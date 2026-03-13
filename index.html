@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>生活・簡居・生活 | 總入口</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 20px; text-align: center; background-color: #f9f9f9; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 20px; text-align: center; background-color: #f9f9f9; }
         .container { max-width: 400px; margin: 0 auto; }
         
         .card-container { 
@@ -14,38 +14,38 @@
             border: 1px solid #F0F0F0; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
             overflow: hidden; 
-            padding: 30px 25px;
+            padding: 40px 25px;
         }
         
-        .logo-img { width: 95%; height: auto; display: block; margin: 0 auto 15px auto; }
+        .logo-img { width: 95%; height: auto; display: block; margin: 0 auto 20px auto; }
         .content-section h1 { margin: 10px 0 10px 0; font-size: 1.4em; color: #333; }
-        .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 25px; }
+        .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 30px; }
         
-        /* 縱向按鈕清單設定 */
+        /* 六個按鈕的垂直排列 */
         .button-group {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* 按鈕之間的間距 */
+            gap: 12px;
         }
         
-        /* 長方形按鈕樣式 */
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 55px; /* 高度適中，好點擊 */
+            height: 55px;
             background-color: #f4f4f9;
             color: #333;
             text-decoration: none;
             border-radius: 12px;
-            font-weight: bold;
+            font-weight: 600;
             border: 1px solid #eee;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         
         .btn:hover {
             background-color: #e8e8f0;
             border-color: #ccc;
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -71,6 +71,7 @@
                 <a href="https://www.pinterest.com/myezstore/pins/" class="btn">Pinterest</a>
                 <a href="https://www.youtube.com/@myezlife" class="btn">YouTube</a>
                 <a href="https://www.instagram.com/?hl=zh-tw" class="btn">Instagram</a>
+                <a href="https://play.google.com/books" class="btn">生活書房</a>
             </div>
         </div>
     </div>
