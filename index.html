@@ -24,12 +24,13 @@
         .content-section h1 { margin: 10px 0 10px 0; font-size: 1.4em; color: #333; }
         .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 25px; }
         
-        /* 頁籤區塊，與卡片底部融為一體 */
+        /* 頁籤區塊 */
         .tab-row { 
             display: flex; 
             width: 100%;
             background-color: #F4F4F9; 
             border-top: 1px solid #eee; 
+            align-items: center; 
         }
         
         .tab { 
@@ -37,17 +38,20 @@
             padding: 16px 5px;
             text-decoration: none;
             color: #555;
-            font-size: 0.85em;
-            font-weight: bold;
             transition: all 0.3s ease;
             border-right: 1px solid #eee; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .tab:last-child { border-right: none; }
+        
+        /* 統一圖示大小 */
+        .icon-img { width: 26px; height: 26px; object-fit: contain; }
         
         /* 點擊變色效果 */
         .tab:hover, .tab:active { 
             background-color: #000; 
-            color: #fff; 
         }
     </style>
 </head>
@@ -69,10 +73,18 @@
             </div>
 
             <div class="tab-row">
-                <a href="https://portaly.cc/myezlife" class="tab">Portaly</a>
-                <a href="https://myeztravellife.blogspot.com" class="tab">Blog</a>
-                <a href="https://www.pinterest.com/myezstore/pins/" class="tab">Pin</a>
-                <a href="https://www.youtube.com/@myezlife" class="tab">YT</a>
+                <a href="https://portaly.cc/myezlife" class="tab">
+                    <img src="https://leadingmrk.com/wp-content/uploads/2024/06/xlzdjh17z3l6miknndg4.png" alt="Portaly" class="icon-img">
+                </a>
+                <a href="https://myeztravellife.blogspot.com" class="tab">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Blogger.svg/330px-Blogger.svg.png" alt="Blog" class="icon-img">
+                </a>
+                <a href="https://www.pinterest.com/myezstore/pins/" class="tab">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeiosBmvjC_tuLrk3P4jB4c_2inDmzEChzTQ&s" alt="Pin" class="icon-img">
+                </a>
+                <a href="https://www.youtube.com/@myezlife" class="tab">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/960px-YouTube_full-color_icon_%282017%29.svg.png" alt="YT" class="icon-img">
+                </a>
             </div>
         </div>
     </div>
