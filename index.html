@@ -54,7 +54,7 @@
 
     <div class="container">
         <div class="card-container">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s16000-rw/logo.gif" alt="Logo" class="logo-img">
+            <img id="logo-img" src="" alt="Logo" class="logo-img">
             
             <div class="content-section">
                 <h1>生活・簡居・生活</h1>
@@ -79,6 +79,23 @@
     </div>
 
     <script>
+        // 設定圖片清單
+        const logoOptions = [
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s16000-rw/logo.gif",
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHE6funSqnK80BBjnDg_P776cRB4W_RJGo5BK70icYE2LfSTXwB7T-V-FZgwfEH9GjOu0v_YxtBddWC8ogf4cJrOi6rbZiSFC4Y17t456a2g5wIYrymneEoHGLGQ_AHEY75IkndveCyaajfMcJdzmUR_Dxq0lTsbqERhpZpzMdbqYYhREf68TFY0t9fY7F/s16000-rw/logo-1.gif"
+        ];
+
+        // 隨機選取並更換 LOGO
+        function setRandomLogo() {
+            const randomIndex = Math.floor(Math.random() * logoOptions.length);
+            const logoImg = document.getElementById('logo-img');
+            logoImg.src = logoOptions[randomIndex];
+        }
+
+        // 執行
+        setRandomLogo();
+
+        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then(() => console.log('Service Worker 註冊成功'));
