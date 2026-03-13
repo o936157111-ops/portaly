@@ -8,23 +8,23 @@
         body { font-family: sans-serif; margin: 0; padding: 20px; text-align: center; background-color: #f9f9f9; }
         .container { max-width: 400px; margin: 0 auto; }
         
-        /* 整個大框框的設定 */
+        /* 圓角矩形資訊卡片，加重陰影使其更鮮明 */
         .card-container { 
             background-color: #FCFCFF; 
             border-radius: 24px;       
             border: 1px solid #F0F0F0; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
-            overflow: hidden; /* 這步很關鍵：讓邊緣對齊圓角 */
-            padding-top: 25px; /* 上方增加一點呼吸空間 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+            overflow: hidden; 
+            padding-top: 25px;
         }
         
-        .content-area { padding: 0 25px; } /* 內容區塊內縮 */
+        .content-area { padding: 0 25px; }
         
         .logo-img { width: 95%; height: auto; display: block; margin: 0 auto 15px auto; }
         .content-section h1 { margin: 10px 0 10px 0; font-size: 1.4em; color: #333; }
         .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 25px; }
         
-        /* 頁籤區塊：成為框框底部的一部份 */
+        /* 頁籤區塊，與卡片底部融為一體 */
         .tab-row { 
             display: flex; 
             width: 100%;
@@ -40,9 +40,9 @@
             font-size: 0.85em;
             font-weight: bold;
             transition: all 0.3s ease;
-            border-right: 1px solid #eee; /* 分隔線 */
+            border-right: 1px solid #eee; 
         }
-        .tab:last-child { border-right: none; } /* 最後一個不要線 */
+        .tab:last-child { border-right: none; }
         
         /* 點擊變色效果 */
         .tab:hover, .tab:active { 
