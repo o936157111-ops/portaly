@@ -35,13 +35,12 @@
         progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
         progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
         
-        .content-section h1 { margin: 10px 0; font-size: 1.4em; color: #333; }
+        /* 標題與頁籤樣式 */
+        .header-tabs { margin: 10px 0; font-size: 1.4em; font-weight: bold; color: #333; }
+        .tab-trigger { cursor: pointer; color: #ccc; transition: color 0.3s; }
+        .tab-trigger.active { color: #333; }
+        
         .slogan { line-height: 1.8; color: #666; font-size: 0.85em; margin-bottom: 25px; }
-
-        /* 頁籤樣式 */
-        .tab-group { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .tab-btn { background: none; border: none; font-size: 1.1em; font-weight: 700; color: #bbb; cursor: pointer; padding: 5px 10px; transition: all 0.3s; }
-        .tab-btn.active { color: #333; border-bottom: 3px solid #333; }
 
         /* 按鈕區塊樣式 */
         .button-group { display: none; flex-direction: column; gap: 12px; }
@@ -64,7 +63,12 @@
             </div>
             
             <div class="content-section">
-                <h1>生活・簡居・生活</h1>
+                <div class="header-tabs">
+                    <span class="tab-trigger active" onclick="openTab(event, 'tab-1')">生活</span>・
+                    <span class="tab-trigger" onclick="openTab(event, 'tab-2')">簡居</span>・
+                    <span class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
+                </div>
+                
                 <div class="slogan">
                     <p>用瞬間記錄永恆，拿片刻鋪滿人生；<br>
                     在角落翻開記憶，把點滴串成一生。<br>
@@ -72,13 +76,7 @@
                 </div>
             </div>
 
-            <div class="tab-group">
-                <button class="tab-btn active" onclick="openTab(event, 'tab-life')">生活</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-minimal')">簡居</button>
-                <button class="tab-btn" onclick="openTab(event, 'tab-daily')">日常</button>
-            </div>
-
-            <div id="tab-life" class="button-group active">
+            <div id="tab-1" class="button-group active">
                 <a href="https://portaly.cc/myezlife" class="btn">Portaly</a>
                 <a href="https://myeztravellife.blogspot.com" class="btn">Blogger</a>
                 <a href="https://www.pinterest.com/myezstore/pins/" class="btn">Pinterest</a>
@@ -86,14 +84,14 @@
                 <a href="https://www.instagram.com/?hl=zh-tw" class="btn">Instagram</a>
             </div>
 
-            <div id="tab-minimal" class="button-group">
+            <div id="tab-2" class="button-group">
                 <a href="https://play.google.com/books" class="btn">生活書房</a>
                 <a href="https://ebook.nlpi.edu.tw" class="btn">電子圖書館</a>
                 <a href="https://myezdailylife.blogspot.com/p/blog-page.html" class="btn">生活小書房</a>
                 <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn">挑本書細讀</a>
             </div>
 
-            <div id="tab-daily" class="button-group">
+            <div id="tab-3" class="button-group">
                 <a href="https://myezdailylife.blogspot.com" class="btn">零碎日常</a>
                 <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn">好歌一直聽</a>
                 <a href="https://www.flickr.com/photos/0936157111/" class="btn">生活相簿</a>
@@ -107,9 +105,9 @@
             for (let i = 0; i < groups.length; i++) {
                 groups[i].classList.remove("active");
             }
-            const tabs = document.getElementsByClassName("tab-btn");
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove("active");
+            const triggers = document.getElementsByClassName("tab-trigger");
+            for (let i = 0; i < triggers.length; i++) {
+                triggers[i].classList.remove("active");
             }
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
