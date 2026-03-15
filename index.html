@@ -18,7 +18,27 @@
             padding: 40px 25px;
         }
         
-        .logo-img { width: 95%; height: auto; display: block; margin: 0 auto 20px auto; }
+        /* 圖片容器與載入動畫樣式 */
+        .logo-wrapper { 
+            position: relative; 
+            min-height: 250px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+        }
+        .logo-img { 
+            width: 95%; 
+            height: auto; 
+            display: none; /* 初始隱藏 */
+            border-radius: 12px;
+        }
+        .loader { 
+            color: #999; 
+            font-size: 0.9em; 
+            position: absolute;
+        }
+        
         .content-section h1 { margin: 10px 0 10px 0; font-size: 1.4em; color: #333; }
         .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 30px; }
         
@@ -54,7 +74,11 @@
 
     <div class="container">
         <div class="card-container">
-            <img id="logo-img" src="" alt="Logo" class="logo-img">
+            <div class="logo-wrapper">
+                <div id="loader" class="loader">載入日常片段中...</div>
+                <img id="logo-img" src="" alt="Logo" class="logo-img" 
+                     onload="document.getElementById('loader').style.display='none'; this.style.display='block';">
+            </div>
             
             <div class="content-section">
                 <h1>生活・簡居・生活</h1>
