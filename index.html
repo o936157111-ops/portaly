@@ -29,7 +29,6 @@
         }
         .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; }
         
-        /* 載入區塊樣式 */
         #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
         .loader-text { color: #999; font-size: 0.9em; }
         progress { width: 100%; height: 8px; border-radius: 4px; border: none; background-color: #eee; }
@@ -38,6 +37,7 @@
         
         .content-section h1 { margin: 10px 0; font-size: 1.4em; color: #333; }
         .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 30px; }
+        
         .button-group { display: flex; flex-direction: column; gap: 12px; }
         .btn { display: flex; align-items: center; justify-content: center; height: 55px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.2s; }
         .btn:hover { background-color: #e8e8f0; border-color: #999; transform: translateY(-2px); }
@@ -63,6 +63,11 @@
             </div>
 
             <div class="button-group">
+                <a href="https://myezdailylife.blogspot.com/p/blog-page.html" class="btn">生活小書房</a>
+                <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn">好歌一直聽</a>
+                <a href="https://myezdailylife.blogspot.com" class="btn">零碎日常</a>
+                <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn">挑本書細讀</a>
+                <hr style="width: 100%; border: 0; border-top: 1px solid #eee; margin: 10px 0;">
                 <a href="https://portaly.cc/myezlife" class="btn">Portaly</a>
                 <a href="https://myeztravellife.blogspot.com" class="btn">Blogger</a>
                 <a href="https://www.pinterest.com/myezstore/pins/" class="btn">Pinterest</a>
@@ -88,7 +93,6 @@
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwWs9fiaelMoFZ6IFkDlo-4osKXSP-t0eaOhN0jL1AA_ssHR3GHwge43JXWwRUfwk4fTwfDTCcDAx7MNglkI56bdw2wr-elArJo2m2gQwbnGE5ySm24xd6fmtjyZCNeXWN2_HsLLss7HO-_lPifYfsjkWvs7eX-au23E9dF4v7POC9sMK9eHAYt8Lg2Wbr/w400-h400-rw/grok-video-410d67fe-c849-4fe8-9cb7-602c5a179347.gif"
         ];
 
-        // 模擬進度條
         const progressBar = document.getElementById('progress-bar');
         let progress = 0;
         const interval = setInterval(() => {
