@@ -36,10 +36,18 @@
         progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
         
         .content-section h1 { margin: 10px 0; font-size: 1.4em; color: #333; }
-        .slogan { line-height: 1.8; color: #666; font-size: 0.9em; margin-bottom: 30px; }
+        .slogan { line-height: 1.8; color: #666; font-size: 0.85em; margin-bottom: 25px; }
+
+        /* 頁籤樣式 */
+        .tab-group { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .tab-btn { background: none; border: none; font-size: 1.1em; font-weight: 700; color: #bbb; cursor: pointer; padding: 5px 10px; transition: all 0.3s; }
+        .tab-btn.active { color: #333; border-bottom: 3px solid #333; }
+
+        /* 按鈕區塊樣式 */
+        .button-group { display: none; flex-direction: column; gap: 12px; }
+        .button-group.active { display: flex; }
         
-        .button-group { display: flex; flex-direction: column; gap: 12px; }
-        .btn { display: flex; align-items: center; justify-content: center; height: 55px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.2s; }
+        .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.2s; }
         .btn:hover { background-color: #e8e8f0; border-color: #999; transform: translateY(-2px); }
     </style>
 </head>
@@ -58,30 +66,56 @@
             <div class="content-section">
                 <h1>生活・簡居・生活</h1>
                 <div class="slogan">
-                    <p>書.咖啡.小日子.零碎日常<br>
-                    用瞬間記錄永恆，拿片刻鋪滿人生；<br>
-                    在角落翻開記憶，把點滴串成一生。<br>
-                    漫無目的，恣意生活。</p>
+                    <p>用瞬間記錄永恆，拿片刻鋪滿人生；<br>
+                    在角落翻開記憶，把點滴串成一生。</p>
                 </div>
             </div>
 
-            <div class="button-group">
+            <div class="tab-group">
+                <button class="tab-btn active" onclick="openTab(event, 'tab-life')">生活</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-minimal')">簡居</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-daily')">日常</button>
+            </div>
+
+            <div id="tab-life" class="button-group active">
                 <a href="https://portaly.cc/myezlife" class="btn">Portaly</a>
                 <a href="https://myeztravellife.blogspot.com" class="btn">Blogger</a>
                 <a href="https://www.pinterest.com/myezstore/pins/" class="btn">Pinterest</a>
                 <a href="https://www.youtube.com/@myezlife" class="btn">YouTube</a>
                 <a href="https://www.instagram.com/?hl=zh-tw" class="btn">Instagram</a>
+            </div>
+
+            <div id="tab-minimal" class="button-group">
                 <a href="https://play.google.com/books" class="btn">生活書房</a>
                 <a href="https://ebook.nlpi.edu.tw" class="btn">電子圖書館</a>
                 <a href="https://myezdailylife.blogspot.com/p/blog-page.html" class="btn">生活小書房</a>
-                <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn">好歌一直聽</a>
-                <a href="https://myezdailylife.blogspot.com" class="btn">零碎日常</a>
                 <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn">挑本書細讀</a>
+            </div>
+
+            <div id="tab-daily" class="button-group">
+                <a href="https://myezdailylife.blogspot.com" class="btn">零碎日常</a>
+                <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn">好歌一直聽</a>
+                <a href="https://www.flickr.com/photos/0936157111/" class="btn">生活相簿</a>
             </div>
         </div>
     </div>
 
     <script>
+        // 頁籤切換邏輯
+        function openTab(evt, tabName) {
+            const groups = document.getElementsByClassName("button-group");
+            for (let i = 0; i < groups.length; i++) {
+                groups[i].classList.remove("active");
+            }
+            const tabs = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // 圖片載入與進度條邏輯
         const logoOptions = [
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s16000-rw/logo.gif",
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHE6funSqnK80BBjnDg_P776cRB4W_RJGo5BK70icYE2LfSTXwB7T-V-FZgwfEH9GjOu0v_YxtBddWC8ogf4cJrOi6rbZiSFC4Y17t456a2g5wIYrymneEoHGLGQ_AHEY75IkndveCyaajfMcJdzmUR_Dxq0lTsbqERhpZpzMdbqYYhREf68TFY0t9fY7F/s16000-rw/logo-1.gif",
@@ -107,8 +141,10 @@
         function finishLoading() {
             clearInterval(interval);
             progressBar.value = 100;
-            document.getElementById('loader-container').style.display = 'none';
-            document.getElementById('logo-img').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('loader-container').style.display = 'none';
+                document.getElementById('logo-img').style.display = 'block';
+            }, 200);
         }
 
         function setRandomLogo() {
