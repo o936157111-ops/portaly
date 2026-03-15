@@ -18,56 +18,29 @@
             padding: 40px 25px;
         }
         
-        /* 圖片容器與載入動畫樣式 */
         .logo-wrapper { 
             position: relative; 
             min-height: 250px; 
             display: flex; 
+            flex-direction: column;
             align-items: center; 
             justify-content: center; 
             margin-bottom: 20px; 
         }
-        .logo-img { 
-            width: 95%; 
-            height: auto; 
-            display: none; /* 初始隱藏 */
-            border-radius: 12px;
-        }
-        .loader { 
-            color: #999; 
-            font-size: 0.9em; 
-            position: absolute;
-        }
+        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; }
         
-        .content-section h1 { margin: 10px 0 10px 0; font-size: 1.4em; color: #333; }
+        /* 載入區塊樣式 */
+        #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
+        .loader-text { color: #999; font-size: 0.9em; }
+        progress { width: 100%; height: 8px; border-radius: 4px; border: none; background-color: #eee; }
+        progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
+        progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
+        
+        .content-section h1 { margin: 10px 0; font-size: 1.4em; color: #333; }
         .slogan { line-height: 1.6; color: #666; font-size: 0.9em; margin-bottom: 30px; }
-        
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 55px;
-            background-color: #f4f4f9;
-            color: #333;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1.1em;
-            border: 2px solid #dcdcdc; 
-            transition: all 0.2s ease;
-        }
-        
-        .btn:hover {
-            background-color: #e8e8f0;
-            border-color: #999;
-            transform: translateY(-2px);
-        }
+        .button-group { display: flex; flex-direction: column; gap: 12px; }
+        .btn { display: flex; align-items: center; justify-content: center; height: 55px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.2s; }
+        .btn:hover { background-color: #e8e8f0; border-color: #999; transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -75,18 +48,17 @@
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
-                <div id="loader" class="loader">載入日常片段中...</div>
-                <img id="logo-img" src="" alt="Logo" class="logo-img" 
-                     onload="document.getElementById('loader').style.display='none'; this.style.display='block';">
+                <div id="loader-container">
+                    <div class="loader-text">載入日常片段中...</div>
+                    <progress id="progress-bar" value="0" max="100"></progress>
+                </div>
+                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()">
             </div>
             
             <div class="content-section">
                 <h1>生活・簡居・生活</h1>
                 <div class="slogan">
-                    <p>書.咖啡.小日子.零碎日常<br>
-                    用瞬間記錄永恆，拿片刻鋪滿人生；<br>
-                    在角落翻開記憶，把點滴串成一生。<br>
-                    漫無目的，恣意生活。</p>
+                    <p>書.咖啡.小日子.零碎日常<br>漫無目的，恣意生活。</p>
                 </div>
             </div>
 
@@ -103,7 +75,6 @@
     </div>
 
     <script>
-        // 設定圖片清單
         const logoOptions = [
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s16000-rw/logo.gif",
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHE6funSqnK80BBjnDg_P776cRB4W_RJGo5BK70icYE2LfSTXwB7T-V-FZgwfEH9GjOu0v_YxtBddWC8ogf4cJrOi6rbZiSFC4Y17t456a2g5wIYrymneEoHGLGQ_AHEY75IkndveCyaajfMcJdzmUR_Dxq0lTsbqERhpZpzMdbqYYhREf68TFY0t9fY7F/s16000-rw/logo-1.gif",
@@ -117,21 +88,29 @@
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwWs9fiaelMoFZ6IFkDlo-4osKXSP-t0eaOhN0jL1AA_ssHR3GHwge43JXWwRUfwk4fTwfDTCcDAx7MNglkI56bdw2wr-elArJo2m2gQwbnGE5ySm24xd6fmtjyZCNeXWN2_HsLLss7HO-_lPifYfsjkWvs7eX-au23E9dF4v7POC9sMK9eHAYt8Lg2Wbr/w400-h400-rw/grok-video-410d67fe-c849-4fe8-9cb7-602c5a179347.gif"
         ];
 
-        // 隨機選取並更換 LOGO
+        // 模擬進度條
+        const progressBar = document.getElementById('progress-bar');
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (progress < 90) {
+                progress += 5;
+                progressBar.value = progress;
+            }
+        }, 100);
+
+        function finishLoading() {
+            clearInterval(interval);
+            progressBar.value = 100;
+            document.getElementById('loader-container').style.display = 'none';
+            document.getElementById('logo-img').style.display = 'block';
+        }
+
         function setRandomLogo() {
             const randomIndex = Math.floor(Math.random() * logoOptions.length);
-            const logoImg = document.getElementById('logo-img');
-            logoImg.src = logoOptions[randomIndex];
+            document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
 
-        // 執行
         setRandomLogo();
-
-        // Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('Service Worker 註冊成功'));
-        }
     </script>
 </body>
 </html>
