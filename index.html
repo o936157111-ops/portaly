@@ -35,10 +35,12 @@
         progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
         progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
         
-        /* 標題與頁籤樣式 */
+        /* 標題頁籤樣式：預設顏色與字體全部相同 */
         .header-tabs { margin: 10px 0; font-size: 1.4em; font-weight: bold; color: #333; }
-        .tab-trigger { cursor: pointer; color: #ccc; transition: color 0.3s; }
-        .tab-trigger.active { color: #333; }
+        .tab-trigger { cursor: pointer; transition: color 0.3s; }
+        
+        /* 點擊後的顏色變化：這裡設定為稍微變淡的灰色，以示區別 */
+        .tab-trigger.active { color: #999; }
         
         .slogan { line-height: 1.8; color: #666; font-size: 0.85em; margin-bottom: 25px; }
 
@@ -64,9 +66,9 @@
             
             <div class="content-section">
                 <div class="header-tabs">
-                    <span class="tab-trigger active" onclick="openTab(event, 'tab-1')">生活</span>・
-                    <span class="tab-trigger" onclick="openTab(event, 'tab-2')">簡居</span>・
-                    <span class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
+                    <span id="trigger-1" class="tab-trigger active" onclick="openTab(event, 'tab-1')">生活</span>・
+                    <span id="trigger-2" class="tab-trigger" onclick="openTab(event, 'tab-2')">簡居</span>・
+                    <span id="trigger-3" class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
                 </div>
                 
                 <div class="slogan">
@@ -101,18 +103,22 @@
 
     <script>
         function openTab(evt, tabName) {
+            // 隱藏所有按鈕組
             const groups = document.getElementsByClassName("button-group");
             for (let i = 0; i < groups.length; i++) {
                 groups[i].classList.remove("active");
             }
+            // 移除所有標題的選中顏色
             const triggers = document.getElementsByClassName("tab-trigger");
             for (let i = 0; i < triggers.length; i++) {
                 triggers[i].classList.remove("active");
             }
+            // 顯示對應的內容並將標題變色
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
 
+        // 圖片隨機與載入邏輯 (略，與之前相同)
         const logoOptions = [
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s16000-rw/logo.gif",
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHE6funSqnK80BBjnDg_P776cRB4W_RJGo5BK70icYE2LfSTXwB7T-V-FZgwfEH9GjOu0v_YxtBddWC8ogf4cJrOi6rbZiSFC4Y17t456a2g5wIYrymneEoHGLGQ_AHEY75IkndveCyaajfMcJdzmUR_Dxq0lTsbqERhpZpzMdbqYYhREf68TFY0t9fY7F/s16000-rw/logo-1.gif",
