@@ -35,12 +35,14 @@
         progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
         progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
         
+        /* 標題頁籤樣式 */
         .header-tabs { margin: 10px 0; font-size: 1.4em; color: #888; }
         .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; }
         .tab-trigger.active { color: #000; font-weight: 800; }
         
         .slogan { line-height: 1.8; color: #666; font-size: 0.85em; margin-bottom: 25px; }
 
+        /* 按鈕區塊樣式 */
         .button-group { display: none; flex-direction: column; gap: 12px; }
         .button-group.active { display: flex; }
         
@@ -51,6 +53,7 @@
             transition: all 0.3s ease; 
         }
         
+        /* 滑鼠滑過樣式：黑底白字 (強制) */
         .btn:hover { 
             background-color: #000 !important; 
             color: #fff !important; 
@@ -111,9 +114,13 @@
     <script>
         function openTab(evt, tabName) {
             const groups = document.getElementsByClassName("button-group");
-            for (let i = 0; i < groups.length; i++) groups[i].classList.remove("active");
+            for (let i = 0; i < groups.length; i++) {
+                groups[i].classList.remove("active");
+            }
             const triggers = document.getElementsByClassName("tab-trigger");
-            for (let i = 0; i < triggers.length; i++) triggers[i].classList.remove("active");
+            for (let i = 0; i < triggers.length; i++) {
+                triggers[i].classList.remove("active");
+            }
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
@@ -133,7 +140,8 @@
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgkNtOsgsSrvudIKAUrXRhAMjS3bfIilL1P2GzcRCA5pyX2bXZG3-T1UqP3fH9QcyrJOCth-w-_sOaGluXHO0hkQBaChpD-C0v5Caa379zoU0K0dGeEC9WECi1pbbZvbEtPC_Lph8APoJrVPlAcxpopaRHb8i4HwCUDv6KJ9bl1Vp-7cWPjl9CZfUa_vUU2/s320-rw/%E7%9F%B3%E9%96%80%E6%B0%B4%E5%BA%AB.gif",
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgY0C7sQ0LVoRDCONqox5Y4w81pI2DLW1Evs_OeCh-WRQB4yW4M57YcWU2iXxvQWGFpB2xc9dBLPRaR3hj58Ihfdz7aDFSA3GXCWLs_HhFc3Q4tyZsG0T5nZ8kpGRXli1YIGQc-X-v4aLq5hcHcGu26A6x2RBeAJgxqEOXwxvcvJzmk3rraq99DwsBJ7LP_/s320-rw/MOON.gif",
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_HnJ11kMo_04haONQ7Y9VNf9AhEjyQxVp7BPEikKWSxHoA5LpBHAlIuIFIUcQagmg1Mq4JfQIBhfbFDZQqhBqG0HkAX4JA2Y912807rAsPJMbSLBc1DZW0hZnbEEykC9nkzV2FDWCJgt-IqxSLW9P4cg_DimlcIl0jbFp7-pIhWIZ_mWJJUhQYjMa4LUD/s600/123.gif",
-            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2RdCZ9Zlc2U33jKHWTjedgVpmOO6OV9vY474UYQMXErwaD8e3_obPpR2gFTDPqrULol0N1mDFZV6Jt9vToWinTwOlVmmzOnKeP3HIV9W1gIJuKJforMnMz3AA8aSAVm6kbMdGTSDLYggMDTBECzDFncleU_xz2AE_rtc0KcCD2wMSQYCtVvPT4c5C8Kkf/w270-h400-rw/%E9%A6%AC%E4%B8%8A%E5%B9%B8%E7%A6%8F.gif"
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2RdCZ9Zlc2U33jKHWTjedgVpmOO6OV9vY474UYQMXErwaD8e3_obPpR2gFTDPqrULol0N1mDFZV6Jt9vToWinTwOlVmmzOnKeP3HIV9W1gIJuKJforMnMz3AA8aSAVm6kbMdGTSDLYggMDTBECzDFncleU_xz2AE_rtc0KcCD2wMSQYCtVvPT4c5C8Kkf/w270-h400-rw/%E9%A6%AC%E4%B8%8A%E5%B9%B8%E7%A6%8F.gif",
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiHMATbfNkTPkQq-sk7XCNkAU6w25hm1wWPHNXw5jHSTuJuAm7TOvi3tM0_1HPlPeIo1uKi7B7sXSz3W3YR_okSVWJZb5iCWp4UXcZOENIRhLdhBY5tTISXDhzIzhr8g7UID0RitCGthJr1j2znwTla_EbYS4ss4kfKG-dxpfnJ4M2hKg4-QP1QjPG8x-D3/s320-rw/grok-video-bbfd710f-fb2d-42ad-945a-c65428ad7daa.gif"
         ];
 
         const progressBar = document.getElementById('progress-bar');
