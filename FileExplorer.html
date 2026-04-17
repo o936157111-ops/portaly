@@ -1,33 +1,82 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="zh-Hant">
+<head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-  .tabs-container { max-width: 800px; margin: 20px auto; font-family: sans-serif; }
-  .tabs { display: flex; overflow-x: auto; white-space: nowrap; padding-bottom: 10px; border-bottom: 2px solid #ddd; -webkit-overflow-scrolling: touch; }
+  body { margin: 0; padding: 0; background-color: #f5f5f5; }
+  .tabs-container { max-width: 800px; margin: 20px auto; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  
+  /* 頁籤列優化 */
+  .tabs { 
+    display: flex; 
+    overflow-x: auto; 
+    white-space: nowrap; 
+    padding: 10px 10px 0 10px; 
+    border-bottom: 2px solid #ddd; 
+    -webkit-overflow-scrolling: touch; 
+    background: #fff;
+  }
   .tabs::-webkit-scrollbar { display: none; }
-  .tabs label { flex: 0 0 auto; padding: 10px 20px; cursor: pointer; background: #eee; margin-right: 5px; border-radius: 8px 8px 0 0; transition: all 0.3s; font-size: 14px; }
+  .tabs label { 
+    flex: 0 0 auto; 
+    padding: 12px 20px; 
+    cursor: pointer; 
+    background: #eee; 
+    margin-right: 5px; 
+    border-radius: 8px 8px 0 0; 
+    transition: all 0.3s; 
+    font-size: 15px; 
+  }
   .tabs label.active-tab { background: #333 !important; color: #fff !important; font-weight: bold; }
-  .content { display: none; padding: 20px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 0 0 8px 8px; }
+  
+  /* 內容區域優化 */
+  .content { display: none; padding: 20px; background: #fff; border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; min-height: 300px; }
   .tab-active { display: block !important; }
-  .bookmark-list { list-style: none; padding: 0; }
-  .bookmark-list li { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
   
-  .footer-admin-area { margin-top: 50px; padding: 20px; border-top: 2px dashed #ccc; text-align: center; }
+  /* 連結清單優化：增加高度與字體 */
+  .bookmark-list { list-style: none; padding: 0; margin: 0; }
+  .bookmark-list li { 
+    margin-bottom: 0; 
+    border-bottom: 1px solid #eee; 
+    padding: 15px 5px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+  }
+  .bookmark-list a { 
+    color: #0066cc; 
+    text-decoration: none; 
+    font-size: 17px; /* 手機端大字體 */
+    line-height: 1.4;
+    word-break: break-all;
+    flex: 1;
+  }
+  
+  .footer-admin-area { margin-top: 50px; padding: 30px 20px; border-top: 2px dashed #ccc; text-align: center; background: #fff; }
   #admin-controls { display: none; margin-top: 10px; }
-  #login-btn { background: none; border: none; color: #888; cursor: pointer; font-size: 12px; }
+  #login-btn { background: #eee; border: 1px solid #ccc; padding: 10px 20px; color: #666; cursor: pointer; font-size: 14px; border-radius: 20px; }
   
-  .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
-  .btn-group button { padding: 8px 15px; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: #fff; }
+  .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px; }
+  .btn-group button { padding: 12px 20px; cursor: pointer; border-radius: 8px; border: 1px solid #ccc; background: #fff; font-size: 15px; }
   
-  .move-btn { background: #f0f0f0; border: 1px solid #ccc; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; transition: 0.2s; }
-  .move-btn:hover { background: #ddd; }
+  .move-btn { background: #f0f0f0; border: 1px solid #ccc; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; }
   
   .admin-only { display: none; }
   .save-btn { background: #dc3545 !important; color: white !important; font-weight: bold; border: none !important; }
 
-  #pwd-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-  .modal-content { background: white; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-  .modal-content input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin: 10px 0; display: block; width: 150px; margin-left: auto; margin-right: auto; }
+  #pwd-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+  .modal-content { background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 80%; max-width: 300px; }
+  .modal-content input { padding: 12px; border: 1px solid #ccc; border-radius: 4px; margin: 15px 0; display: block; width: 90%; font-size: 18px; text-align: center; }
+  .modal-content button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+
+  /* RWD 手機版介面微調 */
+  @media screen and (max-width: 600px) {
+    .tabs-container { margin: 0; }
+    .content { padding: 15px; border-radius: 0; border-left: none; border-right: none; }
+    .tabs label { padding: 12px 15px; font-size: 14px; }
+    .btn-group button { width: 100%; max-width: 200px; } /* 手機按鈕加寬好點擊 */
+  }
 </style>
 </head>
 <body>
@@ -46,7 +95,7 @@
   <div id="contents-area"></div>
 
   <div class="footer-admin-area">
-    <button id="login-btn" onclick="openModal()" style="display: block;">🔒 進入維護模式</button>
+    <button id="login-btn" onclick="openModal()" style="display: inline-block;">🔒 進入維護模式</button>
     <div id="admin-controls" style="display: none;">
       <p style="color:#28a745; font-weight:bold;">維護模式已啟動</p>
       <div class="btn-group">
@@ -59,25 +108,20 @@
 </div>
 
 <script>
+// 完全保留原始資料
 const MY_DATA = [{"name":"生活網站","links":[{"title":"好讀-線上電子書","url":"https://www.haodoo.net/?M=hd&P=welcome#gsc.tab=0"},{"title":"簡居生活地圖","url":"https://www.google.com/maps/d/embed?mid=1MoXFmy5gyGaD4y0bRyTwlTWk86OOKnI&ehbc=2E312F&ll=24.239147199170667%2C119.7738891265625&z=8"},{"title":"OPEN BOOK","url":"https://www.openbook.org.tw"},{"title":"生活網站入口","url":"https://o936157111-ops.github.io/portaly/"}]},{"name":"電子書","links":[{"title":"射鵰英雄傳","url":"https://www.haodoo.net/?M=u&P=D301:0&L=book"},{"title":"神鵰俠侶","url":"https://www.haodoo.net/?M=u&P=D354:0&L=book"},{"title":"倚天屠龍記","url":"https://www.haodoo.net/?M=u&P=D412:0&L=book"},{"title":"天龍八部","url":"https://www.haodoo.net/?M=u&P=D552:0&L=book"},{"title":"笑傲江湖","url":"https://www.haodoo.net/?M=u&P=D517:0&L=book"},{"title":"鹿鼎記","url":"https://www.haodoo.net/?M=u&P=D67:0&L=book"},{"title":"星際爭霸戰","url":"https://www.haodoo.net/?M=u&P=P1010490676:1&L=Share&F=-1"},{"title":"專業 你的唯一生存之道","url":"https://www.haodoo.net/?M=u&P=P1010490508:0&L=Share"},{"title":"尋秦記","url":"https://www.haodoo.net/?M=book&P=81#gsc.tab=0"},{"title":"三國演義","url":"https://www.haodoo.net/?M=u&P=H84:1&L=book"},{"title":"麥田補手","url":"https://www.haodoo.net/?M=u&P=P1010490446:1&L=Share"},{"title":"查令十字路84號","url":"https://www.haodoo.net/?M=u&P=P1010490099:3&L=Share"},{"title":"喬治安娜街33號","url":"https://www.haodoo.net/?M=u&P=P1010490123:0&L=Share"},{"title":"風之影","url":"https://www.haodoo.net/?M=u&P=H17W9:1&L=book"},{"title":"與狼共舞","url":"https://www.haodoo.net/?M=u&P=H1585:1&L=book"},{"title":"肉蒲團","url":"https://www.haodoo.net/?M=u&P=G45:0&L=book"},{"title":"偷書賊","url":"https://www.haodoo.net/?M=u&P=H16N0:1&L=book"}]},{"name":"電視劇","links":[{"title":"去有風的地方","url":"https://www.youtube.com/show/VLPLSIJismKOisEd-tT5MYM1391R9nRRI3U5?sbp=QAE%253D"},{"title":"終極名單","url":"https://gimymax.com/ep/203831-3-1.html"}]},{"name":"電影","links":[{"title":"侵略機器","url":"https://gimymax.com/ep/430094-3-1.html"},{"title":"與狼共舞","url":"https://gimymax.com/ep/220301-1-1.html"},{"title":"郵差","url":"https://gimymax.com/ep/218700-5-1.html"},{"title":"天國王朝","url":"https://gimymax.com/ep/164961-5-1.html"},{"title":"峽谷","url":"https://gimymax.com/ep/338078-1-1.html"},{"title":"刺激1995","url":"https://gimymax.com/ep/192981-9-1.html"}]},{"name":"動漫","links":[{"title":"牧神記","url":"https://gimymax.com/ep/303485-5-72.html"},{"title":"斗羅大陸2","url":"https://gimymax.com/ep/242440-5-143.html"},{"title":"完美世界","url":"https://gimymax.com/ep/144478-2-1.html"}]},{"name":"YOUTUBE","links":[{"title":"鈴木的日常","url":"https://www.youtube.com/@suzuki_tw"},{"title":"線上看好片","url":"https://portaly.cc/myezlife/pages/wind"},{"title":"好歌一直聽","url":"https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=DxIfGHuEwk8hcqbZ"},{"title":"楊乃文","url":"https://youtube.com/playlist?list=PL64GNbse4j6tCgLJ82gvWjqA_KHCx_0PJ&si=YUmYNDf2BBKufMo0"}]},{"name":"公益","links":[{"title":"公益認購【喜憨兒 送愛到偏鄉】愛心餐盒方案一(每月配送一次×配送一學期)","url":"https://www.rakuten.com.tw/shop/cshop/product/fwho28fkb/"},{"title":"公益認購【喜憨兒 溫暖送】愛心餐點募集-吉祥如意套餐","url":"https://www.rakuten.com.tw/shop/cshop/product/yncmn745g/"},{"title":"公益認購【喜憨兒 溫暖送】愛心餐點募集-幸福安康套餐","url":"https://www.rakuten.com.tw/shop/cshop/product/1w4r07o9c/"}]}];
 
 renderUI();
 
 function openModal() {
   document.getElementById('pwd-modal').style.display = 'flex';
-  // 延遲一點點確保視窗渲染後 Focus
-  setTimeout(() => {
-    document.getElementById('modal-pass').focus();
-  }, 100);
+  setTimeout(() => { document.getElementById('modal-pass').focus(); }, 100);
 }
 
 function verify() {
   const input = document.getElementById('modal-pass').value;
   const now = new Date();
-  const today = now.getFullYear() + 
-                String(now.getMonth() + 1).padStart(2, '0') + 
-                String(now.getDate()).padStart(2, '0');
-                
+  const today = now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
   if(input === today) {
     document.getElementById('pwd-modal').style.display = 'none';
     document.getElementById('login-btn').style.display = 'none';
@@ -91,10 +135,7 @@ function verify() {
   }
 }
 
-function closeModal() {
-  document.getElementById('pwd-modal').style.display = 'none';
-  document.getElementById('modal-pass').value = '';
-}
+function closeModal() { document.getElementById('pwd-modal').style.display = 'none'; document.getElementById('modal-pass').value = ''; }
 
 function renderUI() {
   const tabsBar = document.getElementById('tabs-bar');
@@ -115,18 +156,20 @@ function renderUI() {
     
     let linksHTML = tab.links.map((link, linkIdx) => 
       `<li><a href="${link.url}" target="_blank">${link.title}</a> 
-       <button class="admin-only" onclick="deleteLink(${i}, ${linkIdx})" style="font-size:10px;">刪除</button></li>`
+       <button class="admin-only" onclick="deleteLink(${i}, ${linkIdx})" style="padding: 5px 10px; margin-left:10px;">刪除</button></li>`
     ).join('');
 
     content.innerHTML = `<ul class="bookmark-list">${linksHTML || '<li>暫無連結</li>'}</ul>
-      <div class="admin-only" style="border-top:1px solid #ddd; padding-top:10px; display:none;">
-        <button onclick="addLink(${i})">+ 新增連結</button>
-        <span style="margin-left:15px;">
+      <div class="admin-only" style="border-top:1px solid #ddd; padding-top:20px; display:none; text-align:center;">
+        <button onclick="addLink(${i})" style="width:100%; padding:15px; margin-bottom:15px;">＋ 新增連結</button>
+        <div style="margin: 15px 0;">
            <button class="move-btn" onclick="moveTab(${i}, -1)">◀</button>
            <button class="move-btn" onclick="moveTab(${i}, 1)">▶</button>
-        </span>
-        <button onclick="renameTab(${i})" style="color:blue; margin-left:15px;">[ 修改名稱 ]</button>
-        <button onclick="deleteTab(${i})" style="color:red; margin-left:15px;">[ 刪除 ]</button>
+        </div>
+        <div style="display:flex; justify-content: space-around;">
+          <button onclick="renameTab(${i})" style="color:blue;">[ 修改名稱 ]</button>
+          <button onclick="deleteTab(${i})" style="color:red;">[ 刪除頁籤 ]</button>
+        </div>
       </div>`;
     contentsArea.appendChild(content);
   });
@@ -147,7 +190,7 @@ function deleteLink(i, j) { MY_DATA[i].links.splice(j, 1); renderUI(); showAdmin
 function addLink(i) { let t=prompt("名稱："), u=prompt("網址："); if(t && u) { MY_DATA[i].links.push({title:t, url:u}); renderUI(); showAdminButtons(); } }
 function addNewTab() { let n = prompt("頁籤名稱："); if(n) { MY_DATA.push({name: n, links: []}); renderUI(); showAdminButtons(); } }
 function showContent(i, el) { document.querySelectorAll('.content').forEach(c=>c.classList.remove('tab-active')); document.getElementById('content'+i).classList.add('tab-active'); document.querySelectorAll('.tab-label').forEach(l=>l.classList.remove('active-tab')); el.classList.add('active-tab'); }
-function showAdminButtons() { document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block'); }
+function showAdminButtons() { document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block'); }
 function logout() { location.reload(); }
 function generateStaticCode() {
   document.getElementById('login-btn').style.display = 'block';
