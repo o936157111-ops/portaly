@@ -1,0 +1,1736 @@
+<html><head></head><body><div class="mye-wrapper-root" style="clear: both !important; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important;">
+    <style>
+        .mye-wrapper-root .mye-main-container {
+            --taaze-blue: #005599; --save-green: #27ae60; --backup-orange: #f39c12; --read-purple: #8e44ad;
+            font-family: Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
+            color: #333; max-width: 900px; margin: 10px auto; background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #eee; box-sizing: border-box; position: relative;
+        }
+        .mye-wrapper-root .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        .mye-wrapper-root .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .mye-wrapper-root .action-btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; color: white; font-weight: bold; }
+        
+        .mye-wrapper-root #view-blogger { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
+        .mye-wrapper-root .book-item { text-align: center; position: relative; }
+        .mye-wrapper-root .book-item img { width: 100%; border-radius: 6px; cursor: pointer; display: block; aspect-ratio: 3/4; object-fit: cover; }
+        .mye-wrapper-root .admin-overlay { position: absolute; top: 5px; right: 5px; display: flex; gap: 4px; z-index: 10; }
+        .mye-wrapper-root .mini-btn { color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; cursor: pointer; opacity: 0.9; }
+
+        #backToTopBtn {
+            position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; 
+            background: var(--taaze-blue); color: white; border: none; border-radius: 50%;
+            font-size: 20px; cursor: pointer; display: none; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #inputForm { background: #fffbe6; padding: 20px; border: 1px solid #ffe58f; border-radius: 10px; margin-bottom: 20px; display: none; }
+        #inputForm input, #inputForm textarea { width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        #loadMore { text-align:center; padding:30px; color:var(--taaze-blue); cursor:pointer; font-weight:bold; }
+    </style>
+
+    <div class="mye-main-container">
+        <div class="header-top">
+            <div style="font-weight: bold; color: var(--taaze-blue); font-size: 22px;">生活小書房</div>
+            <div id="actionBar" style="display: none;" class="btn-group">
+                <button class="action-btn" style="background:var(--taaze-blue)" onclick="toggleForm()">＋ 新增</button>
+                <button class="action-btn" style="background:var(--backup-orange)" onclick="exportBackup()">📤 匯出</button>
+                <button class="action-btn" style="background:var(--backup-orange)" onclick="document.getElementById('importFile').click()">📥 匯入</button>
+                <button class="action-btn" style="background:var(--save-green)" onclick="safeDownload()">💾 儲存</button>
+                <input type="file" id="importFile" style="display:none" onchange="importBackup(event)">
+            </div>
+            <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:26px;">🔒</div>
+        </div>
+
+        <div id="inputForm" style="display: none;">
+            <input type="text" id="f_title" placeholder="書名">
+            <input type="text" id="f_author" placeholder="作者">
+            <input type="text" id="f_img" placeholder="圖片連結">
+            <input type="text" id="f_url" placeholder="詳情連結">
+            <input type="text" id="f_read" placeholder="線上閱讀連結">
+            <textarea id="f_intro" rows="5" placeholder="心得分享..."></textarea>
+            <div style="display:flex; gap:10px;">
+                <button onclick="saveBook()" style="flex:1; padding:12px; background:var(--taaze-blue); color:white; border:none; border-radius:6px;">儲存書籍</button>
+                <button onclick="toggleForm()" style="flex:1; padding:12px; background:#999; color:white; border:none; border-radius:6px;">取消</button>
+            </div>
+        </div>
+
+        <input type="text" id="searchInput" placeholder="🔍 搜尋書名、作者..." onkeyup="resetAndRender()" style="width:100%; padding:14px; margin-bottom:20px; border-radius:30px; border:1px solid #ddd; outline:none;">
+
+        <div id="view-blogger">
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100021330&amp;height=400&amp;width=310" onclick="openBookInNewWindow(0)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">水煮三國</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.haodoo.net/covers/15Y7.jpg" onclick="openBookInNewWindow(1)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">蕭山克的救贖(刺激1995)</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682043368002/20220104060507545951.jpg" onclick="openBookInNewWindow(2)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">千江有水千江月</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100886650&amp;height=400&amp;width=310" onclick="openBookInNewWindow(3)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">常識統計學 拆穿混淆的假設、揪出偏差的數據、識破扭曲的結論，耶魯大學最受歡迎的十八堂公開課</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/E05/024/34/E050243489.jpg" onclick="openBookInNewWindow(4)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">空城計：諸葛亮逗司馬懿</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680545369008/71469.jpg" onclick="openBookInNewWindow(5)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">幸福藍圖: 101個年輕人要懂的道理</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682191210000/20220622060732182950.jpg" onclick="openBookInNewWindow(6)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">送書人</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681722773007/20190823055054170959.jpg" onclick="openBookInNewWindow(7)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">霍金大見解: 留給世人的十個大哉問與解答</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681425044008/ec1252663.jpg" onclick="openBookInNewWindow(8)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">咖啡學: 122種世界精品咖啡徹底解說!</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/077/49/0010774908.jpg" onclick="openBookInNewWindow(9)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">世界咖啡豆烘焙履歷圖鑑</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/085/00/0010850078.jpg" onclick="openBookInNewWindow(10)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">整頓的技術：中小企業獲利翻轉的祕密</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/101/93/0011019321.jpg" onclick="openBookInNewWindow(11)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">燦爛千陽</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/104/17/0011041733.jpg" onclick="openBookInNewWindow(12)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">偷書賊</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/086/53/0010865321.jpg" onclick="openBookInNewWindow(13)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">四季奇譚</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/045/79/0010457912.jpg" onclick="openBookInNewWindow(14)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">失落的符號</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680364219003/ec1680641.jpg" onclick="openBookInNewWindow(15)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">真情快遞</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/092/67/0010926726.jpg" onclick="openBookInNewWindow(16)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">世界大戰</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611276526002/ec67092.jpg" onclick="openBookInNewWindow(17)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">文茜小妹大</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680923773007/ec905255.jpg" onclick="openBookInNewWindow(18)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">不在他方</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/078/48/0010784864.jpg" onclick="openBookInNewWindow(19)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">驟雨之島</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611385653002/ec298059.jpg" onclick="openBookInNewWindow(20)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">十年的你</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100933959&amp;height=400&amp;width=310" onclick="openBookInNewWindow(21)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">銀行家的妻子</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100254647&amp;height=400&amp;width=310" onclick="openBookInNewWindow(22)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">老闆真的說可以嗎？：決定管理到不到位的暗示心理學</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100010692&amp;height=400&amp;width=310" onclick="openBookInNewWindow(23)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">讀人：解讀行為密碼</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100817516&amp;height=400&amp;width=310" onclick="openBookInNewWindow(24)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">滿願</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100603883&amp;height=400&amp;width=310" onclick="openBookInNewWindow(25)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">傷心咖啡店之歌</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100593318&amp;height=400&amp;width=310" onclick="openBookInNewWindow(26)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">東京灣景</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/202008/o/637326467722947500.jpg" onclick="openBookInNewWindow(27)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">沼澤女孩</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681943498000/20201121042228368020.jpg" onclick="openBookInNewWindow(28)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">鄰居</div>
+                    
+                </div>
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682368628003/20230425060356602905.jpg" onclick="openBookInNewWindow(29)">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">不便利的便利店 2</div>
+                    
+                </div></div>
+        <div id="loadMore" onclick="loadNextPage()" style="display: block;">▽ 載入更多書籍</div>
+        <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="display: none;">▲</button>
+    </div>
+
+    <script>
+    (function() {
+        let books = [
+    {
+        "title": "水煮三國",
+        "author": "成君憶",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100021330&height=400&width=310",
+        "url": "https://www.taaze.tw/products/11100021330.html",
+        "read": "https://www.haodoo.net/?M=u&P=B278:0&L=book",
+        "intro": "這本奇特、實用的管理書在大陸造成一股閱讀熱潮，成了許多企業人士的必備參考資料。\n說是奇特，因為作者以古喻今，將《三國演義》中的戰場變商場，使歷史豪傑成為企業管理者；又取幽默詼諧、令人拍案的筆法，闡釋公司經營的手法，造就了一門麻辣「水煮」風味的管理學論述。\n從開創公司到顧客的需要、講行銷的手法到人才的適用，乃至於同事間的互動到管理老闆的勇氣，你可以在這本書中找到職場上想要成功所需的一切方法，每一條皆具體且踏實，告訴你觀念也提供執行的步驟。附帶的是讓你重溫古人的智慧、兼讓你有讀章回小說的快意。\n要說哪一本書能深入談管理又符合東方人的文化背景，非《水煮三國》莫屬。"
+    },
+    {
+        "title": "蕭山克的救贖(刺激1995)",
+        "author": "史蒂芬．金",
+        "img": "https://www.haodoo.net/covers/15Y7.jpg",
+        "url": "https://www.books.com.tw/products/CN11824844?loc=P_br_r0vq68ygz_D_2aabd0_C_1",
+        "read": "https://www.haodoo.net/?M=u&P=H15Y7:1&L=book",
+        "intro": "《肖申克的救贖》是斯蒂芬·金最受歡迎的代表作，收錄了他的四部中篇小說：《春天的希望：肖申克的救贖》《夏日沉淪：納粹高徒》《不再純真的秋天：屍體》《暮冬重生：呼—吸—呼—吸》。1982年，其英文版一經推出，立即登上《紐約時報》暢銷書排行榜的冠軍之位，並暢銷全球，至今不衰。該書已被翻譯成四十多種語言，四篇小說都被改編成轟動一時的電影，其中最為人津津樂道的便是被譽為電影史上最完美影片之一的《肖申克的救贖》。\n\n中篇《肖申克的救贖》講述的是銀行家安迪被當作殺害妻子的兇手送上法庭，被判入獄，一下子從人生的巔峰跌落世間地獄。但他的到來就像一縷陽光，給黑白顛倒的肖申克監獄里的獄友帶來了光明，讓他們在忙着活和忙着死的抉擇中重燃對生活的希望。而他自己，就像一隻浴火重生的鳳凰，健康自信地飛出了煉獄的火坑。就像同名電影里那句經典的台詞：“有些鳥註定是不會被關在籠子里的，因為它們的每一片羽毛都閃耀着自由的光輝。”這篇小說展現了斯蒂芬·金于擅長的驚悚題材之外的過人功力。書中的另外三篇小說拍成電影后也贏得了極佳的口碑，其中《屍體》還被視為斯蒂芬·金最具自傳色彩的作品。\n"
+    },
+    {
+        "title": "千江有水千江月",
+        "author": " 蕭麗紅",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682043368002/20220104060507545951.jpg",
+        "url": "https://www.eslite.com/product/1001110712682043368002?attr=vQHwvAoLCIv5780GENSEoxMQARokNjliZTNiNTAtMDAwMC0yY2MyLTgxZjMtNTgyNDI5YmUwYjc4KkBmOWY5NTlmMGQzM2M2YjQxMDgxMmYyNGEyOTdiNWRjMjY3NjNiZTI0OWU2ZDQ1NTY1ODcyMDgwNWYzMGIyZjhjMiio5aotwvCeFdSynRW3t4wtmNa3LZvWty2Q97IwyZbwMOmr2DfHlvAwOg5kZWZhdWx0X3NlYXJjaEgBWAFgAWgBegJ0aw",
+        "read": "https://www.haodoo.net/?M=u&P=F10U6:1&L=book",
+        "intro": "亙古真純的戀愛，未及宣說的遺憾！\n未經情劫前，她只是靈；\n經歷這些，貞觀才變通透。\n一封信牽起嘉義與臺北的魚雁往返\n一闋詞道盡了有情故鄉的萬水千江\n小說家蕭麗紅經典代表作《千江有水千江月》\n故事以布袋的蕭姓大家族為中心，敘述傳統大家庭的習俗和人情瑣碎，並探討生死、親情、愛情的衝突與矛盾。生於世代養殖漁業維生的大家庭，主角貞觀巧遇表哥大信，開始了一場若有似無的愛戀。這段戀情直到貞觀上臺北工作，大信到澎湖當兵，兩人間的情愫也因誤解而產生令人唏噓的變化。在蕭麗紅的內容敘述中，充滿了臺灣民俗的瑰麗與趣味，而貞觀與大信古典又含蓄的戀情，為臺灣逐漸失去的純然戀歌，悠悠地低吟了一遍……"
+    },
+    {
+        "title": "常識統計學 拆穿混淆的假設、揪出偏差的數據、識破扭曲的結論，耶魯大學最受歡迎的十八堂公開課",
+        "author": "蓋瑞．史密斯",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100886650&height=400&width=310",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100886650",
+        "read": "",
+        "intro": "為什麼我們用沒完沒了又毫無意義的統計說法來思考與行動？\n為什麼我們相信電腦從不犯錯，不管丟什麼垃圾進去，吐出的數據都是真理？\n為什麼專家欺騙我們，而我們也常欺騙自己？\n把統計當工具前，先搞懂統計常識！\n運用數據做決定前，先學會不被數據欺騙！\n\n每天喝兩杯咖啡會增加罹癌風險？\n在農曆五行中的火年出生的人更容易死於心臟病？\n卓越的公司有共同的成功特質與模式？\n自殺傾向和出生月份有關？\n\n數據可以幫助我們評估局勢，做出良好選擇；\n數據也可能誤導我們，做出錯誤決策。\n大數據時代，\n問題不再是沒有足夠資訊做判斷，而是如何不被眼前的資料誤導。\n\n到底該不該喝咖啡？每天該喝幾杯咖啡？\n該選擇哪家航空公司？\n如何投資？運彩怎麼買？\n\n當數據會影響你的日常決策，\n當騙子也習慣用數據說話，\n你更需要學會辨識隱藏在數字背後的陷阱與詭計。\n\n耶魯大學教授運用基本統計學原理，\n只要會加減乘除，就能揭穿日常生活中的各種數據騙局，\n並傳授避免落入數字陷阱的簡單準則：\n\n◎為什麼我們容易被數據欺騙？\n人們容易被模式、解釋模式的理論吸引，有意或無意地忽略與之矛盾的數據。\n\n◎數據如何欺騙我們？\n‧忽略干擾因素：章魚保羅預測世界盃賽事結果成功率高達九成，但該結論忽略了章魚偏好橫向條紋圖案的因素，它只是選擇自己喜歡的國旗樣式。\n\n‧倖存者偏差：對於敵軍最常攻擊飛機哪些部位的觀察，不會包含那些已經被擊落無法返航的飛機。對航空公司滿意度的調查，不會包含那些只搭過一次就不再來的乘客。\n\n‧變形的圖像：圖像可以幫助我們解讀數據，但也可能扭曲或破壞數據。一旦省略數據、顛倒數軸或使用不一致的數軸間隔，將形成截然不同的圖表，產生誤導。\n\n◎如何區分真確與胡謅？\n‧常識判斷：對於看似嚴謹，但不太合常理的說法，應尋求壓倒性的證據支持。\n‧新數據檢驗：採集新的資料，對既有的解釋進行檢驗。\n\n作者簡介：\n\n蓋瑞．史密斯（Gary Smith）\n\n耶魯大學經濟學博士，並在耶魯大學任教七年，期間兩度獲得教學獎。其研究成果獲得彭博廣播（Bloomberg Radio Network）、CNBC、《富比士》（Forbes）、《紐約時報》、《華爾街日報》、《新聞週刊》（Newsweek）、美國《商業週刊》（BusinessWeek）、理財網站the Motley Fool 報導。"
+    },
+    {
+        "title": "空城計：諸葛亮逗司馬懿",
+        "author": " 鄭文金",
+        "img": "https://www.books.com.tw/img/E05/024/34/E050243489.jpg",
+        "url": "https://www.books.com.tw/products/E050243489?srsltid=AfmBOoqITu3pS5FSgNyA5IqvAibrTxHQdacmqxMwQuUhDmx81O3mMVmb&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "read": "",
+        "intro": "蜀漢丞相諸葛亮為了維繫三國鼎立的局面，以虛張聲勢的手法，不斷北伐，向天下宣示追求統一的決心。他的軍事行動，一方面凝聚國內的向心力，營造願景；一方面要讓曹魏和東吳誤判，以為蜀國具有不可輕視的國力。在這個大的「空城計」的概念下，諸葛亮運用了各式各樣的「示強於敵」、「示弱於敵」的策略，與強敵司馬懿周旋到底！"
+    },
+    {
+        "title": "幸福藍圖: 101個年輕人要懂的道理",
+        "author": " 陳書凱/編",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680545369008/71469.jpg",
+        "url": "https://www.eslite.com/product/1001114101996070?srsltid=AfmBOoqYXfn0kg1536BuRUxAQXrIPQoi6hz6CYxB9GvVxIjAKoJn0nd_&utm_source=shopback&utm_medium=cpa&utm_campaign=shopback&co_name=shopback&shopbackid=10248a86ca5326fee09f7ad0b270a0",
+        "read": "",
+        "intro": "這些道理，學過一次，理解一次，就能用上一輩子改變思維就能改變自己的人生，體會101個道理的智慧當你不滿現狀時，就要懂得提升自我，上帝不會聽到你的抱怨，即使失意了也要微笑面對；你不必比所有人都強，但是在實現理想的過程中，你要對自己的快樂負責；如果你曾經質疑自己是否可以畫出美麗的人生藍圖，關鍵就在於你的自信左右你的夢想。\n改變思維就能改變自己的人生，體會101個道理的智慧年輕人適應社會的最佳心靈聖經\n當我們褪去童年的天真、少年的青澀，作為一個成年人初踏入社會時，這個世界的光怪陸離，令我們情不自禁地興奮驚奇而又懵懂困惑。年輕時，我們不懂世態炎涼，不懂時光易逝，不懂得自己還有很多事情不懂。在紛亂的塵世中，我們需要學習一些切實的道理和方法，以把握住自己的心靈，確立自己的處世態度和原則。《101個年輕人要懂得的哲理》，就是這樣一本能讓我們受益一生的好書。"
+    },
+    {
+        "title": "送書人",
+        "author": "卡斯騰．赫恩",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682191210000/20220622060732182950.jpg",
+        "url": "https://www.eslite.com/product/1001116992682191210000?attr=ygHwyQoMCOjltM0GELmlzbsDEAEaJDY5YjE1Nzc2LTAwMDAtMjY3OS05YWU4LTEwZDlhMjA3OTFlNipAZjlmOTU5ZjBkMzNjNmI0MTA4MTJmMjRhMjk3YjVkYzI2NzYzYmUyNDllNmQ0NTU2NTg3MjA4MDVmMzBiMmY4YzI0yZbwMLe3jC3Usp0VwvCeFZD3sjCY1rctjpHJMMeW8DCo5aot9t3xN-mr2DeR4JE4m9a3LToOZGVmYXVsdF9zZWFyY2hIAVgBYAFoAXoCdGs",
+        "read": "",
+        "intro": "一本寫給所有愛書人的動人情書──總有一本書，拯救了我們的人生。\n售出15種語言版權，熱銷超過15萬本，攻佔《明鏡週刊》暢銷排行榜，德國AMAZON書店超過3000位讀者★★★★★極度好評！\n據說，書本自己會找到需要讀它的人。\n只是有時候，它們還在等待，\n等待著那個人引路。\n《哈利波特》讓她與第一個男友結緣。\n《強盜的女兒》幫助一對單親家庭的父女重拾幸福。\n《追憶似水年華》讓他回想起年輕時父母親對他的愛……\n你，曾被一本書改變一生嗎？\n卡爾是個不折不扣的書痴，他在書店工作，一生奉獻給書本。每天下班後，他會在城市裡散步，將指定的書送到老顧客家中，卡爾是他們與這個世界維持聯繫的重要管道，更是他們專屬的「送書人」。\n原本以為這樣的生活會永遠持續下去，直到夏莎闖進了卡爾的生命之中。九歲的她聰明伶俐，卻對卡爾看似平淡無趣的送書工作產生興趣。夏莎總能看見事物的不尋常之處，她會在送書時注意到某個人家裡只有紅色封面的書、某個女讀者遭受丈夫的家暴……她甚至會拉著卡爾一起解決顧客的疑難，她的加入宛如陽光，照亮了卡爾孤寂的心。\n原本只為書而活的卡爾，從沒想到自己竟然這麼渴望另一個人的陪伴。單親家庭的夏莎，也因為卡爾獲得了更多溫暖。但好景不長，夏莎逃課送書被父親知道，卡爾也因此被解雇，面對消失無蹤的夏莎，失去一切的卡爾做了一個重要的決定……"
+    },
+    {
+        "title": "霍金大見解: 留給世人的十個大哉問與解答",
+        "author": " 史蒂芬．霍金",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681722773007/20190823055054170959.jpg",
+        "url": "https://www.eslite.com/product/1001122732745943?attr=ygHwyQoMCJvltM0GEJa4we4CEAEaJDY5YjM4NDcwLTAwMDAtMjUwMy05MDdhLWM4MmFkZDZjMmU1YypAZjlmOTU5ZjBkMzNjNmI0MTA4MTJmMjRhMjk3YjVkYzI2NzYzYmUyNDllNmQ0NTU2NTg3MjA4MDVmMzBiMmY4YzI0jpHJMJD3sjC1t4wt1LKdFcLwnhWY1rctm9a3Lajlqi3HlvAwyZbwMOmr2Df23fE3keCRODoOZGVmYXVsdF9zZWFyY2hIAVgBYAFoAXoCdGs",
+        "read": "",
+        "intro": "霍金在這本全球矚目的遺作裡，\n提出了關於人類文明如何延續的十個大哉問，\n並且清晰說出自己的見解：\n大哉問之一：上帝存在嗎？\n大哉問之二：宇宙是怎麼開始的？\n大哉問之三：宇宙中還有其他智慧生命嗎？\n大哉問之四：我們能預測未來嗎？\n大哉問之五：黑洞裡面是什麼？\n大哉問之六：時間旅行有可能嗎？\n大哉問之七：我們能在地球上存活下來嗎？\n大哉問之八：我們應該殖民太空嗎？\n大哉問之九：人工智慧將會比我們聰明嗎？\n大哉問之十：我們如何形塑未來？\n\n霍金與漸凍人症搏鬥數十年，\n腦袋中除了進行最尖端的物理學思考，\n他念茲在茲的，都是我們人類如何繼續蓬勃發展、\n如何保護最脆弱的地方、如何保有理性思維、\n以及應該如何教育孩子以面對未來。\n霍金一生幽默、樂觀奮鬥、永不放棄的精神，\n也洋溢在這本遺作《霍金大見解》裡。"
+    },
+    {
+        "title": "咖啡學: 122種世界精品咖啡徹底解說!",
+        "author": " 田口護/ 監修",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681425044008/ec1252663.jpg",
+        "url": "https://www.eslite.com/product/1001130462572745?srsltid=AfmBOoqhAl6h0S7b6xhe2Ff_fNaK6wJgsf06HDcaWjaBNZtxQCdTQFbV&utm_source=shopback&utm_medium=cpa&utm_campaign=shopback&co_name=shopback&shopbackid=102ffaa1086996210ebb872bd28b90",
+        "read": "",
+        "intro": "亞馬遜書店讀者五顆星好評推薦：\n「作者出版的咖啡書，我都買了，這本我覺得內容很完整，讓我對咖啡豆的認識更有系統地了解。」\n內容豐富，是一本咖啡的百科書，從基礎的知識到沖煮的方法，以及咖啡豆的產地、烘豆的技巧、咖啡師的評鑑等，都有詳盡的介紹及說明。\n專業直授，以照片和文字完整描述咖啡的一切。認識烘焙度、苦味、酸味、香氣，嚴選世界122種精品咖啡介紹給大家。\n本書從初階入門，包括選豆法、自家烘豆法、磨豆法以及沖煮出好喝咖啡的方法與技巧，徹底解說各式器具與專家技術，完整提引出咖啡豆的香氣與味道。"
+    },
+    {
+        "title": "世界咖啡豆烘焙履歷圖鑑",
+        "author": "張陽燦, 林怡呈",
+        "img": "https://www.books.com.tw/img/001/077/49/0010774908.jpg",
+        "url": "https://www.books.com.tw/products/0010774908?sloc=main",
+        "read": "",
+        "intro": "一杯好喝咖啡從產豆就決定\n　　衣索比亞、瓜地馬拉、哥斯大黎加、印尼、巴西等\n　　來自世界各國咖啡豆全履歷，\n　　咖啡豆採收、後製處理、烘豆曲線、沖泡原理\n　　咖啡科學的演繹，萃取出層次變化的咖啡香\n　　★★透過烘了幾千鍋咖啡豆的經驗，不斷記錄其中的變化，逐漸將咖啡豆的烘焙科學化、系統化★★\n　　咖啡是科學、是藝術、是技能、是品味、是創作，\n　　發掘每一顆咖啡豆裡的驚嘆號！\n　　每一顆咖啡豆看起來形狀、顏色都差不多，但其中蘊藏著風味祕密。咖啡豆散發出的香、醇、濃、甘風味，都是出自烘豆師的創作之手，再透過沖煮，將咖啡豆裡令人驚嘆的風味祕密完全釋放出來。\n　　尋豆師的精選咖啡豆、烘豆師的完美烘豆曲線，到咖啡師的精湛沖泡技巧\n　　咖啡豆因採集、後製處理、烘焙方式及沖泡技巧展現出不同的風味，幾度的溫差、時間的細微變化，即大幅影響成品質感。帶你了解咖啡豆產地特色、咖啡烘焙技法、咖啡沖煮器材使用、咖啡杯測到經典咖啡沖煮指南，完全實用咖啡豆百科。"
+    },
+    {
+        "title": "整頓的技術：中小企業獲利翻轉的祕密",
+        "author": "小山昇",
+        "img": "https://www.books.com.tw/img/001/085/00/0010850078.jpg",
+        "url": "https://www.books.com.tw/products/0010850078?srsltid=AfmBOorEDte2QdTv-7ZokcGhQI8OBRfNnZCC9Wz6wD27e1JGQG2mRU0h&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "read": "",
+        "intro": "從赤字到營收翻轉10倍的經營奇蹟\n　　兩度榮獲日本經營品質賞的中小企業典範──武藏野\n　　社長親身解析，讓小公司躍身賺錢企業的\n　　整理、整頓、清掃三大技術\n　　★全彩圖解！5萬人爭相參訪的工作現場！\n　　為何看似簡單到不行的「整理整頓」\n　　就能讓一家企業轉虧為盈，甚至翻轉10倍？\n　　還有超過730家企業在爭相效尤後\n　　有400家在改善後營收創新高！\n　　不只是想打造賺錢企業的社長要知道\n　　要營造超強工作現場的主管更該要學會的經營技巧\n　　小山昇社長一次的武藏野流「整頓的技術」\n　　整理整頓，並非只是讓環境變得整潔，\n　　更重要的是，當物品的擺放位置改變時，\n　　員工的行動就會不同，想法也會隨之轉變。\n　　小山昇社長認為，企業要獲利7成取決於整頓。\n　　他將在書中無私分享讓公司轉虧為盈的的祕密。"
+    },
+    {
+        "title": "燦爛千陽",
+        "author": "卡勒德．胡賽尼",
+        "img": "https://www.books.com.tw/img/001/101/93/0011019321.jpg",
+        "url": "https://www.books.com.tw/products/0011019321?sloc=main",
+        "read": "https://www.haodoo.net/?M=u&P=H1601:1&L=book",
+        "intro": "如果我們的過錯只是降生於世，更要活得幸福\n因為犯錯的是命運\n而懂得原諒、寬恕與愛的是我們 \n　　瑪黎安，一個從出生便被認為有罪的孩子，在成年之前，為了她沒有犯下的錯，嫁給四十多歲的男子。她以為，有了自己的家庭後，從此能夠幸福了。 \n　　萊拉，一個相對來說「比較幸運」的女孩，對於未來心懷夢想，她想要受教育，與自己選擇的愛人生活。她以為，戰爭結束後，便能夠幸福度日了。 \n　　然而，她們的願望沒有實現。命運甚至讓這兩名陌生女子，因著一樁無情的意外而綑綁在一起。　\n　　而她們的相遇，或許是命運唯一做對的一件事。"
+    },
+    {
+        "title": "偷書賊",
+        "author": " 馬格斯．朱薩克",
+        "img": "https://www.books.com.tw/img/001/104/17/0011041733.jpg",
+        "url": "https://www.books.com.tw/products/0011041733?sloc=main",
+        "read": "https://www.haodoo.net/?M=u&P=H16N0:0&L=book",
+        "intro": "縈繞死神心頭長久‧感動全球百萬讀者\n一個體現文字如何在戰火之中照亮人心的故事\n「我不斷高估人類，也不停低估他們。同樣是人，怎麼有人如此邪惡，又有人如此光明燦爛？」\n死神和偷書賊第一次相遇，是在白茫的雪地。九歲的莉賽爾．麥明葛在前往寄養家庭途中，由於弟弟不幸亡故，只得就地埋葬。正是這個時候，莉賽爾下手偷了指導掘墓工人的手冊，只為紀念早夭的弟弟與無緣再見的媽媽。而帶著弟弟的靈魂離開的死神，正巧目睹一切。\n來到寄養家庭以後的日子雖然窮苦，但在善良樂觀的養父、粗魯但體貼的養母，以及頑皮的鄰居男孩陪伴下，莉賽爾漸漸找回笑容。此後，莉賽爾自火堆搶救出即將燒毀的禁書、從鎮長的大宅邸行竊……偷來的每一本書都代表了她的一段經歷與成長。從偷書、學習識字到體會閱讀的樂趣，逐漸掌握文字力量的莉賽爾，不只能夠鼓舞藏身於養父母家地下室的猶太人、安撫戰爭時期每顆惶然的心，最後更能夠親筆寫下自己的故事。\n無情的戰火逼近莉賽爾居住的小鎮，死神緊跟在後。當死神與偷書賊再度見面，從塵埃中拾起她殘破的書本時，所讀到的，是一個連死神都震撼不已，重新審視人類的故事。"
+    },
+    {
+        "title": "四季奇譚",
+        "author": " 史蒂芬．金",
+        "img": "https://www.books.com.tw/img/001/086/53/0010865321.jpg",
+        "url": "https://www.books.com.tw/products/0010865321?sloc=main",
+        "read": "",
+        "intro": "希望泉湧的春天，沉淪墮落的夏日，\n　　告別純真的秋季，堅忍不拔的冬時，\n　　沒有最好的季節，也沒有無瑕的人性……\n　　這世上，恐怕沒有人比安迪更懂「絕望」的滋味。他原本是事業有成的銀行家，卻因遭控殺妻而鋃鐺入獄，過著暗無天日的囚禁生活。而在這個一磚一瓦都令人窒息的地方，安迪卻意外找到了他最迫切需要的東西──希望……\n　　十三歲的資優少年陶德，為了滿足好奇心，要脅住在隔壁的前納粹軍官為他「講故事」。當純潔無瑕的白遇到深濃如墨的黑，宛如一場致命的欲望角力。隨著老人喑啞的聲線，恐怖集中營的過往歷歷重現，陶德也無法自拔地逐漸陷入罪惡的深淵……\n　　一起謀殺案新聞，讓高登瞬間憶起了十二歲那年的夏天。一具「不存在」的屍體、一段彷無止境的鐵軌，四名少年共同踏上尋找屍體的旅程，卻不知在前方等著他們的，竟是名為「成長」的黑暗序曲……\n　　在觀念保守的年代，珊卓拉雖然身為備受歧視的未婚媽媽，還是堅持要把孩子生下來。不料卻在分娩之際遭遇車禍，而早已身首異處的她，肺臟竟還努力地一呼一吸著……難道人的意志力，真的能夠超越死亡嗎？\n　　史蒂芬．金用力透紙背的筆鋒，完美地演繹了人性的光明與陰暗，以及生命的脆弱與無常。《四季》展現了「故事之王」全盛顛峰的王者姿態，堪稱他寫作生涯最經典的代表作！"
+    },
+    {
+        "title": "失落的符號",
+        "author": " 丹．布朗",
+        "img": "https://www.books.com.tw/img/001/045/79/0010457912.jpg",
+        "url": "https://www.books.com.tw/products/0010457912?srsltid=AfmBOoodsacg2K2q6-tYGA1dDSPWMLSTRhUdnVSfb_00GhVU8F36IZpw",
+        "read": "",
+        "intro": "凡失落的，必定被尋獲\n\n　　在這本轟動全球的《達文西密碼》驚人續集中，丹．布朗再次證明他為什麼是全球最受歡迎的驚悚作家。\n　　《失落的符號》堪稱神乎其技之作－－在真實世界的符號、祕密、未知事實的迷宮裡進行著一場死亡競賽……一切都在丹．布朗筆下迄今最凶惡的歹徒監控下。\n　　本書背景設定在華府的密室、隧道與聖殿中，穿過壯闊的景觀逐漸加速導向意想不到的結局。\n　　開場時，哈佛大學符號學家羅柏．蘭登突然被請到美國國會大廈去做晚間演講。但是在他抵達幾分鐘之後，事情有了詭異的轉折。蘭登在國會大廈發現一個用五個符號精巧編碼的駭人東西，他認得這個東西是古代的邀請函……意在引導受邀者進入一個失落已久的奧祕智慧世界。\n　　顯然蘭登敬愛的導師彼得．所羅門－－高階共濟會員兼慈善家－－遭到野蠻地綁架，蘭登發現拯救彼得的唯一希望就是接受這個神祕的邀請，一路跟隨。蘭登旋即深陷一個共濟會祕密、隱藏歷史、前所未見的處所構成的隱密世界－－全都似乎把他拖向唯一、不可思議的真相。\n　　如同《達文西密碼》跟《天使與魔鬼》裡發現的世界，丹．布朗的小說像是歷史內幕、晦澀符號與神祕密碼交織的華麗掛毯。在這本新小說裡，他再次以高明、迅如閃電的故事節奏挑戰讀者，在每個轉折出人意表。\n　　《失落的符號》正是布朗書迷所期待的……他生平最驚悚的小說。"
+    },
+    {
+        "title": "真情快遞",
+        "author": " 雷瑟．霍斯楚",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680364219003/ec1680641.jpg",
+        "url": "https://www.eslite.com/product/1004139971797587?srsltid=AfmBOorkZHMPL4yecOBcRdOS9DfDXL8ywNGUTFfJlBEBbpeEVY67CcjV&utm_source=shopback&utm_medium=cpa&utm_campaign=shopback&co_name=shopback&shopbackid=102749703cf8038b886c6c390a1279",
+        "read": "",
+        "intro": "奎爾的際遇充滿了不幸。他深愛妻子和兩個女兒，但他的妻子不安於室，兩個女兒專愛惹麻煩，他自己則靠著替紐約一家三流報紙撰稿餬口，前途渺茫。　\n　　事情的轉機在他的妻子死於一場戲劇化的車禍之後。奎爾心灰意冷之餘，毅然決定回到先祖的故鄉──美麗的紐芬蘭島重新開始。在那兒，他認識了性格各異的鄉人，見識到種種奇聞異事。而奇妙的是，他自己似乎也在海水的洗禮下蛻變重生，慢慢找到了自身的價值，以及獲得真愛的可能....。"
+    },
+    {
+        "title": "世界大戰",
+        "author": " 赫伯特．喬治．威爾斯",
+        "img": "https://www.books.com.tw/img/001/092/67/0010926726.jpg",
+        "url": "https://www.books.com.tw/products/0010926726?srsltid=AfmBOooDVC8j3y0Zv-jbZqvhO9zYPALLVAHIcrQ_FqnAVYJ4bcshtMHB",
+        "read": "",
+        "intro": "一八九四年，在地球運行到太陽和火星之間，也就是火星距離地球比較近的時候，有人觀測到火星亮面有強光，首先是美國的天文臺發現的，接著法國的天文臺也看到了，隨後英國的《自然》雜誌也報導了這個消息。八月的某天半夜，第一顆天外「流星」終於朝地球襲來，這個隕落的碩大圓柱體把地面撞出一個大坑。圓柱體慢慢地被裡面的「東西」轉開了--原來是環境惡化的火星不再適合居住，火星人必須尋覓更宜居的地方，竟然入侵地球！\n　　一向以為自己是地球霸主的人類，面對在科技和智慧上都發展得比自己更完善的火星人時，瞬間變成了全無招架之力的低等動物。也許有人會說火星人這樣攻占地球太不道德，然而人類也幹過如此殘忍的勾當：被人類趕盡殺絕的，不只有那些動物，還有族內同胞，我們有什麼資格批評火星人呢？\n　　外星文明的入侵，使人類社會的內部也發生了變革：富人跟著窮人一起逃難、車站幾乎全面癱瘓、難民之間為了搶水搶食而大打出手……社會秩序一夕之間蕩然無存，在這個瀕臨物種滅絕的末世裡，人類還能逃出生天嗎？"
+    },
+    {
+        "title": "文茜小妹大",
+        "author": "陳文茜",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611276526002/ec67092.jpg",
+        "url": "https://www.eslite.com/product/1001110931328048?srsltid=AfmBOootJJbCpk75h9AAytkVrhZCYtsgzBYa5UiQVTWbmP0VD1jZeVgC",
+        "read": "",
+        "intro": "關於這本書，文茜是這麼說的：「我的一生，總是坐在觀眾席時，想上台當演員；上台演戲時，又想溜回觀眾席。\n在政治圈中，我總是想當個書寫者。政治搞瘋的時刻，特別愛抓著筆，彷彿惟有那一刻，當腦中事物透過筆尖，一筆一劃刻下來時，才能相信自己真能在政治的漩流裡，緊緊掌握人生。但東西寫多了，東一篇、西一篇，幾年來筆下被我同情、批評或歌頌的不盡其數，結仇過多到出門被暗殺，可能都破不了案的境界。但仔細反省，這些言論對世界的影響卻似乎是零。有段時間我停了《商業週刊》的專欄，覺得自己持續的書寫，像極了狗吠火車，那樣的心情，讓我又想從觀眾席裡丟下書寫的筆，跑回台上去當演員。\n不知道該說是荒唐、是錯亂、還是熱情，我彷彿是個不存在的騎士，常常沒緣由地把自己切成兩半。荒涼戰場上，當每個士兵已成了傷兵倒在血泊中，我自己卻往往穿著白色的羽毛，準備出征；然而到了一場豪華的宴會，我卻總想著離行百步，與豪華的劍客們道別。\n現在我這位觀眾，似乎又走到了入戲的門口，大門一推，舞台一跳，也不曉得下個等著自己的戲碼會是什麼？\n恐怕唯一能確定的，就是入了一段戲的我，沒過多久，應該會再走回觀眾席。」"
+    },
+    {
+        "title": "不在他方",
+        "author": " 陳綺貞",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680923773007/ec905255.jpg",
+        "url": "https://www.eslite.com/product/1001223352377773?srsltid=AfmBOopVDBv3RMJbYxzmeZ-RBNYaZ3R8g1usx0tXXw2QGiRdm6_0hbST",
+        "read": "",
+        "intro": "當人開始有了一個夢想，就是試圖要與現實做出一個決裂，也是驅動自己跨界的開始。——陳綺貞以書寫銘刻日常，最迷人的不在遠方十六個年頭，六張專輯、六張單曲，以及無數次巡迴演唱會之後我們終於等到陳綺貞的第一本散文集：《不在他方》這是一本關於追求的書，探索的對象是現在，是這裡；不屬於過去或未來，也不在他方。歌壇創作才女陳綺貞從1998年發行《讓我想一想》以來，始終維持一貫清新獨特的風格，長髮、木吉他、乾淨而溫柔的嗓音，輕易將人喚進恬靜美好的迷人裡，詞曲綻放療癒的光，風靡華人世界，為一整個世代留住純真。歌手身分之外，私底下的她亦熱愛攝影與寫作，對她而言，攝影是「日常加上一些不尋常」記憶的封存，而文字則是更深刻的自我追尋與探索，這本散文集緣起於2011年夏天古巴哈瓦那的旅行，「旅途中的一切，匆匆忙忙之間，妳只能為發生的事，在地圖上作記號，而無法立即書寫。這些記號的意義，妳必須耐心等待時間為妳充分顯影。」當書寫開始，便是顯影的啟動，寫作，讓她心甘情願放手一搏。三十八篇散文、七封信件、三場對談、一段問答，記錄她以旅人之眼所烙印的風景，經時光沉澱，澄靜而純粹、趨近於心，貼近日常與真實的感受，不喧譁的思索。●看見記錄旅行途中的思索與觀察，有人情的溫度，亦烙印他方的色澤與律動。在哈瓦那每天爬上屋頂看日出、看夕陽；以拍立得相機為路上相逢的人拍照，留下照片作為禮物；在史瓦濟蘭看著在草原上徒步走遠的人、提著空水桶到山坡取水的孩子；在威尼斯聖馬可廣場旁，坐望滿天飛舞的鴿子；穿梭柏林的跳蚤市場，買下吐司架和從沒見過的小相機；躺在花蓮的產業道路旁，拿著手電筒和觀星盤，試圖找出十二星座……。這些「每一次」，也都是「第一次」，此時此地的銘刻。●日常隨筆，碰觸界線或跨越界線的驅力，蠢蠢欲動的文字引領思維探險，是日常，也是非日常。陳綺貞回憶大學住宿日子、拔牙的體驗、台北早餐店的氣味、晨起的漫步、閱讀的陶醉、聆聽演唱會的悸動，以及在音樂裡反覆迷失與尋找自己的歷程，不時流露她與家人之間深厚的情感，以及她對台北這座城市的深深眷戀。●To & From信件是私密的寫作，好像有個對象可以傾訴，又不確定對方是否理解，是以「挾帶著不確定的憂慮」。擷錄7封2012年《不在他方》劇本信件，穿插文本之間，寄給每一個正在閱讀的你。●創作路上靈感繆思的追尋，每一次提問，都向內心深處行去，關於書寫、閱讀、音樂與生活節奏，揭露「故事」帶來的衝擊，同時亦收錄陳綺貞與駱以軍、詹偉雄、張鐵志等作家的對談文字，完整呈現她的創作歷程與態度。"
+    },
+    {
+        "title": "驟雨之島",
+        "author": "顧德莎",
+        "img": "https://www.books.com.tw/img/001/078/48/0010784864.jpg",
+        "url": "https://www.books.com.tw/products/0010784864?srsltid=AfmBOopJnlrZJJL7Rvb6pytFkQTBRAcM4CbZM-Q0ACPJSOfLphD3Fvyo&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "read": "",
+        "intro": "「那些當年認識的、共事過的人，都在一場轉換賭局遊戲規則中失去了生命或財產，我用筆草繪那場激烈的戰爭，安慰所有受傷的靈魂，當然包括我自己。」──顧德莎\n　　拋家棄子的成衣台商，一陣驟雨帶他回到失聯多年妻子的面前……\n　　瀕臨潰敗邊緣的工廠老闆，一列大雨中來不及煞住的火車……\n　　她在服裝公司始終沉默，等待翻身，一場暴風雨來前的寧靜……\n　　《驟雨之島》收錄的九篇短篇小說，作者顧德莎以自身在紡織業工作十五年的經驗，見證了五○年到直到八○年代末期，紡織業急遽的興盛與衰落。她用真實的人物、實際的背景，勾勒出虛構的情節，彼此看似各自獨立，但都隱隱有所相關聯……他們是彼此的前景與景深，在同一個時代裡，各自演出小人物的渺小故事。\n　　那群拚博的人，他們是工人、是中小企業老闆、是產業鏈中的螺絲釘，他們的人生起伏和整個時代緊絞在一起，但當外資轉移、產業沒落、政策改變時，惟有站在高處、擁有巨額籌碼的決策者，才是金錢與命運的贏家──當年那群勤奮的人，是經濟奇蹟中的鬼魅，倏忽之間便消散了，有人走上絕路，有人轉業沉浮，過去燦爛的興盛與爆發的流動，終像是一場驟雨，沒有人能留得住。\n　　顧德莎如實寫下盛鬧過後的頹然，伴隨八、九○年代過境台灣一場又一場的風颱、驟雨、地震……男與女，在時代的洪水中都曾想要奮力再起，但他們無能抵抗──「死亡」是不是解決問題的方法？自殺的人是用盡了所有力氣想要找活路，卻在最後一分鐘力竭而亡──如同驟雨來襲時，在過小的傘下，拚命站穩自己，卻無從抵抗時代潮水的流去。"
+    },
+    {
+        "title": "十年的你",
+        "author": "藤井樹",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611385653002/ec298059.jpg",
+        "url": "https://www.eslite.com/product/1001118561001352?srsltid=AfmBOooQf3KBfdBI_yhUCzRNSReoDK0EWKrrn99krkDBaVXuoWdQOcSf&utm_source=shopback&utm_medium=cpa&utm_campaign=shopback&co_name=shopback&shopbackid=102d07a39bd356db6a3bfc0c950c37",
+        "read": "",
+        "intro": "時間的流不斷地前行，人生，也因為這漫漫長流的緩緩堆疊，因此雕塑成不同的模樣。\n\n當他還只是個小學生的時候，他創下一天打12個人的紀錄，只因為失去母親的痛，不該是被無知的孩子拿來當作取笑的理由，或許他不懂得什麼是原則、理念，但他懂得捍衛心中最純潔且神聖的存在。\n\n求學時期，他也曾遇見傾盡所有心神去愛的女神，但難捨的感情卻被距離狠狠斬斷，愛情在他的生命中，漸漸失去值得全心對待的意義。\n\n經歷當兵的過程，經歷視愛情如無物的年歲，經歷……於是，時間的流緩緩經過，沖刷著生命，帶走了一些什麼，也帶來了一些什麼，然後他成了現在的模樣，深深感觸著：做人已經難到在笑的時候都不一定是想笑的了，既然是不想笑的，那你在笑什麼？有時候明明午餐想吃簡單又便宜的陽春麵，而且是在剛打卡上班的那一秒鐘就開始掙扎，經過兩個小時之後終於跟自己的胃達成共識，卻在同事的一聲吆喝下，輕易捨棄歷時兩個小時的共識……。\n\n從大學畢業之後，十年，時間的流，彷彿將他塑造成一個茫茫然的人，毫無目的地隨著人群起舞，隨著眾人期盼的目標前行，談幾場或許不知所謂的戀愛，但，這就是他了嗎？而愛情在心裡留下的傷口，在十年之後，又將得到什麼樣的彌補？"
+    },
+    {
+        "title": "銀行家的妻子",
+        "author": "克里斯蒂娜．艾格",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100933959&height=400&width=310",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100933959",
+        "read": "https://www.haodoo.net/?M=u&P=P1010490735:1&L=Share",
+        "intro": "十一月清晨，一班從倫敦飛往日內瓦的私人班機在雷達上消失，\n幾天之後，阿爾卑斯山區出現了失事機體殘骸。\n機上一名失蹤者是任職瑞士聯合銀行的高層──馬修．華納。\n留給他的年輕遺孀安娜貝爾了一連串謎團：\n馬修不是在蘇黎世出差嗎？怎會搭上從倫敦起飛的飛機……\n種種跡象顯示，馬修之死絕非意外……\n值此同時，\n人在巴黎的名流線記者瑪莉娜正打算好好享受難得的休假，\n卻在半夜接到她的總編上司鄧肯從美國打來越洋電話，\n交辦她與一位線民拿內有瑞士聯合銀行機密資料的隨身碟，\n而鄧肯就在隔天驚傳死訊……"
+    },
+    {
+        "title": "老闆真的說可以嗎？：決定管理到不到位的暗示心理學",
+        "author": "史帝芬．楊",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100254647&height=400&width=310",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100254647",
+        "read": "",
+        "intro": "任何想讓團隊更好、領導命令「更少雜質」的各階層主管不可錯過！\n推廣到IBM、英特爾、蘋果、吉列等數不清多家全球企業內的重要領導技巧訓練，讓更多員工得以發揮潛能與創造凝聚力的職場溝通概念！\n曾任職摩根大通集團「多樣性員工管理」的組織溝通大師將一針見血點出職場「主管─部屬」關係中的最大障礙！\n根據MIT團隊心理研究發展而成；本書有最容易做的領導行為小改變，快速提升主管與部屬間的關係、默契與工作效能！\n掌握超越語言之外的「微訊息」！\n你是位主管嗎？在當上主管前，你是否記得：當部屬時，你天生就傾向對領導者「察言觀色」？\n除了寫電子郵件及口頭交待，你是否想過在語言之外 ，你的「上司訊號」正確嗎？\n本書要談的主題並不是什麼高明的領導「策略」，而是全世界的職場中每天都會發生的情境縮影。\n在主管與下屬的關係中，如果領導者沒有認真對部屬說話，或是沒辦法花時間聆聽員工的觀點。結果會怎樣？\n請想一想：來自老闆及上司的空洞眼神、迴避的注視，或是會議裡（不置可否）輕視的聳肩……我們都知道上面的人表現出的「非語言線索」會給我們什麼感受，……而這些事在辦公室裡，不仔細看，還以為它影響不大！\n其實，這幾乎是每個工作者都曾遇過的困境，本書把這種「超越語言之外」的東西叫作「微訊息」。而很多時候，傷害部屬與主管關係最深的，正是負面微訊息裡隱晦的「微型不公平」，因為人們在溝通時難免有些人際偽裝（雖然許多線索仍被互相讀到），但這些暗示性的訊息，卻很難被拿出來討論！\nMIT的史隆管理學院（Sloan School of Management）教授瑪麗．羅（Mary P. Rowe）博士曾調查，對於某些學生會覺得「他被包括在內」，而「其他學生卻不這麼覺得」的潛在原因，她並創造出「微型不公平」這個名詞。瑪麗．羅指出，微型不公平「會排除不同的人，讓她覺得自己格格不入。……會暗地破壞個人的自信，讓他變得比較沒效率。……微型不公平就是不好的商業習慣。」\n本書即是由這項麻省理工學院的研究發展而成，這個訓練方法已經幫助多家財星五百大企業，包括默克藥廠、英特爾、洛克希德．馬丁、星巴克、IBM、波音公司、富國銀行（Wells Fargo）、美國銀行（Bank of America）、思科等公司，增加領導階層的效力。這套經過「職場實證」的智慧，也已經是全世界許多企業主管承認的事實。"
+    },
+    {
+        "title": "讀人：解讀行為密碼",
+        "author": "張芃",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100010692&height=400&width=310",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100316553",
+        "read": "",
+        "intro": ""
+    },
+    {
+        "title": "滿願",
+        "author": "米澤穗信",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100817516&height=400&width=310",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100817516&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=102614996136a493a9e2395d2be05f",
+        "read": "",
+        "intro": "到頭來，那應該稱為罪惡嗎？\n男男女女，超越善惡試圖守護的是什麼？\n巧妙的心理劇交織，米澤穗信世界的嶄新巔峰！\n在每一場犯罪的背後，都藏有比人生更難捉摸的謎團……\n我幸運的在大學期間就通過了律師考試，這都要歸功於溫柔賢慧房東太太鵜川妙子的照顧。在我念書陷入困境時，她帶我去了達摩市集，據說在達摩的眼睛上點墨祈求願望，最終能成就圓滿。\n而我成立律師事務所的第一件刑事案件，卻是替妙子打謀殺官司。妙子的丈夫重治有間榻榻米店，但花天酒地的重治欠下高利貸業者矢場英司鉅額債務，最後矢場的屍體卻被發現丟棄在草叢裡。鑑識結果是妙子持菜刀殺害他，家裡壁龕的禪畫卷軸、達摩背面、椅墊、塌塌米縫隙都有血跡。\n雖然以妙子不堪矢場以肉體抵債的正當防衛理由提起上訴，卻苦無證據。纏訟三年，當重治因肝硬化病逝消息傳來，妙子卻拒絕再上訴，接受了殺人並棄屍的罪責，監禁八年定讞，並以重治的保險金償還了所有債務。\n我不能理解，溫柔待人的妙子為什麼要這樣接受懲罰。我也弄不明白，之前重治對我這個租屋者抱怨：「酒量好固然不幸，老婆太賢慧更悲慘。」賢慧也是一種錯嗎？我的達摩完成了我追尋成為律師的願望，而妙子那個沾血的達摩是否也圓滿了她的願望呢？為什麼案發現場的達摩是被轉過背面的？難道無生命的物體，視線也擁有令人難以忍受的力量……"
+    },
+    {
+        "title": "傷心咖啡店之歌",
+        "author": "朱少麟",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100603883&height=400&width=310",
+        "url": "https://www.books.com.tw/products/0010652853?srsltid=AfmBOoonfxlnfCvyrqquPGAYfv2CsrbXik4HvbW-mMQfD64elr8KBL9c&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "read": "https://www.haodoo.net/?M=u&P=I0907:1&L=",
+        "intro": "傷心咖啡店深藍色的燈光存在於城市最晦暗的角落，一閃一閃，向每一個傷心苦悶的人招手……失去工作、失去愛情，在最傷心的絕境中，馬蒂走進了傷心咖啡店，以一杯咖啡的代價，經歷了人生中最混亂豐富的旅程：她看見了人間最浪漫壯麗的感情，她也看見了世上最孤獨無情的人、掙扎著找尋生命意義的漫游者、還有無可救藥的暗戀狂，他們在自由的想像中泅泳，透過對話宣洩內在被壓抑最澎湃的渴求與慾望。"
+    },
+    {
+        "title": "東京灣景",
+        "author": "吉田修一",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100593318&height=400&width=310",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100593318",
+        "read": "",
+        "intro": "在品川貨運碼頭工作的亮介，經由交友網站，和在台場工作的「涼子」有了交集。虛擬的名字和背景，一段就算何時結束也不奇怪的關係，卻讓隔著海灣遙望的兩顆孤寂心靈，熱切地緊緊相繫……\n吉田修一第一部愛情長篇小說，2004年改編為「月九」電視劇，由仲間由紀惠和、田聰宏主演。"
+    },
+    {
+        "title": "沼澤女孩",
+        "author": "迪莉婭．歐文斯",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/202008/o/637326467722947500.jpg",
+        "url": "https://www.eslite.com/product/1001130752859499?attr=zgHwzQoMCJC9ic0GEOriwtACEAEaJDY5ZDAxNTc1LTAwMDAtMjc3OS1iNzZmLTg4M2QyNGY5NjE4MCpAZjlmOTU5ZjBkMzNjNmI0MTA4MTJmMjRhMjk3YjVkYzI2NzYzYmUyNDllNmQ0NTU2NTg3MjA4MDVmMzBiMmY4YzI4yZbwMKjlqi23t4wt1LKdFcLwnhWb1rctkPeyMJjWty3HlvAw6avYN_bd8TeR4JE4jsCPN46RyTA6DmRlZmF1bHRfc2VhcmNoSAFYAWABaAF6AnRr",
+        "read": "",
+        "intro": "標題｜自我才是最孤獨的荒野\n撰文｜葉佳怡\n要談《沼澤女孩》（Where the Crawdads Sing）這本小說，很難不從其輝煌的紀錄談起，比如說，光是在《紐約時報》的虛構作品暢銷排行榜上，本書從2019年2月到2020年2月初為止，就斷斷續續佔據了三十星期的第一名位置，幾乎堪比《麥田捕手》當年的成就。又比如說，這本書不但受到好萊塢女星瑞絲．薇斯朋的讀書俱樂部推薦，福斯電影公司還邀請她擔任製片，好將這部小說搬上電影大螢幕。"
+    },
+    {
+        "title": "鄰居",
+        "author": " 雫井脩介",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681943498000/20201121042228368020.jpg",
+        "url": "https://www.eslite.com/product/1001131182681943498000?attr=zAHwywoMCLW8ic0GEIbs360BEAEaJDY5YTQ5OTk5LTAwMDAtMmNmNS04ZjEzLTI0MDU4ODgwYTY5YypAZjlmOTU5ZjBkMzNjNmI0MTA4MTJmMjRhMjk3YjVkYzI2NzYzYmUyNDllNmQ0NTU2NTg3MjA4MDVmMzBiMmY4YzI4jpHJMJD3sjDC8J4V1LKdFbe3jC2Y1rctm9a3Lajlqi3HlvAw6avYN_bd8TeR4JE4yZbwMI7Ajzc6DmRlZmF1bHRfc2VhcmNoSAFYAWgBegJ0aw",
+        "read": "",
+        "intro": "「我的判決，是將殺人魔縱虎歸山？」\n兩年前獲判無罪的武內真伍，搬到梶間勳家隔壁當鄰居，而梶間勳正是宣判武內無罪的前法官。親切的笑容、貼心的贈禮、協助照顧老人……武內的善意很快擄獲了梶間家人的心。但是，自從武內搬來之後，梶間家周遭卻接連發生匪夷所思的事件……\n——你的鄰居沒問題嗎？"
+    },
+    {
+        "title": "不便利的便利店 2",
+        "author": " 金浩然",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682368628003/20230425060356602905.jpg",
+        "url": "https://www.eslite.com/product/1001230442682368628003?attr=zgGACgwI1LuJzQYQpaDxuwIQARokNjlhYTc4NWItMDAwMC0yAQXwqGI5ZGItNTgyNDI5YWU0ODE0KkBmOWY5NTlmMGQzM2M2YjQxMDgxMmYyNGEyOTdiNWRjMjY3NjNiZTI0OWU2ZDQ1NTY1ODcyMDgwNWYzMGIyZjhjMjjJlvAwqOWqLbe3jC3Usp0VwvCeFZjWty2b1rctkPeyMMeW8DCOwI836avYN_bd8TeR4JE4jpHJMDoOZGVmYXVsdF9zZWFyY2hIAVgBYAFoAXoCdGs",
+        "read": "",
+        "intro": "盡了最大努力卻仍苦苦掙扎的人、\n一直互相支援、關愛彼此的人、\n在夢想與生存路上徬徨的人……\n只要不便利的日子依舊持續，\n「不便利的便利店」就會繼續駐守在小巷弄裡，\n為大家的人生加油！\nAlways便利店人事更替，善良的老闆廉女士把經營重責交給兒子，嚴肅的善淑當了店長，誰知竟碰上大夜班店員要辭職的難題！偏偏選在炎熱難耐的酷夏，偏偏還碰上逼死人的疫情來搗亂，眼下就算只來一位應徵者，也不得不接受了。\n新任大夜班店員，自取綽號「洪金寶」，他既多話又熱心，明明是個高大壯漢，心思卻相當細膩。舉凡顧客的就業問題、失業困擾、家庭不和、人生迷惘……竟然都能找他參詳。唯獨可疑的是，這傢伙年紀不小，又好手好腳的，履歷上卻全是兼職工作，從來沒做過正職員工。\n然而，隨著新任大夜班店員的故事逐步揭露，廉女士、善淑店長、詩賢小姐、鄭編劇……以至前任大夜班獨孤，竟然都一一串連起來！\n到底這位「洪金寶」有著怎樣的曲折故事？\n這間Always便利店又怎麼老是這麼不便利，卻總能為大家的希望護航？\n在店員與顧客相遇的空間裡，更多寫滿笑與淚的瞬間，即將接通所有人的幸福人生！"
+    },
+    {
+        "title": "不便利的便利店",
+        "author": " 金浩然",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682233392008/20221213052521521462.jpg",
+        "url": "https://www.eslite.com/product/1001230442682233392008?attr=zQHwzAoLCNO6ic0GEN-mkx8QARokNjlkMDBjN2UtMDAwMC0yNzc5LWI3NmYtODgzZDI0Zjk2MTgwKkBmOWY5NTlmMGQzM2M2YjQxMDgxMmYyNGEyOTdiNWRjMjY3NjNiZTI0OWU2ZDQ1NTY1ODcyMDgwNWYzMGIyZjhjMjiOkckwkPeyMMLwnhXUsp0Vt7eMLZjWty2b1rctqOWqLcmW8DCOwI836avYN8eW8DD23fE3keCRODoOZGVmYXVsdF9zZWFyY2hIAVgBYAFoAXoCdGs",
+        "read": "",
+        "intro": "人生就是會有很多不便利、不舒服，\n這間有點慘澹的便利店，卻為我們撐起了閃閃發光的空間……\n艱難時刻的光亮之書\n一間便利店，接通了我們的幸福人生"
+    },
+    {
+        "title": "北京法源寺",
+        "author": "李敖",
+        "img": "https://cdn.readmoo.com/social/cover/8g/ffcal72_460x580.jpg",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100223356",
+        "read": "https://www.haodoo.net/?M=u&P=C40:0&L=book",
+        "intro": "這麼多年來，你以思想家、歷史家看李敖，你錯了，其實他更是文學家。奇情與思想，是文學家必要的條件，只有李敖具有這種條件。市面的所謂文學家，作品很菜，都是賣菜的。\n《北京法源寺》是李敖第一部史詩式長篇小說。以具象的古廟為縱線，以抽象的歷朝各代史事人物為橫剖，故事中的史實人物，都以歷史考證作底子，其精確度，甚至遠在歷史教授之上。＊\n一九二七年二月二十八日，康有為離開法源寺後七個月，在梁啟超帶頭為他慶祝七十大壽後二十三天，死於青島。\n一九二七年四月二十八日，康有為死後兩個月，張作霖絞死李大釗、李十力等共產黨員二十一人於北京。其中李十力移柩法源寺。他臨上絞架前抬頭望天，含笑說的最後一句話是：「康先生，雖然絞刑使血流不出來，我也算先流了我們的血。」消息傳出，大家不知「康先生」何所指。\n一九二八年七月四日，孫殿英為了盜墓，掘了西太后墳於北京。事後蔣介石揚言要查辦，但是，當蔣介石的新婚夫人宋美齡收了贓品，並把西太后鳳冠上的珠子裝在自己鞋上的時候，查辦之說，也就不了了之了。\n一九六六年到一九七六年十年文革期間，紅衙兵為了「破四舊」，掘了康有為墳於山東。同一文革期間，也為了「破四舊」，袁崇煥的墳也給平墓毀碑了。不過，由於傳說棺材裏有個「金頭」，引發了「革命小將」的貪念與盜寶興趣，平墓不夠，還是把墳給掘了，挖到三個人的深度，結果一無所得。\n一九八七年到一九九○年期間，老百姓為了發財熱，到處盜墓，掘了譚嗣同墳於湖南。\n所有地面上活動的，都化為塵土、都已躺下；剩下的，只有那靜止的古剎，在寒風中、在北國裏，悲愴的佇立著。啊!.北京法源寺、北京法源寺，.多少悲愴因你而起、因你而止、因你而留下串連、血證、與碑痕。雖然，從憫忠台殘留的石礎上，知道你也不在靜止，也在衰亡。你的佇立，也因你曾傾倒。但是，比起短暫的人生來，你是長遠的、永恆的。你帶我們走進歷史，也走出歷史，只有從你的「法海真源」裏，我們才看到中國的「血海真源」…"
+    },
+    {
+        "title": "上山．上山．愛",
+        "author": "李敖",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611258562004/ec412926.jpg",
+        "url": "https://www.eslite.com/product/1001120141345766?srsltid=AfmBOooXH0QP9kW8K7WGNB2zLZRNqsOGyHjorL-oYkYl3kly6I2np50e",
+        "read": "https://www.haodoo.net/?M=u&P=G302:1&L=book",
+        "intro": "李敖是聰明人，書的扉頁上就寫「清者閱之以成聖，濁者見之以為淫」，若有讀者想抨擊或貶低這本書是「黃色小說」，那麼反應的是讀者自己的層次。其實，說這本書沒有官能刺激的色彩也不對，靈與肉的問題、男人的慾望與審美要求，這些都不斷出現在書中，李敖更是不避諱談最容易被俗化、廉價化的議題：對他來說，生殖器與腦袋可以同時運動，談形而上的問題不一定就要避開形而下的事實。書名的賣點，所謂「上山‧上山‧愛」，所談的兩位母女、兩次上山、分別與之纏綿的愛情故事，本來這該如何收拾及面對是最另讀者好奇關心的，不過李敖用簡單的方式處理；反而是三十年前的六日纏綿記憶，佔了全書四分之三強，看來這本書的完成對作家來說，有不吐不快的必要性。"
+    },
+    {
+        "title": "找路：月光．沙韻．Klesan",
+        "author": "林克孝",
+        "img": "https://www.books.com.tw/img/001/045/69/0010456953.jpg",
+        "url": "https://www.books.com.tw/products/0010456953?srsltid=AfmBOooOJbvP0J_syKZYardQAfgCgD17bYyq--9jLSWawaw1LiXASKHp&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "read": "",
+        "intro": "這是無心插柳的尋找，一個新發現與下一個新發現綿密地構成一個個陷阱，把我吸進這個夢幻寫實的經驗。一開始，就停不住了……\n　　一切都從「月光」開始。\n　　他是任職於金融界的專業經理人，但骨子裡卻住著一個愛登山、愛寫詩的浪漫老靈魂。當有一次不經意地發現，那首他從小耳熟能詳的〈月光小夜曲〉，背後似乎有一個充滿戲劇性的傳奇後，他展開了整個故事的追尋──他想要去找一條深埋在宜蘭南澳山區、已被時間與自然湮蓋的「沙韻之路」。對他來說，這是一條「不曾走過的路」，充滿天啟似的召喚不斷誘引著他……\n　　故事源於七十多年前，在南澳深山，一位十七歲的泰雅少女沙韻．哈勇，幫被徵召到南洋當兵的日籍警員揹行李出來時，不幸失足落水。當時的日籍統治者拿這事故當皇民化教育的題材，為沙韻鑄了一口鐘、作了一首歌、拍了一部電影。然後，這一切又隨著台灣光復淡去，只在蘇花公路旁留下一座說明碑，以及那首〈沙韻之鐘〉——後更名為〈月光小夜曲〉，一首四、五年級以上的人大約聽過、卻多半不知其來由的抒情民歌。\n　　為了還原這條「沙韻之路」，他常常一個人，跋山涉水，餐風露宿，披荊斬棘，後來則加入愛侶的默默跟隨與陪伴。而藉著問路，他也逐漸認識了一群泰雅族南澳群（Klesan）的大小朋友。該族的歷史，也從這群朋友口中越聊越多。山上的泰雅老獵人成為湮滅古道的最佳嚮導，找路的敏銳天賦與開路的敬業精神讓跟隨者既感動又讚嘆，他也開始學習用獵人的角度，觀察、行走於山間。有一天當他發現，原本夜行山林會忐忑恐懼的他，突然可以戴起頭燈，聽到哪有聲音就往哪裡去，追尋起飛鼠、山羌，而心情是興奮的，山上的黑暗對他來說，變成是掩護，而不再令他害怕時，他知道，不知不覺中，他已被這片山林徹底改造了……"
+    },
+    {
+        "title": "逆轉人生",
+        "author": " 菲利普．波佐．迪博戈",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/201209/o/634836403323395000.jpg",
+        "url": "https://www.eslite.com/product/1001129142175730?srsltid=AfmBOopVDyubK5FszjkoPLlpX-0Meo2e_c3qmXk6XxuycuAsgnvXzoRY",
+        "read": "",
+        "intro": "「他真讓人受不了，愛慕虛榮，傲慢粗魯，性情陰晴不定，卻很善解人意。沒有他，我可能就此腐朽終老。阿布戴從不間斷地照顧我，彷彿我是個小嬰兒。他能注意到任何微小的狀況，所有我忽略的他都不會放過，當我被監禁的時候，他讓我擺脫束縛，當我軟弱的時候，他保護我。當我崩潰的時候，他能讓我笑。他是我的惡魔看護。」\n富豪菲利普正處於人生和事業的巔峰，認為所有事都在自己的掌握中，直到1993年的一場飛行傘意外，改變了他的一生。菲利普因這場意外終身癱瘓，妻子也因不治之症病逝，只能困坐在巴黎深宅大院內的菲利普，體認到自己「碰不得」（intouchable）──無法接觸人群，旁人也不敢親近，直到阿布戴的出現逆轉了他的人生。\n阿布戴身處社會邊緣，個性不拘小節，對一切肆無忌憚，這位阿爾及利亞裔的失業移民竟為不良於行的菲利普帶來嶄新人生，照顧他的生活起居，共度十年悲喜交加的日子。\n兩個不同世界、人生殘缺的人，拒絕尋求幫助，最後卻療癒了彼此，幫助了彼此。\n本書透過作者口述聽寫而成，內容談及童年回憶、家庭生活、對人生和愛情的憧憬、癱瘓後對世界的觀感、對弱勢族群的憐惜、對來世的想法，以及與看護之間的深刻情誼，至情至性，令人動容。\n法國影史最賣座電影《逆轉人生》，即是根據這部真人實事原著改編拍成。"
+    },
+    {
+        "title": "誰說人是理性的",
+        "author": " 丹．艾瑞利",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/201805/o/636625877196833750.jpg",
+        "url": "https://www.eslite.com/product/1001122732681348?attr=zAHwywoMCP2Whs0GEPTmzIkCEAEaJDY5YThmZDdjLTAwMDAtMjNlZi1iMWU0LWM4MmFkZDZjNTJmYypAZjlmOTU5ZjBkMzNjNmI0MTA4MTJmMjRhMjk3YjVkYzI2NzYzYmUyNDllNmQ0NTU2NTg3MjA4MDVmMzBiMmY4YzI4keCROKjlqi22t4wt1LKdFcLwnhWY1rctm9a3LZD3sjDJlvAwx5bwMI7Ajzfpq9g39t3xN46RyTA6DmRlZmF1bHRfc2VhcmNoSAFYAWgBegJ0aw",
+        "read": "",
+        "intro": "長久以來，經濟學家堅稱，人類的行為和機構的運作，用理性經濟模式最能夠說明，亦即人類是自利、精明的，能夠充分權衡每項決定的成本和好處，以便獲致最大效益。但在許多金融危機之後，從2000年網路泡沫破滅、2008年世界金融危機至今，大家猛然驚覺一項事實：在經濟運作上，心理學和不理性行為所扮演的角色，重要性遠遠超出理性經濟學家和眾人願意承認的程度。"
+    },
+    {
+        "title": "倫敦河惡靈騷動",
+        "author": " Ben Aaronovitch",
+        "img": "https://www.books.com.tw/img/001/091/03/0010910336.jpg",
+        "url": "https://www.books.com.tw/products/0010910336?srsltid=AfmBOor6m3n-UqffQgCpZIpvOJjCEp4sLAZFc3JU-mMwY3fcnlr5NkRJ",
+        "read": "",
+        "intro": "倫敦，這座孕育出福爾摩斯與哈利波特的古老城市，\n魔法捲土重來、惡靈騷動再起……\n寒冷週二的凌晨時分，柯芬園聖保羅教堂的西門廊前躺著一具沒有頭的屍體。就要結束實習工作、接下來將分派到倫敦警察廳所屬轄區警局的菜鳥彼得．葛蘭特，基於職責在案發現場盤問了一名衣著老派過時的矮小男子，沒想到對方竟一五一十細細陳述了事件經過，其內容可信度非常高，只不過彼得恐怕沒辦法將這段證詞呈報給調查小組──\n誰會相信一個平凡人光揮舞一根球棒，就能將被害者的頭敲飛？誰又能接受提供證詞的這位老先生，是個死了足足一百二十年、站在光線下整個人變透明的鬼魂？不過彼得相信，對現代警察來說，「看得見不存在的事物」是個不可或缺的重要技能，沒想到納丁格爾督察長不但願意接受這聽起來像胡謅的說法，還將彼得納入警察廳內最神祕的特殊犯罪部，聯手調查這樁超自然色彩濃厚的謀殺案。\n在這個魔法捲土重來、惡靈騷動再起的時刻，暴力與叛亂已在古老的倫敦城內甦醒，想要解決一連串的詭譎怪案，還得有點福爾摩斯的腦袋與哈利波特的能力才行……\n面對潛藏在混亂世界中的未知敵人與蠢動危機，\n英國的首都、全歐洲最大的城市、由羅馬人建立的倫敦城，\n只能仰賴彼得．葛蘭特這位非典型警察來拯救了！"
+    },
+    {
+        "title": "第73烈士",
+        "author": "李敖",
+        "img": "https://www.books.com.tw/img/001/050/31/0010503106.jpg",
+        "url": "https://www.books.com.tw/products/0010503106?srsltid=AfmBOoqAGD0MDJeWtS3ch4D7SH3egPjOEausSxziB3mh1A_WDUFkJVQN&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "read": "",
+        "intro": "一百年前的「辛亥三月三十九」，正好是該年陽曆四月二十七日，正確的日期乃是「二○一一年四月二十七日」。「三月二十九」是把陰曆不加換算硬當成陽曆來過。但積重難改，也就將錯就錯了。\n　　這本書，扭轉了百年錯誤、扭轉了百年孤寂、扭轉了他們和我們、扭轉了我和你。\n　　這是一部縱貫百年、橫跨兩岸的奇情小說。透過黃花岡之役的倖存者，來看革命先烈們殉難的豪情與不值，劫後餘生者的隱衷與凋萎。大家都以為革命是百年前的事、是有組織的行動，其實在暴政壓迫之下，至今依然有一些個人革命者，如彗星般璀璨。李敖以對照的手法，寫出72烈士的慷慨赴義和第73烈士的特立獨行，告訴大家，革命的偉大不在成不成功，而在它凸顯了當政者的可惡。\n　　書中這些百年前和百年後的真實人物（如莫紀彭、李師科、王宇）、真實故事（如黃花岡之役、搶劫銀行、改名苟活），正活生生的告訴你，當你自以為是在保家衛國，事後回首卻發現，自己的成果被篡奪、自己的一生被誣衊、自己的苦痛被深埋，不禁感嘆，革命到頭來究竟是在為誰作嫁衣裳？\n　　然而幸有歷史家給了他們應得的定位，正由於有了他們作為人證，我們才知道什麼主義、國家、領袖，全都是一場百年騙局。\n　　100年前72烈士死在黃花岡。戰友黃興（克強），寫下了淒美的詞句：\n　　轉眼黃花看發處，\n　　為囑西風，\n　　暫把香籠住。\n　　待釀滿枝清艷露，\n　　和香吹上無情墓。\n　　回首羊城三月暮，\n　　記血肉紛飛。\n　　氣直吞狂虜。\n　　事敗垂成原鼠子，\n　　英雄地下長無語。\n　　72烈士「地下長無語」，但「第73烈士」卻決不沉默。誰是「第73烈士」？在本書裡，你婆娑尋找，可以找到驚悚的答案"
+    },
+    {
+        "title": "不大好笑的人生：伊莉莎白．華倫卯上華爾街的真實故事",
+        "author": "伊莉莎白．華倫",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100848349",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100848349&height=400&width=310",
+        "intro": "《華盛頓郵報》： “動容! “ 《經濟學人》：“有趣極了!”\n\n中產階級啊,不是你存不到錢,是他們早就設下陷阱!\n\n我叫伊莉莎白・華倫。我是個妻子、母親，外婆。在大半人生裡，我是個老師，現在是美國參議員。\n\n這是一本關於我的故事，一個手忙腳亂、麻煩不斷、講笑話不好笑、烤麵包卻烤箱著火的故事，一個關於早婚、離婚、再婚的故事，一個關於母女之間、安親班和狗兒之間、年邁父母和頑皮孫兒之間的故事。\n\n但這也是關於你的故事，一個金融業者如何假理財真詐欺、中產階級血汗錢如何遭到吸乾的故事。如果你以為自己的存款很安全，如果你以為政府會替你把關，以為倒楣的噩夢不會降臨到你身上，等你看完我書中的故事，你一定會一身冷汗地笑不出來。\n\n這是一個關於我、以及整個中產階級急需金融教育的故事。你會發現，就在你我忙著埋首日常生活、努力工作的同時，有一群人悄悄在國會山莊遊走，把玩法律，把十億百億的財富從你我身上奪走，放入他們自己的口袋，而你渾然不覺。你會發現，他們刻意將金融說得很複雜，複雜到你無法分辨真偽，隨時可能掉入他們所設下的陷阱之中。\n\n幸運的是：有時候即使面對極艱難的困境，我們還是能逃脫。我們都要有足夠自信，向錯誤的理財建議說「不」，向包藏禍心的金融商品說「不」，向貪得無厭的財團說「不」。你我都有責任，給孩子的未來一個奮鬥機會，一個他們能夠發展自我、開懷大笑的機會……",
+        "read_url": ""
+    },
+    {
+        "title": "小提琴家",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101030255",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101030255&height=400&width=310",
+        "intro": "在羅馬一家陰暗的古董店，小提琴家茱麗亞・安司德爾偶然發現了一件奇特的音樂作品——〈火焰〉華爾滋——立刻被其獨特的曲風所吸引。充滿熱情、痛苦、令人膽寒的美感，而且似乎從未發表過，這首華爾滋哀傷的小調、熱情的琶音，似乎在舞出自己奇特的生命。茱麗亞決心要駕馭這首複雜的作品，讓眾人聽到它的旋律。\n回到波士頓後，從茱麗亞的琴弓劃過琴絃、將這首華爾滋熾熱的音符散播出來的那一刻開始，就喚醒了某種奇怪的東西──而且茱麗亞的世界開始受到威脅。這首樂曲對她年幼的女兒有一種可怕又無法解釋的效果，讓女兒似乎有了劇烈的轉變。茱麗亞相信〈火焰〉旋律具有催眠效果，會施展惡意的魔力，於是開始追查作曲者和這首樂曲背後的意義。\n為了尋找答案，茱麗亞一路來到威尼斯，在此她發現了一個埋藏數十年的黑暗秘密，牽涉到一個危險而有權勢的家族，他們會不惜任何代價，阻止茱麗亞將真相攤開在陽光底下……",
+        "read_url": ""
+    },
+    {
+        "title": "護理師",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101014456",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101014456&height=400&width=310",
+        "intro": "珍繞到前門，那裡有一個聽診器落在地板上，上頭濺了血。\n\n攻擊就是從這裡開始。\n\n索菲亞昨夜踏入門內時，凶手就在屋內等著她嗎？或者凶手聽到鑰匙插入鎖孔轉動時很驚訝，明白自己就要被發現了，一時恐慌起來？\n\n第一記重擊沒有殺死她。當時她還活著，還有意識。\n\n珍循著地板上抹髒的血往前走，看著被害人拚命想逃離攻擊者的痕跡。血跡從前門開始，來到客廳另一頭，中間經過了輕聲冒著氣泡的水族箱。\n然後就結束在這裡，她心想，往下看著屍體。\n索菲亞．蘇瓦雷茲側躺在鋪了瓷磚的地板上，雙腿往上蜷縮，像是仍在子宮裡的嬰兒。她穿著藍色的護理師刷手服，襯衫上還別著醫院的識別證：索菲亞．蘇瓦雷茲，護理師。破裂的頭骨周圍是一圈血，而且她的臉碎爛得無法辨識。在結婚照裡笑得那麼愉快的那張臉，現在只剩悽慘的碎片。\n\n󠄀\n\n一個五十二歲的寡婦護理師會藏著什麼秘密？珍納悶著。索菲亞沒有犯罪前科，就連欠繳的停車費都沒有。之前搜索她的房子沒找到違禁藥物或成疊的現金，她銀行帳戶裡的存款也不多。\n或許秘密不是關於她自己的。",
+        "read_url": ""
+    },
+    {
+        "title": "小鎮醫生",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101002098",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101002098&height=400&width=310",
+        "intro": "艾略特醫師必須拿到泰勒血液的樣本。這是她抽血的最後機會；到了明天，他血液中的任何藥物都會代謝掉，那就什麼都驗不出來了……\n\n位於草蜢湖畔的度假小鎮緬因州寧靜鎮，似乎是個完美的新居地點，可以讓艾略特醫師帶著她青春期的兒子諾亞遠離大城市的誘惑，也避開他病逝父親的種種回憶。但是隨著冬天的第一絲寒意所來到的震驚新聞，讓她的診所陷入險境，而克蕾兒和寧靜鎮所有鎮民很快就要面對：這只不過是該鎮青少年爆發出一連串毀滅行為的開頭而已……\n\n泰絲．格里森過去以她備受讚譽的《貝納德的墮落》和《急診醫生》，為醫學驚悚小說注入一劑威力十足的強心針。而現在，《小鎮醫生》融合了緊湊的懸疑情節和驚悚的寫實手法，塑造出一個小鎮女醫師，企圖解開駭人聽聞的謎團真相而奔走──為了要挽救寧靜鎮，以及她的兒子。",
+        "read_url": ""
+    },
+    {
+        "title": "骸骨花園",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100609368",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100609368&height=400&width=310",
+        "intro": "在那座以鮮血灌溉的花園裡，長眠著完整真相的最後一塊拼圖……\n\n波士頓 現在\n剛與前夫分手的茱麗亞在波士頓近郊買下一棟古屋，當她決定竭盡心力打造出夢想中的美麗花園時，她手中的鐵鏟卻挖出了一起可怕的秘密──在她的花園下方，有具屍骨。\n\n波士頓 一八三○年\n窮困但優秀的醫學院學生諾里斯．馬歇爾，被指控為以殘忍手法連續屠殺數人的「西城死神」。諾里斯為了證明自己的清白，他四處奔走，想要找到在第一起凶案發生時的目擊者：一名愛爾蘭姑娘羅絲．康納利。當諾里斯費盡千辛萬苦找到羅絲之時，卻發現「西城死神」的受害者均於諾里斯就讀之醫學院任職，更令人意外的是，受害者們也都與羅絲死去的姊姊有所關連……\n\n波士頓 現在\n法醫很快證實花園中的死者在此地已被埋超過百年，然而，一通來自前屋主親戚，亨利．佩吉老先生的電話，卻引起了茱麗亞強烈的好奇心。亨利．佩吉從前任屋主處接手老屋裡多達數十箱的珍貴文件，其中包含了數封十九世紀末的信件，而這些信件中記載著百年前在波士頓引起轟動的「西城死神」連續殺人案。茱麗亞為此案深深著迷，同時她也意識到，自己似乎和這座花園，有著難以言喻的緣份……\n\n一棟年久失修的古宅、一座荒蕪寬廣的花園、一具身份不明的女屍，意外引出百年前連環兇案的最終真相！",
+        "read_url": ""
+    },
+    {
+        "title": "祭念品",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100622427",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100622427&height=400&width=310",
+        "intro": "二十六年前。\n富豪之子布萊德理．羅斯在埃及考古行程中認識了夢中情人美狄亞，美狄亞聰慧熱情，學識淵博，讓布萊德理醉心不已。然而，由於布萊德理與美狄亞的個性差異，兩人終究不歡而散。\n二十六年後。\n波士頓克利斯賓博物館將展出一具埃及木乃伊，在展覽前夕，館方邀請了法醫莫拉．艾爾思前往檢驗。然而被裹屍布緊緊包覆卻非兩千多年前的埃及貴族，而是一具小腿中彈，且以古埃及手法防腐保存的女性乾屍！\n為此，警方派人徹查博物館館藏，並且在博物館地下室內找到一間無人知曉的密室，裡面擺著三顆因乾製而縮水的人頭。其中兩顆屬於館藏，而第三顆來路不明但製作精巧的女性首級，暗示著顯然有個熱愛考古及熟知屍體保存的隱形惡魔，將雜亂老舊的博物館地下室，當作自己的收藏中心……\n\n……瑞卓利跪下，手電筒照進洞口。對面的牆壁有幾碼遠，她依稀辨別得出粗糙的表面。她徐徐移動光束，照見岩壁雕刻出的凹穴，接著，她陡然僵住。\n手電筒照到了一張臉，正從暗處盯著她看。\n",
+        "read_url": ""
+    },
+    {
+        "title": "緘默的女孩",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100858922",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100858922&height=400&width=310",
+        "intro": "波士頓中國城的小巷弄裡，發現了一隻被砍斷的手。警探珍．瑞卓利在附近民宅的屋頂找到了殘屍，頸部幾乎慘遭砍斷。\n唯一的線索是屍體上遺留的兩撮銀毛－－非人類的毛髮，不過，對於法醫莫拉．艾爾思來說，這已足以讓她查出此一兇案與某起陳年懸案的驚人關聯性。十九年前，中國城發生了一起駭人聽聞的紅鳳凰餐廳血案，唯一的目擊證人是位美麗的武術教練，案發之後，她再也不敢講話。\n而且，她可能再也沒有開口的機會了……\n\n總要有人挺身替死者講話，而我知道替他們發言的做法。他們告訴我——他們的遺體告訴我——他們死亡的過程﹕是死於自身的病痛，或是遭外力加害致死。對，這份工作會讓人難過，你看見人類彼此殘殺，會質疑人類的本性。不過，我一直覺得，我註定要走這一行，替死者發聲。",
+        "read_url": ""
+    },
+    {
+        "title": "梅菲斯特俱樂部",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100911116",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100911116&height=400&width=310",
+        "intro": "血液裡流動的邪惡，是舉辦這場魔鬼盛宴的唯一理由。\n\n磁磚地板上有個大型紅圓圈，周圍有五灘等距、融化後又凝固的黑色蠟液。\n正中央擺著被砍下的女性頭顱，眼睛直愣愣地盯著她們。\n一個圓圈、五支黑蠟燭。這是場獻祭。\n家家戶戶正歡慶聖誕的夜晚，珍．瑞卓利警探卻接到了一通破壞心情的電話──一起血腥慘案發生，亟需她至現場處理。案發現場裡年輕女子身首異處，手臂被斬下，死狀淒慘，屋內還畫有召喚惡魔的神秘儀式。警方更發現，兇手行兇時，曾致電給一名與在場眾人熟識、專為歹徒辯護、被警方深惡痛絕的精神醫師喬伊絲．歐唐娜。\n魔鬼的記號就畫在我家大門上。那象徵符號是個警告？\n抑或是邀請？\n由致力於證明撒旦存在的狂熱學者們組成的古老俱樂部「梅菲斯特」舉辦了一場晚宴，受邀者亦包含了歐唐娜醫師。在舉辦宴會的豪宅外，女警慘遭毒手，現場還留下紅色的倒十字圖案。令人不解的是，這場神秘晚宴的主人桑索尼以及賓客們竟對於接連發生的兇案顯露出高度興趣，並且試圖介入調查；俱樂部成員甚至宣稱，這一切全是惡魔所為。此後，死狀淒慘的屍體接連出現，顯然真的有某種令人恐懼的力量正在出沒；就連負責驗屍的法醫莫拉．艾爾思的家門前，也被畫上了記號⋯⋯\nPECCAVI 吾有罪",
+        "read_url": ""
+    },
+    {
+        "title": "莫拉的雙生",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100881900",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100881900&height=400&width=310",
+        "intro": "假如當初安娜的父母收養的是長相一模一樣的我，\n那麼現在，還能活著的，會是我嗎？\n台灣讀者最期待法醫vs.警探系列，累計銷售即將突破240,000冊！　\n醫學懸疑天后 泰絲．格里森 Rizzoli & Isles系列又一新作\n 作品已譯成四十國語言，全球銷量高達三千萬冊！\n 橫掃台灣及全球排行榜，史蒂芬．金藏書必備！\n 《出版人週刊》盛讚「醫學懸疑天后」\n\n當真相如此殘酷，你是否願意再作一次選擇——\n選擇一無所知，選擇沒有過去。\n\n他站在坑口低頭看著她，眼神比冰還冷──\n「這不是針對妳個人。我只是很想知道，一個人活活餓死，屍體腐爛，到最後變成一堆白骨，需要多久的時間……妳知道嗎？剛剛妳看到的那堆骨頭是一隻貓。我等了七個月……」\n然後，他用木板把洞口封死，開始在上面堆石頭……\n那一年，他十四歲。\n\n四十五年後，麻州的女法醫莫拉•艾爾思回到家時，發現家門口全是警察。門口停著一輛車，車門上有三道爪痕，擋風玻璃上濺滿了血，而駕駛座上有一具屍體……死者竟然就是她自己……\n\n泰絲．格里森是位極擅於描寫恐懼、人性黑暗，並且勇於挑戰爭議話題的一流作家。在本書中先以一段絕妙又帶有驚悚氛圍的事件作為開場，之後再以接連不斷的精采情節層層鋪敘出引人入勝的巧妙謎團，同時以細膩的人物角色帶領讀者一窺人性的各種層面。書中瀰漫著令人屏息的懸疑氣氛，從追查真相的過程中帶入主角心境的轉折，彷彿參與命運之神設計的一場殘酷遊戲，並將人性中脆弱與剛強、邪惡與善良等相對但非絕對的心理暗藏在流暢情節中。幾乎無需費力就能融入故事之中，泰絲．格里森的文字具有強大吸引力，能夠使讀者朋友在不知不覺中一口氣讀完而不覺疲倦，在掩卷後依舊身陷其中，餘韻經久不散。",
+        "read_url": ""
+    },
+    {
+        "title": "最後倖存者",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100866002",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100866002&height=400&width=310",
+        "intro": "在他短短的一生中，十四歲的泰迪．克拉克第二度從一場大屠殺中倖存。在他的寄養家庭發生滅門血案後，他再度成為孤兒。這名深受創傷的少年無處可去──直到波士頓警察局派珍．瑞卓利警探來辦這個案子。珍偷偷把泰迪送到不輕易接受新生的晚禱寄宿學校，這個庇護所專收暴力犯罪的年輕受害者，讓他們在這裡學習保護自己的關鍵技巧。\n\n但即使學校有上鎖的大門和嚴密的保全設施，珍還是擔心晚禱學校有其他人在監視。而當她得知有另外兩個學生的過去跟泰迪有驚人的相似性，事情變得很明顯且令人恐懼：有人正企圖殺害這三名倖存者……",
+        "read_url": ""
+    },
+    {
+        "title": "喀邁拉空間",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100717317",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100717317&height=400&width=310",
+        "intro": "加拉巴哥海底裂谷\n一切開始於這片海底世界的黑色冰冷水域。艾亨博士趴臥在潛艇艙裡，被困在六千零八十二公尺深的岩床上，他望著那片卡住他機翼的岩石，像凝結在一起的玻璃碎片，忽然明白眼前所見是什麼！但潛艇快沒電了，他將在攝氏八十二度的水溫中窒息死亡，而救援是如此緩慢……\n\n兩年後，國際太空站上\n漢寧醫師負責的眾多實驗之一「古生菌細胞培養」出現了異常現象，細胞培養團已經不是液體，而是濃稠的鮮亮藍綠色黏膠。他心想，樣本遭到了某種污染。但還有另一個可能：微重力影響。在失重的太空中，這些培養會以三度空間方式生長，如果這純粹就是古生菌在無重力狀態下的自然反應呢？\n但是，當艾瑪•瓦森醫生登上太空站替換比爾之後，卻發現自己面對的是一場生物性污染！一滴藍綠色的水珠被實驗鼠吞下，而死亡的老鼠卻快速的分解，並炸裂到健一的臉上。不到兩天，健一在高燒、雙眼血紅中莫名死亡。而他停留在太空中的屍袋卻無聲地滲出發亮的小水珠，在失重狀態下恣意飛舞……\n\n親愛的傑克︰\n今天也許是我和太空站在太空中一起度過的最後一天。在同事們相繼離開之後，僅存的一隻受感染的小白鼠也已經死去。整個太空站站瀰漫著死亡的味道。\n我只知道我體內的這個東西就要宣佈勝利了。就連我在寫這封信的時候，都可以感覺到它步步進逼。我可以感覺到自己的力量逐漸消退。我已經盡力抵抗過它，但現在我累了，準備要睡覺了。\n趁著我還能打字的時候，我最想說的是，我愛你。我從沒停止愛你。據說將死的人如果不說實話，就無法獲得永生。據說死前的告解都是可信的。這就是我的告解。\n艾瑪\n\n從太空舷窗，艾瑪可以看到藍灰色弧形的裡海。雲霧盤旋在哈薩克上空，白雪覆蓋著喜馬拉雅山。底下有幾十億人類過著自己的生活，她心想。「而我在這裡，只是天空中一顆即將死去的塵埃……」\n\n以驚悚懸疑小說聞名的華裔女作家泰絲‧格里森的《喀邁拉空間》將引領你進入距離地面400公里的國際空間站。在一個失去太空異客的環境中，究竟會發生什麼令人意想不到、充滿恐懼絕望的事呢？\n看泰絲的小說，你不得不被她豐富的想像力、離奇曲折的故事情節所震撼。從小說開始隨著潛水艇沉入6000多米下的加拉帕戈斯海溝的那一刻，你面臨的唯一選擇只有：繼續看下去。於是，挑燈夜讀、一口氣讀完整本書也不足為怪。\n當原本存活在深海海溝的遠古細胞被送入不受重力控制的國際太空站中，它們會發生怎樣不受控制的變化，把太空站裡工作生活的太空英雄們置於怎樣的噩夢中？最終太空站以及站上無法返回地球的太空人們，迎來的是徹底毀滅還是絕境逢生？",
+        "read_url": ""
+    },
+    {
+        "title": "夏季訪客",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/products/11101070535.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101070535&height=400&width=310",
+        "intro": "當真相浮出水面，誰能安然離開？\n對代理警察隊長喬・提布鐸來說，夏天的來臨意味著遊客擁擠的街道、酒吧裡的打鬥，以及一些日常的輕微竊盜案件。但這一次，卻是一名在湖邊失蹤的少女。\n在海濱小鎮「純潔鎮」，一名前來湖邊別墅度假的夏季訪客——一位十幾歲的少女突然失蹤，而「馬丁尼會」的一位鄰居竟成了頭號嫌疑人。\n「馬丁尼會」是由一群退休CIA特務組成的讀書會，他們雖然退休了，但是依然保有間諜本能。這群退役特務們為了鍛鍊逐漸退化的大腦，最愛挑戰拼湊懸案的謎題。這次，為了證明鄰居的清白，他們親自介入調查，卻在追查過程中發現：這起案件竟然與他們過去的特務經歷有所牽連。\n隨著湖中發現屍體，事件逐漸失控。那埋藏多年的祕密與這起案件之間，竟存在無法想像的連結……",
+        "read_url": ""
+    },
+    {
+        "title": "門徒",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100870726",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100870726&height=400&width=310",
+        "intro": "這是個酷熱難當的波士頓夏天。更糟糕的是，在這個城市發生了一連串令人震驚的罪案，一個施虐狂強迫富有的男人看著自己的妻子被殘酷對待，最後再以綁架和死亡告終。\n\n犯案模式指出了一個人：連續殺人犯沃倫．荷伊，但他已經關進牢裡了。警方只能假設有個助手仍逍遙法外，並模仿他所崇拜那名獄中殺人狂的醫學技巧，尋找下一個犯案對象。至少珍．瑞卓利是這樣認為的。她被迫要再度面對這名在她身心都留下疤痕的兇手，這回她決心要終結荷伊可怕的影響力……即使她會受到兇殺組其他男性同事更大的阻力。\n\n但瑞卓利沒想到的是，聯邦調查局忽然會對此案感到興趣，也沒想到會認識守口如瓶的嘉柏瑞．狄恩探員。最沒想到的是，荷伊竟然會脫逃，與他神祕的血盟兄弟會合，展開惡毒的復仇，瑞卓利正是他們的目標……",
+        "read_url": ""
+    },
+    {
+        "title": "迷蹤",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100910476",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100910476&height=400&width=310",
+        "intro": "十六年前\n潦倒窘困的工人薛爾頓帶著妻女，一起加入神秘教派「集居會」，在集居會裡，人人聽從先知教導，過著平凡、與世無爭且單純的生活。三個月後，薜爾頓忽然獲得了極大的榮耀、使他在集居會裡身份益發不同──偉大全能的先知選定了薛爾頓年僅十三歲的女兒凱蒂，成為先知的「新娘」。\n\n現在\n法醫莫拉．艾爾思來到懷俄明參加醫學研討會，莫拉在會中巧遇大學同窗道格，並接受突如其來的邀請，加入滑雪之旅。數日後，莫拉遲遲未歸，當心急的瑞卓利警探一行人趕赴懷俄明時，迎接他們的卻是一則令人震驚的消息──莫拉死了。\n莫拉與友人駕駛的休旅車墮落山谷，出事地點是私人道路，通往一座與世隔絕的怪異村莊。村莊裡的居民人去樓空、只留下進食到一半、沒有收拾的餐桌、製作中的晚飯，以及車庫裡一輛不少、全都未曾駛離的交通工具。居民似乎全都在同一時間憑空消失。正當眾人陷入哀傷時，瑞卓利的手機卻突然響起，傳來的正是莫拉求救的聲音……\n\n郡警馬丁諾坐進駕駛座時，無線電沙沙響起：\n「嘿，我是總機，你找到艾爾思醫師了嗎？」\n「抱歉，沒找到。一定是謊報，這裡沒人。我要離開現場了。」\n莫拉的視線與後照鏡裡的郡警相接，警察的表情令她血液凍結。\n「我在這裡！」莫拉大叫。「救我！我在這裡！」\n但，郡警已經關上無線電。",
+        "read_url": ""
+    },
+    {
+        "title": "墮落天使外傳：墜入愛河",
+        "author": "蘿倫•凱特",
+        "url": "https://www.whose-books.com/SalePage/Index/10065010",
+        "read": "https://www.haodoo.net/?M=u&P=P1010490370:0&L=Share",
+        "img": "https://www.haodoo.net/covers/1010490370.jpg",
+        "intro": "如果不能廝守到老，且讓我們珍惜\n這千百年一度、只屬於情人的日子。\n特別收錄：搶先試讀《墮落天使》最終回第一章！\n\n為了即將到來的情人節，墮落天使外傳《墜入愛河》收錄了四個全新的原創故事，\n背景則設定在浪漫又神祕的中世紀。\n《墜入愛河》將送給書迷《墮落天使》系列中、數位重要配角不為人知的故事，\n以及他們是如何參與了露西和丹尼爾史詩般的愛情故事。這些故事包括：\n\n〈愛在燈火闌珊處：雪兒碧與麥歐司的情人節〉\n〈在回首已是百年身：天使羅蘭的情人節〉\n〈烈愛灼身：天使阿琳的情人節〉\n〈愛，永不結束：丹尼爾與露欣達的情人節〉"
+    },
+    {
+        "title": "游牧人生",
+        "author": "潔西卡．布魯德",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100889608",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100889608&height=400&width=310",
+        "intro": "歷經二○○八年美國金融海嘯的新興族群──\n他們的退休生活，是開著車駛離美國夢\n\n如今，數以萬計的美國人正在和中產階級的生存模式角力，他們錙銖必較、反覆計算，在停滯的薪水與不斷累加的帳單中身心俱疲。\n\n一群原本應從勞動市場上退役，卻不堪金融海嘯衝擊的中老年美國人，選擇減掉最大筆的支出：房租與房貸，住進車裡，形成人數正不斷增加的「露營車打工族」。從北達科他州的甜菜田到德州亞馬遜倉庫，一個成本低廉、多數由來來去去的老人所組成的新勞動力市場正蔚然成形。\n\n作者潔西卡．布魯德開著她的二手休旅車「海倫」，一路追隨她的受訪者，包括一生努力工作、獨自拉拔孩子長大的單親媽媽：琳達‧梅依，由此輻射出一個橫跨全美的游牧社群──他們原本是教授、軟體工程師、大學行政人員、退役軍官，從沒想過自己有朝一日會身陷一個又一個低薪、高工時與高風險，卻標榜自己是露營兼賺錢、勞動顧筋骨的季節性工作中。\n\n本書敘述的是一個發人省思的故事，跟美國經濟體的腹黑面有關，它暗示不安定的未來可能正在前方等候多數的人，但同時也歌頌這群大膽放棄世俗的根，不曾放棄希望的美國人罕見的適應力和創造力。",
+        "read_url": ""
+    },
+    {
+        "title": "台灣鐵道小旅行",
+        "author": "吳柏青",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100634542",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100634542&height=400&width=310",
+        "intro": "環島主線、支線、高鐵線輕快慢遊\n台灣的鐵道除了客運用途，大部分路線原本就是被規畫做為運送煤炭、蔗糖、木材等民生物資使用，因此鐵道沿線分布許多不同人文風情的聚落；或礦村、或糖廠、或木材小山城，這些隱身山林鄉野間的小站，隨著台灣產業轉型及島內旅行風氣的逐年盛行，漸漸演變成可以是一個人或三五好友就能相約成行的鐵道小旅行路線。\n像是到嘉南平原幾個糖廠搭乘糖鐵，造訪曾經盛極一時的虎尾、旗山小鎮；或搭乘平溪線火車，探尋猴硐、三貂嶺等礦村小站。搭乘慢車，一趟充滿台灣風情的時光之旅就此蔓延。\n《台灣鐵道小旅行》完整的蒐集了台灣創新、復古兼具的鐵道風景，適合各年齡層使用，可攜帶，可記錄，可臥遊，是一本認識及實踏台灣鐵道的最佳指南。\n而為了增加鐵道旅行的趣味，本書特別延續引起蓋車站戳章熱潮的《鐵道旅行‧幸福100》活動概念，還設計了91枚台灣鐵道舊站戳印附加在各站版面上，讓遊客在旅途中也能同時蒐集戳印，留下令人回味的美好註記。",
+        "read_url": ""
+    },
+    {
+        "title": "洞見未來︰勾勒美好新境界",
+        "author": "王明德、陳玉鳳、廖珮君、劉子寧",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101022475",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101022475&height=400&width=310",
+        "intro": "當我們在思考所謂的趨勢時，要做的或許不是認定未來就會如同趨勢所描繪般地發生，而是去思索，為何要選擇這個趨勢做為願景，並規劃如何走到願景的路徑。\n\n正如同深耕臺灣產業技術研發已逾50年的工研院，從每一個「當時」，選擇下一個「願景」，面對多變的未知世界，以及新興科技議題的挑戰，工研院始終扮演與時俱進的關鍵角色；透過10大跨域趨勢，擘劃技術藍圖，進行研發策略布局，與產業攜手，創造經濟價值與社會價值。\n\n不僅如此，對於未來產業前景，也有穩健策略及規劃，「2035技術策略與藍圖」聚焦「智慧生活」、「健康樂活」、「永續環境」、「韌性社會」4大跨領域應用方向，促成應用領域「智慧化致能技術」，協助產業從技術創新迎向價值創新，並依此做為未來技術研發創新的藍圖與指南，激發「創新創業」的種子遍地開花。\n\n工研院堅守承先啟後的角色，提供臺灣科技研發的解決方案，也協助國內產業跨越技術鴻溝，推動跨領域科技應用，協助產業轉型升級，成為台灣未來經濟成長的動力，掌握未來決勝關鍵，迎向下一個50年。",
+        "read_url": ""
+    },
+    {
+        "title": "什麼荒謬年代",
+        "author": "凱俐．瑞德",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100934732",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100934732&height=400&width=310",
+        "intro": "本年度最顛覆觀點的娛樂小說\n破除「都是為你好」的魔咒\n在看出彼此的差異之前，抱歉，我們不同路！\n\n★破20家媒體年度選書的口碑之作：「這本小說不但掀風造浪，還要帶動風潮！」\n★入圍2020年布克獎、英國國家圖書獎最佳首作等重要獎項\n★Goodreads書評網站年度最佳首作\n★艾美獎最佳編劇獎、《一級玩家》女星莉娜韋斯率製作團隊搶下影視改編\n★一出版就空降書市暢銷榜：紐約時報、週日泰晤士報、亞馬遜網路書店Top 5、美國獨立書商協會……\n★人氣節目、讀書俱樂部選書強推：今日秀專訪、瑞絲薇絲朋「你好陽光」、美麗佳人、Buzzfeed等大型讀書俱樂部選書共讀\n★盧建彰／導演、鄭宜農／創作歌手、陳又津／作家、蔣亞妮／作家、顏訥／作家、\n少女老王／作家、B編／編笑編哭、Kristin／一頁華爾滋──鼓掌推薦\n\n一場網路公審事件，竟發展出令人拍案叫絕的青春成長篇章！\n\n錢伯連太太總能得到想要的東西，她這套本事還打算要傳授給許多女人。育有兩個女兒的她創立了「讓她發聲」公司，幫助女性打造煥發自信的個人品牌。\n\n年輕女子艾美拉身穿派對勁裝帶著白人小女孩深夜來到高級超市閒逛，警衛覺得不對勁，於是詢問起女子。路人好奇圍觀，情勢緊張，熱心打抱不平的男子凱利高舉手機把一切都錄下來。雙方對峙直到艾美拉急電雇主，誤會才化解，但她又氣又羞，深感受辱，錢伯連太太也決心要幫助艾美拉改正這一切。\n\n前景茫然的艾美拉，面對周圍的眾多聲音，既迷惑又戒慎。往前一步，似乎機會多多，但是引起騷動，可還能有昔日的平靜？\n\n偏偏一個意外（或故意）的舉動，最終還是讓這場位階、性別、世代、種族的糾葛交纏引爆開來。\n「想做對的事」而犯下「錯誤」，可以得到原諒嗎？\n到了火花四射的時刻，人與人還可能有真心誠意的空間嗎？\n\n身處各樣價值矛盾風暴中心的艾美拉，\n又要怎麼揮開擺弄的手，大聲說出自己想走的路？\n\n◎亮眼成績\n★重要獎項高度肯定：\n入圍2020年布克獎、2020年馬克吐溫美國之聲文學獎、\n紐約公共圖書館幼獅文學獎、Goodreads書評網讀者票選最佳首作、\n2021年英國國家圖書獎首作、費城雅典娜年度文學獎\n\n★一出版就空降書市暢銷榜：\n紐約時報、週日泰晤士報、洛杉磯時報、亞馬遜網路書店Top 5、美國獨立書商協會\n\n★人氣節目、讀書俱樂部選書強推：\n今日秀專訪、瑞絲薇絲朋「你好陽光」、美麗佳人、Buzzfeed等大型讀書俱樂部選書共讀\n\n★破20家媒體年度選書的口碑之作：\n華盛頓郵報、芝加哥論壇報、美國國家公共廣播電台、Vogue雜誌、Elle雜誌、\n美麗佳人雜誌、科克斯書評、圖書館期刊、書單雜誌、People雜誌、紐約郵報、\n今日美國五大不可錯過好書、魅力雜誌、Real Simple雜誌、Good Housekeeping雜誌、\nVox新聞網、Domino雜誌、Fast Company商業月刊、theSkimm網路媒體、PopSugar雜誌、\nE!Online網路媒體、InStyle月刊、Parade週日報、Slate網路雜誌……\n\n★超過10家書店、書評熱情選書推介：\n當月選書：紐約時報、歐普拉雜誌、亞馬遜網路書店、美國獨立書商協會、誠品外文館、\nThe Millions線上文學雜誌、Bookish網路媒體、芝加哥書評、LitReactor網路媒體、\nBook Riot網站、Refinery29網路媒體……\n年度最期待好書：Vulture 網路媒體、Parade雜誌、書單雜誌、SheRead 網站",
+        "read_url": ""
+    },
+    {
+        "title": "賺錢公司的採購學：產品要想賣得好，先得買得好。懂採購，獲利比銷售賺更多，下一個高階主管就是你。",
+        "author": "肖瀟",
+        "url": "https://www.taaze.tw/products/11100936509.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100936509&height=400&width=310",
+        "intro": "「採購和銷售，是全公司唯二能掙錢的部門，其他部門發生的，都是費用。」\n──奇異電氣前總裁 傑克．威爾許\n\n◎當採購有啥難，會討價還價就行？錯！幹採購搞懂的專業，夠讓你成為經營者。\n◎催貨要急，貨款慢付？當心最後和你配合的廠商害你丟頭路。\n◎採購如何防弊、不積壓資金？不懂品質檢驗方式，如何買到好東西？\n◎要知道供應廠商報價合不合理、有沒有摻水，該從哪些地方著手？\n\n買東西誰不會？但產品要想賣得好，首先得買得好！\n作者肖瀟曾在中國大型國家企業總部任職。他認為，花錢買東西是一種專業，\n零基礎學採購，再晉升經營者，教你怎麼把花錢的大事變賺錢本事。\n\n◎採購計畫和預算，該怎麼訂？\n．先弄懂公司需要什麼？因為買了，還不等於買對了！\n給相關部門的請購單上，一定要請對方確認數量、包裝、售後服務、運輸\n和檢驗方式等，過程中若發現更適合的產品，亦可調整原先採購需求。\n\n．最適採購量的計算要考量七個變數：\n擬定預算時，要先打聽材料行情，預估需求數量，\n訂採購計畫時要先加法再減法，本書提供申請單據、計畫表和預算表，讓你照套。\n\n◎成功企業的背後，都有一群優質供應商，該怎麼和他們打交道？\n．如何對待供應商：獵人模式 vs. 牧人模式。\n獵人模式只在乎價格，不斷要求供應商降價，往往兩敗俱傷。\n牧人模式是與供應商共同成長，豐田就用這套方法讓一款車型降低30％的成本。\n\n．處理供應商關係的八字方針：分類、減少、開發、扶持。\n依採購金額和供應風險，可將供應商分為四類「槓桿型、戰略型、一般型、瓶頸型」。\n怎麼應對？重點是不能被對方牽著鼻子走，但也不能太常換廠商，如何評估？\n內附供應商績效考核分數表，協助你作為監督依據。\n\n◎採購談判與價格控制？\n．討價還價有三招，畢竟公司採購不是逛夜市！\n．了解供應商報價背後的三種算盤，讓你殺價殺得更理所當然！\n．報價有沒有摻水？可從幾個面向一眼看穿是否過高！\n但重點是，參與談判的團隊成員不能自行唱反調。\n\n◎產品的品質要好，得從原料的採購開始，從頭管理！\n．全面品質管理（TQM）有八個步驟，再配合奇異公司的六標準差。\n如何用制度管理採購品質？本書有範例供參照。\n還有，採購不能忽視的最後一關：驗收。怎麼驗？\n\n採購怎麼樣才算做得好？\n全球最大、擁有8,500家分店的連鎖超市沃爾瑪說：永遠不要買太多！\n\n本書附錄採購常見英文縮寫對照、以及採購常見英語場景對話，\n讓你零基礎也能懂採購，更能從小採購晉升為經營級主管！",
+        "read_url": ""
+    },
+    {
+        "title": "大江大海一九四九",
+        "author": "龍應台",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100984966",
+        "read": "https://www.haodoo.net/?M=u&P=C1004:0&L=Share",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100984966&height=400&width=310",
+        "intro": "那麼慟的生離死別，那麼重的不公不義，\n那麼深的傷害，那麼久的遺忘，那麼沉默的痛苦。\n不管你是勝利者還是失敗者，我可不可以說，\n所有被時代踐踏、汙辱、傷害的人，\n都是我的兄弟、我的姊妹？\n\n▌全球暢銷經典作品，至今未能在中國大陸出版 ▌\n\n國家和個人一樣，從態度看出品格。\n怎麼對待受傷的人，怎麼面對自己的錯，怎麼選擇遺忘和記得；\n怎麼對待歷史，就是品格的高度。\n──龍應台\n\n▌收錄全新序文 ▌\n\n所有的顛沛流離，最後都由大江走向大海；\n所有的生離死別，都發生在某一個車站、碼頭──\n上了船，就是一生。\n\n一九四九，華人集體的記憶，斷裂，流離，\n一整代人隱忍不言的傷，被時代錯置……\n\n我們發誓要認識他們，\n用認識向一個時代告別。\n向所有被時代踐踏、汙辱、傷害的人致敬。\n\n醞釀十年，歷四百天跋涉十六萬字，龍應台用文學之心呈現歷史，將那個時代沾著血跡、藏著眼淚和憂傷的密碼，透過雷霆萬鈞的文字超越時空阻絕投遞出去，傳承給一代代年輕的眼睛，讓你看見一個你無法想像的一九四九。\n"
+    },
+    {
+        "title": "走路：獨處的實踐",
+        "author": "龍應台",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100974407",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100974407&height=400&width=310",
+        "read_url": "",
+        "intro": "走路，就不會是觥籌交錯的時候。\n走路，就不會是把心分給他人的時候。\n走路，就不會是掛在網上、陷入其中的時候。\n即便是熙攘擁擠的市集，只要是走路，也是我帶著「自己」在熱的喧鬧中以冷靜聽、靜觀、靜思，更何況是行走山中野路，明月照亮青苔，溪水攪動碎星。\n\n只要走路，就一定是我的身體和我的「自己」單獨有約。\n新的一年，無論如何忙碌，每天走路，而且走路時，全神貫注，心無罣礙：\n1.走一條沒走過的路\n2.去菜市場，跟十個人說話\n3.去墳場走走\n4.在路邊一棵樹下，坐著\n5.找到沒有光的地方\n6.了解一種作物\n7.走進一方田\n8.跟著水聲走\n9.了解一個動物\n10.了解一株樹\n11.踏入一片空曠田野\n12.認識一個從前不認識的人\n13.去一個沒去過的村\n14.跟一條溪流，往上游走，往下游走\n15.問一個以前沒想過的問題\n16.親手寫封信，走到郵局寄出\n17.發現一件驚奇的事\n18.進入一片森林\n19.窗口有一隻貓，凝視\n20.斷網，坐在黑暗裡，看"
+    },
+    {
+        "title": "赫遜河畔談中國歷史",
+        "author": "黃仁宇",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100174901",
+        "read": "https://www.haodoo.net/?M=u&P=I0825:0&L=Share",
+        "img": "https://www.haodoo.net/covers/0825.jpg",
+        "intro": "這一本集子收錄了黃仁宇在《中國時報》人間副刊發表過的三十三篇歷史文字，發表的時間自 1987 年年初到 1989 年夏天。所包括的內容自先秦至元末。其重點則在具體表彰中國歷史有它的特色，前後連貫，通過各朝代及政治上分裂的階段，各篇雖大致以人物傳記之體裁主，所紀事之影響遠逾當時人之人身經驗，積累之則與我們今日之立場仍然有關。\n\n自明朝至現今的一段，原擬定也照同樣體裁敘述，只因歷史的進展成螺線式，愈至後端積累的分量愈重，內容也更複雜，其安排不容易保持文藝副刊的風格及篇幅的限制。\n\n「赫遜河畔談中國歷史」系列史論，的確完全擺脫了既往的學術論文體制；他往往抓住某個歷史事件即一路鋪延而下，在濤濤的時間黑流中，一一還原事件的面貌。黃仁宇的理想是希望高中程度的讀者，就可自在的閱讀這些著作。不過這種寫法，他自謙不一定是最好的、唯一的，他說這只是一個起點，但願能改變以往的寫史觀念。黃仁宇衷心期盼別的歷史學家能尋出更好的形式。\n\n黃仁宇在他的歷史著作中，一再揭櫫「大歷史史觀」，提倡以「長時間、遠距離、寬視野」的條件重新檢歷史。他自述此一史觀即是：作者及讀者，不斤斤計較書中人物短時片面的賢愚得失：其重點在將這些事蹟與我們今日的處境互相印證，也不只抓住一言一事，借題發揮，而應竭力將當日社會輪廓，盡量勾畫，才不至於因材料參差，造成偏激的印象。黃仁宇的這種嶄新觀念，實際上全由生活煎熬所致，其學術成就，事實上是因命運的困蹇躓踣得來的。"
+    },
+    {
+        "title": "萬曆十五年",
+        "author": "黃仁宇",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100254585",
+        "read": "https://www.haodoo.net/?M=u&P=C234:0&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100254585&height=400&width=310",
+        "intro": "很少有人這樣觀察歷史，更少有人這樣寫作歷史。\n\n作者黃仁宇窮盡三十年心血，出入典籍，宏觀細究，以超然獨到的眼光，俯瞰古老的中國，將中國的糾結、迷惘與困惑，纖毫畢現的開展在讀者眼前。\n\n《萬曆十五年》英文版在1979年由耶魯大學出版社出版，被美國許多大學採用為教科書，另有法文、德文、日文等版本。在台發行迄今已多達二十餘版，是黃仁宇著作中最暢銷的一本。"
+    },
+    {
+        "title": "緬北之戰",
+        "author": "黃仁宇",
+        "url": "https://www.taaze.tw/products/11100835369.html",
+        "read": "https://www.haodoo.net/?M=u&P=C17A7:0&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100835369&height=400&width=310",
+        "intro": "這是黃仁宇先生的第一本書。本書是著名歷史學家黃仁宇在抗戰時期的戰地報告，是記錄中國抗日遠征軍在緬北進行會戰的實錄，也是研究緬北戰爭的第一手歷史資料。本書從中國部隊進入緬北地區保護「東京路」開始，以記事的方式描述了一幕幕感人的戰鬥場面。作者親身經歷了這場戰爭，以最切身的角度記下了這場戰爭的各種實況，非常珍貴。\n"
+    },
+    {
+        "title": "地北天南敘古今",
+        "author": "黃仁宇",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100174905",
+        "read": "https://www.haodoo.net/?M=u&P=P1010490314:0&L=Share",
+        "img": "https://www.haodoo.net/covers/1010490314.jpg",
+        "intro": "這本集子收錄了我過去曾在各處發表過的 26 篇文字。最早的刊於 1944 年，至今已將近半個世紀、最遲的則出版不久，彷如昨日。難說當中有些文字帶著旅遊性質，有的則暴露著個人經歷，全書的範圍可以概說為一個學歷史的人之耳聞目見與腦內的構思。作者提供了他的歷史觀之側面背景。正因為其不拘形式可以補助有體系的文章之不足；也因為全書缺乏長篇大論，讀者也可信手翻來，隨時釋卷。\n\n本書將這26篇歸為五類，分別為「緬甸戰場的聞見」，「五十年來的撫今追昔」，「各種思想體系及其實用」，「歐遊觀感」和「古今人物」只是這樣的分類仍不能全部囊括各篇的內容，也無從避免彼此間的重疊，所以又各用唐詩兩句為題。詩歌的好處則是放漫不拘形跡，有時則又辭句隱蓄，不全受一般修辭學的限制。\n\n我想讀者具有同感：我們今日已面臨著歷史上前所未有的局面。只舉著近身一例：自從 1945 年內戰之展開，已使近兩百萬的軍民，於極短期間自大陸移居於台灣。這即已是中國歷史裏自洪荒以來未有的事蹟。因為如此，再加以很多類是打破紀錄的變故，使我們過去用以衡量歷史的尺度至此大體失去效用。再瞻望著最近台灣海峽兩岸人事的轉變，也使我們領悟到內戰之真意義並不是所謂無產階級清算有產階級，而是中國需要徹底改組迎合世界潮流所帶來之不得已的動亂。其中大陸的一部份因為要剔除農村裏阻擋著全面改革的各種障礙，所以為患至烈。台灣這方面倒可以因利就便，只引用了 1953 年的「耕者有其田」法案再配合美援，即先期完成了一個「能在數目字上管理」的局面，能迅速的存積資本，發生了領導的作用，這不可能在 50 年前一眼看清。也因為如是，當日各方面依據意識型態所寫的歷史也因為時過境遷，今日都亟待修訂。"
+    },
+    {
+        "title": "中國大歷史",
+        "author": "黃仁宇",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100880689",
+        "read": "https://www.haodoo.net/?M=u&P=C1272:0&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100880689&height=400&width=310",
+        "intro": "黃仁宇：我寫的歷史是從技術的角度看歷史，不是從道德的角度檢討歷史。\n這並不是說道德不重要，而是新社會的道德要靠社會的結構而決定其內涵。\n中國過去一百五十年內經過人類歷史上規模最大的一次革命，從一個閉關自守中世紀的國家蛻變而為一個現代國家，影響到十億人口的思想信仰、婚姻教育與衣食住行，其情形不容許我們用尋常尺度衡量。\n\n王汎森（中央研究院院士）、李孝悌（香港城市大學中國文化中心主任）、黃進興（中央研究院院士）　鄭重推薦\n\n黃仁宇的《中國大歷史》涵蓋了從史前到當代的歷史發展過程，雖然是通史性的論著，卻突破了傳統通史的格局。寫作方式上，仍然保持他的一貫風格：從小事件看大道理；從長遠的社會、經濟結構觀察歷史的脈動；從中西的比較提示中國歷史的特殊問題。解釋觀點上，黃仁宇仍然秉持他的「大歷史」角度，注重人物與時勢的交互作用，理念與制度的差距，行政技術與經濟組織的衝突，以及上層結構與下層結構的結合。黃仁宇以他獨到的歷史眼光，賦予幽遠遼闊的中國歷史一個現代的生命，不但引人入勝，而且發人深省。\n\n專家學者推薦\n和膾炙人口的萬曆十五年不同，本書是要一本縱觀幾千年的中國通史。和我們一般熟悉的中國通史論著不同的是，本書充滿了有趣而與眾不同的人物評價。對氣候、土壤和生態環境的重視、對財稅制度的強調、對北方「異族」的新鮮詮釋，在在都讓本書的閱讀，充滿了驚奇和欣喜。\n──李孝悌教授（香港城市大學中國文化中心主任）\n\n黃仁宇教授繼其膾炙人口的成名之作《萬曆十五年》後，經過深刻而長期的思考，以綜合觀點，擇精取要省視漫長的中國歷史，推出力作《中國大歷史》，見解不同凡響，令人耳目一新，甚值專家或一般讀者取閱。\n──黃進興教授（中央研究院院士）"
+    },
+    {
+        "title": "洞見未來︰勾勒美好新境界",
+        "author": "王明德、陳玉鳳、廖珮君、劉子寧",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101022475",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101022475&height=400&width=310",
+        "read_url": "",
+        "intro": "當我們在思考所謂的趨勢時，要做的或許不是認定未來就會如同趨勢所描繪般地發生，而是去思索，為何要選擇這個趨勢做為願景，並規劃如何走到願景的路徑。\n\n正如同深耕臺灣產業技術研發已逾50年的工研院，從每一個「當時」，選擇下一個「願景」，面對多變的未知世界，以及新興科技議題的挑戰，工研院始終扮演與時俱進的關鍵角色；透過10大跨域趨勢，擘劃技術藍圖，進行研發策略布局，與產業攜手，創造經濟價值與社會價值。\n\n不僅如此，對於未來產業前景，也有穩健策略及規劃，「2035技術策略與藍圖」聚焦「智慧生活」、「健康樂活」、「永續環境」、「韌性社會」4大跨領域應用方向，促成應用領域「智慧化致能技術」，協助產業從技術創新迎向價值創新，並依此做為未來技術研發創新的藍圖與指南，激發「創新創業」的種子遍地開花。\n\n工研院堅守承先啟後的角色，提供臺灣科技研發的解決方案，也協助國內產業跨越技術鴻溝，推動跨領域科技應用，協助產業轉型升級，成為台灣未來經濟成長的動力，掌握未來決勝關鍵，迎向下一個50年。"
+    },
+    {
+        "title": "重返查令十字路84號",
+        "author": "海蓮．漢芙",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100932418",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100932418&height=400&width=310",
+        "read_url": "",
+        "intro": "「在等了一輩子之後，\n我終於在前往倫敦的路上了。」──海蓮．漢芙\n\n★ 全球愛書人為之動容的廿載書緣與真摯情誼再次躍然紙上，感動再現！\n★ 愛書人聖經《查令十字路84號》之續集，首度正式授權繁體中文版！\n★ 長踞Amazon.com暢銷書排行榜！授權法、德、日、西等10國語言！\n★ 特別邀請台灣知名水彩插畫家王傑，為本書繪製絕美經典插畫！\n\n\n▎時針被撥慢的那些年──當時，寫信與閱讀，都是極其幸福的事。\n▎愛書人的暗號「查令十字路84號」，載著對閱讀熱忱及對故人的眷念。\n\n「你們若恰好經過查令十字路84號，\n請代我獻上一吻，我虧欠它良多……」\n\n1949年紐約的窮作家海蓮，偶然看見一則倫敦古書店的廣告，\n該書店專營絕版書，為了閱讀幾本遍尋不著的古書，海蓮開始寫信給對方。\n而這一寫，就寫了二十年。\n\n海蓮與書商法蘭克開始長達二十年的魚雁往返，\n他們在信中討論書、歷史、文學、文化……並建立起溫暖的情誼，\n直到這廿載書緣因法蘭克1969年的驟逝戛然而止，他們始終未曾謀面。\n\n1970年書信被彙整出版，書名以書店地址命名為《查令十字路84號》，\n在多年後被譽為「愛書人的聖經」，不斷演繹流傳。\n\n\n▎魂牽夢縈的英國之旅，重返愛書人聖地「查令十字路84號」！\n▎書癡共同的記憶與嚮往 × 歷久彌新的故人情誼 × 英國文學中的英國！\n\n「我一生都在期盼來倫敦看看，\n我在查令十字路84號下車，來到昔日的『馬克斯與柯恩書店』。\n\n我心中想著一個人，我和他通了這麼多年的信，\n如今，我來到了這裡，但他卻已不在……」\n\n1970年《查令十字路84號》的出版激起讀者的共鳴與迴響，\n也使海蓮．漢芙一舉成名，終於在隔年得以踏上前往英國的圓夢之旅，\n並以她慣有的風趣口吻，忠實地記錄下這為期40天、魂牽夢縈的倫敦旅程。\n\n她終於拜訪心心念念的倫敦文學地標如倫敦塔、聖保羅大教堂、克拉里奇酒店、\n牛津大學、狄更斯筆下的舊倫敦巷弄、莎士比亞的環球劇場舊址與其最愛的酒吧……\n當然，她也終於走進了查令十字路84號，這個她多年投遞對英國與文學的情書的所在。\n\n儘管書店已易手、橡木的書櫃已倒下，而法蘭克也已辭世；\n她仍在空蕩蕩的空間裡，建構出二十年來記憶裡（想像中）的景象──\n「如何，法蘭克？我終於來到這裡了。」她在心中向多年的摯友道別。\n\n《重返查令十字路84號》延續傳奇的廿載書緣、溫暖的人情，\n以及對英國文學與歷史的熱愛，同時也承載著對昔日知音的追念。"
+    },
+    {
+        "title": "查令十字路84號",
+        "author": "海蓮．漢芙",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100210100",
+        "read": "https://www.haodoo.net/?M=u&P=P1010490099:0&L=Share",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100210100&height=400&width=310",
+        "intro": "書店常常是愛書的旅人最鍾情的落腳處，一個城市若有了一座能吸引人的書店，往往城市就魅力倍增。在倫敦有一家書店 Marks & Co.，雖然已經不存在，但凡愛書人造訪倫敦一定必到查令十字路張望、拍照。這家書店的舊址之所以讓人徘徊留連，全是因為海蓮‧漢芙與法蘭克的動人故事：《查令十字路 84 號》這本小書是美國紐約作家海蓮和英國經營古董書的書店老闆法蘭克之間長達二十年書信往來。故事從海蓮看到古董書拍賣廣告，開始寫信給法蘭克詢問，憑藉著對書的熱情與專業興趣，兩個一輩子未曾謀面的愛書人搭建起長達二十年的情誼，留下的溫馨故事。這個真人真事最早見於讀者文摘，刊登披露後，引起驚人的迴響，最後當海蓮有了經費造訪倫敦，一切已經人去樓空……"
+    },
+    {
+        "title": "這些人，那些事",
+        "author": "吳念真",
+        "url": "https://www.taaze.tw/products/11301815917.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100248474&height=400&width=310",
+        "read_url": "https://www.haodoo.net/?M=u&P=B1588:0&L=book",
+        "intro": "本書是吳念真導演經歷過人生的風風雨雨和最大低潮後，所完成的生命記事。\n\n他用以文字寫下心底最掛念的家人、日夜惦記的家鄉、一輩子搏真情的朋友，以及台灣各個角落裡最真實的感動。這些人和事，透過他真情摯意的筆，如此躍然的活在你我眼前，笑淚交織的同時，也無可取代的成為烙印在你我心底、這一個時代的美好縮影……\n\n特別收錄 吳念真近年唯一小說創作「遺書」，寫下對胞弟離開人間的真情告白與不捨。\n特別邀請 作家雷驤繪製封面與內文繪製，看兩位大師以圖文激盪的精采火花。"
+    },
+    {
+        "title": "人情．世故",
+        "author": "林夕",
+        "url": "https://www.taaze.tw/products/11302182122.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100228994&height=400&width=310",
+        "intro": "本書是華人第一作詞家林夕分享他的處世之道。\n他說，「請留意書名：\n在「人情」與「世故」之間隔著那一個小黑點\n這點很重要\n\n我們一出世就難免入世\n於是誰都懂得一點點的人情世故\n可是在人情世故之中過活　也未免太沒趣了\n\n我們抱著如三歲小孩的好奇心看大人的人間世\n感受人情的溫度　重繪人心的圖畫　品味人間的煙火\n見過世面之後用自己的鏡頭拍成電影\n\n我相信這是最值得上的終身學習課\n是保持生趣最方便的動力」\n\n\n作者簡介：\n\n林夕，畢業於香港大學文學院，主修翻譯。\n曾任港大中文系助教、《快報》編輯、\n亞洲電視節目部創作主任／副經理、音樂工廠創作總監／總經理、\n商業電台廣告創作及製作部主管／商業電台創作顧問／商業電台顧問。現全職寫字。\n2009年1月18日於2008年度《十大中文金曲頒獎音樂會》上\n獲得香港樂壇最高的終身榮譽大獎「金針獎」。"
+    },
+    {
+        "title": "不在他方",
+        "author": "陳綺貞",
+        "url": "https://www.taaze.tw/products/11100726926.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100726926&height=400&width=310",
+        "intro": "當人開始有了一個夢想，就是試圖要與現實做出一個決裂，也是驅動自己跨界的開始。——陳綺貞\n\n以書寫銘刻日常，最迷人的不在遠方\n十六個年頭，六張專輯、六張單曲，以及無數次巡迴演唱會之後\n我們終於等到陳綺貞的第一本散文集：《不在他方》\n\n這是一本關於追求的書，探索的對象是現在，是這裡；不屬於過去或未來，也不在他方。"
+    },
+    {
+        "title": "急診醫生",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/products/11100936043.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100936043&height=400&width=310",
+        "intro": "醫學驚悚天后泰絲．格里森Tess Gerritsen\n繼《貝納德的墮落》再度挑戰爭議性醫療議題\n\n一具屍體的祕密在解剖刀下會輕易展露，但人類的動機始終是個謎。\n●亞馬遜讀者★★★★★盛讚：如果你喜歡《貝納德的墮落》，那千萬別錯過《急診醫生》！\n●泰絲•格里森又一極具真實性與深度的醫學懸疑小說\n●作品已譯成四十國語言，全球銷量高達三千萬冊！\n●橫掃台灣及全球排行榜，史蒂芬．金藏書必備！\n●《出版人週刊》選書\n●《科克斯書評》選書\n\n豐富多彩的醫院場景描繪、令人膽寒的科學、令人透不過氣來的快節奏，交織成一場迅速、愉快，又悚然的閱讀經驗！\n──《時人》週刊（People）\n\n手術刀好美。\n史坦利．麥奇醫師過去從來沒發現這一點，但此時在手術室的燈光下，他低頭看著刀身反射出鑽石般的明亮光芒，不禁讚嘆不已。他抬頭，看到戴著口罩的刷手護理師朝他皺眉。他深吸一口氣，從工具托盤裡拿起手術刀，低頭看著躺在手術台上的那個女人。頭頂的燈已經對準了病人的下腹部。藍色的外科覆蓋巾已經就定位夾好，露出一塊四方形的皮膚。\n他把刀尖抵著那皮膚，切口中央是麥氏點，位於肚臍和右髖骨前突之間，也就是闌尾的約略位置。手術刀正要劃下時，他忽然暫停一下。\n他的手在抖。\n他不明白，這種事從來沒有發生過。他吞嚥著，手術刀抬離皮膚。放輕鬆。深呼吸幾次。這種感覺會過去的。\n「太多腸子了，這樣不行。」他伸手到腸子裡頭，抓住另一圈。這些多餘的組織不需要，只會阻礙他的視線而已。\n「麥奇醫師，不要！」\n\n他割斷。切下的腸子湧出一股弧形的熱流……"
+    },
+    {
+        "title": "清朝其實很有趣(2)衝擊謝幕",
+        "author": "",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100241286",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100241286&height=400&width=310",
+        "intro": "清朝其實很有趣\n之2：謝幕衝擊\n—爭議四起、秘聞遍佈，還原最有趣的大清王朝\n\n清朝，距離我們最近、最受爭議的王朝。前期，鐵騎入關，揚州七日、嘉定三屠，漢人抗爭歷經三朝方才平息。而到後期，外敵入侵、喪權辱國，將近代中國帶進一個多世紀的屈辱黑暗期。\n清朝，滿是秘聞的傳奇時代。太后下嫁、順治出家、雍正被刺、乾隆身世，四大無解謎案，至今仍為坊間津津樂道。\n到底，這是個怎樣的王朝？你，真的認識清朝嗎？\n歷史並不總是沉重，往事並非遙不可及。且聽霧滿攔江娓娓道來、細細點評，揭開兩百餘年雲煙，重點重現十二位統治者的風光與哀愁，還原一個最趣味的大清王朝。\n\n作者簡介：\n\n霧滿攔江，本名崔金生，現居北京。知名暢銷作家，自由撰稿人，筆耕多年，創作百萬餘字。提倡「新價值寫作」，認為文學應當立足於時代，以幽默筆法，蘊含深度思想智慧，代表作品有《推背圖中的歷史》、《燒餅歌中的歷史》、《萬年歌中的歷史》……等。"
+    },
+    {
+        "title": "Word 365全方位排版實務：紙本書與電子書製作一次搞定",
+        "author": "榮欽科技",
+        "url": "https://www.taaze.tw/products/11100958244.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100958244&height=400&width=310",
+        "intro": "全新Word 365大進擊\n輕鬆活用Word學會專業文件排版\n做出具視覺效果‧易於閱讀的專業質感文件！\n\n對於上班族或學生來說，利用Word軟體來處理辦公文件或研究報告，是最基本的工作技能，不管是通知書、會議記錄單、表格、圖表、宣傳單、卡片、價目表、手冊、網頁、書面報告等，大家都會使用Word來製作編排，只是完成的作品程度參差不齊！\n\n本書除了讓你對全新Word 365操作介面，從原有的熟悉度達到精熟的地步，更著重在以Word做專業排版，目的是在協助你使用熟悉的Word軟體，來製作出一份具專業質感且又具效率的文件。因此，對於印刷流程、紙張開本、版面結構、裝訂裁切、文件類型、排版原則、頁面佈局、文字建構、樣式設定、範本製作、圖文編排、內容圖形化、快速修正錯誤等各項必備知識，從中歸納出許多簡單又實用的使用技巧和要訣，輔以實際範例解說，讓你一目了然、輕鬆上手。運用你所熟悉的Word功能，便能快速完成具專業水準的排版文件。"
+    },
+    {
+        "title": "臺灣產業行腳地圖",
+        "author": "中衛發展中心顧問群",
+        "url": "https://www.taaze.tw/products/11100977390.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100977390&height=400&width=310",
+        "intro": "跟著產業顧問走入全臺各角落\n探訪讓臺灣經濟發光發熱的企業與開啟產業未來的30個觀察\n\n本書集結中衛發展中心謝明達董事長所率領的產業輔導顧問團隊，近4年間走訪超過300家次農、工、商業者的深度觀察。\n\n書中透過長達14萬公里，幾可繞行地球近2圈半的產業行腳旅程，帶領讀者洞察產企業的發展課題，並自農工商領域精選的130家企業，探索產業如何從鏈結外部資源、跨域合作契機等多元面向來尋求發展與突破，展現臺灣經濟發展的蓬勃態勢與競爭力。\n\n此外，中衛發展中心顧問群更以多年輔導產企業轉型升級的豐沛輔導能量，提出引領企業挑戰下一榮景的30個觀察，精準剖析經濟發展現況與升級轉型的解方，期盼運用數位力、體系力、永續力與產企業共創臺灣經濟的未來。\n"
+    },
+    {
+        "title": "經理人特刊—商業思考框架",
+        "author": "",
+        "url": "https://www.taaze.tw/products/21100044346.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=21100044346&height=400&width=310",
+        "intro": "PART 1　邏輯推理\n1. 系統思考\n2. MECE\n3. 金字塔結構（含邏輯樹）\n4. 零基準思考法\n5. 空雨傘＋豐田5次為什麼\n6. 魚骨圖＋80/20法則\n7. ABC理論\n8. 限制理論\n\nPART 2　創意發想\n1. 曼陀羅九宮格\n2. 6頂思考帽\n3. 兩極思考法\n4. 語層分割法\n5. KJ法\n6. 型態分析盒\n7. 倒轉法＋腳本圖\n8. 奧斯本檢核表＋心智圖\n9. 故事板＋期許測試＋狩野分析\n\nPART 3　市場分析\n1. PEST分析\n2. 五力分析\n3. 價值鏈\n4. 模式辨認\n5. 核心競爭力\n6. 專長–產品矩陣\n7. 3C分析＋SWOT分析\n8. 奇異/麥肯錫九宮格矩陣＋4P與4C\n\nPART 4　組織管理\n1. 明茲伯格管理角色論\n2. 貝爾賓團隊角色理論\n3. 競值架構\n4. 斯巴達（SPADARR）人才供應鏈模式\n5. 變革管理8步驟\n6. 組織成長模式\n\nPART 5　進度管理\n1. 時基競爭\n2. PDCA\n3. PERT圖\n4. 業務流程圖\n5. KPI樹狀圖＋艾森豪矩陣\n6. 影響圈＋惠特默模型\n\nPART 6　權衡得失\n1. 波士頓矩陣\n2. 安索夫矩陣\n3. 定位圖\n4. 力場分析\n5. 決策樹\n6. 決策矩陣＋PMI表\n\nPART 7　預測未來\n1. 成長曲線\n2. S形曲線 ＋鴻溝理論\n3. 長尾模型＋報酬遞減法則\n4. 經驗曲線＋厚尾分配"
+    },
+    {
+        "title": "經理人特刊：110招搞定所有EXCEL報表",
+        "author": "",
+        "url": "https://www.taaze.tw/products/21100047685.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=21100047685&height=400&width=310",
+        "intro": "做報表、畫圖表，一點都不複雜！ 搞定兩大Excel必備觀念，成為分析資料、做報表的強者\n\nPART1 高效資料整理術\n儲存格格式 星期變日期、數字變文字，選對格式就不用重輸入\n儲存格位址 搞懂相對位址與絕對位址，複製公式不出錯\n資料剖析與資料驗證 批次分割資料、建立選單，有效提升處理速度\n尋找及取代 不只找字還能找指定格式，精準挑出所需目標\n好用內建按鈕 高手私藏！7個小祕訣讓報表更專業\n常用快速鍵 熟記3大組合，輸入資料不再是苦工！\nExcel出錯了？ 解決10個常見錯誤代碼，完成零失誤的報表\n實戰應用 做報表常遇到的3個困擾，教你用更快的方式解決\n\nPART2 做出老闆認可的報表\n單一/多重欄位排序 誰業績最好？資料分類排列，就能一目瞭然\n小計 不用函數也能做運算！8步驟完成資料分類統計\n格式化條件 快速標出「前段班」，凸顯報表重點\n常用圖表 工作最常用的6種圖表，精準表達數據重點\n美化圖表 7個微調報表的小技巧，瞬間提升圖表可讀性\n列印範圍 Excel怎麼印才不會破碎？學會設定，輸出精美報表\n\nPART3 分析資料的技巧\nMAX / IF / COUNTA / COUNTIF 初學者必學！4大基礎函數，分析報表立即上手\nSUM / SUMIF / SUMPRODUCT / 3D SUM 加總函數有4種，只會一個你就虧大了！\nDATEDIF / TEXT / EDATE 工時、年資、合約到期日，用函數計算才不費力\nVLOOKUP 整合不同報表的好幫手！自動查找比對，填入指定資料\n自動篩選 從上萬筆資料中，快速挑出你需要的訊息\n樞紐分析 精熟樞紐功能，8成分析需求迎刃而解\n資訊圖表化 把樞紐分析報表做成圖，變身互動式圖表\n超實用內建表單：甘特圖、預算表、銷售紀錄表 套用範本、省略製表時間，立刻開啟工作模式\n\nPART4 保護檔案的小訣竅\n保護工作表 限制他人編輯檔案，守護資料完整性\n自動存檔 系統幫你定時備份，當機也不怕檔案消失"
+    },
+    {
+        "title": "經理人特刊 ：工作、人生的解答之書",
+        "author": "",
+        "url": "https://www.taaze.tw/products/21100048296.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=21100048296&height=400&width=310",
+        "intro": "打開IG、臉書，幾乎每天都看得到有朋友轉發語錄，專發名言佳句的粉絲頁也是海量地多，追蹤數動輒破萬；在《經理人月刊》網站上，摘錄名人箴言的文章，回應好、瀏覽高。語錄的魅力到底在哪？\n我向周遭調查了這個問題，歸納出3個結論： 1.有過類似該句情境的挫折，句中點破真相、歸結出事物運行的原理原則，因而覺得被了解、被療癒；\n2.對某些狀況迷惘，句子提供了做法或反擊的建議；\n3.對一件事情有跳脫框架的見解，刺激自己有新的思考。 不過，也有人認為許多名言，只是一碗一碗的「心靈雞湯」，乍看有營養、好正向、說得真好，但讀完船過水無痕，轉頭就忘掉，沒什麼實質功效。\n如果你想學會彈鋼琴，猛讀彈琴技巧的書，卻從不練習，有可能學會嗎？所以，「實踐」才能化概念為現實，「執行」才能造成改變。讀語錄、吸取前人智慧結晶只是開始，找出落實的方法並真的執行，才是使雞湯能強身健體的祕方。\n因此，本期特刊除了精選254句名人金句，更進一步提供「行動筆記」，協助讀者將體悟轉化為實質行動，應用到工作和人生中，讓我們能「踩在巨人的肩膀上前進」。\n另外也建議，能把本期特刊放在書桌案頭，在覺得需要打氣、缺乏靈感時，打開翻一翻，看看歷經挫折並淬鍊出智慧心得的名人，如何領導統御、面對挑戰、砥礪自身追求卓越。最重要的是，看完後思考自己能夠怎麼用，內化為待人處事的行動方針，才不會讓語錄淪為「聽君一席話，如聽一席話」。"
+    },
+    {
+        "title": "小日子享生活誌 6月號/2023 第123期：讓心弛放的咖啡館",
+        "author": "",
+        "url": "https://www.taaze.tw/products/21100046825.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=21100046825&height=400&width=310",
+        "intro": "讓心弛放的咖啡館\nMy Coffee Oasis\n\n咖啡時光\n\n若你從臺大誠品切進溫州街，一路向辛亥路高架方向走，沿路會遇到雪可屋、Picnic 野餐咖啡、還有落在街尾的路貓（路上撿到一隻貓），三家都是當時的一時之選，各有擁護者，也凝聚著不同同溫層。而我獨鍾Picnic，木桌木椅的溫潤調性，擁有大片窗景與陽光的靠窗獨坐區，儘管座位稍嫌擁擠卻不惹人生厭（當時覺得鄰桌人的話題每每都十分有趣）還有不得不提的鹹派與司康有多好吃，每次看到老闆娘從烤箱中拿出鹹派，我都覺得她是好偉大好偉大的人。\n\n對臺大學生而言溫羅汀安頓了多少期中期末前的夜晚。能邊喝著冰美式邊聽著店內放的 Norah Jones，讀累了還有甜食補充熱量，昏黃的燈光、店員敲咖啡把手的聲響、烤箱飄溢出的奶油香氣、牆壁上各式藝文DM 與海報⋯⋯有那麼一刻你會感受到你確確實實地被這空間包裹住、被好好地接住，讓你身體放鬆，靈感伸展，平安快樂。\n\n本期封面故事我們從不那麼典型的咖啡館當開篇，白日夢落在金山半山腰上一望過去就是整片汪洋，矮桌椅、大操場，彷彿回到小時在課堂上愛發呆作夢的時刻；再循山路造訪山中客廳，恬靜自在的空間，再加上開朗健談的汪汪與Camel，讓人不自覺卸下都市裡的防備；恆春半島上的開門見山樹屋咖啡，是生態導覽員寶媽心中的夢土，喝咖啡曬暖陽看星星，或許落山風吹來的是自由的氣息；也跟著王敏翰一手打造的Jimny 咖啡車上路，在山野林間穿梭隨遇而安，整座島嶼都真能是他的咖啡館。\n\n後半部我們走回城市。獲得世界沖煮冠軍的咖啡師徐詩媛，如何成為咖啡與顧客的橋樑，沖出一杯讓人心服口服的咖啡；而擅長用聯名創造驚喜的CAFE!N，看經營者Henry 是如何讓咖啡館成為載體，讓好玩的事情在這裡發生；南下拜訪在高雄經營了25 年的步道咖啡，老闆張孝維將大半生投注在咖啡與閱讀裡，讓步道成為承接夜晚城市靈魂的所在；而在空間裡大玩策展的鼴鼠Error22 與二子咖啡，流著夠酷夠怪的基因，成為南部創作者們的小小綠洲。\n\n而你的生命裡，是否也有因為旅行、因為際遇而讓你深深記得的咖啡館？劇場人蔡柏璋分享了記憶裡的一間店，讓我們的生活對遠方能一直留有期待與眷戀。最後的小小單元是我的私心，在社群上以分享嘉義咖啡館為主的Ms.Kuishinbou 帶來五樣她珍愛的甜食，不禁又多了造訪嘉義的藉口。\n\n每次從溫州街散步回家，看到Picnic 仍舊燈光熠熠，裡頭人們聚精會神低頭在自己的工作裡像是一個個神聖的小宇宙，儘管現在少去了，但仍會猛然想起十年前也一樣坐在那個位置上的自己，那麼自在，那麼自由。\n\n小日子行事曆\n\n一件事　\n奶茶烤餅粑粑絲 野味私廚和陶藝家私藏的滇緬美味\n讓自然還給每一造訪者 浸潤在有山有海有光的粉色空間\n牢記睡在路邊的謙卑與神聖 生命裡的困頓與流浪也能甘之如飴\n義大利人喝的是咖啡 也是生活的節奏\n我的身體裡 有個和世界反方向的指南針"
+    },
+    {
+        "title": "自學日語 看完這本就能說：專為華人設計的日語教材，50音+筆順+單字+文法+會話一次學會！",
+        "author": "許心瀠",
+        "url": "https://www.taaze.tw/products/11100924960.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100924960&height=400&width=310",
+        "intro": "◆初學日語沒問題！發音方法、筆順、範例單字一應俱全，詳細的50音教學內容！\n一開始學日語，不得不經過的過程便是學習如何「聽、說、讀、寫」50音。本書在「聽、說」部分以QR碼方式提供可隨刷隨聽的線上MP3音檔，和真人發音教學影片，皆由日語母語人士錄製，加上書內的發音嘴型示範、發音技巧，再以羅馬拼音加上漢字標音方式標記，層層保證一定讓你搞懂發音。「讀、寫」部分也提供全50音的寫法筆順，加上大量範例單字，讀完就能知道該怎麼用！\n\n◆50音學完就能通，基礎文法教學和慣用句型，打好日語的基礎！\n學過了50音，自然就要進行到如何正確運用這些50音的階段。書中亦提供基礎的文法教學，從句子的結構講起，介紹何謂日本語的「十大品詞」，也收錄介紹日語的「動詞變化」和「時態」及「敬語」的變化，把日本語最基本的部分全都濃縮在這一章。多少對日語的文法有點頭緒後，再進行到日語的慣用句型介紹，能夠理解「這個詞是哪裡來的？」、「這個詞是什麼作用？」自然就不用死背根本看不懂的句子，就算只有一點皮毛，能夠理解日語句子的結構，才能夠真正去運用！\n\n◆由日籍人士老師所有日語字母發音示範影片，這次一定能學會！\n由日籍老師影片示範所有日語字母發音方式，除了當然會有的50音之外，更包括濁音、半濁音、拗音等等所有的發音示範！除了可以看書學習，還可模擬影片中老師的嘴型，同時比對自己發音時的嘴型看看有哪裡不同，盡可能唸出正確的音。影片以QR碼方式隨書贈送，用手機掃描即可隨時隨地馬上下載觀看。\n\n◆隨書附QR碼可隨掃隨聽！生動配音讓你練聽力、練口說更有感覺\n本書音檔採QR碼掃描下載方式，不需要再用到光碟機，只要用手機掃描即可馬上下載！也提供可將全書MP3一次完整下載的QR碼，不需註冊會員，或額外安裝自己不熟悉的播放APP才能聽，省去每次聽音檔都要掃描的麻煩。（註：由於iOS系統對檔案下載的限制，iPhone用戶需升級至iOS 13以上，方可使用全書完整打包下載連結。）\n"
+    },
+    {
+        "title": "陸王",
+        "author": "池井戶潤",
+        "url": "https://www.taaze.tw/products/11100882005.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100882005&height=400&width=310",
+        "intro": "接下來才是真正的戰鬥！\n你想變成什麼樣子，只能靠自己的雙手來實現；\n就算沒成功，只要努力過，一定會留下痕跡！\n\n埼玉縣行田市的「小鉤屋」是家擁有百年歷史的足袋製造商。「歷史悠久」聽起來很了不起，但說穿了，小鉤屋不過是一家小型地方企業。在時代的沖刷下，業績持續低迷，隨時倒閉都不意外。\n\n「是要就這麼老去，被時代埋葬；還是奮力一搏，拚一線生存的曙光？」\n\n第四代社長宮澤紘一為了公司存續，開始盤算：以前做過的馬拉松足袋，有可能成為逆轉形勢的熱銷商品嗎？\n\n只是，真正著手開發後，才看見四處是阻礙：沒有資金、沒有適合的材料、眾人看衰，再加上運動大廠橫加阻撓……\n\n團隊情誼、破釜沉舟的決心，以及對自家產品的驕傲，真的能幫助小鉤屋面對難關、跨越障礙嗎？與陷入低潮的跑者──茂木裕人的相遇，又會為彼此帶來什麼樣的火花？\n\n賭上未來的命運之戰，現在開始！"
+    },
+    {
+        "title": "用Excel做商業預測：終身受用的原理與實作",
+        "author": "葉怡成",
+        "url": "https://www.taaze.tw/products/11100824441.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100824441&height=400&width=310",
+        "intro": "《用Excel做商業預測─終身受用的理論與實作》掌握原理、融會貫通，善用最簡便的Excel做分析及預測，無論是房價漲跌、股市起伏、市場變化，都可以快人一步掌握相關數據，有利做出任何決策！\n\n一般人可能不清楚，Excel除了是各企業廣泛使用的統計應用軟體之外，原來還可以當作預測軟體。一般人並不知道，妥善使用Excel做預測軟體時，可以協助房價評估、股票報酬率預測、社會現象分析了解，等等。本書採用Excel做為預測軟體，進行教學與自修。Excel雖不是專業預測軟體，但普及性高，具備一些基本的統計功能，適合學生或初學者使用。\n\n本書作者葉怡成教授根據多年的研究心得，以深入淺出的理論表述以及貼近民生的個案範例模擬，嘗試讓讀者了解某些較難懂卻又很實用的理論。例如：「迴歸分析原理」、「因果關係模型」、「時間數列模型」，等。\n\n本書優勢:\n\n1. 本書利用Excel實作了許多範例，讀者可以用這些範例當作「模板」來分析自己的數據，建立預測模型，並進行預測。\n\n2. 實際案例操作分析，與民生方面息息相關之各種主題，皆可從此書學到預測要領。\n\n3. 演算過程具透明度，讀者可以徹底了解原理。內附超實用習題，方便讀者邊學邊做，更有效果。"
+    },
+    {
+        "title": "鈴芽之旅",
+        "author": "新海誠",
+        "url": "https://www.taaze.tw/products/11316558140.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101000486&height=400&width=310",
+        "intro": "從遇見尋找著「門」的青年那一刻起，\n踏上不可思議的神祕旅程。\n\n十七歲的少女鈴芽和阿姨住在九州靜謐的海港城鎮。\n某天上學途中，鈴芽與一名俊美的青年擦身而過。\n想要前往「廢墟」的青年，說著他在「尋找門」。\n鈴芽追著他，來到了山中的廢墟，\n在那裡的只有一扇陳舊的白門，\n彷彿遭逢崩壞，而被獨自遺留下來。\n\n彷彿被某種東西吸引般，鈴芽朝著門　\n伸出手──"
+    },
+    {
+        "title": "【島讀臺灣2】旅讀的理由：城市山海，閱覽詩意",
+        "author": "撰文：詹慶齡 攝影：余尚彬",
+        "url": "https://www.taaze.tw/products/11101062459.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101062459&height=400&width=310",
+        "intro": "「島讀臺灣2」再出發！\n12種閱讀風景 ╳ 4大主題 ╳ 12位書店主人的生命故事\n從城市到山海，漫遊島嶼上的閱讀風景\n尋訪臺灣風格獨立書店‧發現最有態度的閱讀空間！\n\n【特別附錄】島讀臺灣獨立書店•集章紀念護照\n走過城市山海，把每一次閱讀，變成一首詩\n\n　　臺灣有山也有海， 而書店是城市的靈魂，本書將帶你遇見臺灣最有個性的閱讀角落。跟著知名主播詹慶齡、攝影專家余尚彬深度走訪臺灣，踏上以「獨立書店」為主題的微旅行，尋找你「旅讀的理由」吧！精選的12家書店各具特色，無論是專注地方文化、強調療癒閱讀，還是結合藝術與旅遊，每一間都展現了臺灣獨立書店的多樣風貌──\n\n● 第一部：在都市裡的詩意空間\n○ 有河書店：影評人的老字號書店重新出發2.0版\n○ 渺渺書店：外表溫柔內在堅實的清新文學庫\n○ 玫瑰色二手書店：把舊書變年輕的明亮二手書店\n\n● 第二部：山海之間，我們推廣閱讀\n○ 見書店：基隆港邊與海為鄰的文化據點\n○ 籃城書房：擁有國際視野的庄頭書店\n○ 日榮本屋：麻雀雖小內蘊深厚的地方微型書店\n\n● 第三部：以愛款待的閱讀角落：溫暖與療癒身心的好所在\n○ 晨熹社：從家出發，有滋有味的繪本書店\n○ 爬上坡好書室：充滿人道關懷精神的溫馨「好書室」\n○ 版本書店：安寧醫師實踐人文醫療的多元平台\n\n● 第四部：台灣閱讀風景線的多元樣貌\n○ 書集囍室：鹿港小鎮古色古香的老屋風情畫\n○ 瑯嬛書屋：關懷平權與弱勢的性別主題書店\n○ 駅本屋：礁溪車站旁可足浴閱讀的溫泉書店\n\n※※※\n在路上，尋找旅讀的理由\n一場與臺灣獨立書店的深度對話\n一段屬於自己的詩意時光"
+    },
+    {
+        "title": "島讀臺灣：旅行時，到書店邂逅一本書！",
+        "author": "撰文：詹慶齡；攝影：余尚彬",
+        "url": "https://www.taaze.tw/products/11100998756.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100998756&height=400&width=310",
+        "intro": "千萬藏書、百態閱讀。\n每一種差異都是美麗的、每一種分歧都是正確的！\n設計氛圍、精選書刊、音樂電影、藝文講座、奇葩雜貨、秘製美食…..\n每一間獨立書店都有無可仿製的熱烈靈魂，讓人一頭栽進去就不想出來！\n\n本書精選16家臺灣必訪風格獨立書店\n帶你邂逅\n最有態度的個性店主 ╳ 最有創意的建築陳設 ╳ 最具觀點的書籍&文創選品\n共同演繹臺灣特有的 人情文化 與 閱讀態度\n\n跟著《名人書房》製作團隊、知名主播詹慶齡、攝影專家余尚彬深度走訪全臺，\n親赴為每一個獨特靈魂而存在的風格書店文化現場，見識網路熱搜、紅到海外的臺灣奇蹟、書店之光──讓很多人跌破眼鏡之後又默默豎起大拇指的文化界特有品種「獨立書店」！\n\n本書引路多元風格的地標級書店，知識含量、樂趣指數皆破表：\n\n●繪本專門書店，有感繪本趣味反諷人生，讓人會心一笑或引爆你的淚腺\n●製造人與書的邂逅，一間書店打造二層樓閱讀高度\n●百年建築優雅重生，蛻變為島中央文化地標，找回失落的一頁人生歷史\n●可以在書店等待一場電影的開始？盛名遠播連日本NHK都來採訪\n●登堂入室名作家的微型文學館氣質老宅，花樹芬芳、文學盛放\n●用自然的氣息，將死巷活絡成自然生態閱讀小花園\n●可以顧店換宿擔任一日店長，還可能要幫忙賣粥的流動式老闆書店\n●運河畔陽光灑滿花樹浪漫的無敵白色書樓\n●躍上國際，榮獲耶魯大學出版社評選為全球獨立書店推薦名單，臺灣在地人的驕傲，國際旅行者的朝聖地標！\n\n油墨永遠芬芳，靈魂始終沸騰\n以此書向所有 獨立書店的主理人 致敬\n作品特色\n專業團隊導讀，趣味性與知識內涵兼具\n知名主播詹慶齡、攝影師余尚彬聯合《名人書房》專業影音攝製團隊，以獨特視角，展開全臺別具特色的獨立書店微旅行，透過對臺灣多元文化的理解、對推廣閱讀的熱情，走訪特色書店挖掘臺灣閱讀故事與感動，趣味與知識內涵兼具。\n新書收錄書店實地採訪寫作與田野踏查\n耗費時間、精力，實地走訪全臺獨立書店，精選16家臺灣必訪深具特色書店，透過文字與鏡頭，報導最真實、溫暖的臺灣在地閱讀故事，職人精神，特殊經營型態、空間運用、書籍空間陳列，顯現臺灣獨樹一幟的閱讀格調與風景。\n跟著作者探訪獨立書店，帶一本自己的愛書回家。\n出外旅遊也探訪書店，從本書透露的閱讀故事中，探索自身與書店、書籍的深度互動，尋訪愛書，從書店帶一本愛書回家品讀。\n精彩線上特輯\n聆聽書店的故事，看見閱讀帶來的感動 ─\n島讀臺灣‧影像故事特輯\nhttps://www.youtube.com/@bookrepublicpublishinggroup/videos\n走進書店，帶走一本好書─\n精彩活動陸續推出，邀請你一起豐盛閱讀！\n島讀臺灣‧FB粉絲專頁\nhttps://www.facebook.com/readintaiwan\n來一場以書店為主題的旅行─\n島讀臺灣‧數位專輯\nhttps://event.bookrep.com.tw/activity/2022/readtheisland/\n"
+    },
+    {
+        "title": "二手書店店員日記",
+        "author": "尚恩．貝西爾",
+        "url": "https://www.taaze.tw/products/11316993254.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101005987&height=400&width=310",
+        "intro": "關於閱讀、關於一間書店，關於我們熱愛的那一切。\n是怎樣的熱情，讓人甘願守著一間店，痛並快樂著？\n店長歷21年，他收購書、收購他人的人生……直到自己的生活也成了一本書。\n\n你小時候的零用錢，全都用來買書了嗎？\n你曾經全身心熱愛一件事，又為此煩惱痛苦嗎？\n\n▍太過誠實的店長日記\n　　尚恩在蘇格蘭規模第一的二手書店擔任店長，他打造的「威格頓圖書節」每年為蘇格蘭帶來鉅額觀光收益，堪稱文化產業的榮光；而他卻在書中說自己的書店已經負擔不起全職員工。在這個「書店愈來愈稀有，庫存倒充足得很」的年代，尚恩表示下輩子再也不想開書店了，但他始終沒有離開。人們熱愛書籍的根本理由成為尚恩持續堅守書店的主要動力──生活總使我們疼痛，而閱讀撫慰我們、讓我們快樂。\n\n▍自虐出版業的浪漫人生\n　　生活是荒誕的，出版業的人生尤其如此。書店日常的真實基礎是日日夜夜為營業調頭寸、經營毒舌書店粉專努力增加線上訂單，並控制自己不要衝動毆打要求書價打3 折的顧客。尚恩記下無數的書店小日子，串連成有些辛酸又有些浪漫的四季詩篇：今天賣了多少本、誰來訂了什麼書；常客又做了什麼事；還有愛書人去世後，他的藏書如何被家屬論斤秤兩當廢紙賣掉……在生活冰霜與利齒夾擊的縫隙中，在經濟與夢想拉扯的身不由己下，我們看到更多的是尚恩他又讀過什麼、哪本書裡講了哪些故事，他去哪個地方收購了好看的、令人興奮的書。自虐又浪漫，即是愛書人的人生。\n\n▍當熱愛的事＝工作\n　　這是一本超級厭世的工作日記，也是一本講述工作即此生熱愛之事的書。隱藏在書店眾生相之下的，是一個愛書人身處時代洪流下的堅持；是一點點收書時發現未知好書的期待；是一顆但願每個顧客都能在此找到一本有趣的書……那般純粹的心。\n"
+    },
+    {
+        "title": "高盛首席分析師教你剖析超級週期：掌握進場的訊號，啟動長期獲利的投資布局",
+        "author": "彼得．C．奧本海默",
+        "url": "https://www.taaze.tw/products/11317296008.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101051835&height=400&width=310",
+        "intro": "掌握市場週期，預約未來獲利\n\n暢銷書作者、高盛首席全球股票策略師奧本海默，繼《高盛首席分析師教你看懂進場的訊號》後，推出備受期待的續作，幫助讀者了解總體經濟驅動因素（包含經濟成長、通貨膨脹和利率）的結構性變化，及地緣政治和社會變遷因素會如何影響市場的長期趨勢（或稱超級週期）。\n\n本書特色包含：\n\n▍以歷史角度分析市場週期與超級週期，回顧了1900年至今的市場趨勢，分析每個時期的驅動因素、特徵，及對投資報酬率的影響。\n\n▍提出「後現代週期」的概念，作者認為我們正處在一個新「超級週期」的開端，並探討其七個主要特徵，包含資本成本上升、由全球化轉為區域化、勞動力與大宗商品的成本上升、資本支出與基礎建設支出增加等。\n\n▍探討人工智慧和去碳化趨勢對投資的影響，認為AI將繼續推動科技業的發展，去碳化趨勢則會推動對新能源、基礎建設和相關技術的投資。\n\n▍提供不同產業的投資機會分析，包含科技、傳統產業、價值股、新興市場等。\n\n作者剖析當前最新的「後現代週期」，背後的驅動力有：\n\n1.資金成本上升\n2.成長趨勢減緩\n3.由全球化轉為區域化\n4.勞動力與大宗商品的成本上漲\n5.政府支出與債務上升\n6.資本支出與基本建設支出增加\n7.人口結構改變\n\n在這些結構性變化中，作者深入探討科技與人工智慧的發展，將對實體經濟的總體環境帶來哪些重大的衝擊。\n\n作者認為AI將為「舊經濟」帶來龐大的機會。過去十年，「輕資本」的產業比傳統「資本密集」產業表現得更好，然而資本支出的趨勢正在改變，國防支出在增加、尋找能源的替代來源、碳中和等等，這些行動不僅需要巨大的花費，而且不是透過軟體或app就能達成的，這些行動都需要在基礎建設投入大量資金。這股「大資金潮」驅動了未來十年的投資布局。\n\n對於想要洞察先機、了解未來市場情勢和報酬率的投資者，以及對總體經濟、市場週期有興趣的讀者而言，本書都是必讀之作。\n"
+    },
+    {
+        "title": "羅蘋計畫",
+        "author": " 橫山秀夫",
+        "url": "https://www.books.com.tw/products/0010977598?srsltid=AfmBOoqV6Za-vwwCsxDCGubXSpjGcfJu1FmayvvrLRAN4RinPgGLNOeZ&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "img": "https://www.books.com.tw/img/001/097/75/0010977598.jpg",
+        "intro": "　日本文壇盛譽「平成的松本清張」橫山秀夫夢幻大作！\n　　榮獲三得利推理大獎佳作！\n　　十五年前的自殺案，原來竟為一起謀殺案件；\n　　然而，距離最後時效，只剩24小時了——\n　　改編日劇由上川隆也領銜主演！\n\n　　在警方熱鬧舉辦忘年會酒宴，眾人酒酣耳熱之際，突然有年輕刑警遞來了一張紙條，那是警視廳傳來的可靠消息——\n\n　　十五年前一起女教師自殺案實則為他殺，並指出兇手應為當晚潛入校園的三名學生。而這起案件距離時效消滅，僅僅只剩二十四小時！\n\n　　即便如此，警方仍緊急調派人手，找回當年疑似涉案的三名高中生，以釐清案情。但已事隔十五年，光是找回當時的學生已費了一番心力，更遑論學生們的供詞，漸漸讓事情往意想不到的黑暗之處發展。\n\n　　警方急於在時限前查出真相，卻萬萬沒想到，等待著他們的並不僅僅是一起命案的內情；在其背後，除了深埋其中的不堪過往，甚而隱藏著「昭和三大懸案」之一的關鍵真相⋯⋯\n\n日本讀者好評不斷\n\n　　「解謎滿足感是推理小說的精髓，而後半的巧妙伏線逐一解開，更使其倍感樂趣，非常精采！」\n\n　　「從前半部分的盜賊行動開始，感覺像是一段有點壞壞的學生青春，但從發現屍體開始的證詞讓人越來越著迷，無論如何，都讓人迫不及待地想知道結局！」\n\n　　「多起事件交織在一起，一直到最後都不知道是誰是兇手。每當出現證詞或證據時，我都試著自己推理，但最後我只是被牽著走，最初以為的兇手其實是清白的。嗯，真的很有趣！」\n\n　　「最後，發生出乎意料的反轉，但我覺得『這是最好的結局』，鬆了一口氣！」"
+    },
+    {
+        "title": "聚眾商機：互動╳黏著╳擴散，9步思考打造高互動社團",
+        "author": "貝莉．理查森、黃凱文、凱伊．埃爾默．索托",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100987191",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100987191&height=400&width=310",
+        "intro": "Web3.0時代，誰先走入群眾，誰就贏！\n馬斯克為何靠推特一句話，就能影響世界？\n馬克佐克伯為什麼要和大家一起吃速食？\nWeb3.0，風向漸漸轉變，你嗅到了嗎？\n經營社群需要的不是「為群眾而做」，\n而是「和群眾一起」的能力！\n\n人聚集了，機會就來了！\n你還在花錢買粉絲廣告嗎？\n●粉絲專頁的觸擊率下滑，快被演算法搞瘋？\n●開了社團卻沒有人氣，揪人怎麼這麼難？\n●砸錢辦活動，粉絲活躍度仍像躺平的心電圖？\n比起自說自話的粉絲專頁，\n你更需要打造自帶能量的互動社團！\n\n│建立期，點燃火苗│\n1→你的社團是為了誰、為了什麼？\n2→如何讓成員對活動引頸期盼？\n3→如何讓社團成員更加凝聚？\n\n│站穩期，增添柴火│\n4→如何讓成員邀請新血加入？\n5→如何強化成員與社團的連結？\n6→如何讓社團走得更遠？\n\n│擴大期，傳遞火把│\n7→想要擴大規模？\n8→你的領袖需要培力？\n9→如何讓社團長保熱情？\n\n身經百戰的社團打造達人\n貝莉、凱文與凱伊創辦了PeopleCompany顧問公司，\n至今幫助了數百個虛擬及實體的社團獲致成功，\n對象從企業主、電競玩家、明星粉絲\n到投資人、教師、跑步愛好者等通通都有。\n他們經歷Twitch從小直播躍昇為百萬人氣平台，\n見證小粉絲發威，助攻瑪麗亞凱莉衝上音樂榜。\n\n社團時代，你要學的是把熱情變成聚眾引擎，\n一群人一起做大事＞大人物做大事\n群眾的力量，才是生存之道！"
+    },
+    {
+        "title": "書店不死",
+        "author": "石橋毅史",
+        "url": "https://www.taaze.tw/products/11318418269.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100865405&height=400&width=310",
+        "read_url": "https://www.haodoo.net/?M=u&P=P1010490241:0&L=Share",
+        "intro": "在東京的商店街，一手創立只有五坪大書店「日暮文庫」的原田真弓；迎戰「電子書時代」，極力主張「紙本」優點的淳久堂的福嶋聰；在和歌山「人口只有百人的村落」經營「井原心靈小舖」的井原萬見子；岩手縣「教主級」的前「澤屋書店」店員伊藤清彥；在鳥取追求並實踐「一般書店」的「定有堂書店」老闆奈良敏行……\n在市街書店逐漸消失，書店所扮演的角色越來越薄弱的現在，他們所捍衛的「書店」之所以應該存在的理由究竟為何？\n他們為何堅持開設書店？\n在電子書逐漸抬頭的時代，紙本出版流通業的運作系統現況是如何呢？在現實環境日益嚴苛的氣氛下，書店的存在意義是什麼？一些被認為「有特色的書店」裡的店員、老闆們，是以怎樣的姿態繼續經營著這個事業？\n本書作者石橋毅史曾在出版社任職、而後擔任新聞記者，憑藉著對紙本書的熱愛，及對書籍從業人員背後執著熱情的好奇，在成為自由作家之後，遍訪日本數個知名的特色書店、連鎖書店、二手書店，專訪書店從業人員的工作心得，試圖從中分析「書」和「書店」在今後的發展與應該繼續存在於這個世界的時代意義。從根本重新審思這般「傳遞書」的職業，存在的意義究竟為何？"
+    },
+    {
+        "title": "帶1枝筆去旅行",
+        "author": "王儒潔",
+        "url": "https://www.taaze.tw/products/11317134802.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100226169&height=400&width=310",
+        "intro": "【內容簡介】\n鉛筆、鋼珠筆、原子筆、簽字筆……\n只要帶著1枝筆和本子，走到哪畫到哪，讓生活和旅途中處處充滿手繪的驚奇！\n\n這不僅僅是一本繪圖工具書！在這本書裡，除了工具配備、筆記本紙張優缺點分析、基本的繪圖技巧以外，作者還要和你分享他如何一邊旅行、一邊手繪紀錄。\n\n手繪初學者可翻開CHAPTER3，拿起筆直接在書上或另外準備的本子上做練習；在CHAPTER1，可以依需求找到適合旅程的本子，也可以動手做自己專屬的本子；購買工具之前，看看CHAPTER2關於作者對工具們的小建議；最後，來到CHAPTER4，創作自己的旅遊筆記前，先跟著作者的本子們一起去世界各國旅行，或者分享生活中的點點滴滴。\n\n\n【本書特色】\n◆ 準備好1枝筆和1本筆記本，不論隨處旅行或日常生活中，就以手繪保留美好回憶吧！\n\n◆ 作者從多年的手繪經驗中，對工具、筆記本紙張做出徹底的優缺點分析和建議，讓初學者省去摸索時間！\n\n◆ 除了基本繪圖技巧、方法外，加入作者遊歷各國第一時間的手繪圖稿，在學習手繪的同時，還能來趟紙上旅遊。\n\n◆ 在基本繪圖部分，以範例搭配作者特別設計的練習，幫助手繪初學者短時間內就能畫出各種圖案。\n\n◆ 買不到喜歡的筆記本沒關係，作者特別分享手作筆記本DIY法，跟著步驟圖，量身打造出自我風格的筆記本！"
+    },
+    {
+        "title": "享受吧！一個人的旅行",
+        "author": "伊莉莎白．吉兒伯特",
+        "url": "https://www.taaze.tw/products/11317784379.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100241297&height=400&width=310",
+        "intro": "她在小時候有個夢想：以為自己長大後會是兒女成群的媽媽。但在30歲以後，她才發現自己既不想要小孩，也不想要丈夫。\n這是女性對自己的覺醒，當然也是對自己困惑的開始。為什麼我想要的，和原來的世俗標準都不一樣？既然如此，不如享受自己的最佳身心暢快計畫！\n\n好吃！義大利　以前我們尋求娛樂－＞這裡的人尋求快樂\n在令人疲憊的婚姻結束之後，作者在義大利、印尼、印度等三個不同國度之間尋找自己。108個短篇象徵了靈魂探索、自我發現之旅：到義大利品嘗感官的滿足，在世上最好的披薩與酒的陪伴下，靈魂就此再生。她再到了印度，與瑜珈士的接觸，洗滌了她混亂的身心。峇里島上，她尋得了身心的平衡。\n\n在義大利極盡吃喝的享受後，作者忽然有了罪惡的感覺，這個感覺的出現，讓她害怕：既然我擔心罪惡，為何我還要放假？原來，以往我們是在耗費心神後，才去尋找「休閒娛樂」，然而，有人正是以「無所事事的生活」為最高目標！\n\n體驗！印度　以前是「觀光」－＞現在要懂得「體驗」\n作者到了印度，學習瑜珈與禪坐，這是人人對於印度習以為常的印象，也似乎是到了印度該去學習的事，但是她其實不喜歡每日早晨之後古魯梵歌的詠唱。外在的標準是教導我們必須忍受，或努力學習外界「認為對的事」，但是只有「勉強忍耐」一個方法嗎？既然得面對「不愉快」，不如學習體驗人生吧！\n\n去愛！峇里島　自以為是的「自由」，其實是混亂－＞尋求定位自己，才能身心平衡\n作者以為走出平常的生活是追求自由，沒想到和峇里島人相比，只是更顯得自己的步調混亂！在峇里島，人們最常問外來客的問題是：「你要去哪裡？」、「你從哪裡來？」、「你已婚嗎？」，三個問題表現了峇里島人相當注重自己的人生定位：了解自己與家人朋友的關係，與上天的關係，才能找到自己的平衡。"
+    },
+    {
+        "title": "漣漪的夜晚",
+        "author": "木皿泉",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100918564",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100918564&height=400&width=310",
+        "intro": "就算看不見，還是在天空的某處發著光。\n離世的人並沒有離開，只是看不到而已。\n\n小國那須美，\n在能看見櫻花與富士山的醫院病逝，\n享年43歲。\n她的離世宛如水滴落入湖中，微波蕩漾，\n擴散至家人、好友、甚至不曾謀面之人……\n\n縱使去了彼方，她所愛及愛她人的人仍繼續活著。\n然而，她所說過的話、做過的事，\n以及留給眾人的種種回憶，\n則以另一種永恆形式，緩緩生長……\n\n「現在哭還太早了吧。我還活著呀！」\n只想著以後的事，所以很害怕。\n不過，現在過得如何，可是重要多了。\n因為我們「還活著」。\n\n【封面設計】\n由日本插畫家荒井良二操刀繪製封面插圖。封面為夜晚的城市，封底則是櫻花盛開的富士山景。在溫柔夜色之下，眾生彷彿正在這色彩斑斕的溫暖城市之中持續生活，而銀白色的漣漪正在天空中緩緩蕩漾開來。\n\n【各界感動推薦】（以下為節錄）\n◇「木皿泉一如以往地，擅長在角色與角色之間尋找呼吸的縫隙，將原本沉痛的生死離別以溫柔的筆觸寫成屬於大人的床邊故事。」──作家 吳旻育\n\n◇「小說裡這場虛構的平凡死亡，卻可以將漣漪泛入真實讀者心中。我是父親，我願與世界勇敢撞擊，即使撞斷牙根。我要在危機來臨時輕唱兒歌。我想成為我孩子眼中發亮的光點，讓孩子追來，成為下一束光。」──作家 沈信宏\n\n◇「木皿泉的創作特色，同時兼具寬容的胸懷，以及不按牌理出牌的詼諧。不僅如此，他們還擅於描寫人物的內心糾葛，即使是恬淡簡單的鋪陳，一樣會帶出濃烈的情感，即使沒有刻意去說教，仍然能夠使觀眾獲得深刻的啟發。」──日劇劇評 雪奈\n\n◇「或許會被認為是有勇無謀，但因那須美的『不怕死』，給了週遭所有人生存下來的勇氣和幸福。」──大眾書局採購部經理 何宗慧\n\n◇「作者書寫的情節，是再平常不過的生活日常，卻因此更能感受到生者對逝者的思念不捨。」──MLD Reading經理 莊璧菁\n\n◇「死者已矣，那麼他們的故事就由生者去繼續編寫。如小時候姊妹倆的打賭，那須美的石頭『啵』的一聲到達水面，產生的漣漪波動著一個個還在跳動的心。」──誠品書店 Simon See\n\n◇「人誕生和離開時同樣孑然一身，但有些無形事物仍然會留下，如話語和經歷，保存在某些人的記憶裡，不時響起和閃過。」──誠品書店 Verna Lam\n\n◇「我閱讀此書時又哭又笑，那須美在每個角色心中產生的漣漪，讓閱讀的人也產生了勇氣與力量。」──誠品書店 王聖婷\n\n◇「藉由那須美的早逝，帶出週遭人內心的各種漣漪，人與人之間的連結就有如水花一般，看似清淺且一閃即逝，但其實底下是巨大的湖，緊密相依且柔軟溫柔。」──誠品書店 楊琬琳\n\n◇「我從沒想到『死亡』這個詞彙可以變得如此溫柔，雖然偶然使人刺痛，卻默默地伴著在世的人，給予他們力量，在還看不見終點的道路上緩慢地前進。」──誠品書店 盧泳怡\n\n◇「死亡與新生命的來臨或許是兩個極端，但看完整本小説以後感覺死亡雖是終結，但又會帶來新的希望，同時間亦想起「糸」這個字，不論彼此的距離，我們正生活在同一片天空下。」──誠品書店 鍾恩偉\n"
+    },
+    {
+        "title": "記憶書店浮光堂",
+        "author": "野村美月",
+        "url": "https://www.taaze.tw/products/11101073594.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101073594&height=400&width=310",
+        "intro": "「記憶」是寫在靈魂之書裡，專屬於自己的故事。\n當書頁上的文字消失，重新填補空白，就會誕生完全不同的故事……\n\n傳聞，在白天是咖啡廳、晚上是酒吧，位於地下室的一家店內，\n可以遇見「記憶買賣人」——現野一夜。\n他面無表情，渾身散發冰冷氣息，宛如死神。\n然而，這是碰觸人心深處最柔軟的部分，非常特別的工作。\n\n「記憶」能夠買賣、移轉、改寫，提供前所未有的體驗，\n當他的掌心浮現光團，翻開獨一無二的靈魂之書，\n機緣巧合找上門的顧客，同時也經歷一場靈魂拷問：\n● 你為什麼來到這裡？\n● 你有想遺忘的人，或想被誰遺忘嗎？\n● 你想成為怎樣的人呢？\n\n男友失蹤的視障心理師，勇敢追愛卻遭背叛的上班族，\n初戀女神突然失憶的推理作家，渴望維持身材和精進演技的劇場女王，\n跟爺爺約定一起爬山卻不敵病魔的男孩……\n生活在某一刻失序的人，與「記憶買賣人」產生交集，\n他們能夠獲得自己想要的幸福嗎？\n\n擁有不可思議能力，卻好似空殼的「記憶買賣人」，\n接觸形形色色顧客的人生一幕後，\n欠缺身為人的本質的這名青年，也漸漸有所改變……\n\n❍   ❍   ❍\n\n〈與你一同看見的美麗世界〉\n在車禍中失去視力的心理師靜乃，有個體貼的戀人誠，總是陪她一起遊歷書中美景。\n某天，誠忽然失去音訊，靜乃造訪他的職場，發現他一年前已去世……\n \n〈表達愛最好的方法〉\n嚮往成為優雅主婦的杏里，積極參加聯誼，意外對內向的牧彥產生好感。\n交往過程中，杏里逐漸拋棄對優渥生活的執著，暗自期待牧彥求婚。不料，她卻撞見牧彥與美豔同事約會……\n\n〈美食的代價〉\n「劇場女王」卡蓮娜的新作《亂世佳人》大受好評，尤其是不輸費雯麗的細腰更襯托出完美扮相。\n只是，卡蓮娜日漸消瘦的身影引人擔憂，她卻堅稱每天都享用豐盛的美食……\n\n〈明的初戀〉\n歷經長達十年的暗戀，推理作家犬嗣明奇蹟般和心目中的女神妙花成為情侶。\n然而，截稿日前，妙花突然傳來許多不安的訊息「我好像快記不得你了」……\n\n〈玫瑰的反叛與薺菜的自尊〉\n以華麗有氣勢的表演著稱的卡蓮娜，為了打破刻板印象，證明自己也能演好平凡女子，再度找上「浮光堂」。\n可是，卡蓮娜的表演反倒引來導演的批評……\n\n〈爺爺的遺產〉\n身體孱弱的航希從小不斷進出醫院，爺爺為了鼓勵他，與他約定「等你滿九歲，我們一起去爬山」。\n即使病情不樂觀，航希仍努力活到了九歲，爺爺卻病倒了……\n\n【書迷感動推薦】\n\n● 從第一篇故事開始，我的眼淚就停不下來。各篇故事描繪重要的記憶和情感，以及生而為人的反思，\n這一點和「文學少女系列」的視角是相同的，是我非常喜愛的一冊。\n\n● 無論是鮮明或模糊，溫柔或苦痛，記憶都是形成現在的我的一部分，讓我深切感受到這一點的作品。\n\n● 「閱讀」或許和浮光堂的工作是一樣的。誰的記憶和自己重疊，就會產生新的記憶，成為新的故事。這無疑是一種奇蹟。\n一篇篇故事醞釀出主題的深度，也漸漸能看出現野人性的一面。有成長也有感動，是富有野村老師風格的美好作品。\n\n● 買賣記憶的行為，猶如告解和懺悔。交出記憶的人，接收記憶的人，仲介記憶的人，藉此獲得救贖。\n帶有喜劇色彩的篇章很好入口，但較為嚴肅的篇章也打動我的心，相當有意思的小說。"
+    },
+    {
+        "title": "賺錢公司的採購學：產品要想賣得好，先得買得好。懂採購，獲利比銷售賺更多，下一個高階主管就是你。",
+        "author": "肖瀟",
+        "url": "https://www.taaze.tw/products/11100936509.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100936509&height=400&width=310",
+        "intro": "「採購和銷售，是全公司唯二能掙錢的部門，其他部門發生的，都是費用。」\n──奇異電氣前總裁 傑克．威爾許\n\n◎當採購有啥難，會討價還價就行？錯！幹採購搞懂的專業，夠讓你成為經營者。\n◎催貨要急，貨款慢付？當心最後和你配合的廠商害你丟頭路。\n◎採購如何防弊、不積壓資金？不懂品質檢驗方式，如何買到好東西？\n◎要知道供應廠商報價合不合理、有沒有摻水，該從哪些地方著手？\n\n買東西誰不會？但產品要想賣得好，首先得買得好！\n作者肖瀟曾在中國大型國家企業總部任職。他認為，花錢買東西是一種專業，\n零基礎學採購，再晉升經營者，教你怎麼把花錢的大事變賺錢本事。\n\n◎採購計畫和預算，該怎麼訂？\n．先弄懂公司需要什麼？因為買了，還不等於買對了！\n給相關部門的請購單上，一定要請對方確認數量、包裝、售後服務、運輸\n和檢驗方式等，過程中若發現更適合的產品，亦可調整原先採購需求。\n\n．最適採購量的計算要考量七個變數：\n擬定預算時，要先打聽材料行情，預估需求數量，\n訂採購計畫時要先加法再減法，本書提供申請單據、計畫表和預算表，讓你照套。\n\n◎成功企業的背後，都有一群優質供應商，該怎麼和他們打交道？\n．如何對待供應商：獵人模式 vs. 牧人模式。\n獵人模式只在乎價格，不斷要求供應商降價，往往兩敗俱傷。\n牧人模式是與供應商共同成長，豐田就用這套方法讓一款車型降低30％的成本。\n\n．處理供應商關係的八字方針：分類、減少、開發、扶持。\n依採購金額和供應風險，可將供應商分為四類「槓桿型、戰略型、一般型、瓶頸型」。\n怎麼應對？重點是不能被對方牽著鼻子走，但也不能太常換廠商，如何評估？\n內附供應商績效考核分數表，協助你作為監督依據。\n\n◎採購談判與價格控制？\n．討價還價有三招，畢竟公司採購不是逛夜市！\n．了解供應商報價背後的三種算盤，讓你殺價殺得更理所當然！\n．報價有沒有摻水？可從幾個面向一眼看穿是否過高！\n但重點是，參與談判的團隊成員不能自行唱反調。\n\n◎產品的品質要好，得從原料的採購開始，從頭管理！\n．全面品質管理（TQM）有八個步驟，再配合奇異公司的六標準差。\n如何用制度管理採購品質？本書有範例供參照。\n還有，採購不能忽視的最後一關：驗收。怎麼驗？\n\n採購怎麼樣才算做得好？\n全球最大、擁有8,500家分店的連鎖超市沃爾瑪說：永遠不要買太多！\n\n本書附錄採購常見英文縮寫對照、以及採購常見英語場景對話，\n讓你零基礎也能懂採購，更能從小採購晉升為經營級主管！"
+    },
+    {
+        "title": "給台灣的情書",
+        "author": "張瀞仁 Jill Chang",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101048884",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101048884&height=400&width=310",
+        "intro": "願我們都能傾聽內心的聲音、試著理解他人，\n做出盡量善良、溫柔的決定。\n或許，我是說或許，越為人家著想，人家就越為我們想。\n\n\n給台灣的情書：在夕陽下看到黃昏市場大哥大姐準備開店的樣子時、在充滿木頭香味的古蹟裡看書時、在路上被第五百次問路時、或在便利商店取貨付款時，我生活中有無數個這種小小的奇蹟時刻，每一個時刻都讓我全身充滿「這就是台灣啊，太幸福了」的感覺。\n\n世界不夠好，但我們可以變好：大家捐錢是為了什麼？為了積陰德祈福、節稅、求得好名聲，還是為了心中理想世界的樣子？真要說的話，我可能比較接近最後一項。\n\n試成美麗的街景：一直以來只穿黑、白、灰、藍的我，那天在服飾店也挑了粉綠色的長褲。每次都試一點不同的，慢慢找到自己適合的，或許有天，我也會是美麗街景的一部分。\n\n終點前的回眸：工作花掉我們這麼多時間、職涯又這麼長，你想要怎麼被記得呢？願我們從終點回眸時，即使有憾、也都無悔。\n\n香香的對抗世界：走出球場的時候，我滿心感謝，感覺對這個世界依然可以有所期待。第二天開始，我噴上喜歡的香水、繼續做我覺得對的事，然後笑笑的，畢竟 there's no crying in baseball（棒球裡沒有眼淚）。\n\n希望這本書是像彩虹一樣的橋，讓異國的人們來這片土地看看；\n也希望很久很久以後，我們仍然可以這樣自由的寫著我們熱愛的家。\n\n「有人說自由像空氣，平常沒感覺、沒有就知道有多痛苦；我覺得安全也是，去到美國的我，覺得像在習慣阿爾卑斯山上純淨空氣的人來到工業城，一直咳嗽才知道空氣品質也是有分的。謝謝守護台灣的人們，你們一直背著我們，卻從未嫌我們重。」——張瀞仁Jill\n\n專文推薦\n曾文誠（資深球評）\n近藤弥生子 Yaeko Kondo（編輯、紀實文學作家）\n\n溫暖推薦\n野島剛（資深媒體人／作家）\n楊双子（小說家）\n郭怡慧 Michelle Kuo（政大創新國際學院客座副教授，《陪你讀下去》作者）\n\n我們或許可以和Jill一樣，學著看看台灣的美、學著看看身邊事物的好，也或者靜下心來回想有什麼是你在乎的，可以永遠珍藏在心裡的記憶，試者也寫封「情書」吧，不論要給誰都是很棒的！——曾文誠\n\nJill曾形容我「像一扇能看讓日本與台灣互相看見的窗戶」，對我來說，她也是一樣。 像Jill這樣，在台灣，大家能用我沒有的視角看待世界各種事物，總是動搖我的價值觀，幫助我解開在日本成長過程中不知不覺中被束縛的「必須如此」的枷鎖。這種解放的喜悅是無可取代的。——近藤弥生子"
+    },
+    {
+        "title": "寫作吧！一篇文章的生成",
+        "author": "蔡淇華",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100939169",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100939169&height=400&width=310",
+        "intro": "師鐸獎得主蔡淇華老師這本新書做了一個大膽的嘗試，就是將「作文書」與「文學書」熔於一爐。「作文」與「文學」乍看扞格，然而作文系出散文，因考場而生，以明志為氣，取邏輯為骨，納詩質為魂，與文學脈絡，處處可尋。\n\n本書分為「升學作文」、「文學創作」、「文字運用」等三大部分，大膽架構一個學習寫作的藍圖，就是將「升學作文」的基本美學，嫁接到更深層的新詩、散文、小說、作詞等「文學創作」，甚至到職場後，可以串聯到實用的文案、下標、作詞等「文字運用」。\n\n期待這本書的生成，能成為島嶼寫作教育的一塊基石，來日文字築城，創新之邦，江山可待！\n\n專文推薦\n林佳樺(時報、林榮三散文獎得主)\n\n強力推薦\n宋裕 (翰林版高中課本編輯召集人)\n宋怡慧(作家／新北市立丹鳳高中圖書館主任)\n李崇健（千樹成林創意作文創辦人）\n林怡辰（閱讀推廣人）\n林晉如(教育部閱讀推手)\n陳怡嘉(女王的教室)\n張經宏 (小說家)\n張輝誠（學思達教育基金會創辦人）\n許榮哲（故事大師）\n黃國珍 (品學堂創辦人)\n彭菊仙(親子作家)\n歐陽立中（Super教師／暢銷作家）\n(以上按姓名筆劃排列)\n\n\n推薦語\n\n這本書為台灣寫作教育，熔煉出一塊恆久的基石。——黃國珍\n\n此書獨力衝決各式文類壁壘分明的藩籬。——張輝誠\n\n《寫作吧！》系列三書印證了只有淇華能超越淇華。——宋怡慧\n\n教育制度做不到的事，作為擴充功能，這本書幫忙做到了。——許榮哲\n\n淇華老師獨門的寫作功夫都無私整理在這本書裡。——彭菊仙\n\n從升學作文、文學創作、廣告行銷、到社群經營，淇華用盡全力，讓寫作成就你的人生！——歐陽立中\n\n從應試、文學、到職場語用，一脈相承，面面俱到，讀來蕩氣迴腸。——林怡辰\n\n這本書會讓你立刻被看見！——陳怡嘉\n\n成為作家的路上，琢磨創作的金針。——張經宏\n\n寫作藍圖，招招打通寫作的任督二脈。——林晉如\n\n涵蓋文學與考試，謀篇架構，羅列範例，深具素養，完全實用。——李崇建\n\n三十篇便是三十招，可幾天勤練一、兩式，練絕了，便是絕招。——林佳樺"
+    },
+    {
+        "title": "陸王",
+        "author": "池井戶潤",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100882005",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100882005&height=400&width=310",
+        "intro": "★日本讀者為之欲罷不能，臺灣讀者久等了！\n日本銷量突破65萬冊，同名日劇引爆話題沸騰，役所廣司+竹內涼真+山崎賢人同臺競演！\n\n★痛快、愉快、爽快！日本國民作家池井戶潤又一傑作！\n孕育出「半澤直樹」系列和「下町火箭」系列等百萬熱銷佳作，作品集娛樂性、熱血、爽快度於一身！\n\n★不論是否看過日劇，都不能錯過原著小說！\n日劇有強大的戲劇與情緒張力，牽動觀眾的目光；原著則細緻寫出人物內心的各種思慮、掙扎，以及彼此產生連結的曲折過程，更是扣人心弦！\n\n★突破瓶頸，重新找到振作的可能！\n百年（但業績不振的）老店＋（陷入低潮的）馬拉松選手，且看遇到瓶頸的彼此，如何在眾人看衰中找到重新振作的可能性！\n\n★還以為自己不可能這麼熱血！每三行畫線一次，每五頁便熱淚盈眶！\n書中金句滿滿是，不論是發人深省、振奮人心，或引人熱淚，在在為讀者帶來勇氣！\n\n★盧建彰、陳夏民、鄭俊德、許立杰、歐陽立中、豬大爺、果子離　各界名人好評連連！\n\n接下來才是真正的戰鬥！\n你想變成什麼樣子，只能靠自己的雙手來實現；\n就算沒成功，只要努力過，一定會留下痕跡！\n\n埼玉縣行田市的「小鉤屋」是家擁有百年歷史的足袋製造商。「歷史悠久」聽起來很了不起，但說穿了，小鉤屋不過是一家小型地方企業。在時代的沖刷下，業績持續低迷，隨時倒閉都不意外。\n\n「是要就這麼老去，被時代埋葬；還是奮力一搏，拚一線生存的曙光？」\n\n第四代社長宮澤紘一為了公司存續，開始盤算：以前做過的馬拉松足袋，有可能成為逆轉形勢的熱銷商品嗎？\n\n只是，真正著手開發後，才看見四處是阻礙：沒有資金、沒有適合的材料、眾人看衰，再加上運動大廠橫加阻撓……\n\n團隊情誼、破釜沉舟的決心，以及對自家產品的驕傲，真的能幫助小鉤屋面對難關、跨越障礙嗎？與陷入低潮的跑者──茂木裕人的相遇，又會為彼此帶來什麼樣的火花？\n\n賭上未來的命運之戰，現在開始！"
+    },
+    {
+        "title": "AI與大數據技術導論（基礎篇）：發展歷程、產業鏈、運算模式、機器學習……從理論概述到核心技術，深度探索人工智慧！",
+        "author": "楊正洪郭良越、劉瑋",
+        "url": "https://www.taaze.tw/products/11101022907.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101022907&height=400&width=310",
+        "intro": "「沒有大量資料支撐的人工智慧就是人工智障」\n\nAI是什麼？為什麼熱門？是否已經成熟？\n跟著本書搞懂資料科學，跟上未來趨勢！\n\n▎人工智慧用於何處？\n2017年是人工智慧（Artificial Intelligence，AI）年，人工智慧技術越來越多的應用到日常生活的各個方面。AlphaGo ZERO替代AlphaGo實現自我學習；百度無人汽車上路；iPhone X開啟Face ID；阿里和小米先後發表智慧音箱；肯德基上線人臉支付……這些背後都是人工智慧技術的驅動！\n\n【人工智慧概述】\n首先為讀者解釋了AI的基礎概念，探索其技術的成熟度，並對美國和中國的AI現狀進行比較。此章還概述了AI與雲端運算和大數據的深層關係及歷史發展。\n\n【AI產業、資料及機器學習】\n從AI產業的基礎層、技術層到應用層逐層深入，並介紹大數據的基本概念、現狀及其在中國的運算模式。此外，機器學習作為AI的核心，我們著重於其基本概念和資料的預處理方法。\n\n【模型和機器學習的演算法】\n從模型的基礎訓練到評估，以及各類型的機器學習演算法，如支援向量機、KNN和決策樹等，這些都為讀者提供了全面的視野。\n\n【探討深度學習】\n深度學習是AI的另一個重要分支，本章專門探討此領域，涵蓋從基本神經網路到卷積神經網路的各種技術。\n\n\n\n本書特色：本書全面講述人工智慧與大數據涉及的技術，共分7章，包括人工智慧概述、AI產業、資料、機器學習概述、模型、機器學習算法、深度學習等。閱讀完本書後，讀者將對人工智慧技術有全面的理解，並能掌握AI整體知識架構。\n\n作者簡介：\n\n楊正洪，在矽谷從事AI和大數據相關研發工作十餘年，是海外智庫專家顧問，曾擔任在美上市公司CTO、北京某國企CIO和上海某國企高階副總裁等職。出版了《智慧城市》、《大數據技術入門》等多本暢銷書。\n\n郭良越，專職作者。\n\n劉瑋，專職作者。"
+    },
+    {
+        "title": "笑傲股市：歐尼爾投資致富經典",
+        "author": "威廉．歐尼爾",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100934250",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100934250&height=400&width=310",
+        "intro": "全美狂銷逾200萬冊，數十年來投資人必讀經典\n啟蒙馬克．米奈爾維尼《超級績效》的投資巨作\n尋找潛在飆股的最強攻略指南\n\n威廉．歐尼爾的全球暢銷書《笑傲股市》，透過各式各樣的市場，向全球超過兩百萬個投資人傳授累積財富的秘密。歐尼爾的CANSLIM®投資系統——一套讓風險極小化且通過考驗的七步驟流程——擁有強大的力量，已經對數個世代的投資人造成深遠的影響。\n\n【全新增訂版】為讀者提供：\n\n◆ 股價大漲前找出飆股的技巧\n◆ 選出最佳股票、共同基金和ETF，讓獲利極大化的訣竅\n◆ 100個全新技術線圖，幫助讀者掌握最具獲利能力的趨勢\n◆ 特別增訂：21個投資人最常犯的錯誤策略\n\n序文推薦\nJenny(《美股投資學》作者)\n美股隊長(《美股隊長操作秘笈》作者)\n\n國際讚譽\n「投資股票的成功需要三項基本要件：一套有效的選股策略、風險管理方法，以及遵守上述兩項要件的紀律。威廉．歐尼爾就是一個最好的範例。」——傑克．史瓦格(Jack D. Schwager)，《金融怪傑》(Market Wizards)系列作者\n\n「我將2004年的《股票操作者年鑑》(Stock Trader’s Almanac) 獻給比爾．歐尼爾：『他高瞻遠矚、創新且紀律分明的股票市場投資方法，將影響未來許多世代的投資人和操作者。』」——耶爾．西爾斯區 (Yale Hirsch)，《股票操作者年鑑》發行者與編輯，《讓我們改變世界》(Let’s Change the World Inc.)一書作者\n\n「《投資人財經日報》為世人提供長達四分之一個世紀的絕妙金融新聞與投資策略。」——大衛．寇勒威(David Callaway)，《市場觀察》(MarketWatch)主編\n\n「《笑傲股市》是ㄧ本經典巨作。任何一個真正想在市場上賺錢的人，都一定要讀這本書。」——賴瑞．卡德洛(Larry Kudlow) ，CNBC《卡德洛報告》(The Kudlow Report)節目主持人"
+    },
+    {
+        "title": "Word 365全方位排版實務：紙本書與電子書製作一次搞定 ",
+        "author": "榮欽科技",
+        "url": "https://www.taaze.tw/products/11101009212.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101009212&height=400&width=310",
+        "intro": "全新Word 365大進擊\n輕鬆活用Word學會專業文件排版\n做出具視覺效果‧易於閱讀的專業質感文件！\n\n對於上班族或學生來說，利用Word軟體來處理辦公文件或研究報告，是最基本的工作技能，不管是通知書、會議記錄單、表格、圖表、宣傳單、卡片、價目表、手冊、網頁、書面報告等，大家都會使用Word來製作編排，只是完成的作品程度參差不齊！\n\n本書除了讓你對全新Word 365操作介面，從原有的熟悉度達到精熟的地步，更著重在以Word做專業排版，目的是在協助你使用熟悉的Word軟體，來製作出一份具專業質感且又具效率的文件。因此，對於印刷流程、紙張開本、版面結構、裝訂裁切、文件類型、排版原則、頁面佈局、文字建構、樣式設定、範本製作、圖文編排、內容圖形化、快速修正錯誤等各項必備知識，從中歸納出許多簡單又實用的使用技巧和要訣，輔以實際範例解說，讓你一目了然、輕鬆上手。運用你所熟悉的Word功能，便能快速完成具專業水準的排版文件。\n\n目錄\nCHAPTER 01 認識數位排版\n1-1 印刷出版流程\n1-2 印刷排版基礎知識\n1-3 Word 做排版的優／缺點\n1-4 Word 文件類型\n1-5 Word 排版原則與應用\n1-6 Word 環境概觀\n\nCHAPTER 02 頁面佈局的排版技巧\n2-1 頁面佈局要領\n2-2 設計文件的版面配置\n2-3 開始頁面佈局\n2-4 實作－書冊版面設定\n\nCHAPTER 03 文字建構的排版技巧\n3-1 文字排版要點\n3-2 文字與符號輸入\n3-3 建構其他文字物件\n3-4 實作－建構文字\n\nCHAPTER 04 文件格式化的排版技巧\n4-1 格式化設定要領\n4-2 強化文件佈局的整齊清晰\n4-3 字元與段落格式設定\n4-4 項目符號與編號\n4-5 實作－文字與段落格式設定\n\nCHAPTER 05 樣式編修的排版技巧\n5-1 為何要使用樣式\n5-2 樣式的套用／修改與建立\n5-3 以樣式集與佈景主題改變文件格式\n5-4 樣式的管理與檢查\n5-5 實作－樣式的設定\n\nCHAPTER 06 提高文件建立的效率－善用範本做排版\n6-1 為何要製作範本\n6-2 範本版面配置技巧\n6-3 實作－建立與應用書冊排版範本\n\nCHAPTER 07 圖文配置的排版技巧\n7-1 善用圖片或美工圖案修飾文件\n7-2 圖文配置技巧\n7-3 圖片編輯與格式設定\n7-4 實作－圖片與文字的組合搭配\n\nCHAPTER 08 文件內容圖形化的排版技巧\n8-1 使用與編輯圖案\n8-2 使用與編輯SmartArt 圖形\n8-3 實作－以SmartArt 圖形製作圖片清單\n\nCHAPTER 09 表格與圖表的排版技巧\n9-1 表格與圖表使用技巧\n9-2 表格建立與結構調整\n9-3 表格內容設定與美化\n9-4 使用與編輯圖表\n9-5 實作－文字轉表格與表格美化\n\nCHAPTER 10 長文件的排版技巧\n10-1 長文件編排注意事項\n10-2 頁碼與頁首／頁尾設定\n10-3 自動標號功能\n10-4 參考資料設定\n10-5 建立目錄\n10-6 封面製作\n10-7 主控文件應用\n10-8 實作－章名頁／書名頁／推薦序言／目錄／主控文件設定\n\nCHAPTER 11 快速修正排版錯誤\n11-1 自動校閱文件\n11-2 尋找與取代文字 .\n11-3 指定方式做取代\n11-4 尋找與取代格式\n\nCHAPTER 12 列印／輸出與文件保護\n12-1 少量列印文件\n12-2 印刷輸出\n12-3 文件保護\n12-4 將文件轉為電子書格式"
+    },
+    {
+        "title": "未央歌",
+        "author": "鹿橋",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100806102",
+        "read": "https://www.haodoo.net/?M=u&P=A562:0&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100806102&height=400&width=310",
+        "intro": "這是一個有情世界，\n在美好故事裡，看見自己和身邊的人\n\n薄暮青山路又斜\n倘佯湖畔少人家\n浮生若夢的不差\n聽我歌聲隨流水到山崖\n──鹿橋　題\n\n昆明的太陽是最叫人愛的，那些驕傲美麗的飛機就常常在晴空之下舒展翻轉他們耀目，銀色的翅膀，下面看得快樂的人們眼也花了。\n\n民國三十二年，重慶郊外山洞：\n為了一向珍視那真的，曾經有過的生活，我很想把每一片段在我心上所創作的全留下來，不讓他們一齊混進所謂分析過的生活經驗裏，而成了所謂錘鍊過的思想。又為了過去的生活是那麼特殊；一面熱心地崇景著本國先哲的思想學術，一面又注射著西方的文化，飽享著自由的讀書空氣，起居絃誦於美麗的昆明及淳厚古樸的昆明人之中，所以現在記載時所採用的形式也是一樣特殊的。──鹿橋\n\n一九七二年，聖鹿邑：\n在你很擠的房子裏，很忙的工作中，如果她（未央歌）也能在你中心拓展出一片風光山色，使你獲致心靈上片刻的慰藉與安寧，這就是我所馨香祈禱的了。──鹿橋\n\n未央──千秋萬世，長樂未央──來者不識，去向未明，《未央歌》一如完全透明白色大理石般那樣的美好，是一部歌頌青春友情的小說。延伸閱讀\n《未央歌》(限量精裝珍藏版)\n《市廛居》\n《人子》\n《懺情書》\n《鹿橋歌未央》\n\n關鍵特色\n★繼1967年初版，至今長銷不衰的長篇小說。\n★民國校園版的浪漫、青春小說，描寫一群大時代的大學生，他們的成長故事。\n★五十週年紀念版深情上市。特別收錄作家楊照專文導讀。"
+    },
+    {
+        "title": "絕對續訂！訂閱經濟最關鍵的獲客、養客、留客術",
+        "author": "尼克．梅塔、丹恩．史坦曼、林肯．墨菲",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100884767",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100884767&height=400&width=310",
+        "intro": "「訂閱經濟」模式之下，消費者行為正在從「擁有」轉向「使用」，「一次買斷」轉向「長期訂閱」。不同於客戶買完就走、「有一餐沒一餐」的一次性收入，公司可以得到的是：長期訂閱合約和最寶貴的資源：穩定的現金流！在此風潮之下，從軟體到音樂，影音到飲食計畫等服務紛紛轉型，為訂閱經濟起飛挹注源源不絕的動力。\n\n本書就是要討論訂閱經濟最關鍵的實務問題：公司除了爭取新客戶外，更重要的是努力保留舊客戶，當顧客擁有美妙的體驗以及賣家許下的承諾，才會一訂再訂、終身支持，而非一再流失。怎麼做到？答案就是「客戶成功」！\n\n做到「客戶成功」核心在於「公司投入資源與客戶互動，以確保客戶獲得價值、為客戶帶來成功」，正如創發「訂閱經濟」一詞的左軒霆所說：「在傳統業務中，客戶關係以購買結束。但在訂閱業務中，客戶關係始於購買。」讓忠誠的客戶跟著你，跟你買更多東西，這表示你必須拿出客戶需要或想要的東西，讓客戶擁有最佳體驗。\n\n除了科技公司不能不跟上這股浪潮，無論是傳統B2C以及非科技公司（如雜誌、健身房、有線電視等）、或是想轉型的任何公司，都可以在這本聚焦於「客戶成功」的指南書找到獲客、留客的基礎概念及創建團隊、務實執行的方法。由來自矽谷的三位專家執筆，難能可貴的是，還有當前領頭的10位從業者指點10項客戶成功原則，你可以學到：\n★如何賣給對的客戶★\n要精準服務，就得依據資料數據嚴格定義出理想客戶，將團隊各層面的目標校準一致為對其服務。\n★避免客戶不續訂或不回購★\n如果客戶使用率降低，客戶成功團隊必須引導、說明所提供的方案及服務，只要客戶更快獲取價值，流失率將會下降。\n★知道你的客戶目標是什麼★\n服務必須聚焦在：你的客戶衡量成功的標準是什麼（省下多少時間、增加多少收益、減少多少成本、確切財務影響等），以及客戶需要達到什麼成果？雙方都共享也理解這些目標，你才能評估並監控整個過程。\n★縮短達成的時間★\n要在合理的時限內看到價值，賣家就要挑戰創造價值的最短時程。你必須和客戶一起建立衡量標準、即時因應調整、每次的聯絡都要確認，以及增加能夠達到標準的業務人員。\n★嚴格的衡量指標★\n包括：與客戶各種不同互動的頻率、總流存率、淨留存率、拓展、標誌留存率、客戶滿意度等。\n★全公司動起來★\n將客戶成功哲學滲透到整家公司，所有營運問題都以客戶成功為優先，重新設計產品與組織。\n\n本書是訂閱經濟潮流下，唯一一本聚焦於「客戶成功」的指南書，無論是想轉型為訂閱模式、升級自身產品與服務、與客群建立長長久久關係，這本實用指南都能給你啟發——客戶將持續訂閱，一再回購！\n\n◎本書特色\n1. 第一本訂閱經濟實戰攻略！矽谷行家從頭解析續訂的祕密\n風行矽谷，Adobe、思科、微軟……的訂閱經濟潮來襲，你的事業能否站上浪頭？本書由矽谷專家解析訂閱經濟提高留客率及預期客戶終身價值（LTV）的概念、輔以企業案例，提出思考指引與確實可行的建議。對初學者或經理人、傳產或新創科技都能帶來啟發。\n2.聚焦訂閱經濟成功關鍵：「Customer Success客戶成功」怎麼做？\n建立長期關係以黏住現有客戶，而不只聚焦獲得新客戶，怎麼做？本書請10位從業領頭羊分享10大原則：釐清概念、優化業務、調整組織團隊……既打基礎也提供方法，讓你一次補足知識。\n3.切實可用！找到屬於你和你的公司的轉型方向和實戰方法\n無論讀者屬於B2B／B2C的SaaS（軟體即服務）公司、訂閱模式的傳統公司、想轉型為訂閱模式的公司，甚至仍採按次計費模式，本書都能教會你減少／管理流失、帶動現有客戶的合約價值增長、改善客戶體驗及客戶滿意度。"
+    },
+    {
+        "title": "世界盡頭的咖啡館：這一生，我為何而存在？",
+        "author": "約翰．史崔勒基",
+        "url": "https://www.taaze.tw/products/11101057915.html?utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=1029269ee721720f8f6fdbf3b0eb79",
+        "read": "https://read.99csw.com/book/11036/397820.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101057915&height=400&width=310",
+        "intro": "在一家位於偏僻之地、彷彿世界盡頭的小咖啡館裡，\n疲憊的旅人約翰正處在一個十字路口，\n只想在繼續自己的旅行前補充一點能量。\n但這一晚，他發現了完全不同的心靈補給——\n\n除了今日特餐之外，\n這間咖啡館的菜單還列出了三個問題，\n鼓勵所有客人思考：\n\n你為什麼在這裡？\n你害怕死亡嗎？\n你感到滿足嗎？\n\n透過這些靈魂拷問，以及在咖啡館內遇見的三個人，\n約翰踏上了一趟覺醒的旅程，\n從繁忙的城市到慵懶的南美洲海灘，\n從渾渾噩噩卻不滿足的生活，\n到為自己、為人生定錨一個位置——\n\n如果你走在人生的迷霧中，歡迎來到「問題咖啡館」。\n\n「人生其實是一個精彩的故事。\n只是有時候，我們忘了自己就是作者，\n能夠隨心所欲地書寫它。」"
+    },
+    {
+        "title": "間諜海岸",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/products/11101042707.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101042707&height=400&width=310",
+        "intro": "前間諜瑪姬・博德選擇來到緬因州的濱海小鎮純潔鎮定居，渴望把過往一樁悲劇性出錯的任務永遠拋開。如今，她平靜地住在自己的農場裡，隱隱仍小心提防，擔心當年迫使她退休的那些事件還會有後續。\n當一具屍體出現在瑪姬的車道上，她立刻意識到這是過往仇敵留下的訊息。瑪姬決定去找她當地的那群朋友——全都是中央情報局退休下來的前間諜——一起查出究竟是誰想殺她。這個「馬丁尼會」由一群前間諜所組成，他們或許退休了，但是依然保有間諜本能，他們也渴望能再度施展身手，即使只是為了讓他們平靜的生活增添刺激⋯⋯\n\n她看著碧昂卡半張的雙眼，想著這個女人的最後時刻。那些折磨一定非常痛苦，在她的手指被一根根扳折得脫臼之後，致命的兩顆子彈應該是一種解脫。她死去的地點一定非常偏僻，她的嘶喊不會有人聽見。兇手要找這麼一個地方不會太難，因為純潔鎮有許多鄉間道路和濃密的森林。華司醫師剪斷一根根肋骨，把整個胸部骨架拿起來。他伸手到胸腔取出溼亮的心臟和肺臟時，喬仍看著那女人毀損的雙手。\n他想查出什麼？他要妳告訴他什麼？"
+    },
+    {
+        "title": "選擇",
+        "author": "泰絲．格里森、蓋瑞．布拉佛",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100987671",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100987671&height=400&width=310",
+        "intro": "在法蘭琪的經驗裡，驗屍解剖從來不會有什麼重大的意外發現。偶爾法醫可能會找到多一個子彈孔，或者一個神秘的腫瘤，或者有一回，一個精神錯亂的老人在住處附近開槍，解剖發現他患有皮克病，腦部嚴重萎縮。但是大部分時候，法蘭琪在病理學家割下第一刀時，就已經知道死因和死法了。驗屍解剖通常只是例行手續，法蘭琪不必出席。\n而這個案例，她真希望自己沒來。\n\n波士頓警方正在調查一名聯邦大學女學生的死因，死者岱倫．摩爾現年二十二歲，家住緬因州何巴特，星期日凌晨她被發現倒臥在住處艾許佛街三二五號公寓大樓外的人行道上，警方認定她是從高樓層墜樓而死。岱倫．摩爾年輕、美麗，而且聰明……她究竟是自殺？還是遭到謀殺？當法蘭琪．魯米思警探抵達現場展開調查，她直覺案情並不單純……"
+    },
+    {
+        "title": "貝納德的墮落",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100854020",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100854020&height=400&width=310",
+        "intro": "如果當時我認識你，如果當時我看著你躺在床上奄奄一息，而喬許．奧戴就躺在另外一張床上，那麼，你們兩個人，我會選擇救哪一個呢？\n我不知道。\n\n十一歲的耶可夫在莫斯科街頭流浪多年。他有一頭燦爛的金髮，湛藍的雙眼散發出一種超乎年齡的睿智神采。那些奇怪的叔叔都迷戀他稚嫩的臉蛋，好像都不在乎他少了一條左手臂。\n他希望自己快點長大，因為長大了就可以不用再受這種蹂躪，就可以跟那幾個同樣無家可歸的大孩子一樣，靠神不知鬼不覺的扒竊技藝謀生。對未來，他的期待也只有這麼多了。\n某天一對美國來的年輕男女看上了耶可夫。他們說，他們到俄國來，是為了尋找像他一樣健康聰明的孩子，帶回美國送給好人家收養。就在莫斯科西邊九百公里，拉脫維亞的里加港，有一艘老舊的貨輪已經生火待發。就在那片茫茫未知的大海彼岸，美國，幸福夢幻的國度，美好光明的前途……\n\n波士頓的貝賽醫院有全美國最頂尖的心臟移植小組。艾貝是一位靠貸款苦讀出身的年輕醫師。對她來說，不可思議的美好前途突然降臨－－才擔任兩年住院醫師的她即將成為心臟移植小組的新成員，即將參與第一次移植任務……\n器官等候名單上第一順位的原本是一個十七歲的年輕人，沒想到，醫院卻臨時下令將心臟移植給一位大富豪的夫人。在良知的驅使下，艾貝違抗院方的命令，擅自將年輕人轉送他院，並奪回了那顆心臟……\n沒多久，移植小組的核心成員亞倫醫師卻離奇自殺。有人在閒置的醫院頂樓發現他的屍體，被自己的皮帶吊死在衣櫃之中……\n\n在這部佈局嚴謹、情節錯綜的懸疑小說，作者泰斯．格里森將她曾任內科醫師的執業經驗完美融入這本讓她成為眾所矚目醫學懸疑天后的驚悚大作。《貝納德的墮落》寫實地勾勒出一位年輕女醫師勇敢挑戰醫界驚人的黑幕——一場貪婪所引發的致命陰謀，以及隱藏在手術間明亮燈光下菁英最終的墮落；精確逼真的情節，專業的手術過程描述，佐以手術解剖刀般鋒利的角色性格設定，無怪乎榮獲史蒂芬．金、哈蘭．科本、詹姆斯．派特森等頂級暢銷名家一致推崇。"
+    },
+    {
+        "title": "罪人",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100894537",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100894537&height=400&width=310",
+        "intro": "「為什麼要去處理死人，而不是活人？」\n「他們有資格得到關注。他們希望我們知道他們為什麼會死掉。」\n\n一個女人沒有雙手，沒有臉，這個兇手不但取走了被害人的性命，也奪走了她的身分。\n但是為什麼還有雙腳？為什麼要把她的雙腳帶走？\n法醫莫拉取出那個裝了老鼠女士Ｘ光片的大信封，把腳踝的片子夾上燈箱。再一次，那些突然切斷皮肉的生硬輪廓令她震驚，但她還是沒看出什麼新東西，沒有任何線索能解釋兇手截斷兩腳的動機。\n她取下片子，換上頭骨的，正面和側面都有。她站在那裡注視著老鼠女士的顏面骨，試圖想像那張臉可能會長得什麼樣子。不會超過四十五歲，她心想，但是你已經失去了上排牙齒。你的下頜已經像個老人的，顏面骨從裡面爛掉，鼻子陷落成一個日益加寬的隕石坑。而散佈在你軀幹和四肢的，是那些醜陋的結節性腫粒。光是在鏡子裡看一眼，都一定很痛苦。然後走出門，在外面拋頭露面……\n她瞪著那些在燈箱上發出亮光的骨頭。她心想：我知道為什麼兇手取走雙腳了。"
+    },
+    {
+        "title": "漂離的伊甸",
+        "author": "泰絲‧格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100243131",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100243131&height=400&width=310",
+        "intro": "坐上這輛車，妳們將前往「新世界」──\n蜜拉以為，到了美國，她的人生就會有所不同，\n卻沒想到，迎接她的，竟是謊言與無法回頭的命運。\n當那些男人一次又一次地，戳刺蜜拉的身體，她唯一的念頭，只有死。\n但她知道，自己必須活著，忘卻恐懼，只依靠著仇恨，活下去。\n原來，生與死可以如此接近。\n在此之前，莫拉從未想過，直到，那個無名女子在停屍間裡復活。\n她是誰？為何如此驚慌？甚至，和同夥用槍脅持了即將臨盆的瑞卓利警官……\n為了拯救摯愛的妻子瑞卓利，聯邦探員嘉柏瑞決定獨自和匪徒們談判，警方卻不顧一切採取了攻堅行動！\n在炮火與鮮血飛濺之中，女子在瑞卓利的耳畔留下了最後的訊息……\n「蜜拉，蜜拉知道。」\n\n繼《莫拉的雙生》之後，泰絲‧格里森再度發揮她驚人的說故事天賦，讓法醫莫拉和警官瑞卓利攜手合作，又一次偵破離奇驚悚的犯罪事件。\n不改泰絲‧格里森的一貫風格，挑戰人類道德爭議，仍是本書著墨的主題。兩條乍看之下毫無關聯的主線，在眾多精心線索巧妙的鋪陳連接之下，逐漸緊密地揉合為一，最後強而有力的牽扯出隱藏在事件背後，盤根錯節的巨大真相，層層疊疊，令人驚異。\n而書中時時刻刻、緊繃得一觸即發的氛圍，更使人不由得讚嘆泰絲‧格里森在文字與情節運用上的絕妙，就如同身陷危急之中的角色，在脫離險境之後，仍久久無法平息情緒"
+    },
+    {
+        "title": "我知道的秘密",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100923269",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100923269&height=400&width=310",
+        "intro": "兩名兇殺案被害人，乍看之下顯然無關，其實兩者有一些共通點，是波士頓警察局警探珍．瑞卓利和法醫莫拉．艾爾思一開始沒發現的。兩具屍體都有駭人的傷口，但是死因不明……\n\n年輕的被害女子躺在床上，姿勢出奇地平靜，雙手放在兩側，衣服穿戴整齊，彷彿只是躺在床罩上小睡片刻而已。她穿了一身黑，黑色內搭褲和高領毛衣，更凸顯了她那張幽靈似的白臉。她的頭髮也是黑的，但金色的髮根透露了她一頭鴉黑的髮色其實是染的。她耳朵上戴了好幾個金耳釘，右眉毛上還有個發亮的金環。不過讓法醫莫拉震驚而注意的，是眉毛下方。\n兩個眼眶都是空的。裡頭的眼珠被挖掉了，只留下血淋淋的窟窿。\n莫拉驚呆地往下看了死者的左手。張開的手掌裡，放著兩個像是彈珠的恐怖球狀物……\n\n她必須保持緘默，如果她還想活下去……\n\n\n一具屍體能揭露的不光是身體的祕密而已；有時也能提供種種洞見，讓人了解曾經棲息在這具血肉之軀內的性格。無論線索是手腕上昔日的割傷痕跡，或是吸毒的針孔，或是整容的疤痕，每具屍體都說出了死者的種種故事。"
+    },
+    {
+        "title": "外科醫生",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100824597",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100824597&height=400&width=310",
+        "intro": "他夜裡溜進她們的家，悄悄走進臥室，那些正在沉睡中的女人即將醒來，進入一個活生生的夢魘。兇手精確的刀法顯示他是個精神錯亂的醫療人員，波士頓新聞界也因此封他為「外科醫生」。警方唯一的線索，就是過去一樁幾乎完全一樣的兇案中，一名倖存的被害人。兩年前，凱薩琳．柯岱兒在被侵害的中途反擊，殺了她的攻擊者。現在這個新兇手的犯案手法，和當初柯岱兒的經歷極為類似，種種細節吻合得令人毛骨悚然。隨著每殺害一個人，他似乎都在嘲弄她，也離她愈來愈近，從她工作的醫院到她的家。她唯一的安慰來自辦案的警探湯瑪士．摩爾。但就連摩爾也無法讓柯岱兒躲開一個聰明的獵人，這個獵人似乎知道、也特別喜歡他刀下每個被害女人最私密的恐懼……"
+    },
+    {
+        "title": "再死一次",
+        "author": "泰絲．格里森",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100828014",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100828014&height=400&width=310",
+        "intro": "當波士頓兇殺組警探珍．瑞卓利和法醫莫拉．艾爾思被要求趕到一個犯罪現場時，她們發現這樁兇案有著最兇猛野獸的典型特徵，甚至包括屍體上的爪痕。死者是知名獵人兼標本剝製師里昂．勾特，家中牆上掛著許多獸頭標本。但只有最邪惡的人類雙手，才可能把他的屍體佈置得像是一頭獵獲物的模樣。勾特是否不智地喚醒了一個掠食者，而且比他所曾獵殺過的那些動物都更危險？\n\n莫拉擔心這不是兇手第一次屠殺，也不會是最後一次。她將這宗命案與全國一連串在野外所發生的兇殺懸案連接起來之後，懷疑答案可能就在非洲的一個遙遠角落。\n\n六年前，一群參加狩獵旅行的遊客淪為同行一名殺手的獵物。他們深入波札那荒野，無法與外界聯繫，唯一的保護就是一名帶著步槍的嚮導。這群驚恐的遊客渴望能獲救，免得他們最糟糕的本能──或是那些在陰影中伺機下手的野生動物──會殺了他們。但最致命的掠食者已經在他們身邊，一個星期後，這名掠食者離開荒野時，已經獵殺了同行幾乎所有人，只有一個除外。\n\n現在這名兇手選擇波士頓當做他的新獵場，而瑞卓利和艾爾思必須找個辦法誘他離開陰影，進入牢籠。即使這表示要拿出那位獵人無法抗拒的誘餌：唯一逃離的被害人。"
+    },
+    {
+        "title": "剛剛好：張曼娟散文精選",
+        "author": "張曼娟",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100485604",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100485604&height=400&width=310",
+        "intro": "相逢只一笑，明日又天涯。\n我從許多微笑的眼睛中，看見了珍惜的光芒。\n於是我有了這樣的念頭，要為自己編一本散文精選集，\n記錄不同年齡的自己，看見的世界，感受到的人生。\n這是為一直以來與我相伴的讀者們編選的，\n也是為可能有緣相遇的新讀者編選的。\n這真是一件奇妙的事，\n我的世界這樣小，卻是剛剛好。\n剛剛好，遇見最美好。"
+    },
+    {
+        "title": "區塊鏈與元宇宙︰虛實共存‧人生重來的科技變局",
+        "author": "王晴天、吳宥忠",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100971153",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100971153&height=400&width=310",
+        "intro": "元宇宙來襲，你準備好了嗎？\n元宇宙夯什麼，為何國際科技巨頭爭相投入？\n微軟、騰訊、字節跳動、Nike……臉書更正式官宣改名為「Meta」，\n連VISA、蘇富比等金融、精品業也都紛紛湧入到元宇宙的賽道中。\nAI 人工智慧│交互性沉浸技術│區塊鏈\n元宇宙究竟是什麼？有著怎樣的魅力與潛力？\n竟能一步步地改變人類的一切，從生活到娛樂，從藝術到政治、經濟，\n沒有人能預言影響會有多大，唯一能確定的是，這場風暴你我都會參與其中！\n\n元宇宙讓你打破網路的藩籬，\n虛擬與真實並存，進入和現實世界平行的新境界！\n\n\n　　如果你有關注投資領域，你會發現2021年最火熱的創投項目，以及漲幅驚人的股票，都是有一個元素，就是元宇宙的元素。如果讓Facebook的祖克伯、輝達的黃仁勳、騰訊的馬化騰等一眾科技大佬討論未來互聯網的發展方向，他們可能會告訴你同一個詞「元宇宙」。\n　　你有感覺到近兩年在疫情的洗禮下，生活日常與工作，都從線下轉線上、從真實移往虛擬了嗎？例如透過VR開會、用視訊上課，或在Roblox遊戲平台上創作自己的遊戲……不管是工作、社交、娛樂，重心都向虛擬世界大遷徙，這些現象背後都代表著一個媲美網路問世般的劃時代大趨勢：元宇宙（Metaverse）已開始啟動。\n\n　　Facebook執行長祖克伯說：「元宇宙就是下一世代的Internet（網際網路）。」\n　　輝達（Nvidia）執行長黃仁勳也預測：「元宇宙的經濟規模，終將大過實體世界。」\n\n　　到底元宇宙是什麼？一個科幻小說提出的概念，為何會被美銀美林證券投資長列為重點分析項目，甚至成為2021年最紅關鍵字？\n　　元宇宙玩家早已不只是VR設備、遊戲廠，甚至Facebook、微軟等大廠，而是各行各業都開始找機會進軍元宇宙。元宇宙已跳脫遊戲，逐漸發展成一個創意發想平台、一個互動社交平台，你眼睛瞄哪裡、對什麼感興趣、平常生活型態如何等等，這都將在元宇宙中掀起革命，創造無限的商機！"
+    },
+    {
+        "title": "中國縱橫：漢學巨擘史景遷的歷史與文化探索",
+        "author": "史景遷",
+        "url": "https://www.books.com.tw/products/0010966158?srsltid=AfmBOorXYgUORBfeFKpwHJTNZSP9Smdln5-_OO9XPkzheedM-gFC5RKd",
+        "img": "https://www.books.com.tw/img/001/096/61/0010966158.jpg",
+        "intro": "史景遷在廣受讚譽的學術生涯中，已確立其傑出中國歷史詮釋者的崇高地位，他的著作展示了非凡的學識、活力、優雅和想像力，吸引了無數讀者，讓一般大眾也能接觸到原本只有專家才能了解的主題。《中國縱橫》精選了25篇史景遷重要的短篇作品，是史景遷唯一一本短篇文選。\n\n　　與最會說故事的漢學家一起放眼寰宇、縱橫華夏\n\n　　《中國縱橫》全書分成五大部分：1.黃嘉略、利瑪竇、馬爾羅的《誘惑》等跨越東西文化藩籬的人物與思想；2.儒學發展以及中國政府公權力的運作機制；3.食物、稅制、藥品、鴉片等中國社會百態的研究；4.脫離帝制後的近代革命中國；5.追憶業師暨漢學巨擘的紀念文字。這25篇文章包含了與史景遷的長篇巨作相互呼應的主題，讓讀者得以一窺其治學脈絡，並在充滿情感與知性的筆致中，共赴一趟中國歷史與文化的探索之旅。"
+    },
+    {
+        "title": "咖啡 for Beginners：初學者一定要知道的咖啡器材事典",
+        "author": "晉遊舍編輯部",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100837191&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=102766ddbbc8dc6ee64f370ef438c5",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100837191&height=400&width=310",
+        "intro": "新手學咖啡的最佳指南！教你認識和挑選器材、學會基本沖煮法，輕鬆煮出美味咖啡\n\n每天早晨或假日時，在家裡來杯咖啡多麼愜意，但是該怎麼做才能喝到美味咖啡呢？\n走進咖啡店，看到琳瑯滿目的咖啡器具，哪一種才適合你呢？\n咖啡達人會告訴你，即使用完全相同的咖啡豆，如果改變工具或沖煮法，風味也會截然不同，\n這正是咖啡最有趣的地方。\n\n這本書幫你整理了咖啡新手必備的器具相關知識，以及各種器具適合的沖煮法、咖啡豆的處理法等等，擁有這些基本知識，你會發現自己煮美味咖啡原來不難喔！"
+    },
+    {
+        "title": "整頓的技術：中小企業獲利翻轉的祕密",
+        "author": " 小山昇",
+        "url": "https://www.books.com.tw/products/0010850078?loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "img": "https://www.books.com.tw/img/001/085/00/0010850078.jpg",
+        "intro": "從赤字到營收翻轉10倍的經營奇蹟\n　　兩度榮獲日本經營品質賞的中小企業典範──武藏野\n　　社長親身解析，讓小公司躍身賺錢企業的\n　　整理、整頓、清掃三大技術\n　　★全彩圖解！5萬人爭相參訪的工作現場！\n\n　　為何看似簡單到不行的「整理整頓」\n　　就能讓一家企業轉虧為盈，甚至翻轉10倍？\n　　還有超過730家企業在爭相效尤後\n　　有400家在改善後營收創新高！\n\n　　不只是想打造賺錢企業的社長要知道\n　　要營造超強工作現場的主管更該要學會的經營技巧\n　　小山昇社長一次的武藏野流「整頓的技術」\n\n　　整理整頓，並非只是讓環境變得整潔，\n　　更重要的是，當物品的擺放位置改變時，\n　　員工的行動就會不同，想法也會隨之轉變。\n　　小山昇社長認為，企業要獲利7成取決於整頓。\n　　他將在書中無私分享讓公司轉虧為盈的的祕密。"
+    },
+    {
+        "title": "訂閱經濟的獲利實例：包包、西裝、手錶、眼鏡、汽車到房子……超過20個案例，讓顧客從買一次變成一直買",
+        "author": "日經xTREND",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100917928",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100917928&height=400&width=310",
+        "intro": "眼鏡可以訂閱？沙發也能訂閱？當然能，\n現在連西裝、包包、美甲、啤酒、汽車、家具、房子……\n所有你想得到和想不到的產品與服務，\n都有人透過訂閱經濟，開始做生意。\n\n訂閱經濟服務是指，消費者只要支付一定的費用（月費、季費、年費），\n就可以享有跟花大錢買斷一樣的特定服務或產品，\n此並非新概念，從手機包月吃到飽到Netflix等服務早已行之有年。\n\n但最近，這股訂閱經濟卻出現巨大轉變──\n從傳統零售業擴大到製造商（像是豐田汽車、麒麟啤酒、松下電器等），\n從影音服務，擴大到生活食衣住行，各種獲利模式因此誕生。\n\n本書作者為日本數位媒體《日經xTREND》編輯部，\n詳細介紹20家以上因發展訂閱經濟而成功的大小企業案例，\n告訴你訂閱制與電子商務有何相異之處？怎麼創造「一直買」的狂熱粉絲？\n\n‧人們喜歡借，卻不喜歡還，「讓顧客想還再還」變成一種生意模式：\n名牌包的租借服務本身不稀奇，但日本某公司推出一個月花不到新臺幣2,000元，\n就能租至少3萬款的LV、愛馬仕名牌包，並用人工智慧幫顧客挑款搭配。\n怎麼可能這麼低價？這家公司這樣做……。\n\n‧出門顯擺才付費，高檔手錶訂閱服務抓住中高階主管市場：\n手機普及了就沒人戴手錶？錯，對準中高階商務人士的手錶訂閱經濟竟逆勢成長，\n顧客可以借手錶，也可把自家不想戴的手錶拿來借，這是一套新的C2C服務。\n\n‧夠新鮮就敢漲價，麒麟啤酒這樣創造三億商機：\n日本啤酒大廠麒麟推出讓顧客以啤酒機享用工廠直送啤酒的服務，\n生意好到麒麟啤酒把訂閱價格調高一成，仍有八成顧客續訂，其中的祕訣是？\n\n‧從擁有車到活用車，豐田汽車竟推出「不買車也可以」策略：\n訂閱經濟的流行讓豐田汽車大膽出擊，吸引買不起車或不想養車的年輕人試用，\n一口氣提供6款汽車選擇──每半年可換車開，還不用負擔保險費用。\n那汽車業賺什麼？他們賺庫存商機。\n\n還有某企業推家具訂閱制，讓顧客搬家時可以把家具退回，\n連非常個人化的洗髮精也能訂閱？日本就有一家幫顧客打造客製用品的美髮沙龍。\n\n原來，訂閱經濟的重點，不是找到更多人訂閱，\n而是讓顧客進來之後再也不退訂，才是關鍵，\n本書附有專家訪談，力推訂閱制的企業執行長替你解惑。"
+    },
+    {
+        "title": "晚安，我的生命",
+        "author": "陳文茜",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101005054",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101005054&height=400&width=310",
+        "intro": "原來，人的衰老不是緩緩的，\n一場病，可以用一年老十歲的速度，\n甚至用逼人快速墜向晚年的方式，直接通報你，\n歲月、回憶、曾經，尤其健康，多麼珍貴。\n\n她溫暖提點：\n請用心將每一個日子、每一次相遇，妥善保存——\n很多的每一次，其實是最後一次。\n\n健康是一個人的福分，總有用完的時候。\n把每一個日子過得淋漓盡致，\n就是最大的「活著」——\n人生沿途的風景，還包括了你自己。\n\n她釋然地說：\n生命的包袱從來沒有這麼輕，\n回憶過往，倒帶人生，你嘆口氣，知道無力彌補——\n過了，就過了。\n\n有一天，我們都會消失，\n別怕，只要輕輕説一聲：\n「晚安，我的生命。」\n\n｜關於年華｜\n\n．女人惟一不必在乎的是男人眼中的妳，不必在乎自己是否年華老去。\n那是一個矮化也貶值自己的戰場，而且必輸無疑。\n\n．你會發現，渴盼了大半生，除非你比較短命，\n你愈長壽，能和你真正地老天荒的，就是你自己一人。\n\n｜關於人際｜\n\n．有些人志在閃亮；有些人志在吞噬他人；有些人志在成為一抹月光，陪伴孤獨的人。\n我們本來沒必要相互理解，正如宇宙中的所有星球，各自轉落。\n\n．永遠不要吝惜對別人說愛的話：因為你不知道多久才會見到他，\n或者能不能再遇見她。\n\n．只有當一個人可以圓滿自己的時候，你才能對外追尋：否則只是拖著殘缺的自我，試圖藉\n由他人，補足自己的破洞，終而辜負也拖累了他人。\n\n｜關於懷舊｜\n\n．把往事包裝起來，像對一個已然被摧毀的玩具，重新修補、裝扮，給點美的顏色，給件美\n的衣裳。那些遺憾、慚愧或者回不去的，通過重新的編織，讓仍要活下去的我們有了幻想，\n有了陶醉。"
+    },
+    {
+        "title": "霧中的男孩",
+        "author": "約翰．提歐林",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100917125&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=102e99b73fd694f269b8973b1f3fc5",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100917125&height=400&width=310",
+        "intro": "九月的一天，厄蘭島的大霧很不尋常，\n六歲的彥斯偷偷溜出外公的莊園，在大霧瀰漫的灌木林中失蹤，音訊全無。\n島民全體動員，仍然查不出下落。\n二十年來，尤莉亞一直走不出失去兒子的悲痛，\n與丈夫離異，再也無心工作，只能靠領救濟金度日。\n直到有一天，她接到了厄蘭島上的父親打來的電話，\n有人寄來了彥斯失蹤當天穿的一隻涼鞋。\n\n二十年前的那場大霧究竟掩蓋了怎樣的秘密？\n這隻涼鞋是尋找彥斯的新線索，還是兇手精心安排的又一陰謀？"
+    },
+    {
+        "title": "你一定想看的中國史",
+        "author": "張承望",
+        "url": "https://www.taaze.tw/products/11100926480.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100926480&height=400&width=310",
+        "intro": "天下大亂，英雄個個蹦出來\n曹操迎來了好時光\n當皇甫嵩和朱儁聯軍追殺黃巾殘軍的時候，就遇到了一個叫曹操的人，當時他的官職是騎都尉。\n這兩位名將當時並不認識眼前這位年輕比自己官銜低的將官，更不會知道他的後代會覆亡掉他們現在所極力挽救的東漢帝國；他們只認得大家穿著一樣的官服，於是互換了眼色，達成默契一起追殺黃巾殘餘勢力。\n追殺之下，黃巾舉手。曹操同學出力不小，老一代的領袖誇獎說：「不錯，不錯，年紀輕輕就立此大功，前途無量。」\n曹操卻說：「我個人前途事小，國家前途事大。」他在說這話的時候不得不令大家肅然起敬。因為在講究出身的東漢王朝，大家有些看不起宦官家庭出生的曹操——曹操的乾爺爺曹騰是漢桓帝手下的一個太監。現在竟聽到曹操說出如此大義之話，不得不刮目相看，看來家庭出身並不能決定思想。\n當然了，曹操令人肅然起敬的原因有他的性格因素——比較有智慧會計謀。這在以後他參與的戰爭中屢次體現。不過這一點在後來民間就廣為流傳成了比較奸詐，而且強加在了年幼曹操的身上。\n汝南地區著名的人才觀察家許劭不久後也一聲長歎。許劭相人無數，心底早已是波瀾不驚了，自己相的什麼人都有，也比較準確，儘管有達官貴人之命的多不盛舉，但當他看到曹操時，心裡還是大大地驚了一下。\n「你是治理國家的大能人，或是搞亂國家的大奸臣（子治世之能臣，亂世之奸雄也）。」這是許劭留給曹操的一句話，也是留給這個時代的一句話。因為不久之後，曹操便開始了自己入世的生涯。他在就任洛陽北部尉期間，把違反宵禁、提刀夜行的中常侍蹇碩的叔叔棒打死了。大家都對他另眼相看——曹操竟然敢於挑戰權威，難得，難得，就把他派到頓丘去做縣令。\n現在曹操聽了許劭對自己的評價，高興地離開了。\n為什麼樂呢？評語中雖然有「奸」這個不好聽的字，但畢竟也有「能臣」、「雄」這樣好聽的字眼。而且自己一生下來聽到的就是親戚鄰居的好言好語，自己早就聽膩了，用壞詞吸引別人的眼球，肯定能引起更多人的關注。曹操這樣想著，心花怒放。\n對曹操來說，這一切才剛剛開始。要想成為治理國家的大能人，或者搞亂國家的大奸臣，就不能安於當一個小小的縣長。這個剛二十出頭的年輕人很快就明白了什麼才是這個時代最應該做的事情：黃巾造亂，禍及生靈，平叛立功。於是，自己主動請纓，帶著五千人馬殺往潁川，在那裡，一個關於平叛的時代主旋律正唱得驚天動地，政府軍和張梁、張寶的起義軍隊廝殺得死去活來。\n曹操投身其中，他覺得現在社會真是混亂，起義軍平息了又起，不起不行啊，沒有什麼吃的了，反不反都是一死。政府內部也是黑暗無比。他隱隱地感覺到，要做一個治世之能臣，那基本上是下輩子的事情了，要做一個亂世之奸雄，卻真是生逢其時。雖然，曹操還是願意做一個眾人敬仰的英雄的，可是既然做英雄名額有限，那就做一個奸雄好了。亂世給曹操提供了大好機會，讓他接下來成為這個時代的主角。\n奸雄還會搞關係，曹操算是太子黨成員，和太子黨的老大袁紹混得很熟。除了袁紹之外，山東壽張大地主世家的張邈也和曹操關係不錯。他們在不久的將來要一起做一番大事業成就英名。\n的確如此，在東漢末年這是一個充滿挑戰，同時也充滿機遇的時代，志趣相投的人們往往能夠結伴闖出一片屬於自己的天地。\n桃花園裡三結義\n劉關張三人的老大是劉備，字玄德，是盧植的學生。\n劉備的祖上據說是中山靖王劉勝，本來是王一級別的，到了劉勝兒子輩劉貞時候被世襲為侯，封在了涿縣。這就降了一個級別。漢室衰落，後來窮得連侯一級別的都養不起了，就找藉口免了很大一批侯，劉貞也在其中。官做不了，但人多勢眾，與當地的官員勾結在一起，依然是涿縣的一霸，到了劉備的爺爺那代，還靠關係當了縣令，不過，三十年河東，三十年河西，到劉備這一代，他們已徹底敗落，劉備就只能靠賣草鞋為生了。\n劉備靠這些糊口簡直愧對了自己的出身與長相。他長得魁梧，身長八尺，不過兩隻耳朵很大（據說兩耳垂肩）。\n劉備曾是一個口出狂言的少年，和夥伴一起玩「英雄抓小偷」遊戲他扮演英雄時候突然不抓小偷了，一個人呆呆指著他家屋子東南角的一棵大桑樹說：「我要是做了天子，就乘坐這麼大車蓋的車！」劉備說這話的時候，大桑樹正枝繁葉茂，遠遠望去，像極了皇家的車蓋。夥伴們都莫名其妙地看著他，心想，這小子是不是瘋了啊？說的這是外星話？\n劉備的叔叔聽說了趕緊過來教育他：「玄德，別亂說話！你這麼亂講，是滅門的罪，連累我們都要倒楣！」\n亂世既來，成年後的劉備雖然不再說大話，但是依然賣著草鞋，靜靜地等待，等待著有什麼事情會發生。儘管到平民張角已經衝鋒陷陣衝向了自己認為成功的路上，那才叫敢教日月換新天！這一年劉備已經28歲了，可是他依然每天斜臥涿縣街頭賣他永遠賣不完的草鞋，除此之外，就是等待。\n他在等待什麼呢？沒有人知道。作為傳說中的皇室子孫，劉備的等待在涿縣被大家廣為流傳，成了一道耐人尋味的風景。人們不知道馬上就要三十歲的劉備在想些什麼，也許他想起自己小時候的豪言壯志在黯然神傷。\n不過，世事總是峰迴路轉。就在有志青年劉備等得幾近失望之時，他的生命終於有了變數，隨著兩個人的到來，他也將風塵僕僕投入這個大時代中。兩個人中其中一個叫張飛，字翼德。\n張飛最先出現，最初他是很粗很暴力地站在劉備的面前，當時劉備從自己的鞋攤挪動到官府貼出的徵兵令前感傷，覺得人生不如意十有八九，自己先祖開創出的國家真的陷入絕境了嗎？連兵都不夠用了嗎？思來想去眼淚都快掉出來了。如此的幽怨在張飛看來，很不男人。淒淒慘慘，像個男人嗎？\n張飛很男人，他的處世風格一貫手起刀落，就如他每天殺豬手起刀落一樣。不過，張飛是個屠夫。此刻，屠夫張飛吼道：「是男人不為國家出力，在這兒歎什麼氣！」張飛對劉備滿眼的鄙夷。不過奇怪的是，在不久之後他就和他鄙夷的人勾肩搭背坐在一起喝酒了。二人決定一起幹點大事，男子漢的確應該上戰場，為這個風起雲湧的時代增添變數，作出一番驚天動地的事業來。因為劉備告訴他自己是中山靖王劉勝之後，漢景帝的玄孫。雖說天下風雲起四方，有槍便是地頭蛇，但比槍更厲害的是出身。張飛毫無疑問對劉備的出身景仰得如滔滔江水綿綿不絕，因為自己只是個屠夫，儘管看上去霸氣十足，可以欺負鄰居百姓，但是說起來令人氣餒，大家都看不起自己。和皇室人員一起做事無疑會提高自己的身份。\n二人正說話間又過來一個人，這個人紅臉長鬚，一臉沉穩，這個男人就是關羽。\n關羽字雲長，其實，幾年前，關羽就已經為這個時代增添過變數了。他在老家河東解良殺了一個人。他對坐在面前的劉備、張飛說，那個土豪該殺，仗勢凌人，我不殺他別人也會殺他。當然自己也為此付出了代價——漂泊江湖。\n亂世之中一個漂泊江湖的人是沒有歸宿的。為了讓自己有歸宿，關羽站在了這個桃園內，三個人一起喝酒吃肉，不過，逃犯關羽到此時還不明白自己與面前二人結拜的意義所在。對於他來說，從現在開始，他只是從一個人漂泊走向三個人一起漂泊——組團漂泊，如此會不會更好一些？畢竟不會一個人獨立站在風中，獨自承擔風霜。結拜就結拜！\n很多年之後，關羽被人念念不忘的優秀品德——忠義源於三人此時手中的一碗酒。三人各自捧著一碗酒，很豪邁地一飲而盡，為一段即將展開的陌生旅程壯行。在紅豔豔的桃花映襯下，這三個剛認識不久的男人看上去雄心勃勃。\n劉備28歲，自然是大哥，關羽27歲，做老二，張飛22歲，做老三，從此劉備與兩位弟弟，像親兄弟一樣生活在一起。但是在為人矚目的公開場合，劉備吩咐關羽、張飛必須垂手侍立左右。隨著大哥劉備奔走，不避艱險，兵來將擋，水來土掩，成為關張二人的義務。\n不過，說來令兩位哥哥慚愧，現在三兄弟之中，只有三弟張飛有些資財。其實張飛置地建房之後，最想做的事情就是娶個好妻子生兒育女，過一輩子幸福安定的生活。而傳聞中的黃巾起義、天下大亂，似乎也與他無關。\n而結拜之後只能和這些美夢含淚道別，張飛賣房籌錢給劉備打造雙股劍和給關羽打造青龍偃月刀，自己也打造丈八點鋼矛，劉備出頭聚集起五百名勇敢鄉親，在幽州校尉鄒靖的引見下，來到太守劉焉面前。在這場漢靈帝光和元年（西元184年）的黃巾平叛中，特別是在最後的消滅張寶戰役中，劉備持著寶劍，關羽舉著大刀，張飛縱馬挺矛，奮力殺敵，劉備還射出了關鍵的一箭——正好射中黃巾頭領張寶的左臂，張寶受傷只得落荒逃走，在他逃跑的途中，被部下殺掉了，張寶的頭顱被割下，送給官軍。\n在這個桃花盛開的季節，三人首次立下大功，準備著當官呢，以為能出人頭地當個大官，但誰知道等待他們的命運又會是怎樣？"
+    },
+    {
+        "title": "鴻 : 三代中國女人的故事",
+        "author": "張戎",
+        "url": "https://www.taaze.tw/products/11100710878.html",
+        "read": "https://www.haodoo.net/?M=u&P=C17E8:0&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100710878&height=400&width=310",
+        "intro": "一個激勵人心的故事，三代女性經歷了無數艱難困苦和政治風暴，始終保持著人性的尊嚴和美。──希拉蕊•柯林頓\n\n走過纏足的時代、封建體制的婚姻、抗日戰爭、國共內亂……直至文化大革命的劫難，她們歷經了人間的悲歡離合，也創造了不平凡的一生。\n\n三代中國女性　一部感人家史　理解二十世紀中國的重量級磅礡史詩\n\n「我享受過特權，也遭受過磨難；有過勇氣，也有過恐懼；見過善良、忠誠，也見過人性最醜陋的一面；在痛苦、毀滅與死亡之中，我更認清了愛及人類不可摧毀的求生存、追求幸福的能力。」──張戎\n\n\n從滿清王朝到共和體制，從共和政體到共產專政，國家體制的轉換，標誌了三代中國女人的命運。\n姥姥玉芳出生於一九○九年。這年，正值滿清統治中國兩百六十年後面臨危亡之秋。天生麗質的姥姥沒能逃過纏腳的痛苦，因為父親希望未來靠著這個女兒平步青雲，有雙三寸金蓮能更快找到乘龍快婿。她的父親心願達成了，儘管姥姥做的是軍閥的姨太太。這年姥姥十五歲。\n母親德鴻，出生於一九三一年。這年，日本人入侵東北，占領東三省，成立滿州國，扶植傀儡皇帝溥儀。德鴻的父親在她兩歲時過世，隨著姥姥改嫁，她有了待她如己出的父親，一位滿族醫生。經過日本人統治、國共交戰的年代，十五歲時，德鴻參加共產黨地下工作，在一次面見上級時遇到了令她傾心的終生伴侶──作者張戎的父親。\n女兒張戎出生於一九五二年，父親守愚和母親德鴻都在四川擔任共黨高幹，她在成長的過程中，既感覺到接二連三的政治運動帶來的緊張氣氛，也享受了生活在這個家庭的愛與溫暖。然而，文化大革命的浩劫，沒有人能逃得掉……在這樣的環境中成長的作者，她能一改姥姥與母親的宿命，走出自己的路來嗎？\n\n歷經三個世代的故事，發端於中國東北的偏遠小城義縣，擴展到大城錦州，再隨著母親的足跡跨越半個中國到了四川。一個家族橫跨了一世紀的滄桑，由三代女人的一生刻畫出一段奇蹟，而這個奇蹟，仍在持續發生中……\n"
+    },
+    {
+        "title": "山林蕨響 The Rhytm of Ferns",
+        "author": " 陳應欽",
+        "url": "https://www.books.com.tw/products/0010151709?srsltid=AfmBOorg1fOd8qObxrryKzuQWrbQMK800ETpSrA8OMTJB4gBIQXoSjjM&loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "img": "https://www.books.com.tw/img/001/015/17/0010151709.jpg",
+        "intro": "發〝蕨〞美麗新世界！\n\n一本臺灣蕨類植物最好看的入門書籍！\n\n蕨類植物，一群古老的綠色精靈，帶著上億年的歷史，翩然來臨，捲曲的新葉在每個角落吐納，單純中衍伸出無數細微的變化。\n\n臺灣，蕨類植物天堂，發現蕨類之美，瞭解自然賦予生命的神祕力量，感「蕨」島嶼，感「覺」臺灣。\n\n本書以欣賞蕨類植物為始，多樣呈現蕨類風貌。有根莖、葉子、葉脈、孢子的各式姿態之美。再進而由作者所精選的47種蕨類植物，詳細的介紹其生態、生長環境等，讓讀者能深入地認識蕨類植物。\n\n書末二章將蕨類植物與我們日常生活的關聯做介紹。包括：蕨類植物在寶島台灣分佈的地區、觀賞、藥用與美食等。"
+    },
+    {
+        "title": "天長地久：給美君的信",
+        "author": "龍應台",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100841809",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100841809&height=400&width=310",
+        "intro": "我們出生在山河破碎的時代裡，\n你們讓我們從滿目荒涼中站起來，\n志氣滿懷走出去。\n現在你們步履蹣跚、不言不語了——\n我們，可以給你們什麼呢？—龍應台\n\n禁語行禪時龍應台瞬間決定：放下一切，回鄉陪伴失智的母親，開始寫信。\n十九封信 是對生命信念的親身實踐\n是對上一代的感恩致敬，是對下一代的溫柔提醒。\n有告白、反省、不捨或喃喃自語……\n美君 觸發每個生命的故事\n牽引 世代間的依戀與不捨"
+    },
+    {
+        "title": "真好用！會計與財務管理的100套Excel應用技巧",
+        "author": "恒盛杰資訊",
+        "url": "https://www.taaze.tw/products/11100029870.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100029870&height=400&width=310",
+        "intro": "對於公司內部的會計與財務管理人員來說，只有處理好對企業財務的準確核算和有效監督才能實現個人價值，如此也可以了解相關財務資料合理維謢的重要性。\n全書內含100個以上的實例，是透過步驟表達的呈現方式，一步步帶領著您學習和會計與財務管理相關的報表或表單。精選的實例主題包含有公司成本費用分析、公司融資和貸款償還分析、公司財務預算及分析、員工工資管理系統、財務報表綜合分析、現金和銀行存款管理系統等。此外，在閱讀的同時也能讓您學會如何真正活用Excel的操作。\n\n●以會計與財務管理的角度出發，具有高度的實用性和可操作性！\n●Step by Step的說明步驟，讓您清楚了解從實例的開始到結束！\n●詳列學習重點，明白掌握該實例所要解說的Excel 2007功能項目！\n●真好用！嚴選100套會計與財務管理相關實例，加強公司財務方面的掌握管理。\n●真好用！全書適用於Excel 2007，能讓使用者透過實作範例真正靈活運用Excel。\n●真好用！不僅在書中詳述製作步驟及方法，還提供現成可立即使用的範例檔案。"
+    },
+    {
+        "title": "用Excel學商業預測：終身受用的原理與實作",
+        "author": "葉怡成",
+        "url": "https://www.taaze.tw/products/14100027818.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=14100027818&height=400&width=310",
+        "intro": "《用Excel學商業預測─終身受用的理論與實作》掌握原理、融會貫通，善用最簡便的Excel做分析及預測，無論是房價漲跌、股市起伏、市場變化，都可以快人一步掌握相關數據，有利做出任何決策！\n\n一般人可能不清楚，Excel除了是各企業廣泛使用的統計應用軟體之外，原來還可以當作預測軟體。一般人並不知道，妥善使用Excel做預測軟體時，可以協助房價評估、股票報酬率預測、社會現象分析了解，等等。本書採用Excel做為預測軟體，進行教學與自修。Excel雖不是專業預測軟體，但普及性高，具備一些基本的統計功能，適合學生或初學者使用。"
+    },
+    {
+        "title": "51張K線圖，輕鬆破解股票何時該賣或買？",
+        "author": "王志鈞",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100919032",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100919032&height=400&width=310",
+        "intro": "股市操盤手的不傳之祕\n日本K線之神本間宗久的聚富心法\n\n全球唯一兩度神準預言2020大股災的神祕作家：\n★2019年12月，公開建議逢高出清所有股票，滿手現金\n★2020年3月，建議逢低大買績優股，不要錯過翻轉財富的絕佳機會\n\n台灣最神祕財經作家王志鈞：「破解股價漲跌的秘密都在K線之中……」"
+    },
+    {
+        "title": "自學日語 看完這本就能說：專為華人設計的日語教材，50音+筆順+單字+文法+會話一次學會！",
+        "author": "許心瀠",
+        "url": "https://www.taaze.tw/products/11100924960.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100924960&height=400&width=310",
+        "intro": "◆初學日語沒問題！發音方法、筆順、範例單字一應俱全，詳細的50音教學內容！\n一開始學日語，不得不經過的過程便是學習如何「聽、說、讀、寫」50音。本書在「聽、說」部分以QR碼方式提供可隨刷隨聽的線上MP3音檔，和真人發音教學影片，皆由日語母語人士錄製，加上書內的發音嘴型示範、發音技巧，再以羅馬拼音加上漢字標音方式標記，層層保證一定讓你搞懂發音。「讀、寫」部分也提供全50音的寫法筆順，加上大量範例單字，讀完就能知道該怎麼用！\n\n◆50音學完就能通，基礎文法教學和慣用句型，打好日語的基礎！\n學過了50音，自然就要進行到如何正確運用這些50音的階段。書中亦提供基礎的文法教學，從句子的結構講起，介紹何謂日本語的「十大品詞」，也收錄介紹日語的「動詞變化」和「時態」及「敬語」的變化，把日本語最基本的部分全都濃縮在這一章。多少對日語的文法有點頭緒後，再進行到日語的慣用句型介紹，能夠理解「這個詞是哪裡來的？」、「這個詞是什麼作用？」自然就不用死背根本看不懂的句子，就算只有一點皮毛，能夠理解日語句子的結構，才能夠真正去運用！\n\n◆由日籍人士老師所有日語字母發音示範影片，這次一定能學會！\n由日籍老師影片示範所有日語字母發音方式，除了當然會有的50音之外，更包括濁音、半濁音、拗音等等所有的發音示範！除了可以看書學習，還可模擬影片中老師的嘴型，同時比對自己發音時的嘴型看看有哪裡不同，盡可能唸出正確的音。影片以QR碼方式隨書贈送，用手機掃描即可隨時隨地馬上下載觀看。\n\n◆隨書附QR碼可隨掃隨聽！生動配音讓你練聽力、練口說更有感覺\n本書音檔採QR碼掃描下載方式，不需要再用到光碟機，只要用手機掃描即可馬上下載！也提供可將全書MP3一次完整下載的QR碼，不需註冊會員，或額外安裝自己不熟悉的播放APP才能聽，省去每次聽音檔都要掃描的麻煩。（註：由於iOS系統對檔案下載的限制，iPhone用戶需升級至iOS 13以上，方可使用全書完整打包下載連結。）"
+    },
+    {
+        "title": "葉有慧",
+        "author": "張西",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100934055",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100934055&height=400&width=310",
+        "intro": "「你覺得我要去參加我爸的婚禮嗎？」\n一則簡訊，想要刪掉但是已經來不及；\n「我甚至是個壞掉的磚，蓋不成一個家。」\n一個女孩，站在陽台邊，不敢再往前多走一步。\n\n第一次興起「我是誰」的念頭，\n是在什麼時候呢？\n\n小慧，小慧。葉有慧站在牆邊，聽見了自己的名字，是爸爸媽媽對她最親暱的稱呼。小慧，小慧。小慧是哪種孩子。什麼是家庭不健全。葉有慧壓根忘記自己餓著的肚子，她恍惚地走回房間，覺得有可能是自己聽錯了，爸爸姓葉，她一直都是葉家的人啊。\n\n「家」是人出生後碰到的第一個、也是最小的社會單位，嬰孩會從中認知到自己是誰。然而，欲言又止是帶有份量的瞬間，那些閃爍猶疑的片刻，讓女孩不再確定「我們家」這三個字，可以繼續使用嗎？\n\n「我從何而來？」失去過往認知的葉有慧，\n「我是誰？」同時失去了自己，\n不確定「我」和「我們」的位置，如何理解愛與被愛？\n\n每個人都假裝告知等於解決，\n還好，生命是靠問題推進的……\n\n#妳是誰？\n葉有慧沒有回應同學們的耳語，她站在陽光下，汗珠在她的額頭上排列成脆弱的隊伍，風輕輕一吹就會像眼淚一樣滑下臉龐。\n她終於提起腳步，而那一步之後，她再也沒有喊過這個女人「媽媽」。\n\n#我是誰？\n「我到底是誰的孩子？」\n「小慧，孩子不屬於父母，父母也不屬於孩子。」女人說：「我們擁有跟彼此的關係，但我們不屬於對方。妳是妳自己的。」\n\n一九八九年出生的葉有慧，和我們一起聽著周杰倫和西城男孩，哼著蔡健雅和阿桑，好奇學姊如何學會為自己上妝，和同居男孩保持著若即若離的關係。她不特別，和其他女孩踩著相同的步伐長大。她只有一個疑問，其他女孩怎麼確認自己值得被愛？\n\n「妳覺得，人跟人之間跨不過去的是什麼呢？」\n「是寂寞吧。我們要先跨過自己的寂寞，才能抵達對方。」\n「有時候抵達的也不是對方，而是對方的寂寞。」"
+    },
+    {
+        "title": "我輩中人：寫給中年人的情書",
+        "author": "張曼娟",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100841720",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100841720&height=400&width=310",
+        "intro": "人到中年，常發覺有許多的延宕：\n那些要做的事、該說的話；想愛的人，都被延宕了……\n已經來到下半場的我們，怎能不好好彌補？\n——張曼娟\n中年，是歲月的累積；\n大人，卻是人生的修為。\n\n中年歲月，其實比想像中更為漫長，\n我們將從哪裡出發？\n將會抵達哪裡？\n\n中年是家庭的承擔者；中年是老年的起點；\n中年有覺醒的力量；中年之愛閃亮激昂；\n中年可以通達、自由與自在；中年是走向渡口，尋找一條船──\n那條船能穿越歲月的湍急洪流，\n使我們成為真正的「大人」。\n\n大人不必討好他人；不必與全世界和解；\n不再等待成功；不再追求名利，\n因為確實明白，真正重要的是什麼。\n睿智、慈悲、雋永；\n「大人」的存在，就應該要閃閃發亮。"
+    },
+    {
+        "title": "全球經濟18年大循環：順著景氣循環四大階段，投資獲利和避開風險",
+        "author": "阿基爾．帕特爾",
+        "url": "https://www.taaze.tw/products/14100106131.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=14100106131&height=400&width=310",
+        "intro": "二百年來美國及全球經濟危機的年份：\n1819、1837、1857、1873、1893、1907、1930、二次大戰中斷景氣循環、1973、1991、2008……\n\n全球經濟景氣18年一個大循環，自2008年後，下一波的景氣崩盤就在2026年？\n\n投資人最擔心的就是景氣崩盤即將到來卻不知情，景氣復甦了還在觀望錯失良機。本書透過二百多年全球的經濟數據和歷史，發現不為人所知的18年經濟大循環的四大階段！\n\n作者從著名經濟學家亨利∙喬治的經濟租理論出發，闡述土地、天然資源、網路平台、政府核發的執照，甚至外太空、電磁頻譜等，是房地產、工廠、銷售、營業、通訊等經濟活動的基礎。當景氣開始復甦時，大量的經濟活動都需要這些基礎空間，因此資金流往土地和房地產，導致利率升高，銀行的呆帳難以回收，大量企業倒閉，房地產也隨之下跌，18年的週期結束，新的循環即將再起。\n\n除了分析景氣循環，作者在每一章末都會建議讀者在當時該如何投資、安置自己的資產。掌握景氣起點致富，避開景氣崩盤，保住財產。\n\n全球經濟景氣循環的四大階段：\n復甦\n　開始期\n　擴張期\n　高峰期\n景氣循環中期\n　衰退期\n繁榮期\n　土地榮景\n　狂熱期\n　最高峰\n危機\n　崩跌期\n　救援期\n　全球景氣循環"
+    },
+    {
+        "title": "兩週搞定，成功創業專案計畫書：新創、開店、找資金，你該告訴投資人的幾件事",
+        "author": "張嶂、馬廣印",
+        "url": "https://www.taaze.tw/products/11100987010.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100987010&height=400&width=310",
+        "intro": "投資人第一眼只在乎這幾件事\n專案計畫書一定要寫的重點\n一份好的創業企畫書，可以讓投資人認識創業企業，並做出最終投資的決定。\n任何天馬行空、創意無限的想法，終將聚焦成商品或服務販售，這時就需要一份好的創業企劃書來支撐你的計畫，找到合適的投資方。\n不論是政府補助計畫或標案、甚或集團內部組織提案、集資的群眾募資，都要有一份詳盡吸引人的企劃書。"
+    },
+    {
+        "title": "元宇宙：科技巨頭爭相投入、無限商機崛起，你準備好了嗎？",
+        "author": "崔亨旭",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100971780",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100971780&height=400&width=310",
+        "intro": "想像一下，再也不用早出晚歸，只要在家穿戴上裝置並連上網，就能用虛擬化身進入栩栩如生的虛擬世界，完成整天的行程，該有多方便？\n在虛擬世界裡，我們可以到服飾店精準試穿及客製化，不怕踩雷或撞衫；也能去銀行向行員申辦各項虛擬貨幣服務，省去排隊時間；還能參加親友的開學或畢業典禮，並訂製祝賀蛋糕送到家；甚至約朋友看球賽或聽演唱會，在各自的家一起享受沉浸感十足的超棒體驗。\n看似只存在遊戲裡的生活，是我們正在迎接的新時代。\n元宇宙不只是類似遊戲的虛擬世界，還是即將打破現實框架，全面改變人類生活的平行世界。而接下來10年，正是元宇宙蓬勃發展的黃金時期！\n本書所涵蓋的內容既全面又好入門，即使完全沒概念，透過這本書也能快速了解：\n●元宇宙是什麼：\n四大情景與七大核心要素？網路遊戲就是元宇宙？只是VR／AR捲土重來？和DeFi、加密貨幣、區塊鍊、NFT有關係嗎？即將帶來破兆商機？究竟有何吸引力，能讓Facebook更名「Meta」，Google、Apple、微軟、輝達、百度等巨頭不惜砸重金開發？\n●元宇宙的核心技術：\n若想全面普及需要什麼設備與技術？企業為此做了哪些嘗試？目前發展到什麼程度？有什麼局限性？該如何克服？\n●元宇宙創造的產業未來：\n從金融、零售、媒體、娛樂、教育到出版，幾乎所有產業都會受到衝擊，各大龍頭早已透過嘗試走上了轉型之路。\n●為什麼要了解元宇宙：\n每當有新事物出現，最先看見趨勢的人總是能改變遊戲規則並累積大筆財富。元宇宙這個尚待開發、充滿無限機會的領域，現在正是最佳進場時機！"
+    },
+    {
+        "title": "看了就想買！藏在設計裡的暢銷關鍵：一頁一法則，讓人秒下單的心理效應",
+        "author": "321web",
+        "url": "https://www.taaze.tw/products/11101021528.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101021528&height=400&width=310",
+        "intro": "一頁一法則，歸納呈現暢銷設計所需的所有元素！\n具衝擊力‧印象深刻‧有效且具說服力‧改變形象‧促使行動的……各種心理設計法則\n\n我們每天都會無意識地受到各種網頁、電視、街頭看板等影響，不知不覺就被誘導做出各種選擇，其實這些商業設計都是刻意利用了心理學，讓你「不知不覺就快手按下購物車結帳」「覺得贈品太吸睛太欠買」「因為這個APP太順手而付費使用」……\n\n★想要商品熱賣，務必要看這本！\n本書將以常見的網頁、海報、banner等為範本，剖析當中所隱藏的心理法則，接著以一頁一法則、搭配圖例的方式說明各種心理學效果、視覺錯視原理、色彩效應、構圖原則等，是設計師、行銷宣傳和商品企畫人員必備的暢銷寶典！\n\n★嚴禁惡用！為消費者的荷包把關\n站在消費者的立場，當你了解刺激消費的機制，就能夠讓自己保持冷靜、捏緊荷包，區分是真有需要還是受到誘導而失心瘋，進而聰明消費或撙節開支。"
+    },
+    {
+        "title": "台灣百名山（3）",
+        "author": "林宗聖",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100018544",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100018544&height=400&width=310",
+        "intro": "本書輯錄燦光寮山、五分山、獅仔頭山、大溪白石山、北插天山、雪白山、桃山、無明山、頭嵙山及紅頭山等十座名山的寶貴資料，並呈現最新踏查的圖文資訊，帶您認識台灣名山之美。"
+    },
+    {
+        "title": "台灣百名山（2）",
+        "author": "林宗聖",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100018543",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100018543&height=400&width=310",
+        "intro": "本書輯錄灣坑頭山、新竹五指山、東澳嶺、大霸尖山、三義火炎山、馬拉邦山、稍來山、合歡北峰、雲嘉大尖山、及老佛山等十座名山的寶貴資料，讓您輕鬆走入百名山的精彩世界。\n\n"
+    },
+    {
+        "title": "台灣百名山（1）",
+        "author": "林宗聖",
+        "url": "https://www.taaze.tw/products/11100018542.html?utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=10246d97a6fb308094e2168c005f44",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100018542&height=400&width=310",
+        "intro": "從資料收集到選定台灣百名山，從親臨探勘到記錄成書，作者以「為山立傳」的精神，開啟首部「台灣百名山傳奇」。本書首先為你輯錄大屯火山群的六座名山，並深入探勘、完整紀錄名山之歷史、步道、稜線、溪谷、生態與景觀。精采圖文對照與資料彙整，前所未見！是深入了解〝台灣百名山〞不可錯過的第一本著作。"
+    },
+    {
+        "title": "企業策略的終極答案：用「作業價值管理AVM」破除成本迷思，掌握正確因果資訊，做對決策賺到「管理財」",
+        "author": "吳安妮",
+        "url": "https://www.taaze.tw/products/11100929615.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100929615&height=400&width=310",
+        "intro": "AVM以管理的細胞「作業」為核心，\n提供正確、即時且「原因」與「結果」結合的因果關係資訊，提升決策品質與精準度；\n串連所有部門的價值鏈，達到全員參與之目的，\n並使人文及科技匯流，快速進入AI時代，用軟實力賺到「管理財」。\n\n「成本」是企業每天必須面對的課題，運轉越久、組織層級越多，所產生的「隱藏成本」就越高，而且往往為了度過難關，錯砍成本或錯置資源，反而削弱「長期競爭力」。之所以會如此，在於企業普遍存在著不知如何取捨長短期成本、誤以為大客戶就是好客戶及看不清楚隱藏成本三大成本迷思；中小企業也經常面臨產品如何創新研發、大客戶訂價該讓到什麼程度、長期虧本原因何在，以及轉型升級怎麼準備等四大經營困境。\n\n解決營運上的問題與挑戰，必須仰賴「原因資訊」與「結果資訊」整合的正確管理資訊，但在一般企業內，分別以會計之「科目」、管理之「作業」為細胞的這兩類資訊是分開的，以致無法提供符合管理者需求的決策情報。有三十餘年學術研究、輔導企業經驗的政大講座教授吳安妮，戮力創新的「作業價值管理AVM」(Activity Value Management)，正是該課題的解方。這套大突破的管理制度，是企業各管理階層從事管理決策的重要參考，對提升長期的「經營績效」有深遠且強大的助益。\n\n●AVM對管理決策的十大優點\n1.AVM可以精確計算産品整體價值鏈的成本及利潤，作為「產品創新決策」及「產品定價決策」的依據，解決不敢從事「產品創新」的問題。\n2.AVM可以精確地計算每位客戶及每個通路的整體價值鏈的成本及利潤，作為「客戶及通路決策」的依據，解決「大客戶是好客戶」的迷思。\n3.AVM可以與企業現有管理系統完全相容，讓所有制度徹底整合，進而全面提升企業「整合管理決策」的能力，解決「利潤」下滑的問題。\n4.AVM可以讓使用者進入簡易雲端上線使用，快速了解經營整體問題，為「整體經營管理」奠定良好的基礎，解決「轉型及接班」的問題。\n5.AVM可以提供五種作業中心成本類型，作為各部門「資源分配決策」的依據。\n6.AVM可以提供人員和機器作業的正常產能及成本，作為各部門「預算決策」的依據。\n7.AVM可以精算出人員與機器的超用或剩餘產能，作為「產能管理決策」的依據。\n8.AVM可以精算各項作業屬性的成本和占比，作為「營運流程再造決策」的依據。\n9.AVM可以「作業」來檢視公司的實際營運狀況，作為「精實管理決策」的依據。\n10.AVM可以精算出各部門及員工的收入、成本及利潤資訊，作為「績效和獎酬決策」的依據。\n\n在大數據及AI迅速發展時代，AVM產出的靈活有用資訊，將會為企業帶來莫大的翻轉力量。\n\n●企業界與學術界熱情推薦\nAVM可以重新整理管理要領、看到虧損客戶的問題點、了解各產品的經營問題，以及工廠內部作業失敗成本的原因，是一面厲害的照妖鏡，能看清楚公司各層面的問題，提升管理績效，適合各行各業推動的管理制度。\n――日正食品副總經理 李采慧\n\n硬體+軟體+管理=企業管理三核心，這股浪潮逐漸從AVM的興起而備受矚目，標誌著「因、果」資訊的融合，以及邁向AI智慧與大數據無縫接軌的開端。\n――旭然國際董事長 吳玲美\n\n吳教授帶領我們拆解傳統會計的分析觀點，從「作業」角度重新建構企業的一舉一動。作業價值管理AVM不僅打破組織部門之間的藩籬，通盤檢視既有的營運模式，整合具因果關聯的相關訊，將有限資源投注在最需要的單位，移除不必要的浪費與支出，更對於企業存續最重要的長、短期利潤與價值，具有絕大助益。\n――信義房屋董事長 周俊吉\n\n吳教授鑄造出AVM這把利劍，直指企業痛處，產生原因與結果關係整合資訊，好比儀表板，讓不同管理階層一目了然得到正確即時的決策資訊，大幅提升決策的精準度及其帶來的效益。\n――勤誠興業董事長 陳美琪\n\n沒有正確的攸關資訊，將無法洞察問題的本質，做出對的判斷。落實《企業策略的終極答案》所建議的作業價值管理系統，能為公司提供優質的管理資訊，創造競爭優勢。\n――東海大學會計學系副教授 劉俊儒\n\n吳教授提出的作業價值管理AVM，以客觀數據為基礎，有利於形成共識與溝通；呈現作業活動間的因果關係及互動性，形成系統思考、消除部門主義；能及早發現問，追蹤趨勢；協助管理者專注於重大長期議題，提升高階管理者的能力和價值；讓個人及組織變聰明，既見林（長期競爭力）又見樹（成本迷思）。\n――明門實業董事長 鄭欽明"
+    },
+    {
+        "title": "投資的底氣︰選股策略X心理素質決定你的財富上限",
+        "author": "股市隱者（謝天健）",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101044743",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101044743&height=400&width=310",
+        "intro": "出手都是贏勢股，荷包、心靈都自由！\n用一套方法，找到含金量高的贏勢股，\n讓一流企業為你賺錢，\n不盯盤，也能三年賺一倍！\n\n投資方法只能決定財富下限，\n心理素質才能決定你的財富上限，\n在致富路上，比方法更重要的是一顆平穩的心。\n\n曾操盤60億的海外基金經理人股市隱者，\n首次結合他的科學選股、穩健心理素質、通透的財富觀，\n分享如何擁有戰勝人性與市場情緒的投資底氣，\n幫助你長期持有高獲利的贏勢股，\n慢慢致富，也賺到自己的人生。\n\n不論是投資新手、在股市載浮載沉的投資人、\n或是不得投資要領的資深股民，\n都能擁有出手精準的投資底氣，\n在獲利上和心境上，更上一層樓。\n\n本書教你 :\n✓什麼是「贏勢股」？\n處在一個成長中的趨勢，並且都是產業龍頭，\n具備長時間高獲利的特性。\n\n✓找趨勢：\n從產業報告精選成長期3年以上、\n成長率超過10%的產業，享受巨大趨勢紅利。\n\n✓選好股\n從好趨勢中找出護城河高、含金量高，\n能不斷創造價值的龍頭企業，獲利更勝大盤。\n\n✓挑價位\n補足用「本益比」估價的侷限，\n「本益比位階」更好算出買進與加碼的價位，不怕買高賣低。\n\n✓看賣點\n從質性資訊和量化數據看賣出信號是否出現？\n不斷持股追蹤，問自己當初買進的理由是否存在？\n\n✓常被忽略的獲利關鍵：心理素質\n不論哪一種投資方法或標的，都需要這些心理素質──\n耐心等待、獨立思考、放大格局、復盤修正，以及用平常心，\n才能幫助我們長期投資、穩定獲利。\n\n✓荷包自由了，時間和心靈也要自由\n別把快樂建立在無限疊加的數字上，反而更容易財富自由。\n比買哪支股票更重要的問題是：我真正需要什麼？\n什麼樣的生活才讓我滿足？當滿足之時，才是財富自由之時。\n\n投資只是人生的一部分，卻足以改變整個人生。\n看完這本書，回報你的不僅僅是金錢，\n更是一種懂得享受生活的能力。"
+    },
+    {
+        "title": "書店本事：在你心中的那些書店",
+        "author": "楊富閔",
+        "url": "https://www.taaze.tw/products/11100800527.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100800527&height=400&width=310",
+        "intro": "書店是「人」的地方：店主與顧客在書店交會，作者和讀者彼此交談，冊頁的流轉則是書店最優雅的私語聲。\n\n書店也是「時間」的居所：無論是日式老木屋的改造，眷村房舍的新創，軍事碉堡的活化，島嶼複雜的歷史銘刻在書屋的書架，書架旁的書桌，書桌上的書頁，以及，正在閱讀書頁文字的你的眼眸。\n\n對楊富閔來說，他穿越其中所見的不僅是一本書、一支筆、一頁紙，而是無形中延續、呼吸了書店的歷史與精神，其中便有不同世代的台灣人，對於文化傳承的各種美意。\n\n四十家書店的尋訪猶如四十堂文學課程，而《書店本事：在你心中的那些書店》彷彿是書店們的穿越考，或許也是作家楊富閔的散文筆記、田野心得與裝滿珍貴回憶的第一手觀察。"
+    },
+    {
+        "title": "停下來的書店",
+        "author": "夏琳",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100926122",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100926122&height=400&width=310",
+        "intro": "安靜的時光裡，淺睡多夢，\n我們輕輕旋轉手中那顆記憶的琥珀……\n\n書寫一座昨日之城\n一冊重新上架的舊日抒情\n落筆寧靜，念想百轉千回\n聽得見時間迂迴起落的聲音\n\n被海風浸漬的南方近代，\n青春是遺憾與決定的喧嘩交會；\n大船入港那日，陸續上岸的人，\n攜回了關於鹽埕埔那間書店的回憶。\n\n記憶的書架上，總有一冊永不下架卻鮮少翻閱的小說，那是我們的青春、傷懷，以及成長年代之美好的疼痛。\n\n夏琳以書店為舒展記憶的軸心，架構了橫跨六○至八○年代的高雄鹽埕埔斷代史，那一段從動盪至逐漸安定的年歲裡，政經環境的轉變與社會的豐富百態緊繫人心，每個人開始懂得懷抱一份希望，卻也同時擁有了無數遺憾。老城區流轉不息的人文景況，是故事的主旋律，繚繞於情緒豐沛的港口、心緒流轉的街區小巷，甚至等長的愛恨裡……被時間停下來的書店，記憶仍鮮明耀眼，那是收藏昨日的折返點、收容倦途之處。\n\n★南崁小書店店主——夏琳的創作初探，昔時港都的姿態與氣味兼具的自傳體小說，醞釀於地方的昨日書寫，橫跨六○至八○年代高雄老城區鹽埕埔的人文風景，在記憶的繁花幽徑裡，與一代人的美好重遇。"
+    },
+    {
+        "title": "小規模是趨勢：掌握AI和新一代新創公司如何改寫未來經濟模式",
+        "author": "賀曼．塔內賈、凱文．曼尼",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100880282",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100880282&height=400&width=310",
+        "intro": "AI＋平台崛起，小規模是趨勢！\n\n一股結合最新科技與經濟學的創新趨勢，正在顛覆巨型產業。現在，規模已經不再是優勢，反而成為不利條件與負擔。新創公司正在運用AI，將以往需要昂貴投資的作業自動化，並且租用各種雲端平台打造事業，因此得以擺脫上個世紀的模式，小規模也能做得有聲有色！\n\n本書作者賀曼．塔內賈為《富比士》（Forbes）雜誌全球百大最佳創投人，以精準的眼光早期投資Airbnb、Snapchat、金流服務商Stripe、眼鏡電商華比帕克（Warby Parker），以及由好萊塢影星潔西卡．艾芭（Jessica Alba）等人所創辦的美國誠實公司（The Honest Company）等知名新創事業。\n\n塔內賈以長達20年的專業創投經驗，在本書解釋「去規模化」（unscaling）的現象。在整個20世紀，世界各地的目標是利用規模經濟的優勢，凡事愈大，幾乎總是愈好。進入21世紀，由於人工智慧、各項新科技的發展和平台崛起，小型新創企業可以用低成本租用平台的能力，靈活運作、精實生產、精準行銷，顛覆產業，提供客製化的產品和個人化的服務，從巨型龍頭手上成功搶下訂單。\n\n塔內賈指出，這股始於2007年左右的趨勢，在未來二十年將會持續發展。在本書，他帶領我們一窺能源業、醫療保健業、教育業、金融業、媒體業、消費性產品業「去規模化」的最新發展，並且為政府制定政策、大型企業和個人提供如何應對這股趨勢的實用建言。\n\n去規模化正在改造巨型產業和全球的發展，為創業者、富想像力的公司，以及足智多謀的個人，開啟絕佳的機會。鮮少產業或活動不會受到影響，不論你從事什麼工作、在何處生活，未來的旅程將不同於以往的年代。擁有創業抱負的個人和組織，現在正處於前所未見的最佳時代，擁有更多的機會、更低的障礙。我們身處於驚奇探索之旅的浪頭，有機會像20世紀初期那樣再次改造整個世界，解決一些最大的全球性問題。"
+    },
+    {
+        "title": "股票Ｋ線戰法",
+        "author": "Steve Nison",
+        "url": "https://www.taaze.tw/products/11100176301.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100176301&height=400&width=310",
+        "intro": "繼《陰線陽線》之後，全美陰陽線分析大師 Steve Nison再度總結日本陰陽線分析技巧，向全球金融從業人員透露前所未見的新技術。這套有效的分析技巧和傳統的交易、投資或避險技術結合，必可使操作者在市場上斬獲良多。《股票K線戰法》提供您循序漸進的指令，詳細的圖表，和明確的方針，足以磨礪您的技術操作方法。\n\n「……必然成為陰陽線分析領域的經典作品。」－Charles Lebeau and David Lucas Technical Trader's Bulletin\n\n「……不論您是期貨、商品或股票的交易員、帽客或部位操作者，本書都是必備之作。」－Lee Siegfiried Investor's Library, Data Broadcasting Corp.\n\n「……從作者所探討主題的學術及寫作技巧來說，本書必然是最好的投資書籍之一，內容結構無懈可擊……閱讀是一種喜悅。」－Commodity Traders"
+    },
+    {
+        "title": "全球化的過去與未來︰從舊石器時代到數位時代，地理、技術與制度如何改寫人類萬年的歷史",
+        "author": "傑佛瑞．薩克斯",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100921313",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100921313&height=400&width=310",
+        "intro": "「由著名經濟學家薩克斯撰寫的世界史，總結了過去七萬年來的歷史演變。買了這本書，可以扔掉你書櫃上數十本那些號稱專家寫！」\n──賈德・戴蒙（Jared Diamond），《槍炮、病菌與與鋼鐵》作者\n\n極端氣候、重度汙染、貧富不均、戰爭風險，\n我們正站在第三次世界大戰的邊緣。\n當人類來到生存的關鍵時刻，\n翻開七萬年的歷史，我們是否能借古鑑今，開啟永續的大門？\n\n────蔡宏政（中山大學社會系教授兼東南亞研究中心主任） 專文推薦────\n\n二十一世紀初，我們再次進入新的地緣政治時代。權力越來越分散，尤其當亞洲也擁有了西歐和美國的技術、經濟、和軍事優勢後，中國、印度、北韓和巴基斯坦成為核武大國，影響全球局勢舉重若輕。不僅如此，數位時代技術的演變，也正在催生全球化權力關係的變化，同時，網路戰成為二十一世紀最新的戰爭。\n\n地緣政治反應了「帝國」的樣貌正以驚人的速度改變。1914年，大英帝國仍然統治著世界；到1960年，大英帝國基本上已經消失了，蘇聯正在挑戰美國的霸權領導地位；1991年12月，蘇聯也從地圖上消失。今天，中國崛起，印度的勢力以極快的速度增長，而非洲的人口上升，預示了二十一世紀的後半可能是截然不同的權力版圖。\n同時，二十一世紀對於人類的基本生存權而言，也面對極大的挑戰：氣候變遷、生物多樣性消失、越來越廣泛的環境汙染，這些都是全球需要攜手面對的難題。\n\n二十八歲即獲聘為哈佛終身職的著名經濟學者傑佛瑞．薩克斯，繼《文明的代價》一書後，將視野拉回過往七萬年的歷史演進。他想知道，若想保證人類的長遠未來，那麼借古鑑今是否有可能？如果我們能研究出過去每個時代的演變與困境，是否就能解決今日的問題？\n\n在本書裡，薩克斯將人類的歷史拆成七個時代：舊石器時代──人類以狩獵採集者的姿態誕生；新石器時代──因農業帶來的密集人口，使得狩獵採集者的競爭力削弱並消失；馬背時代──動物的馴化，讓貿易、通訊都變得更為廣泛，城市發展也逐漸密集且多元；古典時代──世界各區域的文明蓬勃發展，人類史上首度出現陸上帝國；海洋時代──開拓新大陸讓貿易範圍寬廣，跨洲的海洋帝國也於此時誕生；工業時代──蒸氣革命帶來大量工業化，催生了第一個世界霸權大英帝國；以及數位時代──霸權由英國轉為美國，而數位革命又帶來新型態的經濟、戰爭、與地緣政治關係。\n\n薩克斯並以五個問題為切入點扣問：\n\n■是什麼造成了全球化？\n■地理、技術與制度如何交互影響？\n■一個地區的影響力如何向外擴張？\n■這些變化如何影響全球局勢？\n■我們有辦法從過往的全球化汲取教訓，並迎接當下的挑戰嗎？\n\n對於現今世界面臨的危機，薩克斯於書中提出了精闢的見解，更對僵化的聯合國與其他世界組織提出了改革的呼籲。無論是回顧人類七萬年的歷史演進，抑或是對未來的展望上，本書皆展現了全面的觀點，並彌補了傳統經濟學上最缺乏的經濟歷史。薩克斯的這本傑作不僅是強國的警示之書，對於夾擊於強權競逐下的台灣該如何面對世界局勢，也深具啟發。"
+    },
+    {
+        "title": "無止境的殺人",
+        "author": "宮部美幸",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100853971",
+        "read": "https://www.haodoo.net/?M=u&P=E13G3:1&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100853971&height=400&width=310",
+        "intro": "錢包，是守護欲望的鏡子。\n反映出人心最真實的渴求，也看盡人性的醜惡與良善……\n\n三十六歲即坐擁高級餐廳的塚田和彥，及年輕貌美如上流名媛的森元法子，一夕之間沸騰了社會。他們不是政經人物，也不是偶像明星，而是讓警方束手無策的「嫌疑犯」。\n\n深夜一樁肇事逃逸的車禍，死於輪下的男子身上的領帶夾不翼而飛。剛蜜月旅行回來的新娘，在機場附近被毆打致死，手上的戒指消失無蹤。過氣的酒店小姐，埋屍在森林深處，唯有大衣鈕扣遺失。離婚女子慘遭輾斃，無端少了一綹頭髮……一連串看似毫不相關的命案，千絲萬縷的線索都指向這對男女是凶手，然而，警方卻找不到任何確鑿的證據。\n\n不知是太愚蠢，或是太狡詐，塚田和法子坦承是彼此的外遇對象。並且，隨著案情愈來愈嚴重，兩人的嫌疑竟逐漸洗刷。到底是過於清白，根本無所畏懼？還是，對於謀殺計畫有百分之有的自信？在輿論倒向支持兩人的情況下，警方要如何破除迷障，拆穿真相？"
+    },
+    {
+        "title": "獲利優先：大道至簡的現金管理系統",
+        "author": "麥可‧米卡洛維茲",
+        "url": "https://www.taaze.tw/products/14100103184.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=14100103184&height=400&width=310",
+        "intro": "　本書直指你我可能知道，卻又容易犯錯的財務盲區：透過營收成長無法解決財務問題。一心指望下一張大單、下一個客戶或投資人可以挽救頹勢，但最後只是一手創造了超大怪物。不斷成長卻忽略健康，哪一天大單、客戶或投資人沒有出現，後果不堪設想。\n\n　　創業導師、暢銷書作家麥可‧米卡洛維茲也曾有相同的經驗，只在乎業績成長，不在乎獲利，結果竟陷入求生存的惡性循環陷阱：營收增加，但必要費用增加更多→結果獲利更少，只好再拚命工作增加營收。在這樣的惡性循環下，創業存活的人寥寥可數。\n\n銷貨收入－獲利＝費用\n才是確保生存的獲利成長法則\n\n本書作者米卡洛維茲大聲疾呼要大家改變傳統會計思維，放棄會計原則帶來的賺錢幻象。他發現，傳統會計公式會讓人只想追求成長，忘了獲利。只要翻轉傳統的公式，就可以將記帳方法一改為獲利法則。\n\n創業的目的是為了實現願景，達到財富自由；\n創業家別不小心把自己變成公司的災難，需謹記：\n賺錢（收入）和拿到錢（獲利），兩者天差地遠。\n\n創新轉型不只在產品面，更多在財務面，\n跟著本書從第一天、第一個月、第一年，運轉公司財務轉型，\n配合這套「獲利優先」系統，將公司從吃錢怪獸變成獲利機器！"
+    },
+    {
+        "title": "繁花",
+        "author": "金宇澄",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100890773",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100890773&height=400&width=310",
+        "intro": "一座城，兩個男人，三段童年，四個十年，還有說不盡的市井故事。\n\n九○年代，生意人的上海。律師滬生與妻子白萍有名無實，兩人結婚後白萍便想盡辦法轉往國外，不願再回家來。法律夜校同學梅瑞先是與滬生交往，後來勾搭上他的好友「寶總」阿寶，但阿寶心裡始終有一個女孩的影子。\n商場上，精明的女人盯著成功的男人，特別是寂寞的男人。而寂寞的男人背後，都有過一個特別的女人。他們的故事──關於一座城的故事──要遠從滬生、阿寶與小毛三人結識的童年，六○年代的上海說起，那其中充滿各種美麗的、迷人的、身不由己的、充滿慾望的女人，女人的身體，渴望女人的男人與渴望男人的女人；街坊、八卦、流言、背叛、傳說、英雄事蹟、失望與希望、眼淚，與一場改變所有人的革命。"
+    },
+    {
+        "title": "目擊者",
+        "author": "林伍德．巴克萊",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100808573",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100808573&height=400&width=310",
+        "intro": "精神分裂症患者湯瑪士沉迷於網路地圖軟體，成日足不出戶瀏覽全球各城市街景。當他於網上逛到紐約曼哈頓下東區街頭時，意外發現某棟公寓三樓的窗內出現了一張被塑膠袋套緊的女人面孔，因恐懼而扭曲變形，他堅信自己目睹了兇殺案。\n\n不過，事情可沒那麼簡單。對警方而言，湯瑪士不能算是可靠證人，想要說服警方進行調查是難上加難。\n\n湯瑪士的哥哥雷此刻正返家處理他們父親意外猝死的後事，起初雷將湯瑪士的意外發現視為他的妄想不予理會，但為了讓湯瑪士打消親自走去探勘紐約現場的念頭，雷親自去到該棟公寓，卻只發現該戶之前的房客已搬離，目前招租中，其他別無異狀。\n\n但湯瑪士相信自己的雙眼，這個堅持將兩兄弟捲入一場陰謀——\n有人正企圖湮滅證據，任何目擊者都無法倖免……"
+    },
+    {
+        "title": "四猿殺手",
+        "author": "J. D.巴克",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100848797",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100848797&height=400&width=310",
+        "intro": "想活著，就遵守規則，\n非禮勿視、非禮勿聽、非禮勿言、非禮勿動\n否則，格殺勿論！\n\n推理評論人 冬陽\n知名作家暨書評人 提子墨\n荒野夢二書店主人 銀色快手\n知名暢銷作家 螺螄拜恩\n一致好評盛讚（依照姓名筆劃排序）\n\n當繫著黑絲帶的白色盒子再次出現時，\n他知道，四猿殺手回來了。\n\n眼前這個綁著黑絲帶的白盒子，芝加哥警局警探波特再熟悉不過……\n盒子裡分別裝著被害人被洗得乾乾淨淨的五官，再仔細地繫上黑色絲帶，\n就像是禮物一般，送到被害者家人手中。\n當陸續收到第三個盒子後，沒多久便會找到殘破的遺體，旁邊留下「非禮勿動」的警語……\n二十一個盒子，共有七個被害人。\n眼前這個盒子裡裝著一隻耳朵，代表又有一個人被綁架了，\n波特心知肚明，死亡遊戲又開始了。"
+    },
+    {
+        "title": "重啟人生︰一個哈佛教授的生命領悟，給你把餘生過好的簡單建議",
+        "author": "亞瑟．布魯克斯",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101010523",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101010523&height=400&width=310",
+        "intro": "當改變發生，你有沒有勇氣展開另一種人生﹖\n過去，我們總以為只要認真努力，擁抱簡單的成功公式：心無旁騖，犧牲個人生活，一心一意往上爬，辛苦總會有代價。\n如今，我們領悟到人生不是一路往上衝，高峰過後可能就是谷底；不管是誰，現在多閃耀、多風光，有一天都會走下坡。\n當人生從走得光彩奪目變成走鋼索，該如何活出新意義？許多拚命三郎，發現愈來愈力不從心，家庭關係也開始變得緊張。面對人生的四分五裂，他們以一貫方式回應，否認愈來愈明顯的變化，加倍努力，試圖彌補衰退與不足，最後結局卻往往陷入更大的憤怒、害怕與失望。原本以為到了人生某個階段，生活就會更令人自豪，充滿喜悅與滿足感。然而，事與願違。你的人生不必這樣過。\n破解奮鬥者的詛咒，\n把害怕做出的人生改變，轉變成全新的力量泉源。\n哈佛大學教授布魯克斯幫助你打破「奮鬥者的詛咒」，從科學、哲學、神學、歷史的角度出發，分享違反直覺的策略，教你戒除舊習慣，培養新的生活方式，發掘潛在的生命價值。\n‧重新思考成功︰不自我物化，戒掉對成功的癮。\n‧活好︰思考失敗／死亡，擊敗恐懼，好好活著。\n‧認識自己︰從追求外在成就，到發展內在力量。\n‧化脆弱為力量：分享脆弱，生活中的愛會成長。\n\n人生不會因為無條件的相信和努力就變得幸福，有時候你必須捨棄，才會發現生活中真正重要的事情。當改變發生，你不一定要為此感到痛苦。這本書教你以優雅的姿態，帶著喜悅與更深層的使命感，接受挫折帶來的禮物。"
+    },
+    {
+        "title": "起源",
+        "author": "丹．布朗",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100843999",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100843999&height=400&width=310",
+        "intro": "哈佛大學符號學教授羅柏‧蘭登受邀到西班牙畢爾包的古根漢美術館參加一場由未來學家艾德蒙‧柯許主辦的神祕晚會。柯許即將發表的「新人類起源說」據稱將解答人類存在的兩個根本疑問，足以顛覆達爾文以降的科學觀點。\n\n活動開始不久，全場數百位來賓都不禁被別出心裁的簡報迷住，蘭登也發現這遠比他想像的更具爭議性。精心安排的晚會進行到一半卻傳出槍響，有人要除掉柯許。眼見柯許的新發現就要在世界上消失，為了解開柯許上鎖文件的關鍵密碼，蘭登和古根漢美術館館長安布拉‧維達摸黑逃離混亂現場。自從刺殺騷動傳出，王宮出面滅火，主教蠢蠢欲動；今日政教關係不再牢固的西班牙，神聖宗教與尊貴王室已無法安定人心。此刻，同行逃往巴塞隆納的兩人，沿路凶險不斷，被迫躲進高第的聖家堂內鮮為人知的密室中，如今唯有仰賴維達館長提供柯許在世前的種種線索，蘭登或許有可能解開柯許設下的重重密碼，搶救可能永遠失落的新發現。\n\n「密碼不會自然出現，必須被創造。」在這部《達文西密碼》的驚人續集中，羅柏．蘭登將穿過隱晦歷史與極端宗教的黑暗長廊，直達最初始的生命起源。十五世紀以來，從伽俐略到霍金到複雜科學，在這個混亂、失序、人心徬徨的年代，從宗教、王權、政治領袖到哲學家，我們如何回應每日不斷翻天覆地的科學新發現？突現的生命答案，又為何讓人誓願以性命守護？\n\n我們從哪裡來？\n我們要往哪裡去？\n\n未知生，焉知死？數千年來，關於人類存在的兩個根本疑問，在權力爭霸的歷史中莫衷一是。長久矇蔽、令人屏息的真相，即將解開。邱吉爾曾言：「偉大的代價是責任」。生命有何意義？又將如何終結？原來人類對於死亡的恐懼，答案就在起源之中。只有看見死亡，人生才有成為傑作的可能。解開起源之謎，可能改寫人類命運的下一步。\n　\n本書創意驚人，被譽為丹布朗迄今最高明最具娛樂性的小說。"
+    },
+    {
+        "title": "冰裡的女孩",
+        "author": "羅伯．布林澤",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100994122",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100994122&height=400&width=310",
+        "intro": "她睜大眼睛，嘴唇分開，像要說話。她的屍體在冰裡凍住……而她並不是唯一一個。\n\n在南倫敦一處公園厚厚的冰層之下發現了一名女性的屍體，愛芮卡刑警被召來負責這起命案。\n經查被害人是一位年輕美麗的社交名媛，看似人生勝利組。然而，當愛芮卡深入調查，發現命案與另外三名女子謀殺案有共通處──她們全都被勒死，雙手綁住，丟進倫敦各處的水域中。\n冰裡的女孩究竟隱藏了什麼見不得人的秘密？"
+    },
+    {
+        "title": "獲利的魔鬼，就躲在細節裡：不拚業績，我們如何讓獲利翻倍？",
+        "author": "強納森．伯恩斯",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100566348",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100566348&height=400&width=310",
+        "intro": "本書一共四部、36章，意味著伯恩斯至少要幫你抓出、並糾正36種躲藏在各種做事細節裡的「魔鬼」—也就是觀念或做法的誤解。\n\n伯恩斯認為，我們該做的不是想著怎麼開發新計畫、提出新方案，而是先趕緊找出那40％「隱性虧錢」的生意，讓每位顧客、每項產品、每次服務都為公司帶來獲利，你才能夠將不賺錢的生意轉變成好生意。\n\n「魔鬼藏在細節裡」，意思就是︰企業每一個動作環節，都影響利潤高低，而每一項業務其實都擁有帶來利潤的潛力。伯恩斯多年前就提出一套系統化流程來分析利潤，20多年來幫助許多人快速地判斷，公司業務中的哪些部分值得擴展，哪些部分只會耗盡資源。這套犀利的辦法包括三部分︰\n\n1. 簡單畫一下你的利潤地圖（profit mapping）︰你這麼忙，哪有時間一一細算單項成本！所以你得用這套方法，很快「抓出」客戶、產品和服務為公司創造利潤的程度，知道哪些產品利潤很高，哪些活動幾乎賺不到錢；\n\n2. 接著，對那些能發揮利潤槓桿（profit levers）的活動著力︰利潤槓桿就是公司中一經調整，就能增加利潤的做事關鍵點。\n\n3. 落實以利潤觀點來管理流程︰定期檢討公司的顧客群和服務，讓日常活動能完全呼應公司的商業模式，用教育和訓練，將「盈虧損益意識」往下推展到基層人員。\n\n這是一本公司裡所有主管都該使用的手冊，所有員工都該參照的指導原則，不論你的公司是跨國集團，還是只有五名員工的地方商店，本書都會引導你、促使你服務的公司充分發揮潛力，伯恩斯表示，成功的商務人士一定要「找到自己的最佳實務」，本書就是最佳指南。"
+    },
+    {
+        "title": "傳奇",
+        "author": "張愛玲",
+        "url": "https://www.taaze.tw/products/11101040212.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101040212&height=400&width=310",
+        "intro": "80年前，身處在不自由的「圍城」，張愛玲將千瘡百孔的現實投射到《傳奇》裡，成就了觸目可見的破碎慾望。\n\n〈封鎖〉中的「慾望街車」超然時空之外，讓壓抑得以發洩；〈金鎖記〉透過可謂為監禁的滯悶空間，將人性赤裸一表無遺；〈茉莉香片〉令人迷失於奇異且幾近扭曲的「遊戲」；〈花凋〉則寫盡毫無情愫的婚姻與被命運拋棄的抑鬱……這些深蘊人心的隱喻、傳統與叛逆的透視，經歷80年的淬鍊打磨，依舊令人心醉神迷。\n\n80年後，透過經典《傳奇》紀念回歸，我們得以跨越歲月的藩籬，沉浸於歷久不衰的字句，完整一窺張愛玲胸臆間的奇特想望，也見證了她在文學史上最重要的一頁。《傳奇》餘韻亙久不朽，張愛玲文思更將盛放不凋！"
+    },
+    {
+        "title": "不存在的任務",
+        "author": "李查德",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100857617",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100857617&height=400&width=310",
+        "intro": "閉上嘴收下這塊破銅爛鐵，\n他知道，勳章只是不值錢的封口費。\n但又一次，他接下了見不得光的任務，\n一個「不存在」的任務……\n\n\n那是1996年，傑克．李奇還在當憲兵，已是歹徒聞風喪膽的軍方王牌。一次成功的任務讓他獲頒勳章，但隨後卻立即被下放到「學校」。如果把軍隊比喻成一個人的身體，「學校」就是無人聞問的盲腸。一個才剛完成任務的少校會來到這裡，不是得罪了人就是幕後有鬼。\n\n李奇的猜測很快得到證實，他的兩位「同學」分別來自FBI和CIA，都是功績赫赫的頂尖好手。他們三人將接受美國政府的最高指令，阻止一場可能的恐怖攻擊陰謀。\n\n根據線報，潛伏在柏林的伊斯蘭聖戰組織正在進行一項秘密交易，並傳出一則意義不明的訊息：「美國人要一億。」這群人要交易的是什麼？賣家又到底是誰？在線索全無的情況下，李奇決定遠赴德國，掀開「美國人」的真實身分。但與此同時，新納粹黨也盯上了這筆交易，伺機而動。時間一分一秒過去，李奇遊走在法律邊緣，而且沒有失敗的機會……"
+    },
+    {
+        "title": "看不見的圖書館",
+        "author": "珍娜薇．考格曼",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100856373",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100856373&height=400&width=310",
+        "intro": "獻給閱讀冒險家的全新旅程——\n圖書館員版的「古墓奇兵」！\n\n圖書館探員的工作\n館藏採購（×）分類編目（×）讀者服務（×）協助研究（×）\n跨越時空、尋找珍本，和奇幻生物打交道，愛書人為佳。\n\n隱藏在世界之間的大圖書館，\n負責保管各個世界裡珍本中的珍本。\n其中偶有獨一無二的特殊版本，甚至能影響所在世界。\n圖書館員則身懷重任，前往不同時空，尋書收藏。\n知曉內情的人們，通稱大圖書館為「看不見的圖書館」。\n"
+    },
+    {
+        "title": "掠食者",
+        "author": "PatriciaCornwell",
+        "url": "https://www.taaze.tw/gift_sing.html?pid=81301568461",
+        "img": "https://media.taaze.tw/showLargeImage.html?sc=11100155469&width=340&height=474",
+        "intro": "目前擔任佛羅里達全美法醫學會顧問的史卡佩塔正著手調查一件離奇的失蹤案，一家四口突然從寧靜的家園消失，車子還停在車道上，廚房裡的火爐仍開著小火。不久之後就在失蹤案附近，一名抱怨柑橘樹巡查員上門打擾的老婦人遭到殘虐的謀殺，陳屍床上。案子不但起出極其詭異的證物，所有線索更指向一個極度狡獪靈巧的犯罪心靈。史卡佩塔和她的小組──彼德‧馬里諾、班頓‧衛斯禮，以及她的甥女露西──發現這幾樁駭人聽聞的犯罪案件之間，以及幾名可能的嫌疑犯之間似乎有某種神秘連結。\n\n另一方面，哈佛醫療體系下一家著名精神醫院正進行著一項代號「掠食者」的機密研究計畫，這計畫的實驗對象之一是一名入獄服刑的精神病態罪犯，他透露自己是多件謀殺疑案的主嫌，用似真似假的線索逗弄著史卡佩塔，而真正的凶手似乎仍在逃，且面貌多變。這些事件彼此相關或只是機緣巧合？而對這名犯人的腦部研究，是否真能讓人一窺仍在黑暗中尋找獵物的病態殺手的作案手法？\n\n史卡佩塔將再度抽絲剝繭，找出病態的「掠食者」。"
+    },
+    {
+        "title": "心塵往事",
+        "author": "約翰‧厄文",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100781641",
+        "img": "https://cdn-booklife.shang-yu.com/upload_files/fonlego-rwd/prodpic/D_02600001.jpg",
+        "intro": "每個人都曾經尋找，也曾迷失，\n但總有一天你會知道，哪裡，才是心的歸屬……\n\n緬因州，聖克勞斯，在這座因過度伐木興盛，隨後又轉為衰敗的城鎮裡，懷抱著理想與贖罪心的勒奇醫生同情懷孕卻無法扶養孩子的婦女，設立了一所孤兒院，並私下為婦女墮胎。\n終生未婚的勒奇醫生將醫學知識與高超外科技術，傾囊相授給視如己出的孤兒荷馬．威爾斯；荷馬曾被數個家庭先後收養，但又因故回到聖克勞斯，最終荷馬只能留在勒奇醫生的身邊擔任助手；勒奇醫生暗自期盼英俊善良的荷馬終有一天能成為自己的接班人，然而荷馬卻反對為婦女進行墮胎手術。\n一次偶然的機會，荷馬跟隨一對年輕情侶離開了聖克勞斯；急欲接觸真實世界的荷馬，成為了蘋果園的員工，更愛上了好朋友的情人，愛情讓荷馬迷失其中。而在聖克勞斯，勒奇醫生只是默默期盼荷馬能夠回來，在自己被迫離開之前……\n\n道德與困頓、愛情與友情、自私與良善、真相與謊言、背叛與寬恕，《心塵往事》如同採摘蘋果釀酒般，給讀者從滑順到微醺的閱讀迷醉，更成就了一本幽默溫馨、又直探靈魂的經典名作！"
+    },
+    {
+        "title": "新罕布夏旅館",
+        "author": "約翰‧厄文",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100792600",
+        "img": "https://cdn-booklife.shang-yu.com/upload_files/fonlego-rwd/prodpic/D_02600002.jpg",
+        "intro": "父親買熊的那年夏天，我們都還沒出生──\n\n「我們」指的是：大哥法蘭、姊姊芬妮、我、莉莉和蛋蛋。我們家是擁有五個孩子的大家庭，除了五個孩子之外，還有一頭父親被強迫推銷買下，名叫「緬因州」的老熊。父親是個聰明的夢想家，他將母親老舊的母校買下後改建成旅館，命名為「新罕布夏」。\n\n我們幾個孩子就這樣在旅館那一扇又一扇的門後穿梭玩樂，竊聽著客房對講機裡的人生百態；在這裡，除了莉莉之外我們飛快成長，而芬妮打輸了一場影響她一生的架──雖然我們都知道，那並不是她宣稱的群毆，而是其他。\n\n父親後來賣掉了旅館，帶著我們到維也納，開設了第二家「新罕布夏旅館」；我們新旅館的住客不是恐怖份子就是妓女；同時，我們也遇見了另一頭熊，由女孩蘇西扮演、繼承被槍殺的「緬因州」地位的「蘇西熊」。而我，貝里家的次子，則忙著到處尋找可以讓我將雙眼視線從芬妮身上移開的女人，但我跟誰在一切都不快樂。\n\n當父親制伏了企圖炸毀一切的恐怖份子後，莉莉把我們一家的故事寫成小說出版，大哥法蘭成了她的經紀人。我和芬妮在經歷這些年之後，確認了彼此的愛情；因此，我們需要做個了結……"
+    },
+    {
+        "title": "我的心遺留在愛琴海",
+        "author": "Justin",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100177599",
+        "img": "https://www.books.com.tw/img/001/022/87/0010228786_bc_01.jpg",
+        "intro": "2003年四月底，SARS肆虐，台灣籠罩在死亡的陰影下……\n五月初，本書作者Justin去了一趟希臘，12天的旅程，Justin拍了1400張數位照片，因為希臘太美了，他先是把相片寄給朋友，後來又應大家的要求開了一個網站--「我的心遺留在愛琴海」，因為照片太美，朋友們你告訴我，我告訴他，一個傳一個，然後整個五月、六月、七月…許多人都收到這麼一封信：「這是一個聯電工程師去希臘玩的時候拍下的照片，真的很美~~~http://home.kimo.com.tw/yuchang_chen.tw/」這個網站，截至7月10日止，上網人數已高達一百多萬人，並且持續增加中。\n這個Justin愛琴海網路現象就像一則科技與人文結合的傳奇。究竟是愛琴海太美了？還是SARS讓人太煩悶？或是工程師加希臘（理性與感性）的組合太迷人？答案無人知曉。\n\n希臘的藍與白因為Justin的網站而讓人心生嚮往，「今天的天空非常希臘」不再只是詩句，它有了真正的影像，並且印製成書。12天的旅程，Justin以他希臘旅遊的四個地方為經，學習攝影7年的心得為緯，圖文並茂地呈現出來，這不是一本專業的攝影書，而是一本希臘的攝影遊記。\n\n為什麼要出這本書？Justin說：希臘不遠，想去就可以到達；夢想不遠，踏出去就更接近……\n這本書是一個美景，一個實現。"
+    },
+    {
+        "title": "在咖啡冷掉之前",
+        "author": "川口俊和",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100813999",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100813999&height=400&width=310",
+        "intro": "拜託了，請讓我回到那一天！\n「聽說來這裡，就能回到過去，是真的嗎？」\n\n一間能回到過去的咖啡店，一連串奇蹟般的際遇，\n所編織出關於──愛與懊悔的故事。\n\n\n「只有坐在這家咖啡店的某個位子上，\n才能回到過去喔？而且……」\n\n在某條不知名的小徑上，有間咖啡店，有著不可思議的都市傳說。\n當中有個神秘座位，只要坐上那座位，就能回到你所希望回去的那一天。\n不過，回到過去是有代價的，也有著非常麻煩的規則………\n\n1. 就算回到過去，也無法見到不曾來過這家咖啡店的人。\n2. 回到過去之後無論如何努力，也不能改變現實。\n3. 神秘的座位有人，必須等到那個人離席時才能去坐。\n4. 即使回到過去，也不能從座位上離開。\n5. 回到過去的時間，只從咖啡倒進杯子開始，到咖啡冷卻為止。\n\n而且，麻煩的規則還不只這些………\n如果是你，倘若真能回到過去，也有想見的人嗎？\n"
+    },
+    {
+        "title": "安眠書店",
+        "author": "卡洛琳．凱普尼斯",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100797331&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=102b44540fb101e2fc79a4f271456b",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100797331&height=400&width=310",
+        "intro": "自她進入喬伊工作的東村書店那一剎那，喬伊便注意到她，在後續的言談間，喬伊更加確定她是自己要找的目標。喬伊先做了大家都會做的事：利用GOOGLE搜尋她信用卡的名字。\n\n全紐約市只有一個桂妮薇爾．貝可，她有隱私設定為公開的臉書帳號，而且發推特總是發得沒完沒了，這讓喬伊得以查出他所需要知道的一切：她朋友直接叫她貝可，念過布朗大學，住在銀行街，今晚要去布魯克林的某間酒吧——這正是製造「巧遇」的完美機會。\n\n喬伊宛若著魔了般開始偷偷摸摸掌控貝可的生活，他刻意搞出一堆事情，就是為了要讓貝可投入他的懷抱。他終於從變態跟蹤者變成了男友，值此同時，他還得忙著剷除兩人戀愛之路上的各種障礙——不計任何手段，就算得殺人也一樣……\n\n《安眠書店》深入探索我們面對偷窺與操控時的無能為力，過程令人恐懼心驚。初試啼聲的作家卡洛琳．凱普尼斯，為這個網路成癮的數位時代所寫下的小說，洞察力十足。節奏暢快，令人愛不釋手，足與《控制》、《美國殺人魔》、史蒂芬．金《戰慄遊戲》等書相互媲美。"
+    },
+    {
+        "title": "絕筆：史蒂芬．金到目前為止最好的小說！完美集大成！進化版的",
+        "author": "史蒂芬．金",
+        "url": "https://www.taaze.tw/products/11101008023.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101008023&height=400&width=310",
+        "intro": "這是我的第一個故事，也是我的最後一個故事。\n回憶的深邃，人性的殘酷，命運的險惡，救贖的渺茫……\n我會一直寫，寫到生命的最後一頁。\n\n\n我11歲，那是我第一次開槍，\n槍很重，我必須用兩隻手握著，抵在胸膛上。\n那個男人是媽媽的男友，他殺了我妹妹。\n而我知道在這個世界上，只有我能救我自己……\n\n停下書寫，比利沉浸在過往，文思如湧泉，讓他差點忘了作家的身分只是偽裝。身為頂尖殺手，他已經潛伏在這棟大樓一段時間了，既然偽裝成作家，那就寫寫自己的故事吧。這麼多年來，他只對罪有應得的惡人開槍，而這將是他金盆洗手前的最後一單。端起窗邊的狙擊槍，扣下扳機，任務完成。\n\n豈料事情卻沒那麼順利，當他趁亂離開大樓，卻有人追趕而上。比利躲回預先準備的藏身處，決定繼續完成自己的故事。直到某個雨夜，一輛車駛過，不省人事的少女被丟了下來。女孩遭人性侵，渾身是傷，她認出比利就是那個被通緝的殺手，卻一點也不害怕，她覺得是比利救了自己。\n\n兩個寂寞的靈魂彼此相依，她讀比利寫的書，比利聽她訴說心事。這裡彷彿就是一座堡壘，讓他們躲著全世界。然而，比利卻絲毫未覺，惡意正在暗處蠢蠢欲動。如果出來跑，總是要還，這一次，比利注定得要賭上自己的生命，才能終結這一切……"
+    },
+    {
+        "title": "這不是我們做事的方法！：組織的興起、殞落，再崛起",
+        "author": "約翰・科特、赫爾格・拉斯格博",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100795865",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100795865&height=400&width=310",
+        "intro": "https://youtu.be/sERHKbP3BuA?si=Mq3Prm-hKDxTOSTc\n向科特學習迎接挑戰的智慧\n化危機為轉機，只須遵循 8 個步驟\n(1)創造急迫感\n(2)建立領導聯盟\n(3)形成策略願景與行動方案\n(4)招募志工團隊\n(5)排除阻礙展開行動\n(6)創造短期成效\n(7)維持加速前進\n(8)促成變革制度化\n\n當你準備了一個很棒的主意想分享，聽到最爛的回答會是什麼？\n「那不是我們這裡做事的方法！」\n\n《這不是我們做事的方法！》從寓言中淬鍊出高效能組織的精神：\n激發團隊的熱情與才華，為目標同心協力，全力以赴！\n在科特和拉斯格博的代表性暢銷書《冰山在融化》中，他們透過一個與企鵝相關的寓言，闡述領導群眾經歷重大改變的過程。現在，十年之後，他們再度推出一個吸引人的故事，希望能夠協助任何一個團隊或組織，因應他們最重大的挑戰，並且將其轉化為成長的機會。\n\n從南非喀拉哈里沙漠裡的兩個狐獴部落，\n你可以學到哪些關於組織歷久不衰的祕訣？\n很久很久以前，有一個住在非洲南部喀拉哈里的狐獴部落，在多年的穩定成長之後，一場旱災讓這個部落的資源急遽減少，而致命的禿鷹攻擊也增加了。隨著情況愈變愈糟，這個部落的和諧也隨之粉碎。主管團隊為了可能的解決方案而爭執不休，而來自第一線工作人員的建議，則面臨令人絕望的回應：「這不是我們這裡做事的方法！」\n\n所以納迪雅，一隻聰明且喜歡冒險的狐獴，為了幫助她陷入困境的部落尋找新的辦法，展開探索之旅。她發現一個規模較小的部落，有著很不同的運作方式，他們有更多的團隊合作與靈活彈性。這些狐獴發展出創新的解決方案，找到更多的食物，並且避開禿鷹的攻擊。但是在這小部落裡，並非所有的事情都如一開始看到的那樣完美無缺。\n\n這兩個世界，一個是龐大、有紀律、管理良好的部落，另一個是小巧、隨興、充滿創意的部落，誰能夠想出將這兩個優秀團隊的長處結合在一起的最佳方法？\n\n科特將數十年來的經驗與研究精華匯集在這本書中，呈現出為什麼組織會興起與殞落，以及他們可以如何面對逆境、再度崛起的智慧。"
+    },
+    {
+        "title": "三體",
+        "author": "劉慈欣",
+        "url": "https://www.taaze.tw//usedList.html?oid=11101004264#_=_",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101004264&height=400&width=310",
+        "intro": "一封寄往宇宙深處的信\n一款謎樣的線上遊戲\n引出決定人類命運的重要決戰\n \n　　父親在文化大革命被殘殺，對人類絕望的菁英科學家葉文潔加入了軍方的通訊單位。就在這裡，她向宇宙深處寄出了改變人類命運的一封信……\n \n　　數十年後，研究尖端奈米材料的汪淼被捲入頂尖科學家接連自殺的謎團之中，他循著線索找到了一個由科學家組成的組織「科學前線」，還有一款名為「三體」的虛擬實境線上遊戲。這個神秘組織究竟藏著什麼祕密，「三體」中出現的三顆太陽又代表著什麼？"
+    },
+    {
+        "title": "曼哈頓中央街一百號",
+        "author": "布萊德‧梅爾樂",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100076839",
+        "img": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhhyM7BYM5_mBfVpCajZP1YO3Agtm02_ZgWsI3_T7L3wzZItKX5q0WHzfVz5DqsCSu80_dbKqNYgWWobPlTlMONPJPJHLzKql5KlOJ4y0uP4USA5SczAehx4Lp3nAUs2rz6GBgYYx2FtF9hDMdAEKCvkWY1F7-HbXJR_0TB99yGWpQzRG_lq4HSp4Aqsoc/w464-h640-rw/%E5%B0%81%E9%9D%A2.jpg",
+        "intro": "紐約時報暢銷小說家布萊德‧梅爾樂在他的第一本暢銷小說《TheTenthjustice》(暫譯：第十正義)中，問了一個問題：你能信任你的朋友多少？而在這本書中，他提高了層次，加大張力，擴增賭注，將場景設在充滿爾虞我詐、計謀重重的法律世界，一對夫妻在法庭上各為其主喉舌力求官司勝訴，情節發展令人驚心動魄。莎拉‧邰德是紐約曼哈頓地檢署新上任的助理檢察官，她找到一個可以打響她第一砲的案子。她聰明、機伶、敏銳，而且強悍，她當然可以將被告繩之以法。可是，她萬萬沒想到對方卻找上她的丈夫擔任辯護律師。她的丈夫賈德任職於一家知名的法律事務所，是個極為出色的辯護律師，而且就快被升為合夥人。莎拉不知道的是，有人威脅她的丈夫，要是他的當事人沒能無罪開釋，就會殺掉他妻子。相對的，莎拉也有一個要人命的秘密。於是這對有苦難言的夫妻在職場上的鬥心機蔓延到家裡，威脅到他們的婚姻、家庭。他們面臨了一個難以想像的困境──這個案子無論誰勝訴，另一方都會死。"
+    },
+    {
+        "title": "世界上最透明的故事",
+        "author": "杉井光",
+        "url": "https://www.taaze.tw/products/11101047021.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101047021&height=400&width=310",
+        "intro": "享譽文壇的知名推理作家宮內彰吾罹癌過世。宮內在出版界緋聞不斷，明明已有妻小，卻仍然與眾多女性交往，更與其中一位生下了孩子，那就是我。\n\n宮內過世之後，他的長子主動聯絡我。他說宮內死前，好像還持續在撰寫一本名為《世界上最透明的故事》的小說。我那同父異母的哥哥看上高額的版稅，想將之作為遺作出版，無奈一直找不到手稿。\n\n身為書店員工，我知道知名作家過世，正是拓展銷量的機會，生前的作品將炙手可熱。起初我站在如此功利主義的角度思考，但在得知宮內寫作途中曾遭遇難以解釋的瓶頸後，對小說本身產生了好奇。\n\n在欲望與業報盡頭病倒的作家，臨死之際最後的依託──世界上最透明的故事。我和編輯霧子小姐展開調查，尋找未曾謀面的生父的遺作。我們詢問了他的家人、編輯、情婦，然而隨著拼湊出來的父親形象逐漸清晰，我周遭的一切卻開始變得透明……"
+    },
+    {
+        "title": "交互比較視野下的現代性：從台灣出發的反省",
+        "author": "湯志傑、吳鴻昌、林峰燦、蔡博方、林文凱、齊偉先、謝斐宇、鄭祖邦",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100868348",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100868348&height=400&width=310",
+        "intro": "近年，在關於現代性的研究中，歐洲經驗已不再是金科玉律，不同區域於何時又是以何種方式進入現代，實有探討的價值與必要。本書站在多元現代性與後殖民理論的反省基礎上，結合實際歷史研究的進展，倡議以交互比較與相互連結的歷史兩種研究取徑，重探現代性的發展，並企圖從台灣出發，追求超越東方╱西方、殖民╱被殖民僵固二分的知識生產模式。\n\n本書透過探討自律市場、文化與文明概念的演變、專業與公民身分的關係、清帝國的早期現代統治理性、台灣民間神明信仰的現代性、中小企業的彈性生產網絡、中國的天朝主義⋯⋯等政治、經濟與文化三大面向，重新定位台灣的現代性經驗，並與西方的發展進行交互比較。\n\n採取交互比較的方法，可避免以本質化的方式把現代性理解為某些特徵；引進相互連結的歷史考察，則可彰顯現代性本身所內含的異質性，皆有助於開展出超越既有多元現代性的另一種研究路數。"
+    },
+    {
+        "title": "異常【龔固爾獎之作、《紐約時報》年度最佳驚悚小說】",
+        "author": " Hervé Le Tellier",
+        "url": "https://www.books.com.tw/products/0010976596",
+        "img": "https://www.books.com.tw/img/001/097/65/0010976596.jpg",
+        "intro": "法航006班機，從巴黎飛往紐約，途中遭遇十年難得一見的危急亂流。然而，這架飛機降落後，卻像進入一個迥然不同的時空。\n \n　　機上的人們，早在3個月前就「搭乘同一班飛機落地」。如今在6月下機的他們究竟是什麼？是複製人？抑或某種大型實驗對人類群體開的極惡玩笑？\n \n　　他們被關進隱密的大型建築，在真相查明之前，無法與外界聯繫。美國出動了各界菁英，欲釐清這場已經不單是國安危機的「全人類恐慌事件」。\n \n　　＋＋第二架飛機著陸後＋＋\n　　一個孩子，變成擁有兩個母親。\n　　曾自殺的作家，如今「死而復生」。\n　　孤獨的演藝少年，能與一模一樣的自己組團嗎？\n　　罹患重病的機長，是否可以用另一個垂死的自己當作實驗？\n　\n　　痛苦，如浮沫般撈不完。存在，是為了什麼。\n　　「第二個你」，會是一切的解答嗎？"
+    },
+    {
+        "title": "別相信任何",
+        "author": "S. J. 華森 （S.J. Watson）",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100836553",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100836553&height=400&width=310",
+        "intro": "每一天醒來，克莉絲汀都身處一個陌生的房間，身旁躺著一個不認識的男人。\n當她面對鏡子，只看見一張陌生的臉，比她所知的自己老了20歲。接著，男人會耐心說明：我是妳丈夫班恩，妳今年47歲，20年前遭遇嚴重車禍，從此記憶受損。\n\n每一天醒來，克莉絲汀就像懵懂的孩子，關於她世界裡的一切，全仰賴班恩告知。\n不過每一天，她也會接到陌生的奈許醫師來電，要她到衣櫥後方找出日記。\n原來，克莉絲汀在睡前會寫下今天的事作為「備忘錄」，提醒明天失憶的自己。\n就這樣，克莉絲汀藉著日記的累積，一天天重建了自己的歷史，但其中細節漸漸和班恩、奈許醫師的說法產生矛盾。究竟哪一個版本可以信任？"
+    },
+    {
+        "title": "全球通史：從史前文明到現代世界",
+        "author": "（英）喬治·威爾斯等",
+        "url": "https://www.books.com.tw/products/CN11401298?loc=customer_003&url=https://www.books.com.tw/?loc=tw_website_001&utm_source=sp--&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202508",
+        "img": "https://www.books.com.tw/img/CN1/140/12/CN11401298.jpg",
+        "intro": "每個家庭都有自己的故事，故事裡總有一座橋，這座橋，就是家人。\n　　鄧巴家的男孩沒有母親，也不需要父親。\n\n　　母親的病逝雖在他們心中留下傷痛，父親的離家卻讓兄弟羈絆更加堅強。但在他們以為人生也許就是如此時，父親突然回到家，提出令人不解的要求：他希望五人跟他去蓋一座橋。五兄弟中，只有克雷願意答應。其餘四人不明白這座橋有何意義，也不懂他為什麼背叛兄弟情誼。但從好久以前克雷就知道：他就是那座橋，只有他，能修復這個家庭受的一切創傷。\n\n　　面對傷痛，我們從不陌生，卻不知道怎麼把自己治好。\n　　我們啟程到遠方找希望，奇蹟卻在一開始出發的地方。\n\n　　經歷十三年沉潛淬練，愛與溫暖的傳信人馬格斯‧朱薩克再次帶來撼動人心的美麗作品。這個充滿心碎與感動的家族史詩將揪住你的心臟，直至最後一頁。\n"
+    },
+    {
+        "title": "克雷的橋",
+        "author": "馬格斯．朱薩克",
+        "url": "https://www.taaze.tw//usedList.html?oid=11100866904&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=1027112bf7208cbcdb8bdf45a03ce3#_=_",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100866904&height=400&width=310",
+        "intro": "每個家庭都有自己的故事，故事裡總有一座橋，這座橋，就是家人。\n　　鄧巴家的男孩沒有母親，也不需要父親。\n\n　　母親的病逝雖在他們心中留下傷痛，父親的離家卻讓兄弟羈絆更加堅強。但在他們以為人生也許就是如此時，父親突然回到家，提出令人不解的要求：他希望五人跟他去蓋一座橋。五兄弟中，只有克雷願意答應。其餘四人不明白這座橋有何意義，也不懂他為什麼背叛兄弟情誼。但從好久以前克雷就知道：他就是那座橋，只有他，能修復這個家庭受的一切創傷。\n\n　　面對傷痛，我們從不陌生，卻不知道怎麼把自己治好。\n　　我們啟程到遠方找希望，奇蹟卻在一開始出發的地方。\n\n　　經歷十三年沉潛淬練，愛與溫暖的傳信人馬格斯‧朱薩克再次帶來撼動人心的美麗作品。這個充滿心碎與感動的家族史詩將揪住你的心臟，直至最後一頁。\n"
+    },
+    {
+        "title": "站在走廊也要聽的爆滿國文課：說故事頓悟國學裡的人生智慧，你情不自禁擁有的文學素養。",
+        "author": "張一南",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100971430",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100971430&height=400&width=310",
+        "intro": "什麼是國學，簡單來說就是經、史、子、集四部，\n這是智者達人淬鍊出來的生活與生存智慧。\n本書以接連不斷的故事，萃取精華，讓你讀了之後更想去看原典。\n\n作者張一南任教於北京大學，教授大學國文、中國古典文學欣賞等課程，\n他的國文通識課深受學生喜愛，堂堂爆滿，學生甚至要站在走道上聽課。\n\n因為張一南堅持：上課儘量講故事，測驗不用背，憑印象就能考高分。\n本書就是他的課堂講義，以古文當藍本，用故事詳解意涵，通俗易懂。"
+    },
+    {
+        "title": "Excel選股法：我用一張表，每天早上5分鐘，3步驟選出穩賺股",
+        "author": "森口亮",
+        "url": "https://www.taaze.tw/products/11101001094.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101001094&height=400&width=310",
+        "intro": "不愛讀書、沒有學歷、沒有一桶金……\n窮魯蛇如何靠股票投資，打造自己的美好人生？\n會複製貼上就會用！用一張表，每天五分鐘篩出好股票，\n低本金也能穩穩賺，每個月幫自己加薪超有感\n\n他只有高中學歷，人生唯一比別人強的就是換工作的次數，這樣的他，憑什麼成為有妻有女、財富自由的人生勝利組？\n高中畢業後，因為不想念書，他開始擔任美髮師，領著低薪，每天努力奮鬥，夢想出人頭地，沒想到卻因為高壓過勞而累出心病……\n鼓起勇氣裸辭後，他開始學習炒股，原本以為做得很順，貪心之下開槓桿想賺更快，想不到卻是悲劇的開端。\n2015年的股災，讓他瞬間資產歸零，但這場衝擊卻沒有打敗他，\n他痛定思痛，研究出一套「運用Excel來追蹤中小型成長股」的技巧，\n僅花三年時間便成功脫魯，如今他不只是一位專職投資人，每天安穩賺進收益，\n還有妻有女，成功躋身人生勝利組！"
+    },
+    {
+        "title": "Excel商業智慧分析｜樞紐分析x大數據分析工具",
+        "author": "王仲麒",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100901701",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100901701&height=400&width=310",
+        "intro": "Excel 的資料處理與分析打基礎\n想分析資料就要先學會整理資料，不要傻傻的複製貼上，認識Excel的各種資料摘要方式與工具、善用函數、排序、篩選與小計，你才有機會擺脫加班惡夢。\n針對企業現場最迫切需要的資料處理需求，讓您使用Excel 進行資料分析，迅速成為商業資料分析達人。\n\n超強大的樞紐分析打動老闆的心\n一頭栽入複雜的函數前，先學會樞紐分析吧！拖拉點選幾步驟就能產出有意義的決策分析資料，客戶、老闆要看的就是這個準沒錯！\n如何針對樞紐分析表進行瘦身、如何匯入雲端資料庫進行樞紐分析，瞭解樞紐分析快取的意義，也是本書的特色與重點。\n\n快速匯入外部資料整合大數據資料\nExcel 提供各式各樣的資料庫驅動程式，讓使用者可以輕輕鬆鬆的將各種資料庫類型的資料檔案，不論是耳熟能詳的dBase、DB2 或是Access，甚至是主從架構的大型資料庫系統、Microsoft SQL Server、Oracle以及利用程式語言設計的資料庫本文檔案... 等，都可以匯入或連結至Excel 工作表中。最後，再介紹如何運用Excel BI 商務智慧工具中的PowerPivot與PowerView，對資料模型裡的內容進行視覺化，建構出一眼就能看懂的數位儀表板般的報表篩選面板。"
+    },
+    {
+        "title": "克莉絲蒂自傳",
+        "author": "阿嘉莎克莉絲蒂",
+        "url": "https://www.taaze.tw//usedList.html?oid=11100003251&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=10203d5c176f1cb84f270092e534f5#_=_",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100003251&height=400&width=310",
+        "intro": "這是世界推理之后阿嘉莎‧克莉絲蒂歷經豐富的一生，於晚年開始撰寫的自傳。她於六十歲時開始提筆，七十五歲完成，照她的說法「現在停止，似乎正是時候。因為，就一個人的一生來說，要說的全都在這裏了。」歷經十五年漫長回憶，作者的自述仿若一條閃耀於落日餘暉前的暖暖長河，她徐緩的娓娓道來，而又不時閃現著奪目的爍光，誠如她一生的寫照。這部傳記雖然不脫一般自傳的格式－－由童年寫起，而至停筆的時間結束，但她並不讓自己過份呆板或嚴格地受到編年法的限制，它的可愛親和之處便是，她完全依照興之所至寫作，生活中的插曲、回憶隨手捻起。雖然生命中有幾段痛心的過往，但在她回憶中，仍然多的是生活中歡樂、趣味的部份。可以說，這本書是一首生活樂趣的讚美詩。全書共分十一章：一、梣田二、孩子們，出來玩啊！三、我家有女初長成四、君子好逑五、烽火連天六、環遊世界七、失去的逍遙世界八、第二春九、和麥克斯的婚姻生活十、第二次事界大戰十一、秋從眾多章節標題中，可看出作者的生命豐富多奇，出身優渥的英國中上階曾，而後家道中落，又親逢兩次人類悲劇的世界大戰，並以一弱女子之身周遊世界各地，隨夫婿深入奧秘的考古之學。如此多姿多采的生命，我們也終於了解，為何她能一本又一本寫出令人愛不釋手的推理名作，而歷經七、八十年仍未被前仆後繼的後起之秀所淘汰，穩立「推理之后」的美譽。感性與理性的克莉絲蒂，真情至性的阿嘉莎，就此登場。"
+    },
+    {
+        "title": "免寫程式！Excel 大量資料整理術：早知道這些技巧，樞紐分析不再抓狂",
+        "author": "村田吉徳",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100857336&utm_source=shopback&utm_medium=referral&utm_campaign=ap&sbid=102bf297e251f852b4f306a9291c2a",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100857336&height=400&width=310",
+        "intro": "不需撰寫複雜的程式就能整理大量資料！\n．具體說明職場中各類表格，該如何拆解、彙整成可計算的【清單表格】形式。\n．全書只用【INDEX】函數就能有效地轉換表格形式。\n．學會轉換各種表格類型，可提升資料計算及彙整效率，不需再手動搬移、複製了！"
+    },
+    {
+        "title": "哈佛商業評論推薦必讀AI趨勢",
+        "author": "哈佛商業評論",
+        "url": "https://www.taaze.tw/usedList.html?oid=11101015208",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101015208&height=400&width=310",
+        "intro": "一本掌握人工智慧商業新價值\n利用AI轉型，將是新時代企業的成功關鍵\n\n全球最具指標性的管理雜誌《哈佛商業評論》精選文章\n幫助經理人全方位了解AI趨勢、應用範圍與商業潛力"
+    },
+    {
+        "title": "大旱",
+        "author": "珍．哈珀",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100866436",
+        "read": "https://www.haodoo.net/?M=u&P=P1010490614:0&L=Share",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100866436&height=400&width=310",
+        "intro": "如果我說了謊，你也說了謊，我還應該相信你嗎？\n一個背負罪名的警察，一個泯滅人性的兇手，一個偏見極端的小鎮\n澳洲正歷經一世紀以來最嚴重的乾旱，賀德勒一家三口被殘忍謀殺，僅剩襁褓中的嬰兒。這讓長期背負逃亡罪名的聯邦警察賀德勒重返故鄉，面對他二十年前逃離的秘密。"
+    },
+    {
+        "title": "早知道就待在家",
+        "author": "謝哲青",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100940108",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100940108&height=400&width=310",
+        "intro": "他用出走，重新找尋自我；\n他的旅行，是為了回家。\n\n大疫時代，看行走的百科全書謝哲青\n用生命實踐旅行，用旅行改變人生！\n\n「旅行」（Travel）這個字，\n本身就意味著「選擇、折磨、辛勞工作與朝聖」的多重涵義，\n誰說出門才能找到自我？\n又是誰說待在家不能得到幸福？\n只要不斷地移動，\n無論是肉體還是精神，都算是旅行，\n都算是每個人探索自己存在意義的一部分。\n――謝哲青\n\n旅行的目的，其實是為了追求幸福，然而旅行也和追求幸福的過程一樣，有著大家避而不談，充斥著幻滅、痛苦與絕望的一面。踏出家門，需要一套自圓其說的心理準備，待在家也需要許多意想不到的理由，飄泊多年，謝哲青才終於明白，或許家的熟悉與溫暖，才是我們歷劫歸來之後，所努力找尋的一切。\n生活不在他方，旅行，不只是為了出發尋找更好的自己，更是為了平安回家，好好生活。在疫情蔓延、充滿未知的此時此刻，也許你正待在家，也許你正好回想起好久以前的一段旅行，就讓這本書陪伴你，一起探索自己存在的意義。"
+    },
+    {
+        "title": "秘密",
+        "author": "東野圭吾",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100562980",
+        "read": "https://www.haodoo.net/?M=u&P=E13E0:1&L=book",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100562980&height=400&width=310",
+        "intro": "為了讓自己心愛的人幸福，我是否該放手……僅是心靈相通已再也無法維持夫妻生活。"
+    },
+    {
+        "title": "解憂雜貨店",
+        "author": "東野圭吾",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100665527",
+        "read": "https://www.haodoo.net/?M=u&P=E1460:0&L=book",
+        "img": "https://upload.wikimedia.org/wikipedia/zh/2/2b/NAMIYA_ZAKKATEN_NO_KISEKI%28TW%29.jpg",
+        "intro": "這裡不只賣日常生活用品，\n還提供消煩解憂的諮詢。\n困惑不安的你，糾結不已的你，\n歡迎來信討論心中的問題。\n\n\n靜僻的街道旁，佇立著一家「解憂雜貨店」。只要在晚上把寫了煩惱的信丟進鐵捲門上的投遞口，隔天就可以在店後方的牛奶箱裡拿到回信解答。\n男友罹患不治之症，少女陷入兩難，到底要棄他於不顧，獨自去完成兩人的夢想；還是陪他到最後一刻，卻讓他帶著遺憾而死？\n魚店老闆的兒子夢想成為一名音樂人，為此不惜離家又休學，然而卻處處碰壁。他到底要接手老爸的魚店，還是用自己的人生當賭注，繼續玩音樂呢？\n爸爸的公司倒閉，打算帶著全家捲款潛逃。少年該跟著家人遠走高飛，還是乾脆拋棄一切，自己去流浪？\n當他們紛紛寫信到雜貨店，不可思議的事情也接二連三發生。愛情與夢想、理想與現實、人情與義理，那些一瞬間的交會，要如何演變成一生一世的救贖？跨越三十年時空，雜貨店恆常散放著溫暖奇異的光芒……"
+    },
+    {
+        "title": "獲利的魔鬼藏在庫存裡",
+        "author": "芝田稔子",
+        "url": "https://www.taaze.tw/products/11101043870.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101043870&height=400&width=310",
+        "intro": "你對「庫存管理」的印象是？\n「我又不管倉庫，跟我無關」，那就誤會大了。\n\n作者芝田稔子，是日本知名物流諮詢公司湯淺的顧問，\n不管你從事批發、零售等流通業或網路商店，\n只要有實體商品，無論業種和規模大小，庫存管理都是必要技術。\n\n管理得當能增加公司利潤，減少多餘報廢，\n管理不當，顧客下單後等很久都拿不到貨，沒人要的商品卻堆滿倉，\n結果就是有訂單沒獲利，現金周轉必出問題。\n\n本書整理了存貨和訂貨的基本思維，\n包括維持適當庫存量所須的基本計算，各商品生命週期的下單技巧，\n並介紹可供使用的資訊系統功能。\n\n◎零庫存，是好還是壞？就像膽固醇，過多過少都不好。\n產品囤太多，現金流變差，囤太少就缺營業額。安全值怎麼抓？\n遇到熱門產品就多進一點避免缺貨，採購成本也低？\n關鍵是你得找到辦法全部賣完，降單位成本才有意義！\n\n過氣的、一直堆在倉庫的賣不動商品是資產還是負債？\n專家的建議是：賣不動就直接報廢銷毀吧，堆在倉庫還得花錢管理。\n\n◎多少庫存算適當，怎麼樣算過量？庫存周轉又是在轉什麼？\n\n．抓庫存不能只看庫存，關鍵是每日平均出貨量\n100元商品目前庫存100個，1,000元商品庫存10個，誰夠誰不夠怎麼判斷？\n100元商品每天出貨50個，庫存只夠撐兩天，\n1,000元商品每天只出貨1個，還可以再撐十天！（這樣計算你一目瞭然！）\n\n．庫存周轉是什麼？想想冰箱的啤酒，消耗越快、買越勤，品質越新鮮。\n假設你一個月要喝40罐，冰箱只放得下4罐，每個月得周轉（清空）10次。\n如果每月只喝４罐，代表月底還在喝月初買的酒（不新鮮）。\n跟新鮮度有關的產品，產品周轉得加快（替換得越勤）。\n\n如果產品品項越來越複雜，怎麼做訂單與庫存管理？\n哪些商品用資訊系統管理、哪些商品得靠人工計算？\n什麼樣的存貨真的不必留？倉儲基本功「整理」和「整頓」有何不同？\n\n獲利的魔鬼就藏在庫存裡：\n從網店經營，到公司採購、業務、財務、主管必學的訂貨與存貨技術。"
+    },
+    {
+        "title": "那一年, 我們買下了動物園",
+        "author": "班傑明．密",
+        "url": "https://www.eslite.com/product/1001119731958708",
+        "img": "https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/201112/o/634600531393565000.jpg",
+        "intro": "勇氣與重新啟航的故事。一個失去摯愛的家庭，如何透過經營搖搖欲墜的動物園，重新找回生命的動力。"
+    },
+    {
+        "title": "巨流河",
+        "author": "齊邦媛",
+        "url": "https://www.taaze.tw/usedList.html?oid=11100910316",
+        "read": "https://read.99csw.com/book/2921/91325.html",
+        "img": "https://media.taaze.tw/showThumbnail.html?sc=11100910316&height=400&width=310",
+        "intro": "讀了這本書，你終於明白，我們為什麼需要知識份子\n\n一部反映中國近代苦難的家族記憶史\n一部過渡新舊時代衝突的女性奮鬥史\n一部台灣文學走入西方世界的大事紀\n一部用生命書寫壯闊幽微的天籟詩篇\n\n書的記述，從長城外的「巨流河」開始，到台灣南端恆春的「啞口海」結束.........\n\n巨流河，\n位於中國東北地區，是中國七大江河之一，被稱為遼寧百姓的「母親河」。\n南濱渤海與黃海，西南與內蒙內陸河、河北海灤河流域相鄰，北與松花江流域相連。\n這條河古代稱句驪河，現在稱遼河，清代稱巨流河。\n影響中國命運的「巨流河之役」，發生在民國十四年，當地淳樸百姓們仍沿用著清代巨流河之名。\n\n作者齊邦媛的父親齊世英──民國初年的留德熱血青年，九一八事變前的東北維新派，\n畢生憾恨圍繞著巨流河功敗垂成的一戰，\n渡不過的巨流像現實中的嚴寒，外交和革新思想皆困凍於此，從此開始了東北終至波及整個中國的近代苦難。\n作者的一生，正是整個二十世紀顛沛流離的縮影。\n\n本書嘔心瀝血四年完成，\n作者以邃密通透、深情至性、字字珠璣的筆力，記述縱貫百年、橫跨兩岸的大時代故事。"
+    }
+];
+        let isLogged = false;
+        let displayLimit = 30;
+
+        window.handleAuth = function() {
+            if (isLogged) {
+                isLogged = false;
+                document.getElementById('authLock').innerText = "🔒";
+                document.getElementById('actionBar').style.display = "none";
+                document.getElementById('inputForm').style.display = "none";
+            } else {
+                const t = new Date();
+                const correct = t.getFullYear().toString() + (t.getMonth()+1).toString().padStart(2,'0') + t.getDate().toString().padStart(2,'0');
+                const pw = prompt("Password:");
+                if (pw === correct) {
+                    isLogged = true;
+                    document.getElementById('authLock').innerText = "🔓";
+                    document.getElementById('actionBar').style.display = "flex";
+                } else if (pw !== null) alert("Error");
+            }
+            render();
+        };
+
+        window.openBookInNewWindow = function(i) {
+            const b = books[i];
+            const detailWindow = window.open("", "_blank");
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${b.title}</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>
+                        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: #f4f7f9; margin: 0; padding: 20px; color: #333; }
+                        .container { max-width: 800px; margin: 20px auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+                        .flex-layout { display: flex; gap: 30px; }
+                        @media (max-width: 650px) { .flex-layout { flex-direction: column; align-items: center; text-align: center; } }
+                        
+                        /* 🚀 關鍵修正：確保圖片比例正確且不會被拉長 */
+                        .book-cover { 
+                            max-width: 240px; 
+                            width: 100%; 
+                            height: auto; 
+                            flex-shrink: 0; 
+                            align-self: flex-start; /* 防止在 flex 中被縱向拉伸 */
+                            border-radius: 10px; 
+                            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+                            object-fit: contain;
+                        }
+                        
+                        .content { flex: 1; }
+                        h1 { color: #005599; font-size: 24px; margin: 0 0 10px 0; }
+                        .author { color: #666; font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+                        .intro { font-size: 16px; line-height: 1.8; white-space: pre-wrap; margin-bottom: 30px; }
+                        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+                        .btn { text-align: center; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; }
+                        .btn-read { background: #8e44ad; color: #fff; }
+                        .btn-shop { background: #f0f3f5; color: #555; }
+                        .close-tip { text-align: center; margin-top: 40px; color: #bbb; font-size: 13px; cursor: pointer; }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="flex-layout">
+                            <img src="${b.img}" class="book-cover">
+                            <div class="content">
+                                <h1>${b.title}</h1>
+                                <div class="author">${b.author ? '作者：' + b.author : ''}</div>
+                                <div class="intro">${b.intro || '尚未輸入心得筆記。'}</div>
+                                <div class="btn-group">
+                                    ${b.read ? `<a href="${b.read}" class="btn btn-read" target="_blank">📖 線上閱讀連結</a>` : ''}
+                                    <a href="${b.url || '#'}" class="btn btn-shop" target="_blank">🛒 詳情 / 購買</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="close-tip" onclick="window.close()">[ 點此關閉視窗 ]</div>
+                    </div>
+                </body>
+                </html>
+            `;
+            detailWindow.document.write(htmlContent);
+            detailWindow.document.close();
+        };
+
+        window.resetAndRender = function() { displayLimit = 30; render(); };
+        window.loadNextPage = function() { displayLimit += 30; render(); };
+
+        window.render = function() {
+            const container = document.getElementById('view-blogger');
+            const key = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = books.filter(b => b.title.toLowerCase().includes(key) || (b.author && b.author.toLowerCase().includes(key)));
+            const current = filtered.slice(0, displayLimit);
+            container.innerHTML = current.map((b) => {
+                const idx = books.indexOf(b);
+                return `
+                <div class="book-item">
+                    <img src="${b.img}" onclick="openBookInNewWindow(${idx})">
+                    <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden;">${b.title}</div>
+                    ${isLogged ? `
+                        <div class="admin-overlay">
+                            <span class="mini-btn" style="background:var(--backup-orange)" onclick="event.stopPropagation(); editBook(${idx})">改</span>
+                            <span class="mini-btn" style="background:#e74c3c" onclick="event.stopPropagation(); delBook(${idx})">刪</span>
+                        </div>
+                    ` : ''}
+                </div>`;
+            }).join('');
+            document.getElementById('loadMore').style.display = filtered.length > displayLimit ? 'block' : 'none';
+        };
+
+        window.exportBackup = function() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(books, null, 2)], {type: 'application/json'})); a.download = `備份.json`; a.click(); };
+        window.importBackup = function(e) { const r = new FileReader(); r.onload = (ev) => { books = JSON.parse(ev.target.result); render(); alert("匯入成功"); }; r.readAsText(e.target.files[0]); };
+        window.toggleForm = function() { const f = document.getElementById('inputForm'); f.style.display = f.style.display === 'block' ? 'none' : 'block'; };
+        
+        window.saveBook = function() {
+            const b = { title: document.getElementById('f_title').value, author: document.getElementById('f_author').value, img: document.getElementById('f_img').value, url: document.getElementById('f_url').value, read: document.getElementById('f_read').value, intro: document.getElementById('f_intro').value };
+            if (!b.title) return; books.unshift(b); render(); toggleForm();
+            ['f_title','f_author','f_img','f_url','f_read','f_intro'].forEach(id => document.getElementById(id).value='');
+        };
+
+        window.editBook = function(i) {
+            const b = books[i];
+            ['title','author','img','url','read','intro'].forEach(k => document.getElementById('f_'+k).value = b[k] || '');
+            document.getElementById('inputForm').style.display = 'block';
+            books.splice(i, 1); window.scrollTo(0,0);
+        };
+
+        window.delBook = function(i) { if(confirm("確定刪除？")) { books.splice(i, 1); render(); } };
+
+        window.safeDownload = function() {
+            isLogged = false; 
+            document.getElementById('authLock').innerText = "🔒";
+            document.getElementById('actionBar').style.display = "none";
+            document.getElementById('inputForm').style.display = "none";
+            render();
+            setTimeout(() => {
+                const html = document.documentElement.outerHTML.replace(/let books = \[[\s\S]*?\];/, `let books = ${JSON.stringify(books, null, 4)};`);
+                const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' })); a.download = `my_library.html`; a.click();
+            }, 500);
+        };
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTopBtn');
+            if(btn) btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+
+        render();
+    })();
+    </script>
+</div></body></html>
