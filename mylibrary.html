@@ -1,4 +1,7 @@
-<html><head></head><body><div class="mye-wrapper-root" style="clear: both !important; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important;">
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head><body><div class="mye-wrapper-root" style="clear: both !important; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important;">
     <style>
         .mye-wrapper-root .mye-main-container {
             --taaze-blue: #005599; --save-green: #27ae60; --backup-orange: #f39c12; --read-purple: #8e44ad;
@@ -24,6 +27,32 @@
         #inputForm { background: #fffbe6; padding: 20px; border: 1px solid #ffe58f; border-radius: 10px; margin-bottom: 20px; display: none; }
         #inputForm input, #inputForm textarea { width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
         #loadMore { text-align:center; padding:30px; color:var(--taaze-blue); cursor:pointer; font-weight:bold; }
+
+/* 針對手機螢幕（寬度 600px 以下）的調整 */
+@media screen and (max-width: 600px) {
+    .mye-wrapper-root .mye-main-container {
+        padding: 10px; /* 縮小邊距，留給內容更多空間 */
+        margin: 0;
+        border-radius: 0; /* 手機版通常不留圓角邊框 */
+    }
+    
+    .mye-wrapper-root .header-top {
+        flex-direction: column; /* 標題與按鈕改為上下排列 */
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .mye-wrapper-root .btn-group {
+        width: 100%;
+        justify-content: space-between; /* 讓按鈕平均分佈 */
+    }
+
+    .mye-wrapper-root .action-btn {
+        padding: 8px 10px; /* 增加點擊面積 */
+        font-size: 13px;
+    }
+}
+
     </style>
 
     <div class="mye-main-container">
