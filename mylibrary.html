@@ -10,68 +10,56 @@
         }
         body { font-family: Arial, "PingFang TC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #333; }
         
-        /* 限制最大寬度，避免電腦版太寬 */
-        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        /* 核心寬度控制：讓版面不要太鬆散 */
+        .container { max-width: 1000px; margin: 0 auto; padding: 10px; }
 
         /* 標題與鎖頭 */
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #eee; padding: 5px 5px 10px 5px; }
         
-        /* 搜尋框 RWD */
-        #searchInput { width: 100%; padding: 14px 20px; margin-bottom: 20px; border-radius: 30px; border: 1px solid #ddd; outline: none; font-size: 16px; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        /* 搜尋框 */
+        #searchInput { width: 100%; padding: 12px 18px; margin-bottom: 15px; border-radius: 25px; border: 1px solid #ddd; outline: none; font-size: 16px; box-sizing: border-box; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-        /* 四個按鈕 RWD 排版 */
-        #actionBar { display: none; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
-        .action-btn { padding: 10px; border: none; border-radius: 8px; cursor: pointer; color: white; font-size: 14px; font-weight: bold; flex: 1; min-width: calc(50% - 10px); }
-        @media (min-width: 768px) { .action-btn { min-width: 120px; } }
+        /* 功能按鈕：手機 2x2 排列 */
+        #actionBar { display: none; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 10px; border: 1px solid #eee; }
+        .action-btn { padding: 9px; border: none; border-radius: 6px; cursor: pointer; color: white; font-size: 13px; font-weight: bold; flex: 1; min-width: calc(50% - 8px); }
 
-        /* 核心 RWD 書籍網格邏輯 */
+        /* RWD 書籍網格：修正為手機 2 欄 */
         #view-blogger { 
             display: grid; 
-            /* 手機預設：最小 100px 寬，自動填滿 */
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
             gap: 12px; 
-        }
-        /* 平板以上：增加圖片寬度 */
-        @media (min-width: 600px) {
-            #view-blogger { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+            padding: 5px;
         }
 
-        .book-item { background: white; padding: 10px; border-radius: 12px; text-align: center; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s; }
-        .book-item:hover { transform: translateY(-5px); }
-        .book-item img { width: 100%; border-radius: 8px; cursor: pointer; aspect-ratio: 3/4; object-fit: cover; display: block; }
-        .book-title { font-size: 13px; margin-top: 8px; height: 2.8em; overflow: hidden; line-height: 1.4; color: #333; font-weight: 500; }
+        .book-item { background: white; padding: 8px; border-radius: 10px; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .book-item img { width: 100%; border-radius: 6px; cursor: pointer; aspect-ratio: 3/4; object-fit: cover; display: block; }
+        .book-title { font-size: 12px; margin-top: 6px; height: 2.8em; overflow: hidden; line-height: 1.4; color: #444; }
         
         /* 管理浮層 */
-        .admin-overlay { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; background: rgba(255,255,255,0.8); padding: 4px; border-radius: 6px; }
-        .mini-btn { padding: 4px 8px; color: white; border-radius: 4px; font-size: 11px; cursor: pointer; border: none; }
+        .admin-overlay { position: absolute; top: 4px; right: 4px; display: flex; gap: 3px; background: rgba(255,255,255,0.7); padding: 3px; border-radius: 5px; }
+        .mini-btn { padding: 3px 6px; color: white; border-radius: 4px; font-size: 10px; cursor: pointer; border: none; }
 
-        /* RWD 彈窗優化 */
-        #bookModal, #inputForm { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 10px; box-sizing: border-box; }
-        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; overflow: hidden; position: relative; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        .modal-header { padding: 20px; display: flex; gap: 20px; border-bottom: 1px solid #eee; }
-        .modal-header img { width: 110px; border-radius: 10px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .modal-body { padding: 20px; max-height: 350px; overflow-y: auto; font-size: 15px; line-height: 1.7; color: #444; }
+        /* 彈窗優化：縮小尺寸以適應手機 */
+        #bookModal, #inputForm { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 15px; box-sizing: border-box; }
+        .modal-content { background: white; width: 100%; max-width: 340px; border-radius: 15px; overflow: hidden; position: relative; }
         
-        /* 手機版彈窗調整 */
-        @media (max-width: 480px) {
-            .modal-header { flex-direction: column; align-items: center; text-align: center; }
-            .modal-header img { width: 130px; }
-        }
+        .modal-header { padding: 15px; display: flex; gap: 12px; border-bottom: 1px solid #eee; align-items: flex-start; }
+        .modal-header img { width: 85px; border-radius: 6px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .modal-body { padding: 15px; max-height: 250px; overflow-y: auto; font-size: 14px; line-height: 1.6; color: #555; }
+        
+        #loadMore { display: none; width: 95%; margin: 15px auto; padding: 12px; background: white; border: 1px solid #ddd; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; color: var(--taaze-blue); font-size: 14px; }
 
-        #loadMore { display: none; width: 100%; margin: 25px 0; padding: 15px; background: white; border: 1px solid #ddd; border-radius: 12px; text-align: center; cursor: pointer; font-weight: bold; color: var(--taaze-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-        .form-group { padding: 20px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        /* 表單 */
+        .form-group { padding: 15px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header-top">
-        <h2 style="margin:0; color:var(--taaze-blue);">我的圖書館</h2>
-        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:28px;">🔒</div>
+        <h2 style="margin:0; color:var(--taaze-blue); font-size: 19px;">我的圖書館</h2>
+        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:24px;">🔒</div>
     </div>
 
     <div id="actionBar">
@@ -91,23 +79,23 @@
 <div id="bookModal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
         <div id="modalDetail"></div>
-        <button onclick="document.getElementById('bookModal').style.display='none'" style="width:100%; padding:18px; border:none; background:#f8f9fa; font-size:16px; color:#666; font-weight:bold; cursor:pointer;">關閉</button>
+        <button onclick="document.getElementById('bookModal').style.display='none'" style="width:100%; padding:15px; border:none; background:#f8f9fa; font-size:15px; color:#666; font-weight:bold; cursor:pointer;">關閉</button>
     </div>
 </div>
 
 <div id="inputForm">
     <div class="modal-content">
-        <div style="padding:18px; border-bottom:1px solid #eee; font-weight:bold; background:#fcfcfc; text-align:center;">書籍資料編輯</div>
+        <div style="padding:15px; border-bottom:1px solid #eee; font-weight:bold; background:#fcfcfc; text-align:center; font-size:15px;">書籍資料編輯</div>
         <div class="form-group">
             <input type="text" id="f_title" placeholder="書名">
             <input type="text" id="f_author" placeholder="作者">
             <input type="text" id="f_img" placeholder="圖片連結 (URL)">
             <input type="text" id="f_url" placeholder="詳情連結">
             <input type="text" id="f_read" placeholder="線上閱讀連結 (URL)">
-            <textarea id="f_intro" placeholder="內容簡介" rows="4"></textarea>
-            <div style="display:flex; gap:10px;">
-                <button onclick="submitBook()" style="flex:1; padding:14px; background:var(--save-green); color:white; border:none; border-radius:10px; font-weight:bold;">儲存</button>
-                <button onclick="closeForm()" style="flex:1; padding:14px; background:#eee; border:none; border-radius:10px; font-weight:bold;">取消</button>
+            <textarea id="f_intro" placeholder="內容簡介" rows="3"></textarea>
+            <div style="display:flex; gap:8px;">
+                <button onclick="submitBook()" style="flex:1; padding:12px; background:var(--save-green); color:white; border:none; border-radius:8px; font-weight:bold;">儲存</button>
+                <button onclick="closeForm()" style="flex:1; padding:12px; background:#eee; border:none; border-radius:8px; font-weight:bold;">取消</button>
             </div>
         </div>
     </div>
@@ -1481,7 +1469,6 @@
         "intro": "讀了這本書，你終於明白，我們為什麼需要知識份子\n\n一部反映中國近代苦難的家族記憶史\n一部過渡新舊時代衝突的女性奮鬥史\n一部台灣文學走入西方世界的大事紀\n一部用生命書寫壯闊幽微的天籟詩篇\n\n書的記述，從長城外的「巨流河」開始，到台灣南端恆春的「啞口海」結束.........\n\n巨流河，\n位於中國東北地區，是中國七大江河之一，被稱為遼寧百姓的「母親河」。\n南濱渤海與黃海，西南與內蒙內陸河、河北海灤河流域相鄰，北與松花江流域相連。\n這條河古代稱句驪河，現在稱遼河，清代稱巨流河。\n影響中國命運的「巨流河之役」，發生在民國十四年，當地淳樸百姓們仍沿用著清代巨流河之名。\n\n作者齊邦媛的父親齊世英──民國初年的留德熱血青年，九一八事變前的東北維新派，\n畢生憾恨圍繞著巨流河功敗垂成的一戰，\n渡不過的巨流像現實中的嚴寒，外交和革新思想皆困凍於此，從此開始了東北終至波及整個中國的近代苦難。\n作者的一生，正是整個二十世紀顛沛流離的縮影。\n\n本書嘔心瀝血四年完成，\n作者以邃密通透、深情至性、字字珠璣的筆力，記述縱貫百年、橫跨兩岸的大時代故事。"
     }
 
-
     ]; 
     let isLogged = false;
     let visibleCount = 20;
@@ -1526,11 +1513,11 @@
             <div class="modal-header">
                 <img src="${b.img}">
                 <div style="flex:1">
-                    <h3 style="margin:0 0 8px 0; font-size:20px;">${b.title}</h3>
-                    <div style="font-size:14px; color:#777;">${b.author}</div>
-                    <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
-                        ${b.read ? `<a href="${b.read}" target="_blank" style="color:var(--read-purple); font-weight:bold; text-decoration:none; font-size:15px;">📖 線上閱讀連結</a>` : ''}
-                        ${b.url ? `<a href="${b.url}" target="_blank" style="color:var(--taaze-blue); font-weight:bold; text-decoration:none; font-size:15px;">🔗 書籍詳情連結</a>` : ''}
+                    <h3 style="margin:0 0 5px 0; font-size:16px; line-height:1.3;">${b.title}</h3>
+                    <div style="font-size:13px; color:#888;">${b.author}</div>
+                    <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+                        ${b.read ? `<a href="${b.read}" target="_blank" style="color:var(--read-purple); font-weight:bold; text-decoration:none; font-size:13px;">📖 線上閱讀連結</a>` : ''}
+                        ${b.url ? `<a href="${b.url}" target="_blank" style="color:var(--taaze-blue); font-weight:bold; text-decoration:none; font-size:13px;">🔗 書籍詳情連結</a>` : ''}
                     </div>
                 </div>
             </div>
@@ -1547,7 +1534,6 @@
             render();
             return;
         }
-        // 修正：提示文字只有「請輸入密碼」，無日期提示
         const pw = prompt("請輸入密碼"); 
         const today = new Date();
         const correct = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
