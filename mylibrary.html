@@ -18,7 +18,7 @@
     #loadMoreBtn { display: block; width: 220px; margin: 30px auto; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 25px; cursor: pointer; text-align: center; color: #555; font-weight: bold; }
 </style>
 </head>
-<body>
+<body style="overflow: auto;">
 <div class="mye-wrapper-root" style="clear: both !important; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important;">
     <style>
         .mye-wrapper-root .mye-main-container {
@@ -65,27 +65,143 @@
         </div>
 
         <div id="bookList"><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100910316&amp;height=400&amp;width=310" onclick="showModal(0)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">巨流河</div>
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100021330&amp;height=400&amp;width=310" onclick="showModal(0)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">水煮三國</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.haodoo.net/covers/15Y7.jpg" onclick="showModal(1)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">蕭山克的救贖(刺激1995)</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682043368002/20220104060507545951.jpg" onclick="showModal(2)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">千江有水千江月</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100886650&amp;height=400&amp;width=310" onclick="showModal(3)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">常識統計學 拆穿混淆的假設、揪出偏差的數據、識破扭曲的結論，耶魯大學最受歡迎的十八堂公開課</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/E05/024/34/E050243489.jpg" onclick="showModal(4)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">空城計：諸葛亮逗司馬懿</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680545369008/71469.jpg" onclick="showModal(5)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">幸福藍圖: 101個年輕人要懂的道理</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682191210000/20220622060732182950.jpg" onclick="showModal(6)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">送書人</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681722773007/20190823055054170959.jpg" onclick="showModal(7)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">霍金大見解: 留給世人的十個大哉問與解答</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681425044008/ec1252663.jpg" onclick="showModal(8)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">咖啡學: 122種世界精品咖啡徹底解說!</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/077/49/0010774908.jpg" onclick="showModal(9)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">世界咖啡豆烘焙履歷圖鑑</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/085/00/0010850078.jpg" onclick="showModal(10)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">整頓的技術：中小企業獲利翻轉的祕密</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/101/93/0011019321.jpg" onclick="showModal(11)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">燦爛千陽</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/104/17/0011041733.jpg" onclick="showModal(12)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">偷書賊</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/086/53/0010865321.jpg" onclick="showModal(13)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">四季奇譚</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/045/79/0010457912.jpg" onclick="showModal(14)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">失落的符號</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680364219003/ec1680641.jpg" onclick="showModal(15)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">真情快遞</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/092/67/0010926726.jpg" onclick="showModal(16)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">世界大戰</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611276526002/ec67092.jpg" onclick="showModal(17)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">文茜小妹大</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680923773007/ec905255.jpg" onclick="showModal(18)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">不在他方</div>
+                
+            </div><div class="book-item">
+                <img src="https://www.books.com.tw/img/001/078/48/0010784864.jpg" onclick="showModal(19)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">驟雨之島</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611385653002/ec298059.jpg" onclick="showModal(20)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">十年的你</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100933959&amp;height=400&amp;width=310" onclick="showModal(21)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">銀行家的妻子</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100254647&amp;height=400&amp;width=310" onclick="showModal(22)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">老闆真的說可以嗎？：決定管理到不到位的暗示心理學</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100010692&amp;height=400&amp;width=310" onclick="showModal(23)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">讀人：解讀行為密碼</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100817516&amp;height=400&amp;width=310" onclick="showModal(24)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">滿願</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100603883&amp;height=400&amp;width=310" onclick="showModal(25)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">傷心咖啡店之歌</div>
+                
+            </div><div class="book-item">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100593318&amp;height=400&amp;width=310" onclick="showModal(26)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">東京灣景</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/202008/o/637326467722947500.jpg" onclick="showModal(27)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">沼澤女孩</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681943498000/20201121042228368020.jpg" onclick="showModal(28)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">鄰居</div>
+                
+            </div><div class="book-item">
+                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682368628003/20230425060356602905.jpg" onclick="showModal(29)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
+                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">不便利的便利店 2</div>
                 
             </div></div>
-        <div id="loadMoreBtn" onclick="loadMore()" style="display: none;">載入更多書籍...</div>
+        <div id="loadMoreBtn" onclick="loadMore()" style="display: block;">載入更多書籍...</div>
     </div>
 
-    <div id="bookModal" onclick="if(event.target===this) closeModal()">
+    <div id="bookModal" onclick="if(event.target===this) closeModal()" style="display: none;">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">✕</button>
             <div class="modal-header">
-                <img id="m_img" src="">
+                <img id="m_img" src="https://media.taaze.tw/showThumbnail.html?sc=11101022475&amp;height=400&amp;width=310">
                 <div class="modal-info">
-                    <h3 id="m_title" style="margin:0 0 5px 0; color:#005599;"></h3>
-                    <div id="m_author" style="color:#666; font-size:14px;"></div>
+                    <h3 id="m_title" style="margin:0 0 5px 0; color:#005599;">洞見未來︰勾勒美好新境界</h3>
+                    <div id="m_author" style="color:#666; font-size:14px;">作者：王明德、陳玉鳳、廖珮君、劉子寧</div>
                 </div>
             </div>
-            <div id="m_intro" class="modal-body"></div>
+            <div id="m_intro" class="modal-body">當我們在思考所謂的趨勢時，要做的或許不是認定未來就會如同趨勢所描繪般地發生，而是去思索，為何要選擇這個趨勢做為願景，並規劃如何走到願景的路徑。<br><br>正如同深耕臺灣產業技術研發已逾50年的工研院，從每一個「當時」，選擇下一個「願景」，面對多變的未知世界，以及新興科技議題的挑戰，工研院始終扮演與時俱進的關鍵角色；透過10大跨域趨勢，擘劃技術藍圖，進行研發策略布局，與產業攜手，創造經濟價值與社會價值。<br><br>不僅如此，對於未來產業前景，也有穩健策略及規劃，「2035技術策略與藍圖」聚焦「智慧生活」、「健康樂活」、「永續環境」、「韌性社會」4大跨領域應用方向，促成應用領域「智慧化致能技術」，協助產業從技術創新迎向價值創新，並依此做為未來技術研發創新的藍圖與指南，激發「創新創業」的種子遍地開花。<br><br>工研院堅守承先啟後的角色，提供臺灣科技研發的解決方案，也協助國內產業跨越技術鴻溝，推動跨領域科技應用，協助產業轉型升級，成為台灣未來經濟成長的動力，掌握未來決勝關鍵，迎向下一個50年。</div>
             <div class="modal-footer">
-                <a id="m_read_btn" class="modal-btn btn-read-link" target="_blank">線上閱讀</a>
-                <a id="m_url_btn" class="modal-btn btn-detail-link" target="_blank">詳情連結</a>
+                <a id="m_read_btn" class="modal-btn btn-read-link" target="_blank" style="display: none;">線上閱讀</a>
+                <a id="m_url_btn" class="modal-btn btn-detail-link" target="_blank" href="https://www.taaze.tw/usedList.html?oid=11101022475" style="display: inline-block;">詳情連結</a>
             </div>
         </div>
     </div>
@@ -611,14 +727,6 @@
         "read": "https://www.haodoo.net/?M=u&P=C1272:0&L=book",
         "img": "https://media.taaze.tw/showThumbnail.html?sc=11100880689&height=400&width=310",
         "intro": "黃仁宇：我寫的歷史是從技術的角度看歷史，不是從道德的角度檢討歷史。\n這並不是說道德不重要，而是新社會的道德要靠社會的結構而決定其內涵。\n中國過去一百五十年內經過人類歷史上規模最大的一次革命，從一個閉關自守中世紀的國家蛻變而為一個現代國家，影響到十億人口的思想信仰、婚姻教育與衣食住行，其情形不容許我們用尋常尺度衡量。\n\n王汎森（中央研究院院士）、李孝悌（香港城市大學中國文化中心主任）、黃進興（中央研究院院士）　鄭重推薦\n\n黃仁宇的《中國大歷史》涵蓋了從史前到當代的歷史發展過程，雖然是通史性的論著，卻突破了傳統通史的格局。寫作方式上，仍然保持他的一貫風格：從小事件看大道理；從長遠的社會、經濟結構觀察歷史的脈動；從中西的比較提示中國歷史的特殊問題。解釋觀點上，黃仁宇仍然秉持他的「大歷史」角度，注重人物與時勢的交互作用，理念與制度的差距，行政技術與經濟組織的衝突，以及上層結構與下層結構的結合。黃仁宇以他獨到的歷史眼光，賦予幽遠遼闊的中國歷史一個現代的生命，不但引人入勝，而且發人深省。\n\n專家學者推薦\n和膾炙人口的萬曆十五年不同，本書是要一本縱觀幾千年的中國通史。和我們一般熟悉的中國通史論著不同的是，本書充滿了有趣而與眾不同的人物評價。對氣候、土壤和生態環境的重視、對財稅制度的強調、對北方「異族」的新鮮詮釋，在在都讓本書的閱讀，充滿了驚奇和欣喜。\n──李孝悌教授（香港城市大學中國文化中心主任）\n\n黃仁宇教授繼其膾炙人口的成名之作《萬曆十五年》後，經過深刻而長期的思考，以綜合觀點，擇精取要省視漫長的中國歷史，推出力作《中國大歷史》，見解不同凡響，令人耳目一新，甚值專家或一般讀者取閱。\n──黃進興教授（中央研究院院士）"
-    },
-    {
-        "title": "洞見未來︰勾勒美好新境界",
-        "author": "王明德、陳玉鳳、廖珮君、劉子寧",
-        "url": "https://www.taaze.tw/usedList.html?oid=11101022475",
-        "img": "https://media.taaze.tw/showThumbnail.html?sc=11101022475&height=400&width=310",
-        "read_url": "",
-        "intro": "當我們在思考所謂的趨勢時，要做的或許不是認定未來就會如同趨勢所描繪般地發生，而是去思索，為何要選擇這個趨勢做為願景，並規劃如何走到願景的路徑。\n\n正如同深耕臺灣產業技術研發已逾50年的工研院，從每一個「當時」，選擇下一個「願景」，面對多變的未知世界，以及新興科技議題的挑戰，工研院始終扮演與時俱進的關鍵角色；透過10大跨域趨勢，擘劃技術藍圖，進行研發策略布局，與產業攜手，創造經濟價值與社會價值。\n\n不僅如此，對於未來產業前景，也有穩健策略及規劃，「2035技術策略與藍圖」聚焦「智慧生活」、「健康樂活」、「永續環境」、「韌性社會」4大跨領域應用方向，促成應用領域「智慧化致能技術」，協助產業從技術創新迎向價值創新，並依此做為未來技術研發創新的藍圖與指南，激發「創新創業」的種子遍地開花。\n\n工研院堅守承先啟後的角色，提供臺灣科技研發的解決方案，也協助國內產業跨越技術鴻溝，推動跨領域科技應用，協助產業轉型升級，成為台灣未來經濟成長的動力，掌握未來決勝關鍵，迎向下一個50年。"
     },
     {
         "title": "重返查令十字路84號",
@@ -1464,7 +1572,6 @@
         "read": "https://read.99csw.com/book/2921/91325.html",
         "img": "https://media.taaze.tw/showThumbnail.html?sc=11100910316&height=400&width=310",
         "intro": "讀了這本書，你終於明白，我們為什麼需要知識份子\n\n一部反映中國近代苦難的家族記憶史\n一部過渡新舊時代衝突的女性奮鬥史\n一部台灣文學走入西方世界的大事紀\n一部用生命書寫壯闊幽微的天籟詩篇\n\n書的記述，從長城外的「巨流河」開始，到台灣南端恆春的「啞口海」結束.........\n\n巨流河，\n位於中國東北地區，是中國七大江河之一，被稱為遼寧百姓的「母親河」。\n南濱渤海與黃海，西南與內蒙內陸河、河北海灤河流域相鄰，北與松花江流域相連。\n這條河古代稱句驪河，現在稱遼河，清代稱巨流河。\n影響中國命運的「巨流河之役」，發生在民國十四年，當地淳樸百姓們仍沿用著清代巨流河之名。\n\n作者齊邦媛的父親齊世英──民國初年的留德熱血青年，九一八事變前的東北維新派，\n畢生憾恨圍繞著巨流河功敗垂成的一戰，\n渡不過的巨流像現實中的嚴寒，外交和革新思想皆困凍於此，從此開始了東北終至波及整個中國的近代苦難。\n作者的一生，正是整個二十世紀顛沛流離的縮影。\n\n本書嘔心瀝血四年完成，\n作者以邃密通透、深情至性、字字珠璣的筆力，記述縱貫百年、橫跨兩岸的大時代故事。"
-
     }
 ]; // 此處存放您的書籍資料
     let isLogged = false;
