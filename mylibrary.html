@@ -1,213 +1,120 @@
-<html><head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    /* 詳情彈窗樣式 */
-    #bookModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 0;margin: 0 !important;box-sizing: border-box; }
-    .modal-content { background: white; width: 85%; max-width: 400px; margin: auto;left: 0;border-radius: 15px; position: relative; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .modal-header { padding: 20px; display: flex; gap: 20px; border-bottom: 1px solid #eee; }
-    .modal-header img { width: 120px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: cover; aspect-ratio: 3/4; }
-    .modal-info { display: flex; flex-direction: column; justify-content: center; }
-    .modal-body { padding: 20px; max-height: 250px; overflow-y: auto; line-height: 1.6; color: #444; background: #fafafa; white-space: pre-wrap; }
-    .modal-footer { padding: 15px; display: flex; gap: 10px; justify-content: center; background: white; border-top: 1px solid #eee; }
-    .modal-btn { padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: bold; font-size: 14px; color: white; transition: 0.3s; }
-    .btn-read-link { background: #8e44ad; } 
-    .btn-detail-link { background: #005599; }
-    .modal-close { position: absolute; top: 10px; right: 10px; background: #ddd; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; z-index: 10; }
-
-    /* 載入更多樣式 */
-    #loadMoreBtn { display: block; width: 220px; margin: 30px auto; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 25px; cursor: pointer; text-align: center; color: #555; font-weight: bold; }
-</style>
-</head>
-<body style="overflow: auto;">
-<div class="mye-wrapper-root" style="clear: both !important; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; background: transparent !important;">
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的圖書館</title>
     <style>
-        .mye-wrapper-root .mye-main-container {
+        :root {
             --taaze-blue: #005599; --save-green: #27ae60; --backup-orange: #f39c12; --read-purple: #8e44ad;
-            font-family: Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
-            color: #333; max-width: 900px; margin: 10px auto; background: #ffffff; padding: 20px; border-radius: 12px; border: 1px solid #eee; box-sizing: border-box; position: relative;
         }
-        .mye-wrapper-root .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        .mye-wrapper-root .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .mye-wrapper-root .action-btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; color: white; font-weight: bold; }
-        .mye-wrapper-root #bookList { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
-        .mye-wrapper-root .book-item { text-align: center; border: 1px solid #f0f0f0; padding: 10px; border-radius: 8px; position: relative; }
-        .mye-wrapper-root .book-item img { width: 100%; border-radius: 4px; cursor: pointer; aspect-ratio: 3/4; object-fit: cover; }
-        .mye-wrapper-root .input-area { background: #fffbe6; padding: 20px; border: 1px solid #ffe58f; border-radius: 10px; margin-bottom: 20px; display: none; }
-        .mye-wrapper-root .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .mye-wrapper-root input, .mye-wrapper-root textarea { width: 100%; padding: 10px; margin-bottom: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        body { font-family: Arial, "PingFang TC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #333; }
+        
+        /* 限制最大寬度，避免電腦版太寬 */
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+
+        /* 標題與鎖頭 */
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        /* 搜尋框 RWD */
+        #searchInput { width: 100%; padding: 14px 20px; margin-bottom: 20px; border-radius: 30px; border: 1px solid #ddd; outline: none; font-size: 16px; box-sizing: border-box; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        /* 四個按鈕 RWD 排版 */
+        #actionBar { display: none; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
+        .action-btn { padding: 10px; border: none; border-radius: 8px; cursor: pointer; color: white; font-size: 14px; font-weight: bold; flex: 1; min-width: calc(50% - 10px); }
+        @media (min-width: 768px) { .action-btn { min-width: 120px; } }
+
+        /* 核心 RWD 書籍網格邏輯 */
+        #view-blogger { 
+            display: grid; 
+            /* 手機預設：最小 100px 寬，自動填滿 */
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+            gap: 12px; 
+        }
+        /* 平板以上：增加圖片寬度 */
+        @media (min-width: 600px) {
+            #view-blogger { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+        }
+
+        .book-item { background: white; padding: 10px; border-radius: 12px; text-align: center; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s; }
+        .book-item:hover { transform: translateY(-5px); }
+        .book-item img { width: 100%; border-radius: 8px; cursor: pointer; aspect-ratio: 3/4; object-fit: cover; display: block; }
+        .book-title { font-size: 13px; margin-top: 8px; height: 2.8em; overflow: hidden; line-height: 1.4; color: #333; font-weight: 500; }
+        
+        /* 管理浮層 */
+        .admin-overlay { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; background: rgba(255,255,255,0.8); padding: 4px; border-radius: 6px; }
+        .mini-btn { padding: 4px 8px; color: white; border-radius: 4px; font-size: 11px; cursor: pointer; border: none; }
+
+        /* RWD 彈窗優化 */
+        #bookModal, #inputForm { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 10px; box-sizing: border-box; }
+        .modal-content { background: white; width: 100%; max-width: 500px; border-radius: 20px; overflow: hidden; position: relative; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .modal-header { padding: 20px; display: flex; gap: 20px; border-bottom: 1px solid #eee; }
+        .modal-header img { width: 110px; border-radius: 10px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .modal-body { padding: 20px; max-height: 350px; overflow-y: auto; font-size: 15px; line-height: 1.7; color: #444; }
+        
+        /* 手機版彈窗調整 */
+        @media (max-width: 480px) {
+            .modal-header { flex-direction: column; align-items: center; text-align: center; }
+            .modal-header img { width: 130px; }
+        }
+
+        #loadMore { display: none; width: 100%; margin: 25px 0; padding: 15px; background: white; border: 1px solid #ddd; border-radius: 12px; text-align: center; cursor: pointer; font-weight: bold; color: var(--taaze-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+        .form-group { padding: 20px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
     </style>
+</head>
+<body>
 
-    <div class="mye-main-container">
-        <div class="header-top">
-            <div style="font-weight: bold; color: var(--taaze-blue); font-size: 22px;">生活小書房 <span id="authLock" style="cursor:pointer; font-size:18px;">🔒</span></div>
-            <div id="actionBar" style="display: none;" class="btn-group">
-                <button class="action-btn" style="background:var(--taaze-blue)" onclick="document.getElementById('inputForm').style.display='block'">＋ 新增</button>
-                <button class="action-btn" style="background:var(--backup-orange)" onclick="exportJSON()">📤 匯出</button>
-                <button class="action-btn" style="background:var(--backup-orange)" onclick="document.getElementById('importFile').click()">📥 匯入</button>
-                <button class="action-btn" style="background:var(--save-green)" onclick="saveToHTML()">💾 儲存</button>
-                <input type="file" id="importFile" style="display:none" onchange="importJSON(event)">
-            </div>
-        </div>
-
-        <div id="inputForm" class="input-area" style="display: none;">
-            <div class="input-grid">
-                <input id="f_title" placeholder="書名">
-                <input id="f_author" placeholder="作者">
-                <input id="f_img" placeholder="圖片URL">
-                <input id="f_url" placeholder="詳情連結">
-                <input id="f_read" placeholder="線上閱讀連結">
-            </div>
-            <textarea id="f_intro" placeholder="心得分享" style="height:200px;"></textarea>
-            <div style="margin-top:10px; display:flex; gap:10px;">
-                <button onclick="addBook()" style="background:var(--taaze-blue); color:white; border:none; padding:10px 25px; border-radius:4px; cursor:pointer; font-weight:bold;">確認儲存</button>
-                <button onclick="document.getElementById('inputForm').style.display='none'" style="background:#ccc; border:none; padding:10px 25px; border-radius:4px; cursor:pointer;">取消</button>
-            </div>
-        </div>
-
-        <div id="bookList"><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100021330&amp;height=400&amp;width=310" onclick="showModal(0)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">水煮三國</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.haodoo.net/covers/15Y7.jpg" onclick="showModal(1)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">蕭山克的救贖(刺激1995)</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682043368002/20220104060507545951.jpg" onclick="showModal(2)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">千江有水千江月</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100886650&amp;height=400&amp;width=310" onclick="showModal(3)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">常識統計學 拆穿混淆的假設、揪出偏差的數據、識破扭曲的結論，耶魯大學最受歡迎的十八堂公開課</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/E05/024/34/E050243489.jpg" onclick="showModal(4)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">空城計：諸葛亮逗司馬懿</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680545369008/71469.jpg" onclick="showModal(5)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">幸福藍圖: 101個年輕人要懂的道理</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682191210000/20220622060732182950.jpg" onclick="showModal(6)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">送書人</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681722773007/20190823055054170959.jpg" onclick="showModal(7)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">霍金大見解: 留給世人的十個大哉問與解答</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681425044008/ec1252663.jpg" onclick="showModal(8)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">咖啡學: 122種世界精品咖啡徹底解說!</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/077/49/0010774908.jpg" onclick="showModal(9)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">世界咖啡豆烘焙履歷圖鑑</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/085/00/0010850078.jpg" onclick="showModal(10)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">整頓的技術：中小企業獲利翻轉的祕密</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/101/93/0011019321.jpg" onclick="showModal(11)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">燦爛千陽</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/104/17/0011041733.jpg" onclick="showModal(12)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">偷書賊</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/086/53/0010865321.jpg" onclick="showModal(13)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">四季奇譚</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/045/79/0010457912.jpg" onclick="showModal(14)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">失落的符號</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680364219003/ec1680641.jpg" onclick="showModal(15)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">真情快遞</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/092/67/0010926726.jpg" onclick="showModal(16)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">世界大戰</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611276526002/ec67092.jpg" onclick="showModal(17)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">文茜小妹大</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680923773007/ec905255.jpg" onclick="showModal(18)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">不在他方</div>
-                
-            </div><div class="book-item">
-                <img src="https://www.books.com.tw/img/001/078/48/0010784864.jpg" onclick="showModal(19)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">驟雨之島</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611385653002/ec298059.jpg" onclick="showModal(20)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">十年的你</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100933959&amp;height=400&amp;width=310" onclick="showModal(21)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">銀行家的妻子</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100254647&amp;height=400&amp;width=310" onclick="showModal(22)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">老闆真的說可以嗎？：決定管理到不到位的暗示心理學</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100010692&amp;height=400&amp;width=310" onclick="showModal(23)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">讀人：解讀行為密碼</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100817516&amp;height=400&amp;width=310" onclick="showModal(24)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">滿願</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100603883&amp;height=400&amp;width=310" onclick="showModal(25)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">傷心咖啡店之歌</div>
-                
-            </div><div class="book-item">
-                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100593318&amp;height=400&amp;width=310" onclick="showModal(26)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">東京灣景</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/202008/o/637326467722947500.jpg" onclick="showModal(27)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">沼澤女孩</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681943498000/20201121042228368020.jpg" onclick="showModal(28)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">鄰居</div>
-                
-            </div><div class="book-item">
-                <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682368628003/20230425060356602905.jpg" onclick="showModal(29)" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">不便利的便利店 2</div>
-                
-            </div></div>
-        <div id="loadMoreBtn" onclick="loadMore()" style="display: block;">載入更多書籍...</div>
+<div class="container">
+    <div class="header-top">
+        <h2 style="margin:0; color:var(--taaze-blue);">我的圖書館</h2>
+        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:28px;">🔒</div>
     </div>
 
-    <div id="bookModal" onclick="if(event.target===this) closeModal()" style="display: none;">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <div class="modal-header">
-                <img id="m_img" src="https://media.taaze.tw/showThumbnail.html?sc=11101022475&amp;height=400&amp;width=310">
-                <div class="modal-info">
-                    <h3 id="m_title" style="margin:0 0 5px 0; color:#005599;">洞見未來︰勾勒美好新境界</h3>
-                    <div id="m_author" style="color:#666; font-size:14px;">作者：王明德、陳玉鳳、廖珮君、劉子寧</div>
-                </div>
-            </div>
-            <div id="m_intro" class="modal-body">當我們在思考所謂的趨勢時，要做的或許不是認定未來就會如同趨勢所描繪般地發生，而是去思索，為何要選擇這個趨勢做為願景，並規劃如何走到願景的路徑。<br><br>正如同深耕臺灣產業技術研發已逾50年的工研院，從每一個「當時」，選擇下一個「願景」，面對多變的未知世界，以及新興科技議題的挑戰，工研院始終扮演與時俱進的關鍵角色；透過10大跨域趨勢，擘劃技術藍圖，進行研發策略布局，與產業攜手，創造經濟價值與社會價值。<br><br>不僅如此，對於未來產業前景，也有穩健策略及規劃，「2035技術策略與藍圖」聚焦「智慧生活」、「健康樂活」、「永續環境」、「韌性社會」4大跨領域應用方向，促成應用領域「智慧化致能技術」，協助產業從技術創新迎向價值創新，並依此做為未來技術研發創新的藍圖與指南，激發「創新創業」的種子遍地開花。<br><br>工研院堅守承先啟後的角色，提供臺灣科技研發的解決方案，也協助國內產業跨越技術鴻溝，推動跨領域科技應用，協助產業轉型升級，成為台灣未來經濟成長的動力，掌握未來決勝關鍵，迎向下一個50年。</div>
-            <div class="modal-footer">
-                <a id="m_read_btn" class="modal-btn btn-read-link" target="_blank" style="display: none;">線上閱讀</a>
-                <a id="m_url_btn" class="modal-btn btn-detail-link" target="_blank" href="https://www.taaze.tw/usedList.html?oid=11101022475" style="display: inline-block;">詳情連結</a>
+    <div id="actionBar">
+        <button class="action-btn" style="background:var(--taaze-blue)" onclick="openAddForm()">➕ 新增書籍</button>
+        <button class="action-btn" style="background:var(--backup-orange)" onclick="exportJSON()">📤 匯出 JSON</button>
+        <button class="action-btn" style="background:var(--read-purple)" onclick="document.getElementById('fileInput').click()">📥 匯入 JSON</button>
+        <button class="action-btn" style="background:var(--save-green)" onclick="saveToHTML()">💾 儲存檔案</button>
+        <input type="file" id="fileInput" style="display:none" onchange="importJSON(event)">
+    </div>
+
+    <input type="text" id="searchInput" placeholder="🔍 搜尋書名、作者..." oninput="handleSearch()">
+
+    <div id="view-blogger"></div>
+    <div id="loadMore" onclick="handleLoadMore()">載入更多書籍...</div>
+</div>
+
+<div id="bookModal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div id="modalDetail"></div>
+        <button onclick="document.getElementById('bookModal').style.display='none'" style="width:100%; padding:18px; border:none; background:#f8f9fa; font-size:16px; color:#666; font-weight:bold; cursor:pointer;">關閉</button>
+    </div>
+</div>
+
+<div id="inputForm">
+    <div class="modal-content">
+        <div style="padding:18px; border-bottom:1px solid #eee; font-weight:bold; background:#fcfcfc; text-align:center;">書籍資料編輯</div>
+        <div class="form-group">
+            <input type="text" id="f_title" placeholder="書名">
+            <input type="text" id="f_author" placeholder="作者">
+            <input type="text" id="f_img" placeholder="圖片連結 (URL)">
+            <input type="text" id="f_url" placeholder="詳情連結">
+            <input type="text" id="f_read" placeholder="線上閱讀連結 (URL)">
+            <textarea id="f_intro" placeholder="內容簡介" rows="4"></textarea>
+            <div style="display:flex; gap:10px;">
+                <button onclick="submitBook()" style="flex:1; padding:14px; background:var(--save-green); color:white; border:none; border-radius:10px; font-weight:bold;">儲存</button>
+                <button onclick="closeForm()" style="flex:1; padding:14px; background:#eee; border:none; border-radius:10px; font-weight:bold;">取消</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-    let books = [
+<script>
+        let books = [
     {
         "title": "水煮三國",
         "author": "成君憶",
@@ -1573,87 +1480,91 @@
         "img": "https://media.taaze.tw/showThumbnail.html?sc=11100910316&height=400&width=310",
         "intro": "讀了這本書，你終於明白，我們為什麼需要知識份子\n\n一部反映中國近代苦難的家族記憶史\n一部過渡新舊時代衝突的女性奮鬥史\n一部台灣文學走入西方世界的大事紀\n一部用生命書寫壯闊幽微的天籟詩篇\n\n書的記述，從長城外的「巨流河」開始，到台灣南端恆春的「啞口海」結束.........\n\n巨流河，\n位於中國東北地區，是中國七大江河之一，被稱為遼寧百姓的「母親河」。\n南濱渤海與黃海，西南與內蒙內陸河、河北海灤河流域相鄰，北與松花江流域相連。\n這條河古代稱句驪河，現在稱遼河，清代稱巨流河。\n影響中國命運的「巨流河之役」，發生在民國十四年，當地淳樸百姓們仍沿用著清代巨流河之名。\n\n作者齊邦媛的父親齊世英──民國初年的留德熱血青年，九一八事變前的東北維新派，\n畢生憾恨圍繞著巨流河功敗垂成的一戰，\n渡不過的巨流像現實中的嚴寒，外交和革新思想皆困凍於此，從此開始了東北終至波及整個中國的近代苦難。\n作者的一生，正是整個二十世紀顛沛流離的縮影。\n\n本書嘔心瀝血四年完成，\n作者以邃密通透、深情至性、字字珠璣的筆力，記述縱貫百年、橫跨兩岸的大時代故事。"
     }
-]; // 此處存放您的書籍資料
+
+
+    ]; 
     let isLogged = false;
-    let displayedCount = 0;
-    const PAGE_SIZE = 30;
+    let visibleCount = 20;
+    let editingIndex = -1;
 
-    // 分頁渲染核心
-    function render(append = false) {
-        const container = document.getElementById('bookList');
-        if (!append) {
-            container.innerHTML = '';
-            displayedCount = 0;
-        }
-        const nextBatch = books.slice(displayedCount, displayedCount + PAGE_SIZE);
-        nextBatch.forEach((book, i) => {
-            const actualIndex = displayedCount + i;
-            const item = document.createElement('div');
-            item.className = 'book-item';
-            item.innerHTML = `
-                <img src="${book.img || ''}" onclick="showModal(${actualIndex})" onerror="this.src='https://via.placeholder.com/100x140?text=No+Cover'">
-                <div style="font-size:12px; margin-top:8px; height:2.8em; overflow:hidden; line-height:1.4;">${book.title}</div>
-                ${isLogged ? `
-                    <div style="margin-top:8px; display:flex; gap:4px; justify-content:center;">
-                        <button onclick="editBook(${actualIndex})" style="font-size:10px; padding:2px 5px; cursor:pointer;">改</button>
-                        <button onclick="delBook(${actualIndex})" style="font-size:10px; padding:2px 5px; color:red; cursor:pointer;">刪</button>
-                    </div>
-                ` : ''}
+    function render() {
+        const container = document.getElementById('view-blogger');
+        const loadMoreBtn = document.getElementById('loadMore');
+        const term = document.getElementById('searchInput').value.toLowerCase();
+
+        const filtered = books.filter(b => 
+            (b.title || "").toLowerCase().includes(term) || (b.author || "").toLowerCase().includes(term)
+        );
+
+        const displayList = filtered.slice(0, visibleCount);
+
+        container.innerHTML = displayList.map(b => {
+            const realIndex = books.indexOf(b);
+            return `
+                <div class="book-item">
+                    <img src="${b.img}" onclick="showDetail(${realIndex})">
+                    <div class="book-title">${b.title}</div>
+                    ${isLogged ? `
+                        <div class="admin-overlay">
+                            <button class="mini-btn" style="background:#3498db" onclick="editBook(${realIndex})">改</button>
+                            <button class="mini-btn" style="background:#e74c3c" onclick="delBook(${realIndex})">刪</button>
+                        </div>
+                    ` : ''}
+                </div>
             `;
-            container.appendChild(item);
-        });
-        displayedCount += nextBatch.length;
-        document.getElementById('loadMoreBtn').style.display = (displayedCount >= books.length) ? 'none' : 'block';
+        }).join('');
+
+        loadMoreBtn.style.display = (displayList.length < filtered.length) ? 'block' : 'none';
     }
 
-    function loadMore() { render(true); }
+    window.handleSearch = function() { visibleCount = 20; render(); };
+    window.handleLoadMore = function() { visibleCount += 20; render(); };
 
-    function showModal(index) {
-        const book = books[index];
-        document.getElementById('m_img').src = book.img || '';
-        document.getElementById('m_title').innerText = book.title;
-        document.getElementById('m_author').innerText = "作者：" + (book.author || "不詳");
-        document.getElementById('m_intro').innerText = book.intro || "尚無心得分享。";
-        
-        const rBtn = document.getElementById('m_read_btn');
-        if(book.read) { rBtn.href = book.read; rBtn.style.display = "inline-block"; }
-        else { rBtn.style.display = "none"; }
-        
-        const uBtn = document.getElementById('m_url_btn');
-        if(book.url) { uBtn.href = book.url; uBtn.style.display = "inline-block"; }
-        else { uBtn.style.display = "none"; }
-
+    window.showDetail = function(idx) {
+        const b = books[idx];
+        document.getElementById('modalDetail').innerHTML = `
+            <div class="modal-header">
+                <img src="${b.img}">
+                <div style="flex:1">
+                    <h3 style="margin:0 0 8px 0; font-size:20px;">${b.title}</h3>
+                    <div style="font-size:14px; color:#777;">${b.author}</div>
+                    <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+                        ${b.read ? `<a href="${b.read}" target="_blank" style="color:var(--read-purple); font-weight:bold; text-decoration:none; font-size:15px;">📖 線上閱讀連結</a>` : ''}
+                        ${b.url ? `<a href="${b.url}" target="_blank" style="color:var(--taaze-blue); font-weight:bold; text-decoration:none; font-size:15px;">🔗 書籍詳情連結</a>` : ''}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">${b.intro || '暫無簡介'}</div>
+        `;
         document.getElementById('bookModal').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
+    };
 
-    function closeModal() {
-        document.getElementById('bookModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    // 密碼邏輯
-    document.getElementById('authLock').onclick = function() {
-        if(!isLogged) {
-            const today = new Date();
-            const pw = prompt("請輸入密碼：");
-            if(pw === today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0')) {
-                isLogged = true;
-                this.innerText = "🔓";
-                document.getElementById('actionBar').style.display = "flex";
-                render();
-            } else if (pw !== null) alert("密碼錯誤！");
-        } else {
+    window.handleAuth = function() {
+        if (isLogged) {
             isLogged = false;
-            this.innerText = "🔒";
+            document.getElementById('authLock').innerText = "🔒";
             document.getElementById('actionBar').style.display = "none";
-            document.getElementById('inputForm').style.display = "none";
+            render();
+            return;
+        }
+        // 修正：提示文字只有「請輸入密碼」，無日期提示
+        const pw = prompt("請輸入密碼"); 
+        const today = new Date();
+        const correct = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+        if (pw === correct) {
+            isLogged = true;
+            document.getElementById('authLock').innerText = "🔓";
+            document.getElementById('actionBar').style.display = "flex";
             render();
         }
     };
 
-    window.addBook = function() {
-        const nb = {
+    window.openAddForm = function() { editingIndex = -1; clearForm(); document.getElementById('inputForm').style.display = 'flex'; };
+    window.closeForm = function() { document.getElementById('inputForm').style.display = 'none'; };
+    window.clearForm = function() { ['f_title','f_author','f_img','f_url','f_read','f_intro'].forEach(id => document.getElementById(id).value=''); };
+
+    window.submitBook = function() {
+        const b = {
             title: document.getElementById('f_title').value,
             author: document.getElementById('f_author').value,
             img: document.getElementById('f_img').value,
@@ -1661,14 +1572,12 @@
             read: document.getElementById('f_read').value,
             intro: document.getElementById('f_intro').value
         };
-        if(!nb.title) return;
-        books.unshift(nb);
-        document.getElementById('inputForm').style.display = 'none';
-        ['f_title','f_author','f_img','f_url','f_read','f_intro'].forEach(id => document.getElementById(id).value='');
-        render();
+        if(editingIndex > -1) books[editingIndex] = b; else books.unshift(b);
+        closeForm(); render();
     };
 
     window.editBook = function(i) {
+        editingIndex = i;
         const b = books[i];
         document.getElementById('f_title').value = b.title || '';
         document.getElementById('f_author').value = b.author || '';
@@ -1676,40 +1585,33 @@
         document.getElementById('f_url').value = b.url || '';
         document.getElementById('f_read').value = b.read || '';
         document.getElementById('f_intro').value = b.intro || '';
-        document.getElementById('inputForm').style.display = 'block';
-        books.splice(i, 1);
-        window.scrollTo(0,0);
+        document.getElementById('inputForm').style.display = 'flex';
     };
 
-    window.delBook = function(i) { if(confirm("確定刪除？")) { books.splice(i, 1); render(); } };
+    window.delBook = function(i) { if(confirm("確定刪除？")) { books.splice(i,1); render(); } };
 
     window.exportJSON = function() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(books, null, 4));
-        const a = document.createElement('a'); a.href = dataStr; a.download = "library.json"; a.click();
+        const blob = new Blob([JSON.stringify(books, null, 4)], { type: 'application/json' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "library.json"; a.click();
     };
 
     window.importJSON = function(e) {
         const reader = new FileReader();
-        reader.onload = ev => { books = JSON.parse(ev.target.result); render(); };
+        reader.onload = ev => { try { books = JSON.parse(ev.target.result); visibleCount = 20; render(); } catch(e){alert("格式錯誤");} };
         reader.readAsText(e.target.files[0]);
     };
 
     window.saveToHTML = function() {
-        isLogged = false; 
-        document.getElementById('authLock').innerText = "🔒";
-        document.getElementById('actionBar').style.display = "none";
-        render();
+        isLogged = false; render();
         setTimeout(() => {
             const html = document.documentElement.outerHTML.replace(/let books = \[[\s\S]*?\];/, `let books = ${JSON.stringify(books, null, 4)};`);
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-            a.download = `mylibrary.html`;
-            a.click();
+            a.href = URL.createObjectURL(new Blob([html], {type:'text/html'}));
+            a.download = "my_library.html"; a.click();
         }, 500);
     };
 
-    render();
-    </script>
-</div>
-
-</body></html>
+    window.onload = render;
+</script>
+</body>
+</html>
