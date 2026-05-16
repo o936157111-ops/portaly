@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW"><head>
     <meta charset="UTF-8">
@@ -7,18 +6,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&amp;display=swap" rel="stylesheet">
     
     <style>
-        /* 頁面風格顏色配置：簡約風格內文為純黑 (#000000) */
-        :root { --bg-color: #ffffff; --text-color: #000000; --accent-color: #2c3e50; --sub-color: #555555; }
-        .theme-sepia { --bg-color: #f4f1ea; --text-color: #332b22; --accent-color: #8b4513; --sub-color: #7a6e61; }
-        .theme-dark { --bg-color: #1a1a1a; --text-color: #e0e0e0; --accent-color: #d4af37; --sub-color: #888888; }
+        /* 頁面風格顏色配置 */
+        :root { --bg-color: #ffffff; --text-color: #000000; --accent-color: #2c3e50; --sub-color: #555555; --panel-bg: #f9f9f9; --border-color: rgba(0, 0, 0, 0.1); }
+        .theme-sepia { --bg-color: #f4f1ea; --text-color: #332b22; --accent-color: #8b4513; --sub-color: #7a6e61; --panel-bg: #ede9df; --border-color: rgba(0, 0, 0, 0.15); }
+        .theme-dark { --bg-color: #1a1a1a; --text-color: #e0e0e0; --accent-color: #d4af37; --sub-color: #888888; --panel-bg: #252525; --border-color: #333333; }
 
         /* 全域底層預設字型全面改為微軟正黑體 */
         body { margin: 0; display: flex; height: 100vh; background: var(--bg-color); transition: background 0.3s; font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; overflow: hidden; color: var(--text-color); }
         
-        #sidebar { width: 280px; background: rgba(0, 0, 0, 0.03); border-right: 1px solid rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; height: 100%; box-sizing: border-box; transition: background 0.3s, transform 0.3s; z-index: 10; }
-        .theme-dark #sidebar { background: #222; border-right: 1px solid #333; }
+        #sidebar { width: 280px; background: rgba(0, 0, 0, 0.03); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; height: 100%; box-sizing: border-box; transition: background 0.3s, transform 0.3s; z-index: 100; }
+        .theme-dark #sidebar { background: #222; }
         
-        #book-info { padding: 15px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        #book-info { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         #book-title { font-size: 16px; font-weight: bold; color: var(--accent-color); cursor: pointer; }
         
         #tree-area { flex: 1; overflow-y: auto; padding: 10px; }
@@ -32,23 +31,34 @@
         
         #main-container { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative; }
         
-        #toolbar { height: 45px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; }
-        .btn-group { display: flex; gap: 5px; }
+        /* 頂部工具列優化 */
+        #toolbar { height: 50px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; background: var(--bg-color); z-index: 10; }
+        .btn-group { display: flex; gap: 6px; align-items: center; }
         
-        button { background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); padding: 4px 10px; font-size: 12px; cursor: pointer; border-radius: 4px; color: var(--text-color); font-family: inherit; }
+        button { background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); padding: 5px 10px; font-size: 13px; cursor: pointer; border-radius: 4px; color: var(--text-color); font-family: inherit; transition: background 0.2s; }
         button:hover { background: rgba(0, 0, 0, 0.05); }
-        .theme-dark button { border-color: #444; }
+        .theme-dark button { border-color: #555; }
         .theme-dark button:hover { background: #333; }
         button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
         
+        #menu-toggle { display: none; }
+        #settings-toggle { display: none; } /* 手機版專用設定按鈕 */
+
+        /* 閱讀區域 */
         #reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; }
         #reader-main-area { width: 100%; max-width: 700px; font-size: 16px; }
         #content-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; color: var(--accent-color); }
         #content-body { line-height: 1.6; white-space: pre-wrap; font-weight: normal; }
         
+        /* 手機版彈出式設定面板 */
+        #mobile-settings-panel { display: none; position: absolute; top: 51px; left: 0; right: 0; background: var(--panel-bg); border-bottom: 1px solid var(--border-color); padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 90; box-sizing: border-box; }
+        .setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .setting-row:last-child { margin-bottom: 0; }
+        .setting-label { font-size: 13px; font-weight: bold; color: var(--sub-color); }
+
         /* 編輯面板 */
-        #add-container { border-top: 1px solid rgba(0, 0, 0, 0.1); background: rgba(0, 0, 0, 0.01); display: none; } 
-        .theme-dark #add-container { background: #1f1f1f; border-top: 1px solid #333; }
+        #add-container { border-top: 1px solid var(--border-color); background: rgba(0, 0, 0, 0.01); display: none; } 
+        .theme-dark #add-container { background: #1f1f1f; }
         #add-header { padding: 10px 15px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.02); color: var(--accent-color); }
         #add-panel { padding: 15px; display: none; box-sizing: border-box; }
         .form-grid { display: grid; grid-template-columns: 80px 1fr; gap: 8px; margin-bottom: 10px; align-items: center; }
@@ -56,17 +66,19 @@
         .form-grid input, .form-grid textarea { width: 100%; padding: 5px; box-sizing: border-box; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 4px; background: var(--bg-color); color: var(--text-color); font-family: inherit; font-size: 13px; }
         .form-grid textarea { height: 80px; resize: vertical; }
 
-        #menu-toggle { display: none; font-size: 16px; padding: 4px 8px; margin-right: 5px; }
-
-        /* RWD 行動裝置自適應樣式優化 */
+        /* RWD 行動裝置自適應：徹底解決工具列擠爆災難 */
         @media (max-width: 768px) {
             #menu-toggle { display: block; }
-            #sidebar { position: absolute; left: 0; top: 0; bottom: 0; transform: translateX(-100%); background: var(--bg-color); box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+            #settings-toggle { display: block; } /* 顯示手機版設定鈕 */
+            
+            /* 隱藏電腦版直排按念群 */
+            #desktop-config-group { display: none; } 
+            
+            #sidebar { position: absolute; left: 0; top: 0; bottom: 0; transform: translateX(-100%); background: var(--bg-color); box-shadow: 2px 0 10px rgba(0,0,0,0.15); }
             #sidebar.open { transform: translateX(0); }
-            #toolbar { padding: 0 8px; gap: 3px; }
-            .btn-group { gap: 2px; }
-            button { padding: 4px 6px; font-size: 11px; }
-            #reader-area { padding: 15px; }
+            
+            #toolbar { padding: 0 10px; }
+            #reader-area { padding: 20px 15px; }
             #content-title { font-size: 20px; }
         }
     </style>
@@ -109,12 +121,15 @@
     <div id="main-container">
         <div id="toolbar">
             <div class="btn-group">
-                <button id="menu-toggle" onclick="toggleMenu(true)">☰ 目錄</button>
+                <button id="menu-toggle" onclick="toggleMenu(true); toggleSettingsPanel(false);">☰ 目錄</button>
+                <button id="settings-toggle" onclick="toggleSettingsPanel()">⚙️ 設定</button>
+                
                 <button onclick="setTheme('light')" id="btn-light" class="theme-btn active">明亮</button>
                 <button onclick="setTheme('sepia')" id="btn-sepia" class="theme-btn">羊皮紙</button>
                 <button onclick="setTheme('dark')" id="btn-dark" class="theme-btn">深色</button>
             </div>
-            <div class="btn-group">
+            
+            <div class="btn-group" id="desktop-config-group">
                 <button onclick="changeFontSize(1)">字型＋</button>
                 <button onclick="changeFontSize(-1)">字型－</button>
                 <button onclick="changeLineHeight(0.2)">行距＋</button>
@@ -122,12 +137,37 @@
                 <button onclick="changeFont('Microsoft JhengHei')">正黑體</button>
                 <button onclick="changeFont('Noto Sans TC')">思源黑體</button>
             </div>
+            
             <div>
-                <button id="btn-html-export" onclick="exportHTML()" style="background: var(--accent-color); color: #fff; font-weight: bold; display: none;">💾 匯出更新 HTML</button>
+                <button id="btn-html-export" onclick="exportHTML()" style="background: var(--accent-color); color: #fff; font-weight: bold; display: none;">💾 匯出 HTML</button>
             </div>
         </div>
         
-        <div id="reader-area" onclick="toggleMenu(false)">
+        <div id="mobile-settings-panel">
+            <div class="setting-row">
+                <span class="setting-label">文字大小</span>
+                <div class="btn-group">
+                    <button onclick="changeFontSize(1)">字型 ＋</button>
+                    <button onclick="changeFontSize(-1)">字型 －</button>
+                </div>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">段落行距</span>
+                <div class="btn-group">
+                    <button onclick="changeLineHeight(0.2)">行距 ＋</button>
+                    <button onclick="changeLineHeight(-0.2)">行距 －</button>
+                </div>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">閱讀字體</span>
+                <div class="btn-group">
+                    <button onclick="changeFont('Microsoft JhengHei')">微軟正黑體</button>
+                    <button onclick="changeFont('Noto Sans TC')">思源黑體</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="reader-area" onclick="toggleMenu(false); toggleSettingsPanel(false);">
             <div id="reader-main-area">
                 <div id="content-title">請選擇左側章節開始閱讀</div>
                 <div id="content-body">歡迎使用日語短句電子書閱讀器。</div>
@@ -179,8 +219,8 @@
                 },
                 "問候時用的寒暄語句": {
                     "會話情境": {
-                        "好久不見的寒暄": "A：お久しぶりですね。お元気ですか？\o.hi.sa.shi.bu.ri.de.su.ne./o.ge.n.ki.de.su.ka.\n好久不見耶，您過得好嗎？\n\nB：おかげさまで元気です。○○さんは？\no.ka.ge.sa.ma.de.ge.n.ki.de.su./○○.sa.n.wa.\n託您的福，我很好。那○○先生/小姐呢？\n\nA：ええ、私も元気です。\ne.e./wa.ta.shi.mo.ge.n.ki.de.su.\n嗯，我也很好。\n\n【較口語、熟人用法】\nA：具しぶり！元気？ (hi.sa.shi.bu.ri! ge.n.ki?)\n好久不見！過得怎樣？\n\nB：うん、元気だよ。 (u.n./ge.n.ki.da.yo.)\n嗯，很好唷。",
-                        "離開時問候第三人": "A：そろそろ失禮します。\nso.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n我也差不多該告辭了。\n\nB：そうですか。奧様によろしくお伝えください。\nso.u.de.su.ka./o.ku.sa.ma.ni.yo.ro.shi.ku.o.tsu.ta.e.ku.da.sa.i.\n這樣啊。請代我向夫人問好。\n\nA：有難うございます。では、失禮します。\na.ri.ga.to.u.go.za.i.ma.su./de.wa/shi.tsu.re.i.shi.ma.su.\n謝謝，那我告辭了。\n\n【替換單字練習（代稱第三人）】\nご主人 (go.shu.ji.n.) 您先生\nお父さん (o.to.o.sa.n.) 您父親\nお母さん (o.ka.h.sa.n.) 您母親\n皆さん (mi.na.sa.n.) 大家"
+                        "好久不見的寒暄": "A：お久しぶりですね。お元気ですか？\no.hi.sa.shi.bu.ri.de.su.ne./o.ge.n.ki.de.su.ka.\n好久不見耶，您過得好嗎？\n\nB：おかげさまで元気です。○○さんは？\no.ka.ge.sa.ma.de.ge.n.ki.de.su./○○.sa.n.wa.\n託您的福，我很好。那○○先生/小姐呢？\n\nA：ええ、私も元気です。\ne.e./wa.ta.shi.mo.ge.n.ki.de.su.\n嗯，我也很好。\n\n【較口語、熟人用法】\nA：具しぶり！元気？ (hi.sa.shi.bu.ri! ge.n.ki?)\n好久不見！過得怎樣？\n\nB：うん、元気だよ。 (u.n./ge.n.ki.da.yo.)\n嗯，很好唷。",
+                        "離開時問候第三人": "A：そろそろ失禮します。\nso.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n我也差不多該告辭了。\n\nB：そうですか。奧様によろしくお伝えください。\nso.u.de.su.ka./o.ku.sa.ma.ni.yo.ro.shi.ku.o.tsu.ta.e.ku.da.sa.i.\n這樣啊。請代我向夫人問好。\n\nA：有難うございます。では、失禮します。\na.ri.ga.to.u.go.za.i.ma.su./de.wa/shi.tsu.re.i.shi.ma.su.\n謝謝，那我告辭了。\n\n【替換單字練習（代稱第三人）】\nご主人 (go.shu.ji.n.) 您先生\nお父さん (o.to.o.sa.n.) 您父親\nお母さん (o.ku.sa.n.) 您母親\n皆さん (mi.na.sa.n.) 大家"
                     }
                 },
                 "冷場時可用的話題": {
@@ -198,7 +238,7 @@
                     },
                     "會話情境": {
                         "拜訪別人家時": "A：ごめんください。\ngo.me.n.ku.da.sa.i.\n有人在家嗎？\n\nB：はい、どなたでしょうか？\nha.i./do.na.ta.de.sho.u.ka.\n請問您是哪位？\n\nA：○○です。○○さんはいらっしゃいますでしょうか？\n○.○.de.su./○.○.sa.n.wa.i.ra.ssha.i.ma.su.de.sho.u.ka.\n我是○○，○○在嗎？\n\nB：ええ、おりまう。どうぞお上がり下さい。\ne.e./o.ri.ma.su./do.u.zo.o.a.ga.ri.ku.da.sa.i.\n在，請您上來。\n\nA：では、失禮します。\nde.wa./shi.tsu.re.i.shi.ma.su.\n那我就打擾了。\n\nB：コーヒーを入れてきますね。\nko.o.hi.i.o.i.re.te.ki.ma.su.ne.\n我去泡咖啡唷。\n\nA：どうぞ、お気遣いなく。\ndo.u.zo./o.ki.zu.ka.i.na.ku.\n您不用客氣。\n\n【替換單字練習】\n紅茶 (ko.u.cha.) 紅茶\nウーロン茶 (u.u.ro.n.cha.) 烏龍茶\nココア (ko.ko.a.) 可可\nミルクティー (mi.ru.ku.ti.i.) 奶茶",
-                        "拜訪完後準備要離開時": "A：だいぶ長くお邪魔しましたから、そろそろ失禮します。\nda.i.bu.na.ga.ku.o.ja.ma.shi.ma.shi.ta.ka.ra.so.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n因為已經打擾您很久了，我也該準備回家了。\n\nB：まだ早いでしょう。昼ご飯をごいっしょにいかがですか？\nma.da.ha.ya.i.de.sho.u.hi.ru.go.ha.n.o.go.i.ssho.ni.i.ka.ga.de.su.ka.\n還很早吧。要不要一起吃個中飯呢？\n\nA：気持ちは有難いですが、これから用があるので。\nki.mo.chi.wa.a.ri.ga.ta.i.de.su.ga.ko.re.ka.ra.yo.u.ga.a.ru.no.de.\n很感謝您的心意，但我等等還有事。\n\nB：そうですか？では、またお暇なときに遊びにいらっしゃいね。\nso.u.de.su.ka./de.wa./ma.ta.o.hi.ma.na.to.ki.ni.a.so.bi.ni.i.ra.ssha.i.ne.\n這樣呀，那等您有空的時候再來玩唷。\n\nA：はい、お邪魔しました。では失禮します。\nha.i./o.ja.ma.shi.ma.shi.ta./de.wa.shi.tsu.re.i.shi.ma.su.\n好的，打擾您了，再見。",
+                        "拜訪完後準備要離開時": "A：だいぶ長くお邪魔しましたから、そろそろ失禮します。\nda.i.bu.na.ga.ku.o.ja.ma.shi.ma.shi.ta.ka.ra.so.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n因為已經打擾您很久了，我也該準備回家了。\n\nB：まだ早いでしょう。昼ご飯をごいっしょにいかがですか？\nma.da.ha.ya.i.de.sho.u.hi.ru.go.ha.n.o.go.i.ssho.ni.i.ka.ga.de.su.ka.\n還很早吧。要不要一起吃個中飯呢？\n\nA：気持ちは有難いですが、これから用があるので。\nki.mo.chi.wa.a.ri.ga.ta.i.de.su.ga.ko.re.ka.ra.yo.u.ga.a.ru.no.de.\n很感謝您的心意，但我等等還有事。\n\nB：そうですか？では、またお暇なときに遊びにいらっしゃいね。\nso.u.de.su.ka?/de.wa./ma.ta.o.hi.ma.na.to.ki.ni.a.so.bi.ni.i.ra.ssha.i.ne.\n這樣呀，那等您有空的時候再來玩唷。\n\nA：はい、お邪魔しました。では失禮します。\nha.i./o.ja.ma.shi.ma.shi.ta./de.wa.shi.tsu.re.i.shi.ma.su.\n好的，打擾您了，再見。",
                         "去好朋友家玩與表達速離": "A::こんにちは。\nko.n.ni.chi.wa.\n有人在家嗎？\n\nB：やあ、奈奈！さあ、上がって。\nya.a./na.na./sa.a./a.ga.tte.\n啊，是奈奈呀！進來呀。\n\nA：お邪魔します。これ、つまらないものですが、どうぞ。\no.ja.ma.shi.ma.su./ko.re/tsu.ma.ra.na.i.mo.no.de.su.ga./do.u.zo.\n打擾了。這個是一點小意思，請收下。\n\nB：あら、有難う。そんなに気を使わなくてもいい道具なのに。\na.ra/a.ri.ga.to.u./so.n.na.ni.ki.o.tsu.ka.wa.na.ku.te.mo.i.i.no.ni.\n哎呀，謝謝！你不用這麼客氣啦。\n\nA：あ、もう五時だ！そろそろ帰らなくちゃ。\na./mo.u.go.ji.da!/so.ro.so.ro.ka.e.ra.na.ku.cha.\n啊，已經五點了！我差不多該回去了。\n\nB：so.u?/ja.a./e.ki.ma.de.o.ku.ru.yo.\n是嗎？那我送你到車站吧。\n\nA：ううん、お構いなく。\nu.u.n./o.ka.ma.i.na.ku.\n不用不用，您別客氣了。"
                     }
                 },
@@ -218,15 +258,15 @@
                 },
                 "PART 2 每日會發生的事：校園職場生活實用短句": {
                     "提出邀約": {
-                        "邀約朋友出去玩": "A：今週の土曜日に、一緒に遊びに行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.a.so.bi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起出去玩呀？\n\nB：いいですね。開こへ行きますか？\ni.i.de.su.ne./do.ko.e.i.ku.ma.su.ka.\n好呀！要去哪裡呢？\n\nA：淡水へ行きましょう。\nta.n.su.i.e.i.ki.ma.sho.u.\n我們去淡水吧！"
+                        "邀約朋友出去玩": "A::今週の土曜日に、一緒に遊びに行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.a.so.bi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起出去玩呀？\n\nB：いいですね。開こへ行きますか？\ni.i.de.su.ne./do.ko.e.i.ku.ma.su.ka.\n好呀！要去哪裡呢？\n\nA：淡水へ行きましょう。\nta.n.su.i.e.i.ki.ma.sho.u.\n我們去淡水吧！"
                     },
                     "答應邀約": {
                         "答應同學或是好友的邀約": "A：今週の土曜日、一緒に映画を見に行かない？\nko.n.shu.u.no.do.yo.u.bi./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n這星期六要不要一起去看電影？\n\nB：いいね！行こう。 (i.i.ne! / i.ko.u.)\n好呀！走吧。",
                         "答應同事或是長輩的邀約": "A::今週の土曜日に、一緒に映画を見に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.e.i.ga.o.mi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去看電影呢？\n\nB：ええ、喜んで。 (e.e./yo.ro.ko.n.de.)\n嗯，我很樂意。",
-                        "邀約友人看電影或來家裡玩": "A：明日、一緒に映画でも見に行きませんか？\na.shi.ta./i.ssho.ni.e.i.ga.de.mo.mi.ni.i.ki.ma.se.n.ka.\n明天要不要一起去看個電影之類的呀？\n\nB：いいですね。行きましょう。\ni.i.de.su.ne./i.ki.ma.sho.u.\n好呀，走吧！\n\n【邀約友人來家裡】\nA：今週の土曜日に、私の家に来ませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./wa.ta.shi.no.i.e.ni.ki.ma.se.n.ka.\n這星期六要不要來我家玩呀？\n\nB：いいですか？じゃあ、お邪魔します。\ni.i.de.su.ka?/ja.a./o.ja.ma.shi.ma.su.\n方便嗎？那打擾囉！"
+                        "邀約友人看電影或來家裡玩": "A：明日、一緒に映画でも見に行きませんか？\na.shi.ta./i.ssho.ni.e.i.ga.de.mo.mi.ni.i.ki.ma.se.n.ka.\n明天要不要一起去看個電影之類的呀？\n\nB：いいですね。行きましょう。\ni.i.de.su.ne./i.ki.ma.sho.u.\n好呀，走吧！\n\n【邀約友人來家裡】\nA::今週の土曜日に、私の家に来ませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./wa.ta.shi.no.i.e.ni.ki.ma.se.n.ka.\n這星期六要不要來我家玩呀？\n\nB：いいですか？じゃあ、お邪魔します。\ni.i.de.su.ka?/ja.a./o.ja.ma.shi.ma.su.\n方便嗎？那打擾囉！"
                     },
                     "謝絕邀約": {
-                        "因不便或有先約而婉拒": "A：今週の土曜日に、一緒に買い物に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去買東西呀？\n\nB：土曜日はちょっと都合が悪いんです。\ndo.yo.u.bi.wa.cho.tto.tsu.go.u.ga.wa.ru.i.n.de.s.\n星期六我剛好有點不方便耶。\n\n【被好友邀約看電影】\nA：明日、一緒に映画を見に行かない？\na.shi.ta./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n明天要不要一起去看電影？\n\nB：明日はちょっと用事があるんだ。ごめんね。\na.shi.ta.wa.cho.tto.yo.u.ji.ga.a.ru.n.da./go.me.n.ne.\n明天我剛好有事情耶，抱歉啦。\n\nA：so.u.na.n.da./za.n.ne.n./ja.a./ma.ta.ko.n.do.ne.\n這樣呀，真可惜。那就下次囉。\n\n【被朋友邀約去買東西】\nA：一緒に買い物に行きませんか？\ni.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n要不要一起去買東西呀？\n\nB：行きたいんですけど、ちょっと先約があるんですが。\ni.ki.ta.i.n.de.su.ke.do./cho.tto.se.n.ya.ku.ga.a.ru.n.de.su.ga.\n我是很想去，但是我已經有約了耶。\n\nA：そうですか、残念ですね。では、またにしましょうか？\nso.u.de.su.ca,/za.n.ne.n.de.su.ne./de.wa/ma.ta.ni.shi.ma.sho.u.ka.\n是唷，真可惜。那下次去吧。\n\nB：ぜひまた誘ってください。\nze.hi.ma.ta.sa.so.tte.ku.da.sa.i.\n請你一定要再約我。"
+                        "因不便或有先約而婉拒": "A：今週の土曜日に、一緒に買い物に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去買東西呀？\n\nB：土曜日はちょっと都合が悪いんです。\ndo.yo.u.bi.wa.cho.tto.tsu.go.u.ga.wa.ru.i.n.de.s.\n星期六我剛好有點不方便耶。\n\n【被好友邀約看電影】\nA：明日、一緒に映画を見に行かない？\na.shi.ta./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n明天要不要一起去看電影？\n\nB：明日はちょっと用事があるんだ。ごめんね。\na.shi.ta.wa.cho.tto.yo.u.ji.ga.a.ru.n.da./go.me.n.ne.\n明天我剛好有事情耶，抱歉啦。\n\nA::so.u.na.n.da./za.n.ne.n./ja.a./ma.ta.ko.n.do.ne.\n這樣呀，真可惜。那就下次囉。\n\n【被朋友邀約去買東西】\nA：一緒に買い物に行きませんか？\ni.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n要不要一起去買東西呀？\n\nB：行きたいんですけど、ちょっと先約があるんですが。\ni.ki.ta.i.n.de.su.ke.do./cho.tto.se.n.ya.ku.ga.a.ru.n.de.su.ga.\n我是很想去，但是我已經有約了耶。\n\nA：そうですか、残念ですね。では、またにしましょうか？\nso.u.de.su.ca,/za.n.ne.n.de.su.ne./de.wa/ma.ta.ni.shi.ma.sho.u.ka.\n是唷，真可惜。那下次去吧。\n\nB：ぜひまた誘ってください。\nze.hi.ma.ta.sa.so.tte.ku.da.sa.i.\n請你一定要再約我。"
                     },
                     "小知識": {
                         "四六時中的涵義": "日語單字中的「四六時中（shi.ro.ku.ji.chu.u.）」是指 24 小時全天的意思。江戶時期是用「二六時中（12時辰）」代表全天，2×6=12。配合現在的 24 小時，便演變成「四六時中」，4×6=24。"
@@ -242,7 +282,7 @@
                 },
                 "表達日期": {
                     "會話情境": {
-                        "與同事確認開會時間": "A::會議はいつですか？\nka.i.gi.wa.i.tsu.de.su.ka.\n什麼時候開會呀？\n\nB：四月十四日です。\nshi.ga.tsu.ju.u.yo.kka.de.su.\n四月十四號。\n\n【替換單字練習（月份）】\n一月 (i.chi.ga.tsu) / 二月 (ni.ga.tsu) / 三月 (sa.n.ga.tsu) / 四月 (shi.ga.tsu) / 五月 (go.ga.tsu) / 六月 (ro.ku.ga.tsu) / 七月 (shichi.ga.tsu) / 八月 (hachi.ga.tsu) / 九月 (ku.ga.tsu) / 十月 (ju.u.ga.tsu) / 十一月 (ju.u.i.chi.ga.tsu) / 十二月 (ju.u.ni.ga.tsu)\n\n【替換單字練習（1~20號特殊日期稱呼）】\n一日 (tsu.i.ta.chi) 一號\n二日 (fu.tsu.ka) 二號\n三日 (mi.kka) 三號\n四日 (yo.kka) 四號\n五日 (i.tsu.ka) 五號\n六日 (mu.i.ka) 六號\n七日 (na.no.ka) 七號\n八日 (yo.o.ka) 八號\n九日 (ko.ko.no.ka) 九號\n十日 (to.o.ka) 十號\n十四日 (ju.u.yo.kka) 十四號\n二十日 (ha.tsu.ka) 二十號"
+                        "與同事確認開會時間": "A::会議はいつですか？\nka.i.gi.wa.i.tsu.de.su.ka.\n什麼時候開會呀？\n\nB：四月十四日です。\nshi.ga.tsu.ju.u.yo.kka.de.su.\n四月十四號。\n\n【替換單字練習（月份）】\n一月 (i.chi.ga.tsu) / 二月 (ni.ga.tsu) / 三月 (sa.n.ga.tsu) / 四月 (shi.ga.tsu) / 五月 (go.ga.tsu) / 六月 (ro.ku.ga.tsu) / 七月 (shichi.ga.tsu) / 八月 (hachi.ga.tsu) / 九月 (ku.ga.tsu) / 十月 (ju.u.ga.tsu) / 十一月 (ju.u.i.chi.ga.tsu) / 十二月 (ju.u.ni.ga.tsu)\n\n【替換單字練習（1~20號特殊日期稱呼）】\n一日 (tsu.i.ta.chi) 一號\n二日 (fu.tsu.ka) 二號\n三日 (mi.kka) 三號\n四日 (yo.kka) 四號\n五日 (i.tsu.ka) 五號\n六日 (mu.i.ka) 六號\n七日 (na.no.ka) 七號\n八日 (yo.o.ka) 八號\n九日 (ko.ko.no.ka) 九號\n十日 (to.o.ka) 十號\n十四日 (ju.u.yo.kka) 十四號\n二十日 (ha.tsu.ka) 二十號"
                     }
                 },
                 "表達星期": {
@@ -312,7 +352,6 @@
                         let currentIndex = globalItemIndex;
                         itemDiv.onclick = function() {
                             if (currentIndex > 3 && !isUnlocked) {
-                                // 驗證動態日期密碼 - 移除任何格式或規則提示
                                 let pass = prompt("請輸入密碼：");
                                 if (pass === getTodayPassword()) {
                                     alert("解鎖成功。");
@@ -359,7 +398,6 @@
                 return;
             }
             
-            // 移除任何格式或規則提示
             let pass = prompt("請輸入密碼：");
             if (pass === getTodayPassword()) {
                 alert("驗證成功。");
@@ -382,7 +420,28 @@
             if (show) {
                 sidebar.classList.add('open');
             } else {
+                sidebar.classList.remove('remove');
                 sidebar.classList.remove('open');
+            }
+        }
+
+        // 控制手機版專用設定面板顯示/隱藏
+        function toggleSettingsPanel(explicitState) {
+            const panel = document.getElementById('mobile-settings-panel');
+            const toggleBtn = document.getElementById('settings-toggle');
+            
+            if (explicitState === false) {
+                panel.style.display = 'none';
+                if(toggleBtn) toggleBtn.classList.remove('active');
+                return;
+            }
+            
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                toggleBtn.classList.remove('active');
+            } else {
+                panel.style.display = 'block';
+                toggleBtn.classList.add('active');
             }
         }
 
