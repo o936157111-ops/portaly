@@ -42,7 +42,7 @@
         button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
         
         #menu-toggle { display: none; }
-        #settings-toggle { display: none; } /* 手機版專用設定按鈕 */
+        #settings-toggle { display: none; } 
 
         /* 閱讀區域 */
         #reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; }
@@ -51,8 +51,8 @@
         #content-body { line-height: 1.6; white-space: pre-wrap; font-weight: normal; }
         
         /* 手機版彈出式設定面板 */
-        #mobile-settings-panel { display: none; position: absolute; top: 51px; left: 0; right: 0; background: var(--panel-bg); border-bottom: 1px solid var(--border-color); padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 90; box-sizing: border-box; }
-        .setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        #mobile-settings-panel { display: none; position: absolute; top: 50px; left: 0; right: 0; background: var(--panel-bg); border-bottom: 1px solid var(--border-color); padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 90; box-sizing: border-box; }
+        .setting-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         .setting-row:last-child { margin-bottom: 0; }
         .setting-label { font-size: 13px; font-weight: bold; color: var(--sub-color); }
 
@@ -66,19 +66,21 @@
         .form-grid input, .form-grid textarea { width: 100%; padding: 5px; box-sizing: border-box; border: 1px solid rgba(0, 0, 0, 0.2); border-radius: 4px; background: var(--bg-color); color: var(--text-color); font-family: inherit; font-size: 13px; }
         .form-grid textarea { height: 80px; resize: vertical; }
 
-        /* RWD 行動裝置自適應：徹底解決工具列擠爆災難 */
+        /* RWD 行動裝置自適應：手機版極簡化對齊優化 */
         @media (max-width: 768px) {
             #menu-toggle { display: block; }
-            #settings-toggle { display: block; } /* 顯示手機版設定鈕 */
+            #settings-toggle { display: block; } 
             
-            /* 隱藏電腦版直排按念群 */
+            /* 電腦版的主題按鈕與字型按鈕在手機上都隱藏，放入設定選單中 */
+            #desktop-theme-group { display: none; }
             #desktop-config-group { display: none; } 
             
             #sidebar { position: absolute; left: 0; top: 0; bottom: 0; transform: translateX(-100%); background: var(--bg-color); box-shadow: 2px 0 10px rgba(0,0,0,0.15); }
             #sidebar.open { transform: translateX(0); }
             
-            #toolbar { padding: 0 10px; }
-            #reader-area { padding: 20px 15px; }
+            /* 工具列內距微調，與下方內文橫線取得完美一體感對齊 */
+            #toolbar { padding: 0 15px; height: 50px; border-bottom: 1px solid var(--border-color); }
+            #reader-area { padding: 25px 15px; }
             #content-title { font-size: 20px; }
         }
     </style>
@@ -124,9 +126,11 @@
                 <button id="menu-toggle" onclick="toggleMenu(true); toggleSettingsPanel(false);">☰ 目錄</button>
                 <button id="settings-toggle" onclick="toggleSettingsPanel()">⚙️ 設定</button>
                 
-                <button onclick="setTheme('light')" id="btn-light" class="theme-btn active">明亮</button>
-                <button onclick="setTheme('sepia')" id="btn-sepia" class="theme-btn">羊皮紙</button>
-                <button onclick="setTheme('dark')" id="btn-dark" class="theme-btn">深色</button>
+                <div class="btn-group" id="desktop-theme-group">
+                    <button onclick="setTheme('light')" id="btn-light" class="theme-btn active">明亮</button>
+                    <button onclick="setTheme('sepia')" id="btn-sepia" class="theme-btn">羊皮紙</button>
+                    <button onclick="setTheme('dark')" id="btn-dark" class="theme-btn">深色</button>
+                </div>
             </div>
             
             <div class="btn-group" id="desktop-config-group">
@@ -145,21 +149,29 @@
         
         <div id="mobile-settings-panel">
             <div class="setting-row">
-                <span class="setting-label">文字大小</span>
+                <span class="setting-label">閱讀顏色主題</span>
+                <div class="btn-group">
+                    <button onclick="setTheme('light')" id="m-btn-light" class="m-theme-btn active">明亮</button>
+                    <button onclick="setTheme('sepia')" id="m-btn-sepia" class="m-theme-btn">羊皮紙</button>
+                    <button onclick="setTheme('dark')" id="m-btn-dark" class="m-theme-btn">深色</button>
+                </div>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label">文字大小調整</span>
                 <div class="btn-group">
                     <button onclick="changeFontSize(1)">字型 ＋</button>
                     <button onclick="changeFontSize(-1)">字型 －</button>
                 </div>
             </div>
             <div class="setting-row">
-                <span class="setting-label">段落行距</span>
+                <span class="setting-label">段落行距調整</span>
                 <div class="btn-group">
                     <button onclick="changeLineHeight(0.2)">行距 ＋</button>
                     <button onclick="changeLineHeight(-0.2)">行距 －</button>
                 </div>
             </div>
             <div class="setting-row">
-                <span class="setting-label">閱讀字體</span>
+                <span class="setting-label">套用閱讀字體</span>
                 <div class="btn-group">
                     <button onclick="changeFont('Microsoft JhengHei')">微軟正黑體</button>
                     <button onclick="changeFont('Noto Sans TC')">思源黑體</button>
@@ -200,7 +212,7 @@
                         "向大家介紹你自己（上班族身分）": "A：始めまして○○と申します。\nha.ji.me.ma.shi.te.○○.to.mo.u.shi.ma.su.\n大家好我叫○○。\n\nB：貿易會社で働いています。\nbo.u.e.ki.ga.i.sha.de.ha.ta.ra.i.te.i.ma.su.\n在貿易公司上班。\n\nA：項目ろしくお願いいたします。\nyo.ro.shi.ku.o.ne.ga.i.i.ta.shi.ma.su.\n請多多指教。\n\n【替換單字練習】\n建設會社 (ka.n.se.tsu.ga.i.sha.) 建設公司\n出版社 (shu.ppa.n.sha.) 出版社\n病院 (byo.u.i.n.) 醫院\n旅行社 (ryo.u.ko.u.sha.) 旅行社\n保險會社 (ho.ke.n.ga.i.sha.) 保險公司",
                         "向大家介紹你自己（學生身分）": "A：初めまして。○○と申します。\nha.ji.me.ma.shi.te. / ○.○.to.mo.u.shi.ma.su.\n初次見面，我叫○○。\n\nB：台灣から來ta留學生です。\nta.i.wa.n.ka.ra.ki.ta.ryu.u.ga.ku.se.i.de.su.\n我是來自台灣的學生。\n\nA：項目ろしくお願いいたします。\nyo.ro.shi.ku.o.ne.ga.i.i.ta.shi.ma.su.\n請多多指教。\n\n【替換單字練習】\n大學生 (da.i.ga.ku.se.i.) 大學生\n院生 (i.n.se.i.) 研究生\n高校生 (ko.u.ko.u.se.i.) 高中生",
                         "向新朋友簡單的自我介紹": "A：○○です。よろしくお願いします。\n○○.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我叫○○，請多指教唷。\n\nB：こちらこそよろしくお願いします。\nko.chi.ra.ko.so.yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n請您多多指教。",
-                        "介紹在場的 A 小姐與 B 小姐": "C：こちらはAさんです。こちらはBさんです。\nko.chi.ra.wa.A.sa.n.de.su. / ko.chi.ra.wa.B.sa.n.de.su.\n這位是 A 小姐，這位是 B 小姐。\n\nA：はじめまして。Aです。\nha.ji.me.ma.shi.te. / A.de.su.\n初次見面我是 A，請多指教。\n\nB：Bです。よろしくお願いします。\nB.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我是 B，請多指教。\n\nA：あなたは學生ですか？\na.na.ta.wa.ga.ku.se.i.de.su.ka.\n你是學生嗎？\n\nB：はい。そうです。Aさんは？\nha.i./so.u.de.su./A.sa.n.wa.\n是的，沒錯，那A呢？\n\nA：私も學生です。Bさんの國はどこですか？\nwa.ta.shi.mo.ga.ku.se.i.de.su./B.sa.n.no.ku.ni.wa.do.ko.de.su.ka.\n我也學生，B的國家在哪裡呢？\n\nB：アメリカです。Aさんは？\na.me.ri.ka.de.su./A.sa.n.wa.\n是美國，A呢？\n\nA：台灣です。\nta.i.wa.n.de.su.\n台灣。"
+                        "介紹在場的 A 小姐與 B 小姐": "C：こちらはAさんです。こちらはBさんです。\nko.chi.ra.wa.A.sa.n.de.su. / ko.chi.ra.wa.B.sa.n.de.su.\n這位是 A 小姐，這位是 B 小姐。\n\nA：はじめまして。Aです。\nha.ji.me.ma.shi.te. / A.de.su.\n初次見面我是 A，請多指教。\n\nB：Bです。よろしくお願いします。\nB.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我是 B，請多指教。\n\nA：あなたは學生ですか？\na.na.ta.wa.ga.ku.se.i.de.su.ka.\n你是學生嗎？\n\nB：はい。そうです。Aさんは？\nha.i./so.u.de.su./A.sa.n.wa.\n是的，沒錯，那A呢？\n\nA：私も學生です。Bさんの國はどこですか？\nwa.ta.shi.mo.ga.ku.se.i.de.su./B.sa.n.no.ku.ni.wa.do.ko.de.su.ka.\n我也學生，B的國家在哪裡呢？\n\nB：アメリカです。Aさんは？\na.me.ri.ka.de.su./A.sa.n.wa.\n是美國，A呢？\n\nA::台灣です。\nta.i.wa.n.de.su.\n台灣。"
                     },
                     "小知識": {
                         "さん與親密稱呼的男女判別": "在日本不論男性或是女性都是用「さん」來作禮貌性的稱呼。另外對好友、晚輩或是與對方非常熟時，男生可以用「君」、對女生可以用「ちゃん」，例如：\n\nA：優ちゃん、どこへ行く？\nyu.u.cha.n./do.ko.e.i.ku.\n小優，你要去哪裡呀？\n\nB：佐藤君の店に行く。\nsa.to.u.ku.n.no.mi.se.ni.i.ku.\n我要去佐藤君的店。\n\n「～ちゃん」是日本人常用的稱呼，甚至可以用到寵物身上，例如「ワンちゃん（汪汪）」、「ミーちゃん（喵喵）」。"
@@ -237,7 +249,7 @@
                         "拜訪禮儀說明": "日本人拜訪別人家時常用的語句。"
                     },
                     "會話情境": {
-                        "拜訪別人家時": "A：ごめんください。\ngo.me.n.ku.da.sa.i.\n有人在家嗎？\n\nB：はい、どなたでしょうか？\nha.i./do.na.ta.de.sho.u.ka.\n請問您是哪位？\n\nA：○○です。○○さんはいらっしゃいますでしょうか？\n○.○.de.su./○.○.sa.n.wa.i.ra.ssha.i.ma.su.de.sho.u.ka.\n我是○○，○○在嗎？\n\nB：ええ、おりまう。どうぞお上がり下さい。\ne.e./o.ri.ma.su./do.u.zo.o.a.ga.ri.ku.da.sa.i.\n在，請您上來。\n\nA：では、失禮します。\nde.wa./shi.tsu.re.i.shi.ma.su.\n那我就打擾了。\n\nB：コーヒーを入れてきますね。\nko.o.hi.i.o.i.re.te.ki.ma.su.ne.\n我去泡咖啡唷。\n\nA：どうぞ、お気遣いなく。\ndo.u.zo./o.ki.zu.ka.i.na.ku.\n您不用客氣。\n\n【替換單字練習】\n紅茶 (ko.u.cha.) 紅茶\nウーロン茶 (u.u.ro.n.cha.) 烏龍茶\nココア (ko.ko.a.) 可可\nミルクティー (mi.ru.ku.ti.i.) 奶茶",
+                        "拜訪別人家時": "A::ごめんください。\ngo.me.n.ku.da.sa.i.\n有人在家嗎？\n\nB：はい、どなたでしょうか？\nha.i./do.na.ta.de.sho.u.ka.\n請問您是哪位？\n\nA：○○です。○○さんはいらっしゃいますでしょうか？\n○.○.de.su./○.○.sa.n.wa.i.ra.ssha.i.ma.su.de.sho.u.ka.\n我是○○，○○在嗎？\n\nB：ええ、おりまう。どうぞお上がり下さい。\ne.e./o.ri.ma.su./do.u.zo.o.a.ga.ri.ku.da.sa.i.\n在，請您上來。\n\nA：では、失禮します。\nde.wa./shi.tsu.re.i.shi.ma.su.\n那我就打擾了。\n\nB：コーヒーを入れてきますね。\nko.o.hi.i.o.i.re.te.ki.ma.su.ne.\n我去泡咖啡唷。\n\nA：どうぞ、お気遣いなく。\ndo.u.zo./o.ki.zu.ka.i.na.ku.\n您不用客氣。\n\n【替換單字練習】\n紅茶 (ko.u.cha.) 紅茶\nウーロン茶 (u.u.ro.n.cha.) 烏龍茶\nココア (ko.ko.a.) 可可\nミルクティー (mi.ru.ku.ti.i.) 奶茶",
                         "拜訪完後準備要離開時": "A：だいぶ長くお邪魔しましたから、そろそろ失禮します。\nda.i.bu.na.ga.ku.o.ja.ma.shi.ma.shi.ta.ka.ra.so.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n因為已經打擾您很久了，我也該準備回家了。\n\nB：まだ早いでしょう。昼ご飯をごいっしょにいかがですか？\nma.da.ha.ya.i.de.sho.u.hi.ru.go.ha.n.o.go.i.ssho.ni.i.ka.ga.de.su.ka.\n還很早吧。要不要一起吃個中飯呢？\n\nA：気持ちは有難いですが、これから用があるので。\nki.mo.chi.wa.a.ri.ga.ta.i.de.su.ga.ko.re.ka.ra.yo.u.ga.a.ru.no.de.\n很感謝您的心意，但我等等還有事。\n\nB：そうですか？では、またお暇なときに遊びにいらっしゃいね。\nso.u.de.su.ka?/de.wa./ma.ta.o.hi.ma.na.to.ki.ni.a.so.bi.ni.i.ra.ssha.i.ne.\n這樣呀，那等您有空的時候再來玩唷。\n\nA：はい、お邪魔しました。では失禮します。\nha.i./o.ja.ma.shi.ma.shi.ta./de.wa.shi.tsu.re.i.shi.ma.su.\n好的，打擾您了，再見。",
                         "去好朋友家玩與表達速離": "A::こんにちは。\nko.n.ni.chi.wa.\n有人在家嗎？\n\nB：やあ、奈奈！さあ、上がって。\nya.a./na.na./sa.a./a.ga.tte.\n啊，是奈奈呀！進來呀。\n\nA：お邪魔します。これ、つまらないものですが、どうぞ。\no.ja.ma.shi.ma.su./ko.re/tsu.ma.ra.na.i.mo.no.de.su.ga./do.u.zo.\n打擾了。這個是一點小意思，請收下。\n\nB：あら、有難う。そんなに気を使わなくてもいい道具なのに。\na.ra/a.ri.ga.to.u./so.n.na.ni.ki.o.tsu.ka.wa.na.ku.te.mo.i.i.no.ni.\n哎呀，謝謝！你不用這麼客氣啦。\n\nA：あ、もう五時だ！そろそろ帰らなくちゃ。\na./mo.u.go.ji.da!/so.ro.so.ro.ka.e.ra.na.ku.cha.\n啊，已經五點了！我差不多該回去了。\n\nB：so.u?/ja.a./e.ki.ma.de.o.ku.ru.yo.\n是嗎？那我送你到車站吧。\n\nA：ううん、お構いなく。\nu.u.n./o.ka.ma.i.na.ku.\n不用不用，您別客氣了。"
                     }
@@ -282,7 +294,7 @@
                 },
                 "表達日期": {
                     "會話情境": {
-                        "與同事確認開會時間": "A::会議はいつですか？\nka.i.gi.wa.i.tsu.de.su.ka.\n什麼時候開會呀？\n\nB：四月十四日です。\nshi.ga.tsu.ju.u.yo.kka.de.su.\n四月十四號。\n\n【替換單字練習（月份）】\n一月 (i.chi.ga.tsu) / 二月 (ni.ga.tsu) / 三月 (sa.n.ga.tsu) / 四月 (shi.ga.tsu) / 五月 (go.ga.tsu) / 六月 (ro.ku.ga.tsu) / 七月 (shichi.ga.tsu) / 八月 (hachi.ga.tsu) / 九月 (ku.ga.tsu) / 十月 (ju.u.ga.tsu) / 十一月 (ju.u.i.chi.ga.tsu) / 十二月 (ju.u.ni.ga.tsu)\n\n【替換單字練習（1~20號特殊日期稱呼）】\n一日 (tsu.i.ta.chi) 一號\n二日 (fu.tsu.ka) 二號\n三日 (mi.kka) 三號\n四日 (yo.kka) 四號\n五日 (i.tsu.ka) 五號\n六日 (mu.i.ka) 六號\n七日 (na.no.ka) 七號\n八日 (yo.o.ka) 八號\n九日 (ko.ko.no.ka) 九號\n十日 (to.o.ka) 十號\n十四日 (ju.u.yo.kka) 十四號\n二十日 (ha.tsu.ka) 二十號"
+                        "與同事確認開會時間": "A::会議はいつですか？\nka.i.gi.wa.i.tsu.de.su.ka.\n什麼時候開會呀？\n\nB：四月十四日です。\nshi.ga.tsu.ju.u.yo.kka.de.su.\n四月十四號。\n\n【替換單字練習（月份）】\n一月 (i.chi.ga.tsu) / 二月 (ni.ga.tsu) / 三月 (sa.n.ga.tsu) / 四月 (shi.ga.tsu) / 五月 (go.ga.tsu) / 六月 (ro.ku.ga.tsu) / 七月 (shichi.ga.tsu) / 八月 (hachi.ga.tsu) / 九月 (ku.ga.tsu) / 十月 (ju.u.ga.tsu) / 十一月 (ju.u.i.chi.ga.tsu) / 十二月 (ju.u.ni.ga.tsu)\n\n【替換單字練習（1~20號特殊日期稱呼）】\n一日 (tsu.i.ta.chi) 一號\n二日 (fu.tsu.ka) 二號\n三日 (mi.kka) 三號\n四日 (yo.kka) 四號\n五日 (i.tsu.ka) 五號\n六日 (mu.i.ka) 六號\n七日 (na.no.ka) 七號\n八日 (yo.o.ka) 八號\n九日 (ko.ko.no.ka) 九號\n十日 (to.o.ka) 十號\n十四日 (ju.u.yo.kka) 十開號\n二十日 (ha.tsu.ka) 二十號"
                     }
                 },
                 "表達星期": {
@@ -383,7 +395,6 @@
             document.getElementById('content-body').innerText = database.volumes[vol][ch][item];
         }
 
-        // 點選書名標題觸發驗證
         function verifyAdminUnlock() {
             if (isUnlocked) {
                 let changeName = confirm("確認要修改書籍名稱嗎？");
@@ -420,7 +431,6 @@
             if (show) {
                 sidebar.classList.add('open');
             } else {
-                sidebar.classList.remove('remove');
                 sidebar.classList.remove('open');
             }
         }
@@ -478,8 +488,17 @@
 
         function setTheme(theme) {
             document.body.className = 'theme-' + theme;
-            document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + theme).classList.add('active');
+            
+            // 同步更新電腦版按鈕高亮
+            document.querySelectorAll('#desktop-theme-group .theme-btn').forEach(b => b.classList.remove('active'));
+            const dBtn = document.getElementById('btn-' + theme);
+            if (dBtn) dBtn.classList.add('active');
+            
+            // 同步更新手機版按鈕高亮
+            document.querySelectorAll('#mobile-settings-panel .m-theme-btn').forEach(b => b.classList.remove('active'));
+            const mBtn = document.getElementById('m-btn-' + theme);
+            if (mBtn) mBtn.classList.add('active');
+            
             updateStyle();
         }
 
