@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-TW"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -92,14 +91,14 @@
             <div id="book-title" onclick="verifyAdminUnlock()">📖 日本人天天會用的日語短句</div>
             <button id="close-menu" onclick="toggleMenu(false)" style="display: none;">✕</button>
         </div>
-        <div id="tree-area"></div>
+        <div id="tree-area"><div class="tree-vol">初次見面的自我介紹</div><div class="tree-ch">說明</div><div class="tree-item"><span>自我介紹小叮嚀</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>兩人剛要認識</span></div><div class="tree-item"><span>向大家介紹你自己（上班族身分）</span></div><div class="tree-item"><span>向大家介紹你自己（學生身分）</span></div><div class="tree-item"><span>向新朋友簡單的自我介紹</span></div><div class="tree-item"><span>介紹在場的 A 小姐與 B 小姐</span></div><div class="tree-ch">小知識</div><div class="tree-item"><span>さん與親密稱呼的男女判別</span></div><div class="tree-vol">打招呼的實用短句</div><div class="tree-ch">說明</div><div class="tree-item"><span>日常招呼語說明</span></div><div class="tree-ch">常用短句</div><div class="tree-item"><span>四大基本日常問候</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>詢問對方要去哪裡</span></div><div class="tree-vol">問候時用的寒暄語句</div><div class="tree-ch">會話情境</div><div class="tree-item"><span>好久不見的寒暄</span></div><div class="tree-item"><span>離開時問候第三人</span></div><div class="tree-vol">冷場時可用的話題</div><div class="tree-ch">會話情境</div><div class="tree-item"><span>與不熟的朋友聊天</span></div><div class="tree-item"><span>遇見微妙關係的人（用天氣當話題）</span></div><div class="tree-ch">小知識</div><div class="tree-item"><span>大丈夫的由來</span></div><div class="tree-vol">拜訪友人家時的常用句</div><div class="tree-ch">說明</div><div class="tree-item"><span>拜訪禮儀說明</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>拜訪別人家時</span></div><div class="tree-item"><span>拜訪完後準備要離開時</span></div><div class="tree-item"><span>去好朋友家玩與表達速離</span></div><div class="tree-vol">形容天氣的常用句</div><div class="tree-ch">說明</div><div class="tree-item"><span>天氣單字短句說明</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>轉述天氣報導</span></div><div class="tree-item"><span>敘述明天天氣</span></div><div class="tree-vol">表達身體不適症狀</div><div class="tree-ch">會話情境</div><div class="tree-item"><span>詢問與表達感冒症狀</span></div><div class="tree-vol">PART 2 每日會發生的事：校園職場生活實用短句</div><div class="tree-ch">提出邀約</div><div class="tree-item"><span>邀約朋友出去玩</span></div><div class="tree-ch">答應邀約</div><div class="tree-item"><span>答應同學或是好友的邀約</span></div><div class="tree-item"><span>答應同事或是長輩的邀約</span></div><div class="tree-item"><span>邀約友人看電影或來家裡玩</span></div><div class="tree-ch">謝絕邀約</div><div class="tree-item"><span>因不便或有先約而婉拒</span></div><div class="tree-ch">小知識</div><div class="tree-item"><span>四六時中的涵義</span></div><div class="tree-vol">表達時間</div><div class="tree-ch">說明</div><div class="tree-item"><span>時間問句說明</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>向朋友詢問時間與搭巴士</span></div><div class="tree-vol">表達日期</div><div class="tree-ch">會話情境</div><div class="tree-item"><span>與同事確認開會時間</span></div><div class="tree-vol">表達星期</div><div class="tree-ch">說明</div><div class="tree-item"><span>星期問句說明</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>詢問垃圾回收日與星期</span></div><div class="tree-item"><span>想請朋友陪伴出去辦事</span></div><div class="tree-item"><span>剛搬新家向鄰居詢問回收垃圾的日子</span></div><div class="tree-item"><span>與朋友確定星期幾</span></div><div class="tree-vol">提出疑問</div><div class="tree-ch">日語表達疑問或不懂？</div><div class="tree-item"><span>常用短句</span></div><div class="tree-ch">日語表達疑問或不懂?</div><div class="tree-item"><span>常用短句</span></div><div class="tree-ch">會話情境</div><div class="tree-item"><span>小孩向媽媽講不想去學校的原因</span></div><div class="tree-item"><span>向家人抱怨上司</span></div><div class="tree-item"><span>看到日本特有的東西時</span></div><div class="tree-item active"><span>讀日本書時遇到不懂的地方</span></div></div>
         
-        <div id="add-container">
+        <div id="add-container" style="display: block;">
             <div id="add-header" onclick="toggleCollapsible()">
                 <span>➕ 新增/管理內容編輯面板</span>
                 <span id="fold-icon">▼</span>
             </div>
-            <div id="add-panel">
+            <div id="add-panel" style="display: none;">
                 <div class="form-grid">
                     <label>分部名稱</label><input type="text" id="in-vol" placeholder="例：初次見面的自我介紹">
                     <label>章節名稱</label><input type="text" id="in-ch" placeholder="例：會話情境 或 小知識">
@@ -143,11 +142,11 @@
             </div>
             
             <div>
-                <button id="btn-html-export" onclick="exportHTML()" style="background: var(--accent-color); color: #fff; font-weight: bold; display: none;">💾 匯出 HTML</button>
+                <button id="btn-html-export" onclick="exportHTML()" style="background: var(--accent-color); color: rgb(255, 255, 255); font-weight: bold; display: block;">💾 匯出 HTML</button>
             </div>
         </div>
         
-        <div id="mobile-settings-panel">
+        <div id="mobile-settings-panel" style="display: none;">
             <div class="setting-row">
                 <span class="setting-label">閱讀顏色主題</span>
                 <div class="btn-group">
@@ -180,9 +179,9 @@
         </div>
         
         <div id="reader-area" onclick="toggleMenu(false); toggleSettingsPanel(false);">
-            <div id="reader-main-area">
-                <div id="content-title">請選擇左側章節開始閱讀</div>
-                <div id="content-body">歡迎使用日語短句電子書閱讀器。</div>
+            <div id="reader-main-area" style="font-size: 18px; font-family: &quot;Microsoft JhengHei&quot;;">
+                <div id="content-title">讀日本書時遇到不懂的地方</div>
+                <div id="content-body" style="line-height: 1;">A：この辺は難しいです。<br>ko.no.he.n.wa.mu.zu.ka.shi.i.de.su.<br>這部分好難唷。<br><br>B：ちょっと見せてください。<br>cho.tto.mi.se.te.ku.da.sa.i.<br>請讓我看看。<br><br>A：この辺の意味、よくわからないので、<br>ko.no.he.n.no.i.mi./yo.ku.wa.ka.ra.na.i.no.de.<br>這邊的意思我不太了解，<br>説明してもらってもいいですか？<br>se.tsu.me.i.shi.te.mo.ra.tte.mo.i.i.de.su.ka.<br>你可以跟我說明一下嗎？<br><br>小知識<br>在日本的文化裡是非常重視長幼有序的觀念，例如遇到長輩要用敬語，就算是以只差 1～2 歲也是有上下輩份的區分，常看到日本綜藝節目上長輩演員打晚輩演員的頭或是開他們的玩笑，晚輩也只能笑臉迎對，在日本與長輩說話，不使用敬語會被視為很沒有教養的人，如同韓文一樣重視敬語的使用方式，學習過程可能會覺得很麻煩，但這也是日本文化之美的地方。</div>
             </div>
         </div>
     </div>
@@ -201,112 +200,129 @@
 
         // 核心資料庫
         let database = {
-            "bookTitle": "日本人天天會用的日語短句",
-            "volumes": {
-                "初次見面的自我介紹": {
-                    "說明": {
-                        "自我介紹小叮嚀": "在跟人家介紹自己的時候，請不要忘記拿出\"元氣\"以及面帶微笑的說出以下句子，會增加對方對你的好感度唷！"
-                    },
-                    "會話情境": {
-                        "兩人剛要認識": "A：初めまして○○です。\nha.ji.me.ma.shi.te.○○.de.su.\n初次見面我是○○。\n\nよろしくお願いします。\nyo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n請多多指教。\n\nB：こちらこそよろしくお願いします。\nko.chi.ra.ko.so.yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我才請您多多指教。\n\nA：どこから來ましたか？\ndo.ko.ka.ra.ki.ma.shi.ta.ka.\n您從哪裡來呀？\n\nB：台灣から來ました。\nta.i.wa.n.ka.ra.ki.ma.shi.ta.\n我來自台灣。\n\nA：台灣ですか？私は台灣が大好きです。\nta.i.wa.n.de.su.ka. / wa.ta.shi.wa.ta.i.wa.n.ga.da.i.su.ki.de.su\n台灣呀，我最喜歡台灣了。",
-                        "向大家介紹你自己（上班族身分）": "A：始めまして○○と申します。\nha.ji.me.ma.shi.te.○○.to.mo.u.shi.ma.su.\n大家好我叫○○。\n\nB：貿易會社で働いています。\nbo.u.e.ki.ga.i.sha.de.ha.ta.ra.i.te.i.ma.su.\n在貿易公司上班。\n\nA：項目ろしくお願いいたします。\nyo.ro.shi.ku.o.ne.ga.i.i.ta.shi.ma.su.\n請多多指教。\n\n【替換單字練習】\n建設會社 (ka.n.se.tsu.ga.i.sha.) 建設公司\n出版社 (shu.ppa.n.sha.) 出版社\n病院 (byo.u.i.n.) 醫院\n旅行社 (ryo.u.ko.u.sha.) 旅行社\n保險會社 (ho.ke.n.ga.i.sha.) 保險公司",
-                        "向大家介紹你自己（學生身分）": "A：初めまして。○○と申します。\nha.ji.me.ma.shi.te. / ○.○.to.mo.u.shi.ma.su.\n初次見面，我叫○○。\n\nB：台灣から來ta留學生です。\nta.i.wa.n.ka.ra.ki.ta.ryu.u.ga.ku.se.i.de.su.\n我是來自台灣的學生。\n\nA：項目ろしくお願いいたします。\nyo.ro.shi.ku.o.ne.ga.i.i.ta.shi.ma.su.\n請多多指教。\n\n【替換單字練習】\n大學生 (da.i.ga.ku.se.i.) 大學生\n院生 (i.n.se.i.) 研究生\n高校生 (ko.u.ko.u.se.i.) 高中生",
-                        "向新朋友簡單的自我介紹": "A：○○です。よろしくお願いします。\n○○.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我叫○○，請多指教唷。\n\nB：こちらこそよろしくお願いします。\nko.chi.ra.ko.so.yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n請您多多指教。",
-                        "介紹在場的 A 小姐與 B 小姐": "C：こちらはAさんです。こちらはBさんです。\nko.chi.ra.wa.A.sa.n.de.su. / ko.chi.ra.wa.B.sa.n.de.su.\n這位是 A 小姐，這位是 B 小姐。\n\nA：はじめまして。Aです。\nha.ji.me.ma.shi.te. / A.de.su.\n初次見面我是 A，請多指教。\n\nB：Bです。よろしくお願いします。\nB.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我是 B，請多指教。\n\nA：あなたは學生ですか？\na.na.ta.wa.ga.ku.se.i.de.su.ka.\n你是學生嗎？\n\nB：はい。そうです。Aさんは？\nha.i./so.u.de.su./A.sa.n.wa.\n是的，沒錯，那A呢？\n\nA：私も學生です。Bさんの國はどこですか？\nwa.ta.shi.mo.ga.ku.se.i.de.su./B.sa.n.no.ku.ni.wa.do.ko.de.su.ka.\n我也學生，B的國家在哪裡呢？\n\nB：アメリカです。Aさんは？\na.me.ri.ka.de.su./A.sa.n.wa.\n是美國，A呢？\n\nA::台灣です。\nta.i.wa.n.de.su.\n台灣。"
-                    },
-                    "小知識": {
-                        "さん與親密稱呼的男女判別": "在日本不論男性或是女性都是用「さん」來作禮貌性的稱呼。另外對好友、晚輩或是與對方非常熟時，男生可以用「君」、對女生可以用「ちゃん」，例如：\n\nA：優ちゃん、どこへ行く？\nyu.u.cha.n./do.ko.e.i.ku.\n小優，你要去哪裡呀？\n\nB：佐藤君の店に行く。\nsa.to.u.ku.n.no.mi.se.ni.i.ku.\n我要去佐藤君的店。\n\n「～ちゃん」是日本人常用的稱呼，甚至可以用到寵物身上，例如「ワンちゃん（汪汪）」、「ミーちゃん（喵喵）」。"
-                    }
-                },
-                "打招呼的實用短句": {
-                    "說明": {
-                        "日常招呼語說明": "以下的招呼語，是在日本日常生活中常出現的語句。"
-                    },
-                    "常用短句": {
-                        "四大基本日常問候": "例：おはようございます。(o.ha.yo.u.go.za.i.ma.su.) 早安。\n例：こんにちは。(ko.n.ni.chi.wa.) （白天時）您好。\n例：こんばんは。(ko.n.ba.n.wa.) （晚上時）您好。\n例：お休みなさい。(o.ya.su.mi.na.sa.i.) 晚安。"
-                    },
-                    "會話情境": {
-                        "詢問對方要去哪裡": "A：こんにちは。\nko.n.ni.chi.wa.\n您好。\n\nB：こんにちは。いい天氣ですね。\nko.n.ni.chi.wa./i.i.te.n.ki.de.su.ne.\n您好，天氣真好啊。\n\nA：そう記ね。お出かけですか？\nso.u.de.su.ne./o.de.ka.ke.de.su.ka.\n對啊。您要出門嗎？\n\nB：ええ、ちょっと買い物に。\ne.e./cho.tto.ka.i.mo.no.ni.\n是呀，我去買點東西。\n\n【替換單字練習】\n學校 (ga.kko.u.) 學校\n病院 (byo.u.i.n.) 醫院\n圖書館 (to.sho.ka.n.) 圖書館\n公園 (ko.u.e.n.) 公園\nコンビニ (ko.n.bi.ni)便利商店\n駅 (e.ki) 車站"
-                    }
-                },
-                "問候時用的寒暄語句": {
-                    "會話情境": {
-                        "好久不見的寒暄": "A：お久しぶりですね。お元気ですか？\no.hi.sa.shi.bu.ri.de.su.ne./o.ge.n.ki.de.su.ka.\n好久不見耶，您過得好嗎？\n\nB：おかげさまで元気です。○○さんは？\no.ka.ge.sa.ma.de.ge.n.ki.de.su./○○.sa.n.wa.\n託您的福，我很好。那○○先生/小姐呢？\n\nA：ええ、私も元気です。\ne.e./wa.ta.shi.mo.ge.n.ki.de.su.\n嗯，我也很好。\n\n【較口語、熟人用法】\nA：具しぶり！元気？ (hi.sa.shi.bu.ri! ge.n.ki?)\n好久不見！過得怎樣？\n\nB：うん、元気だよ。 (u.n./ge.n.ki.da.yo.)\n嗯，很好唷。",
-                        "離開時問候第三人": "A：そろそろ失禮します。\nso.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n我也差不多該告辭了。\n\nB：そうですか。奧様によろしくお伝えください。\nso.u.de.su.ka./o.ku.sa.ma.ni.yo.ro.shi.ku.o.tsu.ta.e.ku.da.sa.i.\n這樣啊。請代我向夫人問好。\n\nA：有難うございます。では、失禮します。\na.ri.ga.to.u.go.za.i.ma.su./de.wa/shi.tsu.re.i.shi.ma.su.\n謝謝，那我告辭了。\n\n【替換單字練習（代稱第三人）】\nご主人 (go.shu.ji.n.) 您先生\nお父さん (o.to.o.sa.n.) 您父親\nお母さん (o.ku.sa.n.) 您母親\n皆さん (mi.na.sa.n.) 大家"
-                    }
-                },
-                "冷場時可用的話題": {
-                    "會話情境": {
-                        "與不熟的朋友聊天": "A：最近、何をやっているの？\nsa.i.ki.n./na.ni.o.ya.tte.i.ru.no.\n最近都在做什麼呀？\n\nB：別に何もやっていないよ。\nbe.tsu.ni.na.ni.mo.ya.tte.i.na.i.yo.\n也沒特別做什麼啦。\n\nA：......（尷尬中）\nところで、奈奈も元気？\nto.ko.ro.de./na.na.mo.ge.n.ki.\n對了，奈奈也過得好嗎？",
-                        "遇見微妙關係的人（用天氣當話題）": "A：先日はどうom。\nse.n.ji.tsu.wa.do.u.mo.\n前些日子真是謝謝您。\n\nB：いいえ、こちらこそどう修。\ni.i.e./ko.chi.ra.ko.so.do.u.mo.\n不是不是，是我才該跟您道謝。\n\nA：......（尷尬中）\n今日はいい天氣ですね。\nkyo.u.wa.i.i.te.n.ki.de.su.ne.\n今天天氣真好耶。\n\n【替換單字練習】\n寒い (sa.mu.i.) 好冷\n風が強い (ka.ze.ga.tsu.yo.i) 風好大\n雨 (a.me.) 雨天"
-                    },
-                    "小知識": {
-                        "大丈夫的由來": "應該大家都很常看到「大丈夫 (だいじょうぶ)」這個日文單字，其單字來源於中國。將單字分開解析的話「丈」在日本是代表長度而「1丈=3.3米」，古時候成年男子的身高平均為 1.7 米，言下之意隱喻為比一般男生還強壯的意思；「夫」則代表男性。流傳到日本後，演變成頂天立地的男子漢，非常強壯、堅固、不會出差錯等正向涵義。\n\n例句：\nA：あなた、大丈夫ですか？ 你不要緊吧？\nB：大丈夫です。 我沒事，不要緊的。"
-                    }
-                },
-                "拜訪友人家時的常用句": {
-                    "說明": {
-                        "拜訪禮儀說明": "日本人拜訪別人家時常用的語句。"
-                    },
-                    "會話情境": {
-                        "拜訪別人家時": "A::ごめんください。\ngo.me.n.ku.da.sa.i.\n有人在家嗎？\n\nB：はい、どなたでしょうか？\nha.i./do.na.ta.de.sho.u.ka.\n請問您是哪位？\n\nA：○○です。○○さんはいらっしゃいますでしょうか？\n○.○.de.su./○.○.sa.n.wa.i.ra.ssha.i.ma.su.de.sho.u.ka.\n我是○○，○○在嗎？\n\nB：ええ、おりまう。どうぞお上がり下さい。\ne.e./o.ri.ma.su./do.u.zo.o.a.ga.ri.ku.da.sa.i.\n在，請您上來。\n\nA：では、失禮します。\nde.wa./shi.tsu.re.i.shi.ma.su.\n那我就打擾了。\n\nB：コーヒーを入れてきますね。\nko.o.hi.i.o.i.re.te.ki.ma.su.ne.\n我去泡咖啡唷。\n\nA：どうぞ、お気遣いなく。\ndo.u.zo./o.ki.zu.ka.i.na.ku.\n您不用客氣。\n\n【替換單字練習】\n紅茶 (ko.u.cha.) 紅茶\nウーロン茶 (u.u.ro.n.cha.) 烏龍茶\nココア (ko.ko.a.) 可可\nミルクティー (mi.ru.ku.ti.i.) 奶茶",
-                        "拜訪完後準備要離開時": "A：だいぶ長くお邪魔しましたから、そろそろ失禮します。\nda.i.bu.na.ga.ku.o.ja.ma.shi.ma.shi.ta.ka.ra.so.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n因為已經打擾您很久了，我也該準備回家了。\n\nB：まだ早いでしょう。昼ご飯をごいっしょにいかがですか？\nma.da.ha.ya.i.de.sho.u.hi.ru.go.ha.n.o.go.i.ssho.ni.i.ka.ga.de.su.ka.\n還很早吧。要不要一起吃個中飯呢？\n\nA：気持ちは有難いですが、これから用があるので。\nki.mo.chi.wa.a.ri.ga.ta.i.de.su.ga.ko.re.ka.ra.yo.u.ga.a.ru.no.de.\n很感謝您的心意，但我等等還有事。\n\nB：そうですか？では、またお暇なときに遊びにいらっしゃいね。\nso.u.de.su.ka?/de.wa./ma.ta.o.hi.ma.na.to.ki.ni.a.so.bi.ni.i.ra.ssha.i.ne.\n這樣呀，那等您有空的時候再來玩唷。\n\nA：はい、お邪魔しました。では失禮します。\nha.i./o.ja.ma.shi.ma.shi.ta./de.wa.shi.tsu.re.i.shi.ma.su.\n好的，打擾您了，再見。",
-                        "去好朋友家玩與表達速離": "A::こんにちは。\nko.n.ni.chi.wa.\n有人在家嗎？\n\nB：やあ、奈奈！さあ、上がって。\nya.a./na.na./sa.a./a.ga.tte.\n啊，是奈奈呀！進來呀。\n\nA：お邪魔します。これ、つまらないものですが、どうぞ。\no.ja.ma.shi.ma.su./ko.re/tsu.ma.ra.na.i.mo.no.de.su.ga./do.u.zo.\n打擾了。這個是一點小意思，請收下。\n\nB：あら、有難う。そんなに気を使わなくてもいい道具なのに。\na.ra/a.ri.ga.to.u./so.n.na.ni.ki.o.tsu.ka.wa.na.ku.te.mo.i.i.no.ni.\n哎呀，謝謝！你不用這麼客氣啦。\n\nA：あ、もう五時だ！そろそろ帰らなくちゃ。\na./mo.u.go.ji.da!/so.ro.so.ro.ka.e.ra.na.ku.cha.\n啊，已經五點了！我差不多該回去了。\n\nB：so.u?/ja.a./e.ki.ma.de.o.ku.ru.yo.\n是嗎？那我送你到車站吧。\n\nA：ううん、お構いなく。\nu.u.n./o.ka.ma.i.na.ku.\n不用不用，您別客氣了。"
-                    }
-                },
-                "形容天氣的常用句": {
-                    "說明": {
-                        "天氣單字短句說明": "描述每日天氣情況時，常用的單字短句。"
-                    },
-                    "會話情境": {
-                        "轉述天氣報導": "A：天氣予報によると、午後から雨が降るらしいですよ。\nte.n.ki.yo.ho.u.ni.yo.ru.to./go.go.ka.ra.a.me.ga.fu.ru.ra.shi.i.de.su.yo.\n根據天氣預報，聽說下午開始會下雨唷。\n\nB：そうですか？あんなにいい天氣なのに。\nso.u.de.su.ka?/a.n.na.ni.i.ki.te.n.ki.na.no.ni.\n是嗎？明明現在天氣還很好耶。\n\nA：念のために、傘を持っていったほうがいいですよ。\nne.n.no.ta.me.ni./ka.sa.o.mo.tte.i.tta.ho.u.ga.i.i.de.su.yo.\n為了保險起見，還是帶把傘出門比較好唷。\n\nB：そうですね。有難うございます。\nso.u.de.su.ne./a.ri.ga.to.u.go.za.i.ma.su.\n說得也是，謝謝你。",
-                        "敘述明天天氣": "A::明日の天氣はどうでしょうか？\na.shi.ta.no.te.n.ki.wa.do.u.de.sho.u.ka.\n明天的天氣如何呢？\n\nB：明日の天氣はいいらしいですよ。\na.shi.ta.no.te.n.ki.wa.i.i.ra.shi.i.de.su.yo.\n明天的天氣好像不錯。\n\n【替換單字練習】\n悪い (wa.ru.i) 不好\n雨 (a.me) 下雨\n曇り (ku.mo.ri) 陰天\n雪 (yu.ki) 下雪\n台風 (ta.i.fu.u) 颱風"
-                    }
-                },
-                "表達身體不適症狀": {
-                    "會話情境": {
-                        "詢問與表達感冒症狀": "A：どうしましたか？顔色が悪いですよ。\ndo.u.shi.ma.shi.ta.ka?/ka.o.i.ro.ga.wa.ru.i.de.su.yo.\n你怎麼啦？臉色很難看耶。\n\nB：ちょっと風邪気味なんです。頭が痛くて......\ncho.tto.ka.ze.gi.mi.na.n.de.su./a.ta.ma.ga.i.ta.ku.te...\n好像有點感冒，頭好痛......\n\nA：那是大變ですね。早く病院へ行ったほうがいいですよ。\nso.re.wa.ta.i.he.n.de.su.ne./ha.ya.ku.byo.u.i.n.e.i.tta.ho.u.ga.i.i.de.su.yo.\n那真是糟糕，最好快點去醫院看醫生唷。\n\nB：ええ、そうします。\ne.e./so.u.shi.ma.su.\n嗯，我會的。\n\n【替換單字練習】\nお腹が痛い (o.na.ka.ga.i.ta.i) 肚子痛\n歯が痛い (ha.ga.i.ta.i) 牙齒痛\n喉が痛い (no.do.ga.i.ta.i) 喉嚨痛\n熱がある (ne.tsu.ga.a.ru) 發燒\n咳が出る (se.ki.ga.de.ru) 咳嗽"
-                    }
-                },
-                "PART 2 每日會發生的事：校園職場生活實用短句": {
-                    "提出邀約": {
-                        "邀約朋友出去玩": "A::今週の土曜日に、一緒に遊びに行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.a.so.bi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起出去玩呀？\n\nB：いいですね。開こへ行きますか？\ni.i.de.su.ne./do.ko.e.i.ku.ma.su.ka.\n好呀！要去哪裡呢？\n\nA：淡水へ行きましょう。\nta.n.su.i.e.i.ki.ma.sho.u.\n我們去淡水吧！"
-                    },
-                    "答應邀約": {
-                        "答應同學或是好友的邀約": "A：今週の土曜日、一緒に映画を見に行かない？\nko.n.shu.u.no.do.yo.u.bi./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n這星期六要不要一起去看電影？\n\nB：いいね！行こう。 (i.i.ne! / i.ko.u.)\n好呀！走吧。",
-                        "答應同事或是長輩的邀約": "A::今週の土曜日に、一緒に映画を見に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.e.i.ga.o.mi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去看電影呢？\n\nB：ええ、喜んで。 (e.e./yo.ro.ko.n.de.)\n嗯，我很樂意。",
-                        "邀約友人看電影或來家裡玩": "A：明日、一緒に映画でも見に行きませんか？\na.shi.ta./i.ssho.ni.e.i.ga.de.mo.mi.ni.i.ki.ma.se.n.ka.\n明天要不要一起去看個電影之類的呀？\n\nB：いいですね。行きましょう。\ni.i.de.su.ne./i.ki.ma.sho.u.\n好呀，走吧！\n\n【邀約友人來家裡】\nA::今週の土曜日に、私の家に来ませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./wa.ta.shi.no.i.e.ni.ki.ma.se.n.ka.\n這星期六要不要來我家玩呀？\n\nB：いいですか？じゃあ、お邪魔します。\ni.i.de.su.ka?/ja.a./o.ja.ma.shi.ma.su.\n方便嗎？那打擾囉！"
-                    },
-                    "謝絕邀約": {
-                        "因不便或有先約而婉拒": "A：今週の土曜日に、一緒に買い物に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去買東西呀？\n\nB：土曜日はちょっと都合が悪いんです。\ndo.yo.u.bi.wa.cho.tto.tsu.go.u.ga.wa.ru.i.n.de.s.\n星期六我剛好有點不方便耶。\n\n【被好友邀約看電影】\nA：明日、一緒に映画を見に行かない？\na.shi.ta./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n明天要不要一起去看電影？\n\nB：明日はちょっと用事があるんだ。ごめんね。\na.shi.ta.wa.cho.tto.yo.u.ji.ga.a.ru.n.da./go.me.n.ne.\n明天我剛好有事情耶，抱歉啦。\n\nA::so.u.na.n.da./za.n.ne.n./ja.a./ma.ta.ko.n.do.ne.\n這樣呀，真可惜。那就下次囉。\n\n【被朋友邀約去買東西】\nA：一緒に買い物に行きませんか？\ni.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n要不要一起去買東西呀？\n\nB：行きたいんですけど、ちょっと先約があるんですが。\ni.ki.ta.i.n.de.su.ke.do./cho.tto.se.n.ya.ku.ga.a.ru.n.de.su.ga.\n我是很想去，但是我已經有約了耶。\n\nA：そうですか、残念ですね。では、またにしましょうか？\nso.u.de.su.ca,/za.n.ne.n.de.su.ne./de.wa/ma.ta.ni.shi.ma.sho.u.ka.\n是唷，真可惜。那下次去吧。\n\nB：ぜひまた誘ってください。\nze.hi.ma.ta.sa.so.tte.ku.da.sa.i.\n請你一定要再約我。"
-                    },
-                    "小知識": {
-                        "四六時中的涵義": "日語單字中的「四六時中（shi.ro.ku.ji.chu.u.）」是指 24 小時全天的意思。江戶時期是用「二六時中（12時辰）」代表全天，2×6=12。配合現在的 24 小時，便演變成「四六時中」，4×6=24。"
-                    }
-                },
-                "表達時間": {
-                    "說明": {
-                        "時間問句說明": "時間方面的問句是日常生活中常用的句型，請試著用以下時間單字，代入各句型中練習。"
-                    },
-                    "會話情境": {
-                        "向朋友詢問時間與搭巴士": "A：今何時ですか？\ni.ma.na.n.ji.de.su.ka.\n現在是幾點？\n\nB：九時十分です。\nku.ji.ju.ppu.n.de.su.\n九點十分。\n\n【常用短句】\n九時半です。 (ku.ji.ha.n.de.su.) 九點半。\nもうすぐ九時です。 (mo.u.su.gu.ku.ji.de.su.) 快九點了。\n九時過ぎです. (ku.ji.su.gi.de.su.) 九點多了。\n\n【會話情境：搭巴士】\nA：バスはいつ來ますか？\nba.su.wa.i.tsu.ki.ma.su.ka.\n巴士什麼時候會到呀？\n\nB：三時二十五分に来るらしいです。\nsa.n.ji.ni.ju.u.go.fu.n.ni.ku.ru.ra.shi.i.de.su.\n好像是三點二十五分會來。\n\n【替換單字練習（小時）】\n一時 (i.chi.ji.) 一點\n二時 (ni.ji.) 二點\n三時 (sa.n.ji.) 三點\n四時 (yo.ji.) 四點\n五時 (go.ji.) 五點\n\n【替換單字練習（分鐘）】\n十五分 (ju.u.go.fu.n.) 十五分\n二十分 (ni.ju.ppu.n.) 二十分\n二十五分 (ni.ju.u.go.fu.n.) 二十五分"
-                    }
-                },
-                "表達日期": {
-                    "會話情境": {
-                        "與同事確認開會時間": "A::会議はいつですか？\nka.i.gi.wa.i.tsu.de.su.ka.\n什麼時候開會呀？\n\nB：四月十四日です。\nshi.ga.tsu.ju.u.yo.kka.de.su.\n四月十四號。\n\n【替換單字練習（月份）】\n一月 (i.chi.ga.tsu) / 二月 (ni.ga.tsu) / 三月 (sa.n.ga.tsu) / 四月 (shi.ga.tsu) / 五月 (go.ga.tsu) / 六月 (ro.ku.ga.tsu) / 七月 (shichi.ga.tsu) / 八月 (hachi.ga.tsu) / 九月 (ku.ga.tsu) / 十月 (ju.u.ga.tsu) / 十一月 (ju.u.i.chi.ga.tsu) / 十二月 (ju.u.ni.ga.tsu)\n\n【替換單字練習（1~20號特殊日期稱呼）】\n一日 (tsu.i.ta.chi) 一號\n二日 (fu.tsu.ka) 二號\n三日 (mi.kka) 三號\n四日 (yo.kka) 四號\n五日 (i.tsu.ka) 五號\n六日 (mu.i.ka) 六號\n七日 (na.no.ka) 七號\n八日 (yo.o.ka) 八號\n九日 (ko.ko.no.ka) 九號\n十日 (to.o.ka) 十號\n十四日 (ju.u.yo.kka) 十開號\n二十日 (ha.tsu.ka) 二十號"
-                    }
-                },
-                "表達星期": {
-                    "說明": {
-                        "星期問句說明": "星期方面的問句是日常生活中常出現的句型，請試著用以下日期單字代入例句裡。"
-                    },
-                    "會話情境": {
-                        "詢問垃圾回收日與星期": "A::今日は何曜日ですか？\nkyo.u.wa.na.n.yo.u.bi.de.su.ka.\n今天是星期幾呀？\n\nB：今日は火曜日です。\nkyo.u.wa.ka.yo.u.bi.de.su.\n今天是星期二。\n\nA::資源ゴミの回収日はいつですか？\nshi.ge.n.go.mi.no.ka.i.shu.u.bi.wa.i.tsu.de.su.ka.\n資源回收日是什麼時候呀？\n\nB：火曜日と金曜日だけです。\nka.yo.u.bi.to.ki.yo.u.bi.da.ke.de.su.\n資源回收日只在星期二與星期五。\n\n【替換單字練習（星期）】\n月曜日 (ge.tsu.yo.u.bi) 星期一\n火曜日 (ka.yo.u.bi) 星期二\n水曜日 (su.i.yo.u.bi) 星期三\n木曜日 (mo.ku.yo.u.bi) 星期四\n金曜日 (ki.yo.u.bi) 星期五\n土曜日 (do.yo.u.bi) 星期六\n日曜日 (ni.chi.yo.u.bi) 星期日\n\n【替換單字練習 (12星座日文稱呼)】\nおひつじ座 (3/21 ~ 4/19 生まれ) (o.hi.tsu.ji.za.) 牡羊座\nおうし座 (4/20 ~ 5/20 生まれ) (o.u.shi.za.) 金牛座\nふたご座 (5/21 ~ 6/21 生まれ) (fu.ta.go.za.) 雙子座\nかに座 (6/22 ~ 7/22 生まれ) (ka.ni.za.) 巨蟹座\nしし座 (7/23 ~ 8/22 生まれ) (shi.shi.za.) 獅子座\nおとめ座 (8/23 ~ 9/22 生まれ) (o.to.me.za.) 處女座\nてんびん座 (9/23 ~ 10/23 生まれ) (te.n.bi.n.za.) 天秤座\nさそり座 (10/24 ~ 11/22 生まれ) (sa.so.ri.za.) 天蠍座\nいて座 (11/23 ~ 12/21 生まれ) (i.te.za.) 射手座\nやぎ座 (12/22 ~ 1/19 生まれ) (ya.gi.za.) 魔羯座\nみずがめ座 (1/20 ~ 2/18 生まれ) (mi.zu.ga.me.za.) 水瓶座\nうお座 (2/19 ~ 3/20 生まれ) (u.o.za.) 雙魚座"
-                    }
-                }
+    "bookTitle": "日本人天天會用的日語短句",
+    "volumes": {
+        "初次見面的自我介紹": {
+            "說明": {
+                "自我介紹小叮嚀": "在跟人家介紹自己的時候，請不要忘記拿出\"元氣\"以及面帶微笑的說出以下句子，會增加對方對你的好感度唷！"
+            },
+            "會話情境": {
+                "兩人剛要認識": "A：初めまして○○です。\nha.ji.me.ma.shi.te.○○.de.su.\n初次見面我是○○。\n\nよろしくお願いします。\nyo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n請多多指教。\n\nB：こちらこそよろしくお願いします。\nko.chi.ra.ko.so.yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我才請您多多指教。\n\nA：どこから來ましたか？\ndo.ko.ka.ra.ki.ma.shi.ta.ka.\n您從哪裡來呀？\n\nB：台灣から來ました。\nta.i.wa.n.ka.ra.ki.ma.shi.ta.\n我來自台灣。\n\nA：台灣ですか？私は台灣が大好きです。\nta.i.wa.n.de.su.ka. / wa.ta.shi.wa.ta.i.wa.n.ga.da.i.su.ki.de.su\n台灣呀，我最喜歡台灣了。",
+                "向大家介紹你自己（上班族身分）": "A：始めまして○○と申します。\nha.ji.me.ma.shi.te.○○.to.mo.u.shi.ma.su.\n大家好我叫○○。\n\nB：貿易會社で働いています。\nbo.u.e.ki.ga.i.sha.de.ha.ta.ra.i.te.i.ma.su.\n在貿易公司上班。\n\nA：項目ろしくお願いいたします。\nyo.ro.shi.ku.o.ne.ga.i.i.ta.shi.ma.su.\n請多多指教。\n\n【替換單字練習】\n建設會社 (ka.n.se.tsu.ga.i.sha.) 建設公司\n出版社 (shu.ppa.n.sha.) 出版社\n病院 (byo.u.i.n.) 醫院\n旅行社 (ryo.u.ko.u.sha.) 旅行社\n保險會社 (ho.ke.n.ga.i.sha.) 保險公司",
+                "向大家介紹你自己（學生身分）": "A：初めまして。○○と申します。\nha.ji.me.ma.shi.te. / ○.○.to.mo.u.shi.ma.su.\n初次見面，我叫○○。\n\nB：台灣から來ta留學生です。\nta.i.wa.n.ka.ra.ki.ta.ryu.u.ga.ku.se.i.de.su.\n我是來自台灣的學生。\n\nA：項目ろしくお願いいたします。\nyo.ro.shi.ku.o.ne.ga.i.i.ta.shi.ma.su.\n請多多指教。\n\n【替換單字練習】\n大學生 (da.i.ga.ku.se.i.) 大學生\n院生 (i.n.se.i.) 研究生\n高校生 (ko.u.ko.u.se.i.) 高中生",
+                "向新朋友簡單的自我介紹": "A：○○です。よろしくお願いします。\n○○.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我叫○○，請多指教唷。\n\nB：こちらこそよろしくお願いします。\nko.chi.ra.ko.so.yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n請您多多指教。",
+                "介紹在場的 A 小姐與 B 小姐": "C：こちらはAさんです。こちらはBさんです。\nko.chi.ra.wa.A.sa.n.de.su. / ko.chi.ra.wa.B.sa.n.de.su.\n這位是 A 小姐，這位是 B 小姐。\n\nA：はじめまして。Aです。\nha.ji.me.ma.shi.te. / A.de.su.\n初次見面我是 A，請多指教。\n\nB：Bです。よろしくお願いします。\nB.de.su. / yo.ro.shi.ku.o.ne.ga.i.shi.ma.su.\n我是 B，請多指教。\n\nA：あなたは學生ですか？\na.na.ta.wa.ga.ku.se.i.de.su.ka.\n你是學生嗎？\n\nB：はい。そうです。Aさんは？\nha.i./so.u.de.su./A.sa.n.wa.\n是的，沒錯，那A呢？\n\nA：私も學生です。Bさんの國はどこですか？\nwa.ta.shi.mo.ga.ku.se.i.de.su./B.sa.n.no.ku.ni.wa.do.ko.de.su.ka.\n我也學生，B的國家在哪裡呢？\n\nB：アメリカです。Aさんは？\na.me.ri.ka.de.su./A.sa.n.wa.\n是美國，A呢？\n\nA::台灣です。\nta.i.wa.n.de.su.\n台灣。"
+            },
+            "小知識": {
+                "さん與親密稱呼的男女判別": "在日本不論男性或是女性都是用「さん」來作禮貌性的稱呼。另外對好友、晚輩或是與對方非常熟時，男生可以用「君」、對女生可以用「ちゃん」，例如：\n\nA：優ちゃん、どこへ行く？\nyu.u.cha.n./do.ko.e.i.ku.\n小優，你要去哪裡呀？\n\nB：佐藤君の店に行く。\nsa.to.u.ku.n.no.mi.se.ni.i.ku.\n我要去佐藤君的店。\n\n「～ちゃん」是日本人常用的稱呼，甚至可以用到寵物身上，例如「ワンちゃん（汪汪）」、「ミーちゃん（喵喵）」。"
             }
-        };
+        },
+        "打招呼的實用短句": {
+            "說明": {
+                "日常招呼語說明": "以下的招呼語，是在日本日常生活中常出現的語句。"
+            },
+            "常用短句": {
+                "四大基本日常問候": "例：おはようございます。(o.ha.yo.u.go.za.i.ma.su.) 早安。\n例：こんにちは。(ko.n.ni.chi.wa.) （白天時）您好。\n例：こんばんは。(ko.n.ba.n.wa.) （晚上時）您好。\n例：お休みなさい。(o.ya.su.mi.na.sa.i.) 晚安。"
+            },
+            "會話情境": {
+                "詢問對方要去哪裡": "A：こんにちは。\nko.n.ni.chi.wa.\n您好。\n\nB：こんにちは。いい天氣ですね。\nko.n.ni.chi.wa./i.i.te.n.ki.de.su.ne.\n您好，天氣真好啊。\n\nA：そう記ね。お出かけですか？\nso.u.de.su.ne./o.de.ka.ke.de.su.ka.\n對啊。您要出門嗎？\n\nB：ええ、ちょっと買い物に。\ne.e./cho.tto.ka.i.mo.no.ni.\n是呀，我去買點東西。\n\n【替換單字練習】\n學校 (ga.kko.u.) 學校\n病院 (byo.u.i.n.) 醫院\n圖書館 (to.sho.ka.n.) 圖書館\n公園 (ko.u.e.n.) 公園\nコンビニ (ko.n.bi.ni)便利商店\n駅 (e.ki) 車站"
+            }
+        },
+        "問候時用的寒暄語句": {
+            "會話情境": {
+                "好久不見的寒暄": "A：お久しぶりですね。お元気ですか？\no.hi.sa.shi.bu.ri.de.su.ne./o.ge.n.ki.de.su.ka.\n好久不見耶，您過得好嗎？\n\nB：おかげさまで元気です。○○さんは？\no.ka.ge.sa.ma.de.ge.n.ki.de.su./○○.sa.n.wa.\n託您的福，我很好。那○○先生/小姐呢？\n\nA：ええ、私も元気です。\ne.e./wa.ta.shi.mo.ge.n.ki.de.su.\n嗯，我也很好。\n\n【較口語、熟人用法】\nA：具しぶり！元気？ (hi.sa.shi.bu.ri! ge.n.ki?)\n好久不見！過得怎樣？\n\nB：うん、元気だよ。 (u.n./ge.n.ki.da.yo.)\n嗯，很好唷。",
+                "離開時問候第三人": "A：そろそろ失禮します。\nso.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n我也差不多該告辭了。\n\nB：そうですか。奧様によろしくお伝えください。\nso.u.de.su.ka./o.ku.sa.ma.ni.yo.ro.shi.ku.o.tsu.ta.e.ku.da.sa.i.\n這樣啊。請代我向夫人問好。\n\nA：有難うございます。では、失禮します。\na.ri.ga.to.u.go.za.i.ma.su./de.wa/shi.tsu.re.i.shi.ma.su.\n謝謝，那我告辭了。\n\n【替換單字練習（代稱第三人）】\nご主人 (go.shu.ji.n.) 您先生\nお父さん (o.to.o.sa.n.) 您父親\nお母さん (o.ku.sa.n.) 您母親\n皆さん (mi.na.sa.n.) 大家"
+            }
+        },
+        "冷場時可用的話題": {
+            "會話情境": {
+                "與不熟的朋友聊天": "A：最近、何をやっているの？\nsa.i.ki.n./na.ni.o.ya.tte.i.ru.no.\n最近都在做什麼呀？\n\nB：別に何もやっていないよ。\nbe.tsu.ni.na.ni.mo.ya.tte.i.na.i.yo.\n也沒特別做什麼啦。\n\nA：......（尷尬中）\nところで、奈奈も元気？\nto.ko.ro.de./na.na.mo.ge.n.ki.\n對了，奈奈也過得好嗎？",
+                "遇見微妙關係的人（用天氣當話題）": "A：先日はどうom。\nse.n.ji.tsu.wa.do.u.mo.\n前些日子真是謝謝您。\n\nB：いいえ、こちらこそどう修。\ni.i.e./ko.chi.ra.ko.so.do.u.mo.\n不是不是，是我才該跟您道謝。\n\nA：......（尷尬中）\n今日はいい天氣ですね。\nkyo.u.wa.i.i.te.n.ki.de.su.ne.\n今天天氣真好耶。\n\n【替換單字練習】\n寒い (sa.mu.i.) 好冷\n風が強い (ka.ze.ga.tsu.yo.i) 風好大\n雨 (a.me.) 雨天"
+            },
+            "小知識": {
+                "大丈夫的由來": "應該大家都很常看到「大丈夫 (だいじょうぶ)」這個日文單字，其單字來源於中國。將單字分開解析的話「丈」在日本是代表長度而「1丈=3.3米」，古時候成年男子的身高平均為 1.7 米，言下之意隱喻為比一般男生還強壯的意思；「夫」則代表男性。流傳到日本後，演變成頂天立地的男子漢，非常強壯、堅固、不會出差錯等正向涵義。\n\n例句：\nA：あなた、大丈夫ですか？ 你不要緊吧？\nB：大丈夫です。 我沒事，不要緊的。"
+            }
+        },
+        "拜訪友人家時的常用句": {
+            "說明": {
+                "拜訪禮儀說明": "日本人拜訪別人家時常用的語句。"
+            },
+            "會話情境": {
+                "拜訪別人家時": "A::ごめんください。\ngo.me.n.ku.da.sa.i.\n有人在家嗎？\n\nB：はい、どなたでしょうか？\nha.i./do.na.ta.de.sho.u.ka.\n請問您是哪位？\n\nA：○○です。○○さんはいらっしゃいますでしょうか？\n○.○.de.su./○.○.sa.n.wa.i.ra.ssha.i.ma.su.de.sho.u.ka.\n我是○○，○○在嗎？\n\nB：ええ、おりまう。どうぞお上がり下さい。\ne.e./o.ri.ma.su./do.u.zo.o.a.ga.ri.ku.da.sa.i.\n在，請您上來。\n\nA：では、失禮します。\nde.wa./shi.tsu.re.i.shi.ma.su.\n那我就打擾了。\n\nB：コーヒーを入れてきますね。\nko.o.hi.i.o.i.re.te.ki.ma.su.ne.\n我去泡咖啡唷。\n\nA：どうぞ、お気遣いなく。\ndo.u.zo./o.ki.zu.ka.i.na.ku.\n您不用客氣。\n\n【替換單字練習】\n紅茶 (ko.u.cha.) 紅茶\nウーロン茶 (u.u.ro.n.cha.) 烏龍茶\nココア (ko.ko.a.) 可可\nミルクティー (mi.ru.ku.ti.i.) 奶茶",
+                "拜訪完後準備要離開時": "A：だいぶ長くお邪魔しましたから、そろそろ失禮します。\nda.i.bu.na.ga.ku.o.ja.ma.shi.ma.shi.ta.ka.ra.so.ro.so.ro.shi.tsu.re.i.shi.ma.su.\n因為已經打擾您很久了，我也該準備回家了。\n\nB：まだ早いでしょう。昼ご飯をごいっしょにいかがですか？\nma.da.ha.ya.i.de.sho.u.hi.ru.go.ha.n.o.go.i.ssho.ni.i.ka.ga.de.su.ka.\n還很早吧。要不要一起吃個中飯呢？\n\nA：気持ちは有難いですが、これから用があるので。\nki.mo.chi.wa.a.ri.ga.ta.i.de.su.ga.ko.re.ka.ra.yo.u.ga.a.ru.no.de.\n很感謝您的心意，但我等等還有事。\n\nB：そうですか？では、またお暇なときに遊びにいらっしゃいね。\nso.u.de.su.ka?/de.wa./ma.ta.o.hi.ma.na.to.ki.ni.a.so.bi.ni.i.ra.ssha.i.ne.\n這樣呀，那等您有空的時候再來玩唷。\n\nA：はい、お邪魔しました。では失禮します。\nha.i./o.ja.ma.shi.ma.shi.ta./de.wa.shi.tsu.re.i.shi.ma.su.\n好的，打擾您了，再見。",
+                "去好朋友家玩與表達速離": "A::こんにちは。\nko.n.ni.chi.wa.\n有人在家嗎？\n\nB：やあ、奈奈！さあ、上がって。\nya.a./na.na./sa.a./a.ga.tte.\n啊，是奈奈呀！進來呀。\n\nA：お邪魔します。これ、つまらないものですが、どうぞ。\no.ja.ma.shi.ma.su./ko.re/tsu.ma.ra.na.i.mo.no.de.su.ga./do.u.zo.\n打擾了。這個是一點小意思，請收下。\n\nB：あら、有難う。そんなに気を使わなくてもいい道具なのに。\na.ra/a.ri.ga.to.u./so.n.na.ni.ki.o.tsu.ka.wa.na.ku.te.mo.i.i.no.ni.\n哎呀，謝謝！你不用這麼客氣啦。\n\nA：あ、もう五時だ！そろそろ帰らなくちゃ。\na./mo.u.go.ji.da!/so.ro.so.ro.ka.e.ra.na.ku.cha.\n啊，已經五點了！我差不多該回去了。\n\nB：so.u?/ja.a./e.ki.ma.de.o.ku.ru.yo.\n是嗎？那我送你到車站吧。\n\nA：ううん、お構いなく。\nu.u.n./o.ka.ma.i.na.ku.\n不用不用，您別客氣了。"
+            }
+        },
+        "形容天氣的常用句": {
+            "說明": {
+                "天氣單字短句說明": "描述每日天氣情況時，常用的單字短句。"
+            },
+            "會話情境": {
+                "轉述天氣報導": "A：天氣予報によると、午後から雨が降るらしいですよ。\nte.n.ki.yo.ho.u.ni.yo.ru.to./go.go.ka.ra.a.me.ga.fu.ru.ra.shi.i.de.su.yo.\n根據天氣預報，聽說下午開始會下雨唷。\n\nB：そうですか？あんなにいい天氣なのに。\nso.u.de.su.ka?/a.n.na.ni.i.ki.te.n.ki.na.no.ni.\n是嗎？明明現在天氣還很好耶。\n\nA：念のために、傘を持っていったほうがいいですよ。\nne.n.no.ta.me.ni./ka.sa.o.mo.tte.i.tta.ho.u.ga.i.i.de.su.yo.\n為了保險起見，還是帶把傘出門比較好唷。\n\nB：そうですね。有難うございます。\nso.u.de.su.ne./a.ri.ga.to.u.go.za.i.ma.su.\n說得也是，謝謝你。",
+                "敘述明天天氣": "A::明日の天氣はどうでしょうか？\na.shi.ta.no.te.n.ki.wa.do.u.de.sho.u.ka.\n明天的天氣如何呢？\n\nB：明日の天氣はいいらしいですよ。\na.shi.ta.no.te.n.ki.wa.i.i.ra.shi.i.de.su.yo.\n明天的天氣好像不錯。\n\n【替換單字練習】\n悪い (wa.ru.i) 不好\n雨 (a.me) 下雨\n曇り (ku.mo.ri) 陰天\n雪 (yu.ki) 下雪\n台風 (ta.i.fu.u) 颱風"
+            }
+        },
+        "表達身體不適症狀": {
+            "會話情境": {
+                "詢問與表達感冒症狀": "A：どうしましたか？顔色が悪いですよ。\ndo.u.shi.ma.shi.ta.ka?/ka.o.i.ro.ga.wa.ru.i.de.su.yo.\n你怎麼啦？臉色很難看耶。\n\nB：ちょっと風邪気味なんです。頭が痛くて......\ncho.tto.ka.ze.gi.mi.na.n.de.su./a.ta.ma.ga.i.ta.ku.te...\n好像有點感冒，頭好痛......\n\nA：那是大變ですね。早く病院へ行ったほうがいいですよ。\nso.re.wa.ta.i.he.n.de.su.ne./ha.ya.ku.byo.u.i.n.e.i.tta.ho.u.ga.i.i.de.su.yo.\n那真是糟糕，最好快點去醫院看醫生唷。\n\nB：ええ、そうします。\ne.e./so.u.shi.ma.su.\n嗯，我會的。\n\n【替換單字練習】\nお腹が痛い (o.na.ka.ga.i.ta.i) 肚子痛\n歯が痛い (ha.ga.i.ta.i) 牙齒痛\n喉が痛い (no.do.ga.i.ta.i) 喉嚨痛\n熱がある (ne.tsu.ga.a.ru) 發燒\n咳が出る (se.ki.ga.de.ru) 咳嗽"
+            }
+        },
+        "PART 2 每日會發生的事：校園職場生活實用短句": {
+            "提出邀約": {
+                "邀約朋友出去玩": "A::今週の土曜日に、一緒に遊びに行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.a.so.bi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起出去玩呀？\n\nB：いいですね。開こへ行きますか？\ni.i.de.su.ne./do.ko.e.i.ku.ma.su.ka.\n好呀！要去哪裡呢？\n\nA：淡水へ行きましょう。\nta.n.su.i.e.i.ki.ma.sho.u.\n我們去淡水吧！"
+            },
+            "答應邀約": {
+                "答應同學或是好友的邀約": "A：今週の土曜日、一緒に映画を見に行かない？\nko.n.shu.u.no.do.yo.u.bi./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n這星期六要不要一起去看電影？\n\nB：いいね！行こう。 (i.i.ne! / i.ko.u.)\n好呀！走吧。",
+                "答應同事或是長輩的邀約": "A::今週の土曜日に、一緒に映画を見に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.e.i.ga.o.mi.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去看電影呢？\n\nB：ええ、喜んで。 (e.e./yo.ro.ko.n.de.)\n嗯，我很樂意。",
+                "邀約友人看電影或來家裡玩": "A：明日、一緒に映画でも見に行きませんか？\na.shi.ta./i.ssho.ni.e.i.ga.de.mo.mi.ni.i.ki.ma.se.n.ka.\n明天要不要一起去看個電影之類的呀？\n\nB：いいですね。行きましょう。\ni.i.de.su.ne./i.ki.ma.sho.u.\n好呀，走吧！\n\n【邀約友人來家裡】\nA::今週の土曜日に、私の家に来ませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./wa.ta.shi.no.i.e.ni.ki.ma.se.n.ka.\n這星期六要不要來我家玩呀？\n\nB：いいですか？じゃあ、お邪魔します。\ni.i.de.su.ka?/ja.a./o.ja.ma.shi.ma.su.\n方便嗎？那打擾囉！"
+            },
+            "謝絕邀約": {
+                "因不便或有先約而婉拒": "A：今週の土曜日に、一緒に買い物に行きませんか？\nko.n.shu.u.no.do.yo.u.bi.ni./i.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n這星期六要不要一起去買東西呀？\n\nB：土曜日はちょっと都合が悪いんです。\ndo.yo.u.bi.wa.cho.tto.tsu.go.u.ga.wa.ru.i.n.de.s.\n星期六我剛好有點不方便耶。\n\n【被好友邀約看電影】\nA：明日、一緒に映画を見に行かない？\na.shi.ta./i.ssho.ni.e.i.ga.o.mi.ni.i.ka.na.i.\n明天要不要一起去看電影？\n\nB：明日はちょっと用事があるんだ。ごめんね。\na.shi.ta.wa.cho.tto.yo.u.ji.ga.a.ru.n.da./go.me.n.ne.\n明天我剛好有事情耶，抱歉啦。\n\nA::so.u.na.n.da./za.n.ne.n./ja.a./ma.ta.ko.n.do.ne.\n這樣呀，真可惜。那就下次囉。\n\n【被朋友邀約去買東西】\nA：一緒に買い物に行きませんか？\ni.ssho.ni.ka.i.mo.no.ni.i.ki.ma.se.n.ka.\n要不要一起去買東西呀？\n\nB：行きたいんですけど、ちょっと先約があるんですが。\ni.ki.ta.i.n.de.su.ke.do./cho.tto.se.n.ya.ku.ga.a.ru.n.de.su.ga.\n我是很想去，但是我已經有約了耶。\n\nA：そうですか、残念ですね。では、またにしましょうか？\nso.u.de.su.ca,/za.n.ne.n.de.su.ne./de.wa/ma.ta.ni.shi.ma.sho.u.ka.\n是唷，真可惜。那下次去吧。\n\nB：ぜひまた誘ってください。\nze.hi.ma.ta.sa.so.tte.ku.da.sa.i.\n請你一定要再約我。"
+            },
+            "小知識": {
+                "四六時中的涵義": "日語單字中的「四六時中（shi.ro.ku.ji.chu.u.）」是指 24 小時全天的意思。江戶時期是用「二六時中（12時辰）」代表全天，2×6=12。配合現在的 24 小時，便演變成「四六時中」，4×6=24。"
+            }
+        },
+        "表達時間": {
+            "說明": {
+                "時間問句說明": "時間方面的問句是日常生活中常用的句型，請試著用以下時間單字，代入各句型中練習。"
+            },
+            "會話情境": {
+                "向朋友詢問時間與搭巴士": "A：今何時ですか？\ni.ma.na.n.ji.de.su.ka.\n現在是幾點？\n\nB：九時十分です。\nku.ji.ju.ppu.n.de.su.\n九點十分。\n\n【常用短句】\n九時半です。 (ku.ji.ha.n.de.su.) 九點半。\nもうすぐ九時です。 (mo.u.su.gu.ku.ji.de.su.) 快九點了。\n九時過ぎです. (ku.ji.su.gi.de.su.) 九點多了。\n\n【會話情境：搭巴士】\nA：バスはいつ來ますか？\nba.su.wa.i.tsu.ki.ma.su.ka.\n巴士什麼時候會到呀？\n\nB：三時二十五分に来るらしいです。\nsa.n.ji.ni.ju.u.go.fu.n.ni.ku.ru.ra.shi.i.de.su.\n好像是三點二十五分會來。\n\n【替換單字練習（小時）】\n一時 (i.chi.ji.) 一點\n二時 (ni.ji.) 二點\n三時 (sa.n.ji.) 三點\n四時 (yo.ji.) 四點\n五時 (go.ji.) 五點\n\n【替換單字練習（分鐘）】\n十五分 (ju.u.go.fu.n.) 十五分\n二十分 (ni.ju.ppu.n.) 二十分\n二十五分 (ni.ju.u.go.fu.n.) 二十五分"
+            }
+        },
+        "表達日期": {
+            "會話情境": {
+                "與同事確認開會時間": "A::会議はいつですか？\nka.i.gi.wa.i.tsu.de.su.ka.\n什麼時候開會呀？\n\nB：四月十四日です。\nshi.ga.tsu.ju.u.yo.kka.de.su.\n四月十四號。\n\n【替換單字練習（月份）】\n一月 (i.chi.ga.tsu) / 二月 (ni.ga.tsu) / 三月 (sa.n.ga.tsu) / 四月 (shi.ga.tsu) / 五月 (go.ga.tsu) / 六月 (ro.ku.ga.tsu) / 七月 (shichi.ga.tsu) / 八月 (hachi.ga.tsu) / 九月 (ku.ga.tsu) / 十月 (ju.u.ga.tsu) / 十一月 (ju.u.i.chi.ga.tsu) / 十二月 (ju.u.ni.ga.tsu)\n\n【替換單字練習（1~20號特殊日期稱呼）】\n一日 (tsu.i.ta.chi) 一號\n二日 (fu.tsu.ka) 二號\n三日 (mi.kka) 三號\n四日 (yo.kka) 四號\n五日 (i.tsu.ka) 五號\n六日 (mu.i.ka) 六號\n七日 (na.no.ka) 七號\n八日 (yo.o.ka) 八號\n九日 (ko.ko.no.ka) 九號\n十日 (to.o.ka) 十號\n十四日 (ju.u.yo.kka) 十開號\n二十日 (ha.tsu.ka) 二十號"
+            }
+        },
+        "表達星期": {
+            "說明": {
+                "星期問句說明": "星期方面的問句是日常生活中常出現的句型，請試著用以下日期單字代入例句裡。"
+            },
+            "會話情境": {
+                "詢問垃圾回收日與星期": "A::今日は何曜日ですか？\nkyo.u.wa.na.n.yo.u.bi.de.su.ka.\n今天是星期幾呀？\n\nB：今日は火曜日です。\nkyo.u.wa.ka.yo.u.bi.de.su.\n今天是星期二。\n\nA::資源ゴミの回収日はいつですか？\nshi.ge.n.go.mi.no.ka.i.shu.u.bi.wa.i.tsu.de.su.ka.\n資源回收日是什麼時候呀？\n\nB：火曜日と金曜日だけです。\nka.yo.u.bi.to.ki.yo.u.bi.da.ke.de.su.\n資源回收日只在星期二與星期五。\n\n【替換單字練習（星期）】\n月曜日 (ge.tsu.yo.u.bi) 星期一\n火曜日 (ka.yo.u.bi) 星期二\n水曜日 (su.i.yo.u.bi) 星期三\n木曜日 (mo.ku.yo.u.bi) 星期四\n金曜日 (ki.yo.u.bi) 星期五\n土曜日 (do.yo.u.bi) 星期六\n日曜日 (ni.chi.yo.u.bi) 星期日\n\n【替換單字練習 (12星座日文稱呼)】\nおひつじ座 (3/21 ~ 4/19 生まれ) (o.hi.tsu.ji.za.) 牡羊座\nおうし座 (4/20 ~ 5/20 生まれ) (o.u.shi.za.) 金牛座\nふたご座 (5/21 ~ 6/21 生まれ) (fu.ta.go.za.) 雙子座\nかに座 (6/22 ~ 7/22 生まれ) (ka.ni.za.) 巨蟹座\nしし座 (7/23 ~ 8/22 生まれ) (shi.shi.za.) 獅子座\nおとめ座 (8/23 ~ 9/22 生まれ) (o.to.me.za.) 處女座\nてんびん座 (9/23 ~ 10/23 生まれ) (te.n.bi.n.za.) 天秤座\nさそり座 (10/24 ~ 11/22 生まれ) (sa.so.ri.za.) 天蠍座\nいて座 (11/23 ~ 12/21 生まれ) (i.te.za.) 射手座\nやぎ座 (12/22 ~ 1/19 生まれ) (ya.gi.za.) 魔羯座\nみずがめ座 (1/20 ~ 2/18 生まれ) (mi.zu.ga.me.za.) 水瓶座\nうお座 (2/19 ~ 3/20 生まれ) (u.o.za.) 雙魚座",
+                "想請朋友陪伴出去辦事": "•\tA：今週（こんしゅう）の水曜日（すいようび）は予定（よてい）がありますか？ \no\tko.n.shu.u.no.su.i.yo.u.bi.wa.yo.te.i.ga.a.ri.ma.su.ka. \no\t這禮拜三你有事嗎？\n•\tB：予定（よてい）がないですけど。 \no\tyo.te.i.ga.na.i.de.su.ke.do. \no\t我是沒事呀。\n•\tA：ちょっと行（い）きたい所（ところ）があるんですけど、付（つ）き合（あ）ってくれませんか？\no\tcho.tto.i.ki.ta.i.to.ko.ro.ga.a.ru.n.de.su.ke.do./tsu.ki.a.tte.ku.re.ma.se.n.ka. \no\t我有想去的地方，你可以陪我去嗎？\n•\tB：ええ、いいですよ。何時（なんじ）にしますか？ \no\te.e./i.i.de.su.yo./na.n.ji.ni.shi.ma.su.ka. \no\t嗯，好呀。幾點去呢？\n•\tA：三時（さんじ）にしましょう。 \no\tsa.n.ji.ni.shi.ma.sho.u. \no\t約三點吧。\n•\tB：じゃ、いつもの場所（ばしょ）で待（ま）ち合（あ）わせましょう。 \no\tja./i.tsu.mo.no.ba.sho.de.ma.chi.a.wa.se.ma.sho.u. \no\t那就約老地方見吧。",
+                "剛搬新家向鄰居詢問回收垃圾的日子": "•\tA：こんにちは。 \no\tko.n.ni.chi.wa. \no\t您好。\n•\tB：こんにちは。 \no\tko.n.ni.chi.wa. \no\t您好。\n•\tA：あのう、すみません。今日（きょう）は資源（しげん）ごみの日（ひ）ですか？ \no\ta.no.u./su.mi.ma.se.n./kyo.u.wa.shi.ge.n.go.mi.no.hi.de.su.ka. \no\t不好意思，請問今天有資源回收嗎？\n•\tB：資源（しげん）ごみの日（ひ）は火曜日（かようび）と金曜日（きんようび）だけです。 \no\tshi.ge.n.go.mi.no.hi.wa./ka.yo.u.bi.to.ki.n.yo.u.bi.da.ke.de.su. \no\t資源回收日只在星期二與星期五。\n•\tA そうですか？分かりました。ありがとうございます。 \no\tso.u.de.su.ka. / wa.ka.ri.ma.shi.ta. / a.ri.ga.to.u.go.za.i.ma.su. \no\t是唷。我知道囉，謝謝。",
+                "與朋友確定星期幾": "•\tA 来週の成人式は何曜日ですか？ \no\tra.i.shu.u.no.se.i.ji.n.shi.ki.wa.na.n.yo.u.bi.de.su.ka. \no\t下禮拜的成人節是禮拜幾呢？\n•\tB 月曜日に決まっているでしょう。 \no\tge.tsu.yo.u.bi.ni.ki.ma.tte.i.ru.de.sho.u. \no\t當然是禮拜一呀。\n________________________________________\n替換單字練習\n•\t月曜日 \no\tge.tsu.yo.u.bi. \no\t星期一\n•\t火曜日 \no\tka.yo.u.bi. \no\t星期二\n•\t水曜日 \no\tsu.i.yo.u.bi. \no\t星期三\n•\t木曜日 \no\tmo.ku.yo.u.bi. \no\t星期四\n•\t金曜日 \no\tki.n.yo.u.bi. \no\t星期五\n•\t土曜日 \no\tdo.yo.u.bi. \no\t星期六\n•\t日曜日 \no\tni.chi.yo.u.bi. \no\t星期日\n________________________________________\n替換單字練習\n•\t去年 \no\tkyo.ne.n. \no\t去年\n•\t一昨年 \no\to.to.to.shi. \no\t前年\n•\t今年 \no\tko.to.shi. \no\t今年\n•\t来年 \no\tra.i.ne.n. \no\t明年\n•\t先月 \no\tse.n.ge.tsu \no\t上個月\n•\t今月 \no\tko.n.ge.tsu. \no\t這個月\n•\t来月 \no\tra.i.ge.tsu. \no\t下個月\n•\t先週 \no\tse.n.shu.u. \no\t上週\n•\t今週 \no\tko.n.shu.u. \no\t這週\n•\t来週 \no\tra.i.shu.u. \no\t下週\n________________________________________\n小知識\n在日本成人節是個重要的節日，每年一月的第二個星期一，年滿二十歲的男女，會穿上正式服裝參加由地方政府所舉辦的成人節儀式，此節日是告知年滿二十歲的青年男女即將從踏上人生另外一個階段進入成人的世界，他們就可以合法的抽菸、喝酒享受大人的世界，同時也必須為自己的行為負責，如果做錯事情時也不會因為未成年而得到大家或是法律上的寬恕。\n________________________________________"
+            }
+        },
+        "提出疑問": {
+            "日語表達疑問或不懂？": {
+                "常用短句": "なんで？\nna.n.de.\n為什麼？\n\nどうしたの？\ndo.u.shi.ta.no.\n怎麼了呢？\n\nどういう意味ですか？\ndo.u.i.u.i.mi.de.su.ka.\n什麼意思？\n\nどうしてですか？\ndo.u.shi.te.de.su.ka.\n為什麼這樣？\n\nこれは何ですか？\nko.re.wa.na.n.de.su.ka.\n這個是什麼呀？\n\nどういうふうに使いますか？\ndo.u.i.u.fu.u.ni.tsu.ka.i.ma.su.ka.\n要怎麼使用呀？"
+            },
+            "日語表達疑問或不懂?": {
+                "常用短句": "これ、教えてもらってもいいですか？\nko.re.o.shi.e.te.mo.ra.tte.mo.i.i.de.su.ka.\n這個，你可以教我嗎？"
+            },
+            "會話情境": {
+                "小孩向媽媽講不想去學校的原因": "A：学校行きたくないなぁ。\nga.kko.u.i.ki.ta.ku.na.i.na.a.\n我好不想去學校唷。\n\nB：なんで？\nna.n.de.\n為什麼？\n\nA：先生が怖いから。\nse.n.se.i.ga.ko.wa.i.ka.ra.\n因為老師很兇。",
+                "向家人抱怨上司": "A：ただいま。\nta.da.i.ma.\n我回家囉。\n\nB：お帰りなさい。\no.ka.e.ri.na.sa.i.\n你回來啦。\nA：気分が悪い。倒れそうだ。\nki.bu.n.ga.wa.ru.i./ta.o.re.so.u.da.\n真是不舒服，我快昏倒了。\n\nB：いったいどうしたの？\ni.tta.i.do.u.shi.ta.no.\n你到底怎麼了呢？\n\nA：部長に誘われて、飲みに行ったんだ。\nbu.cho.u.ni.sa.so.wa.re.te./no.mi.ni.i.tta.n.da.\n我被部長找去喝酒。\n\nB：大変だね。\nta.i.he.n.da.ne.\n真是辛苦你了。",
+                "看到日本特有的東西時": "A：これは何ですか？\nko.re.wa.na.n.de.su.ka.\n這個是什麼呀？\n\nB：これは日本の急須です。\nko.re.wa.ni.ho.n.no.kyu.su.de.su.\n這是日本的茶壺。\n\nA：台湾のと違いますね。\nta.i.wa.n.no.to.chi.ga.i.ma.su.ne.\n和台灣的茶壺不太一樣耶。",
+                "讀日本書時遇到不懂的地方": "A：この辺は難しいです。\nko.no.he.n.wa.mu.zu.ka.shi.i.de.su.\n這部分好難唷。\n\nB：ちょっと見せてください。\ncho.tto.mi.se.te.ku.da.sa.i.\n請讓我看看。\n\nA：この辺の意味、よくわからないので、\nko.no.he.n.no.i.mi./yo.ku.wa.ka.ra.na.i.no.de.\n這邊的意思我不太了解，\n説明してもらってもいいですか？\nse.tsu.me.i.shi.te.mo.ra.tte.mo.i.i.de.su.ka.\n你可以跟我說明一下嗎？\n\n小知識\n在日本的文化裡是非常重視長幼有序的觀念，例如遇到長輩要用敬語，就算是以只差 1～2 歲也是有上下輩份的區分，常看到日本綜藝節目上長輩演員打晚輩演員的頭或是開他們的玩笑，晚輩也只能笑臉迎對，在日本與長輩說話，不使用敬語會被視為很沒有教養的人，如同韓文一樣重視敬語的使用方式，學習過程可能會覺得很麻煩，但這也是日本文化之美的地方。"
+            }
+        }
+    }
+};
 
         let currentFontSize = 16;
         let currentLineHeight = 1.6;
@@ -589,4 +605,4 @@
         window.onresize = updateStyle;
     </script>
 
-</body></html>
+<span style="--colorFg: #192419; --colorFgFadedMore: #6e706b; --colorBg: #f1efea; --colorBgDark: #e9e7e2; --colorBgLighter: #ffffff; --colorBorder: #d7d5d1;"></span></body></html>
