@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>詠風雅頌 · 現代橫書詩詞</title>
+    <style>
+        /* 全域樣式優化 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: "Noto Serif TC", "Noto Serif CJK TC", "PingFang TC", "Microsoft JhengHei", serif;
+            background-color: #f4f3ee; 
+            color: #2c2c2c;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 網頁主卡片 */
+        .poem-card {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 540px; /* 稍微加寬，讓長句子有足夠伸展空間 */
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04), 
+                        0 3px 10px rgba(0, 0, 0, 0.01);
+            padding: 45px 40px;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        /* 頂部資訊區：完全靠右排列 */
+        .poem-header {
+            width: 100%;
+            text-align: right;
+            margin-bottom: 35px; /* 與下方內文拉開舒適的留白 */
+        }
+
+        /* 詩詞名 */
+        .title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #8c2d19; /* 古典硃砂紅 */
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+        }
+
+        /* 作者 */
+        .author {
+            font-size: 0.9rem;
+            color: #7a756b;
+            letter-spacing: 2px;
+        }
+
+        /* 內文容器：用來讓整個詩詞區塊在卡片內水平置中 */
+        .content-container {
+            width: 100%;
+            display: flex;
+            justify-content: center; /* 讓內文區塊在卡片中央 */
+            margin-bottom: 35px;
+        }
+
+        /* 下方詩句內文區：改為「靠左對齊」 */
+        .content {
+            font-size: 1.25rem;
+            line-height: 2.2; /* 寬鬆的行高 */
+            color: #333333;
+            white-space: pre-line; /* 保持詩句的換行 */
+            letter-spacing: 2px;
+            text-align: left; /* 💡 關鍵修正：改為靠左對齊，讓長短句起點一致 */
+            font-weight: 500;
+            display: inline-block; /* 讓區塊大小隨最長的那一行自動伸縮 */
+            max-width: 100%;
+        }
+
+        /* 底部按鈕區 */
+        .btn-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .refresh-btn {
+            background: transparent;
+            color: #666;
+            border: 1px solid #e0dfd5;
+            padding: 10px 35px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.2s ease;
+            background-color: #ffffff;
+        }
+
+        /* 按鈕互動效果 */
+        .refresh-btn:hover {
+            border-color: #8c2d19;
+            color: #8c2d19;
+            background-color: #fbfbfa;
+            box-shadow: 0 4px 10px rgba(140, 45, 25, 0.05);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* RWD 行動裝置自動適應樣式 */
+        @media (max-width: 480px) {
+            .poem-card {
+                padding: 35px 25px;
+            }
+            .title {
+                font-size: 1.3rem;
+            }
+            .content {
+                font-size: 1.15rem;
+                line-height: 2;
+            }
+            .refresh-btn {
+                padding: 8px 28px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poem-card">
+        <!-- 上方右側：標題與作者 -->
+        <div class="poem-header">
+            <h1 class="title" id="poemTitle">載入中</h1>
+            <div class="author" id="poemAuthor">詩人</div>
+        </div>
+        
+        <!-- 中間：橫式內文（區塊置中，文字靠左） -->
+        <div class="content-container">
+            <p class="content" id="poemContent">縹緲孤鴻影，生機字句中。</p>
+        </div>
+        
+        <!-- 下方：按鈕 -->
+        <div class="btn-container">
+            <button class="refresh-btn" onclick="getRandomPoem()">易詞換景</button>
+        </div>
+    </div>
+
+    <script>
+        // 經典詩詞庫（特別挑選了長短句明顯的宋詞來測試排版）
+        const poemDatabase = [
+            { title: "水調歌頭", author: "宋 · 蘇軾", content: "明月幾時有？把酒問青天。\n不知天上宮闕，今夕是何年。\n我欲乘風歸去，又恐瓊樓玉宇，高處不勝寒。\n起舞弄清影，何似在人間。" },
+            { title: "定風波", author: "宋 · 蘇軾", content: "莫聽穿林打葉聲，何妨吟嘯且徐行。\n竹杖芒鞋輕勝馬，誰怕？一蓑煙雨任平生。\n料峭春風吹酒醒，微冷，山頭斜照卻相迎。\n回首向來蕭瑟處，歸去，也無風雨也無晴。" },
+            { title: "青玉案 · 元夕", author: "宋 · 辛棄疾", content: "東風夜放花千樹。更吹落、星如雨。\n寶馬雕車香滿路。\n鳳簫聲動，玉壺光轉，一夜魚龍舞。\n蛾兒雪柳黃金縷。笑語盈盈暗香去。\n眾裡尋他千百度。驀然回首，那人卻在，燈火闌珊處。" },
+            { title: "雨霖鈴", author: "宋 · 柳永", content: "寒蟬淒切，對長亭晚，驟雨初歇。\n都門帳飲無緒，留戀處，蘭舟催發。\n執手相看淚眼，竟無語凝噎。\n念去去，千里煙波，暮靄沉沉楚天闊。" },
+            { title: "錦瑟", author: "唐 · 李商隱", content: "錦瑟無端五十弦，一弦一柱思華年。\n莊生曉夢迷蝴蝶，望帝春心託杜鵑。\n滄海月明珠有淚，藍田日暖玉生煙。\n此情可待成追憶，只是當時已惘然。" }
+        ];
+
+        function getRandomPoem() {
+            const card = document.querySelector('.poem-card');
+            
+            card.style.opacity = 0;
+            card.style.transform = "translateY(4px)";
+            
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * poemDatabase.length);
+                const poem = poemDatabase[randomIndex];
+
+                document.getElementById('poemTitle').innerText = poem.title;
+                document.getElementById('poemAuthor').innerText = poem.author;
+                document.getElementById('poemContent').innerText = poem.content;
+                
+                card.style.opacity = 1;
+                card.style.transform = "translateY(0)";
+            }, 200);
+        }
+
+        window.onload = getRandomPoem;
+    </script>
+</body>
+</html>
