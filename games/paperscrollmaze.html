@@ -1,1 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>童年紙捲迷宮：原汁原味亮色版</title>
+    <style>
+        :root {
+            --bg-color: #faf6eb; /* 模擬稍微泛黃的乾淨圖畫紙 */
+            --line-color: #3a3226;
+        }
+        body {
+            background-color: #f0ebe0; /* 整個畫面都改成舒服的亮色 */
+            font-family: 'Courier New', Courier, monospace, "微軟正黑體";
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        /* 模擬長條紙捲軸 */
+        #scroll-container {
+            width: 100%;
+            max-width: 450px;
+            height: 95vh;
+            background-color: var(--bg-color);
+            border: 6px solid #8d7a5f;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow-y: hidden; 
+            position: relative;
+        }
+        .section {
+            height: 95vh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            padding: 20px;
+            text-align: center;
+        }
+        /* 鉛筆線條 */
+        .path-line {
+            width: 4px;
+            background-color: var(--line-color);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        .line-top { top: 0; height: 40%; }
+        .line-bottom { bottom: 0; height: 30%; }
+        
+        h1, h2, p {
+            color: var(--line-color);
+            z-index: 2;
+            margin: 10px 0;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid var(--line-color);
+            background: #fff;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: var(--line-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            z-index: 2;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.95); }
+        
+        .choice-container {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+            z-index: 2;
+        }
+        .choice-btn {
+            background: #fff;
+            border: 3px dashed var(--line-color);
+            color: var(--line-color);
+            padding: 15px 25px;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .choice-btn:hover {
+            background-color: #f5eedc;
+        }
+        
+        .badge {
+            font-size: 14px;
+            border: 1px solid var(--line-color);
+            padding: 3px 8px;
+            margin-bottom: 20px;
+            transform: rotate(-3deg);
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
 
+<div id="scroll-container">
+    
+    <!-- 起點 -->
+    <div class="section" id="sec-0">
+        <div class="badge">手繪童趣版 v3.1 (懷舊明亮色調)</div>
+        <h2>命運的紙捲迷宮</h2>
+        <p>請輸入今天最讓你水逆或糟心的事：</p>
+        <input type="text" id="target-name" placeholder="例如：加不完的班、難搞的客戶" value="加不完的班">
+        <button class="btn" onclick="startGame()">開始解開超長紙捲...</button>
+        <div class="path-line line-bottom"></div>
+    </div>
+
+    <!-- 關卡 1 -->
+    <div class="section" id="sec-1">
+        <div class="path-line line-top"></div>
+        <h2>【第 1 關：鬧鐘的咆哮】</h2>
+        <p>禮拜一清晨，鬧鐘瘋狂響起！你要往哪邊翻身避開？</p>
+        <div class="choice-container">
+            <button class="choice-btn" onclick="makeChoice(true)">左</button>
+            <button class="choice-btn" onclick="makeChoice(false)">右</button>
+        </div>
+        <div class="path-line line-bottom"></div>
+    </div>
+
+    <!-- 關卡 2 -->
+    <div class="section" id="sec-2">
+        <div class="path-line line-top"></div>
+        <h2>【第 2 關：已讀不回的焦慮】</h2>
+        <p>發出去的訊息顯示「已讀」，對方卻遲遲沒有輸入...快閃！</p>
+        <div class="choice-container">
+            <button class="choice-btn" onclick="makeChoice(false)">A</button>
+            <button class="choice-btn" onclick="makeChoice(true)">B</button>
+        </div>
+        <div class="path-line line-bottom"></div>
+    </div>
+
+    <!-- 關卡 3 -->
+    <div class="section" id="sec-3">
+        <div class="path-line line-top"></div>
+        <h2>【第 3 關：無盡的會議】</h2>
+        <p>主管突然說：「我們臨時來對個齊。」快找按鈕隱身！</p>
+        <div class="choice-container">
+            <button class="choice-btn" onclick="makeChoice(true)">紅</button>
+            <button class="choice-btn" onclick="makeChoice(false)">藍</button>
+        </div>
+        <div class="path-line line-bottom"></div>
+    </div>
+
+    <!-- 關卡 4 -->
+    <div class="section" id="sec-4">
+        <div class="path-line line-top"></div>
+        <h2>【第 4 關：體重的背叛】</h2>
+        <p>只是喝口水，體重計的數字居然往上跳了！該怎麼走？</p>
+        <div class="choice-container">
+            <button class="choice-btn" onclick="makeChoice(false)">上</button>
+            <button class="choice-btn" onclick="makeChoice(true)">下</button>
+        </div>
+        <div class="path-line line-bottom"></div>
+    </div>
+
+    <!-- 關卡 5 -->
+    <div class="section" id="sec-5">
+        <div class="path-line line-top"></div>
+        <h2>【第 5 關：命運的下班鐘】</h2>
+        <p>指針快到六點了，這是今天最後一拉，能不能順利溜走？</p>
+        <div class="choice-container">
+            <button class="choice-btn" onclick="makeChoice(true)">✕</button>
+            <button class="choice-btn" onclick="makeChoice(false)">◯</button>
+        </div>
+        <div class="path-line line-bottom"></div>
+    </div>
+
+    <!-- 終點 -->
+    <div class="section" id="sec-end">
+        <div class="path-line line-top" style="height: 20%;"></div>
+        <h1 style="font-size: 40px;">🎉 順利通關！</h1>
+        <p id="victory-msg">恭喜！你成功突破了重重水逆，守住了你的內心平靜！</p>
+        <div class="badge" id="boss-fate" style="font-size: 18px; color: #a00; font-weight: bold; padding: 10px;"></div>
+        <button class="btn" onclick="restartGame()">再拉一次紙捲</button>
+    </div>
+
+</div>
+
+<script>
+    let currentStage = 0;
+    let target = "日常生活瑣事";
+    const totalStages = 6; 
+    const container = document.getElementById('scroll-container');
+
+    const punishments = [
+        "踩到陳年大便坑！退回起點洗腳！",
+        "不小心踩到樂高積木！痛到退回起點！",
+        "選錯了！泡麵的調味包居然沒有開口，用牙齒咬到噴汁！退回重來！",
+        "出門才發現沒帶鑰匙和手機！在門口罰站並退回起點！",
+        "剛洗好車就突然下起暴雨！心情泡湯，退回重來！"
+    ];
+
+    const fates = [
+        "已被自動打包發射到外太空，再也不會來煩你！",
+        "剛剛不小心掉進馬桶被沖走了！",
+        "被 AI 格式化變成了一隻只會喵喵叫的電子貓！",
+        "變成了一縷輕煙，隨風飄散散散散去了——",
+        "被碎紙機切成碎片，變成了這條紙捲迷宮的背景裝飾！"
+    ];
+
+    function startGame() {
+        const inputVal = document.getElementById('target-name').value;
+        if(inputVal.trim() !== "") {
+            target = inputVal;
+        }
+        nextStage();
+    }
+
+    function makeChoice(isCorrect) {
+        if (isCorrect) {
+            nextStage();
+        } else {
+            const randomPunish = punishments[Math.floor(Math.random() * punishments.length)];
+            alert(`❌ 【慘遭懲罰】\n\n${randomPunish}`);
+            restartGame();
+        }
+    }
+
+    function nextStage() {
+        currentStage++;
+        
+        if(currentStage === totalStages) {
+            const randomFate = fates[Math.floor(Math.random() * fates.length)];
+            document.getElementById('boss-fate').innerText = `⚠️ 偵測到：【${target}】${randomFate}`;
+        }
+
+        container.scrollTo({
+            top: currentStage * container.clientHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    function restartGame() {
+        currentStage = 0;
+        container.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+</script>
+
+</body>
+</html>
