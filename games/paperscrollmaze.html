@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>童年紙捲迷宮：完美對齊修正版</title>
+    <title>童年紙捲迷宮：手機版極致視覺優化版</title>
     <style>
         :root {
             --bg-color: #faf6eb; 
@@ -16,11 +16,13 @@
             background-color: #f0ebe0; 
             font-family: 'Courier New', Courier, monospace, "微軟正黑體";
             margin: 0;
-            padding: 0;
+            /* 改進 1：補上 padding，確保手機版上下都有呼吸空間，框架不貼底 */
+            padding: 10px; 
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh; /* 支援動態全螢幕 */
             overflow: hidden; 
         }
         
@@ -28,7 +30,9 @@
         #scroll-container {
             width: 100%;
             max-width: 450px; 
-            height: 95vh; /* 以外殼高度為唯一基準 */
+            /* 改進 1：使用 dvh 代替 vh，動態扣除手機瀏覽器工具列，確保看得到下邊緣 */
+            height: 90vh;
+            height: 90dvh; 
             background-color: var(--bg-color);
             border: 6px solid #8d7a5f;
             border-radius: 8px;
@@ -37,66 +41,73 @@
             position: relative;
         }
         
-        /* 每一關的容器：完美服貼外殼高度，不溢出 */
+        /* 每一關的容器：完美服貼外殼高度 */
         .section {
-            height: 100%; /* 嚴格跟隨外殼高度 */
+            height: 100%; 
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* 頂部、內容、底部完美拉開 */
+            justify-content: space-between; 
             align-items: center;
             padding: 20px 25px; 
             text-align: center;
             position: relative;
-            flex-shrink: 0; /* 嚴格防止被壓縮 */
+            flex-shrink: 0; 
         }
         
-        /* 完美的上下塗鴉裝飾線，改回結構內排版，絕對不會跑位 */
+        /* 上下塗鴉裝飾線 */
         .doodle-container {
-            font-size: 26px; 
+            font-size: 24px; 
             letter-spacing: 12px; 
             padding-left: 12px; 
             user-select: none;
             opacity: 0.8;
-            height: 40px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            white-space: nowrap; /* 嚴格禁止折行 */
+            white-space: nowrap; 
             overflow: hidden;
-            flex-shrink: 0; /* 確保小圖案自己不會被壓扁 */
+            flex-shrink: 0; 
         }
         
-        /* 核心內文區塊：自動吃掉中間剩餘的所有空間 */
+        /* 核心內文區塊 */
         .content-block {
             width: 100%;
             flex-grow: 1; 
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 讓內文與按鈕在中間完美居中 */
+            justify-content: center; 
             align-items: center;
-            overflow: hidden; /* 預防萬一 */
+            overflow: hidden; 
         }
         
         h1, h2, p {
             color: var(--line-color);
-            margin: 8px 0;
+            margin: 6px 0;
             word-break: break-all; 
         }
         
-        h2 { font-size: 1.3rem; }
-        p { font-size: 1rem; line-height: 1.4; }
+        /* 改進 2：優化標題樣式，強制單行、不允許折行，字體略微縮小 */
+        h2 { 
+            font-size: 1.15rem; 
+            white-space: nowrap; 
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis; /* 萬一文字太長顯示驚嘆號或省略 */
+        }
+        p { font-size: 0.95rem; line-height: 1.4; }
         
         input {
-            padding: 12px;
+            padding: 10px;
             font-size: 16px;
             border: 2px solid var(--line-color);
             background: #fff;
             text-align: center;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 4px;
             width: 90%;
-            max-width: 300px;
+            max-width: 280px;
         }
         
         .btn {
@@ -109,15 +120,15 @@
             border-radius: 4px;
             font-weight: bold;
             transition: transform 0.1s;
-            margin: 10px 0;
+            margin: 5px 0;
             flex-shrink: 0;
         }
         .btn:active { transform: scale(0.95); }
         
         .choice-container {
             display: flex;
-            gap: 35px;
-            margin: 15px 0;
+            gap: 30px;
+            margin: 12px 0;
             flex-shrink: 0;
         }
         
@@ -129,8 +140,8 @@
             cursor: pointer;
             font-weight: bold;
             border-radius: 50%;
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -140,10 +151,10 @@
         .choice-btn:hover { background-color: #f5eedc; }
         
         .badge {
-            font-size: 13px;
+            font-size: 12px;
             border: 1px solid var(--line-color);
             padding: 3px 8px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             transform: rotate(-2deg);
             background: #fff;
             display: inline-block;
@@ -155,13 +166,16 @@
             text-decoration: underline;
         }
         
-        /* 小螢幕手機微調 */
+        /* 針對極窄或極短的手機螢幕進一步微調 */
         @media (max-height: 650px) {
-            .doodle-container { font-size: 20px; height: 30px; }
-            .section { padding: 10px 20px; }
-            h2 { font-size: 1.1rem; }
-            p { font-size: 0.9rem; }
-            .choice-btn { width: 55px; height: 55px; font-size: 16px; }
+            #scroll-container { height: 92dvh; }
+            .doodle-container { font-size: 18px; height: 25px; }
+            .section { padding: 8px 15px; }
+            h2 { font-size: 1.05rem; }
+            p { font-size: 0.85rem; margin: 4px 0; }
+            input { margin: 8px 0; padding: 8px; }
+            .choice-btn { width: 50px; height: 50px; font-size: 15px; }
+            .btn { padding: 10px 25px; font-size: 15px; }
         }
     </style>
 </head>
@@ -173,10 +187,10 @@
     <div class="section" id="sec-0">
         <div class="doodle-container class-doodle-top"></div> 
         <div class="content-block">
-            <div class="badge">手繪童趣版 v7.2 (高度精準對齊版)</div>
+            <div class="badge">手繪童趣版 v7.3 (手機版完工優化)</div>
             <h2>命運的紙捲迷宮</h2>
             <p>請輸入今天最讓你水逆、不爽或想逃避的事物：</p>
-            <input type="text" id="target-name" placeholder="例如：寫程式、開早會、主管的嘮叨" value="加不完的班">
+            <input type="text" id="target-name" placeholder="例如：寫程式、開早會" value="加不完的班">
             <button class="btn" onclick="startGame()">將怨念注入紙捲並出發...</button>
         </div>
         <div class="doodle-container class-doodle-bottom"></div> 
@@ -256,9 +270,9 @@
     <div class="section" id="sec-end">
         <div class="doodle-container class-doodle-top"></div>
         <div class="content-block">
-            <h1 style="font-size: 2.2rem; margin-bottom: 5px;">🎉 奇蹟通關！</h1>
+            <h1 style="font-size: 2rem; margin-bottom: 5px;">🎉 奇蹟通關！</h1>
             <p id="victory-msg">恭喜！你成功用高超的直覺完成了這趟冒險！</p>
-            <div class="badge" id="boss-fate" style="font-size: 15px; color: #a00; font-weight: bold; padding: 10px; transform: rotate(1deg); margin-top: 10px;"></div>
+            <div class="badge" id="boss-fate" style="font-size: 14px; color: #a00; font-weight: bold; padding: 10px; transform: rotate(1deg); margin-top: 10px;"></div>
             <button class="btn" onclick="restartGame()">重新洗牌，再次應戰</button>
         </div>
         <div class="doodle-container class-doodle-bottom"></div>
@@ -313,22 +327,23 @@
         bottomContainers.forEach(el => el.innerHTML = makeDoodleString(4));
     }
 
+    /* 改進 2：簡化了關卡劇本標題的字數，確保小螢幕手機也絕對不折行 */
     function updateStoryScript(kw) {
         const spanKw = `<span class="dynamic-keyword">${kw}</span>`;
         
-        document.getElementById('title-1').innerHTML = `【第 1 關：預知夢的警告】`;
+        document.getElementById('title-1').innerHTML = `【第 1 關：預知夢】`;
         document.getElementById('desc-1').innerHTML = `昨晚做夢，夢到今天一睜眼就要面對 ${spanKw}...！心驚肉跳的你，決定起床往哪邊翻身躲避？`;
 
-        document.getElementById('title-2').innerHTML = `【第 2 關：突如其來的黑影】`;
+        document.getElementById('title-2').innerHTML = `【第 2 關：神祕黑影】`;
         document.getElementById('desc-2').innerHTML = `走在路上，前方角落突然飄出一股恐怖的氣息，定睛一看，天啊！竟然是隱形的 ${spanKw} 正在逼近！快閃！`;
 
         document.getElementById('title-3').innerHTML = `【第 3 關：全面封鎖】`;
         document.getElementById('desc-3').innerHTML = `手機突然震動，通知欄跳出好幾則跟 ${spanKw} 有關的緊急訊息！按哪個按鈕可以一鍵隱身？`;
 
-        document.getElementById('title-4').innerHTML = `【第 4 關：地心引力的背叛】`;
+        document.getElementById('title-4').innerHTML = `【第 4 關：失重危機】`;
         document.getElementById('desc-4').innerHTML = `就在你覺得快要逃掉時，地心引力突然失靈，你跟 ${spanKw} 同時飄到了半空中！該往哪邊游動才能甩開它？`;
 
-        document.getElementById('title-5').innerHTML = `【第 5 關：命運的終點線】`;
+        document.getElementById('title-5').innerHTML = `【第 5 關：命運終點線】`;
         document.getElementById('desc-5').innerHTML = `終點就在眼前了！但 ${spanKw} 竟然擋在傳送門前做最後的掙扎！這是最後一拉，給它奮力一擊吧！`;
     }
 
@@ -370,7 +385,6 @@
             document.getElementById('boss-fate').innerText = `⚠️ 終極捷報：【${target}】${randomFate}`;
         }
 
-        // 核心滾動邏輯修正：每次精準滾動「正好一整個關卡」的高度
         container.scrollTo({
             top: currentStage * container.clientHeight,
             behavior: 'smooth'
