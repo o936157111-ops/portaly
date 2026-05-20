@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>銀河戰役：經典太空射擊</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #0b0b1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        .game-container {
+            background-color: #1a1a2e;
+            border: 4px solid #16213e;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+        }
+
+        .status-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            background-color: #0f0f1a;
+            padding: 8px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #00ffff;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .view-window {
+            position: relative;
+            width: 100%;
+            border: 3px solid #0f0f1a;
+            background-color: #000; 
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: radial-gradient(circle at center, #0d1b2a 0%, #000814 100%);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(11, 11, 26, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .overlay h2 { color: #00ffff; font-size: 32px; margin-bottom: 10px; font-family: monospace; letter-spacing: 2px; }
+        .overlay p { font-size: 14px; color: #8bd3dd; line-height: 1.6; margin-bottom: 20px; }
+
+        .btn {
+            background-color: #00ffff;
+            color: #0b0b1a;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px #00b3b3;
+        }
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px #00b3b3;
+        }
+
+        .pc-tip {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="status-bar">
+        <span id="scoreTxt">SCORE: 0</span>
+        <span id="waveTxt">WAVE: 1</span>
+    </div>
+
+    <div class="view-window" id="touchArea">
+        <!-- 經典垂直射擊比例：寬 320, 高 450 -->
+        <canvas id="gameCanvas" width="320" height="450"></canvas>
+        
+        <div id="gameOverlay" class="overlay">
+            <h2 id="overlayTitle">GALAXY WARS</h2>
+            <p id="overlaySub">消滅所有逼近的外星敵機！<br>戰機會自動開火，專心閃躲吧！</p>
+            <button id="startBtn" class="btn">LAUNCH</button>
+        </div>
+    </div>
+
+    <div class="pc-tip">
+        電腦：左右方向鍵 或 A、D 鍵移動移動<br>
+        手機：在 <b>黑色遊戲畫面內直接左右拖曳</b> 即可控制
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const gameOverlay = document.getElementById('gameOverlay');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlaySub = document.getElementById('overlaySub');
+    const scoreTxt = document.getElementById('scoreTxt');
+    const waveTxt = document.getElementById('waveTxt');
+    const touchArea = document.getElementById('touchArea');
+
+    let score = 0;
+    let wave = 1;
+    let gameOver = true;
+    let animationId;
+
+    // 遊戲物件群
+    let player = { x: 160, y: 410, width: 30, height: 24, speed: 5 };
+    let lasers = [];
+    let enemies = [];
+    let stars = [];
+    let enemySpeedBase = 0.8;
+
+    // 控制器狀態
+    let keys = { Left: false, Right: false };
+    let lastShootTime = 0;
+    const shootInterval = 300; // 0.3秒自動射擊一發
+
+    // 初始化滿天星空背景
+    for (let i = 0; i < 30; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speed: Math.random() * 1.5 + 0.5,
+            size: Math.random() * 1.5 + 0.5
+        });
+    }
+
+    function initGame() {
+        score = 0;
+        wave = 1;
+        enemySpeedBase = 0.8;
+        gameOver = false;
+        lasers = [];
+        enemies = [];
+        player.x = canvas.width / 2;
+
+        keys.Left = false;
+        keys.Right = false;
+
+        spawnEnemies();
+        updateUI();
+        gameOverlay.style.display = 'none';
+
+        lastShootTime = performance.now();
+        if (animationId) cancelAnimationFrame(animationId);
+        animate(performance.now());
+    }
+
+    // 生成敵機陣列 (5行 x 6列)
+    function spawnEnemies() {
+        enemies = [];
+        const rows = 4;
+        const cols = 6;
+        const spacingX = 40;
+        const spacingY = 32;
+        const startX = (canvas.width - (cols - 1) * spacingX) / 2;
+        const startY = 40;
+
+        // 隨著波數越高，外星人移動速度越快
+        let currentSpeed = enemySpeedBase + (wave - 1) * 0.25;
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                enemies.push({
+                    x: startX + c * spacingX,
+                    y: startY + r * spacingY,
+                    width: 22,
+                    height: 16,
+                    speedX: currentSpeed,
+                    dir: 1 // 1往右，-1往左
+                });
+            }
+        }
+    }
+
+    function update(currentTime) {
+        if (gameOver) return;
+
+        // 1. 背景星空捲動
+        stars.forEach(star => {
+            star.y += star.speed;
+            if (star.y > canvas.height) {
+                star.y = 0;
+                star.x = Math.random() * canvas.width;
+            }
+        });
+
+        // 2. 玩家鍵盤移動
+        if (keys.Left) player.x -= player.speed;
+        if (keys.Right) player.x += player.speed;
+
+        // 邊界限制
+        if (player.x - player.width/2 < 0) player.x = player.width/2;
+        if (player.x + player.width/2 > canvas.width) player.x = canvas.width - player.width/2;
+
+        // 3. 自動雷射充能與開火
+        if (currentTime - lastShootTime > shootInterval) {
+            lasers.push({
+                x: player.x,
+                y: player.y - player.height/2,
+                speed: 7,
+                radius: 2.5
+            });
+            lastShootTime = currentTime;
+        }
+
+        // 4. 雷射更新與越界回收
+        for (let i = lasers.length - 1; i >= 0; i--) {
+            lasers[i].y -= lasers[i].speed;
+            if (lasers[i].y < 0) {
+                lasers.splice(i, 1);
+            }
+        }
+
+        // 5. 敵機移動邏輯 (碰到邊緣整體往下沉並反轉方向)
+        let changeDir = false;
+        enemies.forEach(enemy => {
+            enemy.x += enemy.speedX * enemy.dir;
+            if (enemy.x - enemy.width/2 < 5 || enemy.x + enemy.width/2 > canvas.width - 5) {
+                changeDir = true;
+            }
+        });
+
+        if (changeDir) {
+            enemies.forEach(enemy => {
+                enemy.dir *= -1;
+                enemy.y += 12; // 整體下移
+                // 如果外星人突破底線，直接輸
+                if (enemy.y + enemy.height/2 >= player.y - player.height/2) {
+                    endGame(false);
+                }
+            });
+        }
+
+        // 6. 碰撞判定：雷射 vs 敵機
+        for (let l = lasers.length - 1; l >= 0; l--) {
+            for (let e = enemies.length - 1; e >= 0; e--) {
+                if (checkCollision(lasers[l], enemies[e])) {
+                    // 擊中！移除雷射與敵機
+                    lasers.splice(l, 1);
+                    enemies.splice(e, 1);
+                    score += 20;
+                    updateUI();
+                    break; // 跳出內迴圈，這發雷射已經消耗掉了
+                }
+            }
+        }
+
+        // 7. 檢查是否清空當前波數的所有外星人
+        if (enemies.length === 0 && !gameOver) {
+            wave++;
+            updateUI();
+            spawnEnemies();
+        }
+    }
+
+    // 簡單的圓形與矩形/點矩形碰撞檢測
+    function checkCollision(laser, enemy) {
+        return (
+            laser.x > enemy.x - enemy.width/2 &&
+            laser.x < enemy.x + enemy.width/2 &&
+            laser.y > enemy.y - enemy.height/2 &&
+            laser.y < enemy.y + enemy.height/2
+        );
+    }
+
+    function endGame(isWin) {
+        gameOver = true;
+        gameOverlay.style.display = 'flex';
+        overlayTitle.textContent = "MISSION FAILED";
+        overlaySub.textContent = `防線被外星人攻破了！\n最終波數: WAVE ${wave}\n總得分: ${score}`;
+        startBtn.textContent = "REDEPLOY";
+    }
+
+    function updateUI() {
+        scoreTxt.textContent = `SCORE: ${score}`;
+        waveTxt.textContent = `WAVE: ${wave}`;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. 畫星空
+        ctx.fillStyle = '#ffffff';
+        stars.forEach(star => {
+            ctx.fillRect(star.x, star.y, star.size, star.size);
+        });
+
+        if (gameOver) return;
+
+        // 2. 畫玩家戰機 🚀 (綠色前衛科幻幾何造型)
+        ctx.fillStyle = '#00ffcc';
+        ctx.beginPath();
+        ctx.moveTo(player.x, player.y - player.height/2); // 機頭
+        ctx.lineTo(player.x + player.width/2, player.y + player.height/2); // 右翼
+        ctx.lineTo(player.x + player.width/4, player.y + player.height/4);
+        ctx.lineTo(player.x - player.width/4, player.y + player.height/4);
+        ctx.lineTo(player.x - player.width/2, player.y + player.height/2); // 左翼
+        ctx.closePath();
+        ctx.fill();
+
+        // 3. 畫雷射 ⚡ (亮紅色能量球)
+        ctx.fillStyle = '#ff3366';
+        lasers.forEach(laser => {
+            ctx.beginPath();
+            ctx.arc(laser.x, laser.y, laser.radius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // 4. 畫外星敵機 👾 (紅色雙翼怪獸造型)
+        ctx.fillStyle = '#ff4757';
+        enemies.forEach(enemy => {
+            let ex = enemy.x;
+            let ey = enemy.y;
+            let w = enemy.width;
+            let h = enemy.height;
+
+            ctx.fillRect(ex - w/2 + 4, ey - h/2, w - 8, h); // 主軀幹
+            ctx.fillRect(ex - w/2, ey - h/4, w, h/2);       // 觸手雙翼
+            // 畫個發光的小眼睛
+            ctx.fillStyle = '#ffff00';
+            ctx.fillRect(ex - 5, ey - 2, 2, 2);
+            ctx.fillRect(ex + 3, ey - 2, 2, 2);
+            ctx.fillStyle = '#ff4757'; // 切回紅色
+        });
+    }
+
+    function animate(currentTime) {
+        if (gameOver) return;
+        update(currentTime);
+        draw();
+        animationId = requestAnimationFrame(animate);
+    }
+
+    // 鍵盤監聽事件
+    window.addEventListener('keydown', e => {
+        if (['ArrowLeft', 'ArrowRight', 'a', 'd', 'A', 'D'].includes(e.key)) e.preventDefault();
+        if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') keys.Left = true;
+        if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') keys.Right = true;
+    });
+
+    window.addEventListener('keyup', e => {
+        if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') keys.Left = false;
+        if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') keys.Right = false;
+    });
+
+    // 手機端全螢幕滑動操控：手指放在畫面上左右拖曳，太空船 1:1 跟隨
+    function handleTouch(e) {
+        if (gameOver) return;
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        // 算出觸控點相對於 canvas 的比例位置
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const touchXOnCanvas = ((clientX - rect.left) / rect.width) * canvas.width;
+        
+        player.x = touchXOnCanvas;
+    }
+
+    touchArea.addEventListener('touchstart', handleTouch, { passive: false });
+    touchArea.addEventListener('touchmove', handleTouch, { passive: false });
+    touchArea.addEventListener('mousemove', (e) => {
+        // 如果滑鼠有按著，也支援滑鼠拖曳移動
+        if (e.buttons === 1) handleTouch(e);
+    });
+
+    startBtn.addEventListener('click', initGame);
+</script>
+
+</body>
+</html>

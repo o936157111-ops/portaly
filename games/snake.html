@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>經典復古貪食蛇 - RWD版</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #222;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+            padding: 10px;
+        }
+
+        /* 模擬老舊手機外殼與 RWD 主要容器 */
+        .phone-container {
+            background-color: #333;
+            border: 4px solid #444;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px; /* 限制在手機般的大小，更具復古感 */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 經典綠色液晶螢幕 */
+        .screen {
+            background-color: #8fa382;
+            border: 6px solid #111;
+            border-radius: 4px;
+            width: 100%;
+            padding: 10px;
+            position: relative;
+        }
+
+        /* 頂部資訊列 */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            color: #2b3a22;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #2b3a22;
+            padding-bottom: 4px;
+        }
+
+        /* 遊戲畫布自動適應寬度 (RWD 核心) */
+        canvas {
+            background-color: #8fa382;
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated; /* 讓像素保持銳利不模糊 */
+        }
+
+        /* 遊戲結束或暫停的覆蓋提示 */
+        .overlay {
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background-color: rgba(143, 163, 130, 0.9);
+            color: #2b3a22;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: monospace;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .overlay h2 { margin-bottom: 10px; font-size: 24px; }
+        .overlay p { font-size: 14px; }
+
+        /* 控制選單 */
+        .controls {
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn:active { background-color: #777; }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #444;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .speed-control select {
+            background: #555;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* 手機專用的虛擬方向鍵 (D-Pad) */
+        .d-pad {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .d-btn {
+            background-color: #222;
+            color: #fff;
+            border: 2px solid #444;
+            border-radius: 50%;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #111;
+        }
+        .d-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #111;
+        }
+        .d-btn.up { grid-column: 2; grid-row: 1; }
+        .d-btn.left { grid-column: 1; grid-row: 2; }
+        .d-btn.right { grid-column: 3; grid-row: 2; }
+        .d-btn.down { grid-column: 2; grid-row: 3; }
+
+        /* 電腦版提示 */
+        .pc-tip {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* 當螢幕比較大時（電腦），可以選擇隱藏或縮小 D-pad，這裡保留讓使用者也能用滑鼠點 */
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <!-- 手機螢幕區域 -->
+    <div class="screen">
+        <div class="status-bar">
+            <span id="score-display">SCORE: 0000</span>
+            <span id="hi-score-display">HI: 0000</span>
+        </div>
+        
+        <!-- 實際繪製遊戲的畫布 -->
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+        <!-- 覆蓋提示層（開始/遊戲結束） -->
+        <div id="gameOverlay" class="overlay">
+            <h2 id="overlayTitle">SNAKE GAME</h2>
+            <p id="overlaySub">點擊下方 START 開始遊戲</p>
+        </div>
+    </div>
+
+    <!-- 功能控制項 -->
+    <div class="controls">
+        <button id="startBtn" class="btn">START</button>
+        <div class="speed-control">
+            <label for="speedSelect">速度(難度):</label>
+            <select id="speedSelect">
+                <option value="150">新手 (慢)</option>
+                <option value="100" selected>經典 (中)</option>
+                <option value="60">高手 (快)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 手機觸控虛擬按鍵 -->
+    <div class="d-pad">
+        <button class="d-btn up" data-dir="UP">▲</button>
+        <button class="d-btn left" data-dir="LEFT">◀</button>
+        <button class="d-btn right" data-dir="RIGHT">▶</button>
+        <button class="d-btn down" data-dir="DOWN">▼</button>
+    </div>
+
+    <div class="pc-tip">電腦玩家亦可直接使用鍵盤方向鍵操作</div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score-display');
+    const hiScoreDisplay = document.getElementById('hi-score-display');
+    const startBtn = document.getElementById('startBtn');
+    const speedSelect = document.getElementById('speedSelect');
+    const gameOverlay = document.getElementById('gameOverlay');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlaySub = document.getElementById('overlaySub');
+
+    // 遊戲網格設定 (400x400 的畫布切成 20x20 個格子，每格 20px)
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+
+    let snake = [];
+    let food = { x: 0, y: 0 };
+    let dx = 0;
+    let dy = 0;
+    let score = 0;
+    let highScore = localStorage.getItem('snakeHighScore') || 0;
+    let gameInterval = null;
+    let isGameOver = true;
+    let isPaused = false;
+    let nextDirection = { x: 0, y: 0 }; // 防止在一個影格內連續按鍵造成自殺
+
+    hiScoreDisplay.textContent = `HI: ${String(highScore).padStart(4, '0')}`;
+
+    // 初始化/重置遊戲
+    function initGame() {
+        snake = [
+            { x: 10, y: 10 },
+            { x: 9, y: 10 },
+            { x: 8, y: 10 }
+        ];
+        generateFood();
+        dx = 1; // 預設往右移動
+        dy = 0;
+        nextDirection = { x: 1, y: 0 };
+        score = 0;
+        updateScoreDisplay();
+        isGameOver = false;
+        isPaused = false;
+        gameOverlay.style.display = 'none';
+        startBtn.textContent = 'PAUSE';
+        
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(gameLoop, speedSelect.value);
+    }
+
+    // 遊戲主循環
+    function gameLoop() {
+        if (isPaused || isGameOver) return;
+
+        // 確定下一步的方向
+        dx = nextDirection.x;
+        dy = nextDirection.y;
+
+        // 計算蛇頭新位置
+        const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+        // 碰撞檢查：撞牆
+        if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+            endGame();
+            return;
+        }
+
+        // 碰撞檢查：撞到自己
+        for (let i = 0; i < snake.length; i++) {
+            if (snake[i].x === head.x && snake[i].y === head.y) {
+                endGame();
+                return;
+            }
+        }
+
+        // 將新蛇頭加入陣列最前面
+        snake.unshift(head);
+
+        // 檢查是否吃到食物
+        if (head.x === food.x && head.y === food.y) {
+            score += 10;
+            updateScoreDisplay();
+            generateFood();
+        } else {
+            // 沒吃到食物，就把蛇尾巴去掉，保持長度
+            snake.pop();
+        }
+
+        draw();
+    }
+
+    // 繪製畫布上的所有東西
+    function draw() {
+        // 清空畫布（用背光色填滿）
+        ctx.fillStyle = '#8fa382';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 繪製小蛇 (深墨綠色像素)
+        ctx.fillStyle = '#2b3a22';
+        snake.forEach((part, index) => {
+            // 頭部稍微畫點區隔，或者全部一樣呈現純粹像素感
+            ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+        });
+
+        // 繪製食物 (閃爍感或實心)
+        ctx.fillStyle = '#1a2414';
+        ctx.fillRect(food.x * gridSize + 2, food.y * gridSize + 2, gridSize - 4, gridSize - 4);
+    }
+
+    // 隨機生成食物位置
+    function generateFood() {
+        food.x = Math.floor(Math.random() * tileCount);
+        food.y = Math.floor(Math.random() * tileCount);
+
+        // 確保食物不會生在蛇的身體上
+        snake.forEach(part => {
+            if (part.x === food.x && part.y === food.y) {
+                generateFood();
+            }
+        });
+    }
+
+    function updateScoreDisplay() {
+        scoreDisplay.textContent = `SCORE: ${String(score).padStart(4, '0')}`;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('snakeHighScore', highScore);
+            hiScoreDisplay.textContent = `HI: ${String(highScore).padStart(4, '0')}`;
+        }
+    }
+
+    function endGame() {
+        isGameOver = true;
+        clearInterval(gameInterval);
+        overlayTitle.textContent = 'GAME OVER';
+        overlaySub.textContent = `最終得分: ${score}\n點擊 START 重新挑戰`;
+        gameOverlay.style.display = 'flex';
+        startBtn.textContent = 'START';
+    }
+
+    function togglePause() {
+        if (isGameOver) {
+            initGame();
+            return;
+        }
+        isPaused = !isPaused;
+        if (isPaused) {
+            startBtn.textContent = 'RESUME';
+            overlayTitle.textContent = '遊戲暫停';
+            overlaySub.textContent = '點擊 RESUME 繼續遊戲';
+            gameOverlay.style.display = 'flex';
+        } else {
+            startBtn.textContent = 'PAUSE';
+            gameOverlay.style.display = 'none';
+        }
+    }
+
+    // 方向控制核心邏輯
+    function changeDirection(dir) {
+        if (isPaused || isGameOver) return;
+        
+        switch (dir) {
+            case 'UP':
+                if (dy !== 1) nextDirection = { x: 0, y: -1 };
+                break;
+            case 'DOWN':
+                if (dy !== -1) nextDirection = { x: 0, y: 1 };
+                break;
+            case 'LEFT':
+                if (dx !== 1) nextDirection = { x: -1, y: 0 };
+                break;
+            case 'RIGHT':
+                if (dx !== -1) nextDirection = { x: 1, y: 0 };
+                break;
+        }
+    }
+
+    // 監聽鍵盤事件（電腦版）
+    window.addEventListener('keydown', e => {
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+            e.preventDefault(); // 防止網頁捲動
+        }
+        
+        if (e.key === 'ArrowUp') changeDirection('UP');
+        if (e.key === 'ArrowDown') changeDirection('DOWN');
+        if (e.key === 'ArrowLeft') changeDirection('LEFT');
+        if (e.key === 'ArrowRight') changeDirection('RIGHT');
+        if (e.key === ' ') togglePause(); // 空白鍵暫停
+    });
+
+    // 監聽按鈕點擊事件
+    startBtn.addEventListener('click', togglePause);
+    
+    // 監聽虛擬 D-pad 觸控/點擊（手機版）
+    document.querySelectorAll('.d-btn').forEach(btn => {
+        // 同時支援 mousedown 與 touchstart，讓手機反應更快
+        const handlePress = (e) => {
+            e.preventDefault();
+            const dir = btn.getAttribute('data-dir');
+            changeDirection(dir);
+        };
+        btn.addEventListener('mousedown', handlePress);
+        btn.addEventListener('touchstart', handlePress);
+    });
+
+    // 調整速度難度
+    speedSelect.addEventListener('change', () => {
+        if (!isGameOver && !isPaused) {
+            clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, speedSelect.value);
+        }
+    });
+
+    // 首次進網頁先繪製一幅空的畫面
+    draw();
+</script>
+
+</body>
+</html>
