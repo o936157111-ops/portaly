@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>童年紙捲迷宮：原汁原味亮色版</title>
+    <title>童年紙捲迷宮：完美對齊修正版</title>
     <style>
         :root {
-            --bg-color: #faf6eb; /* 模擬稍微泛黃的乾淨圖畫紙 */
+            --bg-color: #faf6eb; 
             --line-color: #3a3226;
         }
+        * {
+            box-sizing: border-box;
+        }
         body {
-            background-color: #f0ebe0; /* 整個畫面都改成舒服的亮色 */
+            background-color: #f0ebe0; 
             font-family: 'Courier New', Courier, monospace, "微軟正黑體";
             margin: 0;
             padding: 0;
@@ -18,105 +21,147 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow: hidden; 
         }
-        /* 模擬長條紙捲軸 */
+        
+        /* 核心紙捲外殼 */
         #scroll-container {
             width: 100%;
-            max-width: 450px;
-            height: 95vh;
+            max-width: 450px; 
+            height: 95vh; /* 以外殼高度為唯一基準 */
             background-color: var(--bg-color);
             border: 6px solid #8d7a5f;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow-y: hidden; 
+            overflow: hidden; 
             position: relative;
         }
+        
+        /* 每一關的容器：完美服貼外殼高度，不溢出 */
         .section {
-            height: 95vh; 
+            height: 100%; /* 嚴格跟隨外殼高度 */
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between; /* 頂部、內容、底部完美拉開 */
             align-items: center;
-            position: relative;
-            box-sizing: border-box;
-            padding: 20px;
+            padding: 20px 25px; 
             text-align: center;
+            position: relative;
+            flex-shrink: 0; /* 嚴格防止被壓縮 */
         }
-        /* 鉛筆線條 */
-        .path-line {
-            width: 4px;
-            background-color: var(--line-color);
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1;
+        
+        /* 完美的上下塗鴉裝飾線，改回結構內排版，絕對不會跑位 */
+        .doodle-container {
+            font-size: 26px; 
+            letter-spacing: 12px; 
+            padding-left: 12px; 
+            user-select: none;
+            opacity: 0.8;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            white-space: nowrap; /* 嚴格禁止折行 */
+            overflow: hidden;
+            flex-shrink: 0; /* 確保小圖案自己不會被壓扁 */
         }
-        .line-top { top: 0; height: 40%; }
-        .line-bottom { bottom: 0; height: 30%; }
+        
+        /* 核心內文區塊：自動吃掉中間剩餘的所有空間 */
+        .content-block {
+            width: 100%;
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 讓內文與按鈕在中間完美居中 */
+            align-items: center;
+            overflow: hidden; /* 預防萬一 */
+        }
         
         h1, h2, p {
             color: var(--line-color);
-            z-index: 2;
-            margin: 10px 0;
+            margin: 8px 0;
+            word-break: break-all; 
         }
+        
+        h2 { font-size: 1.3rem; }
+        p { font-size: 1rem; line-height: 1.4; }
+        
         input {
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
             border: 2px solid var(--line-color);
             background: #fff;
             text-align: center;
-            margin-bottom: 15px;
+            margin: 15px 0;
             border-radius: 4px;
+            width: 90%;
+            max-width: 300px;
         }
+        
         .btn {
             background-color: var(--line-color);
             color: var(--bg-color);
             border: none;
             padding: 12px 30px;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             border-radius: 4px;
-            z-index: 2;
             font-weight: bold;
             transition: transform 0.1s;
+            margin: 10px 0;
+            flex-shrink: 0;
         }
         .btn:active { transform: scale(0.95); }
         
         .choice-container {
             display: flex;
-            gap: 40px;
-            margin-top: 20px;
-            z-index: 2;
+            gap: 35px;
+            margin: 15px 0;
+            flex-shrink: 0;
         }
+        
         .choice-btn {
             background: #fff;
             border: 3px dashed var(--line-color);
             color: var(--line-color);
-            padding: 15px 25px;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             font-weight: bold;
             border-radius: 50%;
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.2s;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .choice-btn:hover {
-            background-color: #f5eedc;
-        }
+        .choice-btn:hover { background-color: #f5eedc; }
         
         .badge {
-            font-size: 14px;
+            font-size: 13px;
             border: 1px solid var(--line-color);
             padding: 3px 8px;
-            margin-bottom: 20px;
-            transform: rotate(-3deg);
+            margin-bottom: 15px;
+            transform: rotate(-2deg);
             background: #fff;
+            display: inline-block;
+        }
+        
+        .dynamic-keyword {
+            color: #b85c00;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        
+        /* 小螢幕手機微調 */
+        @media (max-height: 650px) {
+            .doodle-container { font-size: 20px; height: 30px; }
+            .section { padding: 10px 20px; }
+            h2 { font-size: 1.1rem; }
+            p { font-size: 0.9rem; }
+            .choice-btn { width: 55px; height: 55px; font-size: 16px; }
         }
     </style>
 </head>
@@ -126,81 +171,97 @@
     
     <!-- 起點 -->
     <div class="section" id="sec-0">
-        <div class="badge">手繪童趣版 v3.1 (懷舊明亮色調)</div>
-        <h2>命運的紙捲迷宮</h2>
-        <p>請輸入今天最讓你水逆或糟心的事：</p>
-        <input type="text" id="target-name" placeholder="例如：加不完的班、難搞的客戶" value="加不完的班">
-        <button class="btn" onclick="startGame()">開始解開超長紙捲...</button>
-        <div class="path-line line-bottom"></div>
+        <div class="doodle-container class-doodle-top"></div> 
+        <div class="content-block">
+            <div class="badge">手繪童趣版 v7.2 (高度精準對齊版)</div>
+            <h2>命運的紙捲迷宮</h2>
+            <p>請輸入今天最讓你水逆、不爽或想逃避的事物：</p>
+            <input type="text" id="target-name" placeholder="例如：寫程式、開早會、主管的嘮叨" value="加不完的班">
+            <button class="btn" onclick="startGame()">將怨念注入紙捲並出發...</button>
+        </div>
+        <div class="doodle-container class-doodle-bottom"></div> 
     </div>
 
     <!-- 關卡 1 -->
     <div class="section" id="sec-1">
-        <div class="path-line line-top"></div>
-        <h2>【第 1 關：鬧鐘的咆哮】</h2>
-        <p>禮拜一清晨，鬧鐘瘋狂響起！你要往哪邊翻身避開？</p>
-        <div class="choice-container">
-            <button class="choice-btn" onclick="makeChoice(true)">左</button>
-            <button class="choice-btn" onclick="makeChoice(false)">右</button>
+        <div class="doodle-container class-doodle-top"></div>
+        <div class="content-block">
+            <h2 id="title-1">【第 1 關】</h2>
+            <p id="desc-1">讀取中...</p>
+            <div class="choice-container">
+                <button class="choice-btn" onclick="makeChoice(1, 'left')">Left</button>
+                <button class="choice-btn" onclick="makeChoice(1, 'right')">Right</button>
+            </div>
         </div>
-        <div class="path-line line-bottom"></div>
+        <div class="doodle-container class-doodle-bottom"></div>
     </div>
 
     <!-- 關卡 2 -->
     <div class="section" id="sec-2">
-        <div class="path-line line-top"></div>
-        <h2>【第 2 關：已讀不回的焦慮】</h2>
-        <p>發出去的訊息顯示「已讀」，對方卻遲遲沒有輸入...快閃！</p>
-        <div class="choice-container">
-            <button class="choice-btn" onclick="makeChoice(false)">A</button>
-            <button class="choice-btn" onclick="makeChoice(true)">B</button>
+        <div class="doodle-container class-doodle-top"></div>
+        <div class="content-block">
+            <h2 id="title-2">【第 2 關】</h2>
+            <p id="desc-2">讀取中...</p>
+            <div class="choice-container">
+                <button class="choice-btn" onclick="makeChoice(2, 'A')">A</button>
+                <button class="choice-btn" onclick="makeChoice(2, 'B')">B</button>
+            </div>
         </div>
-        <div class="path-line line-bottom"></div>
+        <div class="doodle-container class-doodle-bottom"></div>
     </div>
 
     <!-- 關卡 3 -->
     <div class="section" id="sec-3">
-        <div class="path-line line-top"></div>
-        <h2>【第 3 關：無盡的會議】</h2>
-        <p>主管突然說：「我們臨時來對個齊。」快找按鈕隱身！</p>
-        <div class="choice-container">
-            <button class="choice-btn" onclick="makeChoice(true)">紅</button>
-            <button class="choice-btn" onclick="makeChoice(false)">藍</button>
+        <div class="doodle-container class-doodle-top"></div>
+        <div class="content-block">
+            <h2 id="title-3">【第 3 關】</h2>
+            <p id="desc-3">讀取中...</p>
+            <div class="choice-container">
+                <button class="choice-btn" onclick="makeChoice(3, 'red')">紅</button>
+                <button class="choice-btn" onclick="makeChoice(3, 'blue')">藍</button>
+            </div>
         </div>
-        <div class="path-line line-bottom"></div>
+        <div class="doodle-container class-doodle-bottom"></div>
     </div>
 
     <!-- 關卡 4 -->
     <div class="section" id="sec-4">
-        <div class="path-line line-top"></div>
-        <h2>【第 4 關：體重的背叛】</h2>
-        <p>只是喝口水，體重計的數字居然往上跳了！該怎麼走？</p>
-        <div class="choice-container">
-            <button class="choice-btn" onclick="makeChoice(false)">上</button>
-            <button class="choice-btn" onclick="makeChoice(true)">下</button>
+        <div class="doodle-container class-doodle-top"></div>
+        <div class="content-block">
+            <h2 id="title-4">【第 4 關】</h2>
+            <p id="desc-4">讀取中...</p>
+            <div class="choice-container">
+                <button class="choice-btn" onclick="makeChoice(4, 'up')">上</button>
+                <button class="choice-btn" onclick="makeChoice(4, 'down')">下</button>
+            </div>
         </div>
-        <div class="path-line line-bottom"></div>
+        <div class="doodle-container class-doodle-bottom"></div>
     </div>
 
     <!-- 關卡 5 -->
     <div class="section" id="sec-5">
-        <div class="path-line line-top"></div>
-        <h2>【第 5 關：命運的下班鐘】</h2>
-        <p>指針快到六點了，這是今天最後一拉，能不能順利溜走？</p>
-        <div class="choice-container">
-            <button class="choice-btn" onclick="makeChoice(true)">✕</button>
-            <button class="choice-btn" onclick="makeChoice(false)">◯</button>
+        <div class="doodle-container class-doodle-top"></div>
+        <div class="content-block">
+            <h2 id="title-5">【第 5 關】</h2>
+            <p id="desc-5">讀取中...</p>
+            <div class="choice-container">
+                <button class="choice-btn" onclick="makeChoice(5, 'X')">✕</button>
+                <button class="choice-btn" onclick="makeChoice(5, 'O')">◯</button>
+            </div>
         </div>
-        <div class="path-line line-bottom"></div>
+        <div class="doodle-container class-doodle-bottom"></div>
     </div>
 
     <!-- 終點 -->
     <div class="section" id="sec-end">
-        <div class="path-line line-top" style="height: 20%;"></div>
-        <h1 style="font-size: 40px;">🎉 順利通關！</h1>
-        <p id="victory-msg">恭喜！你成功突破了重重水逆，守住了你的內心平靜！</p>
-        <div class="badge" id="boss-fate" style="font-size: 18px; color: #a00; font-weight: bold; padding: 10px;"></div>
-        <button class="btn" onclick="restartGame()">再拉一次紙捲</button>
+        <div class="doodle-container class-doodle-top"></div>
+        <div class="content-block">
+            <h1 style="font-size: 2.2rem; margin-bottom: 5px;">🎉 奇蹟通關！</h1>
+            <p id="victory-msg">恭喜！你成功用高超的直覺完成了這趟冒險！</p>
+            <div class="badge" id="boss-fate" style="font-size: 15px; color: #a00; font-weight: bold; padding: 10px; transform: rotate(1deg); margin-top: 10px;"></div>
+            <button class="btn" onclick="restartGame()">重新洗牌，再次應戰</button>
+        </div>
+        <div class="doodle-container class-doodle-bottom"></div>
     </div>
 
 </div>
@@ -211,12 +272,20 @@
     const totalStages = 6; 
     const container = document.getElementById('scroll-container');
 
+    let correctAnswers = { 1: 'left', 2: 'A', 3: 'red', 4: 'up', 5: 'X' };
+
+    const doodlePool = [
+        "👾", "🚀", "🛸", "👻", "🦖", "🍦", "🎈", "🎨", "🧩", "🎲", 
+        "🐱", "🐶", "🦊", "🦁", "🐸", "🐵", "🌟", "🔥", "⚡", "🌈", 
+        "🤖", "🧛", "🧟", "🍕", "🍔", "🍟", "🍩", "🛹", "🎸", "🔮"
+    ];
+
     const punishments = [
-        "踩到陳年大便坑！退回起點洗腳！",
-        "不小心踩到樂高積木！痛到退回起點！",
+        "剛要逃跑就被腳底的樂高積木暗算！痛到退回起點！",
         "選錯了！泡麵的調味包居然沒有開口，用牙齒咬到噴汁！退回重來！",
-        "出門才發現沒帶鑰匙和手機！在門口罰站並退回起點！",
-        "剛洗好車就突然下起暴雨！心情泡湯，退回重來！"
+        "出門才發現沒帶鑰匙 and 手機！在門口罰站並退回起點！",
+        "剛洗好車就突然下起暴雨！心情泡湯，退回重來！",
+        "因為分心，一頭撞上辦公室的玻璃門！退回起點重整旗鼓！"
     ];
 
     const fates = [
@@ -227,16 +296,64 @@
         "被碎紙機切成碎片，變成了這條紙捲迷宮的背景裝飾！"
     ];
 
+    function generateRandomDoodles() {
+        const topContainers = document.querySelectorAll('.class-doodle-top');
+        const bottomContainers = document.querySelectorAll('.class-doodle-bottom');
+        
+        function makeDoodleString(count) {
+            let result = "";
+            for(let i = 0; i < count; i++) {
+                const randomIcon = doodlePool[Math.floor(Math.random() * doodlePool.length)];
+                result += randomIcon;
+            }
+            return result;
+        }
+
+        topContainers.forEach(el => el.innerHTML = makeDoodleString(4));
+        bottomContainers.forEach(el => el.innerHTML = makeDoodleString(4));
+    }
+
+    function updateStoryScript(kw) {
+        const spanKw = `<span class="dynamic-keyword">${kw}</span>`;
+        
+        document.getElementById('title-1').innerHTML = `【第 1 關：預知夢的警告】`;
+        document.getElementById('desc-1').innerHTML = `昨晚做夢，夢到今天一睜眼就要面對 ${spanKw}...！心驚肉跳的你，決定起床往哪邊翻身躲避？`;
+
+        document.getElementById('title-2').innerHTML = `【第 2 關：突如其來的黑影】`;
+        document.getElementById('desc-2').innerHTML = `走在路上，前方角落突然飄出一股恐怖的氣息，定睛一看，天啊！竟然是隱形的 ${spanKw} 正在逼近！快閃！`;
+
+        document.getElementById('title-3').innerHTML = `【第 3 關：全面封鎖】`;
+        document.getElementById('desc-3').innerHTML = `手機突然震動，通知欄跳出好幾則跟 ${spanKw} 有關的緊急訊息！按哪個按鈕可以一鍵隱身？`;
+
+        document.getElementById('title-4').innerHTML = `【第 4 關：地心引力的背叛】`;
+        document.getElementById('desc-4').innerHTML = `就在你覺得快要逃掉時，地心引力突然失靈，你跟 ${spanKw} 同時飄到了半空中！該往哪邊游動才能甩開它？`;
+
+        document.getElementById('title-5').innerHTML = `【第 5 關：命運的終點線】`;
+        document.getElementById('desc-5').innerHTML = `終點就在眼前了！但 ${spanKw} 竟然擋在傳送門前做最後的掙扎！這是最後一拉，給它奮力一擊吧！`;
+    }
+
+    function randomizeAnswers() {
+        correctAnswers[1] = Math.random() < 0.5 ? 'left' : 'right';
+        correctAnswers[2] = Math.random() < 0.5 ? 'A' : 'B';
+        correctAnswers[3] = Math.random() < 0.5 ? 'red' : 'blue';
+        correctAnswers[4] = Math.random() < 0.5 ? 'up' : 'down';
+        correctAnswers[5] = Math.random() < 0.5 ? 'X' : 'O';
+    }
+
     function startGame() {
         const inputVal = document.getElementById('target-name').value;
         if(inputVal.trim() !== "") {
             target = inputVal;
         }
+        
+        updateStoryScript(target);
+        randomizeAnswers(); 
+        generateRandomDoodles(); 
         nextStage();
     }
 
-    function makeChoice(isCorrect) {
-        if (isCorrect) {
+    function makeChoice(stageNum, playerChoice) {
+        if (playerChoice === correctAnswers[stageNum]) {
             nextStage();
         } else {
             const randomPunish = punishments[Math.floor(Math.random() * punishments.length)];
@@ -250,9 +367,10 @@
         
         if(currentStage === totalStages) {
             const randomFate = fates[Math.floor(Math.random() * fates.length)];
-            document.getElementById('boss-fate').innerText = `⚠️ 偵測到：【${target}】${randomFate}`;
+            document.getElementById('boss-fate').innerText = `⚠️ 終極捷報：【${target}】${randomFate}`;
         }
 
+        // 核心滾動邏輯修正：每次精準滾動「正好一整個關卡」的高度
         container.scrollTo({
             top: currentStage * container.clientHeight,
             behavior: 'smooth'
@@ -261,11 +379,16 @@
 
     function restartGame() {
         currentStage = 0;
+        generateRandomDoodles(); 
         container.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
     }
+
+    window.onload = function() {
+        generateRandomDoodles();
+    };
 </script>
 
 </body>
