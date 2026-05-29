@@ -29,25 +29,25 @@
             flex-direction: column;
         }
 
-        .poem-header { width: 100%; text-align: right; margin-bottom: 35px; }
-        .title { font-size: 1.5rem; font-weight: 700; color: #8c2d19; margin-bottom: 6px; letter-spacing: 2px; }
+        /* 標題與作者改為靠左 */
+        .poem-header { width: 100%; text-align: left; margin-bottom: 35px; }
+        .title { font-size: 1.5rem; font-weight: 700; color: #8c2d19; margin-bottom: 10px; letter-spacing: 2px; }
         .author { font-size: 0.9rem; color: #7a756b; letter-spacing: 2px; }
 
-        /* 詩詞內容排版區 */
-        .content-container { width: 100%; margin-bottom: 35px; }
+        /* 內文容器：左對齊 */
+        .content-container { width: 100%; margin-bottom: 35px; text-align: left; }
         .content {
             font-size: 1.25rem;
             line-height: 2.2;
             color: #333333;
             letter-spacing: 0.15em;
-            text-align: center;
             font-weight: 500;
         }
-        /* 強制每一行詩句為一個獨立區塊 */
+        
+        /* 每一句詩皆為獨立區塊 */
         .content div {
             display: block;
-            margin: 0 auto;
-            width: fit-content;
+            width: 100%;
         }
 
         .btn-container { width: 100%; display: flex; justify-content: center; }
@@ -65,8 +65,8 @@
 
         @media (max-width: 480px) {
             .poem-card { padding: 35px 20px; }
-            .title { font-size: 1.3rem; }
-            .content { font-size: 1.05rem; line-height: 2.0; letter-spacing: 0.05em; }
+            .title { font-size: 1.2rem; }
+            .content { font-size: 1rem; line-height: 2.0; }
         }
     </style>
 </head>
@@ -87,7 +87,6 @@
     </div>
 
     <script>
-        // 您的詩詞資料庫
        const poemDatabase = [
             // --- 第一、二波 詩詞 ---
             { title: "水調歌頭", author: "宋 · 蘇軾", content: "明月幾時有？把酒問青天。\n不知天上宮閱，今夕是何年。\n我欲乘風歸去，又恐瓊樓玉宇，高處不勝寒。\n起舞弄清影，何似在人間。" },
@@ -177,7 +176,6 @@
             { title: "點降唇 · 蹴罷秋千", author: "宋 · 李清照", content: "蹴罷秋千，起來慵整纖纖手。\n露濃花瘦，薄汗輕衣透。\n見客入來，襪剗金釵溜。和羞走。\n倚門回首，卻把青梅嗅。" },
             { title: "鷓鴣天 · 暗淡輕黃體性柔", author: "宋 · 李清照", content: "暗淡輕黃體性柔，情疏跡遠只香留。\n何須淺碧深紅色，自是花中第一流。\n梅定妒，菊應羞，畫闌開處冠中秋。\n騷人可煞無情思，何事當年不見收。" },
             { title: "如夢令 · 常記溪亭日暮", author: "宋 · 李清照", content: "常記溪亭日暮，沉醉不知歸路。\n興盡晚回舟，誤入藕花深處。\n爭渡，爭渡，驚起一灘鷗鷺。" }
-            // 之後可在此處補入其他資料
         ];
 
         function getRandomPoem() {
@@ -187,15 +185,17 @@
             document.getElementById('poemTitle').innerText = poem.title;
             document.getElementById('poemAuthor').innerText = poem.author;
             
-            // 清空舊內容並重新生成 <div>
             const contentContainer = document.getElementById('poemContent');
             contentContainer.innerHTML = '';
             
+            // 按每一列拆分
             const lines = poem.content.split('\n');
             lines.forEach(line => {
-                const div = document.createElement('div');
-                div.innerText = line;
-                contentContainer.appendChild(div);
+                if (line.trim() !== "") {
+                    const div = document.createElement('div');
+                    div.innerText = line;
+                    contentContainer.appendChild(div);
+                }
             });
         }
 
