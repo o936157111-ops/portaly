@@ -116,17 +116,20 @@
         /* RWD 行動裝置自動適應樣式 */
         @media (max-width: 480px) {
             .poem-card {
-                padding: 35px 25px;
+                padding: 30px 20px;
             }
             .title {
-                font-size: 1.3rem;
+                font-size: 1.25rem;
             }
             .content {
-                font-size: 1.15rem;
+                font-size: 1rem;
                 line-height: 2;
+                letter-spacing: 0.1em; /* 微調字距 */
+                text-align: center;   /* 詩詞置中排版最合適 */
+                word-break: break-all;
             }
             .refresh-btn {
-                padding: 8px 28px;
+                padding: 10px 40px;
                 font-size: 0.85rem;
             }
         }
