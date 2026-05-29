@@ -5,15 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>詠風雅頌 · 現代橫書詩詞</title>
     <style>
-        /* 全域樣式優化 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            font-family: "Noto Serif TC", "Noto Serif CJK TC", "PingFang TC", "Microsoft JhengHei", serif;
+            font-family: "Noto Serif TC", "Noto Serif CJK TC", serif;
             background-color: #f4f3ee; 
             color: #2c2c2c;
             min-height: 100vh;
@@ -23,113 +18,55 @@
             padding: 20px;
         }
 
-        /* 網頁主卡片 */
         .poem-card {
             background-color: #ffffff;
             width: 100%;
             max-width: 540px; 
             border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04), 
-                        0 3px 10px rgba(0, 0, 0, 0.01);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
             padding: 45px 40px;
             display: flex;
             flex-direction: column;
-            transition: opacity 0.25s ease, transform 0.25s ease;
         }
 
-        /* 頂部資訊區：完全靠右排列 */
-        .poem-header {
-            width: 100%;
-            text-align: right;
-            margin-bottom: 35px; 
-        }
+        .poem-header { width: 100%; text-align: right; margin-bottom: 35px; }
+        .title { font-size: 1.5rem; font-weight: 700; color: #8c2d19; margin-bottom: 6px; letter-spacing: 2px; }
+        .author { font-size: 0.9rem; color: #7a756b; letter-spacing: 2px; }
 
-        /* 詩詞名 */
-        .title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #8c2d19; 
-            margin-bottom: 6px;
-            letter-spacing: 2px;
-        }
-
-        /* 作者 */
-        .author {
-            font-size: 0.9rem;
-            color: #7a756b;
-            letter-spacing: 2px;
-        }
-
-        /* 內文容器 */
-        .content-container {
-            width: 100%;
-            display: flex;
-            justify-content: center; 
-            margin-bottom: 35px;
-        }
-
-        /* 下方詩句內文區：靠左對齊 */
+        /* 詩詞內容排版區 */
+        .content-container { width: 100%; margin-bottom: 35px; }
         .content {
-          font-size: 1.1rem;      /* 字稍大一點，手機閱讀更舒適 */
-    line-height: 2.2;        /* 保持舒適的行間距 */
-    letter-spacing: 0.05em;  /* 將字距縮小，讓文字更緊湊 */
-    text-align: center;      /* 置中對齊 */
-    white-space: normal;     /* 允許文字根據容器自動換行 */
-    word-break: keep-all;    /* 強制文字在斷句處換行，避免單字被切開 */
-    padding: 0 10px;         /* 增加左右邊距，避免貼邊 */
+            font-size: 1.25rem;
+            line-height: 2.2;
+            color: #333333;
+            letter-spacing: 0.15em;
+            text-align: center;
+            font-weight: 500;
+        }
+        /* 強制每一行詩句為一個獨立區塊 */
+        .content div {
+            display: block;
+            margin: 0 auto;
+            width: fit-content;
         }
 
-        /* 底部按鈕區 */
-        .btn-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
+        .btn-container { width: 100%; display: flex; justify-content: center; }
         .refresh-btn {
-            background: transparent;
+            background: #ffffff;
             color: #666;
             border: 1px solid #e0dfd5;
             padding: 10px 35px;
-            font-size: 0.9rem;
-            font-family: inherit;
             border-radius: 50px;
             cursor: pointer;
             letter-spacing: 2px;
             transition: all 0.2s ease;
-            background-color: #ffffff;
         }
+        .refresh-btn:hover { border-color: #8c2d19; color: #8c2d19; }
 
-        .refresh-btn:hover {
-            border-color: #8c2d19;
-            color: #8c2d19;
-            background-color: #fbfbfa;
-            box-shadow: 0 4px 10px rgba(140, 45, 25, 0.05);
-        }
-
-        .refresh-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* RWD 行動裝置自動適應樣式 */
         @media (max-width: 480px) {
-            .poem-card {
-                padding: 30px 20px;
-            }
-            .title {
-                font-size: 1.25rem;
-            }
-            .content {
-                font-size: 0.85rem;
-                line-height: 2;
-                letter-spacing: 0.1em; /* 微調字距 */
-                text-align: center;   /* 詩詞置中排版最合適 */
-                word-break: break-all;
-            }
-            .refresh-btn {
-                padding: 10px 40px;
-                font-size: 0.85rem;
-            }
+            .poem-card { padding: 35px 20px; }
+            .title { font-size: 1.3rem; }
+            .content { font-size: 1.05rem; line-height: 2.0; letter-spacing: 0.05em; }
         }
     </style>
 </head>
@@ -141,9 +78,8 @@
             <div class="author" id="poemAuthor">詩人</div>
         </div>
         
-        <div class="content-container">
-            <p class="content" id="poemContent">縹緲孤鴻影，生機字句中。</p>
-        </div>
+        <div class="content-container" id="poemContent">
+            </div>
         
         <div class="btn-container">
             <button class="refresh-btn" onclick="getRandomPoem()">易詞換景</button>
@@ -151,8 +87,8 @@
     </div>
 
     <script>
-        // 完整 85 首唐詩宋詞資料庫，語法已完全檢驗
-        const poemDatabase = [
+        // 您的詩詞資料庫
+       const poemDatabase = [
             // --- 第一、二波 詩詞 ---
             { title: "水調歌頭", author: "宋 · 蘇軾", content: "明月幾時有？把酒問青天。\n不知天上宮閱，今夕是何年。\n我欲乘風歸去，又恐瓊樓玉宇，高處不勝寒。\n起舞弄清影，何似在人間。" },
             { title: "定風波", author: "宋 · 蘇軾", content: "莫聽穿林打葉聲，何妨吟嘯且徐行。\n竹杖芒鞋輕勝馬，誰怕？一蓑煙雨任平生。\n料峭春風吹酒醒，微冷，山頭斜照卻相迎。\n回首向來蕭瑟處，歸去，也無風雨也無晴。" },
@@ -241,25 +177,26 @@
             { title: "點降唇 · 蹴罷秋千", author: "宋 · 李清照", content: "蹴罷秋千，起來慵整纖纖手。\n露濃花瘦，薄汗輕衣透。\n見客入來，襪剗金釵溜。和羞走。\n倚門回首，卻把青梅嗅。" },
             { title: "鷓鴣天 · 暗淡輕黃體性柔", author: "宋 · 李清照", content: "暗淡輕黃體性柔，情疏跡遠只香留。\n何須淺碧深紅色，自是花中第一流。\n梅定妒，菊應羞，畫闌開處冠中秋。\n騷人可煞無情思，何事當年不見收。" },
             { title: "如夢令 · 常記溪亭日暮", author: "宋 · 李清照", content: "常記溪亭日暮，沉醉不知歸路。\n興盡晚回舟，誤入藕花深處。\n爭渡，爭渡，驚起一灘鷗鷺。" }
+            // 之後可在此處補入其他資料
         ];
 
         function getRandomPoem() {
-            const card = document.querySelector('.poem-card');
-            
-            card.style.opacity = 0;
-            card.style.transform = "translateY(4px)";
-            
-            setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * poemDatabase.length);
-                const poem = poemDatabase[randomIndex];
+            const randomIndex = Math.floor(Math.random() * poemDatabase.length);
+            const poem = poemDatabase[randomIndex];
 
-                document.getElementById('poemTitle').innerText = poem.title;
-                document.getElementById('poemAuthor').innerText = poem.author;
-                document.getElementById('poemContent').innerText = poem.content;
-                
-                card.style.opacity = 1;
-                card.style.transform = "translateY(0)";
-            }, 200);
+            document.getElementById('poemTitle').innerText = poem.title;
+            document.getElementById('poemAuthor').innerText = poem.author;
+            
+            // 清空舊內容並重新生成 <div>
+            const contentContainer = document.getElementById('poemContent');
+            contentContainer.innerHTML = '';
+            
+            const lines = poem.content.split('\n');
+            lines.forEach(line => {
+                const div = document.createElement('div');
+                div.innerText = line;
+                contentContainer.appendChild(div);
+            });
         }
 
         window.onload = getRandomPoem;
