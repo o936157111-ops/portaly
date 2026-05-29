@@ -70,15 +70,13 @@
 
         /* 下方詩句內文區：靠左對齊 */
         .content {
-            font-size: 0.85rem;
-            line-height: 2.2; 
-            color: #333333;
-            white-space: pre-line; 
-            letter-spacing: 2px;
-            text-align: left; 
-            font-weight: 500;
-            display: inline-block; 
-            max-width: 100%;
+          font-size: 1.1rem;      /* 字稍大一點，手機閱讀更舒適 */
+    line-height: 2.2;        /* 保持舒適的行間距 */
+    letter-spacing: 0.05em;  /* 將字距縮小，讓文字更緊湊 */
+    text-align: center;      /* 置中對齊 */
+    white-space: normal;     /* 允許文字根據容器自動換行 */
+    word-break: keep-all;    /* 強制文字在斷句處換行，避免單字被切開 */
+    padding: 0 10px;         /* 增加左右邊距，避免貼邊 */
         }
 
         /* 底部按鈕區 */
@@ -122,7 +120,7 @@
                 font-size: 1.25rem;
             }
             .content {
-                font-size: 1rem;
+                font-size: 0.85rem;
                 line-height: 2;
                 letter-spacing: 0.1em; /* 微調字距 */
                 text-align: center;   /* 詩詞置中排版最合適 */
