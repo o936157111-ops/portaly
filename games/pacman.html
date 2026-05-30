@@ -1,518 +1,1574 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>經典復古：慢速流暢版小精靈 Pac-Man</title>
+
+    <title>經典小精靈 Pacman - 手機畫面極限優化版</title>
+
     <style>
+
         * {
+
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+
             user-select: none;
+
             -webkit-user-select: none;
+
+            margin: 0;
+
+            padding: 0;
+
         }
 
         body {
+
             background-color: #111;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+
             color: #fff;
-            padding: 10px;
-            overflow: hidden;
-        }
 
-        .game-container {
-            background-color: #222;
-            border: 4px solid #333;
-            border-radius: 12px;
-            padding: 10px;
-            width: 100%;
-            max-width: 360px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
 
-        .status-bar {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 5px;
-            font-size: 16px;
-            color: #ffff00;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
+            justify-content: flex-start; /* 改變為從頂部依序排列，不強制上下居中 */
 
-        .view-window {
-            position: relative;
-            width: 100%;
-            border: 3px solid #0000ff;
-            background-color: #000; 
+            min-height: 100vh;
+
             overflow: hidden;
+
+            padding: 5px; /* 給予極小的全局留白 */
+
+        }
+
+        #gameContainer {
+
+            position: relative;
+
+            background: #000;
+
+            padding: 10px; /* 微幅縮減內襯 */
+
+            border: 3px solid #333;
+
+            border-radius: 12px;
+
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            margin-top: 5px; /* 強制讓整體往上移，釋放頂部空白 */
+
+            max-width: 100%;
+
+        }
+
+        #hud {
+
+            width: 100%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            font-size: 13px; /* 微調字體 */
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 8px; /* 縮小與畫布的間距 */
+
+            font-family: monospace;
+
+            color: #00ffcc;
+
+        }
+
+        #stageSelect {
+
+            background: #222;
+
+            color: #ffff00;
+
+            border: 1px solid #444;
+
+            padding: 1px 4px;
+
+            border-radius: 4px;
+
+            font-family: monospace;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            outline: none;
+
+        }
+
+        #canvasWrapper {
+
+            position: relative;
+
         }
 
         canvas {
+
             display: block;
-            width: 100%;
-            height: auto;
+
+            background: #000;
+
+            border-radius: 4px;
+
         }
 
-        .overlay {
+        #gameOverlay {
+
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.85);
+
+            top: 0; left: 0; width: 100%; height: 100%;
+
+            background: rgba(0,0,0,0.85);
+
             display: flex;
+
             flex-direction: column;
-            justify-content: center;
+
             align-items: center;
-            text-align: center;
+
+            justify-content: center;
+
             z-index: 10;
+
+            border-radius: 4px;
+
         }
 
-        .overlay h2 { color: #ffff00; font-size: 32px; margin-bottom: 10px; text-shadow: 0 0 10px #ffff00;}
-        .overlay p { font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 20px; padding: 0 15px; }
+        #overlayTitle {
+
+            font-size: 26px;
+
+            color: #ffff00;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+            text-align: center;
+
+            letter-spacing: 2px;
+
+        }
+
+        #overlaySub {
+
+            font-size: 12px;
+
+            color: #bbb;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+
+            line-height: 1.5;
+
+            white-space: pre-line;
+
+        }
+
+        #startBtn {
+
+            padding: 8px 24px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            background: #ffff00;
+
+            color: #000;
+
+            border: none;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+
+            transition: all 0.1s;
+
+            letter-spacing: 1px;
+
+        }
+
+        #startBtn:active {
+
+            transform: scale(0.95);
+
+            background: #ddff00;
+
+        }
+
+
+
+        /* 🛠️ 優化手機版搖桿尺寸，大幅收縮高度 */
+
+        #controlsContainer {
+
+            margin-top: 12px; /* 縮減與上方的距離 */
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            width: 130px; /* 從 160px 壓縮至 130px */
+
+            height: 130px;
+
+            position: relative;
+
+        }
 
         .btn {
-            background-color: #ffff00;
-            color: #000;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 4px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
 
-        .controls {
-            width: 100%;
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-        }
+            position: absolute;
 
-        .dpad {
-            display: grid;
-            grid-template-columns: repeat(3, 50px);
-            grid-template-rows: repeat(3, 50px);
-            gap: 5px;
-        }
+            width: 42px; /* 從 50px 縮小至 42px */
 
-        .dbtn {
-            background-color: #333;
-            color: #fff;
+            height: 42px;
+
+            background: #222;
+
             border: 2px solid #444;
-            border-radius: 8px;
-            font-size: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-        .dbtn:active { background-color: #555; border-color: #ffff00; }
-        .empty { border: none; background: transparent; cursor: default; }
 
-        .pc-tip {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #666;
-            text-align: center;
+            color: #fff;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            border-radius: 8px;
+
+            box-shadow: 0 3px 0 #111;
+
+            transition: transform 0.05s, box-shadow 0.05s;
+
         }
+
+        .btn:active {
+
+            transform: translateY(2px);
+
+            box-shadow: 0 1px 0 #111;
+
+            background: #333;
+
+        }
+
+        #btnUp    { top: 0; left: 44px; }
+
+        #btnDown  { bottom: 0; left: 44px; }
+
+        #btnLeft  { left: 0; top: 44px; }
+
+        #btnRight { right: 0; top: 44px; }
+
     </style>
+
 </head>
+
 <body>
 
-<div class="game-container">
-    <div class="status-bar">
-        <span id="scoreTxt">SCORE: 0</span>
-        <span id="dotsTxt">DOTS: 0</span>
-    </div>
 
-    <div class="view-window">
-        <canvas id="gameCanvas" width="280" height="280"></canvas>
+
+    <div id="gameContainer">
+
+        <div id="hud">
+
+            <span id="scoreTxt">SCORE: 0</span>
+
+            <span>
+
+                STAGE: 
+
+                <select id="stageSelect">
+
+                    <option value="1">1</option>
+
+                    <option value="2">2</option>
+
+                    <option value="3">3</option>
+
+                    <option value="4">4</option>
+
+                    <option value="5">5</option>
+
+                    <option value="6">6</option>
+
+                    <option value="7">7</option>
+
+                    <option value="8">8</option>
+
+                    <option value="9">9</option>
+
+                    <option value="10">10</option>
+
+                </select>
+
+            </span>
+
+            <span id="dotsTxt">DOTS: 0</span>
+
+        </div>
+
         
-        <div id="gameOverlay" class="overlay">
-            <h2 id="overlayTitle">PAC-MAN</h2>
-            <p id="overlaySub">吃光迷宮裡所有的豆子！<br>吃到角落的大閃光豆時，小鬼會變成藍色，這時候可以反過來吃掉牠們喔！</p>
-            <button id="startBtn" class="btn">START</button>
+
+        <div id="canvasWrapper">
+
+            <canvas id="gameCanvas" width="280" height="280"></canvas>
+
+            
+
+            <div id="gameOverlay">
+
+                <div id="overlayTitle">PAC-MAN</div>
+
+                <div id="overlaySub">挑戰全新設計的 10 大迷宮！<br>可由上方自由選擇關卡切換。<br>吃掉所有豆子即可晉級！</div>
+
+                <button id="startBtn">START GAME</button>
+
+            </div>
+
         </div>
+
+
+
+        <div id="controlsContainer">
+
+            <div class="btn" id="btnUp">▲</div>
+
+            <div class="btn" id="btnLeft">◀</div>
+
+            <div class="btn" id="btnRight">▶</div>
+
+            <div class="btn" id="btnDown">▼</div>
+
+        </div>
+
     </div>
 
-    <div class="controls">
-        <div class="dpad">
-            <div class="empty"></div>
-            <button class="dbtn" id="btnUp">▲</button>
-            <div class="empty"></div>
-            <button class="dbtn" id="btnLeft">◀</button>
-            <div class="empty"></div>
-            <button class="dbtn" id="btnRight">▶</button>
-            <div class="empty"></div>
-            <button class="dbtn" id="btnDown">▼</button>
-            <div class="empty"></div>
-        </div>
-    </div>
 
-    <div class="pc-tip">電腦：鍵盤方向鍵可以控制移動</div>
-</div>
 
 <script>
+
     const canvas = document.getElementById('gameCanvas');
+
     const ctx = canvas.getContext('2d');
+
     const startBtn = document.getElementById('startBtn');
+
     const gameOverlay = document.getElementById('gameOverlay');
+
     const overlayTitle = document.getElementById('overlayTitle');
+
     const overlaySub = document.getElementById('overlaySub');
+
     const scoreTxt = document.getElementById('scoreTxt');
+
+    const stageSelect = document.getElementById('stageSelect');
+
     const dotsTxt = document.getElementById('dotsTxt');
 
+
+
     let score = 0;
+
+    let stage = 1;
+
     let gameOver = true;
-    let animationId;
+
+    let isStageClearing = false;
+
+    let animationId = null;
+
+
 
     const TILE_SIZE = 20;
+
     const MAP_SIZE = 14; 
 
-    // 1: 牆壁, 0: 有豆子, 2: 空地(安全區/重生點), 3: 大能量豆
-    const maze = [
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,3,0,0,0,0,1,1,0,0,0,0,3,1],
-        [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
-        [1,0,1,2,2,0,0,0,0,2,2,1,0,1],
-        [1,0,1,0,1,1,2,2,1,1,0,1,0,1],
-        [1,0,0,0,1,2,2,2,2,1,0,0,0,1],
-        [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
-        [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
-        [1,0,0,0,1,1,1,1,1,1,0,0,0,1],
-        [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
-        [1,0,1,2,2,0,1,1,0,2,2,1,0,1],
-        [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+
+    const maps = [
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,0,0,1,1,0,0,0,0,3,1],
+
+            [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
+
+            [1,0,1,2,2,0,0,0,0,2,2,1,0,1],
+
+            [1,0,1,0,1,1,2,2,1,1,0,1,0,1],
+
+            [1,0,0,0,1,2,2,2,2,1,0,0,0,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,0,0,0,1,1,1,1,1,1,0,0,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
+
+            [1,0,1,2,2,0,1,1,0,2,2,1,0,1],
+
+            [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
+
+            [1,0,1,1,1,1,0,0,1,1,1,1,0,1],
+
+            [1,0,1,1,1,1,0,0,1,1,1,1,0,1],
+
+            [1,0,0,0,0,0,2,2,0,0,0,0,0,1],
+
+            [1,1,1,0,1,1,2,2,1,1,0,1,1,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,0,0,0,1,1,1,1,1,1,0,0,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
+
+            [1,0,0,0,0,0,1,1,0,0,0,0,0,1],
+
+            [1,3,1,1,1,0,0,0,0,1,1,1,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,1,0,0,0,0,0,0,0,0,1,3,1],
+
+            [1,0,1,0,1,1,1,1,1,1,0,1,0,1],
+
+            [1,0,0,0,1,2,2,2,2,1,0,0,0,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,0,0,0,1,2,2,2,2,1,0,0,0,1],
+
+            [1,0,1,0,1,1,1,1,1,1,0,1,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,0,1,1,1,1,0,0,1,1,1,1,0,1],
+
+            [1,0,0,0,0,1,0,0,1,0,0,0,0,1],
+
+            [1,1,1,1,0,1,0,0,1,0,1,1,1,1],
+
+            [1,1,1,1,0,0,0,0,0,0,1,1,1,1],
+
+            [1,3,0,0,0,1,1,1,1,0,0,0,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,1,1,0,0,1,1,0,0,3,1],
+
+            [1,1,1,0,1,1,0,0,1,1,0,1,1,1],
+
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+
+            [1,0,1,1,0,1,2,2,1,0,1,1,0,1],
+
+            [1,0,1,1,0,1,2,2,1,0,1,1,0,1],
+
+            [1,0,0,0,0,1,2,2,1,0,0,0,0,1],
+
+            [1,1,1,1,0,1,1,1,1,0,1,1,1,1],
+
+            [1,1,1,1,0,0,0,0,0,0,1,1,1,1],
+
+            [1,0,0,0,0,1,1,1,1,0,0,0,0,1],
+
+            [1,0,1,1,0,1,1,1,1,0,1,1,0,1],
+
+            [1,0,1,1,0,0,0,0,0,0,1,1,0,1],
+
+            [1,3,0,0,0,1,1,1,1,0,0,0,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
+
+            [1,1,1,1,0,1,1,1,1,0,1,1,1,1],
+
+            [1,0,0,0,0,1,2,2,1,0,0,0,0,1],
+
+            [1,0,1,1,0,1,2,2,1,0,1,1,0,1],
+
+            [1,0,1,1,0,1,2,2,1,0,1,1,0,1],
+
+            [1,0,0,1,0,0,0,0,0,0,1,0,0,1],
+
+            [1,1,0,1,1,1,0,0,1,1,1,0,1,1],
+
+            [1,1,0,0,0,1,0,0,1,0,0,0,1,1],
+
+            [1,1,1,1,0,1,0,0,1,0,1,1,1,1],
+
+            [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
+
+            [1,0,1,1,1,1,1,1,1,1,1,1,0,1],
+
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,1,1,0,0,1,1,0,0,3,1],
+
+            [1,0,1,0,1,1,0,0,1,1,0,1,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
+
+            [1,0,0,0,0,0,2,2,0,0,0,0,0,1],
+
+            [1,1,1,1,1,0,2,2,0,1,1,1,1,1],
+
+            [1,0,0,0,0,0,2,2,0,0,0,0,0,1],
+
+            [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
+
+            [1,0,1,3,1,0,0,0,0,1,3,1,0,1],
+
+            [1,0,1,0,1,1,1,1,1,1,0,1,0,1],
+
+            [1,0,0,0,0,0,1,1,0,0,0,0,0,1],
+
+            [1,1,1,1,1,0,0,0,0,1,1,1,1,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,0,0,1,1,0,0,0,0,3,1],
+
+            [1,0,1,1,1,0,1,1,0,1,1,1,0,1],
+
+            [1,0,0,0,1,0,0,0,0,1,0,0,0,1],
+
+            [1,0,1,0,1,1,2,2,1,1,0,1,0,1], 
+
+            [1,0,1,0,0,0,2,2,0,0,0,1,0,1], 
+
+            [1,0,1,1,1,0,2,2,0,1,1,1,0,1], 
+
+            [1,0,0,0,1,0,2,2,0,1,0,0,0,1],
+
+            [1,0,1,0,1,1,1,1,1,1,0,1,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,0,1,1,1,1,0,0,1,1,1,1,0,1],
+
+            [1,0,1,1,1,1,0,0,1,1,1,1,0,1],
+
+            [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,0,0,0,0,0,0,0,0,3,1],
+
+            [1,1,1,1,1,0,1,1,0,1,1,1,1,1],
+
+            [1,1,1,1,1,0,1,1,0,1,1,1,1,1],
+
+            [1,0,0,0,0,0,2,2,0,0,0,0,0,1],
+
+            [1,0,1,1,1,1,2,2,1,1,1,1,0,1],
+
+            [1,0,1,1,1,1,2,2,1,1,1,1,0,1],
+
+            [1,0,0,0,1,1,1,1,1,1,0,0,0,1],
+
+            [1,1,1,0,0,0,0,0,0,0,0,1,1,1],
+
+            [1,1,1,0,1,1,1,1,1,1,0,1,1,1],
+
+            [1,0,0,0,1,1,1,1,1,1,0,0,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,3,1,1,1,1,0,0,1,1,1,1,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,0,0,0,1,1,0,0,0,0,3,1],
+
+            [1,1,1,0,1,0,1,1,0,1,0,1,1,1],
+
+            [1,0,0,0,1,0,0,0,0,1,0,0,0,1],
+
+            [1,0,1,0,1,1,2,2,1,1,0,1,0,1],
+
+            [1,0,0,0,0,0,2,2,0,0,0,0,0,1], 
+
+            [1,0,1,1,0,1,2,2,1,0,1,1,0,1],
+
+            [1,0,0,1,0,1,1,1,1,0,1,0,0,1],
+
+            [1,1,0,0,0,0,0,0,0,0,0,0,1,1], 
+
+            [1,1,0,1,1,1,0,0,1,1,1,0,1,1],
+
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,1], 
+
+            [1,0,1,1,0,0,0,0,0,0,1,1,0,1],
+
+            [1,3,1,1,1,1,1,1,1,1,1,1,3,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ],
+
+        [
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+            [1,3,0,1,1,0,0,0,0,1,1,0,3,1],
+
+            [1,1,0,1,1,0,1,1,0,1,1,0,1,1],
+
+            [1,0,0,0,0,0,1,1,0,0,0,0,0,1],
+
+            [1,0,1,1,1,0,2,2,0,1,1,1,0,1],
+
+            [1,0,0,0,1,1,2,2,1,1,0,0,0,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,1,1,0,1,2,2,2,2,1,0,1,1,1],
+
+            [1,0,0,0,1,1,1,1,1,1,0,0,0,1],
+
+            [1,0,1,0,0,0,0,0,0,0,0,1,0,1],
+
+            [1,0,1,1,1,1,0,0,1,1,1,1,0,1],
+
+            [1,0,0,0,1,1,0,0,1,1,0,0,0,1],
+
+            [1,1,1,0,0,0,0,0,0,0,0,1,1,1],
+
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+        ]
+
     ];
 
+
+
+    let currentMaze = [];
+
     let dots = [];
+
     
-    // 舒適慢速設定：speed 降到 1.25
+
     let pacman = {
-        gridX: 1,
-        gridY: 1,
-        screenX: 30,
-        screenY: 30,
-        dirX: 1,
-        dirY: 0,
-        nextDirX: 1,
-        nextDirY: 0,
-        speed: 1.25, 
-        progress: 0, 
-        mouthAngle: 0.2,
-        mouthClosing: false
+
+        gridX: 1, gridY: 1,
+
+        screenX: 30, screenY: 30,
+
+        dirX: 0, dirY: 0,
+
+        nextDirX: 0, nextDirY: 0,
+
+        speed: 0.5, progress: 0, 
+
+        mouthAngle: 0.2, mouthClosing: false
+
     };
 
+
+
     let ghosts = [];
+
     const ghostColors = ['#ff0000', '#ffb8ff', '#00ffff', '#ffb852'];
+
     let frightenTimer = 0; 
 
+
+
     function initGame() {
+
         score = 0;
-        gameOver = false;
-        frightenTimer = 0;
-        
-        dots = [];
-        for(let r=0; r<MAP_SIZE; r++) {
-            for(let c=0; c<MAP_SIZE; c++) {
-                if(maze[r][c] === 0) dots.push({x: c, y: r, big: false});
-                if(maze[r][c] === 3) dots.push({x: c, y: r, big: true});
-            }
+
+        stage = parseInt(stageSelect.value);
+
+        isStageClearing = false;
+
+        startNextStage(true); 
+
+    }
+
+
+
+    function restartCurrentStage() {
+
+        if (animationId) {
+
+            cancelAnimationFrame(animationId);
+
+            animationId = null;
+
         }
 
-        pacman.gridX = 1; pacman.gridY = 1;
-        pacman.screenX = pacman.gridX * TILE_SIZE + TILE_SIZE/2;
-        pacman.screenY = pacman.gridY * TILE_SIZE + TILE_SIZE/2;
-        pacman.dirX = 1; pacman.dirY = 0;
-        pacman.nextDirX = 1; pacman.nextDirY = 0;
-        pacman.progress = 0;
 
-        ghosts = [
-            { gridX: 6, gridY: 5, color: ghostColors[0], dirX: 0, dirY: -1, isEaten: false },
-            { gridX: 7, gridY: 5, color: ghostColors[1], dirX: 0, dirY: -1, isEaten: false },
-            { gridX: 6, gridY: 6, color: ghostColors[2], dirX: 1, dirY: 0, isEaten: false },
-            { gridX: 7, gridY: 6, color: ghostColors[3], dirX: -1, dirY: 0, isEaten: false }
-        ];
 
-        ghosts.forEach(g => {
-            g.screenX = g.gridX * TILE_SIZE + TILE_SIZE/2;
-            g.screenY = g.gridY * TILE_SIZE + TILE_SIZE/2;
-            g.progress = 0;
-        });
+        gameOver = false;
 
-        dotsTxt.textContent = `DOTS: ${dots.length}`;
-        scoreTxt.textContent = `SCORE: ${score}`;
+        isStageClearing = false;
+
+        frightenTimer = 0;
+
+
+
+        resetCharactersPosition();
+
+
+
+        gameOverlay.style.visibility = 'hidden'; 
+
         gameOverlay.style.display = 'none';
 
-        if (animationId) cancelAnimationFrame(animationId);
         animate();
+
     }
+
+
+
+    function startNextStage(isNewStage = true) {
+
+        if (animationId) {
+
+            cancelAnimationFrame(animationId);
+
+            animationId = null;
+
+        }
+
+
+
+        gameOver = false;
+
+        isStageClearing = false;
+
+        frightenTimer = 0;
+
+        
+
+        pacman.speed = 1.0 + Math.min(5, stage - 1) * 0.08;
+
+        
+
+        let mapIndex = (stage - 1) < 10 ? (stage - 1) : Math.floor(Math.random() * 10);
+
+        
+
+        if (isNewStage) {
+
+            currentMaze = JSON.parse(JSON.stringify(maps[mapIndex]));
+
+            dots = [];
+
+            for(let r=0; r<MAP_SIZE; r++) {
+
+                for(let c=0; c<MAP_SIZE; c++) {
+
+                    if(currentMaze[r][c] === 0) dots.push({x: c, y: r, big: false});
+
+                    if(currentMaze[r][c] === 3) dots.push({x: c, y: r, big: true});
+
+                }
+
+            }
+
+        }
+
+
+
+        resetCharactersPosition();
+
+
+
+        dotsTxt.textContent = `DOTS: ${dots.length}`;
+
+        scoreTxt.textContent = `SCORE: ${score}`;
+
+        stageSelect.value = stage;
+
+        
+
+        gameOverlay.style.visibility = 'hidden'; 
+
+        gameOverlay.style.display = 'none';
+
+
+
+        animate();
+
+    }
+
+
+
+    function resetCharactersPosition() {
+
+        let foundSafe = false;
+
+        for (let r = MAP_SIZE - 2; r > 7; r--) { 
+
+            for (let c = 1; c < MAP_SIZE - 1; c++) {
+
+                if (currentMaze[r][c] === 0) {
+
+                    pacman.gridX = c;
+
+                    pacman.gridY = r;
+
+                    foundSafe = true;
+
+                    break;
+
+                }
+
+            }
+
+            if(foundSafe) break;
+
+        }
+
+        
+
+        if(!foundSafe) {
+
+            pacman.gridX = 1;
+
+            pacman.gridY = 12;
+
+        }
+
+
+
+        pacman.screenX = pacman.gridX * TILE_SIZE + TILE_SIZE/2;
+
+        pacman.screenY = pacman.gridY * TILE_SIZE + TILE_SIZE/2;
+
+        pacman.dirX = 0; pacman.dirY = 0;
+
+        pacman.nextDirX = 0; pacman.nextDirY = 0;
+
+        pacman.progress = 0;
+
+
+
+        ghosts = [
+
+            { gridX: 6, gridY: 4, color: ghostColors[0], dirX: 0, dirY: -1, isEaten: false },
+
+            { gridX: 7, gridY: 4, color: ghostColors[1], dirX: 0, dirY: -1, isEaten: false },
+
+            { gridX: 6, gridY: 5, color: ghostColors[2], dirX: 1, dirY: 0, isEaten: false },
+
+            { gridX: 7, gridY: 5, color: ghostColors[3], dirX: -1, dirY: 0, isEaten: false }
+
+        ];
+
+
+
+        ghosts.forEach(g => {
+
+            g.screenX = g.gridX * TILE_SIZE + TILE_SIZE/2;
+
+            g.screenY = g.gridY * TILE_SIZE + TILE_SIZE/2;
+
+            g.progress = 0;
+
+        });
+
+    }
+
+
 
     function isWall(gx, gy) {
+
         if (gx < 0 || gx >= MAP_SIZE || gy < 0 || gy >= MAP_SIZE) return true;
-        return maze[gy][gx] === 1;
+
+        return currentMaze[gy][gx] === 1;
+
     }
 
+
+
     function update() {
-        if (gameOver) return;
+
+        if (gameOver || isStageClearing) return;
+
+
 
         if (frightenTimer > 0) frightenTimer--;
 
-        // 小精靈網格邏輯
+
+
         if (pacman.progress === 0) {
+
             if (!isWall(pacman.gridX + pacman.nextDirX, pacman.gridY + pacman.nextDirY)) {
+
                 pacman.dirX = pacman.nextDirX;
+
                 pacman.dirY = pacman.nextDirY;
+
             }
+
             if (isWall(pacman.gridX + pacman.dirX, pacman.gridY + pacman.dirY)) {
+
                 pacman.dirX = 0;
+
                 pacman.dirY = 0;
+
             }
+
         }
+
+
 
         if (pacman.dirX !== 0 || pacman.dirY !== 0) {
+
             pacman.progress += pacman.speed;
+
             pacman.screenX += pacman.dirX * pacman.speed;
+
             pacman.screenY += pacman.dirY * pacman.speed;
 
+
+
             if (pacman.mouthClosing) {
+
                 pacman.mouthAngle -= 0.04;
+
                 if (pacman.mouthAngle <= 0.05) pacman.mouthClosing = false;
+
             } else {
+
                 pacman.mouthAngle += 0.04;
+
                 if (pacman.mouthAngle >= 0.4) pacman.mouthClosing = true;
+
             }
+
         }
 
-        if (pacman.progress >= TILE_SIZE) {
+
+
+        if (pacman.progress >= TILE_SIZE - 0.001) {
+
             pacman.gridX += pacman.dirX;
+
             pacman.gridY += pacman.dirY;
-            pacman.progress = 0;
+
+            pacman.progress = 0; 
+
             pacman.screenX = pacman.gridX * TILE_SIZE + TILE_SIZE/2;
+
             pacman.screenY = pacman.gridY * TILE_SIZE + TILE_SIZE/2;
 
+
+
             for (let i = dots.length - 1; i >= 0; i--) {
+
                 if (dots[i].x === pacman.gridX && dots[i].y === pacman.gridY) {
+
                     if (dots[i].big) {
+
                         score += 50;
-                        frightenTimer = 360; 
+
+                        frightenTimer = Math.max(90, Math.floor(360 * Math.pow(0.82, stage - 1))); 
+
                     } else {
+
                         score += 10;
+
                     }
+
                     dots.splice(i, 1);
+
                     scoreTxt.textContent = `SCORE: ${score}`;
+
                     dotsTxt.textContent = `DOTS: ${dots.length}`;
+
                     break;
+
                 }
+
             }
+
+
 
             if (dots.length === 0) {
+
+                isStageClearing = true;
+
                 gameOver = true;
+
+                gameOverlay.style.visibility = 'visible';
+
                 gameOverlay.style.display = 'flex';
-                overlayTitle.textContent = "VICTORY!";
-                overlaySub.textContent = `太強了！吃光所有豆子！\n最終得分: ${score}`;
-                startBtn.textContent = "PLAY AGAIN";
+
+                overlayTitle.textContent = "STAGE CLEAR!";
+
+                
+
+                if (stage < 10) {
+
+                    overlaySub.textContent = `解鎖新迷宮！順利通過第 ${stage} 關！\n準備好迎戰 STAGE ${stage + 1} 的全新地形了嗎？`;
+
+                } else {
+
+                    overlaySub.textContent = `太強了！你擊破了全部 10 個核心迷宮！\n接下來進入無限制隨機地圖狂暴模式！`;
+
+                }
+
+                
+
+                startBtn.textContent = "NEXT STAGE";
+
+                
+
+                startBtn.onclick = function() {
+
+                    stage++;
+
+                    if(stage > 10) stage = 1; 
+
+                    startNextStage(true); 
+
+                };
+
+                return;
+
             }
+
         }
 
-        // 鬼魂移動邏輯 (正常速度 1，受到驚嚇減速為 0.5)
+
+
         ghosts.forEach(ghost => {
-            let gSpeed = frightenTimer > 0 ? 0.5 : 1; 
+
+            let baseGhostSpeed = 0.8 + Math.min(5, stage - 1) * 0.06;
+
+            let gSpeed = frightenTimer > 0 ? (baseGhostSpeed * 0.55) : baseGhostSpeed; 
+
+
 
             if (ghost.progress === 0) {
+
                 let validDirs = [];
+
                 let dirs = [{x:0, y:-1}, {x:0, y:1}, {x:-1, y:0}, {x:1, y:0}];
+
                 
+
                 dirs.forEach(d => {
+
                     if (d.x === -ghost.dirX && d.y === -ghost.dirY) return;
+
                     if (!isWall(ghost.gridX + d.x, ghost.gridY + d.y)) {
+
                         validDirs.push(d);
+
                     }
+
                 });
 
+
+
                 if (validDirs.length === 0) {
+
                     validDirs.push({x: -ghost.dirX, y: -ghost.dirY});
+
                 }
+
+
 
                 let selectedDir = validDirs[0];
+
                 if (frightenTimer > 0) {
+
                     selectedDir = validDirs[Math.floor(Math.random() * validDirs.length)];
+
                 } else {
+
                     let minD = Infinity;
+
                     validDirs.forEach(d => {
+
                         let nextGx = ghost.gridX + d.x;
+
                         let nextGy = ghost.gridY + d.y;
+
                         let dist = Math.hypot(pacman.gridX - nextGx, pacman.gridY - nextGy);
+
                         if (dist < minD) {
+
                             minD = dist;
+
                             selectedDir = d;
+
                         }
+
                     });
+
                 }
+
+
 
                 if (selectedDir) {
+
                     ghost.dirX = selectedDir.x;
+
                     ghost.dirY = selectedDir.y;
+
                 }
+
             }
+
+
 
             ghost.screenX += ghost.dirX * gSpeed;
+
             ghost.screenY += ghost.dirY * gSpeed;
+
             ghost.progress += gSpeed;
 
-            if (ghost.progress >= TILE_SIZE) {
+
+
+            if (ghost.progress >= TILE_SIZE - 0.001) {
+
                 ghost.gridX += ghost.dirX;
+
                 ghost.gridY += ghost.dirY;
+
                 ghost.progress = 0;
+
                 ghost.screenX = ghost.gridX * TILE_SIZE + TILE_SIZE/2;
+
                 ghost.screenY = ghost.gridY * TILE_SIZE + TILE_SIZE/2;
+
             }
+
+
 
             let distToPacman = Math.hypot(pacman.screenX - ghost.screenX, pacman.screenY - ghost.screenY);
+
             if (distToPacman < 12) {
+
                 if (frightenTimer > 0) {
+
                     if (!ghost.isEaten) {
+
                         score += 200;
+
                         scoreTxt.textContent = `SCORE: ${score}`;
-                        ghost.gridX = 6; ghost.gridY = 6;
+
+                        ghost.gridX = 6; ghost.gridY = 5;
+
                         ghost.screenX = ghost.gridX * TILE_SIZE + TILE_SIZE/2;
+
                         ghost.screenY = ghost.gridY * TILE_SIZE + TILE_SIZE/2;
+
                         ghost.progress = 0;
+
                     }
+
                 } else {
+
                     endGame();
+
                 }
+
             }
+
         });
+
     }
+
+
 
     function draw() {
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#0000d6';
+
+
+        const colors = ['#0000d6', '#00aa00', '#d600d6', '#d66a00', '#00aaaa', '#aa5500', '#aa0000', '#5555ff', '#33aa33', '#e6b800'];
+
+        ctx.fillStyle = colors[(stage - 1) % colors.length];
+
+
+
         for (let r = 0; r < MAP_SIZE; r++) {
+
             for (let c = 0; c < MAP_SIZE; c++) {
-                if (maze[r][c] === 1) {
+
+                if (currentMaze[r][c] === 1) {
+
                     ctx.fillRect(c * TILE_SIZE + 1, r * TILE_SIZE + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+
                 }
+
             }
+
         }
+
+
 
         dots.forEach(d => {
+
             ctx.fillStyle = '#ffb8ae';
+
             ctx.beginPath();
+
             if (d.big) {
+
                 if (Math.floor(Date.now() / 150) % 2 === 0) {
+
                     ctx.arc(d.x * TILE_SIZE + TILE_SIZE/2, d.y * TILE_SIZE + TILE_SIZE/2, 6, 0, Math.PI*2);
+
                     ctx.fill();
+
                 }
+
             } else {
+
                 ctx.arc(d.x * TILE_SIZE + TILE_SIZE/2, d.y * TILE_SIZE + TILE_SIZE/2, 2.5, 0, Math.PI*2);
+
                 ctx.fill();
+
             }
+
         });
+
+
 
         ctx.fillStyle = '#ffff00';
+
         ctx.beginPath();
+
         let baseAngle = 0;
+
         if (pacman.dirX === -1) baseAngle = Math.PI;
+
         if (pacman.dirY === -1) baseAngle = Math.PI * 1.5;
+
         if (pacman.dirY === 1) baseAngle = Math.PI * 0.5;
 
+
+
         ctx.arc(
+
             pacman.screenX, pacman.screenY, 8, 
+
             baseAngle + pacman.mouthAngle, 
+
             baseAngle + Math.PI * 2 - pacman.mouthAngle
+
         );
+
         ctx.lineTo(pacman.screenX, pacman.screenY);
+
         ctx.fill();
 
+
+
         ghosts.forEach(ghost => {
+
             if (frightenTimer > 0) {
+
                 ctx.fillStyle = (frightenTimer < 90 && Math.floor(Date.now() / 100) % 2 === 0) ? '#fff' : '#0000ff';
+
             } else {
+
                 ctx.fillStyle = ghost.color;
+
             }
+
             
+
             ctx.beginPath();
+
             ctx.arc(ghost.screenX, ghost.screenY - 2, 7, Math.PI, 0, false);
+
             ctx.lineTo(ghost.screenX + 7, ghost.screenY + 7);
+
             ctx.lineTo(ghost.screenX + 4, ghost.screenY + 4);
+
             ctx.lineTo(ghost.screenX, ghost.screenY + 7);
+
             ctx.lineTo(ghost.screenX - 4, ghost.screenY + 4);
+
             ctx.lineTo(ghost.screenX - 7, ghost.screenY + 7);
+
             ctx.closePath();
+
             ctx.fill();
+
+
 
             ctx.fillStyle = '#fff';
+
             ctx.beginPath();
+
             ctx.arc(ghost.screenX - 2.5, ghost.screenY - 2, 2, 0, Math.PI*2);
+
             ctx.arc(ghost.screenX + 2.5, ghost.screenY - 2, 2, 0, Math.PI*2);
+
             ctx.fill();
+
             ctx.fillStyle = '#000';
+
             ctx.beginPath();
+
             ctx.arc(ghost.screenX - 2.5 + ghost.dirX, ghost.screenY - 2 + ghost.dirY, 1, 0, Math.PI*2);
+
             ctx.arc(ghost.screenX + 2.5 + ghost.dirX, ghost.screenY - 2 + ghost.dirY, 1, 0, Math.PI*2);
+
             ctx.fill();
+
         });
+
     }
 
-    function animate() {
-        if (gameOver) return;
+
+
+let frameCount = 0; // 新增計數器
+
+function animate() {
+    if (gameOver) return;
+
+    // 每執行 2 次請求才更新一次邏輯，這等於強行把速度減半
+    frameCount++;
+    if (frameCount % 2 === 0) {
         update();
         draw();
-        animationId = requestAnimationFrame(animate);
+    } else {
+        // 雖然不更新邏輯，但為了畫面流暢，我們只重繪
+        draw();
     }
+    
+    animationId = requestAnimationFrame(animate);
+}
+
 
     function endGame() {
+
         gameOver = true;
+
+        gameOverlay.style.visibility = 'visible';
+
         gameOverlay.style.display = 'flex';
+
         overlayTitle.textContent = "GAME OVER";
-        overlaySub.textContent = `被小鬼抓到啦！\n總得分: ${score}`;
-        startBtn.textContent = "RETRY";
+
+        overlaySub.textContent = `在第 ${stage} 關被抓到了！\n別氣餒，分數和關卡都幫你保留了！\n目前得分: ${score}`;
+
+        startBtn.textContent = "TRY AGAIN";
+
+        
+
+        startBtn.onclick = restartCurrentStage; 
+
     }
+
+
 
     function setNextDir(vx, vy) {
+
+        if (gameOver || isStageClearing) return;
+
         pacman.nextDirX = vx;
+
         pacman.nextDirY = vy;
+
         if (pacman.dirX === 0 && pacman.dirY === 0 && pacman.progress === 0) {
+
             if (!isWall(pacman.gridX + vx, pacman.gridY + vy)) {
+
                 pacman.dirX = vx;
+
                 pacman.dirY = vy;
+
             }
+
         }
+
     }
 
+
+
     window.addEventListener('keydown', e => {
+
         if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
+
         if (e.key === 'ArrowUp') setNextDir(0, -1);
+
         if (e.key === 'ArrowDown') setNextDir(0, 1);
+
         if (e.key === 'ArrowLeft') setNextDir(-1, 0);
+
         if (e.key === 'ArrowRight') setNextDir(1, 0);
+
     });
 
-    document.getElementById('btnUp').addEventListener('touchstart', (e) => { e.preventDefault(); setNextDir(0, -1); });
-    document.getElementById('btnDown').addEventListener('touchstart', (e) => { e.preventDefault(); setNextDir(0, 1); });
-    document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); setNextDir(-1, 0); });
-    document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); setNextDir(1, 0); });
 
-    document.getElementById('btnUp').addEventListener('mousedown', () => { setNextDir(0, -1); });
-    document.getElementById('btnDown').addEventListener('mousedown', () => { setNextDir(0, 1); });
-    document.getElementById('btnLeft').addEventListener('mousedown', () => { setNextDir(-1, 0); });
-    document.getElementById('btnRight').addEventListener('mousedown', () => { setNextDir(1, 0); });
 
-    startBtn.addEventListener('click', initGame);
+    stageSelect.addEventListener('change', () => {
+
+        stage = parseInt(stageSelect.value);
+
+        if (!gameOver) {
+
+            startNextStage(true);
+
+        } else {
+
+            overlaySub.textContent = `已切換至第 ${stage} 關！\n點擊下方按鈕開始挑戰新迷宮。`;
+
+        }
+
+    });
+
+
+
+    const btns = {
+
+        up: document.getElementById('btnUp'),
+
+        down: document.getElementById('btnDown'),
+
+        left: document.getElementById('btnLeft'),
+
+        right: document.getElementById('btnRight')
+
+    };
+
+
+
+    function bindControl(element, vx, vy) {
+
+        element.addEventListener('mousedown', (e) => { e.preventDefault(); setNextDir(vx, vy); });
+
+        element.addEventListener('touchstart', (e) => { e.preventDefault(); setNextDir(vx, vy); }, { passive: false });
+
+    }
+
+
+
+    bindControl(btns.up, 0, -1);
+
+    bindControl(btns.down, 0, 1);
+
+    bindControl(btns.left, -1, 0);
+
+    bindControl(btns.right, 1, 0);
+
+
+
+    startBtn.onclick = initGame;
+
 </script>
 
 </body>
+
 </html>
