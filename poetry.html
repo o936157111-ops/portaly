@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>詠風雅頌 · 現代橫書詩詞</title>
+    <title>詠風雅頌 · 詩詞閱讀器</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            font-family: "Noto Serif TC", "Noto Serif CJK TC", serif;
+            font-family: "Noto Serif TC", serif;
             background-color: #f4f3ee; 
-            color: #2c2c2c;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,50 +23,36 @@
             max-width: 540px; 
             border-radius: 16px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
-            padding: 45px 40px;
-            display: flex;
-            flex-direction: column;
+            padding: 40px;
         }
 
-        /* 標題與作者改為靠左 */
-        .poem-header { width: 100%; text-align: left; margin-bottom: 35px; }
-        .title { font-size: 1.5rem; font-weight: 700; color: #8c2d19; margin-bottom: 10px; letter-spacing: 2px; }
-        .author { font-size: 0.9rem; color: #7a756b; letter-spacing: 2px; }
-
-        /* 內文容器：左對齊 */
-        .content-container { width: 100%; margin-bottom: 35px; text-align: left; }
-        .content {
-            font-size: 1.25rem;
-            line-height: 2.2;
-            color: #333333;
-            letter-spacing: 0.15em;
-            font-weight: 500;
-        }
+        .poem-header { text-align: left; margin-bottom: 30px; }
+        .title { font-size: 1.5rem; font-weight: 700; color: #8c2d19; margin-bottom: 8px; }
+        .author { font-size: 0.9rem; color: #7a756b; margin-bottom: 20px; }
         
-        /* 每一句詩皆為獨立區塊 */
-        .content div {
-            display: block;
-            width: 100%;
-        }
+        #poemContent { text-align: left; margin-bottom: 30px; }
+        #poemContent div { display: block; width: 100%; }
 
-        .btn-container { width: 100%; display: flex; justify-content: center; }
-        .refresh-btn {
-            background: #ffffff;
-            color: #666;
-            border: 1px solid #e0dfd5;
-            padding: 10px 35px;
-            border-radius: 50px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            transition: all 0.2s ease;
+        /* 控制面板：水平排列 */
+        .controls { 
+            border-top: 1px solid #eee; 
+            padding-top: 20px; 
+            margin-top: 20px;
+            display: flex; 
+            justify-content: space-between; 
+            gap: 15px;
         }
-        .refresh-btn:hover { border-color: #8c2d19; color: #8c2d19; }
+        .control-group { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+        .control-group label { font-size: 0.75rem; color: #999; margin-bottom: 5px; }
+        .control-group input { width: 100%; cursor: pointer; accent-color: #8c2d19; }
 
-        @media (max-width: 480px) {
-            .poem-card { padding: 35px 20px; }
-            .title { font-size: 1.2rem; }
-            .content { font-size: 1rem; line-height: 2.0; }
-        }
+        .btn-container { display: flex; justify-content: center; margin-top: 25px; }
+        .refresh-btn { background: #fdfdfd; border: 1px solid #e0dfd5; padding: 10px 30px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -78,8 +63,22 @@
             <div class="author" id="poemAuthor">詩人</div>
         </div>
         
-        <div class="content-container" id="poemContent">
+        <div id="poemContent" class="content"></div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>字體</label>
+                <input type="range" id="fontSize" min="16" max="32" value="20" oninput="updateStyle()">
             </div>
+            <div class="control-group">
+                <label>行距</label>
+                <input type="range" id="lineHeight" min="1.5" max="3.5" step="0.1" value="2.2" oninput="updateStyle()">
+            </div>
+            <div class="control-group">
+                <label>字距</label>
+                <input type="range" id="letterSpacing" min="0" max="10" value="2" oninput="updateStyle()">
+            </div>
+        </div>
         
         <div class="btn-container">
             <button class="refresh-btn" onclick="getRandomPoem()">易詞換景</button>
@@ -87,7 +86,13 @@
     </div>
 
     <script>
-       const poemDatabase = [
+        // ==========================================
+        // [詩詞資料放置區]
+        // 請將您的詩詞填寫在下方陣列中
+        // 格式為: { title: "標題", author: "作者", content: "每一句間請用 \\n 分隔" }
+        // ==========================================
+         // 完整 85 首唐詩宋詞資料庫，語法已完全檢驗
+        const poemDatabase = [
             // --- 第一、二波 詩詞 ---
             { title: "水調歌頭", author: "宋 · 蘇軾", content: "明月幾時有？把酒問青天。\n不知天上宮閱，今夕是何年。\n我欲乘風歸去，又恐瓊樓玉宇，高處不勝寒。\n起舞弄清影，何似在人間。" },
             { title: "定風波", author: "宋 · 蘇軾", content: "莫聽穿林打葉聲，何妨吟嘯且徐行。\n竹杖芒鞋輕勝馬，誰怕？一蓑煙雨任平生。\n料峭春風吹酒醒，微冷，山頭斜照卻相迎。\n回首向來蕭瑟處，歸去，也無風雨也無晴。" },
@@ -176,30 +181,32 @@
             { title: "點降唇 · 蹴罷秋千", author: "宋 · 李清照", content: "蹴罷秋千，起來慵整纖纖手。\n露濃花瘦，薄汗輕衣透。\n見客入來，襪剗金釵溜。和羞走。\n倚門回首，卻把青梅嗅。" },
             { title: "鷓鴣天 · 暗淡輕黃體性柔", author: "宋 · 李清照", content: "暗淡輕黃體性柔，情疏跡遠只香留。\n何須淺碧深紅色，自是花中第一流。\n梅定妒，菊應羞，畫闌開處冠中秋。\n騷人可煞無情思，何事當年不見收。" },
             { title: "如夢令 · 常記溪亭日暮", author: "宋 · 李清照", content: "常記溪亭日暮，沉醉不知歸路。\n興盡晚回舟，誤入藕花深處。\n爭渡，爭渡，驚起一灘鷗鷺。" }
+        
         ];
+        // ==========================================
+
+        function updateStyle() {
+            const content = document.getElementById('poemContent');
+            content.style.fontSize = document.getElementById('fontSize').value + 'px';
+            content.style.lineHeight = document.getElementById('lineHeight').value;
+            content.style.letterSpacing = document.getElementById('letterSpacing').value + 'px';
+        }
 
         function getRandomPoem() {
-            const randomIndex = Math.floor(Math.random() * poemDatabase.length);
-            const poem = poemDatabase[randomIndex];
-
+            const poem = poemDatabase[Math.floor(Math.random() * poemDatabase.length)];
             document.getElementById('poemTitle').innerText = poem.title;
             document.getElementById('poemAuthor').innerText = poem.author;
             
             const contentContainer = document.getElementById('poemContent');
             contentContainer.innerHTML = '';
-            
-            // 按每一列拆分
-            const lines = poem.content.split('\n');
-            lines.forEach(line => {
-                if (line.trim() !== "") {
-                    const div = document.createElement('div');
-                    div.innerText = line;
-                    contentContainer.appendChild(div);
-                }
+            poem.content.split('\n').forEach(line => {
+                const div = document.createElement('div');
+                div.innerText = line;
+                contentContainer.appendChild(div);
             });
         }
 
-        window.onload = getRandomPoem;
+        window.onload = () => { getRandomPoem(); updateStyle(); };
     </script>
 </body>
 </html>
