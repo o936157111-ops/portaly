@@ -1,5 +1,5 @@
 // 將原本的 v1 改成 v2
-const CACHE_NAME = 'my-site-cache-v47'; 
+const CACHE_NAME = 'my-site-cache-v48'; 
 const urlsToCache = [
   'index.html',
   'manifest.json'
