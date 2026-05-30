@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811"
+     crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活懷舊遊戲</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 20px; text-align: center; background-color: #f9f9f9; }
+        .container { max-width: 400px; margin: 0 auto; }
+        
+        .card-container { 
+            background-color: #FCFCFF; 
+            border-radius: 24px;       
+            border: 1px solid #F0F0F0; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+            overflow: hidden; 
+            padding: 40px 25px;
+        }
+        
+        .logo-wrapper { 
+            position: relative; 
+            min-height: 250px; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+        }
+        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; }
+        
+        #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
+        .loader-text { color: #999; font-size: 0.9em; }
+        progress { width: 100%; height: 8px; border-radius: 4px; border: none; background-color: #eee; }
+        progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
+        progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
+        
+        .header-tabs { margin: 10px 0; font-size: 1.4em; color: #888; }
+        .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; }
+        .tab-trigger.active { color: #000; font-weight: 800; }
+        
+        .slogan { line-height: 1.25; color: #666; font-size: 1.25em; margin-bottom: 15px; }
+
+        .button-group { display: none; flex-direction: column; gap: 12px; }
+        .button-group.active { display: flex; }
+        
+        .btn { 
+            display: flex; align-items: center; justify-content: center; height: 50px; 
+            background-color: #f4f4f9; color: #333; text-decoration: none; 
+            border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; 
+            transition: all 0.3s ease; 
+        }
+        
+        .btn:hover { 
+            background-color: #000 !important; 
+            color: #fff !important; 
+            border-color: #000 !important; 
+            transform: translateY(-2px) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card-container">
+            <div class="logo-wrapper">
+                <div id="loader-container">
+                    <div class="loader-text">載入日常片段中...</div>
+                    <progress id="progress-bar" value="0" max="100"></progress>
+                </div>
+                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()">
+            </div>
+            
+            <div class="content-section">
+                <div class="header-tabs">
+                    <span class="tab-trigger active" onclick="openTab(event, 'tab-1')">生活</span>・
+                    <span class="tab-trigger" onclick="openTab(event, 'tab-2')">簡居</span>・
+                    <span class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
+                </div>
+                
+                <div class="slogan">
+                    <p><B>自製簡易復古經典小遊戲</B></p>
+                </div>
+            </div>
+
+            <div id="tab-1" class="button-group active">
+<a href="https://myezlife.com/games/paperscrollmaze.html" class="btn" target="_blank" rel="noopener noreferrer">                 命運紙捲迷宮</a>              
+<a href="https://o936157111-ops.github.io/games/mahjong.html" class="btn" target="_blank" rel="noopener noreferrer">台灣16張麻將</a>
+                <a href="https://o936157111-ops.github.io/games/pacman.html" class="btn" target="_blank" rel="noopener noreferrer">經典小精靈</a>
+                <a href="https://o936157111-ops.github.io/games/tetris.html" class="btn" target="_blank" rel="noopener noreferrer">俄羅斯方塊</a>
+                <a href="https://o936157111-ops.github.io/games/snake.html" class="btn" target="_blank" rel="noopener noreferrer">經典復古貪食蛇</a>
+                <a href="https://o936157111-ops.github.io/games/galaxy_shooter.html" class="btn" target="_blank" rel="noopener noreferrer">銀河戰役</a>
+                <a href="https://o936157111-ops.github.io/games/Bricks.html" class="btn" target="_blank" rel="noopener noreferrer">                 霓虹街機打磚塊</a>
+            </div>
+
+            <div id="tab-2" class="button-group">
+                <a href="https://play.google.com/books" class="btn" target="_blank" rel="noopener noreferrer">生活書房</a>
+                <a href="https://ebook.nlpi.edu.tw" class="btn" target="_blank" rel="noopener noreferrer">電子圖書館</a>
+                <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer"">生活小書房</a>
+                <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn" target="_blank" rel="noopener noreferrer">挑本書細讀</a>
+            </div>
+
+            <div id="tab-3" class="button-group">
+                <a href="https://myezdailylife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">零碎日常</a>
+                <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
+                <a href="https://www.flickr.com/photos/0936157111/" class="btn" target="_blank" rel="noopener noreferrer">生活相簿</a>
+                <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            const groups = document.getElementsByClassName("button-group");
+            for (let i = 0; i < groups.length; i++) groups[i].classList.remove("active");
+            const triggers = document.getElementsByClassName("tab-trigger");
+            for (let i = 0; i < triggers.length; i++) triggers[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        const logoOptions = [
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif",
+           
+        ];
+
+        const progressBar = document.getElementById('progress-bar');
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (progress < 90) {
+                progress += 5;
+                progressBar.value = progress;
+            }
+        }, 100);
+
+        function finishLoading() {
+            clearInterval(interval);
+            progressBar.value = 100;
+            setTimeout(() => {
+                document.getElementById('loader-container').style.display = 'none';
+                document.getElementById('logo-img').style.display = 'block';
+            }, 200);
+        }
+
+        function setRandomLogo() {
+            const randomIndex = Math.floor(Math.random() * logoOptions.length);
+            document.getElementById('logo-img').src = logoOptions[randomIndex];
+        }
+
+        setRandomLogo();
+    </script>
+    
+</body>
+</html>
