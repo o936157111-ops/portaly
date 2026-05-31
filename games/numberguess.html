@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>猜數字遊戲</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { 
+            background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+            min-height: 100vh; 
+            margin: 0;         
+            display: flex;     
+            justify-content: center; 
+            align-items: center;     
+            font-family: 'Segoe UI', sans-serif; 
+        }
+        
+        .game-container { 
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;      
+            width: 90%;              
+            max-width: 400px;        
+        }
+
+        input { padding: 12px; width: 80%; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 15px; }
+
+        button { 
+            padding: 10px 20px; 
+            background-color: #6c63ff; 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+        
+        button:hover { background-color: #5750d8; transform: scale(1.05); }
+        
+        #message { font-weight: bold; margin-top: 20px; min-height: 1.2em; }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 id="title">猜數字 (1-100)</h1>
+<input type="number" id="guessInput" onkeypress="if(event.key==='Enter') checkGuess()" placeholder="輸入數字">        <br>
+        <button onclick="checkGuess()">送出</button>
+        <button onclick="resetGame()">再猜一次</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        // 1. 全域變數宣告 (放在函數外面，讓所有函數都能共用)
+        let level = 1; 
+        let maxNumber = 100;
+        let target = Math.floor(Math.random() * maxNumber) + 1;
+
+        // 2. 判斷猜測邏輯
+        function checkGuess() {
+            let input = document.getElementById("guessInput").value;
+            let message = document.getElementById("message");
+            let title = document.getElementById("title");
+
+            if (input == "") return; // 防呆：沒輸入不處理
+
+            if (input == target) {
+                level++;
+                maxNumber += 100;
+                
+                title.innerText = `猜數字 (1-${maxNumber})`; 
+                message.innerText = `恭喜過關！進入第 ${level} 關 (1-${maxNumber})！`;
+                message.style.color = "blue";
+                
+                target = Math.floor(Math.random() * maxNumber) + 1;
+                document.getElementById("guessInput").value = "";
+            } else if (input < target) {
+                message.innerText = "太小了，再大一點！";
+                message.style.color = "red";
+            } else {
+                message.innerText = "太大了，再小一點！";
+                message.style.color = "red";
+            }
+        }
+
+        // 3. 重置遊戲邏輯
+        function resetGame() {
+            level = 1;
+            maxNumber = 100;
+            target = Math.floor(Math.random() * maxNumber) + 1;
+            
+            document.getElementById("title").innerText = "猜數字 (1-100)";
+            document.getElementById("guessInput").value = "";
+            document.getElementById("message").innerText = "遊戲已重置，請開始猜數字！";
+            document.getElementById("message").style.color = "black";
+        }
+    </script>
+</body>
+</html>
