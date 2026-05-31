@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>滑塊拼圖 - 簡易版</title>
+    <div id="controls">
+    </div>
+
+    <style>
+    
+    #controls {
+    margin-bottom: 20px;
+    text-align: center;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+button:hover { background-color: #219150; }
+
+
+
+    :root {
+        --grid-size: 3;
+        --tile-size: 80px; /* 手機友善尺寸 */
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f0f2f5;
+    }
+    #game-board {
+        display: grid;
+        grid-template-columns: repeat(var(--grid-size), var(--tile-size));
+        grid-template-rows: repeat(var(--grid-size), var(--tile-size));
+        gap: 8px;
+        padding: 10px;
+        background-color: #34495e;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        margin: 20px auto; /* 與上方元素保持距離 */
+        #controls {
+    margin-top: 20px; /* 增加與上方棋盤的間距 */
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+
+
+    }
+    .tile {
+        width: var(--tile-size);
+        height: var(--tile-size);
+        background-color: #3498db;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+        box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+    }
+    .tile:hover {
+        background-color: #2980b9;
+        transform: scale(1.02);
+    }
+    .empty {
+        background-color: #ecf0f1;
+        box-shadow: none;
+        cursor: default;
+    }
+    /* RWD: 當螢幕很小時，自動縮小方塊 */
+    @media (max-width: 400px) {
+        :root { --tile-size: 60px; }
+    }
+</style>
+</head>
+<body>
+
+<div id="game-board"></div>
+
+<div id="controls">
+      <button onclick="resetGame()">重置關卡</button>
+    </div>
+
+<script>
+
+// 增加重置功能
+function resetGame() {
+    createBoard();
+}
+
+// 修改 createBoard，讓它更新標題文字
+function createBoard() {
+    document.documentElement.style.setProperty('--grid-size', gridSize);
+    
+    // 更新顯示文字
+    document.getElementById('level-display').innerText = `目前關卡: ${gridSize}x${gridSize}`;
+    
+    tiles = [];
+    for (let i = 1; i < gridSize * gridSize; i++) tiles.push(i);
+    tiles.push(0);
+    
+    shuffle();
+    render();
+}
+
+    let gridSize = 3;
+    let tiles = [];
+    const board = document.getElementById('game-board');
+
+    // 取得鄰居的邏輯
+    function getNeighbors(index) {
+        const neighbors = [];
+        const col = index % gridSize;
+        const row = Math.floor(index / gridSize);
+        if (row > 0) neighbors.push(index - gridSize);
+        if (row < gridSize - 1) neighbors.push(index + gridSize);
+        if (col > 0) neighbors.push(index - 1);
+        if (col < gridSize - 1) neighbors.push(index + 1);
+        return neighbors;
+    }
+
+    // 繪製棋盤
+    function render() {
+        board.innerHTML = '';
+        tiles.forEach((num, index) => {
+            const div = document.createElement('div');
+            div.className = num === 0 ? 'tile empty' : 'tile';
+            div.textContent = num === 0 ? '' : num;
+            div.onclick = () => handleTileClick(index);
+            board.appendChild(div);
+        });
+    }
+
+    // 處理點擊與交換
+    function handleTileClick(index) {
+        const emptyIndex = tiles.indexOf(0);
+        const neighbors = getNeighbors(index);
+        
+        if (neighbors.includes(emptyIndex)) {
+            [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+            render();
+            checkWin();
+        }
+    }
+
+    // 打亂邏輯
+    function shuffle() {
+        let shuffleMoves = gridSize * gridSize * 20;
+        for (let i = 0; i < shuffleMoves; i++) {
+            const emptyIndex = tiles.indexOf(0);
+            const neighbors = getNeighbors(emptyIndex);
+            const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+            [tiles[randomNeighbor], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[randomNeighbor]];
+        }
+    }
+
+    // 勝利檢查
+    function checkWin() {
+        const winState = [...Array(gridSize * gridSize - 1).keys()].map(i => i + 1).concat(0);
+        if (JSON.stringify(tiles) === JSON.stringify(winState)) {
+            setTimeout(() => {
+                alert("恭喜過關！準備進入下一關");
+                gridSize++;
+                createBoard();
+            }, 100);
+        }
+    }
+
+    // 初始化
+    function createBoard() {
+        document.documentElement.style.setProperty('--grid-size', gridSize);
+        tiles = [];
+        for (let i = 1; i < gridSize * gridSize; i++) tiles.push(i);
+        tiles.push(0);
+        shuffle();
+        render();
+    }
+
+    createBoard();
+</script></body>
+</html>
