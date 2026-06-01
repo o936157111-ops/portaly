@@ -2,33 +2,43 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>倉庫番 - 精簡版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>倉庫番 - 手機版</title>
     <style>
         body { text-align: center; font-family: sans-serif; background-color: #2c3e50; color: white; padding: 5px; }
-        /* 縮小遊戲區域間距 */
-        #game-board { display: grid; gap: 2px; background-color: #34495e; width: fit-content; margin: 5px auto; padding: 5px; border-radius: 8px; }
-        .cell { width: 35px; height: 35px; background-color: #465a6d; border-radius: 2px; }
+        h1 { margin: 5px 0; font-size: 20px; }
+        /* 響應式遊戲區 */
+        #game-board { display: grid; gap: 2px; background-color: #34495e; width: 90vw; max-width: 350px; margin: 5px auto; padding: 5px; border-radius: 8px; }
+        .cell { width: 100%; aspect-ratio: 1 / 1; background-color: #465a6d; border-radius: 2px; }
         .wall { background-color: #273746; }
         .box { background-color: #e67e22; border-radius: 2px; }
         .box.on-target { background-color: #d35400; outline: 3px solid #2ecc71; }
         .player { background-color: #3498db; border-radius: 50%; }
         .target { background-color: #27ae60; opacity: 0.5; border-radius: 50%; }
-        /* 縮小控制區間距與字體 */
-        .controls { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 14px; }
-        button, select { padding: 2px 8px; font-size: 13px; }
+        /* 控制區 */
+        .controls { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; }
+        button { padding: 8px 12px; font-size: 14px; cursor: pointer; }
+        .touch-btn { padding: 15px 20px; font-size: 20px; touch-action: manipulation; }
     </style>
 </head>
 <body>
 
-<h1 style="margin: 5px 0; font-size: 20px;">倉庫番遊戲</h1>
+<h1>倉庫番遊戲</h1>
 <div class="controls">
-    <button id="reset-btn">重置</button>
-    <label>關卡：</label>
     <select id="level-select" onchange="jumpToLevel(this.value)"></select>
-    <p id="status" style="margin: 0;">開始推箱子吧！</p>
+    <button id="reset-btn">重置</button>
 </div>
 
 <div id="game-board"></div>
+
+<div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px;">
+    <button class="touch-btn" onclick="move(-1,0)">▲</button>
+    <div style="display: flex; gap: 20px;">
+        <button class="touch-btn" onclick="move(0,-1)">◀</button>
+        <button class="touch-btn" onclick="move(0,1)">▶</button>
+    </div>
+    <button class="touch-btn" onclick="move(1,0)">▼</button>
+</div>
 
 <script>
 const levels = [
@@ -58,18 +68,13 @@ function loadLevel(i) {
 
 function jumpToLevel(i) { 
     loadLevel(parseInt(i)); 
-    
-    // --- 關鍵修正：切換關卡後，讓選單失去焦點 ---
-    document.getElementById('level-select').blur();
-    // ------------------------------------------
-    
-    document.getElementById('status').innerText = `已跳轉至第 ${parseInt(i) + 1} 關`;
+    document.getElementById('level-select').blur(); // 修正選單焦點問題
 }
 
 function render() {
     const board = document.getElementById('game-board');
     board.innerHTML = '';
-    board.style.gridTemplateColumns = `repeat(${map[0].length}, 35px)`;
+    board.style.gridTemplateColumns = `repeat(${map[0].length}, 1fr)`;
     
     for (let r = 0; r < map.length; r++) {
         for (let c = 0; c < map[r].length; c++) {
@@ -86,8 +91,10 @@ function render() {
         }
     }
     if (targets.every(t => map[t.r][t.c] === 2)) {
-        document.getElementById('status').innerText = "過關！";
-        setTimeout(() => { if(currentLevel + 1 < levels.length) loadLevel(currentLevel+1); else alert("全破！"); }, 500);
+        setTimeout(() => { 
+            if(currentLevel + 1 < levels.length) loadLevel(currentLevel+1); 
+            else alert("全破！"); 
+        }, 500);
     }
 }
 
