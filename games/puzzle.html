@@ -2,6 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>滑塊拼圖 - 簡易版</title>
     <div id="controls">
     </div>
@@ -26,18 +27,20 @@ button:hover { background-color: #219150; }
 
 
 
-    :root {
+ :root {
         --grid-size: 3;
-        --tile-size: 80px; /* 手機友善尺寸 */
+        --tile-size: 80px; /* 電腦版的預設尺寸 */
     }
-    body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f0f2f5;
-    }
-    #game-board {
+   body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+  #game-board {
         display: grid;
         grid-template-columns: repeat(var(--grid-size), var(--tile-size));
         grid-template-rows: repeat(var(--grid-size), var(--tile-size));
@@ -46,43 +49,38 @@ button:hover { background-color: #219150; }
         background-color: #34495e;
         border-radius: 12px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        margin: 20px auto; /* 與上方元素保持距離 */
-        #controls {
-    margin-top: 20px; /* 增加與上方棋盤的間距 */
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    color: #2c3e50;
-
-
+        margin: 20px auto;
+        width: fit-content; /* 這會讓棋盤只包住方塊的大小，不會撐滿螢幕 */
     }
     .tile {
-        width: var(--tile-size);
-        height: var(--tile-size);
-        background-color: #3498db;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        font-weight: bold;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.2s, background-color 0.2s;
-        box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
-    }
+            width: var(--tile-size);
+            height: var(--tile-size);
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+        }
     .tile:hover {
         background-color: #2980b9;
         transform: scale(1.02);
     }
-    .empty {
-        background-color: #ecf0f1;
-        box-shadow: none;
-        cursor: default;
-    }
+.empty { background-color: #ecf0f1; box-shadow: none; }
+        #controls { margin-top: 10px; text-align: center; }
+        button { padding: 12px 24px; font-size: 18px; background-color: #27ae60; color: white; border: none; border-radius: 5px; }
     /* RWD: 當螢幕很小時，自動縮小方塊 */
     @media (max-width: 400px) {
-        :root { --tile-size: 60px; }
+        :root {
+            --tile-size: 25vw; /* 手機上按比例縮放 */
+        }
+        #game-board {
+            width: auto; /* 允許在手機上隨比例調整 */
+        }
     }
 </style>
 </head>
