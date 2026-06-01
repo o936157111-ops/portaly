@@ -35,29 +35,27 @@ button:hover { background-color: #219150; }
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center; /* 讓內容垂直置中 */
-        height: 100vh;           /* 強制高度為視窗的 100% */
+        justify-content: space-evenly; /* 讓內容在空間內平均分佈 */
+        height: 100vh;
         margin: 0;
         padding: 10px;
         box-sizing: border-box;
-        overflow: hidden;        /* 防止出現滾動條 */
+        overflow: hidden; /* 防止滾動 */
     }
 
     #game-board {
         display: grid;
         grid-template-columns: repeat(var(--grid-size), 1fr);
         gap: 5px;
-        padding: 5px;
         background-color: #34495e;
         border-radius: 12px;
+        padding: 5px;
+        /* 重點：讓棋盤高度自動適應，且不超過螢幕的 60% */
+        width: 90vw;
+        max-width: 400px;
+        max-height: 60vh;
+        aspect-ratio: 1 / 1;
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        
-        /* 關鍵：限制高度為螢幕高度的 70%，寬度隨比例縮放 */
-        height: 70vh; 
-        aspect-ratio: 1 / 1; 
-        max-width: 90vw;
-        max-height: 70vh;
-        margin-bottom: 20px;
     }
 
     .tile {
@@ -66,7 +64,7 @@ button:hover { background-color: #219150; }
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: clamp(12px, 4vw, 24px); /* 字體隨比例自適應 */
+        font-size: clamp(16px, 8vw, 24px); /* 字體隨螢幕動態縮放 */
         font-weight: bold;
         border-radius: 8px;
         cursor: pointer;
@@ -79,8 +77,20 @@ button:hover { background-color: #219150; }
 
     #controls {
         text-align: center;
-        flex-shrink: 0; /* 防止按鈕區塊被壓縮 */
+        /* 重點：不讓按鈕區塊佔用太多高度 */
+        flex-shrink: 0; 
+        padding-bottom: 20px;
     }
+
+button {
+        padding: 12px 30px;
+        font-size: 18px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
     /* RWD: 當螢幕很小時，自動縮小方塊 */
     @media (max-width: 400px) {
         :root {
