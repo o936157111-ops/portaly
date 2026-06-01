@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>倉庫番 - 關卡讀取版</title>
+    <title>倉庫番 - 穩定版</title>
     <style>
         body { text-align: center; font-family: 'Segoe UI', sans-serif; background-color: #2c3e50; color: #ecf0f1; padding: 20px; }
         #game-board { display: grid; gap: 4px; background-color: #34495e; width: fit-content; margin: 20px auto; padding: 10px; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
@@ -17,37 +17,37 @@
 <body>
 
     <h1>倉庫番遊戲</h1>
-    <p id="status">正在載入關卡...</p>
+    <p id="status">請將橘色箱子推到綠色光點上！</p>
     <div id="game-board"></div>
 
 <script>
-let levels = [];
+// 直接將資料整合進程式碼，不再依賴外部 JSON 檔案
+const levels = [
+    {
+        "map": [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,4,0,2,0,1],[1,0,0,0,3,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]],
+        "targets": [{"r": 3, "c": 4}]
+    },
+    {
+        "map": [[1,1,1,1,1,1,1],[1,1,0,0,0,1,1],[1,1,0,2,0,1,1],[1,0,0,4,0,3,1],[1,1,0,0,0,1,1],[1,1,1,1,1,1,1]],
+        "targets": [{"r": 3, "c": 5}]
+    },
+    {
+        "map": [[1,1,1,1,1,1,1,1],[1,0,0,1,1,0,0,1],[1,0,2,0,0,2,0,1],[1,1,0,1,1,0,1,1],[1,0,0,3,3,0,0,1],[1,1,1,1,1,1,1,1]],
+        "targets": [{"r": 4, "c": 3}, {"r": 4, "c": 4}]
+    }
+];
+
 let currentLevel = 0;
 let map = [];
 let targets = [];
 
-// 1. 先從 JSON 讀取資料
-async function initGame() {
-    try {
-        const response = await fetch('levels.json');
-        levels = await response.json();
-        loadLevel(0);
-    } catch (e) {
-        document.getElementById('status').innerText = "載入失敗：請確保在伺服器環境下開啟 (Live Server)";
-        console.error("錯誤原因：", e);
-    }
-}
-
-// 2. 載入特定關卡
 function loadLevel(index) {
     currentLevel = index;
     map = levels[currentLevel].map.map(row => [...row]);
     targets = levels[currentLevel].targets;
-    document.getElementById('status').innerText = `第 ${currentLevel + 1} 關：請將箱子推到目標點！`;
     render();
 }
 
-// 3. 繪圖引擎
 function render() {
     const board = document.getElementById('game-board');
     board.innerHTML = '';
@@ -80,13 +80,8 @@ function render() {
     }
 }
 
-// 4. 移動邏輯
 function move(dr, dc) {
-    let p = (() => {
-        for (let r = 0; r < map.length; r++)
-            for (let c = 0; c < map[r].length; c++)
-                if (map[r][c] === 4) return { r, c };
-    })();
+    let p = (() => { for(let r=0; r<map.length; r++) for(let c=0; c<map[0].length; c++) if(map[r][c]===4) return {r, c}; })();
     let nextR = p.r + dr, nextC = p.c + dc;
     if (map[nextR][nextC] === 1) return;
     if (map[nextR][nextC] === 2) {
@@ -103,7 +98,7 @@ window.addEventListener('keydown', (e) => {
     if (e.key.startsWith('Arrow')) move(e.key==='ArrowUp'?-1:e.key==='ArrowDown'?1:0, e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0);
 });
 
-initGame(); // 啟動遊戲
+loadLevel(0);
 </script>
 </body>
 </html>
