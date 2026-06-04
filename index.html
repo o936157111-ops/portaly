@@ -12,12 +12,34 @@
         .container { max-width: 400px; margin: 0 auto; }
         
         .card-container { 
+            position: relative; /* 讓卡片內部支援絕對定位 */
             background-color: #FCFCFF; 
             border-radius: 24px;       
             border: 1px solid #F0F0F0; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
             overflow: hidden; 
             padding: 40px 25px;
+        }
+
+        /* 個人網頁區塊（卡片）內部的左上角頭像 */
+        .card-corner-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            z-index: 10;
+        }
+        .card-corner-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%; /* 圓形頭像，若要方形微圓角可改為 border-radius: 8px; */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card-corner-logo img:hover {
+            transform: scale(1.1); /* 滑鼠懸停時微放大 */
         }
         
         .logo-wrapper { 
@@ -65,6 +87,11 @@
 
     <div class="container">
         <div class="card-container">
+            
+            <div class="card-corner-logo">
+                <img src="https://myezlife.com/eric-logo.jpg" alt="Eric Logo">
+            </div>
+
             <div class="logo-wrapper">
                 <div id="loader-container">
                     <div class="loader-text">載入日常片段中...</div>
@@ -93,13 +120,13 @@
                 <a href="https://www.pinterest.com/myezstore/pins/" class="btn" target="_blank" rel="noopener noreferrer">Pinterest</a>
                 <a href="https://www.youtube.com/@myezlife" class="btn" target="_blank" rel="noopener noreferrer">YouTube</a>
                 <a href="https://www.instagram.com/?hl=zh-tw" class="btn" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://myezlife.com/games.html" class="btn">簡易復古經典小遊戲</a>
+                <a href="https://myezlife.com/games.html" class="btn" target="_blank" rel="noopener noreferrer">                 自製簡易復古經典小遊戲</a>
             </div>
 
             <div id="tab-2" class="button-group">
                 <a href="https://play.google.com/books" class="btn" target="_blank" rel="noopener noreferrer">生活書房</a>
                 <a href="https://ebook.nlpi.edu.tw" class="btn" target="_blank" rel="noopener noreferrer">電子圖書館</a>
-                <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer"">生活小書房</a>
+                <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer">生活小書房</a>
                 <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn" target="_blank" rel="noopener noreferrer">挑本書細讀</a>
             </div>
 
@@ -123,8 +150,7 @@
         }
 
         const logoOptions = [
-            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif",
-           
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif"
         ];
 
         const progressBar = document.getElementById('progress-bar');
