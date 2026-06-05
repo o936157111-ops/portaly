@@ -12,10 +12,14 @@
         /* ========================================== */
         /* 1. 基礎與直式版樣式 (電腦版、手機直式) */
         /* ========================================== */
+        html, body {
+            background-color: #f9f9f9; /* 預設直式底色 */
+            margin: 0; padding: 0;
+        }
+
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
-            margin: 0; padding: 20px; text-align: center; 
-            background-color: #f9f9f9; color: #333;
+            padding: 20px; text-align: center; color: #333;
             overscroll-behavior: none;
         }
         .container { max-width: 400px; margin: 0 auto; }
@@ -95,16 +99,20 @@
         }
 
         /* ========================================== */
-        /* 3. 專屬手機橫式版的佈局 */
+        /* 3. 專屬手機橫式版的佈局 (修正 Samsung 白邊問題) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
             .container, #rotate-guide { display: none !important; }
             
+            /* 將最外層底色全部強制設為深色，消滅白邊 */
+            html, body {
+                background-color: #0f172a !important;
+            }
+
             body { 
                 margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
-                background-color: #0f172a; 
                 display: flex; justify-content: center; align-items: center;
             }
             
@@ -112,6 +120,12 @@
                 display: flex; width: 100vw; height: 100vh; 
                 background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
                 overflow: hidden; position: relative;
+                
+                /* 運用環境變數自動內縮，防止重要按鈕文字被挖孔鏡頭切到 */
+                padding-left: env(safe-area-inset-left, 0px);
+                padding-right: env(safe-area-inset-right, 0px);
+                padding-top: env(safe-area-inset-top, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 0px);
             }
             
             .card-left {
@@ -135,9 +149,11 @@
             .card-btn:hover { background: rgba(255, 255, 255, 0.15); }
             .card-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.98); }
 
-            /* 精緻的全螢幕切換按鈕，配置在橫式版右下角 */
+            /* 全螢幕切換按鈕考量到安全區域調整位置 */
             #fs-toggle-btn {
-                display: block; position: absolute; bottom: 15px; right: 15px;
+                display: block; position: absolute; 
+                bottom: calc(15px + env(safe-area-inset-bottom, 0px)); 
+                right: calc(15px + env(safe-area-inset-right, 0px));
                 background: rgba(255, 255, 255, 0.9); color: #0f172a; border: none;
                 padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: bold;
                 cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999;
@@ -146,13 +162,11 @@
             #fs-toggle-btn:active { transform: scale(0.95); background: #ffffff; }
         }
 
-        /* 如果已經成功進入全螢幕，就把右下角的按鈕文字變成「退出全螢幕」 */
         :fullscreen #fs-toggle-btn { background: rgba(255, 255, 255, 0.3); color: #fff; }
     </style>
 </head>
 <body>
 
-    <!-- 直式版結構 -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -202,7 +216,6 @@
         </div>
     </div>
 
-    <!-- 旋轉引導提示遮罩 (純引導，不在此處強求全螢幕權限) -->
     <div id="rotate-guide" onclick="hideRotateGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
@@ -211,9 +224,7 @@
         </div>
     </div>
 
-    <!-- 橫式版結構 -->
     <div id="landscape-card-view">
-        <!-- 橫式右下角常駐一個正統的全螢幕切換按鈕，由使用者在橫式下點擊，瀏覽器必給全螢幕 -->
         <button id="fs-toggle-btn" onclick="toggleFullscreen()">🖥️ 點擊全螢幕</button>
 
         <div class="card-left">
@@ -267,18 +278,17 @@
             document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
 
-        // 點擊 LOGO 出現旋轉引導
         function showRotateGuide() {
             if (window.innerHeight > window.innerWidth) {
                 document.getElementById('rotate-guide').style.display = 'flex';
             }
         }
 
+        // 隱藏引導層時順便更新背景色
         function hideRotateGuide() {
             document.getElementById('rotate-guide').style.display = 'none';
         }
 
-        // 核心修正：在橫向狀態下，由使用者自主點擊按鈕，百分之百能啟動/解除全螢幕
         function toggleFullscreen() {
             const btn = document.getElementById('fs-toggle-btn');
             if (!document.fullscreenElement) {
@@ -292,7 +302,6 @@
             }
         }
 
-        // 當使用者在橫式且全螢幕狀態下，直接把手機轉回直式時的處理
         window.addEventListener("resize", () => {
             if (window.innerHeight > window.innerWidth) {
                 hideRotateGuide();
