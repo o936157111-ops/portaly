@@ -10,7 +10,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         
         /* ========================================== */
-        /* 1. 基礎與直式版樣式 (電腦版、手機直式都走這裡) */
+        /* 1. 基礎與直式版樣式 (電腦版、手機直式) */
         /* ========================================== */
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
@@ -69,7 +69,7 @@
         }
 
         /* ========================================== */
-        /* 2. 旋轉引導提示遮罩 (僅在手機直式點擊時顯示) */
+        /* 2. 旋轉引導提示遮罩 */
         /* ========================================== */
         #rotate-guide {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -95,16 +95,13 @@
         }
 
         /* ========================================== */
-        /* 3. 專屬手機橫式版的佈局 (加入 max-width 限制限制) */
+        /* 3. 專屬手機橫式版的佈局 */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
-        /* 關鍵修正：同時滿足【橫式】且【螢幕寬度在手機範圍 950px 以下】才啟動滿版名片 */
         @media (orientation: landscape) and (max-width: 950px) {
-            /* 隱藏直式版內容與引導層 */
             .container, #rotate-guide { display: none !important; }
             
-            /* 手機橫式版全螢幕滿版卡片 */
             body { 
                 margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
                 background-color: #0f172a; 
@@ -112,12 +109,9 @@
             }
             
             #landscape-card-view {
-                display: flex; 
-                width: 100vw; 
-                height: 100vh; 
+                display: flex; width: 100vw; height: 100vh; 
                 background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                overflow: hidden;
-                position: relative;
+                overflow: hidden; position: relative;
             }
             
             .card-left {
@@ -140,11 +134,25 @@
             }
             .card-btn:hover { background: rgba(255, 255, 255, 0.15); }
             .card-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.98); }
+
+            /* 精緻的全螢幕切換按鈕，配置在橫式版右下角 */
+            #fs-toggle-btn {
+                display: block; position: absolute; bottom: 15px; right: 15px;
+                background: rgba(255, 255, 255, 0.9); color: #0f172a; border: none;
+                padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: bold;
+                cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999;
+                transition: all 0.2s;
+            }
+            #fs-toggle-btn:active { transform: scale(0.95); background: #ffffff; }
         }
+
+        /* 如果已經成功進入全螢幕，就把右下角的按鈕文字變成「退出全螢幕」 */
+        :fullscreen #fs-toggle-btn { background: rgba(255, 255, 255, 0.3); color: #fff; }
     </style>
 </head>
 <body>
 
+    <!-- 直式版結構 -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -194,15 +202,20 @@
         </div>
     </div>
 
-    <div id="rotate-guide" onclick="triggerFullscreenAndGuide()">
+    <!-- 旋轉引導提示遮罩 (純引導，不在此處強求全螢幕權限) -->
+    <div id="rotate-guide" onclick="hideRotateGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
-            請點擊此處並將手機轉為橫向<br>
-            <span style="font-size: 13px; color: #94a3b8;">即可開啟全螢幕個人數位名片</span>
+            請將手機轉為橫向<br>
+            <span style="font-size: 13px; color: #94a3b8;">即可開啟數位個人名片</span>
         </div>
     </div>
 
+    <!-- 橫式版結構 -->
     <div id="landscape-card-view">
+        <!-- 橫式右下角常駐一個正統的全螢幕切換按鈕，由使用者在橫式下點擊，瀏覽器必給全螢幕 -->
+        <button id="fs-toggle-btn" onclick="toggleFullscreen()">🖥️ 點擊全螢幕</button>
+
         <div class="card-left">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar">
             <div class="card-name">簡居生活</div>
@@ -254,32 +267,39 @@
             document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
 
-        // 修正點：只有在螢幕【高度大於寬度（手機直拿）】或【寬度小於 950px 且是在行動端設備上】才點擊跳引導
+        // 點擊 LOGO 出現旋轉引導
         function showRotateGuide() {
             if (window.innerHeight > window.innerWidth) {
                 document.getElementById('rotate-guide').style.display = 'flex';
-            } else if (window.innerWidth <= 950) {
-                // 如果是已經打橫的小螢幕手機，點擊直接嘗試全螢幕
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => console.log(err));
-                }
             }
         }
 
-        function triggerFullscreenAndGuide() {
+        function hideRotateGuide() {
             document.getElementById('rotate-guide').style.display = 'none';
+        }
+
+        // 核心修正：在橫向狀態下，由使用者自主點擊按鈕，百分之百能啟動/解除全螢幕
+        function toggleFullscreen() {
+            const btn = document.getElementById('fs-toggle-btn');
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.log("全螢幕被瀏覽器阻擋", err);
-                });
+                document.documentElement.requestFullscreen()
+                    .then(() => { btn.innerText = "❌ 退出全螢幕"; })
+                    .catch(err => console.log("全螢幕請求失敗: ", err));
+            } else {
+                document.exitFullscreen()
+                    .then(() => { btn.innerText = "🖥️ 點擊全螢幕"; })
+                    .catch(err => console.log(err));
             }
         }
 
+        // 當使用者在橫式且全螢幕狀態下，直接把手機轉回直式時的處理
         window.addEventListener("resize", () => {
-            // 如果轉回直式，且目前在全螢幕狀態，自動退出全螢幕
             if (window.innerHeight > window.innerWidth) {
+                hideRotateGuide();
                 if (document.fullscreenElement) {
-                    document.exitFullscreen().catch(err => console.log(err));
+                    document.exitFullscreen().then(() => {
+                        document.getElementById('fs-toggle-btn').innerText = "🖥️ 點擊全螢幕";
+                    }).catch(err => console.log(err));
                 }
             }
         });
