@@ -10,7 +10,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         
         /* ========================================== */
-        /* 1. 基礎與直式版樣式 (完全還原原本入口網) */
+        /* 1. 基礎與直式版樣式 (還原原本入口網) */
         /* ========================================== */
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
@@ -69,7 +69,7 @@
         }
 
         /* ========================================== */
-        /* 2. 直式點擊 LOGO 後產生的「旋轉引導提示遮罩」 */
+        /* 2. 旋轉引導提示遮罩 (點擊觸發全螢幕) */
         /* ========================================== */
         #rotate-guide {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -79,7 +79,6 @@
         }
         .guide-text { font-size: 18px; margin-top: 20px; line-height: 1.6; letter-spacing: 1px; }
         
-        /* 旋轉手機的動畫圖標 */
         .phone-icon {
             width: 60px; height: 100px; border: 3px solid #fff; border-radius: 10px;
             position: relative; animation: rotatePhone 2.5s ease-in-out infinite;
@@ -96,57 +95,57 @@
         }
 
         /* ========================================== */
-        /* 3. 專屬橫式版的全新網頁布局 (名片型入口網) */
+        /* 3. 專屬橫式版的全新網頁布局 (正全螢幕名片) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
-        @media (orientation: landscape) and (max-width: 950px) {
-            /* 隱藏直式版的所有內容與引導層 */
+        @media (orientation: landscape) {
+            /* 隱藏直式版內容與引導層 */
             .container, #rotate-guide { display: none !important; }
             
-            /* 啟動橫式版滿版名片佈局 */
+            /* 橫式版全螢幕滿版卡片 */
             body { 
                 margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
-                background-color: #0f172a; /* 深色科技感底色 */
+                background-color: #0f172a; 
                 display: flex; justify-content: center; align-items: center;
             }
             
             #landscape-card-view {
-                display: flex; width: 92vw; height: 88vh; max-width: 800px; max-height: 450px;
+                display: flex; 
+                width: 100vw; /* 設為 100vw 達成純滿版 */
+                height: 100vh; /* 設為 100vh 達成純滿版 */
                 background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.6); overflow: hidden;
+                overflow: hidden;
+                position: relative;
             }
             
-            /* 左側：個人品牌視覺區 */
+            /* 左側：品牌形象區 */
             .card-left {
                 flex: 4; display: flex; flex-direction: column; justify-content: center; 
                 align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 20px;
             }
-            .card-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 12px; }
-            .card-name { font-size: 22px; font-weight: bold; color: #fff; margin-bottom: 5px; }
-            .card-sub { font-size: 13px; color: #94a3b8; letter-spacing: 2px; }
+            .card-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 12px; }
+            .card-name { font-size: 24px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+            .card-sub { font-size: 14px; color: #94a3b8; letter-spacing: 2px; }
 
-            /* 右側：名片型入口網按鈕群 */
+            /* 右側：按鈕區 */
             .card-right {
                 flex: 6; display: flex; flex-direction: column; justify-content: center; 
-                padding: 30px; gap: 10px; text-align: left; overflow-y: auto;
+                padding: 40px; gap: 15px; text-align: left; overflow-y: auto;
             }
             .card-btn {
-                display: flex; align-items: center; justify-content: center; height: 44px;
+                display: flex; align-items: center; justify-content: center; height: 50px;
                 background: rgba(255, 255, 255, 0.06); color: #f8fafc; text-decoration: none;
-                border-radius: 8px; font-size: 14px; font-weight: 600;
+                border-radius: 10px; font-size: 15px; font-weight: 600;
                 border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s;
             }
-            .card-btn:active { background: rgba(255, 255, 255, 0.2); transform: scale(0.98); }
+            .card-btn:hover { background: rgba(255, 255, 255, 0.15); }
+            .card-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.98); }
         }
     </style>
 </head>
 <body>
 
-    <!-- ========================================== -->
-    <!-- 【直式版 HTML】完全保留你原來的入口網結構    -->
-    <!-- ========================================== -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -154,7 +153,6 @@
                     <div class="loader-text">載入日常片段中...</div>
                     <progress id="progress-bar" value="0" max="100"></progress>
                 </div>
-                <!-- 綁定點擊事件 showRotateGuide() -->
                 <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()" onclick="showRotateGuide()">
             </div>
             
@@ -197,30 +195,21 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 【引導層 HTML】點擊 LOGO 後跳出的旋轉引導   -->
-    <!-- ========================================== -->
-    <div id="rotate-guide" onclick="hideRotateGuide()">
+    <div id="rotate-guide" onclick="triggerFullscreenAndGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
-            請將手機轉為橫向<br>
-            <span style="font-size: 13px; color: #94a3b8;">即可開啟滿版個人數位名片</span>
+            請點擊此處並將手機轉為橫向<br>
+            <span style="font-size: 13px; color: #94a3b8;">即可開啟全螢幕個人數位名片</span>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 【橫式版 HTML】全新設計的橫向名片入口網佈局  -->
-    <!-- ========================================== -->
     <div id="landscape-card-view">
-        <!-- 左側：個人名片形象（可換成你的大頭貼與名字） -->
         <div class="card-left">
-            <!-- 暫時借用你的 Logo 作為名片大頭貼，你可自行更換網址 -->
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar">
             <div class="card-name">簡居生活</div>
             <div class="card-sub">DIGITAL CARD</div>
         </div>
         
-        <!-- 右側：精選出來的橫式名片核心按鈕（可自行增減調整網址） -->
         <div class="card-right">
             <a href="https://portaly.cc/myezlife" class="card-btn" target="_blank">個人 Portaly 主頁</a>
             <a href="https://myeztravellife.blogspot.com" class="card-btn" target="_blank">Blogger 旅遊生活</a>
@@ -230,7 +219,6 @@
     </div>
 
     <script>
-        // 原有入口網分頁功能
         function openTab(evt, tabName) {
             const groups = document.getElementsByClassName("button-group");
             for (let i = 0; i < groups.length; i++) groups[i].classList.remove("active");
@@ -240,7 +228,6 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // 原有 Logo 與進度條動畫
         const logoOptions = [
             "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif"
         ];
@@ -268,28 +255,32 @@
             document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
 
-        // 新增功能：直式點擊 LOGO 跳出引導
+        // 點擊 LOGO 顯示引導層
         function showRotateGuide() {
-            // 只有在直式手持時點擊才跳出引導
             if (window.innerHeight > window.innerWidth) {
                 document.getElementById('rotate-guide').style.display = 'flex';
-                
-                // 巧妙機制：點擊引導時順便請求瀏覽器全螢幕，這樣轉橫時名片會更完整漂亮
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => console.log(err));
-                }
             }
         }
 
-        // 點擊引導任意處可手動關閉
-        function hideRotateGuide() {
+        // 點擊引導層：同時發送全螢幕請求並隱藏引導提示
+        function triggerFullscreenAndGuide() {
             document.getElementById('rotate-guide').style.display = 'none';
+            
+            // 安全觸發全螢幕 API
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log("全螢幕請求被瀏覽器拒絕或需要重新觸發", err);
+                });
+            }
         }
 
-        // 監聽螢幕旋轉：只要使用者一轉橫，引導層就自動消失，橫式網頁隨即由 CSS 接管顯示
+        // 監聽螢幕方向/尺寸變化
         window.addEventListener("resize", () => {
-            if (window.innerWidth > window.innerHeight) {
-                hideRotateGuide();
+            // 如果使用者轉回直式，且目前還在全螢幕狀態，就自動退出全螢幕回到網頁狀態
+            if (window.innerHeight > window.innerWidth) {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen().catch(err => console.log(err));
+                }
             }
         });
 
