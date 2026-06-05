@@ -10,7 +10,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         
         /* ========================================== */
-        /* 1. 基礎與直式版樣式 (還原原本入口網) */
+        /* 1. 基礎與直式版樣式 (電腦版、手機直式都走這裡) */
         /* ========================================== */
         body { 
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
@@ -69,7 +69,7 @@
         }
 
         /* ========================================== */
-        /* 2. 旋轉引導提示遮罩 (點擊觸發全螢幕) */
+        /* 2. 旋轉引導提示遮罩 (僅在手機直式點擊時顯示) */
         /* ========================================== */
         #rotate-guide {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -95,15 +95,16 @@
         }
 
         /* ========================================== */
-        /* 3. 專屬橫式版的全新網頁布局 (正全螢幕名片) */
+        /* 3. 專屬手機橫式版的佈局 (加入 max-width 限制限制) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
-        @media (orientation: landscape) {
+        /* 關鍵修正：同時滿足【橫式】且【螢幕寬度在手機範圍 950px 以下】才啟動滿版名片 */
+        @media (orientation: landscape) and (max-width: 950px) {
             /* 隱藏直式版內容與引導層 */
             .container, #rotate-guide { display: none !important; }
             
-            /* 橫式版全螢幕滿版卡片 */
+            /* 手機橫式版全螢幕滿版卡片 */
             body { 
                 margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
                 background-color: #0f172a; 
@@ -112,14 +113,13 @@
             
             #landscape-card-view {
                 display: flex; 
-                width: 100vw; /* 設為 100vw 達成純滿版 */
-                height: 100vh; /* 設為 100vh 達成純滿版 */
+                width: 100vw; 
+                height: 100vh; 
                 background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
                 overflow: hidden;
                 position: relative;
             }
             
-            /* 左側：品牌形象區 */
             .card-left {
                 flex: 4; display: flex; flex-direction: column; justify-content: center; 
                 align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 20px;
@@ -128,7 +128,6 @@
             .card-name { font-size: 24px; font-weight: bold; color: #fff; margin-bottom: 5px; }
             .card-sub { font-size: 14px; color: #94a3b8; letter-spacing: 2px; }
 
-            /* 右側：按鈕區 */
             .card-right {
                 flex: 6; display: flex; flex-direction: column; justify-content: center; 
                 padding: 40px; gap: 15px; text-align: left; overflow-y: auto;
@@ -255,28 +254,29 @@
             document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
 
-        // 點擊 LOGO 顯示引導層
+        // 修正點：只有在螢幕【高度大於寬度（手機直拿）】或【寬度小於 950px 且是在行動端設備上】才點擊跳引導
         function showRotateGuide() {
             if (window.innerHeight > window.innerWidth) {
                 document.getElementById('rotate-guide').style.display = 'flex';
+            } else if (window.innerWidth <= 950) {
+                // 如果是已經打橫的小螢幕手機，點擊直接嘗試全螢幕
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => console.log(err));
+                }
             }
         }
 
-        // 點擊引導層：同時發送全螢幕請求並隱藏引導提示
         function triggerFullscreenAndGuide() {
             document.getElementById('rotate-guide').style.display = 'none';
-            
-            // 安全觸發全螢幕 API
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.log("全螢幕請求被瀏覽器拒絕或需要重新觸發", err);
+                    console.log("全螢幕被瀏覽器阻擋", err);
                 });
             }
         }
 
-        // 監聽螢幕方向/尺寸變化
         window.addEventListener("resize", () => {
-            // 如果使用者轉回直式，且目前還在全螢幕狀態，就自動退出全螢幕回到網頁狀態
+            // 如果轉回直式，且目前在全螢幕狀態，自動退出全螢幕
             if (window.innerHeight > window.innerWidth) {
                 if (document.fullscreenElement) {
                     document.exitFullscreen().catch(err => console.log(err));
