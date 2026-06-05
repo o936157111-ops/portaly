@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>生活・簡居・生活 | 數位名片型總入口</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        /* ========================================== */
+        /* 1. 基礎與直式版樣式 (完全還原原本入口網) */
+        /* ========================================== */
+        body { 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
+            margin: 0; padding: 20px; text-align: center; 
+            background-color: #f9f9f9; color: #333;
+            overscroll-behavior: none;
+        }
+        .container { max-width: 400px; margin: 0 auto; }
+        
+        .card-container { 
+            background-color: #FCFCFF; 
+            border-radius: 24px;       
+            border: 1px solid #F0F0F0; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+            overflow: hidden; 
+            padding: 40px 25px;
+        }
+        
+        .logo-wrapper { 
+            position: relative; 
+            min-height: 250px; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            margin-bottom: 20px; 
+        }
+        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; cursor: pointer; }
+        
+        #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
+        .loader-text { color: #999; font-size: 0.9em; }
+        progress { width: 100%; height: 8px; border-radius: 4px; border: none; background-color: #eee; }
+        progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
+        progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
+        
+        .header-tabs { margin: 10px 0; font-size: 1.4em; color: #888; }
+        .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; }
+        .tab-trigger.active { color: #000; font-weight: 800; }
+        
+        .slogan { line-height: 1.8; color: #666; font-size: 0.85em; margin-bottom: 25px; }
+
+        .button-group { display: none; flex-direction: column; gap: 12px; }
+        .button-group.active { display: flex; }
+        
+        .btn { 
+            display: flex; align-items: center; justify-content: center; height: 50px; 
+            background-color: #f4f4f9; color: #333; text-decoration: none; 
+            border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; 
+            transition: all 0.3s ease; 
+        }
+        .btn:hover { 
+            background-color: #000 !important; 
+            color: #fff !important; 
+            border-color: #000 !important; 
+            transform: translateY(-2px) !important;
+        }
+
+        /* ========================================== */
+        /* 2. 直式點擊 LOGO 後產生的「旋轉引導提示遮罩」 */
+        /* ========================================== */
+        #rotate-guide {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.95); z-index: 10000;
+            color: white; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; padding: 20px;
+        }
+        .guide-text { font-size: 18px; margin-top: 20px; line-height: 1.6; letter-spacing: 1px; }
+        
+        /* 旋轉手機的動畫圖標 */
+        .phone-icon {
+            width: 60px; height: 100px; border: 3px solid #fff; border-radius: 10px;
+            position: relative; animation: rotatePhone 2.5s ease-in-out infinite;
+        }
+        .phone-icon::after {
+            content: ''; position: absolute; bottom: 5px; left: 50%;
+            transform: translateX(-50%); width: 8px; height: 8px; background: #fff; border-radius: 50%;
+        }
+        @keyframes rotatePhone {
+            0% { transform: rotate(0deg); }
+            30% { transform: rotate(-90deg); }
+            70% { transform: rotate(-90deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* ========================================== */
+        /* 3. 專屬橫式版的全新網頁布局 (名片型入口網) */
+        /* ========================================== */
+        #landscape-card-view { display: none; }
+
+        @media (orientation: landscape) and (max-width: 950px) {
+            /* 隱藏直式版的所有內容與引導層 */
+            .container, #rotate-guide { display: none !important; }
+            
+            /* 啟動橫式版滿版名片佈局 */
+            body { 
+                margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
+                background-color: #0f172a; /* 深色科技感底色 */
+                display: flex; justify-content: center; align-items: center;
+            }
+            
+            #landscape-card-view {
+                display: flex; width: 92vw; height: 88vh; max-width: 800px; max-height: 450px;
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.6); overflow: hidden;
+            }
+            
+            /* 左側：個人品牌視覺區 */
+            .card-left {
+                flex: 4; display: flex; flex-direction: column; justify-content: center; 
+                align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 20px;
+            }
+            .card-avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 12px; }
+            .card-name { font-size: 22px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+            .card-sub { font-size: 13px; color: #94a3b8; letter-spacing: 2px; }
+
+            /* 右側：名片型入口網按鈕群 */
+            .card-right {
+                flex: 6; display: flex; flex-direction: column; justify-content: center; 
+                padding: 30px; gap: 10px; text-align: left; overflow-y: auto;
+            }
+            .card-btn {
+                display: flex; align-items: center; justify-content: center; height: 44px;
+                background: rgba(255, 255, 255, 0.06); color: #f8fafc; text-decoration: none;
+                border-radius: 8px; font-size: 14px; font-weight: 600;
+                border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s;
+            }
+            .card-btn:active { background: rgba(255, 255, 255, 0.2); transform: scale(0.98); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================== -->
+    <!-- 【直式版 HTML】完全保留你原來的入口網結構    -->
+    <!-- ========================================== -->
+    <div class="container">
+        <div class="card-container">
+            <div class="logo-wrapper">
+                <div id="loader-container">
+                    <div class="loader-text">載入日常片段中...</div>
+                    <progress id="progress-bar" value="0" max="100"></progress>
+                </div>
+                <!-- 綁定點擊事件 showRotateGuide() -->
+                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()" onclick="showRotateGuide()">
+            </div>
+            
+            <div class="content-section">
+                <div class="header-tabs">
+                    <span class="tab-trigger active" onclick="openTab(event, 'tab-1')">生活</span>・
+                    <span class="tab-trigger" onclick="openTab(event, 'tab-2')">簡居</span>・
+                    <span class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
+                </div>
+                
+                <div class="slogan">
+                    <p>用瞬間記錄永恆，拿片刻鋪滿人生；<br>
+                    在角落翻開記憶，把點滴串成一生。<br>
+                    漫無目的，恣意生活。</p>
+                </div>
+            </div>
+
+            <div id="tab-1" class="button-group active">
+                <a href="https://portaly.cc/myezlife" class="btn" target="_blank" rel="noopener noreferrer">Portaly</a>
+                <a href="https://myeztravellife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">Blogger</a>
+                <a href="https://www.pinterest.com/myezstore/pins/" class="btn" target="_blank" rel="noopener noreferrer">Pinterest</a>
+                <a href="https://www.youtube.com/@myezlife" class="btn" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://www.instagram.com/?hl=zh-tw" class="btn" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://myezlife.com/games.html" class="btn" target="_blank" rel="noopener noreferrer">自製簡易復古經典小遊戲</a>
+            </div>
+
+            <div id="tab-2" class="button-group">
+                <a href="https://play.google.com/books" class="btn" target="_blank" rel="noopener noreferrer">生活書房</a>
+                <a href="https://ebook.nlpi.edu.tw" class="btn" target="_blank" rel="noopener noreferrer">電子圖書館</a>
+                <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer">生活小書房</a>
+                <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn" target="_blank" rel="noopener noreferrer">挑本書細讀</a>
+            </div>
+
+            <div id="tab-3" class="button-group">
+                <a href="https://myezdailylife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">零碎日常</a>
+                <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
+                <a href="https://www.flickr.com/photos/0936157111/" class="btn" target="_blank" rel="noopener noreferrer">生活相簿</a>
+                <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 【引導層 HTML】點擊 LOGO 後跳出的旋轉引導   -->
+    <!-- ========================================== -->
+    <div id="rotate-guide" onclick="hideRotateGuide()">
+        <div class="phone-icon"></div>
+        <div class="guide-text">
+            請將手機轉為橫向<br>
+            <span style="font-size: 13px; color: #94a3b8;">即可開啟滿版個人數位名片</span>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 【橫式版 HTML】全新設計的橫向名片入口網佈局  -->
+    <!-- ========================================== -->
+    <div id="landscape-card-view">
+        <!-- 左側：個人名片形象（可換成你的大頭貼與名字） -->
+        <div class="card-left">
+            <!-- 暫時借用你的 Logo 作為名片大頭貼，你可自行更換網址 -->
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar">
+            <div class="card-name">簡居生活</div>
+            <div class="card-sub">DIGITAL CARD</div>
+        </div>
+        
+        <!-- 右側：精選出來的橫式名片核心按鈕（可自行增減調整網址） -->
+        <div class="card-right">
+            <a href="https://portaly.cc/myezlife" class="card-btn" target="_blank">個人 Portaly 主頁</a>
+            <a href="https://myeztravellife.blogspot.com" class="card-btn" target="_blank">Blogger 旅遊生活</a>
+            <a href="https://www.youtube.com/@myezlife" class="card-btn" target="_blank">YouTube 頻道</a>
+            <a href="https://myezlife.com/games.html" class="card-btn" target="_blank">自製復古經典小遊戲</a>
+        </div>
+    </div>
+
+    <script>
+        // 原有入口網分頁功能
+        function openTab(evt, tabName) {
+            const groups = document.getElementsByClassName("button-group");
+            for (let i = 0; i < groups.length; i++) groups[i].classList.remove("active");
+            const triggers = document.getElementsByClassName("tab-trigger");
+            for (let i = 0; i < triggers.length; i++) triggers[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // 原有 Logo 與進度條動畫
+        const logoOptions = [
+            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif"
+        ];
+
+        const progressBar = document.getElementById('progress-bar');
+        let progress = 0;
+        const interval = setInterval(() => {
+            if (progress < 90) {
+                progress += 5;
+                progressBar.value = progress;
+            }
+        }, 100);
+
+        function finishLoading() {
+            clearInterval(interval);
+            progressBar.value = 100;
+            setTimeout(() => {
+                document.getElementById('loader-container').style.display = 'none';
+                document.getElementById('logo-img').style.display = 'block';
+            }, 200);
+        }
+
+        function setRandomLogo() {
+            const randomIndex = Math.floor(Math.random() * logoOptions.length);
+            document.getElementById('logo-img').src = logoOptions[randomIndex];
+        }
+
+        // 新增功能：直式點擊 LOGO 跳出引導
+        function showRotateGuide() {
+            // 只有在直式手持時點擊才跳出引導
+            if (window.innerHeight > window.innerWidth) {
+                document.getElementById('rotate-guide').style.display = 'flex';
+                
+                // 巧妙機制：點擊引導時順便請求瀏覽器全螢幕，這樣轉橫時名片會更完整漂亮
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => console.log(err));
+                }
+            }
+        }
+
+        // 點擊引導任意處可手動關閉
+        function hideRotateGuide() {
+            document.getElementById('rotate-guide').style.display = 'none';
+        }
+
+        // 監聽螢幕旋轉：只要使用者一轉橫，引導層就自動消失，橫式網頁隨即由 CSS 接管顯示
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > window.innerHeight) {
+                hideRotateGuide();
+            }
+        });
+
+        setRandomLogo();
+    </script>
+</body>
+</html>
