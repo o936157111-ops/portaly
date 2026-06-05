@@ -13,8 +13,9 @@
         /* 1. 基礎與直式版樣式 (電腦版、手機直式) */
         /* ========================================== */
         html, body {
-            background-color: #f9f9f9; /* 預設直式底色 */
+            background-color: #f9f9f9;
             margin: 0; padding: 0;
+            width: 100%; height: 100%;
         }
 
         body { 
@@ -99,70 +100,59 @@
         }
 
         /* ========================================== */
-        /* 3. 專屬手機橫式版的佈局 (修正 Samsung 白邊問題) */
+        /* 3. 專屬手機橫式版的佈局 (去按鈕、100% 視窗相容) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
             .container, #rotate-guide { display: none !important; }
             
-            /* 將最外層底色全部強制設為深色，消滅白邊 */
             html, body {
                 background-color: #0f172a !important;
+                width: 100%; height: 100%; overflow: hidden;
             }
 
             body { 
-                margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
+                margin: 0; padding: 0;
                 display: flex; justify-content: center; align-items: center;
             }
             
             #landscape-card-view {
-                display: flex; width: 100vw; height: 100vh; 
+                display: flex; 
+                /* 使用 100% 代替 100vh/100vw，能完美適應 Vivaldi 等有底列導航的瀏覽器 */
+                width: 100%; height: 100%; 
                 background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-                overflow: hidden; position: relative;
+                overflow: hidden; 
+                position: relative;
                 
-                /* 運用環境變數自動內縮，防止重要按鈕文字被挖孔鏡頭切到 */
-                padding-left: env(safe-area-inset-left, 0px);
-                padding-right: env(safe-area-inset-right, 0px);
-                padding-top: env(safe-area-inset-top, 0px);
-                padding-bottom: env(safe-area-inset-bottom, 0px);
+                /* 防止 Samsung 安全區域留白 */
+                padding-left: env(safe-area-inset-left, 15px);
+                padding-right: env(safe-area-inset-right, 15px);
+                padding-top: env(safe-area-inset-top, 10px);
+                padding-bottom: env(safe-area-inset-bottom, 10px);
             }
             
             .card-left {
                 flex: 4; display: flex; flex-direction: column; justify-content: center; 
-                align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 20px;
+                align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px;
             }
-            .card-avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 12px; }
-            .card-name { font-size: 24px; font-weight: bold; color: #fff; margin-bottom: 5px; }
-            .card-sub { font-size: 14px; color: #94a3b8; letter-spacing: 2px; }
+            .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 10px; }
+            .card-name { font-size: 20px; font-weight: bold; color: #fff; margin-bottom: 3px; }
+            .card-sub { font-size: 12px; color: #94a3b8; letter-spacing: 2px; }
 
             .card-right {
                 flex: 6; display: flex; flex-direction: column; justify-content: center; 
-                padding: 40px; gap: 15px; text-align: left; overflow-y: auto;
+                padding: 20px 25px; gap: 10px; text-align: left; overflow-y: auto;
             }
             .card-btn {
-                display: flex; align-items: center; justify-content: center; height: 50px;
+                display: flex; align-items: center; justify-content: center; height: 44px;
                 background: rgba(255, 255, 255, 0.06); color: #f8fafc; text-decoration: none;
-                border-radius: 10px; font-size: 15px; font-weight: 600;
+                border-radius: 10px; font-size: 14px; font-weight: 600;
                 border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s;
             }
             .card-btn:hover { background: rgba(255, 255, 255, 0.15); }
             .card-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.98); }
-
-            /* 全螢幕切換按鈕考量到安全區域調整位置 */
-            #fs-toggle-btn {
-                display: block; position: absolute; 
-                bottom: calc(15px + env(safe-area-inset-bottom, 0px)); 
-                right: calc(15px + env(safe-area-inset-right, 0px));
-                background: rgba(255, 255, 255, 0.9); color: #0f172a; border: none;
-                padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: bold;
-                cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999;
-                transition: all 0.2s;
-            }
-            #fs-toggle-btn:active { transform: scale(0.95); background: #ffffff; }
         }
-
-        :fullscreen #fs-toggle-btn { background: rgba(255, 255, 255, 0.3); color: #fff; }
     </style>
 </head>
 <body>
@@ -225,8 +215,6 @@
     </div>
 
     <div id="landscape-card-view">
-        <button id="fs-toggle-btn" onclick="toggleFullscreen()">🖥️ 點擊全螢幕</button>
-
         <div class="card-left">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar">
             <div class="card-name">簡居生活</div>
@@ -284,32 +272,13 @@
             }
         }
 
-        // 隱藏引導層時順便更新背景色
         function hideRotateGuide() {
             document.getElementById('rotate-guide').style.display = 'none';
-        }
-
-        function toggleFullscreen() {
-            const btn = document.getElementById('fs-toggle-btn');
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen()
-                    .then(() => { btn.innerText = "❌ 退出全螢幕"; })
-                    .catch(err => console.log("全螢幕請求失敗: ", err));
-            } else {
-                document.exitFullscreen()
-                    .then(() => { btn.innerText = "🖥️ 點擊全螢幕"; })
-                    .catch(err => console.log(err));
-            }
         }
 
         window.addEventListener("resize", () => {
             if (window.innerHeight > window.innerWidth) {
                 hideRotateGuide();
-                if (document.fullscreenElement) {
-                    document.exitFullscreen().then(() => {
-                        document.getElementById('fs-toggle-btn').innerText = "🖥️ 點擊全螢幕";
-                    }).catch(err => console.log(err));
-                }
             }
         });
 
