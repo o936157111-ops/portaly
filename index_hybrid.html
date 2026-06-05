@@ -43,7 +43,7 @@
             justify-content: center; 
             margin-bottom: 20px; 
         }
-        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; cursor: pointer; }
+        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; }
         
         #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
         .loader-text { color: #999; font-size: 0.9em; }
@@ -74,41 +74,16 @@
         }
 
         /* ========================================== */
-        /* 2. 旋轉引導提示遮罩 */
-        /* ========================================== */
-        #rotate-guide {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.95); z-index: 10000;
-            color: white; flex-direction: column; justify-content: center; align-items: center;
-            cursor: pointer; padding: 20px;
-        }
-        .guide-text { font-size: 18px; margin-top: 20px; line-height: 1.6; letter-spacing: 1px; }
-        
-        .phone-icon {
-            width: 60px; height: 100px; border: 3px solid #fff; border-radius: 10px;
-            position: relative; animation: rotatePhone 2.5s ease-in-out infinite;
-        }
-        .phone-icon::after {
-            content: ''; position: absolute; bottom: 5px; left: 50%;
-            transform: translateX(-50%); width: 8px; height: 8px; background: #fff; border-radius: 50%;
-        }
-        @keyframes rotatePhone {
-            0% { transform: rotate(0deg); }
-            30% { transform: rotate(-90deg); }
-            70% { transform: rotate(-90deg); }
-            100% { transform: rotate(0deg); }
-        }
-
-        /* ========================================== */
-        /* 3. 專屬手機橫式版的佈局 (去按鈕、100% 視窗相容) */
+        /* 2. 專屬手機橫式版的佈局 (全白背景、高質感極簡) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
-            .container, #rotate-guide { display: none !important; }
+            .container { display: none !important; }
             
+            /* 橫式狀態下，外層與身體全部變成純白色，與瀏覽器白邊完美融合 */
             html, body {
-                background-color: #0f172a !important;
+                background-color: #ffffff !important;
                 width: 100%; height: 100%; overflow: hidden;
             }
 
@@ -119,39 +94,44 @@
             
             #landscape-card-view {
                 display: flex; 
-                /* 使用 100% 代替 100vh/100vw，能完美適應 Vivaldi 等有底列導航的瀏覽器 */
                 width: 100%; height: 100%; 
-                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                background: #ffffff; /* 內層也設為純白 */
                 overflow: hidden; 
                 position: relative;
                 
-                /* 防止 Samsung 安全區域留白 */
-                padding-left: env(safe-area-inset-left, 15px);
-                padding-right: env(safe-area-inset-right, 15px);
+                /* 防止重要元件被瀏海或挖孔切到 */
+                padding-left: env(safe-area-inset-left, 20px);
+                padding-right: env(safe-area-inset-right, 20px);
                 padding-top: env(safe-area-inset-top, 10px);
                 padding-bottom: env(safe-area-inset-bottom, 10px);
             }
             
+            /* 左側：品牌形象區 (改為白底黑字的高質感色調) */
             .card-left {
                 flex: 4; display: flex; flex-direction: column; justify-content: center; 
-                align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px;
+                align-items: center; border-right: 1px solid #f0f0f0; padding: 10px;
             }
-            .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 10px; }
-            .card-name { font-size: 20px; font-weight: bold; color: #fff; margin-bottom: 3px; }
-            .card-sub { font-size: 12px; color: #94a3b8; letter-spacing: 2px; }
+            .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 1px solid #e2e8f0; margin-bottom: 10px; }
+            .card-name { font-size: 20px; font-weight: bold; color: #1a1a1a; margin-bottom: 3px; }
+            .card-sub { font-size: 11px; color: #718096; letter-spacing: 2px; }
 
+            /* 右側：按鈕連結區 */
             .card-right {
                 flex: 6; display: flex; flex-direction: column; justify-content: center; 
-                padding: 20px 25px; gap: 10px; text-align: left; overflow-y: auto;
+                padding: 20px 30px; gap: 10px; text-align: left; overflow-y: auto;
             }
             .card-btn {
                 display: flex; align-items: center; justify-content: center; height: 44px;
-                background: rgba(255, 255, 255, 0.06); color: #f8fafc; text-decoration: none;
-                border-radius: 10px; font-size: 14px; font-weight: 600;
-                border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s;
+                background: #f7fafc; color: #2d3748; text-decoration: none;
+                border-radius: 12px; font-size: 14px; font-weight: 600;
+                border: 1px solid #e2e8f0; transition: all 0.2s;
             }
-            .card-btn:hover { background: rgba(255, 255, 255, 0.15); }
-            .card-btn:active { background: rgba(255, 255, 255, 0.25); transform: scale(0.98); }
+            .card-btn:hover { 
+                background: #000000; 
+                color: #ffffff; 
+                border-color: #000000;
+            }
+            .card-btn:active { transform: scale(0.98); }
         }
     </style>
 </head>
@@ -164,7 +144,7 @@
                     <div class="loader-text">載入日常片段中...</div>
                     <progress id="progress-bar" value="0" max="100"></progress>
                 </div>
-                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()" onclick="showRotateGuide()">
+                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()">
             </div>
             
             <div class="content-section">
@@ -203,14 +183,6 @@
                 <a href="https://www.flickr.com/photos/0936157111/" class="btn" target="_blank" rel="noopener noreferrer">生活相簿</a>
                 <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
             </div>
-        </div>
-    </div>
-
-    <div id="rotate-guide" onclick="hideRotateGuide()">
-        <div class="phone-icon"></div>
-        <div class="guide-text">
-            請將手機轉為橫向<br>
-            <span style="font-size: 13px; color: #94a3b8;">即可開啟數位個人名片</span>
         </div>
     </div>
 
@@ -265,22 +237,6 @@
             const randomIndex = Math.floor(Math.random() * logoOptions.length);
             document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
-
-        function showRotateGuide() {
-            if (window.innerHeight > window.innerWidth) {
-                document.getElementById('rotate-guide').style.display = 'flex';
-            }
-        }
-
-        function hideRotateGuide() {
-            document.getElementById('rotate-guide').style.display = 'none';
-        }
-
-        window.addEventListener("resize", () => {
-            if (window.innerHeight > window.innerWidth) {
-                hideRotateGuide();
-            }
-        });
 
         setRandomLogo();
     </script>
