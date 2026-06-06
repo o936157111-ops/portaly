@@ -25,30 +25,37 @@
             position: relative;
         }
 
-        /* 💡 完美重現 myezlife.com 風格的直式左上角個人 LOGO */
+        /* 💡 100% 完美複製 myezlife.com 主站左上角 LOGO 與品牌字樣式 */
         .top-left-logo {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
             display: flex;
             align-items: center;
+            gap: 10px;
             z-index: 100;
+            text-decoration: none;
+            cursor: pointer;
         }
         .top-left-logo img {
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            border: 2px solid #E2E8F0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
         }
-        .top-left-logo img:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        .top-left-logo:hover img {
+            transform: scale(1.05);
+        }
+        .top-left-logo .brand-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: 1px;
         }
 
-        .container { max-width: 400px; margin: 45px auto 0 auto; } /* 留出上方空間給 LOGO */
+        .container { max-width: 400px; margin: 55px auto 0 auto; } /* 留出空間給左上角 LOGO */
         
         .card-container { 
             background-color: #FCFCFF; 
@@ -194,9 +201,7 @@
                 background-color: #FFFFFF; 
             }
 
-            /* ========================================== */
-            /* 4. 自動門內部獨立專屬樣式組合 */
-            /* ========================================== */
+            /* 自動門內部獨立專屬樣式組合 */
             .blogger-door-container {
                 width: 100%; height: 100%;
                 display: flex !important; justify-content: center !important; align-items: center !important;
@@ -264,7 +269,7 @@
             .sensor-light { width: 5px; height: 5px; background: #ff3333; border-radius: 50%; transition: background 0.3s; }
             .door-open .sensor-light { background: #33ff33; box-shadow: 0 0 6px #33ff33; }
 
-            /* 各功能格子的優美背景圖片 */
+            /* 背景圖片 */
             .read-nebula-bg { background-image: url('https://live.staticflickr.com/3701/33034841121_6de420e7b6.jpg'); }
             .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
             .collect-drawer-bg { background-image: url('https://live.staticflickr.com/5505/10337267526_41e9cf2c27.jpg'); }
@@ -276,10 +281,13 @@
 </head>
 <body>
 
-    <div class="top-left-logo">
-        <img src="https://myezlife.com/eric-logo.jpg" alt="Personal Logo" onclick="showRotateGuide()">
-    </div>
+    <!-- 💡 完美重現主站樣式的左上角完整 LOGO 組合 -->
+    <a class="top-left-logo" href="https://myezlife.com" target="_blank" rel="noopener noreferrer">
+        <img src="https://myezlife.com/eric-logo.jpg" alt="Logo">
+        <span class="brand-text">生活・簡居・生活</span>
+    </a>
 
+    <!-- 1. 手機直式與電腦版佈局 -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -329,6 +337,7 @@
         </div>
     </div>
 
+    <!-- 2. 手機橫式轉向提示引導 -->
     <div id="rotate-guide" onclick="hideRotateGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
@@ -337,6 +346,7 @@
         </div>
     </div>
 
+    <!-- 3. 手機橫式佈局 -->
     <div id="landscape-card-view">
         <div class="card-left">
             <div class="profile-meta">
