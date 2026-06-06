@@ -25,7 +25,7 @@
             position: relative;
         }
 
-        /* 💡 直式左上角個人 LOGO 樣式設定 */
+        /* 💡 完美重現 myezlife.com 風格的直式左上角個人 LOGO */
         .top-left-logo {
             position: absolute;
             top: 20px;
@@ -39,15 +39,16 @@
             height: 45px;
             border-radius: 50%;
             border: 2px solid #E2E8F0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .top-left-logo img:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
-        .container { max-width: 400px; margin: 40px auto 0 auto; } /* 微調上方留白給左上角 LOGO */
+        .container { max-width: 400px; margin: 45px auto 0 auto; } /* 留出上方空間給 LOGO */
         
         .card-container { 
             background-color: #FCFCFF; 
@@ -129,7 +130,7 @@
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
-            .container, #rotate-guide, .top-left-logo { display: none !important; } /* 💡 橫式下自動隱藏直式左上角 LOGO */
+            .container, #rotate-guide, .top-left-logo { display: none !important; } /* 橫式下隱藏直式的左上角 LOGO */
             
             html, body {
                 background-color: #f4f4f9 !important; 
@@ -276,7 +277,7 @@
 <body>
 
     <div class="top-left-logo">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Personal Logo" onclick="showRotateGuide()">
+        <img src="https://myezlife.com/eric-logo.jpg" alt="Personal Logo" onclick="showRotateGuide()">
     </div>
 
     <div class="container">
@@ -352,7 +353,7 @@
                     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                 </a>
                 <a href="https://www.youtube.com/@myezlife" class="icon-link" target="_blank" title="YouTube">
-                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93 Club.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </a>
                 <a href="https://www.flickr.com/photos/0936157111/" class="icon-link" target="_blank" title="Flickr">
                     <svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="5"/><circle cx="17" cy="12" r="5"/></svg>
