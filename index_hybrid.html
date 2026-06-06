@@ -10,7 +10,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         
         /* ========================================== */
-        /* 1. 基礎與直式版樣式 (維持原樣) */
+        /* 1. 基礎與直式版樣式 (電腦版、手機直式) */
         /* ========================================== */
         html, body {
             background-color: #f9f9f9;
@@ -43,7 +43,7 @@
             justify-content: center; 
             margin-bottom: 20px; 
         }
-        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; }
+        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; cursor: pointer; }
         
         #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
         .loader-text { color: #999; font-size: 0.9em; }
@@ -74,15 +74,41 @@
         }
 
         /* ========================================== */
-        /* 2. 專屬手機橫式版的佈局 (純圖形無文字版) */
+        /* 2. 旋轉引導提示遮罩 */
+        /* ========================================== */
+        #rotate-guide {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.95); z-index: 10000;
+            color: white; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; padding: 20px;
+        }
+        .guide-text { font-size: 18px; margin-top: 20px; line-height: 1.6; letter-spacing: 1px; }
+        
+        .phone-icon {
+            width: 60px; height: 100px; border: 3px solid #fff; border-radius: 10px;
+            position: relative; animation: rotatePhone 2.5s ease-in-out infinite;
+        }
+        .phone-icon::after {
+            content: ''; position: absolute; bottom: 5px; left: 50%;
+            transform: translateX(-50%); width: 8px; height: 8px; background: #fff; border-radius: 50%;
+        }
+        @keyframes rotatePhone {
+            0% { transform: rotate(0deg); }
+            30% { transform: rotate(-90deg); }
+            70% { transform: rotate(-90deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* ========================================== */
+        /* 3. 專屬手機橫式版的佈局 + 右側自動門整合 */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
-            .container { display: none !important; }
+            .container, #rotate-guide { display: none !important; }
             
             html, body {
-                background-color: #ffffff !important;
+                background-color: #0f172a !important;
                 width: 100%; height: 100%; overflow: hidden;
             }
 
@@ -94,52 +120,130 @@
             #landscape-card-view {
                 display: flex; 
                 width: 100%; height: 100%; 
-                background: #ffffff; 
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
                 overflow: hidden; 
                 position: relative;
                 
-                padding-left: env(safe-area-inset-left, 30px);
-                padding-right: env(safe-area-inset-right, 30px);
-                padding-top: env(safe-area-inset-top, 20px);
-                padding-bottom: env(safe-area-inset-bottom, 20px);
+                padding-left: env(safe-area-inset-left, 15px);
+                padding-right: env(safe-area-inset-right, 15px);
+                padding-top: env(safe-area-inset-top, 10px);
+                padding-bottom: env(safe-area-inset-bottom, 10px);
             }
             
-            /* 左側：品牌形象 + 純圖形連結排列 */
+            /* 左側：個人頭像與基本資料 */
             .card-left {
-                flex: 4.5; display: flex; flex-direction: column; justify-content: center; 
-                align-items: center; border-right: 1px solid #f0f0f0; padding: 10px 20px;
+                flex: 4; display: flex; flex-direction: column; justify-content: center; 
+                align-items: center; border-right: 1px solid rgba(255, 255, 255, 0.08); padding: 10px;
             }
-            .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 1px solid #e2e8f0; margin-bottom: 10px; }
-            .card-name { font-size: 20px; font-weight: bold; color: #1a1a1a; margin-bottom: 2px; }
-            .card-sub { font-size: 10px; color: #a0aec0; letter-spacing: 2px; margin-bottom: 25px; text-align: center; }
+            .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.2); margin-bottom: 10px; }
+            .card-name { font-size: 20px; font-weight: bold; color: #fff; margin-bottom: 3px; }
+            .card-sub { font-size: 12px; color: #94a3b8; letter-spacing: 2px; }
 
-            /* 純圖形水平橫排，間距適中舒適 */
-            .media-icons-row {
-                display: flex; justify-content: center; align-items: center; gap: 18px; width: 100%;
-            }
-            .media-icon-link {
-                display: flex; align-items: center; justify-content: center;
-                text-decoration: none; transition: transform 0.2s ease;
-            }
-            .media-icon-link:hover { transform: scale(1.15); }
-            
-            /* 調整 Icon 大小，維持精緻但不失點擊便利性 */
-            .media-svg {
-                width: 22px; height: 22px; fill: #718096; transition: fill 0.2s ease;
-            }
-            .media-icon-link:hover .media-svg { fill: #000000; }
-
-            /* 右側：目前保持留空 */
+            /* 右側：完美嵌入自動門 */
             .card-right {
-                flex: 5.5; display: flex; flex-direction: column; justify-content: center; 
-                align-items: center; padding: 20px; color: #cbd5e1; font-style: italic; font-size: 14px;
+                flex: 6; display: flex; justify-content: center; align-items: center;
+                position: relative; overflow: hidden;
+                background-color: #D6D2C4; /* 繼承自動門的古風背景色 */
             }
+
+            /* ========================================== */
+            /* 4. 自動門內部專屬 CSS 樣式組合 */
+            /* ========================================== */
+            .blogger-door-container {
+                width: 100%; height: 100%;
+                display: flex !important; justify-content: center !important; align-items: center !important;
+                position: relative; overflow: hidden;
+            }
+
+            .facade {
+                display: flex; width: 95%; height: 95%; position: relative;
+                background: #111; border: 6px solid #444; 
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5); cursor: pointer;
+            }
+
+            /* 門後的六個區塊面板 */
+            .inner-grid { 
+                position: absolute; inset: 10px; 
+                display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; 
+                gap: 8px; z-index: 1; 
+            }
+            
+            /* 基礎格子狀態 */
+            .panel { 
+                display: flex; justify-content: center; align-items: center; 
+                text-decoration: none; background: #222; background-size: cover; background-position: center;
+                border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;
+                filter: brightness(0.6) grayscale(0.2);
+                transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 2;
+            }
+
+            .panel h3 { 
+                color: #fff; font-size: 1rem; letter-spacing: 3px; 
+                text-shadow: 1px 1px 5px #000; margin: 0; transition: all 0.4s ease;
+            }
+
+            /* ✨ 滑鼠滑到每格時的效果 (Hover) */
+            .panel:hover { 
+                filter: brightness(1.1) grayscale(0); 
+                border-color: #D4AF37; 
+                box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.4), 0 4px 15px rgba(0,0,0,0.4); 
+                transform: scale(1.02); z-index: 5; 
+            }
+
+            .panel:hover h3 {
+                color: #D4AF37; letter-spacing: 6px; transform: scale(1.05); 
+            }
+
+            /* 自動門系統 */
+            .auto-door-system {
+                position: absolute; inset: 0; z-index: 10; display: flex; overflow: hidden;
+            }
+
+            .glass-leaf {
+                flex: 1; height: 100%; background: rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+                border: 2px solid #bdc3c7; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative; display: flex; justify-content: center; align-items: center;
+            }
+
+            .door-text {
+                font-size: 2.2rem; color: rgba(255, 255, 255, 0.6); font-weight: bold; letter-spacing: 12px;
+                writing-mode: vertical-rl; text-orientation: upright; user-select: none;
+                border: 2px solid rgba(255,255,255,0.2); padding: 15px 5px;
+            }
+
+            /* 開門位移 */
+            .door-open .left-leaf { transform: translateX(-99%); }
+            .door-open .right-leaf { transform: translateX(99%); }
+
+            /* 門開了之後釋放滑鼠控制權 */
+            .door-open .auto-door-system { pointer-events: none; }
+
+            /* 自動門感應器 */
+            .sensor-box {
+                position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+                width: 60px; height: 14px; background: #222; border-radius: 0 0 8px 8px;
+                z-index: 20; display: flex; justify-content: center; align-items: center;
+            }
+            .sensor-light {
+                width: 5px; height: 5px; background: #ff3333; border-radius: 50%; transition: background 0.3s;
+            }
+            .door-open .sensor-light {
+                background: #33ff33; box-shadow: 0 0 6px #33ff33;
+            }
+
+            /* 背景圖設定 */
+            .read-nebula-bg { background-image: url('https://live.staticflickr.com/3701/33034841121_6de420e7b6.jpg'); }
+            .collect-drawer-bg { background-image: url('https://live.staticflickr.com/5505/10337267526_41e9cf2c27.jpg'); }
+            .old-friend-bg { background-image: url('https://live.staticflickr.com/2826/33751154010_38c96ddea2.jpg'); }
+            .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
+            .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
+            .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
         }
     </style>
 </head>
 <body>
 
-    <!-- 直式版結構 (維持原樣不變) -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -147,7 +251,7 @@
                     <div class="loader-text">載入日常片段中...</div>
                     <progress id="progress-bar" value="0" max="100"></progress>
                 </div>
-                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()">
+                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()" onclick="showRotateGuide()">
             </div>
             
             <div class="content-section">
@@ -189,40 +293,49 @@
         </div>
     </div>
 
-    <!-- 橫式版結構：已移除中文字說明，全面圖形化 -->
+    <div id="rotate-guide" onclick="hideRotateGuide()">
+        <div class="phone-icon"></div>
+        <div class="guide-text">
+            請將手機轉為橫向<br>
+            <span style="font-size: 13px; color: #94a3b8;">即可開啟數位個人名片</span>
+        </div>
+    </div>
+
     <div id="landscape-card-view">
         <div class="card-left">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar">
             <div class="card-name">簡居生活</div>
-            <div class="card-sub">MEDIA DIGITAL CARD</div>
-            
-            <!-- 純圖形 Icon 排列區 -->
-            <div class="media-icons-row">
-                <!-- Portaly -->
-                <a href="https://portaly.cc/myezlife" class="media-icon-link" target="_blank" title="Portaly">
-                    <svg class="media-svg" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6z"/></svg>
-                </a>
-                <!-- Blogger -->
-                <a href="https://myeztravellife.blogspot.com" class="media-icon-link" target="_blank" title="Blogger">
-                    <svg class="media-svg" viewBox="0 0 24 24"><path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm0 2v2h16V5H4zm0 4v10h16V9H4zm2 2h12v2H6v-2zm0 4h9v2H6v-2z"/></svg>
-                </a>
-                <!-- YouTube -->
-                <a href="https://www.youtube.com/@myezlife" class="media-icon-link" target="_blank" title="YouTube">
-                    <svg class="media-svg" viewBox="0 0 24 24"><path d="M23.5 6.6a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.5A3 3 0 0 0 .5 6.6A31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.4a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.4zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg>
-                </a>
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/?hl=zh-tw" class="media-icon-link" target="_blank" title="Instagram">
-                    <svg class="media-svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-                </a>
-                <!-- Flickr -->
-                <a href="https://www.flickr.com/photos/0936157111/" class="media-icon-link" target="_blank" title="Flickr">
-                    <svg class="media-svg" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="5.5"/><circle cx="18.5" cy="12" r="5.5"/></svg>
-                </a>
-            </div>
+            <div class="card-sub">DIGITAL CARD</div>
         </div>
         
-        <!-- 右側留空，迎接下一步的新巧思 -->
-        <div class="card-right"></div>
+        <div class="card-right">
+            <div class="blogger-door-container">
+                <div class="facade" onclick="this.classList.toggle('door-open')">
+                    
+                    <div class="sensor-box">
+                        <div class="sensor-light"></div>
+                    </div>
+
+                    <div class="inner-grid">
+                        <a href="#" class="panel read-nebula-bg"><h3>閱覽</h3></a>
+                        <a href="#" class="panel explore-compass-bg"><h3>探索</h3></a>
+                        <a href="#" class="panel collect-drawer-bg"><h3>收藏</h3></a>
+                        <a href="#" class="panel note-quill-bg"><h3>筆記</h3></a>
+                        <a href="#" class="panel old-friend-bg"><h3>舊識</h3></a>
+                        <a href="#" class="panel map-guide-bg"><h3>地圖</h3></a>
+                    </div>
+
+                    <div class="auto-door-system">
+                        <div class="glass-leaf left-leaf">
+                            <div class="door-text">生活</div>
+                        </div>
+                        <div class="glass-leaf right-leaf">
+                            <div class="door-text">日常</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -261,6 +374,22 @@
             const randomIndex = Math.floor(Math.random() * logoOptions.length);
             document.getElementById('logo-img').src = logoOptions[randomIndex];
         }
+
+        function showRotateGuide() {
+            if (window.innerHeight > window.innerWidth) {
+                document.getElementById('rotate-guide').style.display = 'flex';
+            }
+        }
+
+        function hideRotateGuide() {
+            document.getElementById('rotate-guide').style.display = 'none';
+        }
+
+        window.addEventListener("resize", () => {
+            if (window.innerHeight > window.innerWidth) {
+                hideRotateGuide();
+            }
+        });
 
         setRandomLogo();
     </script>
