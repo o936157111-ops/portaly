@@ -22,8 +22,32 @@
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
             padding: 20px; text-align: center; color: #333;
             overscroll-behavior: none;
+            position: relative;
         }
-        .container { max-width: 400px; margin: 0 auto; }
+
+        /* 💡 直式左上角個人 LOGO 樣式設定 */
+        .top-left-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+        }
+        .top-left-logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #E2E8F0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .top-left-logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .container { max-width: 400px; margin: 40px auto 0 auto; } /* 微調上方留白給左上角 LOGO */
         
         .card-container { 
             background-color: #FCFCFF; 
@@ -105,7 +129,7 @@
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
-            .container, #rotate-guide { display: none !important; }
+            .container, #rotate-guide, .top-left-logo { display: none !important; } /* 💡 橫式下自動隱藏直式左上角 LOGO */
             
             html, body {
                 background-color: #f4f4f9 !important; 
@@ -194,7 +218,6 @@
                 display: flex; justify-content: center; align-items: center; 
                 text-decoration: none; background-color: #f4f4f9; background-size: cover; background-position: center;
                 border: 1px solid rgba(255,255,255,0.3); position: relative; overflow: hidden;
-                /* 💡 移除任何調暗或灰階濾鏡，讓背景圖片完全以原始明亮色彩呈現 */
                 filter: none !important; 
                 z-index: 2;
                 border-radius: 6px;
@@ -202,7 +225,6 @@
 
             .panel h3 { 
                 color: #ffffff; font-size: 1.05rem; letter-spacing: 3px; font-weight: bold;
-                /* 💡 加上多重文字陰影描邊，確保在亮色或複雜背景圖片下文字依然完美清晰 */
                 text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), -1px -1px 3px rgba(0, 0, 0, 0.8), 1px -1px 3px rgba(0, 0, 0, 0.8), -1px 1px 3px rgba(0, 0, 0, 0.8); 
                 margin: 0;
             }
@@ -252,6 +274,10 @@
     </style>
 </head>
 <body>
+
+    <div class="top-left-logo">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Personal Logo" onclick="showRotateGuide()">
+    </div>
 
     <div class="container">
         <div class="card-container">
