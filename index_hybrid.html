@@ -100,7 +100,7 @@
         }
 
         /* ========================================== */
-        /* 3. 手機橫式版佈局 (左側純白 + 右側門外全面改白) */
+        /* 3. 手機橫式版佈局 (左側純白 + 右側純白) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
@@ -162,7 +162,7 @@
             }
             .icon-link svg { width: 18px; height: 18px; fill: currentColor; }
 
-            /* 右側區塊：滿版融入自動門大門 */
+            /* 右側區塊：大門底座 */
             .card-right {
                 flex: 6; display: flex; justify-content: center; align-items: center;
                 position: relative; overflow: hidden;
@@ -180,7 +180,7 @@
 
             .facade {
                 display: flex; width: 95%; height: 95%; position: relative;
-                background: #111; border: 6px solid #E2E8F0; 
+                background: #FFFFFF; border: 6px solid #E2E8F0; 
                 box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer;
             }
 
@@ -192,18 +192,20 @@
             
             .panel { 
                 display: flex; justify-content: center; align-items: center; 
-                text-decoration: none; background: #222; background-size: cover; background-position: center;
-                border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;
-                filter: brightness(0.75); /* 調整手機上預設格子亮度，更易閱讀 */
+                text-decoration: none; background-color: #f4f4f9; background-size: cover; background-position: center;
+                border: 1px solid rgba(255,255,255,0.3); position: relative; overflow: hidden;
+                /* 💡 移除任何調暗或灰階濾鏡，讓背景圖片完全以原始明亮色彩呈現 */
+                filter: none !important; 
                 z-index: 2;
+                border-radius: 6px;
             }
 
             .panel h3 { 
-                color: #fff; font-size: 1rem; letter-spacing: 3px; 
-                text-shadow: 1px 1px 5px #000; margin: 0;
+                color: #ffffff; font-size: 1.05rem; letter-spacing: 3px; font-weight: bold;
+                /* 💡 加上多重文字陰影描邊，確保在亮色或複雜背景圖片下文字依然完美清晰 */
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), -1px -1px 3px rgba(0, 0, 0, 0.8), 1px -1px 3px rgba(0, 0, 0, 0.8), -1px 1px 3px rgba(0, 0, 0, 0.8); 
+                margin: 0;
             }
-
-            /* 💡 移除手機上會卡住的 .panel:hover 各項縮放變色與陰影效果，保持輕量 */
 
             /* 玻璃門系統 */
             .auto-door-system {
@@ -239,12 +241,12 @@
             .sensor-light { width: 5px; height: 5px; background: #ff3333; border-radius: 50%; transition: background 0.3s; }
             .door-open .sensor-light { background: #33ff33; box-shadow: 0 0 6px #33ff33; }
 
-            /* 圖片預設 */
+            /* 各功能格子的優美背景圖片 */
             .read-nebula-bg { background-image: url('https://live.staticflickr.com/3701/33034841121_6de420e7b6.jpg'); }
-            .collect-drawer-bg { background-image: url('https://live.staticflickr.com/5505/10337267526_41e9cf2c27.jpg'); }
-            .old-friend-bg { background-image: url('https://live.staticflickr.com/2826/33751154010_38c96ddea2.jpg'); }
             .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
+            .collect-drawer-bg { background-image: url('https://live.staticflickr.com/5505/10337267526_41e9cf2c27.jpg'); }
             .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
+            .old-friend-bg { background-image: url('https://live.staticflickr.com/2826/33751154010_38c96ddea2.jpg'); }
             .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
         }
     </style>
