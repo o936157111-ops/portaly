@@ -10,7 +10,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         
         /* ========================================== */
-        /* 1. 基礎與直式版樣式 (電腦版、手機直式都走這裡) */
+        /* 1. 基礎與直式版樣式 (維持原樣) */
         /* ========================================== */
         html, body {
             background-color: #f9f9f9;
@@ -74,7 +74,7 @@
         }
 
         /* ========================================== */
-        /* 2. 專屬手機橫式版的佈局 (聚焦核心網路媒體連結) */
+        /* 2. 專屬手機橫式版的佈局 (第一步：左側名片化) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
@@ -98,43 +98,47 @@
                 overflow: hidden; 
                 position: relative;
                 
-                padding-left: env(safe-area-inset-left, 25px);
-                padding-right: env(safe-area-inset-right, 25px);
-                padding-top: env(safe-area-inset-top, 15px);
-                padding-bottom: env(safe-area-inset-bottom, 15px);
+                padding-left: env(safe-area-inset-left, 30px);
+                padding-right: env(safe-area-inset-right, 30px);
+                padding-top: env(safe-area-inset-top, 20px);
+                padding-bottom: env(safe-area-inset-bottom, 20px);
             }
             
-            /* 左側：個人形象與名片稱謂 */
+            /* 左側：品牌形象 + 整合型 Icon 媒體連結區 */
             .card-left {
-                flex: 4; display: flex; flex-direction: column; justify-content: center; 
-                align-items: center; border-right: 1px solid #f0f0f0; padding: 10px;
+                flex: 4.5; display: flex; flex-direction: column; justify-content: center; 
+                align-items: center; border-right: 1px solid #f0f0f0; padding: 10px 20px;
             }
-            .card-avatar { width: 90px; height: 90px; border-radius: 50%; border: 1px solid #e2e8f0; margin-bottom: 12px; }
-            .card-name { font-size: 22px; font-weight: bold; color: #1a1a1a; margin-bottom: 4px; }
-            .card-sub { font-size: 11px; color: #718096; letter-spacing: 2px; }
+            .card-avatar { width: 75px; height: 75px; border-radius: 50%; border: 1px solid #e2e8f0; margin-bottom: 8px; }
+            .card-name { font-size: 18px; font-weight: bold; color: #1a1a1a; margin-bottom: 2px; }
+            .card-sub { font-size: 10px; color: #a0aec0; letter-spacing: 2px; margin-bottom: 15px; text-align: center; }
 
-            /* 右側：精選核心網路個人媒體連結 (上下置中並可微幅滾動) */
+            /* 左側專屬：優雅的圖示連結列表 (非按鈕樣式) */
+            .media-links-list {
+                display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 180px;
+            }
+            .media-item {
+                display: flex; align-items: center; gap: 10px;
+                color: #4a5568; text-decoration: none; font-size: 13px; font-weight: 500;
+                transition: color 0.2s ease; padding: 2px 0;
+            }
+            .media-item:hover { color: #000000; }
+            .media-icon {
+                width: 16px; height: 16px; fill: #718096; transition: fill 0.2s ease;
+            }
+            .media-item:hover .media-icon { fill: #000000; }
+
+            /* 右側：目前先留空，準備在第二步放入全新設計的內容 */
             .card-right {
-                flex: 6; display: flex; flex-direction: column; justify-content: center; 
-                padding: 10px 35px; gap: 10px; text-align: left; overflow-y: auto;
+                flex: 5.5; display: flex; flex-direction: column; justify-content: center; 
+                align-items: center; padding: 20px; color: #cbd5e1; font-style: italic; font-size: 14px;
             }
-            .card-btn {
-                display: flex; align-items: center; justify-content: center; height: 42px;
-                background: #f7fafc; color: #2d3748; text-decoration: none;
-                border-radius: 12px; font-size: 14px; font-weight: 600;
-                border: 1px solid #e2e8f0; transition: all 0.2s;
-            }
-            .card-btn:hover { 
-                background: #000000; 
-                color: #ffffff; 
-                border-color: #000000;
-            }
-            .card-btn:active { transform: scale(0.98); }
         }
     </style>
 </head>
 <body>
 
+    <!-- 直式版結構 (不變) -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -184,19 +188,46 @@
         </div>
     </div>
 
+    <!-- 橫式版結構：第一步改造完成 -->
     <div id="landscape-card-view">
         <div class="card-left">
             <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar">
             <div class="card-name">簡居生活</div>
             <div class="card-sub">MEDIA DIGITAL CARD</div>
+            
+            <!-- 這裡是整合在左側、帶有 Icon 的高質感連結清單 -->
+            <div class="media-links-list">
+                <!-- Portaly (使用星號/首頁感 Icon) -->
+                <a href="https://portaly.cc/myezlife" class="media-item" target="_blank">
+                    <svg class="media-icon" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6z"/></svg>
+                    Portaly 主頁
+                </a>
+                <!-- Blogger (使用 B 字/書本感 Icon) -->
+                <a href="https://myeztravellife.blogspot.com" class="media-item" target="_blank">
+                    <svg class="media-icon" viewBox="0 0 24 24"><path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm0 2v2h16V5H4zm0 4v10h16V9H4zm2 2h12v2H6v-2zm0 4h9v2H6v-2z"/></svg>
+                    Blogger 旅遊
+                </a>
+                <!-- YouTube (使用播放鍵 Icon) -->
+                <a href="https://www.youtube.com/@myezlife" class="media-item" target="_blank">
+                    <svg class="media-icon" viewBox="0 0 24 24"><path d="M23.5 6.6a3 3 0 0 0-2.1-2.1C19.5 4 12 4 12 4s-7.5 0-9.4.5A3 3 0 0 0 .5 6.6A31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.4a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.4zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg>
+                    YouTube 頻道
+                </a>
+                <!-- Instagram (使用相機明暗孔 Icon) -->
+                <a href="https://www.instagram.com/?hl=zh-tw" class="media-item" target="_blank">
+                    <svg class="media-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                    Instagram 日常
+                </a>
+                <!-- Flickr (使用雙圓點圖示) -->
+                <a href="https://www.flickr.com/photos/0936157111/" class="media-item" target="_blank">
+                    <svg class="media-icon" viewBox="0 0 24 24"><circle cx="5.5" cy="12" r="5.5"/><circle cx="18.5" cy="12" r="5.5"/></svg>
+                    Flickr 相簿
+                </a>
+            </div>
         </div>
         
+        <!-- 右側目前保持乾淨 -->
         <div class="card-right">
-            <a href="https://portaly.cc/myezlife" class="card-btn" target="_blank">個人 Portaly 主頁</a>
-            <a href="https://myeztravellife.blogspot.com" class="card-btn" target="_blank">Blogger 旅遊生活</a>
-            <a href="https://www.youtube.com/@myezlife" class="card-btn" target="_blank">YouTube 官方頻道</a>
-            <a href="https://www.instagram.com/?hl=zh-tw" class="card-btn" target="_blank">Instagram 日常</a>
-            <a href="https://www.flickr.com/photos/0936157111/" class="card-btn" target="_blank">Flickr 生活相簿</a>
+            [ 準備放入全新的功能或資訊 ]
         </div>
     </div>
 
