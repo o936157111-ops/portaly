@@ -166,7 +166,7 @@
             .card-right {
                 flex: 6; display: flex; justify-content: center; align-items: center;
                 position: relative; overflow: hidden;
-                background-color: #FFFFFF; /* 💡 右半邊背景外牆改為純白 */
+                background-color: #FFFFFF; 
             }
 
             /* ========================================== */
@@ -180,7 +180,7 @@
 
             .facade {
                 display: flex; width: 95%; height: 95%; position: relative;
-                background: #111; border: 6px solid #E2E8F0; /* 💡 大門邊框改為清爽淺灰 */
+                background: #111; border: 6px solid #E2E8F0; 
                 box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer;
             }
 
@@ -194,22 +194,16 @@
                 display: flex; justify-content: center; align-items: center; 
                 text-decoration: none; background: #222; background-size: cover; background-position: center;
                 border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;
-                filter: brightness(0.6) grayscale(0.2);
-                transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 2;
+                filter: brightness(0.75); /* 調整手機上預設格子亮度，更易閱讀 */
+                z-index: 2;
             }
 
             .panel h3 { 
                 color: #fff; font-size: 1rem; letter-spacing: 3px; 
-                text-shadow: 1px 1px 5px #000; margin: 0; transition: all 0.4s ease;
+                text-shadow: 1px 1px 5px #000; margin: 0;
             }
 
-            .panel:hover { 
-                filter: brightness(1.1) grayscale(0); 
-                border-color: #D4AF37; 
-                box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.4), 0 4px 15px rgba(0,0,0,0.4); 
-                transform: scale(1.02); z-index: 5; 
-            }
-            .panel:hover h3 { color: #D4AF37; letter-spacing: 6px; transform: scale(1.05); }
+            /* 💡 移除手機上會卡住的 .panel:hover 各項縮放變色與陰影效果，保持輕量 */
 
             /* 玻璃門系統 */
             .auto-door-system {
@@ -217,14 +211,14 @@
             }
             .glass-leaf {
                 flex: 1; height: 100%; 
-                background: rgba(255, 255, 255, 0.75); /* 💡 提高白色玻璃遮罩純度 */
+                background: rgba(255, 255, 255, 0.75); 
                 backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
                 border: 2px solid #E2E8F0; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative; display: flex; justify-content: center; align-items: center;
             }
             .door-text {
                 font-size: 2.2rem; 
-                color: #475569; /* 💡 門上字體換成質感深灰，完美融入白底 */
+                color: #475569; 
                 font-weight: bold; letter-spacing: 12px;
                 writing-mode: vertical-rl; text-orientation: upright; user-select: none;
                 border: 2px solid #E2E8F0; padding: 15px 5px;
@@ -257,7 +251,6 @@
 </head>
 <body>
 
-    <!-- 1. 手機直式與電腦版佈局 (白底) -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -307,7 +300,6 @@
         </div>
     </div>
 
-    <!-- 2. 手機橫式轉向提示引導 -->
     <div id="rotate-guide" onclick="hideRotateGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
@@ -316,7 +308,6 @@
         </div>
     </div>
 
-    <!-- 3. 手機橫式佈局 -->
     <div id="landscape-card-view">
         <div class="card-left">
             <div class="profile-meta">
