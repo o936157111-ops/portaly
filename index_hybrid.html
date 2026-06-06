@@ -100,7 +100,7 @@
         }
 
         /* ========================================== */
-        /* 3. 手機橫式版佈局 (還原純白底色 + 左下方 ICON 列) */
+        /* 3. 手機橫式版佈局 (左側純白 + 右側門外全面改白) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
@@ -108,7 +108,7 @@
             .container, #rotate-guide { display: none !important; }
             
             html, body {
-                background-color: #f4f4f9 !important; /* 還原淺色背景 */
+                background-color: #f4f4f9 !important; 
                 width: 100%; height: 100%; overflow: hidden;
             }
 
@@ -120,7 +120,7 @@
             #landscape-card-view {
                 display: flex; 
                 width: 100%; height: 100%; 
-                background: #FFFFFF; /* 橫式大基底還原為乾淨純白 */
+                background: #FFFFFF; 
                 overflow: hidden; 
                 position: relative;
                 
@@ -137,7 +137,6 @@
                 background-color: #FCFCFF;
             }
             
-            /* 左上基本資料包裝容器 */
             .profile-meta {
                 display: flex; flex-direction: column; align-items: center; justify-content: center;
                 flex-grow: 1;
@@ -146,7 +145,7 @@
             .card-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 3px; }
             .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; }
 
-            /* 💡 左下方各 ICON 連結橫列 */
+            /* 左下方各 ICON 連結橫列 */
             .card-icons-row {
                 display: flex; justify-content: center; align-items: center;
                 gap: 14px; width: 100%; padding-top: 15px; border-top: 1px dashed #E2E8F0;
@@ -167,7 +166,7 @@
             .card-right {
                 flex: 6; display: flex; justify-content: center; align-items: center;
                 position: relative; overflow: hidden;
-                background-color: #D6D2C4; /* 保持古風自動門背牆色 */
+                background-color: #FFFFFF; /* 💡 右半邊背景外牆改為純白 */
             }
 
             /* ========================================== */
@@ -181,8 +180,8 @@
 
             .facade {
                 display: flex; width: 95%; height: 95%; position: relative;
-                background: #111; border: 6px solid #444; 
-                box-shadow: 0 10px 40px rgba(0,0,0,0.5); cursor: pointer;
+                background: #111; border: 6px solid #E2E8F0; /* 💡 大門邊框改為清爽淺灰 */
+                box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer;
             }
 
             .inner-grid { 
@@ -204,7 +203,6 @@
                 text-shadow: 1px 1px 5px #000; margin: 0; transition: all 0.4s ease;
             }
 
-            /* ✨ 滑鼠移到格子的 Hover 效果 */
             .panel:hover { 
                 filter: brightness(1.1) grayscale(0); 
                 border-color: #D4AF37; 
@@ -218,15 +216,19 @@
                 position: absolute; inset: 0; z-index: 10; display: flex; overflow: hidden;
             }
             .glass-leaf {
-                flex: 1; height: 100%; background: rgba(255, 255, 255, 0.4);
+                flex: 1; height: 100%; 
+                background: rgba(255, 255, 255, 0.75); /* 💡 提高白色玻璃遮罩純度 */
                 backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-                border: 2px solid #bdc3c7; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 2px solid #E2E8F0; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative; display: flex; justify-content: center; align-items: center;
             }
             .door-text {
-                font-size: 2.2rem; color: rgba(255, 255, 255, 0.6); font-weight: bold; letter-spacing: 12px;
+                font-size: 2.2rem; 
+                color: #475569; /* 💡 門上字體換成質感深灰，完美融入白底 */
+                font-weight: bold; letter-spacing: 12px;
                 writing-mode: vertical-rl; text-orientation: upright; user-select: none;
-                border: 2px solid rgba(255,255,255,0.2); padding: 15px 5px;
+                border: 2px solid #E2E8F0; padding: 15px 5px;
+                background: rgba(255, 255, 255, 0.5);
             }
 
             /* 開門動畫位移 */
@@ -237,7 +239,7 @@
             /* 感應器 */
             .sensor-box {
                 position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-                width: 60px; height: 14px; background: #222; border-radius: 0 0 8px 8px;
+                width: 60px; height: 14px; background: #E2E8F0; border-radius: 0 0 8px 8px;
                 z-index: 20; display: flex; justify-content: center; align-items: center;
             }
             .sensor-light { width: 5px; height: 5px; background: #ff3333; border-radius: 50%; transition: background 0.3s; }
@@ -255,6 +257,7 @@
 </head>
 <body>
 
+    <!-- 1. 手機直式與電腦版佈局 (白底) -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -304,6 +307,7 @@
         </div>
     </div>
 
+    <!-- 2. 手機橫式轉向提示引導 -->
     <div id="rotate-guide" onclick="hideRotateGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
@@ -312,6 +316,7 @@
         </div>
     </div>
 
+    <!-- 3. 手機橫式佈局 -->
     <div id="landscape-card-view">
         <div class="card-left">
             <div class="profile-meta">
