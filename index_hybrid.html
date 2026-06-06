@@ -22,40 +22,8 @@
             font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
             padding: 20px; text-align: center; color: #333;
             overscroll-behavior: none;
-            position: relative;
         }
-
-        /* 💡 100% 完美複製 myezlife.com 主站左上角 LOGO 與品牌字樣式 */
-        .top-left-logo {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 100;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .top-left-logo img {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: transform 0.3s ease;
-        }
-        .top-left-logo:hover img {
-            transform: scale(1.05);
-        }
-        .top-left-logo .brand-text {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #1e293b;
-            letter-spacing: 1px;
-        }
-
-        .container { max-width: 400px; margin: 55px auto 0 auto; } /* 留出空間給左上角 LOGO */
+        .container { max-width: 400px; margin: 0 auto; }
         
         .card-container { 
             background-color: #FCFCFF; 
@@ -66,6 +34,7 @@
             padding: 40px 25px;
         }
         
+        /* 修改：確保容器有相對定位，並設定與大圖相同的寬度以利小頭貼對齊 */
         .logo-wrapper { 
             position: relative; 
             min-height: 250px; 
@@ -74,8 +43,26 @@
             align-items: center; 
             justify-content: center; 
             margin-bottom: 20px; 
+            width: 95%;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .logo-img { width: 95%; height: auto; display: none; border-radius: 12px; cursor: pointer; }
+        .logo-img { width: 100%; height: auto; display: none; border-radius: 12px; cursor: pointer; }
+        
+        /* 新增：左上角圓形小頭貼的樣式 */
+        .logo-avatar {
+            position: absolute;
+            top: -10px;       /* 往上偏移，製造出微微壓在邊框上的立體感，可自行調整 */
+            left: -10px;      /* 往左偏移，可自行調整 */
+            width: 70px;      /* 小頭貼的寬度 */
+            height: 70px;     /* 小頭貼的高度 */
+            border-radius: 50%; /* 變成完美圓形 */
+            border: 3px solid #FFFFFF; /* 白色粗邊框，與截圖樣式一致 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* 陰影效果 */
+            z-index: 10;      /* 確保疊在大圖上方 */
+            object-fit: cover;
+            display: none;    /* 初始隱藏，跟隨大圖一起載入完成後顯示 */
+        }
         
         #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
         .loader-text { color: #999; font-size: 0.9em; }
@@ -132,12 +119,12 @@
         }
 
         /* ========================================== */
-        /* 3. 手機橫式版佈局 (左側純白 + 右側純白) */
+        /* 3. 手機橫式版佈局 (左側純白 + 右側門外全面改白) */
         /* ========================================== */
         #landscape-card-view { display: none; }
 
         @media (orientation: landscape) and (max-width: 950px) {
-            .container, #rotate-guide, .top-left-logo { display: none !important; } /* 橫式下隱藏直式的左上角 LOGO */
+            .container, #rotate-guide { display: none !important; }
             
             html, body {
                 background-color: #f4f4f9 !important; 
@@ -194,14 +181,16 @@
             }
             .icon-link svg { width: 18px; height: 18px; fill: currentColor; }
 
-            /* 右側區塊：大門底座 */
+            /* 右側區塊：滿版融入自動門大門 */
             .card-right {
                 flex: 6; display: flex; justify-content: center; align-items: center;
                 position: relative; overflow: hidden;
                 background-color: #FFFFFF; 
             }
 
-            /* 自動門內部獨立專屬樣式組合 */
+            /* ========================================== */
+            /* 4. 自動門內部獨立專屬樣式組合 */
+            /* ========================================== */
             .blogger-door-container {
                 width: 100%; height: 100%;
                 display: flex !important; justify-content: center !important; align-items: center !important;
@@ -210,7 +199,7 @@
 
             .facade {
                 display: flex; width: 95%; height: 95%; position: relative;
-                background: #FFFFFF; border: 6px solid #E2E8F0; 
+                background: #111; border: 6px solid #E2E8F0; 
                 box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer;
             }
 
@@ -222,18 +211,24 @@
             
             .panel { 
                 display: flex; justify-content: center; align-items: center; 
-                text-decoration: none; background-color: #f4f4f9; background-size: cover; background-position: center;
-                border: 1px solid rgba(255,255,255,0.3); position: relative; overflow: hidden;
-                filter: none !important; 
-                z-index: 2;
-                border-radius: 6px;
+                text-decoration: none; background: #222; background-size: cover; background-position: center;
+                border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;
+                filter: brightness(0.6) grayscale(0.2);
+                transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 2;
             }
 
             .panel h3 { 
-                color: #ffffff; font-size: 1.05rem; letter-spacing: 3px; font-weight: bold;
-                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), -1px -1px 3px rgba(0, 0, 0, 0.8), 1px -1px 3px rgba(0, 0, 0, 0.8), -1px 1px 3px rgba(0, 0, 0, 0.8); 
-                margin: 0;
+                color: #fff; font-size: 1rem; letter-spacing: 3px; 
+                text-shadow: 1px 1px 5px #000; margin: 0; transition: all 0.4s ease;
             }
+
+            .panel:hover { 
+                filter: brightness(1.1) grayscale(0); 
+                border-color: #D4AF37; 
+                box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.4), 0 4px 15px rgba(0,0,0,0.4); 
+                transform: scale(1.02); z-index: 5; 
+            }
+            .panel:hover h3 { color: #D4AF37; letter-spacing: 6px; transform: scale(1.05); }
 
             /* 玻璃門系統 */
             .auto-door-system {
@@ -269,25 +264,18 @@
             .sensor-light { width: 5px; height: 5px; background: #ff3333; border-radius: 50%; transition: background 0.3s; }
             .door-open .sensor-light { background: #33ff33; box-shadow: 0 0 6px #33ff33; }
 
-            /* 背景圖片 */
+            /* 圖片預設 */
             .read-nebula-bg { background-image: url('https://live.staticflickr.com/3701/33034841121_6de420e7b6.jpg'); }
-            .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
             .collect-drawer-bg { background-image: url('https://live.staticflickr.com/5505/10337267526_41e9cf2c27.jpg'); }
-            .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
             .old-friend-bg { background-image: url('https://live.staticflickr.com/2826/33751154010_38c96ddea2.jpg'); }
+            .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
+            .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
             .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
         }
     </style>
 </head>
 <body>
 
-    <!-- 💡 完美重現主站樣式的左上角完整 LOGO 組合 -->
-    <a class="top-left-logo" href="https://myezlife.com" target="_blank" rel="noopener noreferrer">
-        <img src="https://myezlife.com/eric-logo.jpg" alt="Logo">
-        <span class="brand-text">生活・簡居・生活</span>
-    </a>
-
-    <!-- 1. 手機直式與電腦版佈局 -->
     <div class="container">
         <div class="card-container">
             <div class="logo-wrapper">
@@ -295,6 +283,9 @@
                     <div class="loader-text">載入日常片段中...</div>
                     <progress id="progress-bar" value="0" max="100"></progress>
                 </div>
+                
+                <img id="logo-avatar" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Avatar" class="logo-avatar">
+                
                 <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()" onclick="showRotateGuide()">
             </div>
             
@@ -337,7 +328,6 @@
         </div>
     </div>
 
-    <!-- 2. 手機橫式轉向提示引導 -->
     <div id="rotate-guide" onclick="hideRotateGuide()">
         <div class="phone-icon"></div>
         <div class="guide-text">
@@ -346,7 +336,6 @@
         </div>
     </div>
 
-    <!-- 3. 手機橫式佈局 -->
     <div id="landscape-card-view">
         <div class="card-left">
             <div class="profile-meta">
@@ -363,7 +352,7 @@
                     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
                 </a>
                 <a href="https://www.youtube.com/@myezlife" class="icon-link" target="_blank" title="YouTube">
-                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93 Club.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </a>
                 <a href="https://www.flickr.com/photos/0936157111/" class="icon-link" target="_blank" title="Flickr">
                     <svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="5"/><circle cx="17" cy="12" r="5"/></svg>
@@ -427,12 +416,14 @@
             }
         }, 100);
 
+        /* 修改：當圖片載入完成後，同時讓大圖和小頭貼一起顯示 */
         function finishLoading() {
             clearInterval(interval);
             progressBar.value = 100;
             setTimeout(() => {
                 document.getElementById('loader-container').style.display = 'none';
                 document.getElementById('logo-img').style.display = 'block';
+                document.getElementById('logo-avatar').style.display = 'block'; // 顯示小頭貼
             }, 200);
         }
 
