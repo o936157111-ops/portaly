@@ -7,6 +7,17 @@
     <title>生活・簡居・生活 | 數位名片型總入口</title>
     <link rel="manifest" href="manifest.json">
     <style>
+
+        #overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #f9f9f9; z-index: 9999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; cursor: pointer; color: #333;
+}
+.overlay-content { padding: 20px; }
+
+
+
         * { box-sizing: border-box; touch-action: manipulation; }
         
         /* ========================================== */
@@ -272,9 +283,30 @@
             .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
             .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
         }
+
+
+
+     #landscape-card-view {
+    /* 將原來的 height: 100%; 改為 */
+    height: 100dvh; 
+    /* 確保容器能處理內容溢出 */
+    overflow-y: auto; 
+}
+
+
+
     </style>
 </head>
 <body>
+
+<div id="overlay" onclick="enterFullScreen()">
+    <div class="overlay-content">
+        <h1>歡迎來到<BR>生活・簡居‧生活</h1>
+        <p>點擊畫面以進入全螢幕體驗</p>
+    </div>
+</div>
+
+
 
     <div class="container">
         <div class="card-container">
@@ -394,6 +426,23 @@
     </div>
 
     <script>
+
+        function enterFullScreen() {
+    const elem = document.documentElement;
+    // 嘗試進入全螢幕
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => {
+            console.log("全螢幕模式無法啟用: " + err.message);
+        });
+    }
+    
+    // 隱藏遮罩層
+    document.getElementById('overlay').style.display = 'none';
+}
+
+
+
+
         function openTab(evt, tabName) {
             const groups = document.getElementsByClassName("button-group");
             for (let i = 0; i < groups.length; i++) groups[i].classList.remove("active");
@@ -449,6 +498,14 @@
         });
 
         setRandomLogo();
+
+
+
+       
+
+
+
+
     </script>
 </body>
 </html>
