@@ -50,31 +50,18 @@
         /* 橫式版面完整樣式 (參考 index_2.html) */
         #landscape-card-view { display: none; height: 100dvh; overflow-y: auto; }
        /* 這是手機橫向時的媒體查詢區塊 */
-@media (orientation: landscape) and (max-width: 950px) {
+/* 修改此處的判定條件 */
+@media (orientation: landscape) and (max-width: 950px) and (pointer: coarse) {
     .container { display: none !important; }
     html, body { background-color: #f4f4f4 !important; overflow: hidden; }
     body { display: flex; justify-content: center; align-items: center; }
+    #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #ffffff; }
     
-    /* 核心修改：我們使用 flex-direction 來控制順序 */
-    #landscape-card-view { 
-        display: flex !important; 
-        width: 100%; height: 100%; 
-        background: #ffffff; 
-        flex-direction: row; /* 預設：左邊是 .card-left，右邊是 .card-right */
-    }
-    
-    /* 當偵測到右轉 (reverse-layout) 時，直接左右對調 */
-    #landscape-card-view.reverse-layout { 
-        flex-direction: row-reverse !important; 
-    }
-
-    .card-left { flex: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid #eee; padding: 25px; }
-    .card-right { flex: 6; display: flex; justify-content: center; align-items: center; position: relative; }
-    
-    /* 其他細節樣式保持不變... */
-}
-
-            #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #FFFFFF; overflow: hidden; position: relative; }
+    /* 以下維持您原本的 .card-left, .card-right, .facade 等樣式不變 */
+    .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #eee; padding: 25px 15px; }
+    .card-right { flex: 6; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; background-color: #ffffff; }
+    /* ... 請保留原本剩下的樣式 ... */
+}            #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #FFFFFF; overflow: hidden; position: relative; }
             .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 25px 15px; background-color: #FCFCFF; }
             .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
             .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 10px; }
