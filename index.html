@@ -53,6 +53,9 @@
             .container { display: none !important; }
             html, body { background-color: #f4f4f9 !important; overflow: hidden; }
             body { display: flex; justify-content: center; align-items: center; }
+
+#landscape-card-view.reverse-layout { flex-direction: row-reverse !important; }
+
             #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #FFFFFF; overflow: hidden; position: relative; }
             .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 25px 15px; background-color: #FCFCFF; }
             .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
@@ -180,6 +183,29 @@
 </div>
 
 <script>
+
+
+// 偵測轉向並切換鏡像佈局，絕對不會影響電腦版顯示
+function handleOrientation() {
+    const view = document.getElementById('landscape-card-view');
+    // 只有在手機橫向狀態下才進行反轉偵測
+    if (window.matchMedia("(orientation: landscape)").matches) {
+        if (window.screen.orientation && window.screen.orientation.type === 'landscape-secondary') {
+            view.classList.add('reverse-layout');
+        } else {
+            view.classList.remove('reverse-layout');
+        }
+    }
+}
+
+// 監聽轉向
+if (window.screen.orientation) {
+    window.screen.orientation.addEventListener("change", handleOrientation);
+}
+window.addEventListener("orientationchange", handleOrientation);
+handleOrientation();
+
+
     function updateOverlay() {
         const overlay = document.getElementById('start-overlay');
         const isPortrait = window.innerHeight > window.innerWidth;
