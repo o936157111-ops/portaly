@@ -51,18 +51,18 @@
         #landscape-card-view { display: none; height: 100dvh; overflow-y: auto; }
        /* 這是手機橫向時的媒體查詢區塊 */
 /* 修改此處的判定條件 */
-@media (orientation: landscape) and (max-width: 950px) and (pointer: coarse) {
+/* 僅在寬度小於 950px 且為觸控裝置 (手機) 時才啟用橫式版面 */
+@media screen and (max-width: 950px) and (pointer: coarse) and (orientation: landscape) {
     .container { display: none !important; }
     html, body { background-color: #f4f4f4 !important; overflow: hidden; }
     body { display: flex; justify-content: center; align-items: center; }
     #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #ffffff; }
     
-    /* 以下維持您原本的 .card-left, .card-right, .facade 等樣式不變 */
-    .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #eee; padding: 25px 15px; }
-    .card-right { flex: 6; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; background-color: #ffffff; }
-    /* ... 請保留原本剩下的樣式 ... */
-}            #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #FFFFFF; overflow: hidden; position: relative; }
-            .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 25px 15px; background-color: #FCFCFF; }
+    /* 鏡像反轉類別 */
+    #landscape-card-view.reverse-layout { flex-direction: row-reverse !important; }
+
+    /* 以下保留您原有的 card-left, card-right, facade 樣式... */
+}            .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 25px 15px; background-color: #FCFCFF; }
             .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
             .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 10px; }
             .card-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 3px; }
@@ -95,6 +95,12 @@
             .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
             .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
         }
+
+@media screen and (min-width: 951px) {
+    .container { display: block !important; }
+    #landscape-card-view { display: none !important; }
+}
+
     </style>
 </head>
 <body>
