@@ -39,9 +39,18 @@
         progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
         
         .header-tabs { margin: 10px 0; font-size: 1.4em; color: #888; }
-        .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; }
-        .tab-trigger.active { color: #000; font-weight: 800; }
+        .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; text-decoration: none; }
+        .tab-trigger.active { color: #000; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+        
         .slogan { line-height: 1.8; color: #666; font-size: 0.85em; margin-bottom: 25px; }
+        /* 放大一號並變粗體，加上可點擊樣式 */
+        .slogan-clickable { font-size: 1.15em; font-weight: bold; color: #444; cursor: pointer; display: inline-block; transition: color 0.2s; }
+        .slogan-clickable:hover { color: #000; }
+        
+        /* 展開詩句的區塊樣式 */
+        .poem-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out; opacity: 0; color: #666; font-size: 0.95em; line-height: 1.8; margin-top: 0; }
+        .poem-content.show { max-height: 150px; opacity: 1; margin-top: 10px; }
+
         .button-group { display: none; flex-direction: column; gap: 12px; }
         .button-group.active { display: flex; }
         .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.3s ease; }
@@ -49,19 +58,12 @@
 
         /* 橫式版面完整樣式 (參考 index_2.html) */
         #landscape-card-view { display: none; height: 100dvh; overflow-y: auto; }
-       /* 這是手機橫向時的媒體查詢區塊 */
-/* 修改此處的判定條件 */
-/* 僅在寬度小於 950px 且為觸控裝置 (手機) 時才啟用橫式版面 */
 @media screen and (max-width: 950px) and (pointer: coarse) and (orientation: landscape) {
     .container { display: none !important; }
     html, body { background-color: #f4f4f4 !important; overflow: hidden; }
     body { display: flex; justify-content: center; align-items: center; }
     #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #ffffff; }
-    
-    /* 鏡像反轉類別 */
     #landscape-card-view.reverse-layout { flex-direction: row-reverse !important; }
-
-    /* 以下保留您原有的 card-left, card-right, facade 樣式... */
 }            .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 25px 15px; background-color: #FCFCFF; }
             .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
             .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 10px; }
@@ -94,7 +96,6 @@
             .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
             .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
             .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
-        }
 
 @media screen and (min-width: 951px) {
     .container { display: block !important; }
@@ -125,9 +126,12 @@
                 <span class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
             </div>
             <div class="slogan">
-                <p>用瞬間記錄永恆，拿片刻鋪滿人生；<br>
-                在角落翻開記憶，把點滴串成一生。<br>
-                漫無目的，恣意生活。</p>
+                <!-- 點擊此處展開/收合詩句 -->
+                <div class="slogan-clickable" onclick="togglePoem()">漫無目的，恣意生活。</div>
+                <div id="poem-box" class="poem-content">
+                    用瞬間記錄永恆，拿片刻鋪滿人生；<br>
+                    在角落翻開記憶，把點滴串成一生。
+                </div>
             </div>
         </div>
 
@@ -194,12 +198,9 @@
 </div>
 
 <script>
-
-
 // 偵測轉向並切換鏡像佈局，絕對不會影響電腦版顯示
 function handleOrientation() {
     const view = document.getElementById('landscape-card-view');
-    // 只有在手機橫向狀態下才進行反轉偵測
     if (window.matchMedia("(orientation: landscape)").matches) {
         if (window.screen.orientation && window.screen.orientation.type === 'landscape-secondary') {
             view.classList.add('reverse-layout');
@@ -209,57 +210,61 @@ function handleOrientation() {
     }
 }
 
-// 監聽轉向
 if (window.screen.orientation) {
     window.screen.orientation.addEventListener("change", handleOrientation);
 }
 window.addEventListener("orientationchange", handleOrientation);
 handleOrientation();
 
-
-    function updateOverlay() {
-        const overlay = document.getElementById('start-overlay');
-        const isPortrait = window.innerHeight > window.innerWidth;
-        if (isPortrait) {
-            overlay.innerHTML = `<div class="guide-icon rotate-anim"></div><div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>請將手機轉為橫向以獲得最佳體驗<br>或點擊此處直接進入</p></div>`;
-        } else {
-            overlay.innerHTML = `<div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div>`;
-        }
+function updateOverlay() {
+    const overlay = document.getElementById('start-overlay');
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isPortrait) {
+        overlay.innerHTML = `<div class="guide-icon rotate-anim"></div><div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>請將手機轉為橫向以獲得最佳體驗<br>或點擊此處直接進入</p></div>`;
+    } else {
+        overlay.innerHTML = `<div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div>`;
     }
+}
 
-    function enterFullScreen() {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen().catch(err => console.log(err.message));
-        }
-        document.getElementById('start-overlay').style.display = 'none';
+function enterFullScreen() {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => console.log(err.message));
     }
+    document.getElementById('start-overlay').style.display = 'none';
+}
 
-    function openTab(evt, tabName) {
-        document.querySelectorAll(".button-group").forEach(el => el.classList.remove("active"));
-        document.querySelectorAll(".tab-trigger").forEach(el => el.classList.remove("active"));
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-    }
+function openTab(evt, tabName) {
+    document.querySelectorAll(".button-group").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".tab-trigger").forEach(el => el.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
 
-    // 載入器邏輯
-    const progressBar = document.getElementById('progress-bar');
-    let progress = 0;
-    const interval = setInterval(() => { if (progress < 90) { progress += 5; progressBar.value = progress; } }, 100);
-    function finishLoading() {
-        clearInterval(interval);
-        progressBar.value = 100;
-        setTimeout(() => {
-            document.getElementById('loader-container').style.display = 'none';
-            document.getElementById('logo-img').style.display = 'block';
-            document.getElementById('logo-avatar').style.display = 'block';
-        }, 200);
-    }
-    
-    document.getElementById('logo-img').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
+// 詩句展開與收合控制
+function togglePoem() {
+    const poemBox = document.getElementById('poem-box');
+    poemBox.classList.toggle('show');
+}
 
-    window.addEventListener("resize", updateOverlay);
-    updateOverlay();
+// 載入器邏輯
+const progressBar = document.getElementById('progress-bar');
+let progress = 0;
+const interval = setInterval(() => { if (progress < 90) { progress += 5; progressBar.value = progress; } }, 100);
+function finishLoading() {
+    clearInterval(interval);
+    progressBar.value = 100;
+    setTimeout(() => {
+        document.getElementById('loader-container').style.display = 'none';
+        document.getElementById('logo-img').style.display = 'block';
+        document.getElementById('logo-avatar').style.display = 'block';
+    }, 200);
+}
+
+document.getElementById('logo-img').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
+
+window.addEventListener("resize", updateOverlay);
+updateOverlay();
 </script>
 </body>
 </html>
