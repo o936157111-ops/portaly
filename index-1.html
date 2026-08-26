@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>生活・簡居・生活</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * { box-sizing: border-box; touch-action: manipulation; }
+        html, body { background-color: #f9f9f9; margin: 0; padding: 0; width: 100%; min-height: 100%; overscroll-behavior: none; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; color: #333; display: flex; justify-content: center; align-items: flex-start; }
+
+        /* 全域容器 */
+        .page-view { width: 100%; max-width: 440px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+
+        /* 統一包裝在同一個白色大框架內 */
+        .card-container { background-color: #FCFCFF; border-radius: 24px; border: 1px solid #F0F0F0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); overflow: hidden; padding: 40px 20px; width: 100%; position: relative; }
+        
+        /* 上半部雙 LOGO 區塊 */
+        .logo-wrapper { position: relative; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 95%; margin: 0 auto 20px auto; }
+        .logo-link { display: block; width: 100%; transition: transform 0.3s ease; }
+        .logo-link:hover { transform: scale(1.02); }
+        .logo-img { width: 100%; height: auto; border-radius: 12px; display: block; }
+        .logo-avatar { position: absolute; top: -24px; left: -18px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; }
+
+        /* 詩句區塊樣式 */
+        .slogan-section { text-align: center; margin-bottom: 25px; }
+        .slogan-clickable { font-size: 1.25em; font-weight: bold; color: #444; cursor: pointer; display: inline-block; transition: color 0.2s; }
+        .slogan-clickable:hover { color: #000; }
+        
+        .poem-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out; opacity: 0; color: #666; font-size: 0.9em; line-height: 1.8; margin-top: 0; }
+        .poem-content.show { max-height: 150px; opacity: 1; margin-top: 8px; }
+
+        /* ========================================================
+           下半部：純圖片 Pinterest 瀑布流風格（隨機 6 幅）
+           ======================================================== */
+        .pinterest-masonry { 
+            column-count: 2; /* 雙欄瀑布流 */
+            column-gap: 10px; /* 欄位間距 */
+            width: 100%; 
+        }
+        
+        .pin-card { 
+            break-inside: avoid; /* 避免圖片被欄位切斷 */
+            display: inline-block; 
+            width: 100%;
+            margin-bottom: 10px; /* 上下圖片間距 */
+            border-radius: 14px; 
+            overflow: hidden; 
+            background: #fff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); 
+            text-decoration: none; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        
+        .pin-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12); 
+        }
+        
+        /* 保持圖片原始比例，呈現高低錯落感 */
+        .pin-img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-view">
+        <div class="card-container">
+            <!-- 上半部：雙 LOGO（大 LOGO 連結回首頁） -->
+            <div class="logo-wrapper">
+                <img src="https://myezlife.com/eric-logo.gif" alt="Avatar" class="logo-avatar">
+                <a href="https://myezlife.com" class="logo-link" title="返回首頁">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="logo-img">
+                </a>
+            </div>
+
+            <!-- 第一層與第二層互動文字 -->
+            <div class="slogan-section">
+                <div class="slogan-clickable" onclick="togglePoem()">漫無目的，恣意生活。</div>
+                <div id="poem-box" class="poem-content">
+                    用瞬間記錄永恆，拿片刻鋪滿人生；<br>
+                    在角落翻開記憶，把點滴串成一生。
+                </div>
+            </div>
+
+            <!-- 下半部：純圖片 Pinterest 瀑布流專區（將載入所有候選照片，由 Script 隨機選出 6 幅） -->
+            <div class="pinterest-masonry" id="random-masonry">
+                
+                <a href="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+                
+                <a href="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+                
+                <a href="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+                
+                <a href="https://live.staticflickr.com/7565/28053680683_cb0bff983b_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/7565/28053680683_cb0bff983b_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+                
+                <a href="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+                
+                <a href="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/87/a2/fc/87a2fc3f6825666f0335a226feeb2317.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/87/a2/fc/87a2fc3f6825666f0335a226feeb2317.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-card" target="_blank">
+                    <img src="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/6f/13/eb/6f13eb3365ae7f83e89bf6a5823a5596.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/6f/13/eb/6f13eb3365ae7f83e89bf6a5823a5596.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/17/f7/84/17f784d3baf4a109ba76850855beeae2.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/17/f7/84/17f784d3baf4a109ba76850855beeae2.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/57/d6/05/57d605601aa1ef16adcddcee28933015.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/57/d6/05/57d605601aa1ef16adcddcee28933015.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/37/4d/60/374d6076fc0cf87405665d464db81904.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/37/4d/60/374d6076fc0cf87405665d464db81904.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/d8/85/9d/d8859d72bf64a0097f98223104ea591a.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/d8/85/9d/d8859d72bf64a0097f98223104ea591a.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/2f/26/7f/2f267fa3821e28a4cfd3bfbdc7eda557.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/2f/26/7f/2f267fa3821e28a4cfd3bfbdc7eda557.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/f2/23/14/f223140de854fce09df4add37fad067a.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/f2/23/14/f223140de854fce09df4add37fad067a.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/9a/8a/3a/9a8a3a4b4b9558335e96c1c977b64741.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/9a/8a/3a/9a8a3a4b4b9558335e96c1c977b64741.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/48/54/e2/4854e264fb2e6eaa3f1649615ac7daa6.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/48/54/e2/4854e264fb2e6eaa3f1649615ac7daa6.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/fa/e4/59/fae459256bcaec9d38c257545f863f7c.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/fa/e4/59/fae459256bcaec9d38c257545f863f7c.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/71/58/12/715812ac0fa62687a9868e2f1a292872.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/71/58/12/715812ac0fa62687a9868e2f1a292872.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/c8/c0/3d/c8c03d6631d7845a579e7206713d60ad.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/c8/c0/3d/c8c03d6631d7845a579e7206713d60ad.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/1a/9d/2d/1a9d2db51511da80f363e666f8024f5c.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/1a/9d/2d/1a9d2db51511da80f363e666f8024f5c.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/01/c9/87/01c987b1ce3b1c45be0cfcc9354f4be0.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/01/c9/87/01c987b1ce3b1c45be0cfcc9354f4be0.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/3c/2e/6b/3c2e6b696f6d0edc38654530d8a6d887.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/3c/2e/6b/3c2e6b696f6d0edc38654530d8a6d887.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/ed/7d/be/ed7dbe8e01e29309f019d86c7889659c.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/ed/7d/be/ed7dbe8e01e29309f019d86c7889659c.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/8e/90/b4/8e90b4997751a3d79dbdee2d45335599.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/8e/90/b4/8e90b4997751a3d79dbdee2d45335599.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/a4/7f/a3/a47fa3e416f42d61e3471e2016932b39.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/a4/7f/a3/a47fa3e416f42d61e3471e2016932b39.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/8e/2c/c5/8e2cc5b8846ff60ce6fffc6ca36fc583.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/8e/2c/c5/8e2cc5b8846ff60ce6fffc6ca36fc583.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/d0/d8/af/d0d8afb1eb6455e8335bf0406955e9ac.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/d0/d8/af/d0d8afb1eb6455e8335bf0406955e9ac.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/04/44/af/0444af46cd18a554dfdf81af48821182.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/04/44/af/0444af46cd18a554dfdf81af48821182.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/7b/c9/0e/7bc90e4f2ddb7795037cf3d952b906f9.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/7b/c9/0e/7bc90e4f2ddb7795037cf3d952b906f9.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/f5/4c/35/f54c35ca2e5674379c10ef4e7a452f33.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/f5/4c/35/f54c35ca2e5674379c10ef4e7a452f33.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/41/d3/64/41d364a8185dfcf24d9b6abad1656899.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/41/d3/64/41d364a8185dfcf24d9b6abad1656899.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/a5/9b/92/a59b92e7401827774e5086b9f039829e.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/a5/9b/92/a59b92e7401827774e5086b9f039829e.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+                <a href="https://i.pinimg.com/1200x/28/65/90/286590a8a736c6ae54715c317a269da8.jpg" class="pin-card" target="_blank">
+                    <img src="https://i.pinimg.com/1200x/28/65/90/286590a8a736c6ae54715c317a269da8.jpg" class="pin-img" alt="攝影作品">
+                </a>
+
+
+                
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 點擊第一層文字時，切換第二層詩句的顯示與隱藏
+    function togglePoem() {
+        const poemBox = document.getElementById('poem-box');
+        poemBox.classList.toggle('show');
+    }
+
+    // 每次重新整理頁面時，隨機挑選 12 幅圖片呈現
+    document.addEventListener("DOMContentLoaded", function() {
+        const masonryContainer = document.getElementById("random-masonry");
+        const cards = Array.from(masonryContainer.children);
+        
+        // Fisher-Yates 隨機洗牌演算法
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        
+        // 清空容器並只取前 12 張卡片塞入
+        masonryContainer.innerHTML = "";
+        cards.slice(0, 12).forEach(card => masonryContainer.appendChild(card));
+    });
+</script>
+</body>
+</html>
