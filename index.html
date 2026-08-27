@@ -61,7 +61,7 @@
         .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.3s ease; }
         .btn:hover { background-color: #000 !important; color: #fff !important; border-color: #000 !important; transform: translateY(-2px) !important; }
 
-        /* 下半部：純圖片 Pinterest 瀑布流風格（隨機 12 幅選 6 幅或全部） */
+        /* 下半部：純圖片 Pinterest 瀑布流風格 */
         .pinterest-masonry { 
             column-count: 2; 
             column-gap: 10px; 
@@ -94,27 +94,28 @@
             background: #eee;
         }
 
-        /* 橫式版面完整樣式 */
-        #landscape-card-view { display: none; height: 100dvh; overflow-y: auto; }
+        /* 橫式版面完整樣式（已修正高度，支援滿版顯示） */
+        #landscape-card-view { display: none; width: 100vw; height: 100vh; overflow: hidden; }
         @media screen and (max-width: 950px) and (pointer: coarse) and (orientation: landscape) {
             .container { display: none !important; }
-            html, body { background-color: #f4f4f4 !important; overflow: hidden; }
+            html, body { background-color: #f4f4f4 !important; overflow: hidden; width: 100%; height: 100%; margin: 0; padding: 0; }
             body { display: flex; justify-content: center; align-items: center; }
-            #landscape-card-view { display: flex !important; width: 100%; height: 100%; background: #ffffff; }
+            #landscape-card-view { display: flex !important; width: 100vw; height: 100vh; background: #ffffff; align-items: stretch; }
             #landscape-card-view.reverse-layout { flex-direction: row-reverse !important; }
         }
-        .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 25px 15px; background-color: #FCFCFF; }
+        .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 20px 15px; background-color: #FCFCFF; height: 100%; }
         .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
-        .card-avatar { width: 85px; height: 85px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 10px; }
-        .card-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 3px; }
+        .card-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 8px; }
+        .card-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 3px; }
         .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; }
-        .card-icons-row { display: flex; justify-content: center; align-items: center; gap: 14px; width: 100%; padding-top: 15px; border-top: 1px dashed #E2E8F0; }
-        .icon-link { display: flex; justify-content: center; align-items: center; width: 36px; height: 36px; border-radius: 50%; background-color: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; transition: all 0.2s ease; text-decoration: none; }
+        .card-icons-row { display: flex; justify-content: center; align-items: center; gap: 12px; width: 100%; padding-top: 12px; border-top: 1px dashed #E2E8F0; }
+        .icon-link { display: flex; justify-content: center; align-items: center; width: 34px; height: 34px; border-radius: 50%; background-color: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; transition: all 0.2s ease; text-decoration: none; }
         .icon-link:hover { background-color: #000; color: #fff; border-color: #000; transform: translateY(-3px); }
-        .icon-link svg { width: 18px; height: 18px; fill: currentColor; }
-        .card-right { flex: 6; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; background-color: #FFFFFF; }
-        .blogger-door-container { width: 100%; height: 100%; display: flex !important; justify-content: center !important; align-items: center !important; position: relative; overflow: hidden; }
-        .facade { display: flex; width: 95%; height: 95%; position: relative; background: #111; border: 6px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer; }
+        .icon-link svg { width: 16px; height: 16px; fill: currentColor; }
+        .card-right { flex: 6; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; background-color: #FFFFFF; height: 100%; }
+        .blogger-door-container { width: 100%; height: 100%; display: flex !important; justify-content: center !important; align-items: center !important; position: relative; overflow: hidden; padding: 10px; }
+        .facade { display: flex; width: 96%; height: 96%; position: relative; background: #111; border: 6px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer; }
+        
         .inner-grid { position: absolute; inset: 10px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 8px; z-index: 1; }
         .panel { display: flex; justify-content: center; align-items: center; text-decoration: none; background: #222; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden; filter: brightness(0.6) grayscale(0.2); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 2; }
         .panel h3 { color: #fff; font-size: 1rem; letter-spacing: 3px; text-shadow: 1px 1px 5px #000; margin: 0; transition: all 0.4s ease; }
@@ -205,7 +206,7 @@
             <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
         </div>
 
-        <!-- 下半部：純圖片 Pinterest 瀑布流專區（由 Script 每次隨機選出 12 幅呈現） -->
+        <!-- 下半部：純圖片 Pinterest 瀑布流專區 -->
         <div class="pinterest-masonry" id="random-masonry">
             <a href="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-img" alt="攝影作品"></a>
