@@ -107,7 +107,26 @@
         .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
         .card-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 8px; }
         .card-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 3px; }
-        .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; }
+        .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; margin-bottom: 10px; }
+        
+        /* 新增：橫式左側 DIGITAL CARD 下方的下拉式選單樣式 */
+        .landscape-song-select {
+            width: 100%;
+            max-width: 180px;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            background-color: #F8FAFC;
+            color: #334155;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .landscape-song-select:hover {
+            border-color: #94A3B8;
+        }
+
         .card-icons-row { display: flex; justify-content: center; align-items: center; gap: 12px; width: 100%; padding-top: 12px; border-top: 1px dashed #E2E8F0; }
         .icon-link { display: flex; justify-content: center; align-items: center; width: 34px; height: 34px; border-radius: 50%; background-color: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; transition: all 0.2s ease; text-decoration: none; }
         .icon-link:hover { background-color: #000; color: #fff; border-color: #000; transform: translateY(-3px); }
@@ -224,41 +243,48 @@
             <a href="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a>
-            <a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a>        
-            <a href="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/76/1e/c1/761ec1000d311cd3076137f7f2debf7e.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/76/1e/c1/761ec1000d311cd3076137f7f2debf7e.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/d8/36/d9/d836d9b3bc34a0b00e48ee89fbda74f6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/d8/36/d9/d836d9b3bc34a0b00e48ee89fbda74f6.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://go.portaly.cc/5a9826a0" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/suww9pHrDlSYaXL5n1Uh%2Fproducts%2FPls3FQmDlFjVMQ8R6deJ%2Fimage?alt=media&token=676cc137-5896-46a8-987a-49a99a09a10d" class="pin-img" alt="【Notion 模版】訂閱服務管理系統"></a>
-            <a href="https://go.portaly.cc/-27s8HM0" class="pin-card" target="_blank"><img src="https://img.portaly.cc/hbli07OoX37NsFKuGNjYaWyvZX6Map9lszbYC5oxHqY/rs:fill:640/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vY1JjSjFOazcxVmVuYUFXdGlacW0lMkZwcm9kdWN0cyUyRnJIRXVyZHNBaHUxYUFEdWIxbXRjJTJGaW1hZ2U_YWx0PW1lZGlhJnRva2VuPWJkZTBjZDliLTk4OTYtNDQ4Zi1hMmMyLTVkZDliMWQ0MDRjNw" class="pin-img" alt="《電子書》IG變現計畫：AI寫電子書"></a>
-            <a href="https://go.portaly.cc/af10b5ee" class="pin-card" target="_blank"><img src="https://img.portaly.cc/PMHrKv3lM7kI0mpHfsrtWgxWnSBB6NPoHgFGWfCfN1A/rs:fill:640/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vd3ZrMHlFcWowS1VXb2FvelpQQ3IlMkZwcm9kdWN0cyUyRm5UT0JEbjVRd3g1cUdFa2RmSno2JTJGaW1hZ2U_YWx0PW1lZGlhJnRva2VuPTM2MWIxOTE0LWIwY2YtNGIwOC04NWU3LWRjMGE3OTJhN2JjNQ" class="pin-img" alt="完整版《破億下載Podcast製作人的經營指南》電子書"></a>
-            <a href="https://go.portaly.cc/28d3d72e" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/Y1CFcamCHpEaLlyr6jaq%2Fproducts%2FN88jIjq2woP7MPwNhrKd%2Fimage?alt=media&token=e5860d1d-eb86-42a1-b14d-18dcce7e5a70" class="pin-img" alt="排版微調電子"></a>
-            <a href="https://go.portaly.cc/6d66963f" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/DD15Q2QIeVh5hWmPjG1Y" class="pin-img" alt="沖繩。初旅"></a>
-            <a href="https://go.portaly.cc/c6db0cc3" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/ugFatGEu6tyuUe4kL0WO" class="pin-img" alt="用 120 萬走過 28 國的兩年環遊世界"></a>
-            <a href="https://go.portaly.cc/ec4aff45" class="pin-card" target="_blank"><img src="https://img.portaly.cc/jsO1jQ2M3pQL2WSglerK8Fwh9AvW4FqU2z3WfSgsgmk/rs:fill:750/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZXUXd3VU9XMmJFR3NLeWVadHZqMyUyRml0ZW1NYXPlNmFCZm9Fb3BwN1JqZ2xNRS1lZzVLLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj0xZTljODcwOC00M2FhLTQ2ZjktYmNhZC1hOWRlNDk0MWE5NzM" class="pin-img" alt="把理想活成日常"></a>
-        </div>
+           <a href="https://www.eslite.com/product/10052265122683137254003?gad_source=1&gad_campaignid=22094810800&gbraid=0AAAAAoLh2DkcMvFQUEOXHz4A-QucYBh5Z&gclid=Cj0KCQjwnbrUBhDOARIsAKKhPpcaM7yiT-FcqN9-MI1W4filstUO1N02n9Q35cmcY587h3CtqlvfMFwaAqxyEALw_wcB&utm_source=shopback&utm_medium=cpa&utm_campaign=shopback&co_name=shopback&shopbackid=102bf45d489ab1749fa68d36440f5d" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a>
+
+            <a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html?gg=0&co_servername=sbuy_criteo_221028prospecting&utm_source=criteo&utm_medium=prospecting&utm_campaign=20221028prospecting&utm_id=343292&cto_pld=3RmL2JsiAACY0XW72oIigQ" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a>        
+
+              <a href="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-img" alt="攝影作品"></a>
+               <a href="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-img" alt="攝影作品"></a>
+              <a href="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-img" alt="攝影作品"></a>
+              <a href="https://i.pinimg.com/1200x/76/1e/c1/761ec1000d311cd3076137f7f2debf7e.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/76/1e/c1/761ec1000d311cd3076137f7f2debf7e.jpg" class="pin-img" alt="攝影作品"></a>
+              <a href="https://i.pinimg.com/1200x/d8/36/d9/d836d9b3bc34a0b00e48ee89fbda74f6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/d8/36/d9/d836d9b3bc34a0b00e48ee89fbda74f6.jpg" class="pin-img" alt="攝影作品"></a>
+              <a href="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-img" alt="攝影作品"></a>
+              <a href="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-img" alt="攝影作品"></a>
+
+<a href="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-img" alt="攝影作品"></a>
+
+             <a href="https://go.portaly.cc/5a9826a0" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/suww9pHrDlSYaXL5n1Uh%2Fproducts%2FPls3FQmDlFjVMQ8R6deJ%2Fimage?alt=media&token=676cc137-5896-46a8-987a-49a99a09a10d" class="pin-img" alt="【Notion 模版】訂閱服務管理系統"></a>
+              <a href="https://go.portaly.cc/-27s8HM0" class="pin-card" target="_blank"><img src="https://img.portaly.cc/hbli07OoX37NsFKuGNjYaWyvZX6Map9lszbYC5oxHqY/rs:fill:640/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vY1JjSjFOazcxVmVuYUFXdGlacW0lMkZwcm9kdWN0cyUyRnJIRXVyZHNBaHUxYUFEdWIxbXRjJTJGaW1hZ2U_YWx0PW1lZGlhJnRva2VuPWJkZTBjZDliLTk4OTYtNDQ4Zi1hMmMyLTVkZDliMWQ0MDRjNw" class="pin-img" alt="《電子書》IG變現計畫：AI寫電子書"></a>
+<a href="https://go.portaly.cc/af10b5ee" class="pin-card" target="_blank"><img src="https://img.portaly.cc/PMHrKv3lM7kI0mpHfsrtWgxWnSBB6NPoHgFGWfCfN1A/rs:fill:640/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vd3ZrMHlFcWowS1VXb2FvelpQQ3IlMkZwcm9kdWN0cyUyRm5UT0JEbjVRd3g1cUdFa2RmSno2JTJGaW1hZ2U_YWx0PW1lZGlhJnRva2VuPTM2MWIxOTE0LWIwY2YtNGIwOC04NWU3LWRjMGE3OTJhN2JjNQ" class="pin-img" alt="完整版《破億下載Podcast製作人的經營指南》電子書"></a>
+<a href="https://go.portaly.cc/28d3d72e" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/Y1CFcamCHpEaLlyr6jaq%2Fproducts%2FN88jIjq2woP7MPwNhrKd%2Fimage?alt=media&token=e5860d1d-eb86-42a1-b14d-18dcce7e5a70" class="pin-img" alt="排版微調電子"></a>
+<a href="https://go.portaly.cc/6d66963f" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/DD15Q2QIeVh5hWmPjG1Y" class="pin-img" alt="沖繩。初旅"></a>
+<a href="https://go.portaly.cc/c6db0cc3" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/ugFatGEu6tyuUe4kL0WO" class="pin-img" alt="用 120 萬走過 28 國的兩年環遊世界"></a>
+<a href="https://go.portaly.cc/ec4aff45" class="pin-card" target="_blank"><img src="https://img.portaly.cc/jsO1jQ2M3pQL2WSglerK8Fwh9AvW4FqU2z3WfSgsgmk/rs:fill:750/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZXUXd3VU9XMmJFR3NLeWVadHZqMyUyRml0ZW1NYXAuNmFCZm9Fb3BwN1Jqg2xNRS1lZzVLLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj0xZTljODcwOC00M2FhLTQ2ZjktYmNhZC1hOWRlNDk0MWE5NzM" class="pin-img" alt="把理想活成日常"></a>
+</div>
     </div>
 </div>
 
-<!-- ========================================== -->
-<!-- 橫式版面總入口（手機往左右轉橫時顯示的內容） -->
-<!-- ========================================== -->
+<!-- 橫式版面總入口（自動偵測切換） -->
 <div id="landscape-card-view">
     <div class="card-left">
         <div class="profile-meta">
             <a href="https://myezlife.com" target="_blank" rel="noopener noreferrer">
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar" alt="Logo">
             </a>
-            <div class="card-name">簡居生活</div> <!-- 可在此更改標題文字 -->
-            <div class="card-sub">DIGITAL CARD</div> <!-- 可在此更改副標題 -->
+            <div class="card-name">簡居生活</div>
+            <div class="card-sub">DIGITAL CARD</div>
+            
+            <!-- 新增：在 DIGITAL CARD 下方加入的 YouTube 好歌下拉式選單[cite: 3] -->
+            <select id="youtube-song-select" class="landscape-song-select" onchange="playSelectedSong(this)">
+                <option value="" disabled selected>🎵 選擇 YouTube 好歌</option>
+                <option value="KSTeFTHjj14">楊乃文 - 推開世界的門</option>
+            </select>
         </div>
         
-        <!-- 左側底部的社群按鈕小圖示列 -->
         <div class="card-icons-row">
             <a href="https://portaly.cc/myezlife" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
             <a href="https://myeztravellife.blogspot.com" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></a>
@@ -270,9 +296,9 @@
     
     <div class="card-right">
         <div class="blogger-door-container">
-            <div class="facade" onclick="this.classList.toggle('door-open')">
+            <!-- 門的本體（增加 id 以便 JavaScript 進行開門與載入影片控制） -->
+            <div id="landscape-facade" class="facade" onclick="this.classList.toggle('door-open')">
                 <div class="sensor-box"><div class="sensor-light"></div></div>
-                <!-- 橫式點開自動門後的 6 個方格按鈕與連結 -->
                 <div class="inner-grid">
                     <a href="https://myezdailylife.blogspot.com" class="panel read-nebula-bg"><h3>閱覽</h3></a>
                     <a href="https://myezlife.com/FileExplorer.html" class="panel explore-compass-bg"><h3>探索</h3></a>
@@ -281,7 +307,6 @@
                     <a href="https://www.flickr.com/photos/0936157111/" class="panel old-friend-bg"><h3>舊識</h3></a>
                     <a href="https://www.google.com/maps/d/edit?mid=1MoXFmy5gyGaD4y0bRyTwlTWk86OOKnI&usp=sharing" class="panel map-guide-bg"><h3>地圖</h3></a>
                 </div>
-                <!-- 橫式大門未打開時，左右兩片門上的文字 -->
                 <div class="auto-door-system">
                     <div class="glass-leaf left-leaf"><div class="door-text">生活</div></div>
                     <div class="glass-leaf right-leaf"><div class="door-text">日常</div></div>
@@ -342,6 +367,36 @@ function togglePoem() {
     poemBox.classList.toggle('show');
 }
 
+// 新增：處理下拉式選單選取歌曲時的動作（開門並載入 YouTube 畫面）[cite: 3]
+function playSelectedSong(selectElement) {
+    const videoId = selectElement.value;
+    if (!videoId) return;
+
+    const facade = document.getElementById('landscape-facade');
+    // 自動開啟右側的門
+    facade.classList.add('door-open');
+
+    // 檢查是否已經建立了 iframe，若無則動態插入
+    let iframeContainer = facade.querySelector('.youtube-player-container');
+    if (!iframeContainer) {
+        iframeContainer = document.createElement('div');
+        iframeContainer.className = 'youtube-player-container';
+        iframeContainer.style.cssText = "position:absolute; inset:0; z-index:5; background:#000; display:flex; justify-content:center; align-items:center;";
+        facade.appendChild(iframeContainer);
+    }
+
+    // 放入 YouTube 嵌入播放器（自動播放設定 autoplay=1）
+    iframeContainer.innerHTML = `
+        <iframe width="100%" height="100%" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen style="width:100%; height:100%;">
+        ></iframe>
+    `;
+}
+
 // 載入器邏輯與 Pinterest 瀑布流隨機洗牌
 const progressBar = document.getElementById('progress-bar');
 let progress = 0;
@@ -362,9 +417,11 @@ function finishLoading() {
         document.getElementById('logo-link-wrap').style.display = 'block';
     }, 200);
 
+    // 每次重新整理或載入完成後，隨機挑選 15 幅圖片呈現
     const masonryContainer = document.getElementById("random-masonry");
     const cards = Array.from(masonryContainer.children);
     
+    // Fisher-Yates 隨機洗牌演算法
     for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
@@ -374,6 +431,7 @@ function finishLoading() {
     cards.slice(0, 15).forEach(card => masonryContainer.appendChild(card));
 }
 
+// 觸發大 Logo 圖片載入
 document.getElementById('logo-img').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
 window.addEventListener("resize", updateOverlay);
