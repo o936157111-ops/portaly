@@ -101,7 +101,6 @@
             html, body { background-color: #f4f4f4 !important; overflow: hidden !important; width: 100vw !important; height: 100dvh !important; margin: 0 !important; padding: 0 !important; position: fixed !important; top: 0; left: 0; }
             body { display: flex !important; justify-content: center !important; align-items: center !important; }
             #landscape-card-view { display: flex !important; width: 100vw !important; height: 100dvh !important; background: #ffffff !important; align-items: stretch !important; position: absolute !important; top: 0 !important; left: 0 !important; z-index: 99999; }
-            #landscape-card-view.reverse-layout { flex-direction: row-reverse !important; }
         }
         .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 20px 15px; background-color: #FCFCFF; height: 100%; }
         .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
@@ -109,7 +108,7 @@
         .card-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 3px; }
         .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; margin-bottom: 10px; }
         
-        /* 新增：橫式左側 DIGITAL CARD 下方的下拉式選單樣式 */
+        /* 橫式左側下拉式選單樣式 */
         .landscape-song-select {
             width: 100%;
             max-width: 180px;
@@ -276,20 +275,11 @@
                 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar" alt="Logo">
             </a>
             <div class="card-name">簡居生活</div>
-            <div class="card-sub">好歌一直聽</div>
+            <!-- 動態副標題（會根據轉向自動切換） -->
+            <div id="dynamic-card-sub" class="card-sub">好歌一直聽</div>
             
-            <!-- 新增：在 DIGITAL CARD 下方加入的 YouTube 好歌下拉式選單[cite: 3] -->
-            <select id="youtube-song-select" class="landscape-song-select" onchange="playSelectedSong(this)">
-                <option value="" disabled selected>🎵 選擇 YouTube 好歌</option>
-                <option value="KSTeFTHjj14">楊乃文 - 推開世界的門</option>
-                <option value="W9Ee85S7s2Q">楊乃文 - 我給的愛</option>
-                <option value="1mrBdx9FH44">楊乃文 - 女爵</option>
-                <option value="cP5te4Tl4Os">楊乃文 - 证据</option>
-                <option value="w-flWDAO2rA">楊乃文 - 未接來電</option>
-                <option value="uzD_BwIaeQA">楊乃文 - 祝我幸福</option>
-
-                 
-            </select>
+            <!-- 動態選單（會根據轉向切換：左打橫＝好歌清單 / 右打橫＝AI好劇清單） -->
+            <div id="dynamic-select-container"></div>
         </div>
         
         <div class="card-icons-row">
@@ -303,7 +293,7 @@
     
     <div class="card-right">
         <div class="blogger-door-container">
-            <!-- 門的本體（增加 id 以便 JavaScript 進行開門與載入影片控制） -->
+            <!-- 門的本體 -->
             <div id="landscape-facade" class="facade" onclick="this.classList.toggle('door-open')">
                 <div class="sensor-box"><div class="sensor-light"></div></div>
                 <div class="inner-grid">
@@ -324,14 +314,42 @@
 </div>
 
 <script>
-// 偵測轉向並切換鏡像佈局
+// 偵測轉向（分辨向左打橫 landscape-primary 還是向右打橫 landscape-secondary）
 function handleOrientation() {
     const view = document.getElementById('landscape-card-view');
+    const subText = document.getElementById('dynamic-card-sub');
+    const selectContainer = document.getElementById('dynamic-select-container');
+
     if (window.matchMedia("(orientation: landscape)").matches) {
-        if (window.screen.orientation && window.screen.orientation.type === 'landscape-secondary') {
+        // 判斷是否為 landscape-secondary（通常代表向右打橫）
+        const isRightLandscape = window.screen.orientation && window.screen.orientation.type === 'landscape-secondary';
+
+        if (isRightLandscape) {
+            // 【向右打橫】顯示：AI好劇一直看
             view.classList.add('reverse-layout');
+            subText.innerText = "AI好劇一直看";
+            selectContainer.innerHTML = `
+                <select class="landscape-song-select" onchange="playSelectedContent(this)">
+                    <option value="" disabled selected>🎬 選擇 AI 好劇</option>
+                    <option value="t76zhPJTS2g">春風不等舊時人</option>
+                </select>
+            `;
         } else {
+            // 【向左打橫】（預設 landscape-primary）顯示：好歌一直聽
             view.classList.remove('reverse-layout');
+            subText.innerText = "好歌一直聽";
+            selectContainer.innerHTML = `
+                <select class="landscape-song-select" onchange="playSelectedContent(this)">
+                    <option value="" disabled selected>🎵 選擇好歌清單</option>
+                    <option value="KSTeFTHjj14">楊乃文 - 推開世界的門</option>
+                <option value="W9Ee85S7s2Q">楊乃文 - 我給的愛</option>
+                <option value="1mrBdx9FH44">楊乃文 - 女爵</option>
+                <option value="cP5te4Tl4Os">楊乃文 - 证据</option>
+                <option value="w-flWDAO2rA">楊乃文 - 未接來電</option>
+                <option value="uzD_BwIaeQA">楊乃文 - 祝我幸福</option>
+
+                </select>
+            `;
         }
     }
 }
@@ -374,16 +392,14 @@ function togglePoem() {
     poemBox.classList.toggle('show');
 }
 
-// 新增：處理下拉式選單選取歌曲時的動作（開門並載入 YouTube 畫面）[cite: 3]
-function playSelectedSong(selectElement) {
-    const videoId = selectElement.value;
-    if (!videoId) return;
+// 下拉式選單選取時自動開門並載入內容
+function playSelectedContent(selectElement) {
+    const val = selectElement.value;
+    if (!val) return;
 
     const facade = document.getElementById('landscape-facade');
-    // 自動開啟右側的門
     facade.classList.add('door-open');
 
-    // 檢查是否已經建立了 iframe，若無則動態插入
     let iframeContainer = facade.querySelector('.youtube-player-container');
     if (!iframeContainer) {
         iframeContainer = document.createElement('div');
@@ -392,16 +408,22 @@ function playSelectedSong(selectElement) {
         facade.appendChild(iframeContainer);
     }
 
-    // 放入 YouTube 嵌入播放器（自動播放設定 autoplay=1）
-    iframeContainer.innerHTML = `
-        <iframe width="100%" height="100%" 
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
-            title="YouTube video player" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            allowfullscreen style="width:100%; height:100%;">
-        ></iframe>
-    `;
+    // 判斷是單一影片 ID 還是完整的播放清單連結
+    let embedSrc = "";
+    if (val.startsWith("http")) {
+        embedSrc = val;
+        iframeContainer.innerHTML = `<div style="color:#fff; text-align:center; padding:20px;">已開啟播放清單，<a href="${val}" target="_blank" style="color:#D4AF37;">點此前往 YouTube 觀賞</a></div>`;
+    } else {
+        iframeContainer.innerHTML = `
+            <iframe width="100%" height="100%" 
+                src="https://www.youtube.com/embed/${val}?autoplay=1" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen style="width:100%; height:100%;">
+            </iframe>
+        `;
+    }
 }
 
 // 載入器邏輯與 Pinterest 瀑布流隨機洗牌
@@ -424,11 +446,9 @@ function finishLoading() {
         document.getElementById('logo-link-wrap').style.display = 'block';
     }, 200);
 
-    // 每次重新整理或載入完成後，隨機挑選 15 幅圖片呈現
     const masonryContainer = document.getElementById("random-masonry");
     const cards = Array.from(masonryContainer.children);
     
-    // Fisher-Yates 隨機洗牌演算法
     for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
@@ -438,7 +458,6 @@ function finishLoading() {
     cards.slice(0, 15).forEach(card => masonryContainer.appendChild(card));
 }
 
-// 觸發大 Logo 圖片載入
 document.getElementById('logo-img').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
 window.addEventListener("resize", updateOverlay);
