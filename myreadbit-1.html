@@ -241,12 +241,17 @@
 
     function toggleInputMode() {
         const inputSection = document.getElementById('inputSection');
+        const cardContainer = document.getElementById('cardContainer');
         const toggleBtn = document.getElementById('toggleBtn');
         
         inputSection.classList.toggle('active');
+        
+        // 切換時順便隱藏或顯示底下的閱讀卡片區，讓畫面更清爽
         if (inputSection.classList.contains('active')) {
+            cardContainer.style.display = 'none';
             toggleBtn.textContent = "返回閱讀";
         } else {
+            cardContainer.style.display = 'flex';
             toggleBtn.textContent = "新增導讀";
         }
     }
@@ -279,7 +284,7 @@
         return text
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
-            .replace(> /g, "&gt;")
+            .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
