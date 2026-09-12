@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My ReadBit - 個人書摘閱讀器</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #10b981;
+            --accent-hover: #059669;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* 卡片閱讀區 */
+        .card-container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .book-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #fff;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 8px;
+        }
+
+        .book-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 250px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background: #444;
+        }
+
+        /* 表單輸入區 (預設隱藏) */
+        .input-section {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-section.active {
+            display: flex;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 120px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            margin: auto 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>📖 My ReadBit</h1>
+        <button class="btn" id="toggleBtn" onclick="toggleInputMode()">新增導讀</button>
+    </header>
+
+    <!-- 新增導讀表單 -->
+    <div class="input-section" id="inputSection">
+        <h3 style="font-size: 1.1rem;">輸入新的書本導讀</h3>
+        <input type="text" id="inputTitle" placeholder="請輸入書名...">
+        <textarea id="inputContent" placeholder="請輸入這本書的重點導讀、核心摘要或金句..."></textarea>
+        <button class="btn" onclick="saveBook()">儲存導讀卡片</button>
+    </div>
+
+    <!-- 卡片閱讀介面 -->
+    <div class="card-container" id="cardContainer">
+        <div id="cardInner">
+            <!-- 內容會透過 JS 動態載入 -->
+        </div>
+        <div class="card-footer">
+            <span id="pageIndicator">0 / 0</span>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="prevCard()">上一張</button>
+                <button class="nav-btn" onclick="nextCard()">下一張</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 從 LocalStorage 載入資料，若沒有則預設幾筆示範
+    let books = JSON.parse(localStorage.getItem('my_readbit_books')) || [
+        { title: "原子習慣 (Sample)", content: "身份認同迴圈：不要問自己想成為什麼樣的人，而是問你想成為「哪種人」。改變習慣最深層的方式，是改變你的身份認同，讓行為符合你想成為的自我。" },
+        { title: "極度專注力 (Sample)", content: "我們的大腦分為「散漫模式」與「聚焦模式」。真正的生產力不來自於做得更多，而是來自於明智地選擇分心與專注的時機。" }
+    ];
+
+    let currentIndex = 0;
+
+    function renderCard() {
+        const cardInner = document.getElementById('cardInner');
+        const pageIndicator = document.getElementById('pageIndicator');
+
+        if (books.length === 0) {
+            cardInner.innerHTML = `<div class="empty-state">目前沒有任何導讀，請點擊右上角「新增導讀」開始建立你的專屬書庫！</div>`;
+            pageIndicator.textContent = "0 / 0";
+            return;
+        }
+
+        if (currentIndex >= books.length) currentIndex = books.length - 1;
+        if (currentIndex < 0) currentIndex = 0;
+
+        const currentBook = books[currentIndex];
+        cardInner.innerHTML = `
+            <div class="book-title">${escapeHtml(currentBook.title)}</div>
+            <div class="book-content">${escapeHtml(currentBook.content)}</div>
+        `;
+        pageIndicator.textContent = `${currentIndex + 1} / ${books.length}`;
+    }
+
+    function nextCard() {
+        if (books.length === 0) return;
+        currentIndex = (currentIndex + 1) % books.length;
+        renderCard();
+    }
+
+    function prevCard() {
+        if (books.length === 0) return;
+        currentIndex = (currentIndex - 1 + books.length) % books.length;
+        renderCard();
+    }
+
+    function toggleInputMode() {
+        const inputSection = document.getElementById('inputSection');
+        const toggleBtn = document.getElementById('toggleBtn');
+        
+        inputSection.classList.toggle('active');
+        if (inputSection.classList.contains('active')) {
+            toggleBtn.textContent = "返回閱讀";
+        } else {
+            toggleBtn.textContent = "新增導讀";
+        }
+    }
+
+    function saveBook() {
+        const titleInput = document.getElementById('inputTitle');
+        const contentInput = document.getElementById('inputContent');
+
+        const title = titleInput.value.trim();
+        const content = contentInput.value.trim();
+
+        if (!title || !content) {
+            alert('書名和導讀內容都不能空白喔！');
+            return;
+        }
+
+        books.push({ title, content });
+        localStorage.setItem('my_readbit_books', JSON.stringify(books));
+
+        // 清空欄位並切回閱讀畫面
+        titleInput.value = '';
+        contentInput.value = '';
+        currentIndex = books.length - 1; // 跳到剛新增的那本
+        toggleInputMode();
+        renderCard();
+    }
+
+    // 簡單防 XSS 轉義
+    function escapeHtml(text) {
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(> /g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // 初始化載入
+    renderCard();
+</script>
+
+</body>
+</html>
