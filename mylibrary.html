@@ -1474,7 +1474,7 @@
 
     ]; 
     let isLogged = false;
-    let visibleCount = 20;
+    let visibleCount = 24;
     let editingIndex = -1;
 
     // 🚀 回到頂端邏輯
@@ -1521,8 +1521,8 @@
         loadMoreBtn.style.display = (displayList.length < filtered.length) ? 'block' : 'none';
     }
 
-    window.handleSearch = function() { visibleCount = 20; render(); };
-    window.handleLoadMore = function() { visibleCount += 20; render(); };
+    window.handleSearch = function() { visibleCount = 24; render(); };
+    window.handleLoadMore = function() { visibleCount += 24; render(); };
 
     window.showDetail = function(idx) {
         const b = books[idx];
