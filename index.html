@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>生活・簡居・生活 | 生活總入口</title>
+    <title>生活・簡居・生活 | 數位名片型總入口</title>
     <link rel="manifest" href="manifest.json">
     <style>
         /* 合併後的智慧啟動遮罩 */
@@ -94,7 +94,72 @@
             background: #eee;
         }
 
-        /* 橫式版面強制滿版修正（完美對應手機轉向） */
+        /* Lightbox 燈箱樣式 */
+        #lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100dvh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+        #lightbox-modal img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+        .lightbox-btn {
+            background-color: #fff;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .lightbox-btn:hover {
+            background-color: #000;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            z-index: 100000;
+        }
+
+        /* 橫式版面強制滿版修正 */
         #landscape-card-view { display: none; width: 100vw; height: 100dvh; overflow: hidden; }
         @media screen and (max-width: 950px) and (pointer: coarse) and (orientation: landscape) {
             .container { display: none !important; }
@@ -108,23 +173,11 @@
         .card-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 3px; }
         .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; margin-bottom: 10px; }
         
-        /* 橫式左側下拉式選單樣式 */
         .landscape-song-select {
-            width: 100%;
-            max-width: 180px;
-            padding: 6px 10px;
-            font-size: 12px;
-            border: 1px solid #CBD5E1;
-            border-radius: 8px;
-            background-color: #F8FAFC;
-            color: #334155;
-            outline: none;
-            cursor: pointer;
-            transition: all 0.2s;
+            width: 100%; max-width: 180px; padding: 6px 10px; font-size: 12px;
+            border: 1px solid #CBD5E1; border-radius: 8px; background-color: #F8FAFC; color: #334155; outline: none; cursor: pointer; transition: all 0.2s;
         }
-        .landscape-song-select:hover {
-            border-color: #94A3B8;
-        }
+        .landscape-song-select:hover { border-color: #94A3B8; }
 
         .card-icons-row { display: flex; justify-content: center; align-items: center; gap: 12px; width: 100%; padding-top: 12px; border-top: 1px dashed #E2E8F0; }
         .icon-link { display: flex; justify-content: center; align-items: center; width: 34px; height: 34px; border-radius: 50%; background-color: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; transition: all 0.2s ease; text-decoration: none; }
@@ -210,7 +263,7 @@
 
         <!-- 頁籤二：簡居 -->
         <div id="tab-2" class="button-group">
-            <a href="https://portaly.cc/myezlife/pages/readingshare" class="btn" target="_blank" rel="noopener noreferrer">生活閱讀分享</a>
+            <a href="https://portaly.cc/myezlife/pages/readingshare" class="btn" target="_blank" rel="noopener noreferrer">生活閱讀-讀後分享</a>
             <a href="https://ebook.nlpi.edu.tw" class="btn" target="_blank" rel="noopener noreferrer">電子圖書館</a>
             <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer">生活小書房</a>
             <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn" target="_blank" rel="noopener noreferrer">挑本書細讀</a>
@@ -258,7 +311,7 @@
             <a href="https://go.portaly.cc/28d3d72e" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/Y1CFcamCHpEaLlyr6jaq%2Fproducts%2FN88jIjq2woP7MPwNhrKd%2Fimage?alt=media&token=e5860d1d-eb86-42a1-b14d-18dcce7e5a70" class="pin-img" alt="排版微調電子"></a>
             <a href="https://go.portaly.cc/6d66963f" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/DD15Q2QIeVh5hWmPjG1Y" class="pin-img" alt="沖繩。初旅"></a>
             <a href="https://go.portaly.cc/c6db0cc3" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/ugFatGEu6tyuUe4kL0WO" class="pin-img" alt="用 120 萬走過 28 國的兩年環遊世界"></a>
-            <a href="https://go.portaly.cc/ec4aff45" class="pin-card" target="_blank"><img src="https://img.portaly.cc/igEobXs7Jd0EJRRqJzQNpbq4CXEzOivYKeVzPEk8FBU/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZXUXd3VU9XMmJFR3NLeWVadHZqMyUyRml0ZW1NYXAuNmFCZm9Fb3BwN1JqZ2xNRS1lZzVLLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj0xZTljODcwOC00M2FhLTQ2ZjktYmNhZC1hOWRlNDk0MWE5NzM" class="pin-img" alt="把理想活成日常"></a>
+            <a href="https://go.portaly.cc/ec4aff45" class="pin-card" target="_blank"><img src="https://img.portaly.cc/igEobXs7Jd0EJRRqJzQNpbq4CXEzOivYKeVzPEk8FBU/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZXUXd3VU9XMmJFR3NLeWVadHZq3yUyRml0ZW1NYXPoNmFCZm9Fb3BwN1JqZ2xNRS1lZzVLLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj0xZTljODcwOC00M2FhLTQ2ZjktYmNhZC1hOWRlNDk0MWE5NzM" class="pin-img" alt="把理想活成日常"></a>
             <a href="https://go.portaly.cc/Ql8XjsTz" class="pin-card" target="_blank"><img src="https://img.portaly.cc/x0YNqhK_hcuh6bNbBFmzVhnICQfc5omq3iCM_k3Chko/rs:fill:828/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZ4eHAyWEhsaUxxWlpETkpYYWNjMSUyRml0ZW1NYXAuaXNxNEpnTjJjM1otTkZNZXBSSWtILmltYWdlP2FsdD1tZWRpYSZ0b2tlbj05Yjg3NjlhNS00NzhhLTQ5YTgtYmFiNy1lMjBkY2YwNTdkMGM" class="pin-img" alt="你也可以做到！每月加薪3萬：自媒體新手的經營全攻略"></a>
             <a href="https://go.portaly.cc/8fd4ef3b" class="pin-card" target="_blank"><img src="https://img.portaly.cc/CzqGDv9dAl79LrZCfipFkLgFzfHOoYYLaqVaFWJ5v00/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZRZTJmNXduZ3lUTWVRd0t5VkhrNSUyRml0ZW1NYXAuaU5LUnl3VWpPVEU2ZE9FbDIyXzIwLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj04YTVlYWEzNi02OTM1LTRjM2ItYjZhNy1hODIwMGExNTFjNTE" class="pin-img" alt="把理想活成日常"></a>
             <a href="https://go.portaly.cc/e245f1bc" class="pin-card" target="_blank"><img src="https://img.portaly.cc/KNuP6UZIuTCvHI2hDrlre7VoqGkSaZ2WxN2ZY96Wrco/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjAvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZZdlp2TjQ0MXBPVUhERjY0a1V6MCUyRml0ZW1NYXAuZWVyVW5ESVU1Rlh0bFRjdzFYVG1KLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj1lM2M2MzIwOS1kMTNiLTRkYjYtODY2ZS0yNzRjYjQxNjU3NDQ" class="pin-img" alt="把理想活成日常"></a>
@@ -266,7 +319,7 @@
     </div>
 </div>
 
-<!-- 橫式版面總入口（自動偵測切換） -->
+<!-- 橫式版面總入口 -->
 <div id="landscape-card-view">
     <div class="card-left">
         <div class="profile-meta">
@@ -308,12 +361,19 @@
     </div>
 </div>
 
+<!-- Lightbox 燈箱容器（含前往原始連結按鈕） -->
+<div id="lightbox-modal" onclick="closeLightbox(event)">
+    <span id="lightbox-close">&times;</span>
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <img id="lightbox-img" src="" alt="放大圖片">
+        <a id="lightbox-link" href="" target="_blank" rel="noopener noreferrer" class="lightbox-btn">🔗 前往原始連結</a>
+    </div>
+</div>
+
 <script>
-// 隨機預設三個頁籤之一
 function randomTabOnLoad() {
     const tabs = ['tab-1', 'tab-2', 'tab-3'];
     const triggers = document.querySelectorAll('.tab-trigger');
-    
     const randomIndex = Math.floor(Math.random() * tabs.length);
     const selectedTabId = tabs[randomIndex];
     
@@ -326,10 +386,36 @@ function randomTabOnLoad() {
     }
 }
 
-// 執行隨機頁籤初始化
 randomTabOnLoad();
 
-// 偵測轉向（分辨向左打橫 landscape-primary 還是向右打橫 landscape-secondary）
+// 初始化 Lightbox 點擊事件攔截
+function initLightbox() {
+    const pinCards = document.querySelectorAll('.pin-card');
+    const modal = document.getElementById('lightbox-modal');
+    const modalImg = document.getElementById('lightbox-img');
+    const modalLink = document.getElementById('lightbox-link');
+
+    pinCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            const img = this.querySelector('.pin-img');
+            const href = this.getAttribute('href');
+            
+            if (img) {
+                modalImg.src = img.src;
+                modalLink.href = href;
+                modal.style.display = 'flex';
+            }
+        });
+    });
+}
+
+function closeLightbox(e) {
+    if (e.target.id === 'lightbox-modal' || e.target.id === 'lightbox-close') {
+        document.getElementById('lightbox-modal').style.display = 'none';
+    }
+}
+
 function handleOrientation() {
     const view = document.getElementById('landscape-card-view');
     const subText = document.getElementById('dynamic-card-sub');
@@ -352,12 +438,10 @@ function handleOrientation() {
                     <option value="6Wz5pdMXHJY">歸墟-第二季</option>
                     <option value="omWT8s9azZ0">現代博士穿成農門窮小子！第1~3季</option>
                     <option value="Xv9WUt_e8xw">現代博士穿成農門窮小子！第4季</option>
-                   <option value="LvNlJjV6Jns">現代博士穿成農門窮小子！第5季</option>
-                   <option value="ITIWu-l7czg">現代博士穿成農門窮小子！第6季</option>
-                   <option value="KeITzXlcqoQ">現代博士穿成農門窮小子！第7季</option>
-                   <option value="E7Vk5bId4tE">站在外科之巅，我在急诊科疯狂摸鱼</option>
-
-
+                    <option value="LvNlJjV6Jns">現代博士穿成農門窮小子！第5季</option>
+                    <option value="ITIWu-l7czg">現代博士穿成農門窮小子！第6季</option>
+                    <option value="KeITzXlcqoQ">現代博士穿成農門窮小子！第7季</option>
+                    <option value="E7Vk5bId4tE">站在外科之巅，我在急诊科疯狂摸鱼</option>
                 </select>
             `;
         } else {
@@ -442,9 +526,7 @@ function playSelectedContent(selectElement) {
         facade.appendChild(iframeContainer);
     }
 
-    let embedSrc = "";
     if (val.startsWith("http")) {
-        embedSrc = val;
         iframeContainer.innerHTML = `<div style="color:#fff; text-align:center; padding:20px;">已開啟播放清單，<a href="${val}" target="_blank" style="color:#D4AF37;">點此前往 YouTube 觀賞</a></div>`;
     } else {
         iframeContainer.innerHTML = `
@@ -488,6 +570,8 @@ function finishLoading() {
     
     masonryContainer.innerHTML = "";
     cards.slice(0, 15).forEach(card => masonryContainer.appendChild(card));
+
+    initLightbox();
 }
 
 document.getElementById('logo-img').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
