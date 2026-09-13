@@ -130,10 +130,10 @@
 <div class="container">
     <div class="header-top">
         <h2 style="margin:0; color:var(--taaze-blue); font-size: 19px;">我的圖書館</h2>
-        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:24px;">🔓</div>
+        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:24px;">🔒</div>
     </div>
 
-    <div id="actionBar" style="display: flex;">
+    <div id="actionBar" style="display: none;">
         <button class="action-btn" style="background:var(--taaze-blue)" onclick="openAddForm()">➕ 新增書籍</button>
         <button class="action-btn" style="background:var(--backup-orange)" onclick="exportJSON()">📤 匯出 JSON</button>
         <button class="action-btn" style="background:var(--read-purple)" onclick="document.getElementById('fileInput').click()">📥 匯入 JSON</button>
@@ -307,7 +307,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-body">這本奇特、實用的管理書在大陸造成一股閱讀熱潮，成了許多企業人士的必備參考資料。<br>說是奇特，因為作者以古喻今，將《三國演義》中的戰場變商場，使歷史豪傑成為企業管理者；又取幽默詼諧、令人拍案的筆法，闡釋公司經營的手法，造就了一門麻辣「水煮」風味的管理學論述。<br>從開創公司到顧客的需要、講行銷的手法到人才的適用，乃至於同事間的互動到管理老闆的勇氣，你可以在這本書中找到職場上想要成功所需的一切方法，每一條皆具體且踏實，告訴你觀念也提供執行的步驟。</div>
+            <div class="modal-body">這本奇特、實用的管理書在大陸造成一股閱讀熱潮，成了許多企業人士的必備參考資料。</div>
         </div>
         <button onclick="document.getElementById('bookModal').style.display='none'" style="width:100%; padding:15px; border:none; background:#f8f9fa; font-size:15px; color:#666; font-weight:bold; cursor:pointer;">關閉</button>
     </div>
@@ -331,7 +331,7 @@
                 <button type="button" onclick="document.execCommand('insertUnorderedList', false, null)" title="項目符號">• 列表</button>
                 <button type="button" onclick="document.execCommand('removeFormat', false, null)" title="清除格式">清除格式</button>
             </div>
-            <div id="f_intro" class="rich-editable-area" contenteditable="true" placeholder="請輸入內容簡介...">這本奇特、實用的管理書在大陸造成一股閱讀熱潮，成了許多企業人士的必備參考資料。<br>說是奇特，因為作者以古喻今，將《三國演義》中的戰場變商場，使歷史豪傑成為企業管理者；又取幽默詼諧、令人拍案的筆法，闡釋公司經營的手法，造就了一門麻辣「水煮」風味的管理學論述。<br>從開創公司到顧客的需要、講行銷的手法到人才的適用，乃至於同事間的互動到管理老闆的勇氣，你可以在這本書中找到職場上想要成功所需的一切方法，每一條皆具體且踏實，告訴你觀念也提供執行的步驟。</div>
+            <div id="f_intro" class="rich-editable-area" contenteditable="true" placeholder="請輸入內容簡介..."></div>
 
             <div style="display:flex; gap:8px; margin-top: 10px;">
                 <button onclick="submitBook()" style="flex:1; padding:12px; background:var(--save-green); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">儲存</button>
@@ -1714,7 +1714,6 @@
     let visibleCount = 24;
     let editingIndex = -1;
 
-    // 🚀 回到頂端邏輯
     window.onscroll = function() {
         const btn = document.getElementById("backToTop");
         if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
@@ -1854,16 +1853,29 @@
     };
 
     window.saveToHTML = function() {
-        isLogged = false; render();
+        // 儲存前先強制關閉登入狀態，確保產生的 HTML 永遠是未解鎖安全狀態
+        isLogged = false;
+        document.getElementById('authLock').innerText = "🔒";
+        document.getElementById('actionBar').style.display = "none";
+        render();
+
         setTimeout(() => {
             const html = document.documentElement.outerHTML.replace(/let books = \[[\s\S]*?\];/, `let books = ${JSON.stringify(books, null, 4)};`);
             const a = document.createElement('a');
             a.href = URL.createObjectURL(new Blob([html], {type:'text/html'}));
             a.download = "my_library.html"; a.click();
-        }, 500);
+        }, 300);
     };
 
-    window.onload = render;
+    // 頁面載入時強制初始化未登入狀態，雙重保險避免被快取或殘留狀態影響
+    window.onload = function() {
+        isLogged = false;
+        const lock = document.getElementById('authLock');
+        const bar = document.getElementById('actionBar');
+        if(lock) lock.innerText = "🔒";
+        if(bar) bar.style.display = "none";
+        render();
+    };
 </script>
 
 </body></html>
