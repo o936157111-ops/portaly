@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
+<html lang="zh-Hant"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>我的圖書館</title>
@@ -33,35 +31,36 @@
         .mini-btn { padding: 3px 6px; color: white; border-radius: 4px; font-size: 10px; cursor: pointer; border: none; }
 
         /* 彈窗 */
-      #bookModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        #bookModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
 
-/* 新增/編輯書籍的彈窗設定 */
-#inputForm { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.8); 
-    z-index: 2000; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px; 
-    box-sizing: border-box; 
-}
+        /* 新增/編輯書籍的彈窗設定 */
+        #inputForm { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 2000; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            box-sizing: border-box; 
+        }
 
-/* 確保彈窗打開時，裡面的表單群組會顯示出來 */
-#inputForm.active, #inputForm[style*="display: flex"], #inputForm[style*="display:block"] {
-    display: flex !important;
-}
+        #inputForm.active, #inputForm[style*="display: flex"], #inputForm[style*="display:block"] {
+            display: flex !important;
+        }
 
-#inputForm .form-group {
-    display: block !important; /* 確保點擊新增時表單內容會出來 */
-}       .modal-content { background: white; width: 100%; max-width: 600px; max-height: 85vh; border-radius: 8px; overflow-y: auto; position: relative; display: flex; flex-direction: column; box-sizing: border-box; }
+        #inputForm .form-group {
+            display: block !important;
+        }
+
+        .modal-content { background: white; width: 100%; max-width: 600px; max-height: 85vh; border-radius: 8px; overflow-y: auto; position: relative; display: flex; flex-direction: column; box-sizing: border-box; }
         .modal-header { padding: 15px; display: flex; gap: 12px; border-bottom: 1px solid #eee; align-items: flex-start; }
         .modal-header img { width: 85px; border-radius: 6px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .modal-body { padding: 15px; flex: 1; max-height: none; overflow-y: auto; font-size: 14px; line-height: 1.6; color: #555; }
+        .modal-body { padding: 15px; flex: 1; max-height: none; overflow-y: auto; font-size: 14px; line-height: 1.6; color: #555; word-break: break-word; }
         
         #loadMore { display: none; width: 95%; margin: 15px auto; padding: 12px; background: white; border: 1px solid #ddd; border-radius: 10px; text-align: center; cursor: pointer; font-weight: bold; color: var(--taaze-blue); font-size: 14px; }
 
@@ -73,33 +72,57 @@
             z-index: 1000; align-items: center; justify-content: center; transition: opacity 0.3s;
         }
 
-        .form-group { padding: 15px; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .form-group { padding: 15px; display: none; }
+        .form-group input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
 
+        /* Rich Text 編輯器樣式 */
+        .rich-editor-toolbar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 0;
+            background: #f1f3f5;
+            padding: 6px;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        .rich-editor-toolbar button {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .rich-editor-toolbar button:hover {
+            background: #e9ecef;
+        }
+        .rich-editable-area {
+            width: 100%;
+            min-height: 120px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 8px 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #fff;
+            outline: none;
+        }
+        .rich-editable-area:focus {
+            border-color: var(--taaze-blue);
+            box-shadow: 0 0 0 2px rgba(0,85,153,0.1);
+        }
 
-@media (max-width: 768px) {
-  #bookModal { padding: 0; }
-  .modal-content { width: 100%; height: 100%; max-width: 100%; max-height: 100%; border-radius: 0; }
-  .modal-body { flex: 1; max-height: none; }
-}
-
-
-/* 預設隱藏表單群組 */
-.form-group { 
-    display: none; /* 加上這行來預設隱藏 */
-    padding: 15px; 
-}
-.form-group input, .form-group textarea { 
-    width: 100%; 
-    padding: 10px; 
-    margin-bottom: 10px; 
-    border: 1px solid #ddd; 
-    border-radius: 8px; 
-    box-sizing: border-box; 
-    font-size: 16px; 
-}
-
-
+        @media (max-width: 768px) {
+          #bookModal { padding: 0; }
+          .modal-content { width: 100%; height: 100%; max-width: 100%; max-height: 100%; border-radius: 0; }
+          .modal-body { flex: 1; max-height: none; }
+        }
     </style>
 </head>
 <body>
@@ -107,10 +130,10 @@
 <div class="container">
     <div class="header-top">
         <h2 style="margin:0; color:var(--taaze-blue); font-size: 19px;">我的圖書館</h2>
-        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:24px;">🔒</div>
+        <div id="authLock" onclick="handleAuth()" style="cursor:pointer; font-size:24px;">🔓</div>
     </div>
 
-    <div id="actionBar">
+    <div id="actionBar" style="display: flex;">
         <button class="action-btn" style="background:var(--taaze-blue)" onclick="openAddForm()">➕ 新增書籍</button>
         <button class="action-btn" style="background:var(--backup-orange)" onclick="exportJSON()">📤 匯出 JSON</button>
         <button class="action-btn" style="background:var(--read-purple)" onclick="document.getElementById('fileInput').click()">📥 匯入 JSON</button>
@@ -120,20 +143,609 @@
 
     <input type="text" id="searchInput" placeholder="🔍 搜尋書名、作者..." oninput="handleSearch()">
 
-    <div id="view-blogger"></div>
-    <div id="loadMore" onclick="handleLoadMore()">載入更多書籍...</div>
+    <div id="view-blogger">
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100021330&amp;height=400&amp;width=310" onclick="showDetail(0)">
+                    <div class="book-title">水煮三國</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.haodoo.net/covers/15Y7.jpg" onclick="showDetail(1)">
+                    <div class="book-title">蕭山克的救贖(刺激1995)</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682043368002/20220104060507545951.jpg" onclick="showDetail(2)">
+                    <div class="book-title">千江有水千江月</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100886650&amp;height=400&amp;width=310" onclick="showDetail(3)">
+                    <div class="book-title">常識統計學 拆穿混淆的假設、揪出偏差的數據、識破扭曲的結論，耶魯大學最受歡迎的十八堂公開課</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/E05/024/34/E050243489.jpg" onclick="showDetail(4)">
+                    <div class="book-title">空城計：諸葛亮逗司馬懿</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680545369008/71469.jpg" onclick="showDetail(5)">
+                    <div class="book-title">幸福藍圖: 101個年輕人要懂的道理</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682191210000/20220622060732182950.jpg" onclick="showDetail(6)">
+                    <div class="book-title">送書人</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681722773007/20190823055054170959.jpg" onclick="showDetail(7)">
+                    <div class="book-title">霍金大見解: 留給世人的十個大哉問與解答</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681425044008/ec1252663.jpg" onclick="showDetail(8)">
+                    <div class="book-title">咖啡學: 122種世界精品咖啡徹底解說!</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/077/49/0010774908.jpg" onclick="showDetail(9)">
+                    <div class="book-title">世界咖啡豆烘焙履歷圖鑑</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/085/00/0010850078.jpg" onclick="showDetail(10)">
+                    <div class="book-title">整頓的技術：中小企業獲利翻轉的祕密</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/101/93/0011019321.jpg" onclick="showDetail(11)">
+                    <div class="book-title">燦爛千陽</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/104/17/0011041733.jpg" onclick="showDetail(12)">
+                    <div class="book-title">偷書賊</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/086/53/0010865321.jpg" onclick="showDetail(13)">
+                    <div class="book-title">四季奇譚</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/045/79/0010457912.jpg" onclick="showDetail(14)">
+                    <div class="book-title">失落的符號</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680364219003/ec1680641.jpg" onclick="showDetail(15)">
+                    <div class="book-title">真情快遞</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/092/67/0010926726.jpg" onclick="showDetail(16)">
+                    <div class="book-title">世界大戰</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611276526002/ec67092.jpg" onclick="showDetail(17)">
+                    <div class="book-title">文茜小妹大</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2680923773007/ec905255.jpg" onclick="showDetail(18)">
+                    <div class="book-title">不在他方</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/078/48/0010784864.jpg" onclick="showDetail(19)">
+                    <div class="book-title">驟雨之島</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611385653002/ec298059.jpg" onclick="showDetail(20)">
+                    <div class="book-title">十年的你</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100933959&amp;height=400&amp;width=310" onclick="showDetail(21)">
+                    <div class="book-title">銀行家的妻子</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100254647&amp;height=400&amp;width=310" onclick="showDetail(22)">
+                    <div class="book-title">老闆真的說可以嗎？：決定管理到不到位的暗示心理學</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100010692&amp;height=400&amp;width=310" onclick="showDetail(23)">
+                    <div class="book-title">讀人：解讀行為密碼</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100817516&amp;height=400&amp;width=310" onclick="showDetail(24)">
+                    <div class="book-title">滿願</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100603883&amp;height=400&amp;width=310" onclick="showDetail(25)">
+                    <div class="book-title">傷心咖啡店之歌</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100593318&amp;height=400&amp;width=310" onclick="showDetail(26)">
+                    <div class="book-title">東京灣景</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/202008/o/637326467722947500.jpg" onclick="showDetail(27)">
+                    <div class="book-title">沼澤女孩</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2681943498000/20201121042228368020.jpg" onclick="showDetail(28)">
+                    <div class="book-title">鄰居</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682368628003/20230425060356602905.jpg" onclick="showDetail(29)">
+                    <div class="book-title">不便利的便利店 2</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2682233392008/20221213052521521462.jpg" onclick="showDetail(30)">
+                    <div class="book-title">不便利的便利店</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://cdn.readmoo.com/social/cover/8g/ffcal72_460x580.jpg" onclick="showDetail(31)">
+                    <div class="book-title">北京法源寺</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/upload/product/o/2611258562004/ec412926.jpg" onclick="showDetail(32)">
+                    <div class="book-title">上山．上山．愛</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/045/69/0010456953.jpg" onclick="showDetail(33)">
+                    <div class="book-title">找路：月光．沙韻．Klesan</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/201209/o/634836403323395000.jpg" onclick="showDetail(34)">
+                    <div class="book-title">逆轉人生</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://s2.eslite.com/unsafe/fit-in/x900/s.eslite.com/Upload/Product/201805/o/636625877196833750.jpg" onclick="showDetail(35)">
+                    <div class="book-title">誰說人是理性的</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/091/03/0010910336.jpg" onclick="showDetail(36)">
+                    <div class="book-title">倫敦河惡靈騷動</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/050/31/0010503106.jpg" onclick="showDetail(37)">
+                    <div class="book-title">第73烈士</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100848349&amp;height=400&amp;width=310" onclick="showDetail(38)">
+                    <div class="book-title">不大好笑的人生：伊莉莎白．華倫卯上華爾街的真實故事</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101030255&amp;height=400&amp;width=310" onclick="showDetail(39)">
+                    <div class="book-title">小提琴家</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101014456&amp;height=400&amp;width=310" onclick="showDetail(40)">
+                    <div class="book-title">護理師</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101002098&amp;height=400&amp;width=310" onclick="showDetail(41)">
+                    <div class="book-title">小鎮醫生</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100609368&amp;height=400&amp;width=310" onclick="showDetail(42)">
+                    <div class="book-title">骸骨花園</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100622427&amp;height=400&amp;width=310" onclick="showDetail(43)">
+                    <div class="book-title">祭念品</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100858922&amp;height=400&amp;width=310" onclick="showDetail(44)">
+                    <div class="book-title">緘默的女孩</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100911116&amp;height=400&amp;width=310" onclick="showDetail(45)">
+                    <div class="book-title">梅菲斯特俱樂部</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100881900&amp;height=400&amp;width=310" onclick="showDetail(46)">
+                    <div class="book-title">莫拉的雙生</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100866002&amp;height=400&amp;width=310" onclick="showDetail(47)">
+                    <div class="book-title">最後倖存者</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100717317&amp;height=400&amp;width=310" onclick="showDetail(48)">
+                    <div class="book-title">喀邁拉空間</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101070535&amp;height=400&amp;width=310" onclick="showDetail(49)">
+                    <div class="book-title">夏季訪客</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100870726&amp;height=400&amp;width=310" onclick="showDetail(50)">
+                    <div class="book-title">門徒</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100910476&amp;height=400&amp;width=310" onclick="showDetail(51)">
+                    <div class="book-title">迷蹤</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.haodoo.net/covers/1010490370.jpg" onclick="showDetail(52)">
+                    <div class="book-title">墮落天使外傳：墜入愛河</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100889608&amp;height=400&amp;width=310" onclick="showDetail(53)">
+                    <div class="book-title">游牧人生</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100634542&amp;height=400&amp;width=310" onclick="showDetail(54)">
+                    <div class="book-title">台灣鐵道小旅行</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101022475&amp;height=400&amp;width=310" onclick="showDetail(55)">
+                    <div class="book-title">洞見未來︰勾勒美好新境界</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100934732&amp;height=400&amp;width=310" onclick="showDetail(56)">
+                    <div class="book-title">什麼荒謬年代</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100936509&amp;height=400&amp;width=310" onclick="showDetail(57)">
+                    <div class="book-title">賺錢公司的採購學：產品要想賣得好，先得買得好。懂採購，獲利比銷售賺更多，下一個高階主管就是你。</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100984966&amp;height=400&amp;width=310" onclick="showDetail(58)">
+                    <div class="book-title">大江大海一九四九</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100974407&amp;height=400&amp;width=310" onclick="showDetail(59)">
+                    <div class="book-title">走路：獨處的實踐</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.haodoo.net/covers/0825.jpg" onclick="showDetail(60)">
+                    <div class="book-title">赫遜河畔談中國歷史</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100254585&amp;height=400&amp;width=310" onclick="showDetail(61)">
+                    <div class="book-title">萬曆十五年</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100835369&amp;height=400&amp;width=310" onclick="showDetail(62)">
+                    <div class="book-title">緬北之戰</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.haodoo.net/covers/1010490314.jpg" onclick="showDetail(63)">
+                    <div class="book-title">地北天南敘古今</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100880689&amp;height=400&amp;width=310" onclick="showDetail(64)">
+                    <div class="book-title">中國大歷史</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100932418&amp;height=400&amp;width=310" onclick="showDetail(65)">
+                    <div class="book-title">重返查令十字路84號</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100210100&amp;height=400&amp;width=310" onclick="showDetail(66)">
+                    <div class="book-title">查令十字路84號</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100248474&amp;height=400&amp;width=310" onclick="showDetail(67)">
+                    <div class="book-title">這些人，那些事</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100228994&amp;height=400&amp;width=310" onclick="showDetail(68)">
+                    <div class="book-title">人情．世故</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100726926&amp;height=400&amp;width=310" onclick="showDetail(69)">
+                    <div class="book-title">不在他方</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100936043&amp;height=400&amp;width=310" onclick="showDetail(70)">
+                    <div class="book-title">急診醫生</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100241286&amp;height=400&amp;width=310" onclick="showDetail(71)">
+                    <div class="book-title">清朝其實很有趣(2)衝擊謝幕</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100958244&amp;height=400&amp;width=310" onclick="showDetail(72)">
+                    <div class="book-title">Word 365全方位排版實務：紙本書與電子書製作一次搞定</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100977390&amp;height=400&amp;width=310" onclick="showDetail(73)">
+                    <div class="book-title">臺灣產業行腳地圖</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=21100044346&amp;height=400&amp;width=310" onclick="showDetail(74)">
+                    <div class="book-title">經理人特刊—商業思考框架</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=21100047685&amp;height=400&amp;width=310" onclick="showDetail(75)">
+                    <div class="book-title">經理人特刊：110招搞定所有EXCEL報表</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=21100048296&amp;height=400&amp;width=310" onclick="showDetail(76)">
+                    <div class="book-title">經理人特刊 ：工作、人生的解答之書</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=21100046825&amp;height=400&amp;width=310" onclick="showDetail(77)">
+                    <div class="book-title">小日子享生活誌 6月號/2023 第123期：讓心弛放的咖啡館</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100924960&amp;height=400&amp;width=310" onclick="showDetail(78)">
+                    <div class="book-title">自學日語 看完這本就能說：專為華人設計的日語教材，50音+筆順+單字+文法+會話一次學會！</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100882005&amp;height=400&amp;width=310" onclick="showDetail(79)">
+                    <div class="book-title">陸王</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100824441&amp;height=400&amp;width=310" onclick="showDetail(80)">
+                    <div class="book-title">用Excel做商業預測：終身受用的原理與實作</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101000486&amp;height=400&amp;width=310" onclick="showDetail(81)">
+                    <div class="book-title">鈴芽之旅</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101062459&amp;height=400&amp;width=310" onclick="showDetail(82)">
+                    <div class="book-title">【島讀臺灣2】旅讀的理由：城市山海，閱覽詩意</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100998756&amp;height=400&amp;width=310" onclick="showDetail(83)">
+                    <div class="book-title">島讀臺灣：旅行時，到書店邂逅一本書！</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101005987&amp;height=400&amp;width=310" onclick="showDetail(84)">
+                    <div class="book-title">二手書店店員日記</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101051835&amp;height=400&amp;width=310" onclick="showDetail(85)">
+                    <div class="book-title">高盛首席分析師教你剖析超級週期：掌握進場的訊號，啟動長期獲利的投資布局</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://www.books.com.tw/img/001/097/75/0010977598.jpg" onclick="showDetail(86)">
+                    <div class="book-title">羅蘋計畫</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100987191&amp;height=400&amp;width=310" onclick="showDetail(87)">
+                    <div class="book-title">聚眾商機：互動╳黏著╳擴散，9步思考打造高互動社團</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100865405&amp;height=400&amp;width=310" onclick="showDetail(88)">
+                    <div class="book-title">書店不死</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100226169&amp;height=400&amp;width=310" onclick="showDetail(89)">
+                    <div class="book-title">帶1枝筆去旅行</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100241297&amp;height=400&amp;width=310" onclick="showDetail(90)">
+                    <div class="book-title">享受吧！一個人的旅行</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100918564&amp;height=400&amp;width=310" onclick="showDetail(91)">
+                    <div class="book-title">漣漪的夜晚</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101073594&amp;height=400&amp;width=310" onclick="showDetail(92)">
+                    <div class="book-title">記憶書店浮光堂</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100936509&amp;height=400&amp;width=310" onclick="showDetail(93)">
+                    <div class="book-title">賺錢公司的採購學：產品要想賣得好，先得買得好。懂採購，獲利比銷售賺更多，下一個高階主管就是你。</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11101048884&amp;height=400&amp;width=310" onclick="showDetail(94)">
+                    <div class="book-title">給台灣的情書</div>
+                    
+                </div>
+            
+                <div class="book-item">
+                    <img src="https://media.taaze.tw/showThumbnail.html?sc=11100939169&amp;height=400&amp;width=310" onclick="showDetail(95)">
+                    <div class="book-title">寫作吧！一篇文章的生成</div>
+                    
+                </div>
+            </div>
+    <div id="loadMore" onclick="handleLoadMore()" style="display: block;">載入更多書籍...</div>
 </div>
 
-<button id="backToTop" onclick="scrollToTop()">↑</button>
+<button id="backToTop" onclick="scrollToTop()" style="display: none;">↑</button>
 
-<div id="bookModal" onclick="this.style.display='none'">
+<div id="bookModal" onclick="this.style.display='none'" style="display: none;">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <div id="modalDetail"></div>
+        <div id="modalDetail">
+            <div class="modal-header">
+                <img src="https://media.taaze.tw/showThumbnail.html?sc=11100021330&amp;height=400&amp;width=310">
+                <div style="flex:1">
+                    <h3 style="margin:0 0 5px 0; font-size:16px; line-height:1.3;">水煮三國</h3>
+                    <div style="font-size:13px; color:#888;">成君憶</div>
+                    <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+                        <a href="https://www.haodoo.net/?M=u&amp;P=B278:0&amp;L=book" target="_blank" style="color:var(--read-purple); font-weight:bold; text-decoration:none; font-size:13px;">📖 線上閱讀連結</a>
+                        <a href="https://www.taaze.tw/products/11100021330.html" target="_blank" style="color:var(--taaze-blue); font-weight:bold; text-decoration:none; font-size:13px;">🔗 書籍詳情連結</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">這本奇特、實用的管理書在大陸造成一股閱讀熱潮，成了許多企業人士的必備參考資料。<br>說是奇特，因為作者以古喻今，將《三國演義》中的戰場變商場，使歷史豪傑成為企業管理者；又取幽默詼諧、令人拍案的筆法，闡釋公司經營的手法，造就了一門麻辣「水煮」風味的管理學論述。<br>從開創公司到顧客的需要、講行銷的手法到人才的適用，乃至於同事間的互動到管理老闆的勇氣，你可以在這本書中找到職場上想要成功所需的一切方法，每一條皆具體且踏實，告訴你觀念也提供執行的步驟。</div>
+        </div>
         <button onclick="document.getElementById('bookModal').style.display='none'" style="width:100%; padding:15px; border:none; background:#f8f9fa; font-size:15px; color:#666; font-weight:bold; cursor:pointer;">關閉</button>
     </div>
 </div>
 
-<div id="inputForm">
+<div id="inputForm" style="display: none;">
     <div class="modal-content">
         <div style="padding:15px; border-bottom:1px solid #eee; font-weight:bold; background:#fcfcfc; text-align:center; font-size:15px;">書籍資料編輯</div>
         <div class="form-group">
@@ -142,17 +754,27 @@
             <input type="text" id="f_img" placeholder="圖片連結 (URL)">
             <input type="text" id="f_url" placeholder="詳情連結">
             <input type="text" id="f_read" placeholder="線上閱讀連結 (URL)">
-            <textarea id="f_intro" placeholder="內容簡介" rows="3"></textarea>
-            <div style="display:flex; gap:8px;">
-                <button onclick="submitBook()" style="flex:1; padding:12px; background:var(--save-green); color:white; border:none; border-radius:8px; font-weight:bold;">儲存</button>
-                <button onclick="closeForm()" style="flex:1; padding:12px; background:#eee; border:none; border-radius:8px; font-weight:bold;">取消</button>
+            
+            <label style="font-size:13px; color:#666; display:block; margin-bottom:3px;">內容簡介 (Rich Text)</label>
+            <div class="rich-editor-toolbar">
+                <button type="button" onclick="document.execCommand('bold', false, null)" title="粗體"><b>B</b></button>
+                <button type="button" onclick="document.execCommand('italic', false, null)" title="斜體"><i>I</i></button>
+                <button type="button" onclick="document.execCommand('underline', false, null)" title="底線"><u>U</u></button>
+                <button type="button" onclick="document.execCommand('insertUnorderedList', false, null)" title="項目符號">• 列表</button>
+                <button type="button" onclick="document.execCommand('removeFormat', false, null)" title="清除格式">清除格式</button>
+            </div>
+            <div id="f_intro" class="rich-editable-area" contenteditable="true" placeholder="請輸入內容簡介...">這本奇特、實用的管理書在大陸造成一股閱讀熱潮，成了許多企業人士的必備參考資料。<br>說是奇特，因為作者以古喻今，將《三國演義》中的戰場變商場，使歷史豪傑成為企業管理者；又取幽默詼諧、令人拍案的筆法，闡釋公司經營的手法，造就了一門麻辣「水煮」風味的管理學論述。<br>從開創公司到顧客的需要、講行銷的手法到人才的適用，乃至於同事間的互動到管理老闆的勇氣，你可以在這本書中找到職場上想要成功所需的一切方法，每一條皆具體且踏實，告訴你觀念也提供執行的步驟。</div>
+
+            <div style="display:flex; gap:8px; margin-top: 10px;">
+                <button onclick="submitBook()" style="flex:1; padding:12px; background:var(--save-green); color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">儲存</button>
+                <button onclick="closeForm()" style="flex:1; padding:12px; background:#eee; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">取消</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-     let books = [
+    let books = [
     {
         "title": "水煮三國",
         "author": "成君憶",
@@ -1518,10 +2140,8 @@
         "img": "https://media.taaze.tw/showThumbnail.html?sc=11100910316&height=400&width=310",
         "intro": "讀了這本書，你終於明白，我們為什麼需要知識份子\n\n一部反映中國近代苦難的家族記憶史\n一部過渡新舊時代衝突的女性奮鬥史\n一部台灣文學走入西方世界的大事紀\n一部用生命書寫壯闊幽微的天籟詩篇\n\n書的記述，從長城外的「巨流河」開始，到台灣南端恆春的「啞口海」結束.........\n\n巨流河，\n位於中國東北地區，是中國七大江河之一，被稱為遼寧百姓的「母親河」。\n南濱渤海與黃海，西南與內蒙內陸河、河北海灤河流域相鄰，北與松花江流域相連。\n這條河古代稱句驪河，現在稱遼河，清代稱巨流河。\n影響中國命運的「巨流河之役」，發生在民國十四年，當地淳樸百姓們仍沿用著清代巨流河之名。\n\n作者齊邦媛的父親齊世英──民國初年的留德熱血青年，九一八事變前的東北維新派，\n畢生憾恨圍繞著巨流河功敗垂成的一戰，\n渡不過的巨流像現實中的嚴寒，外交和革新思想皆困凍於此，從此開始了東北終至波及整個中國的近代苦難。\n作者的一生，正是整個二十世紀顛沛流離的縮影。\n\n本書嘔心瀝血四年完成，\n作者以邃密通透、深情至性、字字珠璣的筆力，記述縱貫百年、橫跨兩岸的大時代故事。"
     }
+]; 
 
-
-
-    ]; 
     let isLogged = false;
     let visibleCount = 24;
     let editingIndex = -1;
@@ -1613,7 +2233,10 @@
 
     window.openAddForm = function() { editingIndex = -1; clearForm(); document.getElementById('inputForm').style.display = 'flex'; };
     window.closeForm = function() { document.getElementById('inputForm').style.display = 'none'; };
-    window.clearForm = function() { ['f_title','f_author','f_img','f_url','f_read','f_intro'].forEach(id => document.getElementById(id).value=''); };
+    window.clearForm = function() { 
+        ['f_title','f_author','f_img','f_url','f_read'].forEach(id => document.getElementById(id).value=''); 
+        document.getElementById('f_intro').innerHTML = '';
+    };
 
     window.submitBook = function() {
         const b = {
@@ -1622,7 +2245,7 @@
             img: document.getElementById('f_img').value,
             url: document.getElementById('f_url').value,
             read: document.getElementById('f_read').value,
-            intro: document.getElementById('f_intro').value
+            intro: document.getElementById('f_intro').innerHTML
         };
         if(editingIndex > -1) books[editingIndex] = b; else books.unshift(b);
         closeForm(); render();
@@ -1636,7 +2259,7 @@
         document.getElementById('f_img').value = b.img || '';
         document.getElementById('f_url').value = b.url || '';
         document.getElementById('f_read').value = b.read || '';
-        document.getElementById('f_intro').value = b.intro || '';
+        document.getElementById('f_intro').innerHTML = b.intro || '';
         document.getElementById('inputForm').style.display = 'flex';
     };
 
@@ -1649,7 +2272,7 @@
 
     window.importJSON = function(e) {
         const reader = new FileReader();
-        reader.onload = ev => { try { books = JSON.parse(ev.target.result); visibleCount = 20; render(); } catch(e){alert("格式錯誤");} };
+        reader.onload = ev => { try { books = JSON.parse(ev.target.result); visibleCount = 24; render(); } catch(e){alert("格式錯誤");} };
         reader.readAsText(e.target.files[0]);
     };
 
@@ -1664,10 +2287,6 @@
     };
 
     window.onload = render;
-
-
-
-
 </script>
-</body>
-</html>
+
+</body></html>
