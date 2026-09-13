@@ -34,7 +34,31 @@
 
         /* 彈窗 */
       #bookModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
-       .modal-content { background: white; width: 100%; max-width: 600px; max-height: 85vh; border-radius: 8px; overflow-y: auto; position: relative; display: flex; flex-direction: column; box-sizing: border-box; }
+
+/* 新增/編輯書籍的彈窗設定 */
+#inputForm { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.8); 
+    z-index: 2000; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px; 
+    box-sizing: border-box; 
+}
+
+/* 確保彈窗打開時，裡面的表單群組會顯示出來 */
+#inputForm.active, #inputForm[style*="display: flex"], #inputForm[style*="display:block"] {
+    display: flex !important;
+}
+
+#inputForm .form-group {
+    display: block !important; /* 確保點擊新增時表單內容會出來 */
+}       .modal-content { background: white; width: 100%; max-width: 600px; max-height: 85vh; border-radius: 8px; overflow-y: auto; position: relative; display: flex; flex-direction: column; box-sizing: border-box; }
         .modal-header { padding: 15px; display: flex; gap: 12px; border-bottom: 1px solid #eee; align-items: flex-start; }
         .modal-header img { width: 85px; border-radius: 6px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .modal-body { padding: 15px; flex: 1; max-height: none; overflow-y: auto; font-size: 14px; line-height: 1.6; color: #555; }
@@ -57,6 +81,22 @@
   #bookModal { padding: 0; }
   .modal-content { width: 100%; height: 100%; max-width: 100%; max-height: 100%; border-radius: 0; }
   .modal-body { flex: 1; max-height: none; }
+}
+
+
+/* 預設隱藏表單群組 */
+.form-group { 
+    display: none; /* 加上這行來預設隱藏 */
+    padding: 15px; 
+}
+.form-group input, .form-group textarea { 
+    width: 100%; 
+    padding: 10px; 
+    margin-bottom: 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
+    font-size: 16px; 
 }
 
 
@@ -1624,6 +1664,10 @@
     };
 
     window.onload = render;
+
+
+
+
 </script>
 </body>
 </html>
