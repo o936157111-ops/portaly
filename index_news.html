@@ -377,19 +377,204 @@
             }
         };
 
-        // 宣告全域變數，資料改由外部 news.json 載入
-        let newsDatabase = {};
+        // 內嵌預設備份資料庫（確保在本機或未成功讀取 json 時網頁也能正常運作）
+        let newsDatabase = {
+            economic: {
+                name: "經濟日報",
+                headline: "AI 晶片與半導體供應鏈最新動態解析",
+                analysis: "今日經濟日報頭條聚焦於全球半導體廠在先進封裝與 AI 晶片產能的佈局，顯示台灣在全球供應鏈中的關鍵地位持續鞏固。",
+                diffSummary: "傳統大報重產業鏈上下游的實質數據與財務影響，與商管媒體的視角互補。",
+                tableData: [
+                    { type: "傳統實體大報", angle: "著重政策補助、大廠資本支出與供應鏈數據。" },
+                    { type: "主流電子媒體", angle: "聚焦市場話題性與對消費者的直接影響。" }
+                ],
+                exclusive: "獨家掌握供應鏈一手消息",
+                summaryText: "深入追蹤封裝大廠擴產時程，點出水電供應與在地化供應鏈韌性將是未來關鍵指標。"
+            },
+            commercial: {
+                name: "工商時報",
+                headline: "迎向 AI PC 換機潮，供應鏈 Q3 營收動能看旺",
+                analysis: "工商時報從總體經濟與資本市場角度出發，分析各大品牌廠在新品齊發下的備貨力道。",
+                diffSummary: "著重於總體經濟數據、法人動向與科技大廠財務表現。",
+                tableData: [
+                    { type: "獨立調查", angle: "探討產能擴張背後的勞動條件與環境成本。" },
+                    { type: "實體大報", angle: "側重數據、財務預測與產業大局。" }
+                ],
+                exclusive: "法人圈與宏觀市場共振",
+                summaryText: "結合外資券商對下半年出貨量的預估，點出關鍵零組件廠的營收成長契機。"
+            },
+            united: {
+                name: "聯合報",
+                headline: "缺工海嘯來襲，傳統製造業加速導入 AI 自動化",
+                analysis: "聯合報關注社會結構改變對產業帶來的深遠影響，探討從人工導向轉型為智慧自動化生產線的趨勢。",
+                diffSummary: "民生與社會觀察角度較強，關注產業轉型對基層勞動結構的衝擊。",
+                tableData: [
+                    { type: "財經大報", angle: "聚焦產值提升與資本投資報酬率。" },
+                    { type: "商管媒體", angle: "探討組織文化重塑與內部培訓策略。" }
+                ],
+                exclusive: "社會結構與產業轉型焦點",
+                summaryText: "透過實際案例，展現中小企業在數位轉型過程中的陣痛期與解方。"
+            },
+            freedom: {
+                name: "自由時報",
+                headline: "台灣科技實力再獲肯定，全球半導體自主防線成形",
+                analysis: "自由時報剖析國際大廠持續加碼投資台灣的戰略意義，強調台灣在全球供應鏈中的核心地位。",
+                diffSummary: "切入角度偏向地緣政治、國際供應鏈安全與國家戰略高度。",
+                tableData: [
+                    { type: "財經大報", angle: "側重個別企業的訂單與營收成長。" },
+                    { type: "電子媒體", angle: "著重即時新聞與話題延展。" }
+                ],
+                exclusive: "地緣政治與全球戰略視角",
+                summaryText: "分析國際大廠技術研發中心根留台灣的具體成效。"
+            },
+            china: {
+                name: "中國時報",
+                headline: "兩岸與國際經貿變局下，傳統出口產業面臨轉型關卡",
+                analysis: "中國時報關注區域經貿協定與出口導向產業面臨的成本壓力，探討企業如何開拓新市場。",
+                diffSummary: "聚焦於宏觀貿易政策、出口競爭力與區域經貿情勢。",
+                tableData: [
+                    { type: "商業周刊", angle: "聚焦個別企業創新與品牌突圍故事。" },
+                    { type: "實體大報", angle: "側重整體貿易數據與政策影響評估。" }
+                ],
+                exclusive: "區域經貿與風險管理剖析",
+                summaryText: "探討在全球供應鏈重組趨勢下，傳統出口產業面臨的關稅挑戰。"
+            },
+            ettoday: {
+                name: "ETtoday新聞雲",
+                headline: "話題科技新品齊發！消費者與市場反應全解析",
+                analysis: "ETtoday 發揮網路原生媒體的速度與社群擴散力，第一時間捕捉市場與消費者的熱議話題。",
+                diffSummary: "注重社群共鳴、即時性與大眾讀者容易理解的通俗切入點。",
+                tableData: [
+                    { type: "商管媒體", angle: "偏重商業邏輯與長期產業趨勢。" },
+                    { type: "實體大報", angle: "語氣較為嚴肅、具官方權威感。" }
+                ],
+                exclusive: "社群熱度與即時話題擴散",
+                summaryText: "從網路聲量與消費者回饋出發，全面盤點新產品上市後的市場接受度。"
+            },
+            tvbs: {
+                name: "TVBS新聞網",
+                headline: "迎戰通膨與升息尾聲，民眾理財與資產配置新策略",
+                analysis: "TVBS 結合新聞專題與專家訪談，探討大環境變動下一般民眾與上班族該如何調整資產配置。",
+                diffSummary: "兼顧宏觀經濟與小市民的實際生活痛點，親和力與實用性高。",
+                tableData: [
+                    { type: "經濟日報", angle: "聚焦法人機構與企業大額投資。" },
+                    { type: "數位時代", angle: "偏重科技創新與數位工具應用。" }
+                ],
+                exclusive: "大眾理財與民生經濟共鳴",
+                summaryText: "深入淺出解析升息循環對房貸族與各類投資工具的實質影響。"
+            },
+            cti: {
+                name: "中天新聞網",
+                headline: "民生經濟壓力未減，各界呼籲推動更有感實質政策",
+                analysis: "中天新聞網聚焦於民眾切身感受的物價與民生議題，報導各界對政府財經政策的建言。",
+                diffSummary: "立場鮮明、高度關注基層民眾對經濟政策的真實反應與民意流向。",
+                tableData: [
+                    { type: "工商時報", angle: "偏重企業營收與總體經濟數據表現。" },
+                    { type: "哈佛商業評論", angle: "探討高階管理科學與領導力理論。" }
+                ],
+                exclusive: "基層民意與政策監督視角",
+                summaryText: "透過街頭採訪與民意代表發聲，反映當前一般民眾面對物價波動的真實壓力。"
+            },
+            digitimes: {
+                name: "數位時代",
+                headline: "生成式 AI 落地企業端，資安與算力成本成最大考驗",
+                analysis: "數位時代深入探討企業在導入生成式 AI 時面臨的實際痛點，包含資料隱私與投資報酬率（ROI）。",
+                diffSummary: "聚焦於數位科技創新、新創生態圈與企業內部的實務轉型經驗。",
+                tableData: [
+                    { type: "傳統大報", angle: "偏向巨型企業的營收與產能擴張。" },
+                    { type: "主流電視", angle: "側重短期股價與大眾焦點話題。" }
+                ],
+                exclusive: "科技趨勢與企業數位轉型實務",
+                summaryText: "剖析多家企業導入 AI 助理的成功與失敗案例，為管理者提供具體建議。"
+            },
+            manager: {
+                name: "經理人",
+                headline: "混合工作模式再進化，主管如何提升遠距團隊凝聚力？",
+                analysis: "經理人月刊從領導力與組織管理切入，探討在混合辦公成為常態的時代，管理者如何透過新型態工具維持協作。",
+                diffSummary: "專注於職場軟實力、主管領導學與個人職涯成長。",
+                tableData: [
+                    { type: "數位時代", angle: "偏重科技工具與數位轉型技術。" },
+                    { type: "經濟日報", angle: "聚焦巨觀產業與供應鏈變動。" }
+                ],
+                exclusive: "管理者領導學與組織心法",
+                summaryText: "提供具體的主管溝通心法與會議精簡技巧，協助團隊維持高效協作。"
+            },
+            futureweb: {
+                name: "未來商務",
+                headline: "無人化零售與 AI 推薦，如何徹底改寫消費者購物體驗？",
+                analysis: "未來商務探討零售科技的最新應用，包含 AI 視覺辨識智慧櫃位與全通路數據打通。",
+                diffSummary: "關注未來零售、MarTech 行銷科技與商業模式創新。",
+                tableData: [
+                    { type: "傳統大報", angle: "側重傳統製造與大宗出口貿易。" },
+                    { type: "經理人", angle: "偏重內部領導與團隊管理技巧。" }
+                ],
+                exclusive: "零售科技與消費模式創新",
+                summaryText: "分析先進零售科技的落地場景，探討虛實融合（O2O）的發展契機。"
+            },
+            hbr: {
+                name: "哈佛商業評論",
+                headline: "動盪時代的策略韌性：企業如何建立抗風險的商業模式",
+                analysis: "哈佛商業評論以全球頂尖管理學術研究為基礎，剖析企業在面對地緣政治與供應鏈斷鏈風險時的應對策略。",
+                diffSummary: "具備高度的學術理論基礎與全球頂尖企業的戰略高度。",
+                tableData: [
+                    { type: "電子媒體", angle: "偏向即時、短平快的新聞動態。" },
+                    { type: "數位時代", angle: "聚焦當前熱門的科技工具與新創應用。" }
+                ],
+                exclusive: "全球管理大師與前瞻商業洞察",
+                summaryText: "透過經典管理框架，深入探討領導者如何在充滿不確定性的環境中做出關鍵抉擇。"
+            },
+            cw: {
+                name: "天下雜誌",
+                headline: "台灣產業的下一個護國群山在哪裡？新世代成長引擎解密",
+                analysis: "天下雜誌以深度專題報導見長，全面檢視台灣在半導體之外的生醫、綠能與精密機械潛力產業。",
+                diffSummary: "兼具宏觀台灣社會發展脈絡與深度的企業長篇調查報導。",
+                tableData: [
+                    { type: "日報媒體", angle: "受限於版面，多為即時與分段報導。" },
+                    { type: "財經短訊", angle: "聚焦短線消息與股價表現。" }
+                ],
+                exclusive: "長篇深度專題與台灣社會脈動",
+                summaryText: "透過歷時數月的田野調查與數據分析，勾勒出台灣未來十年產業發展的機遇。"
+            },
+            bwnet: {
+                name: "商業周刊",
+                headline: "隱形冠軍的突圍戰：中小企業如何在紅海中找到高毛利定位",
+                analysis: "商業周刊聚焦於台灣中小企業的真實生存故事，報導各行各業的隱形冠軍如何透過技術突圍。",
+                diffSummary: "擅長以生動的企業人物故事，闡述深刻的商業策略與經營哲學。",
+                tableData: [
+                    { type: "哈佛商業評論", angle: "偏重學術框架與大型跨國企業策略。" },
+                    { type: "日報", angle: "著重財經數據與即時產經動態。" }
+                ],
+                exclusive: "台灣在地企業家故事與策略拆解",
+                summaryText: "深入中小企業第一線，揭露經營者在關鍵轉折點的決策思維。"
+            },
+            twreporter: {
+                name: "報導者",
+                headline: "看見轉型背後的代價：勞動環境、權益與公共利益的深度追蹤",
+                analysis: "報導者秉持非營利獨立調查精神，透過長時間田野調查與數據爬梳，揭露重大發展背後的勞動與環境議題。",
+                diffSummary: "以深度人權、公共利益與社會結構調查為主，跳脫商業與廣告利益考量。",
+                tableData: [
+                    { type: "主流財經媒體", angle: "多聚焦於企業營收、股價與經濟產值。" },
+                    { type: "電子媒體", angle: "著重即時性與大眾娛樂或焦點話題。" }
+                ],
+                exclusive: "無商業干擾的獨立調查與公共監督",
+                summaryText: "透過深度訪談與長期追蹤報導，帶領讀者看見主流經濟新聞背後的系統性問題。"
+            }
+        };
 
         async function loadNewsData() {
             try {
                 const response = await fetch('news.json');
-                newsDatabase = await response.json();
-                // 成功載入後，預設載入第一個類別
-                switchCategory('paper');
+                if (response.ok) {
+                    const jsonData = await response.json();
+                    if (jsonData && Object.keys(jsonData).length > 0) {
+                        newsDatabase = jsonData; // 如果成功讀到遠端/自動更新的 JSON，就替換
+                    }
+                }
             } catch (error) {
-                console.error('無法載入最新新聞資料：', error);
-                document.getElementById('resultCard').innerHTML = '<p style="color: red; text-align: center;">載入 news.json 資料失敗，請確認檔案是否存在。</p>';
+                console.log('使用內嵌預設資料運作');
             }
+            // 無論是否成功讀取外在檔案，都初始化畫面
+            switchCategory('paper');
         }
 
         function switchCategory(catKey) {
@@ -494,7 +679,7 @@
             }
         }
 
-        // 頁面初始化時，執行非同步讀取外部 JSON
+        // 頁面初始化時，嘗試讀取外部 JSON，若無法讀取則自動使用內嵌備份
         loadNewsData();
     </script>
 
