@@ -324,7 +324,7 @@
         </header>
 
         <div class="content">
-            <div class="section-title"></div>
+            <div class="section-title">第一步：選擇媒體類別</div>
             
             <!-- 四大類頁籤列：手機上一列並可滑動，電腦版自動變兩列 -->
             <div class="category-scroll-container">
@@ -336,7 +336,7 @@
 
             <!-- 第二層：下拉式選單 -->
             <div class="dropdown-box">
-                <label for="mediaDropdown"></label>
+                <label for="mediaDropdown">第二步：選擇具體媒體來源</label>
                 <select id="mediaDropdown" class="media-select" onchange="onDropdownChange(this.value)">
                     <!-- 動態載入選項 -->
                 </select>
@@ -368,7 +368,7 @@
             electronic: {
                 name: "主流電子媒體",
                 options: [
-                    { id: "ustv", label: "非凡新聞" },
+                    /* 已移除非凡新聞 (ustv) */
                     { id: "ettoday", label: "ETtoday新聞雲" },
                     { id: "tvbs", label: "TVBS新聞網" },
                     { id: "cti", label: "中天新聞網" }
