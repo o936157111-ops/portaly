@@ -70,27 +70,35 @@
             letter-spacing: 0.5px;
         }
 
-        /* 調整四大類頁籤列：在手機上可滑動，在電腦版或寬螢幕上自動均分換行，避免被切掉 */
+        /* 調整四大類頁籤列：強制在同一列上，並允許水平滑動 */
         .category-scroll-container {
             display: flex;
-            flex-wrap: wrap; /* 允許在空間不夠時自動換行，或在電腦版完美排列 */
-            gap: 6px;
+            flex-wrap: nowrap; /* 強制不換行，全部擠在同一列 */
+            gap: 8px;
             margin-bottom: 12px;
+            overflow-x: auto; /* 允許水平捲動 */
+            -webkit-overflow-scrolling: touch; /* 讓手機滑動更流暢 */
+            padding-bottom: 4px; /* 避免捲軸貼太近 */
+        }
+
+        /* 隱藏捲軸但保持滑動功能 */
+        .category-scroll-container::-webkit-scrollbar {
+            display: none;
         }
 
         .category-btn {
-            flex: 1 1 calc(50% - 6px); /* 預設在手機上每行排兩個，平分空間，絕對不會被切掉 */
-            padding: 8px 10px;
+            flex: 0 0 auto; /* 固定大小，不會自動縮小，確保文字不變形 */
+            padding: 8px 14px;
             border: 1px solid var(--border-color);
             background-color: var(--tab-bg);
-            border-radius: 8px; /* 改成微圓角矩形，在多行排版時更整齊 */
+            border-radius: 8px;
             font-size: 0.78rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
             color: #475569;
             text-align: center;
-            white-space: nowrap;
+            white-space: nowrap; /* 文字不換行 */
         }
 
         .category-btn:hover {
@@ -305,7 +313,7 @@
         <div class="content">
             <div class="section-title">第一步：選擇媒體類別</div>
             
-            <!-- 調整後的頁籤列：改為網格/自動換行排版，在電腦與手機上皆完美呈現 -->
+            <!-- 調整後的頁籤列：在同一列上，手機可左右滑動瀏覽 -->
             <div class="category-scroll-container">
                 <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
                 <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
