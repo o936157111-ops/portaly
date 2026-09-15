@@ -70,24 +70,24 @@
             letter-spacing: 0.5px;
         }
 
-        /* 調整四大類頁籤列：強制在同一列上，並允許水平滑動 */
+        /* 預設（手機版）：四個頁籤在同一列，可左右滑動 */
         .category-scroll-container {
             display: flex;
-            flex-wrap: nowrap; /* 強制不換行，全部擠在同一列 */
+            flex-wrap: nowrap; /* 強制不換行，擠在同一列 */
             gap: 8px;
             margin-bottom: 12px;
-            overflow-x: auto; /* 允許水平捲動 */
-            -webkit-overflow-scrolling: touch; /* 讓手機滑動更流暢 */
-            padding-bottom: 4px; /* 避免捲軸貼太近 */
+            overflow-x: auto; /* 允許左右滑動 */
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
         }
 
-        /* 隱藏捲軸但保持滑動功能 */
+        /* 隱藏手機版滑動捲軸但保持功能 */
         .category-scroll-container::-webkit-scrollbar {
             display: none;
         }
 
         .category-btn {
-            flex: 0 0 auto; /* 固定大小，不會自動縮小，確保文字不變形 */
+            flex: 0 0 auto; /* 手機版：按鈕固定寬度不縮形，可橫向捲動 */
             padding: 8px 14px;
             border: 1px solid var(--border-color);
             background-color: var(--tab-bg);
@@ -98,7 +98,20 @@
             transition: all 0.2s;
             color: #475569;
             text-align: center;
-            white-space: nowrap; /* 文字不換行 */
+            white-space: nowrap;
+        }
+
+        /* 電腦版或較寬螢幕（>= 480px）：改為兩列平均排列，不需左右滑動 */
+        @media (min-width: 480px) {
+            .category-scroll-container {
+                flex-wrap: wrap; /* 允許自動換行成兩列 */
+                overflow-x: visible; /* 取消水平滑動 */
+            }
+
+            .category-btn {
+                flex: 1 1 calc(50% - 4px); /* 每行放兩個，平分寬度 */
+                white-space: normal; /* 允許文字適度換行 */
+            }
         }
 
         .category-btn:hover {
@@ -313,7 +326,7 @@
         <div class="content">
             <div class="section-title">第一步：選擇媒體類別</div>
             
-            <!-- 調整後的頁籤列：在同一列上，手機可左右滑動瀏覽 -->
+            <!-- 四大類頁籤列：手機上一列並可滑動，電腦版自動變兩列 -->
             <div class="category-scroll-container">
                 <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
                 <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
