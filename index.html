@@ -29,7 +29,7 @@
         .container { max-width: 440px; width: 100%; margin: 0 auto; }
         .card-container { background-color: #FCFCFF; border-radius: 24px; border: 1px solid #F0F0F0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); overflow: hidden; padding: 40px 20px; width: 100%; position: relative; }
         
-        /* 頂部列：小 LOGO 與即時資訊並排 */
+        /* 頂部列：小 LOGO 與即時資訊並排，高度與小 Logo 一致 */
         .top-header-row {
             display: flex;
             align-items: center;
@@ -42,34 +42,60 @@
 
         .logo-avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); object-fit: cover; display: none; flex-shrink: 0; }
 
-        /* 晨間即時資訊列樣式（置於右側，無底色無邊框，強制不換行） */
+        /* 晨間即時資訊列樣式（上下兩列排版，高度對齊 Logo） */
         .morning-widget {
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            height: 45px; /* 與小 Logo 高度一致 */
             background: transparent;
             border: none;
-            padding: 0 0 0 8px;
-            font-size: 0.8em; /* 稍微縮小手機上的整體字體以確保一列塞下 */
+            padding: 0 0 0 10px;
             color: #444;
-            white-space: nowrap; /* 強制所有內容不換行，避免被擠到第二列 */
         }
+        
+        /* 左側：上排天氣與氣溫，下排定位位置 */
         .widget-left { 
             display: flex; 
-            align-items: center; 
-            gap: 4px; /* 縮小圖示與文字間距 */
-            font-weight: 650; 
-            overflow: hidden;
-            text-overflow: ellipsis; 
+            flex-direction: column; 
+            justify-content: center;
+            gap: 2px; 
         }
+        .widget-left-top {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85em;
+            font-weight: 650;
+        }
+        .widget-left-bottom {
+            font-size: 0.75em;
+            color: #666;
+            font-weight: normal;
+        }
+
+        /* 右側：上排日曆圖示+日期，下排目前時刻 */
         .widget-right { 
-            text-align: right; 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
             color: #666; 
             font-family: monospace; 
-            font-size: 0.85em; 
-            flex-shrink: 0; /* 確保時間絕對不會被擠壓變形 */
-            margin-left: 6px;
+        }
+        .widget-right-top {
+            font-size: 0.75em;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .widget-right-bottom {
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #333;
         }
 
         .logo-wrapper { position: relative; min-height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 95%; margin: 0 auto 25px auto; }
@@ -262,17 +288,27 @@
 
 <div class="container">
     <div class="card-container">
-        <!-- 頂部列：小 LOGO 與晨間即時資訊並排 -->
+        <!-- 頂部列：小 LOGO 與即時資訊並排 -->
         <div class="top-header-row">
             <img id="logo-avatar" src="https://myezlife.com/eric-logo.gif" alt="Avatar" class="logo-avatar">
             
             <div class="morning-widget">
+                <!-- 左方：上排天氣圖與氣溫，下排定位位置 -->
                 <div class="widget-left">
-                    <span id="weather-icon" style="font-size: 1.1em;">☀️</span>
-                    <span id="weather-temp">--°C</span>
-                    <span id="location-name" style="color: #666; font-weight: normal; font-size: 0.9em; margin-left: 2px;">(定位中)</span>
+                    <div class="widget-left-top">
+                        <span id="weather-icon" style="font-size: 1.1em;">☀️</span>
+                        <span id="weather-temp">--°C</span>
+                    </div>
+                    <div class="widget-left-bottom" id="location-name">(定位中)</div>
                 </div>
-                <div class="widget-right" id="live-clock">--/-- --:--:--</div>
+                <!-- 右方：上排日曆圖示與日期，下排目前時刻 -->
+                <div class="widget-right">
+                    <div class="widget-right-top">
+                        <span>📅</span>
+                        <span id="live-date">--/--</span>
+                    </div>
+                    <div class="widget-right-bottom" id="live-time">--:--:--</div>
+                </div>
             </div>
         </div>
 
@@ -427,13 +463,15 @@
 </div>
 
 <script>
-// 即時時間與日期更新
+// 即時時間與日期更新（配合上下兩列排版）
 function updateClockAndDate() {
     const now = new Date();
     const options = { month: 'numeric', day: 'numeric', weekday: 'short' };
     const dateStr = now.toLocaleDateString('zh-TW', options);
     const timeStr = now.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    document.getElementById('live-clock').innerText = `${dateStr} ${timeStr}`;
+    
+    document.getElementById('live-date').innerText = dateStr;
+    document.getElementById('live-time').innerText = timeStr;
 }
 setInterval(updateClockAndDate, 1000);
 updateClockAndDate();
