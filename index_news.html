@@ -70,7 +70,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* 頁籤列：自動換行與平分，電腦與手機皆不被切掉 */
+        /* 頁籤列：自動換行排版，在電腦與手機上皆完美呈現 */
         .category-scroll-container {
             display: flex;
             flex-wrap: wrap;
@@ -80,11 +80,11 @@
 
         .category-btn {
             flex: 1 1 calc(50% - 6px);
-            padding: 8px 10px;
+            padding: 9px 10px;
             border: 1px solid var(--border-color);
             background-color: var(--tab-bg);
             border-radius: 8px;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
@@ -305,7 +305,7 @@
         <div class="content">
             <div class="section-title">第一步：選擇媒體類別</div>
             
-            <!-- 頁籤列 -->
+            <!-- 四大類頁籤列 -->
             <div class="category-scroll-container">
                 <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
                 <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
@@ -347,7 +347,6 @@
             electronic: {
                 name: "主流電子媒體",
                 options: [
-                    { id: "ustv", label: "非凡新聞" },
                     { id: "ettoday", label: "ETtoday新聞雲" },
                     { id: "tvbs", label: "TVBS新聞網" },
                     { id: "cti", label: "中天新聞網" }
@@ -372,6 +371,7 @@
             }
         };
 
+        // 宣告全域變數，資料由外部 news.json 動態載入
         let newsDatabase = {};
 
         async function loadNewsData() {
@@ -400,7 +400,6 @@
                 dropdown.appendChild(optionEl);
             });
 
-            // 【已修正】這裡補回了切換類別時，自動渲染該類別第一個選項的邏輯
             if (catData.options.length > 0) {
                 renderMedia(catData.options[0].id);
             }
@@ -426,7 +425,6 @@
 
             const card = document.getElementById('resultCard');
             card.innerHTML = `
-                .headline-box { ... } <!-- 略 -->
                 <div class="headline-box">
                     <span>${data.name} 頭條焦點</span>
                     <h3>${data.headline}</h3>
@@ -453,6 +451,7 @@
                     </table>
                 </div>
 
+                <!-- 點閱式摘要與引文區塊 -->
                 <div class="insight-section" style="margin-bottom: 0;">
                     <strong>⭐ 獨家與市場共振判定：</strong>
                     <div style="margin-top: 6px; margin-bottom: 10px;"><span class="tag">${data.exclusive}</span></div>
@@ -487,6 +486,7 @@
             }
         }
 
+        // 頁面載入時執行非同步讀取外部 news.json
         loadNewsData();
     </script>
 
