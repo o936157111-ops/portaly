@@ -70,27 +70,33 @@
             letter-spacing: 0.5px;
         }
 
-        /* 頁籤列：自動換行排版，在電腦與手機上皆完美呈現 */
+        /* 第一層：可左右滑動的四大類頁籤列 */
         .category-scroll-container {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 6px;
             margin-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .category-scroll-container::-webkit-scrollbar {
+            display: none;
         }
 
         .category-btn {
-            flex: 1 1 calc(50% - 6px);
-            padding: 9px 10px;
+            flex: 0 0 auto;
+            padding: 9px 14px;
             border: 1px solid var(--border-color);
             background-color: var(--tab-bg);
-            border-radius: 8px;
-            font-size: 0.8rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
             color: #475569;
             text-align: center;
-            white-space: nowrap;
         }
 
         .category-btn:hover {
@@ -303,9 +309,9 @@
         </header>
 
         <div class="content">
-            <div class="section-title">第一步：選擇媒體類別</div>
+            <div class="section-title">第一步：左右滑動選擇媒體類別</div>
             
-            <!-- 四大類頁籤列 -->
+            <!-- 第一層：可左右滑動的四大類頁籤列 -->
             <div class="category-scroll-container">
                 <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
                 <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
@@ -371,13 +377,14 @@
             }
         };
 
-        // 宣告全域變數，資料由外部 news.json 動態載入
+        // 宣告全域變數，資料改由外部 news.json 載入
         let newsDatabase = {};
 
         async function loadNewsData() {
             try {
                 const response = await fetch('news.json');
                 newsDatabase = await response.json();
+                // 成功載入後，預設載入第一個類別
                 switchCategory('paper');
             } catch (error) {
                 console.error('無法載入最新新聞資料：', error);
@@ -474,6 +481,7 @@
             `;
         }
 
+        // 控制底部摘要區塊的展開與收合
         function toggleSummary() {
             const box = document.getElementById('summaryBox');
             const label = document.getElementById('summaryToggleLabel');
@@ -486,7 +494,7 @@
             }
         }
 
-        // 頁面載入時執行非同步讀取外部 news.json
+        // 頁面初始化時，執行非同步讀取外部 JSON
         loadNewsData();
     </script>
 
