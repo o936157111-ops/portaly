@@ -33,7 +33,9 @@
         .logo-link { display: none; width: 100%; transition: transform 0.3s ease; }
         .logo-link:hover { transform: scale(1.02); }
         .logo-img { width: 100%; height: auto; border-radius: 12px; display: block; }
-        .logo-avatar { position: absolute; top: -24px; left: -18px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
+        
+        /* 修正小 LOGO 靠左超出邊界的問題：將負值改為 0 或配合內距 */
+        .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
         /* 即時資訊區塊：無底色、無邊框，置於大 LOGO 下方 */
         .realtime-info {
@@ -449,9 +451,6 @@ function fetchLocationAndWeather() {
                     else iconEl.innerText = "☁️";
                 }
                 
-                // 逆向地理編碼取得大約行政區
-                const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=current&count=1&language=zh&format=json`);
-                // 為了簡化與確保穩定，若無精確名稱則顯示地區座標概況或預設位置
                 locationEl.innerText = "本地";
             } catch (e) {
                 locationEl.innerText = "台灣";
@@ -459,7 +458,6 @@ function fetchLocationAndWeather() {
                 iconEl.innerText = "⛅";
             }
         }, () => {
-            // 若拒絕定位或失敗的預設值
             locationEl.innerText = "台灣";
             tempEl.innerText = "26°C";
             iconEl.innerText = "⛅";
