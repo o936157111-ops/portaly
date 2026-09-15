@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 全媒體與深度商管洞察室</title>
+    <style>
+        :root {
+            --primary-color: #1e293b;
+            --accent-color: #2563eb;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --tag-bg: #e0f2fe;
+            --tag-text: #0369a1;
+            --border-color: #e2e8f0;
+            --tab-bg: #f8fafc;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            min-height: 100vh;
+            background-color: var(--card-bg);
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 18px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        header p {
+            margin: 4px 0 0 0;
+            font-size: 0.78rem;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 16px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #64748b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 第一層：可左右滑動的四大類頁籤列 */
+        .category-scroll-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .category-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-btn {
+            flex: 0 0 auto;
+            padding: 9px 14px;
+            border: 1px solid var(--border-color);
+            background-color: var(--tab-bg);
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #475569;
+            text-align: center;
+        }
+
+        .category-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .category-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+
+        /* 第二層：下拉式選單包裝區 */
+        .dropdown-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 14px;
+        }
+
+        .dropdown-box label {
+            display: block;
+            font-size: 0.78rem;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .media-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: white;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .media-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+
+        /* 結果展示卡片 */
+        .result-card {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .headline-box {
+            background-color: #f8fafc;
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .headline-box span {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .headline-box h3 {
+            margin: 0;
+            font-size: 1.02rem;
+            color: var(--primary-color);
+            line-height: 1.4;
+        }
+
+        .insight-section {
+            margin-bottom: 14px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .insight-section strong {
+            color: #0f172a;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.88rem;
+        }
+
+        .insight-section p {
+            margin: 0;
+            color: #475569;
+            background-color: #f8fafc;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.86rem;
+        }
+
+        /* 差異比較表格區 */
+        .diff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+            font-size: 0.8rem;
+        }
+
+        .diff-table th, .diff-table td {
+            border: 1px solid var(--border-color);
+            padding: 7px;
+            text-align: left;
+        }
+
+        .diff-table th {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* 底部點擊展開區專屬樣式 (Accordion) */
+        .expandable-summary-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .expandable-header {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            background-color: #f1f5f9;
+        }
+
+        .expandable-header:hover {
+            background-color: #e2e8f0;
+        }
+
+        .expandable-title-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .toggle-hint-full {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .arrow-icon-full {
+            transition: transform 0.3s ease;
+        }
+
+        .expandable-summary-box.expanded .arrow-icon-full {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, padding 0.3s ease-in-out;
+            padding: 0 14px;
+            background-color: #ffffff;
+            font-size: 0.86rem;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .expandable-summary-box.expanded .expandable-content-body {
+            max-height: 600px;
+            padding: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>📰 全媒體與深度商管洞察室</h1>
+            <p>滑動式分類頁籤與焦點摘要檢視體驗</p>
+        </header>
+
+        <div class="content">
+            <div class="section-title">第一步：左右滑動選擇媒體類別</div>
+            
+            <!-- 第一層：可左右滑動的四大類頁籤列 -->
+            <div class="category-scroll-container">
+                <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
+                <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
+                <button class="category-btn" onclick="switchCategory('business')" id="cat-business">📈 商管與科技媒體</button>
+                <button class="category-btn" onclick="switchCategory('investigation')" id="cat-investigation">🔍 深度獨立調查</button>
+            </div>
+
+            <!-- 第二層：下拉式選單 -->
+            <div class="dropdown-box">
+                <label for="mediaDropdown">第二步：選擇具體媒體來源</label>
+                <select id="mediaDropdown" class="media-select" onchange="onDropdownChange(this.value)">
+                    <!-- 動態載入選項 -->
+                </select>
+            </div>
+
+            <!-- 分析結果顯示區 -->
+            <div class="result-card" id="resultCard">
+                <!-- 動態載入內容 -->
+            </div>
+        </div>
+
+        <footer>
+            AI Agent 互動網頁概念 © 2026
+        </footer>
+    </div>
+
+    <script>
+        const categories = {
+            paper: {
+                name: "傳統實體大報",
+                options: [
+                    { id: "economic", label: "經濟日報" },
+                    { id: "commercial", label: "工商時報" },
+                    { id: "united", label: "聯合報" },
+                    { id: "freedom", label: "自由時報" },
+                    { id: "china", label: "中國時報" }
+                ]
+            },
+            electronic: {
+                name: "主流電子媒體",
+                options: [
+                    { id: "ettoday", label: "ETtoday新聞雲" },
+                    { id: "tvbs", label: "TVBS新聞網" },
+                    { id: "cti", label: "中天新聞網" }
+                ]
+            },
+            business: {
+                name: "商管與科技媒體",
+                options: [
+                    { id: "digitimes", label: "數位時代" },
+                    { id: "manager", label: "經理人" },
+                    { id: "futureweb", label: "未來商務" },
+                    { id: "hbr", label: "哈佛商業評論" },
+                    { id: "cw", label: "天下雜誌" },
+                    { id: "bwnet", label: "商業周刊" }
+                ]
+            },
+            investigation: {
+                name: "深度獨立調查",
+                options: [
+                    { id: "twreporter", label: "報導者" }
+                ]
+            }
+        };
+
+        // 宣告全域變數，資料改由外部 news.json 載入
+        let newsDatabase = {};
+
+        async function loadNewsData() {
+            try {
+                const response = await fetch('news.json');
+                newsDatabase = await response.json();
+                // 成功載入後，預設載入第一個類別
+                switchCategory('paper');
+            } catch (error) {
+                console.error('無法載入最新新聞資料：', error);
+                document.getElementById('resultCard').innerHTML = '<p style="color: red; text-align: center;">載入 news.json 資料失敗，請確認檔案是否存在。</p>';
+            }
+        }
+
+        function switchCategory(catKey) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('cat-' + catKey).classList.add('active');
+
+            const dropdown = document.getElementById('mediaDropdown');
+            dropdown.innerHTML = '';
+
+            const catData = categories[catKey];
+            catData.options.forEach(opt => {
+                const optionEl = document.createElement('option');
+                optionEl.value = opt.id;
+                optionEl.textContent = opt.label;
+                dropdown.appendChild(optionEl);
+            });
+
+            if (catData.options.length > 0) {
+                renderMedia(catData.options[0].id);
+            }
+        }
+
+        function onDropdownChange(mediaId) {
+            renderMedia(mediaId);
+        }
+
+        function renderMedia(mediaId) {
+            const data = newsDatabase[mediaId];
+            if (!data) return;
+
+            let tableHtml = '';
+            data.tableData.forEach(item => {
+                tableHtml += `
+                    <tr>
+                        <td><strong>${item.type}</strong></td>
+                        <td>${item.angle}</td>
+                    </tr>
+                `;
+            });
+
+            const card = document.getElementById('resultCard');
+            card.innerHTML = `
+                <div class="headline-box">
+                    <span>${data.name} 頭條焦點</span>
+                    <h3>${data.headline}</h3>
+                </div>
+                
+                <div class="insight-section">
+                    <strong>🧠 頭條內容深度解析：</strong>
+                    <p>${data.analysis}</p>
+                </div>
+
+                <div class="insight-section">
+                    <strong>⚖️ 跨媒體與商管視角差異：</strong>
+                    <p style="margin-bottom: 8px;">${data.diffSummary}</p>
+                    <table class="diff-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;">媒體類型</th>
+                                <th>切入角度與盲點差異</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableHtml}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 點閱式摘要與引文區塊 -->
+                <div class="insight-section" style="margin-bottom: 0;">
+                    <strong>⭐ 獨家與市場共振判定：</strong>
+                    <div style="margin-top: 6px; margin-bottom: 10px;"><span class="tag">${data.exclusive}</span></div>
+                    
+                    <div class="expandable-summary-box" id="summaryBox">
+                        <div class="expandable-header" onclick="toggleSummary()">
+                            <div class="expandable-title-area">
+                                <span>📄 點擊檢視焦點摘要與報導引文</span>
+                            </div>
+                            <div class="toggle-hint-full">
+                                <span id="summaryToggleLabel">展開摘要</span>
+                                <span class="arrow-icon-full">▼</span>
+                            </div>
+                        </div>
+                        <div class="expandable-content-body" id="summaryBody">
+                            <p style="margin: 0;">${data.summaryText}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 控制底部摘要區塊的展開與收合
+        function toggleSummary() {
+            const box = document.getElementById('summaryBox');
+            const label = document.getElementById('summaryToggleLabel');
+            
+            const isExpanded = box.classList.toggle('expanded');
+            if (isExpanded) {
+                label.textContent = "收合摘要";
+            } else {
+                label.textContent = "展開摘要";
+            }
+        }
+
+        // 頁面初始化時，執行非同步讀取外部 JSON
+        loadNewsData();
+    </script>
+
+</body>
+</html>
