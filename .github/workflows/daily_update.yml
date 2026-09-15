@@ -1,19 +1,36 @@
-import json
-import os
-from google import genai
+name: Daily News Auto Update
 
-# 使用 GitHub Secrets 帶入你的 Gemini API Key
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+on:
+  schedule:
+    - cron: '0 23 * * *'  # 每天世界標準時間 23:00 執行（台灣時間早上 7 點）
+  workflow_dispatch:      # 允許你隨時手動在 GitHub 點擊按鈕觸發
 
-def generate_daily_news():
-    # 這裡可以加入你讓 AI 聯網抓取新聞或產生當日各媒體頭條的邏輯
-    # 範例：利用 Gemini 產生結構化分析，並更新到 newsDatabase 格式中
-    prompt = "請針對今日台灣財經與商管媒體，產生 JSON 格式的頭條與跨媒體視角分析..."
-    
-    # 假設我們透過 Gemini 取得更新後的字典資料
-    # response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
-    
-    print("AI 自動化更新腳本執行中...")
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 授權讓 Action 可以自動 push 程式碼回倉庫
 
-if __name__ == "__main__":
-    generate_daily_news()
+    steps:
+      - name: 取得程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Python 環境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 安裝相依套件
+        run: pip install google-genai
+
+      - name: 執行更新腳本
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python update_script.py
+
+      - name: 自動提交並推送變更回 GitHub
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "bot@github.com"
+          git add news.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: 每日自動更新最新新聞摘要 [skip ci]" && git push)
