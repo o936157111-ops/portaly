@@ -70,33 +70,27 @@
             letter-spacing: 0.5px;
         }
 
-        /* 第一層：可左右滑動的四大類頁籤列 */
+        /* 調整四大類頁籤列：在手機上可滑動，在電腦版或寬螢幕上自動均分換行，避免被切掉 */
         .category-scroll-container {
             display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 6px;
+            flex-wrap: wrap; /* 允許在空間不夠時自動換行，或在電腦版完美排列 */
+            gap: 6px;
             margin-bottom: 12px;
-            scrollbar-width: none;
-        }
-
-        .category-scroll-container::-webkit-scrollbar {
-            display: none;
         }
 
         .category-btn {
-            flex: 0 0 auto;
-            padding: 9px 14px;
+            flex: 1 1 calc(50% - 6px); /* 預設在手機上每行排兩個，平分空間，絕對不會被切掉 */
+            padding: 8px 10px;
             border: 1px solid var(--border-color);
             background-color: var(--tab-bg);
-            border-radius: 20px;
-            font-size: 0.82rem;
+            border-radius: 8px; /* 改成微圓角矩形，在多行排版時更整齊 */
+            font-size: 0.78rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
             color: #475569;
             text-align: center;
+            white-space: nowrap;
         }
 
         .category-btn:hover {
@@ -309,9 +303,9 @@
         </header>
 
         <div class="content">
-            <div class="section-title">第一步：左右滑動選擇媒體類別</div>
+            <div class="section-title">第一步：選擇媒體類別</div>
             
-            <!-- 第一層：可左右滑動的四大類頁籤列 -->
+            <!-- 調整後的頁籤列：改為網格/自動換行排版，在電腦與手機上皆完美呈現 -->
             <div class="category-scroll-container">
                 <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
                 <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
@@ -351,14 +345,14 @@
                 ]
             },
             electronic: {
-    name: "主流電子媒體",
-    options: [
-        { id: "ustv", label: "非凡新聞" },      // <--- 在這裡加上非凡新聞
-        { id: "ettoday", label: "ETtoday新聞雲" },
-        { id: "tvbs", label: "TVBS新聞網" },
-        { id: "cti", label: "中天新聞網" }
-    ]
-},
+                name: "主流電子媒體",
+                options: [
+                    { id: "ustv", label: "非凡新聞" },
+                    { id: "ettoday", label: "ETtoday新聞雲" },
+                    { id: "tvbs", label: "TVBS新聞網" },
+                    { id: "cti", label: "中天新聞網" }
+                ]
+            },
             business: {
                 name: "商管與科技媒體",
                 options: [
@@ -378,14 +372,13 @@
             }
         };
 
-        // 宣告全域變數，資料改由外部 news.json 載入
+        // 宣告全域變數，資料由外部 news.json 載入
         let newsDatabase = {};
 
         async function loadNewsData() {
             try {
                 const response = await fetch('news.json');
                 newsDatabase = await response.json();
-                // 成功載入後，預設載入第一個類別
                 switchCategory('paper');
             } catch (error) {
                 console.error('無法載入最新新聞資料：', error);
@@ -482,7 +475,6 @@
             `;
         }
 
-        // 控制底部摘要區塊的展開與收合
         function toggleSummary() {
             const box = document.getElementById('summaryBox');
             const label = document.getElementById('summaryToggleLabel');
@@ -495,7 +487,6 @@
             }
         }
 
-        // 頁面初始化時，執行非同步讀取外部 JSON
         loadNewsData();
     </script>
 
