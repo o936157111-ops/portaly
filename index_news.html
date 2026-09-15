@@ -70,20 +70,20 @@
             letter-spacing: 0.5px;
         }
 
-        /* 調整四大類頁籤列：在手機上可滑動，在電腦版或寬螢幕上自動均分換行，避免被切掉 */
+        /* 頁籤列：自動換行與平分，電腦與手機皆不被切掉 */
         .category-scroll-container {
             display: flex;
-            flex-wrap: wrap; /* 允許在空間不夠時自動換行，或在電腦版完美排列 */
+            flex-wrap: wrap;
             gap: 6px;
             margin-bottom: 12px;
         }
 
         .category-btn {
-            flex: 1 1 calc(50% - 6px); /* 預設在手機上每行排兩個，平分空間，絕對不會被切掉 */
+            flex: 1 1 calc(50% - 6px);
             padding: 8px 10px;
             border: 1px solid var(--border-color);
             background-color: var(--tab-bg);
-            border-radius: 8px; /* 改成微圓角矩形，在多行排版時更整齊 */
+            border-radius: 8px;
             font-size: 0.78rem;
             font-weight: bold;
             cursor: pointer;
@@ -305,7 +305,7 @@
         <div class="content">
             <div class="section-title">第一步：選擇媒體類別</div>
             
-            <!-- 調整後的頁籤列：改為網格/自動換行排版，在電腦與手機上皆完美呈現 -->
+            <!-- 頁籤列 -->
             <div class="category-scroll-container">
                 <button class="category-btn active" onclick="switchCategory('paper')" id="cat-paper">📌 傳統實體大報</button>
                 <button class="category-btn" onclick="switchCategory('electronic')" id="cat-electronic">⚡ 主流電子媒體</button>
@@ -372,7 +372,6 @@
             }
         };
 
-        // 宣告全域變數，資料由外部 news.json 載入
         let newsDatabase = {};
 
         async function loadNewsData() {
@@ -401,6 +400,7 @@
                 dropdown.appendChild(optionEl);
             });
 
+            // 【已修正】這裡補回了切換類別時，自動渲染該類別第一個選項的邏輯
             if (catData.options.length > 0) {
                 renderMedia(catData.options[0].id);
             }
@@ -426,6 +426,7 @@
 
             const card = document.getElementById('resultCard');
             card.innerHTML = `
+                .headline-box { ... } <!-- 略 -->
                 <div class="headline-box">
                     <span>${data.name} 頭條焦點</span>
                     <h3>${data.headline}</h3>
@@ -452,7 +453,6 @@
                     </table>
                 </div>
 
-                <!-- 點閱式摘要與引文區塊 -->
                 <div class="insight-section" style="margin-bottom: 0;">
                     <strong>⭐ 獨家與市場共振判定：</strong>
                     <div style="margin-top: 6px; margin-bottom: 10px;"><span class="tag">${data.exclusive}</span></div>
