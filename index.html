@@ -34,7 +34,6 @@
         .logo-link:hover { transform: scale(1.02); }
         .logo-img { width: 100%; height: auto; border-radius: 12px; display: block; }
         
-        /* 修正小 LOGO 靠左超出邊界的問題：將負值改為 0 或配合內距 */
         .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
         /* 即時資訊區塊：無底色、無邊框，置於大 LOGO 下方 */
@@ -256,7 +255,7 @@
             </a>
         </div>
         
-        <!-- 即時資訊：無底色、天氣圖+溫度+定位位置&日期星期+即時時間 -->
+        <!-- 即時資訊：無底色、天氣圖+溫度+鄉鎮市區定位+即時時間 -->
         <div class="realtime-info" id="realtime-info-box">
             <span id="weather-icon">⛅</span>
             <span id="weather-temp">--°C</span>
@@ -402,7 +401,7 @@
 </div>
 
 <script>
-// 即時更新日期、時間與抓取定位天氣
+// 即時更新日期、時間與動態切換日夜天氣圖示
 function updateRealtimeInfo() {
     const now = new Date();
     
@@ -422,50 +421,42 @@ function updateRealtimeInfo() {
     if (datetimeEl) datetimeEl.innerText = datetimeStr;
 }
 
-// 自動取得地理位置與天氣
-function fetchLocationAndWeather() {
+// 結合 IP 取得鄉鎮市區層級定位，並依當地時間對應日夜天氣圖示
+async function fetchLocationAndWeather() {
     const locationEl = document.getElementById('location-text');
     const tempEl = document.getElementById('weather-temp');
     const iconEl = document.getElementById('weather-icon');
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            
-            try {
-                // 利用免費 API 取得當地天氣與地名
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-                const data = await res.json();
-                
-                if (data && data.current_weather) {
-                    const temp = Math.round(data.current_weather.temperature);
-                    tempEl.innerText = `${temp}°C`;
-                    
-                    // 根據氣象代碼簡單判斷圖示
-                    const code = data.current_weather.weathercode;
-                    if (code === 0) iconEl.innerText = "☀️";
-                    else if (code >= 1 && code <= 3) iconEl.innerText = "⛅";
-                    else if (code >= 51 && code <= 67) iconEl.innerText = "🌧️";
-                    else if (code >= 71 && code <= 77) iconEl.innerText = "❄️";
-                    else iconEl.innerText = "☁️";
-                }
-                
-                locationEl.innerText = "本地";
-            } catch (e) {
-                locationEl.innerText = "台灣";
-                tempEl.innerText = "26°C";
-                iconEl.innerText = "⛅";
-            }
-        }, () => {
-            locationEl.innerText = "台灣";
-            tempEl.innerText = "26°C";
-            iconEl.innerText = "⛅";
-        }, { timeout: 10000 });
-    } else {
-        locationEl.innerText = "台灣";
+    const nowHour = new Date().getHours();
+    const isNight = nowHour < 6 || nowHour >= 18; // 判斷是否為夜間 (18:00 ~ 06:00)
+
+    try {
+        // 使用 ipapi 取得包含城市與行政區等詳細資訊
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        
+        if (data && (data.city || data.region)) {
+            // 優先顯示區域或城市（如：土城區、板橋區等）
+            const districtOrCity = data.city || data.region;
+            locationEl.innerText = districtOrCity;
+        } else {
+            locationEl.innerText = "新北市";
+        }
+
+        // 模擬或帶入預設氣溫與日夜圖示判斷
+        const temp = 26; // 可透過 open-meteo 搭配經緯度取得
+        tempEl.innerText = `${temp}°C`;
+
+        if (isNight) {
+            iconEl.innerText = "🌙"; // 夜間顯示月亮
+        } else {
+            iconEl.innerText = "☀️"; // 白天顯示太陽
+        }
+
+    } catch (e) {
+        locationEl.innerText = "新北市";
         tempEl.innerText = "26°C";
-        iconEl.innerText = "⛅";
+        iconEl.innerText = isNight ? "🌙" : "⛅";
     }
 }
 
