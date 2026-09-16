@@ -183,7 +183,6 @@
             margin-bottom: 12px;
         }
 
-        /* 方案二：安全智慧檢索按鈕 */
         .perspective-link {
             text-align: center;
             margin-top: auto;
@@ -237,12 +236,10 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 事件切換頁籤 -->
     <div class="event-tabs" id="eventTabsContainer">
         <div class="loading">正在載入事件按鈕...</div>
     </div>
 
-    <!-- 事件比對卡片呈現區 -->
     <div id="eventCardContainer">
         <div class="loading">正在載入多維度解析資料...</div>
     </div>
@@ -299,7 +296,7 @@
     function switchEvent(index) {
         currentEventIndex = index;
         
-        const buttons = document.querySelectorAll('.event-tab-btn');
+        const buttons = document.querySelectorAll('.event-tabs button');
         buttons.forEach((b, idx) => {
             b.classList.toggle('active', idx === index);
         });
@@ -316,8 +313,28 @@
         let perspectivesHtml = '';
         if (evt.perspectives && Array.isArray(evt.perspectives)) {
             evt.perspectives.forEach(p => {
-                // 💡 方案二核心：將事件標題與該視角的群組名稱組合成 Google 新聞關鍵字搜尋連結
-                const searchQuery = encodeURIComponent(`${evt.eventTitle} ${p.groupName}`);
+                // 💡 最佳化搜尋策略：
+                // 1. 抓取事件標題的前幾個字（避開過長導致 Google 找不到）
+                // 2. 將「社會民意視角」、「政策推動視角」等名稱轉化為更通用的搜尋詞彙（例如：民意、爭議、政策、立場），或者直接只用事件核心關鍵字搭配視角重點。
+                let cleanTitle = evt.eventTitle ? evt.eventTitle.replace(/[【】「」《》()（）]/g, '').trim() : '';
+                // 如果標題太長，取前 12 個字作為核心關鍵字，確保 Google 能精準命中
+                if (cleanTitle.length > 12) {
+                    cleanTitle = cleanTitle.substring(0, 12);
+                }
+
+                // 針對不同視角賦予精準、簡短的搜尋輔助關鍵字
+                let focusKeyword = "";
+                if (p.groupName.includes('民意') || p.groupName.includes('社會')) {
+                    focusKeyword = "民意 反彈 爭議";
+                } else if (p.groupName.includes('政策') || p.groupName.includes('官方') || p.groupName.includes('政府')) {
+                    focusKeyword = "政策 說明 立場";
+                } else if (p.groupName.includes('產經') || p.groupName.includes('產業') || p.groupName.includes('專家')) {
+                    focusKeyword = "影響 評估 分析";
+                } else {
+                    focusKeyword = p.groupName.replace('視角', '').trim();
+                }
+
+                const searchQuery = encodeURIComponent(`${cleanTitle} ${focusKeyword}`);
                 const searchUrl = `https://www.google.com/search?q=${searchQuery}&tbm=nws`;
 
                 perspectivesHtml += `
