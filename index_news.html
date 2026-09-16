@@ -51,7 +51,7 @@
             color: var(--text-secondary);
         }
 
-        /* 事件頁籤選單（已置中與自動換行） */
+        /* 事件頁籤選單（置中與自動換行） */
         .event-tabs {
             display: flex;
             justify-content: center;
@@ -221,9 +221,9 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 事件切換頁籤（已置中） -->
+    <!-- 事件切換頁籤（已置中，保證會動態建立所有事件按鈕） -->
     <div class="event-tabs" id="eventTabsContainer">
-        <!-- 動態產生事件按鈕 -->
+        <div class="loading">正在載入事件按鈕...</div>
     </div>
 
     <!-- 事件比對卡片呈現區 -->
@@ -257,6 +257,7 @@
             renderEventCard(0);
         } catch (error) {
             console.error(error);
+            document.getElementById('eventTabsContainer').innerHTML = '';
             document.getElementById('eventCardContainer').innerHTML = `
                 <div class="error-msg">
                     ⚠️ 尚無解析資料（news.json）或格式錯誤。<br>
@@ -270,11 +271,14 @@
         const tabsContainer = document.getElementById('eventTabsContainer');
         tabsContainer.innerHTML = '';
 
+        // 確保陣列中的每一個事件都會被建立成一顆按鈕
         eventsData.forEach((evt, index) => {
             const btn = document.createElement('button');
             btn.className = `event-tab-btn ${index === 0 ? 'active' : ''}`;
             const titleText = evt.eventTitle ? evt.eventTitle.substring(0, 10) + '...' : `焦點事件 ${index + 1}`;
             btn.textContent = `焦點 ${index + 1}：${titleText}`;
+            
+            // 綁定點擊事件
             btn.onclick = () => switchEvent(index);
             tabsContainer.appendChild(btn);
         });
@@ -283,6 +287,7 @@
     function switchEvent(index) {
         currentEventIndex = index;
         
+        // 更新按鈕 active 樣式
         const buttons = document.querySelectorAll('.event-tab-btn');
         buttons.forEach((b, idx) => {
             b.classList.toggle('active', idx === index);
