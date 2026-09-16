@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>焦點議題多元視角觀測站 | News Perspectives</title>
+    <title>焦點議題多元視角觀測站 | 新聞透鏡：多維度事件解析</title>
     <style>
         :root {
             --primary-color: #334155;
@@ -51,11 +51,11 @@
             color: var(--text-secondary);
         }
 
-        /* 事件頁籤選單 */
+        /* 事件頁籤選單（已置中與自動換行） */
         .event-tabs {
             display: flex;
-            justify-content: center; /* 讓按鈕在桌面版置中 */
-            flex-wrap: wrap;        /* 螢幕太小時自動換行，確保不會被切掉 */
+            justify-content: center;
+            flex-wrap: wrap;
             gap: 8px;
             padding-bottom: 8px;
             margin-bottom: 20px;
@@ -164,6 +164,32 @@
             padding: 8px;
             border-radius: 6px;
             margin-top: 6px;
+            margin-bottom: 12px;
+        }
+
+        /* 各自獨立的小按鈕 */
+        .perspective-link {
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .btn-mini-link {
+            display: inline-block;
+            background: #f1f5f9;
+            color: var(--accent-blue);
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-mini-link:hover {
+            background: var(--accent-blue);
+            color: #ffffff;
+            border-color: var(--accent-blue);
         }
 
         .neutral-conclusion {
@@ -173,27 +199,6 @@
             border-radius: 0 8px 8px 0;
             margin-bottom: 16px;
             font-size: 0.95rem;
-        }
-
-        .external-link-container {
-            text-align: center;
-            margin-top: 16px;
-        }
-
-        .btn-link {
-            display: inline-block;
-            background: var(--accent-blue);
-            color: #ffffff;
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-
-        .btn-link:hover {
-            background: #1d4ed8;
         }
 
         .loading, .error-msg {
@@ -216,14 +221,14 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 事件切換頁籤 -->
+    <!-- 事件切換頁籤（已置中） -->
     <div class="event-tabs" id="eventTabsContainer">
         <!-- 動態產生事件按鈕 -->
     </div>
 
     <!-- 事件比對卡片呈現區 -->
     <div id="eventCardContainer">
-        <div class="loading">正在載入重大事件多維解析資料...</div>
+        <div class="loading">正在載入多維度解析資料...</div>
     </div>
 </div>
 
@@ -285,8 +290,11 @@
                         <div>
                             <div class="perspective-header">${p.groupName}</div>
                             <div class="perspective-content"><strong>主要聚焦：</strong>${p.focus}</div>
+                            <div class="angle-note"><strong>💡 延伸視角：</strong>${p.blindspot}</div>
                         </div>
-                        <div class="angle-note"><strong>💡 延伸視角與側重點：</strong>${p.blindspot}</div>
+                        <div class="perspective-link">
+                            <a href="${p.url || '#'}" target="_blank" class="btn-mini-link">前往閱讀該視角報導 ↗</a>
+                        </div>
                     </div>
                 `;
             });
@@ -301,7 +309,7 @@
                     <div>${evt.coreFacts}</div>
                 </div>
 
-                <div class="section-title" style="margin-bottom: 10px;">🔍 多元媒體觀點與切入面比較</div>
+                <div class="section-title" style="margin-bottom: 10px;">🔍 多元視角觀點與切入面比較</div>
                 <div class="perspectives-grid">
                     ${perspectivesHtml}
                 </div>
@@ -309,10 +317,6 @@
                 <div class="neutral-conclusion">
                     <div class="section-title" style="color: var(--accent-green);">💡 綜合觀點與事件本質解析</div>
                     <div>${evt.neutralSummary}</div>
-                </div>
-
-                <div class="external-link-container">
-                    <a href="${evt.referenceUrl || '#'}" target="_blank" class="btn-link">前往閱讀代表性新聞 ↗</a>
                 </div>
             </div>
         `;
