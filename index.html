@@ -36,7 +36,7 @@
         
         .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
-        /* 即時資訊區塊：預設電腦版維持單行橫向，手機版改為上下兩列 */
+        /* 即時資訊區塊：預設電腦版單行，手機版拆為上下兩列且均置中 */
         .realtime-info {
             width: 100%;
             background: transparent;
@@ -52,18 +52,19 @@
             text-align: center;
         }
         
-        @media (max-width: 768px) {
-            .realtime-info {
-                flex-direction: column;
-                gap: 6px;
-            }
-        }
-
         .realtime-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .realtime-info {
+                flex-direction: column;
+                gap: 6px;
+                align-items: center;
+            }
         }
 
         /* 載入器樣式 */
@@ -264,14 +265,16 @@
             </a>
         </div>
         
-        <!-- 即時資訊：電腦版維持單行橫向，手機版自動切換為上下兩列 -->
+        <!-- 即時資訊區塊：手機版嚴格拆為兩列，皆置中對齊 -->
         <div class="realtime-info" id="realtime-info-box">
+            <!-- 第一列：天氣圖 + 溫度 + 定位位置 -->
             <div class="realtime-row">
                 <span id="weather-icon">⛅</span>
                 <span id="weather-temp">--°C</span>
-            </div>
-            <div class="realtime-row">
                 <span id="location-text">定位中...</span>
+            </div>
+            <!-- 第二列：日期及時間 -->
+            <div class="realtime-row">
                 <span id="datetime-text">--/-- (─) 00:00:00</span>
             </div>
         </div>
