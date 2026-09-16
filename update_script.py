@@ -6,7 +6,7 @@ from google.genai import types
 def generate_media_bias_analysis():
     client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-    # 定義嚴格的 JSON 結構規範，確保三個視角一定要有各自且安全的 url
+    # 定義結構，讓每個視角都有獨立的 searchQuery 欄位
     schema = {
         "type": "OBJECT",
         "properties": {
@@ -26,9 +26,9 @@ def generate_media_bias_analysis():
                                     "groupName": {"type": "STRING"},
                                     "focus": {"type": "STRING"},
                                     "blindspot": {"type": "STRING"},
-                                    "url": {"type": "STRING", "description": "該特定視角所對應的真實新聞報導網址。必須來自憑證完整、穩定可靠的主流媒體，絕對不能空白或使用有風險的網址"}
+                                    "searchQuery": {"type": "STRING", "description": "專為 Google 新聞設計的精簡搜尋關鍵字，結合核心事件與該視角面向（例如：'AI應用 職場 轉型' 或 '淨零碳排 成本 衝擊'），確保在 Google 新聞搜尋時絕對找得到豐富報導"}
                                 },
-                                "required": ["groupName", "focus", "blindspot", "url"]
+                                "required": ["groupName", "focus", "blindspot", "searchQuery"]
                             }
                         },
                         "neutralSummary": {"type": "STRING"}
@@ -46,8 +46,7 @@ def generate_media_bias_analysis():
 
     針對每一個議題，請進行深入的「多維度事件解析」：
     1. 必須包含 3 種不同切入面或立場群體（例如：「產經專業視角」、「社會民意視角」、「政策推動視角」）。
-    2. 【極重要】每一種觀點（perspective）都必須透過 Google 搜尋找出該視角對應的真實新聞報導網址填入 "url" 欄位中。
-    3. ⚠️【安全規範】所提供的 "url" 必須來自具備完整且有效 SSL 安全憑證的主流大站（如中央社 CNA、公視新聞網、聯合新聞網、自由時報、工商時報、經濟日報等信譽良好的媒體），絕對不可抓取會導致瀏覽器跳出憑證無效或安全警告的網址。三個視角的網址必須各自獨立且不同。
+    2. 【極重要】針對每一個視角，除了提供聚焦與延伸視角外，必須在 "searchQuery" 欄位提供一組專門用來在 Google 新聞搜尋的精簡關鍵字（建議 3 到 5 個字元組合，如：事件主旨＋立場關鍵字），絕對不能空白，且三個視角的關鍵字必須各有側重，不可重複，以確保使用者點擊時能精準且順利地找到對應新聞。
     """
 
     response = client.models.generate_content(
