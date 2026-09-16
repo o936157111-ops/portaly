@@ -313,16 +313,9 @@
         let perspectivesHtml = '';
         if (evt.perspectives && Array.isArray(evt.perspectives)) {
             evt.perspectives.forEach(p => {
-                // 💡 絕對安全策略：完全屏除複雜的組合字串。
-                // 我們只取事件標題中最核心的關鍵字（去除特殊符號、只取前 8 到 10 個字），
-                // 這樣丟給 Google 新聞搜尋時，涵蓋率最高、絕對不會發生找不到新聞的窘境。
-                let coreKeyword = evt.eventTitle ? evt.eventTitle.replace(/[【】「」《》()（）?!？]/g, '').trim() : '';
-                if (coreKeyword.length > 8) {
-                    coreKeyword = coreKeyword.substring(0, 8); // 取前 8 個最核心字元
-                }
-
-                const searchQuery = encodeURIComponent(coreKeyword);
-                const searchUrl = `https://www.google.com/search?q=${searchQuery}&tbm=nws`;
+                // 💡 直接使用後端 AI 精心客製化的 searchQuery 產生 Google 新聞檢索連結
+                const queryText = p.searchQuery || `${evt.eventTitle} ${p.groupName}`;
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryText)}&tbm=nws`;
 
                 perspectivesHtml += `
                     <div class="perspective-card">
