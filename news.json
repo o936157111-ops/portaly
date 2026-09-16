@@ -1,7 +1,7 @@
 {
     "economic": {
         "name": "經濟日報",
-        "headline": "台股震盪整理觀望氣氛濃厚，半導體與AI供應鏈成盤面焦點",
+        "headline": "台股震盪觀望氣氛濃厚，半導體與AI供應鏈成盤面焦點",
         "analysis": "受到國際總體經濟變數與美國聯準會政策預期影響，台股近期維持量縮震盪格局。大型權值股與AI概念供應鏈成為多空交織下的核心撐盤力量，法人指出短線操作宜聚焦具實質基本面與訂單能見度的個股。",
         "diffSummary": "財經專業大報著重於總體經濟數據、法人資金流向與產業供應鏈的實質連動，強調數據佐證與投資風向。",
         "tableData": [
@@ -16,7 +16,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "今日台股在平盤附近狹幅整理，市場目光聚焦於主要科技權值股的法說會風向。法人分析，雖然短期內受到國際股市波動干擾，但隨著下半年旺季到來，供應鏈庫存去化告一段落，具備強固技術壁壘與全球市占率的企業仍是長線資金佈局的核心。投資人應密切關注總體經濟指標與匯率變化。",
-        "url": "https://edn.udn.com/"
+        "url": "https://money.udn.com/money/index"
     },
     "commercial": {
         "name": "工商時報",
@@ -35,7 +35,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "本篇報導深入剖析多家標竿企業在面對全球供應鏈重組時的因應之道。企業不僅在生產基地上進行多元化佈局，更將AI技術導入內部管理與智慧製造流程，大幅降低營運成本並縮短產品上市週期。專家呼籲，中小企業也應善用雲端與AI工具，避免在轉型浪潮中落後。",
-        "url": "https://www.ctee.com.tw/"
+        "url": "https://www.ctee.com.tw/news/industry"
     },
     "united": {
         "name": "聯合報",
@@ -54,7 +54,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "隨著國際永續標準與經貿規範日益嚴格，企業在永續轉型上的投資比重顯著增加。報導指出，如何在嚴格的法規要求下維持成本競爭力，是當前產業界面臨的共同課題。各界呼籲政府應提供更具前瞻性的配套措施，協助產業順利度過轉型期。",
-        "url": "https://udn.com/"
+        "url": "https://udn.com/news/index"
     },
     "freedom": {
         "name": "自由時報",
@@ -73,7 +73,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "報導指出，台灣的高科技產業聚落已經形成完整的生態系，從上游IC設計、中游晶圓製造到下游封測與應用，展現出極高的應變能力與創新速度。面對全球激烈的市場競爭，持續加大研發投資與培育高階人才仍是維持領先的核心關鍵。",
-        "url": "https://news.ltn.com.tw/"
+        "url": "https://news.ltn.com.tw/news/business/breakingnews"
     },
     "china": {
         "name": "中國時報",
@@ -92,7 +92,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "面對全球市場的詭譎多變，國內許多指標性企業紛紛採取「台灣研發、全球佈局」的策略來分散風險。專家分析，企業在因應外部衝擊時，靈活的資金調度與多元化的市場開拓能力將是確保獲利穩健的關鍵。",
-        "url": "https://www.chinatimes.com/"
+        "url": "https://www.chinatimes.com/realtimenews/"
     },
     "ettoday": {
         "name": "ETtoday新聞雲",
@@ -111,7 +111,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "隨著AI助理、智慧家電及各類生成式工具的普及，消費者對於互動式科技的接受度達到新高。這不僅帶動了相關硬體設備的換機潮，也迫使傳統零售與服務業加速數位化升級，以滿足消費者對即時、客製化體驗的需求。",
-        "url": "https://www.ettoday.net/"
+        "url": "https://www.ettoday.net/news/focus/3C/"
     },
     "tvbs": {
         "name": "TVBS新聞網",
@@ -130,7 +130,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "本篇報導關注台灣企業在邁向淨零碳排過程中的實際困難與創新解方。許多企業透過導入智慧電網與循環經濟模式，成功降低能源消耗並提升品牌形象。專家強調，綠色轉型雖然初期投入成本較高，但長遠來看能有效強化企業的抗風險能力。",
-        "url": "https://news.tvbs.com.tw/"
+        "url": "https://news.tvbs.com.tw/money"
     },
     "cti": {
         "name": "中天新聞網",
@@ -149,7 +149,7 @@
         ],
         "exclusive": "非獨家（市場高度共振焦點）",
         "summaryText": "針對近期民生消費市場的變化，專家指出，通膨預期心理改變了消費者的購物行為，高性價比與實用性成為產品熱銷的核心要素。零售及餐飲品牌正透過數位會員系統精準行銷，以維持顧客黏著度並穩固營收表現。",
-        "url": "https://ctinews.com/"
+        "url": "https://ctinews.com/category/money"
     },
     "digitimes": {
         "name": "數位時代",
@@ -168,7 +168,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "本篇深度報導探討邊緣AI在各垂直領域的落地應用。透過將AI運算能力直接賦能於終端裝置，不僅大幅降低了資料傳輸的延遲與雲端成本，也保障了使用者隱私。產業專家預期，這將為台灣的資通訊（ICT）供應鏈帶來龐大的換機與升級商機。",
-        "url": "https://www.bnext.com.tw/"
+        "url": "https://www.bnext.com.tw/categories/ai-big-data"
     },
     "manager": {
         "name": "經理人",
@@ -187,7 +187,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "報導指出，成功的AI導入不僅僅是購買軟體授權，更需要組織文化的調整與員工培訓。主管應鼓勵團隊試驗各種AI協作工具，將重複性高的行政工作自動化，從而釋放人力投入更具創造力與策略性的核心任務中。",
-        "url": "https://www.manager.com.tw/"
+        "url": "https://www.manager.com.tw/articles/view"
     },
     "futureweb": {
         "name": "未來商務",
@@ -206,7 +206,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "隨著消費者對購物體驗的要求不斷提高，零售業者紛紛導入全通路（Omnichannel）數據平台，打通線上與線下的會員資料。透過AI演算法進行精準推薦與預測性補貨，不僅提升了顧客滿意度，也有效降低了庫存營運成本。",
-        "url": "https://www.futurecity.com.tw/"
+        "url": "https://www.futurecity.com.tw/tag/112"
     },
     "hbr": {
         "name": "哈佛商業評論",
@@ -225,7 +225,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "本篇深度文章探討了高階主管在面臨突發危機時的決策盲點與應對框架。研究表明，具備高度適應力的企業通常擁有開放的溝通文化、去中心化的授權機制以及持續實驗的創新動能，這些特質讓它們在逆境中更能脫穎而出。",
-        "url": "https://hbr.org/"
+        "url": "https://www.hbrtaiwan.com/category/id/11"
     },
     "cw": {
         "name": "天下雜誌",
@@ -244,7 +244,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "本篇專題深入台灣各產業聚落，探訪隱形冠軍在技術研發與國際市場所付出的努力。報導指出，台灣不能僅依賴硬體製造優勢，更需在軟體、服務與品牌價值上全面升級，才能在全球供應鏈重組的大潮中立於不敗之地。",
-        "url": "https://www.cw.com.tw/"
+        "url": "https://www.cw.5.com.tw/magazine"
     },
     "bwnet": {
         "name": "商業周刊",
@@ -263,7 +263,7 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "本期商業周刊深入報導一家台灣傳統製造業如何成功轉型為高科技精密元件供應商的歷程。面對國際同業的低價競爭，該企業堅持研發創新並深化與國際大廠的協同設計，成功拉開競爭差距，成為市場上的最佳典範。",
-        "url": "https://www.businessweekly.com.tw/"
+        "url": "https://www.businessweekly.com.tw/focus"
     },
     "twreporter": {
         "name": "報導者",
@@ -282,6 +282,6 @@
         ],
         "exclusive": "獨家產業深度追蹤",
         "summaryText": "這篇深度調查報導檢視了數位轉型背後隱含的勞動與倫理挑戰。透過田野調查與專家訪談，揭示了演算法對基層勞動者的影響，並呼籲產官學各界應建立更健全的法規與倫理準則，確保科技發展能真正造福全體社會。",
-        "url": "https://www.twreporter.org/"
+        "url": "https://www.twreporter.org/i/topics"
     }
 }
