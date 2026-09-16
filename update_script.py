@@ -7,10 +7,10 @@ def generate_news_data():
     # 初始化 Gemini Client (使用最新 google-genai SDK)
     client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-    # 定義提示詞，明確要求包含 url 欄位
+    # 定義提示詞，嚴格要求必須使用 Google 搜尋取得每篇新聞的「真實單篇報導網址」
     prompt = """
     請扮演專業的總體經濟學家、資深財經媒體總編輯與商管策略顧問。
-    請透過 Google 搜尋今日（2026年9月）台灣與全球的最新財經、科技、政經與社會動態，針對以下 15 個媒體產生一組結構化的 JSON 內容。
+    請利用 Google 搜尋工具，針對今日（2026年9月）台灣與全球的最新財經、科技、政經與社會動態，針對以下 15 個媒體搜尋並產生一組結構化的 JSON 內容。
     
     JSON 的根物件必須包含以下 15 個媒體的 key（英文 ID）：
     - economic (經濟日報)
@@ -37,20 +37,20 @@ def generate_news_data():
     5. "tableData": 陣列，包含 2 到 3 個物件，每個物件有 "type"（媒體類型）與 "angle"（切入角度與盲點差異）
     6. "exclusive": 獨家與市場共振判定（例如：「非獨家（市場高度共振焦點）」或「獨家產業深度追蹤」）
     7. "summaryText": 【焦點摘要與引文】的詳細內文（約 100-150 字）
-    8. "url": 該頭條新聞或該媒體官網的代表性真實超連結網址（請透過搜尋確保網址有效）
+    8. "url": ⚠️【非常重要】必須透過 Google 搜尋找出該篇頭條新聞的「真實單篇報導網址」（絕對不能只填各媒體的官網首頁，例如 https://edn.udn.com/ 是錯誤的，必須是要能連到該則詳細新聞的完整網址）。
 
     注意：請確保輸出為純 JSON 格式（不要包覆在 markdown 的 ```json 以外，或確保內容能被 json.loads 解析），且內容不可包含任何未跳脫的特殊字元。
     """
 
-    print("正在呼叫 Gemini 聯網搜尋並生成最新新聞分析與原網站網址...")
+    print("正在呼叫 Gemini 進行聯網搜尋並生成最新新聞分析與單篇報導網址...")
 
     response = client.models.generate_content(
-        model='gemini-3.6-flash',          # 已更新為目前支援的最新模型
+        model='gemini-3.6-flash',          # 使用支援聯網與結構化輸出的模型
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.7,
             response_mime_type="application/json", # 強制輸出純 JSON
-            tools=[{"google_search": {}}],         # 開啟即時聯網搜尋
+            tools=[{"google_search": {}}],         # 重新啟用聯網搜尋以抓取真實新聞網址
         ),
     )
 
@@ -69,7 +69,7 @@ def main():
         with open(output_filename, "w", encoding="utf-8") as f:
             json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
-        print(f"成功更新！新聞資料與原網站網址已順利寫入 {output_filename}")
+        print(f"成功更新！新聞資料與單篇報導網址已順利寫入 {output_filename}")
 
     except json.JSONDecodeError as e:
         print(f"解析 Gemini 回傳的 JSON 失敗: {e}")
