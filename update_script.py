@@ -45,12 +45,12 @@ def generate_news_data():
     print("正在呼叫 Gemini 聯網搜尋並生成最新新聞分析與原網站網址...")
 
     response = client.models.generate_content(
-        model='gemini-2.5-flash',  # 使用高速且支援聯網的模型
+        model='gemini-3.6-flash',          # 已更新為目前支援的最新模型
         contents=prompt,
         config=types.GenerateContentConfig(
             temperature=0.7,
             response_mime_type="application/json", # 強制輸出純 JSON
-            tools=[{"google_search": {}}],         # 關鍵：開啟即時聯網搜尋
+            tools=[{"google_search": {}}],         # 開啟即時聯網搜尋
         ),
     )
 
