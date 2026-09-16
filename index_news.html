@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全方位熱門焦點情報站</title>
+    <title>焦點議題多元視角觀測站 | News Perspectives</title>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
+            --primary-color: #334155;
+            --accent-blue: #2563eb;
+            --accent-green: #0d9488;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
-            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         }
 
         * {
@@ -31,7 +31,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
         }
 
@@ -41,8 +41,8 @@
         }
 
         header h1 {
-            font-size: 1.5rem;
-            color: var(--text-main);
+            font-size: 1.6rem;
+            color: var(--primary-color);
             margin-bottom: 6px;
         }
 
@@ -51,194 +51,138 @@
             color: var(--text-secondary);
         }
 
-        /* 五大主題頁籤選單列 */
-        .category-scroll-container {
+        /* 事件頁籤選單 */
+        .event-tabs {
             display: flex;
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 8px;
-            margin-bottom: 16px;
-            scrollbar-width: none; /* Firefox */
+            margin-bottom: 20px;
+            scrollbar-width: none;
         }
 
-        .category-scroll-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari */
-        }
-
-        .category-btn {
+        .event-tab-btn {
             flex: 0 0 auto;
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            padding: 10px 18px;
+            font-size: 0.95rem;
             font-weight: 600;
             border: 1px solid var(--border-color);
             background: #ffffff;
             color: var(--text-secondary);
-            border-radius: 20px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
 
-        .category-btn.active {
-            background: var(--primary-color);
+        .event-tab-btn.active {
+            background: var(--accent-blue);
             color: #ffffff;
-            border-color: var(--primary-color);
+            border-color: var(--accent-blue);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        /* 媒體下拉選單區 */
-        .media-select-container {
-            margin-bottom: 20px;
-        }
-
-        .media-select-container label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-        }
-
-        select {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: #ffffff;
-            color: var(--text-main);
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        select:focus {
-            border-color: var(--primary-color);
-        }
-
-        /* 卡片主體樣式 */
+        /* 主卡片區域 */
         .card {
             background: var(--card-bg);
             border-radius: 12px;
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            padding: 20px;
+            padding: 24px;
             margin-bottom: 20px;
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .media-badge {
-            background: #eff6ff;
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: 700;
             color: var(--primary-color);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .exclusive-badge {
-            font-size: 0.75rem;
-            color: #d97706;
-            background: #fef3c7;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .headline {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--text-main);
             margin-bottom: 12px;
             line-height: 1.4;
+        }
+
+        .section-box {
+            background: #f1f5f9;
+            border-left: 4px solid var(--accent-blue);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
         }
 
         .section-title {
             font-size: 0.9rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-top: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .content-box {
-            font-size: 0.95rem;
-            color: #334155;
-            margin-bottom: 10px;
+        /* 多方視角比較網格 */
+        .perspectives-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        /* 跨媒體視角表格 */
-        .diff-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+        @media (min-width: 768px) {
+            .perspectives-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
-        .diff-table th, .diff-table td {
+        .perspective-card {
+            background: #ffffff;
             border: 1px solid var(--border-color);
-            padding: 8px 10px;
-            text-align: left;
-        }
-
-        .diff-table th {
-            background-color: #f8fafc;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        /* 摘要收合按鈕與內容 */
-        .summary-container {
-            margin-top: 14px;
-            border-top: 1px dashed var(--border-color);
-            padding-top: 10px;
-        }
-
-        .toggle-summary-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
+            border-radius: 8px;
+            padding: 14px;
             display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 0;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .summary-content {
-            margin-top: 8px;
+        .perspective-header {
+            font-weight: 700;
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .perspective-content {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .angle-note {
+            font-size: 0.82rem;
+            color: #475569;
             background: #f8fafc;
-            padding: 12px;
+            border: 1px solid var(--border-color);
+            padding: 8px;
             border-radius: 6px;
-            display: none;
+            margin-top: 6px;
         }
 
-        .summary-content.show {
-            display: block;
+        .neutral-conclusion {
+            background: #f0fdf4;
+            border-left: 4px solid var(--accent-green);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
         }
 
-        /* 前往原網站按鈕 */
         .external-link-container {
-            margin-top: 16px;
             text-align: center;
+            margin-top: 16px;
         }
 
         .btn-link {
             display: inline-block;
-            background: var(--primary-color);
+            background: var(--accent-blue);
             color: #ffffff;
             padding: 8px 16px;
             border-radius: 6px;
@@ -249,7 +193,7 @@
         }
 
         .btn-link:hover {
-            background: var(--primary-dark);
+            background: #1d4ed8;
         }
 
         .loading, .error-msg {
@@ -268,208 +212,110 @@
 
 <div class="container">
     <header>
-        <h1>🔥 全方位熱門焦點情報站</h1>
-        <p>AI 科技、年底選舉、健康養生、旅遊攻略、賺錢流量每日自動彙整</p>
+        <h1>焦點議題多元視角觀測站</h1>
+        <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 五大熱門主題頁籤列 -->
-    <div class="category-scroll-container">
-        <button class="category-btn active" onclick="switchCategory('ai')" id="cat-ai">🤖 AI 科技熱話</button>
-        <button class="category-btn" onclick="switchCategory('politics')" id="cat-politics">🗳️ 年底選舉政治</button>
-        <button class="category-btn" onclick="switchCategory('health')" id="cat-health">🍎 健康保健養生</button>
-        <button class="category-btn" onclick="switchCategory('travel')" id="cat-travel">✈️ 旅遊休閒攻略</button>
-        <button class="category-btn" onclick="switchCategory('wealth')" id="cat-wealth">💰 賺錢流量密碼</button>
+    <!-- 事件切換頁籤 -->
+    <div class="event-tabs" id="eventTabsContainer">
+        <!-- 動態產生事件按鈕 -->
     </div>
 
-    <!-- 媒體下拉選單 -->
-    <div class="media-select-container">
-        <label for="mediaSelect" id="selectLabel">選擇細分媒體來源：</label>
-        <select id="mediaSelect" onchange="renderSelectedNews()">
-            <!-- 動態生成選項 -->
-        </select>
-    </div>
-
-    <!-- 新聞資訊卡片呈現區 -->
-    <div id="newsCardContainer">
-        <div class="loading">正在載入最新情報資料...</div>
+    <!-- 事件比對卡片呈現區 -->
+    <div id="eventCardContainer">
+        <div class="loading">正在載入重大事件多維解析資料...</div>
     </div>
 </div>
 
 <script>
-    // 定義五大分類與對應的媒體來源設定
-    const categories = {
-        ai: {
-            name: "AI 科技熱話",
-            options: [
-                { id: "digitimes", label: "數位時代 (AI 創新)" },
-                { id: "futureweb", label: "未來商務 (科技應用)" },
-                { id: "ettoday", label: "ETtoday (生活科技)" }
-            ]
-        },
-        politics: {
-            name: "年底選舉政治",
-            options: [
-                { id: "united", label: "聯合報 (政經動態)" },
-                { id: "china", label: "中國時報 (選情觀察)" },
-                { id: "cti", label: "中天新聞網 (政治焦點)" }
-            ]
-        },
-        health: {
-            name: "健康保健養生",
-            options: [
-                { id: "tvbs", label: "TVBS新聞網 (健康醫療)" },
-                { id: "cw", label: "天下雜誌 (生活福祉)" }
-            ]
-        },
-        travel: {
-            name: "旅遊休閒攻略",
-            options: [
-                { id: "freedom", label: "自由時報 (旅遊生活)" },
-                { id: "bwnet", label: "商業周刊 (休閒品味)" }
-            ]
-        },
-        wealth: {
-            name: "賺錢流量密碼",
-            options: [
-                { id: "economic", label: "經濟日報 (投資理財)" },
-                { id: "commercial", label: "工商時報 (致富商機)" },
-                { id: "manager", label: "經理人 (職場加薪)" },
-                { id: "hbr", label: "哈佛商業評論 (高階策略)" },
-                { id: "twreporter", label: "報導者 (深度調查)" }
-            ]
-        }
-    };
+    let eventsData = [];
+    let currentEventIndex = 0;
 
-    let currentCategory = 'ai';
-    let newsData = {};
-
-    // 頁面載入時抓取新聞 JSON 並初始化
     window.addEventListener('DOMContentLoaded', async () => {
         try {
             const response = await fetch('news.json');
-            if (!response.ok) throw new Error('無法讀取新聞資料庫檔案');
-            newsData = await response.json();
-            switchCategory('ai'); // 預設打開第一個分類
+            if (!response.ok) throw new Error('無法讀取新聞資料');
+            const data = await response.json();
+            
+            eventsData = data.events || [];
+            if (eventsData.length === 0) throw new Error('資料格式不符');
+
+            renderEventTabs();
+            renderEventCard(0);
         } catch (error) {
-            document.getElementById('newsCardContainer').innerHTML = `
+            document.getElementById('eventCardContainer').innerHTML = `
                 <div class="error-msg">
-                    ⚠️ 尚未讀取到即時新聞資料（news.json）。<br>
-                    請確認您的後端更新腳本已執行，或已成功將資料推送到 GitHub！
+                    ⚠️ 尚無解析資料（news.json）。<br>
+                    請確認後端腳本已更新並完成執行！
                 </div>
             `;
         }
     });
 
-    // 切換分類頁籤
-    function switchCategory(categoryKey) {
-        currentCategory = categoryKey;
+    function renderEventTabs() {
+        const tabsContainer = document.getElementById('eventTabsContainer');
+        tabsContainer.innerHTML = '';
 
-        // 更新按鈕樣式狀態
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
+        eventsData.forEach((evt, index) => {
+            const btn = document.createElement('button');
+            btn.className = `event-tab-btn ${index === 0 ? 'active' : ''}`;
+            btn.textContent = `焦點事件 ${index + 1}：${evt.eventTitle.substring(0, 10)}...`;
+            btn.onclick = () => switchEvent(index);
+            tabsContainer.appendChild(btn);
         });
-        const activeBtn = document.getElementById(`cat-${categoryKey}`);
-        if (activeBtn) activeBtn.classList.add('active');
-
-        // 更新下拉選單選項
-        const selectElement = document.getElementById('mediaSelect');
-        selectElement.innerHTML = '';
-
-        const catConfig = categories[categoryKey];
-        catConfig.options.forEach(opt => {
-            const optionEl = document.createElement('option');
-            optionEl.value = opt.id;
-            optionEl.textContent = opt.label;
-            selectElement.appendChild(optionEl);
-        });
-
-        // 渲染對應的第一個媒體新聞卡片
-        renderSelectedNews();
     }
 
-    // 渲染當前選定媒體的新聞內容
-    function renderSelectedNews() {
-        const selectElement = document.getElementById('mediaSelect');
-        const selectedMediaId = selectElement.value;
-        const container = document.getElementById('newsCardContainer');
+    function switchEvent(index) {
+        currentEventIndex = index;
+        document.querySelectorAll('.event-tab-btn').forEach((b, idx) => {
+            b.classList.toggle('active', idx === index);
+        });
+        renderEventCard(index);
+    }
 
-        if (!newsData[selectedMediaId]) {
-            container.innerHTML = `<div class="error-msg">目前該媒體尚無今日的彙整資料。</div>`;
-            return;
-        }
+    function renderEventCard(index) {
+        const evt = eventsData[index];
+        const container = document.getElementById('eventCardContainer');
 
-        const item = newsData[selectedMediaId];
-
-        // 建立跨媒體視角表格列 HTML
-        let tableRowsHtml = '';
-        if (item.tableData && Array.isArray(item.tableData)) {
-            item.tableData.forEach(row => {
-                tableRowsHtml += `
-                    <tr>
-                        <td style="font-weight:600; width: 30%;">${row.type}</td>
-                        <td>${row.angle}</td>
-                    </tr>
+        let perspectivesHtml = '';
+        if (evt.perspectives && Array.isArray(evt.perspectives)) {
+            evt.perspectives.forEach(p => {
+                perspectivesHtml += `
+                    <div class="perspective-card">
+                        <div>
+                            <div class="perspective-header">${p.groupName}</div>
+                            <div class="perspective-content"><strong>主要聚焦：</strong>${p.focus}</div>
+                        </div>
+                        <div class="angle-note"><strong>💡 延伸視角與側重點：</strong>${p.blindspot}</div>
+                    </div>
                 `;
             });
         }
 
-        // 組裝卡片 HTML
         container.innerHTML = `
             <div class="card">
-                <div class="card-header">
-                    <span class="media-badge">${item.name || '焦點媒體'}</span>
-                    <span class="exclusive-badge">${item.exclusive || '焦點共振'}</span>
+                <h2 class="event-title">${evt.eventTitle}</h2>
+                
+                <div class="section-box">
+                    <div class="section-title">📌 事件核心與客觀背景</div>
+                    <div>${evt.coreFacts}</div>
                 </div>
-                
-                <h2 class="headline">${item.headline || '無標題'}</h2>
-                
-                <div class="section-title">💡 深度解析與大眾解讀</div>
-                <div class="content-box">${item.analysis || '暫無解析'}</div>
 
-                <div class="section-title">🔍 跨媒體視角與盲點差異</div>
-                <div class="content-box">${item.diffSummary || ''}</div>
-                ${tableRowsHtml ? `
-                    <table class="diff-table">
-                        <thead>
-                            <tr>
-                                <th>媒體類型</th>
-                                <th>切入角度與盲點差異</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRowsHtml}
-                        </tbody>
-                    </table>
-                ` : ''}
+                <div class="section-title" style="margin-bottom: 10px;">🔍 多元媒體觀點與切入面比較</div>
+                <div class="perspectives-grid">
+                    ${perspectivesHtml}
+                </div>
 
-                <div class="summary-container">
-                    <button class="toggle-summary-btn" onclick="toggleSummary(this)">
-                        <span>▶ 展開詳細焦點摘要與引文</span>
-                    </button>
-                    <div class="summary-content">
-                        ${item.summaryText || '暫無詳細引文內容。'}
-                    </div>
+                <div class="neutral-conclusion">
+                    <div class="section-title" style="color: var(--accent-green);">💡 綜合觀點與事件本質解析</div>
+                    <div>${evt.neutralSummary}</div>
                 </div>
 
                 <div class="external-link-container">
-                    <a href="${item.url || '#'}" target="_blank" class="btn-link">前往原網站閱讀報導 ↗</a>
+                    <a href="${evt.referenceUrl || '#'}" target="_blank" class="btn-link">前往閱讀代表性新聞 ↗</a>
                 </div>
             </div>
         `;
-    }
-
-    // 展開/收合摘要內文功能
-    function toggleSummary(btn) {
-        const content = btn.nextElementSibling;
-        const isShown = content.classList.contains('show');
-        
-        if (isShown) {
-            content.classList.remove('show');
-            btn.querySelector('span').textContent = '▶ 展開詳細焦點摘要與引文';
-        } else {
-            content.classList.add('show');
-            btn.querySelector('span').textContent = '▼ 收合詳細焦點摘要與引文';
-        }
     }
 </script>
 
