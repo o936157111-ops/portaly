@@ -57,7 +57,6 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            white-space: nowrap; /* 確保內容不會自動換行 */
         }
 
         @media (max-width: 768px) {
@@ -91,7 +90,7 @@
         /* 頁籤按鈕群組 */
         .button-group { display: none; flex-direction: column; gap: 12px; width: 100%; }
         .button-group.active { display: flex; }
-        .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.3s ease; width: 100%; cursor: pointer; }
+        .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.3s ease; width: 100%; }
         .btn:hover { background-color: #000 !important; color: #fff !important; border-color: #000 !important; transform: translateY(-2px) !important; }
 
         /* 下半部：純圖片 Pinterest 瀑布流風格 */
@@ -290,7 +289,7 @@
 
             <!-- 詩句互動區塊 -->
             <div class="slogan-section">
-                <div class="slogan-clickable" onclick="togglePoem()">漫無目的  恣意生活</div>
+                <div class="slogan-clickable" onclick="togglePoem()">漫無目的，恣意生活。</div>
                 <div id="poem-box" class="poem-content">
                     用瞬間記錄永恆，拿片刻鋪滿人生；<br>
                     在角落翻開記憶，把點滴串成一生。
@@ -301,7 +300,7 @@
         <!-- 頁籤一：生活 -->
         <div id="tab-1" class="button-group active">
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
-            <a href="javascript:void(0);" onclick="openLandscapeView()" class="btn">生活閱讀-讀後分享</a>
+            <a href="https://portaly.cc/myezlife/pages/readingshare" class="btn" target="_blank" rel="noopener noreferrer">生活閱讀-讀後分享</a>
             <a href="https://ebook.nlpi.edu.tw" class="btn" target="_blank" rel="noopener noreferrer">電子圖書館</a>
             <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer">生活小書房</a>
             <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn" target="_blank" rel="noopener noreferrer">挑本書細讀</a>
@@ -423,11 +422,13 @@
 function updateRealtimeInfo() {
     const now = new Date();
     
+    // 日期與星期
     const m = String(now.getMonth() + 1).padStart(2, '0');
     const d = String(now.getDate()).padStart(2, '0');
     const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     const wk = weekdays[now.getDay()];
     
+    // 即時時間
     const h = String(now.getHours()).padStart(2, '0');
     const min = String(now.getMinutes()).padStart(2, '0');
     const s = String(now.getSeconds()).padStart(2, '0');
@@ -444,7 +445,7 @@ async function fetchLocationAndWeather() {
     const iconEl = document.getElementById('weather-icon');
 
     const nowHour = new Date().getHours();
-    const isNight = nowHour < 6 || nowHour >= 18;
+    const isNight = nowHour < 6 || nowHour >= 18; // 判斷是否為夜間 (18:00 ~ 06:00)
 
     try {
         const res = await fetch('https://ipapi.co/json/');
@@ -518,18 +519,6 @@ function initLightbox() {
 function closeLightbox(e) {
     if (e.target.id === 'lightbox-modal' || e.target.id === 'lightbox-close') {
         document.getElementById('lightbox-modal').style.display = 'none';
-    }
-}
-
-// 點擊按鈕時強制展開橫式選單檢視畫面的函式
-function openLandscapeView() {
-    const view = document.getElementById('landscape-card-view');
-    if (view) {
-        view.style.display = 'flex';
-        view.style.position = 'fixed';
-        view.style.top = '0';
-        view.style.left = '0';
-        view.style.zIndex = '999999';
     }
 }
 
