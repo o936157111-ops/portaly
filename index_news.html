@@ -54,11 +54,11 @@
         /* 事件頁籤選單 */
         .event-tabs {
             display: flex;
+            justify-content: center; /* 讓按鈕在桌面版置中 */
+            flex-wrap: wrap;        /* 螢幕太小時自動換行，確保不會被切掉 */
             gap: 8px;
-            overflow-x: auto;
             padding-bottom: 8px;
             margin-bottom: 20px;
-            scrollbar-width: none;
         }
 
         .event-tab-btn {
