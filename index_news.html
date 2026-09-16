@@ -40,10 +40,18 @@
             margin-bottom: 24px;
         }
 
+        /* 調整標題大小，確保在手機版也能完美單行呈現 */
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.35rem;
             color: var(--primary-color);
             margin-bottom: 6px;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 480px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
         }
 
         header p {
@@ -51,40 +59,31 @@
             color: var(--text-secondary);
         }
 
-        /* 事件頁籤選單：手機與桌面皆置中、不允許隨意左右滑動、平均分配 */
-        .event-tabs {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+        /* 改為下拉式選單容器 */
+        .event-select-container {
+            margin-bottom: 24px;
+            text-align: center;
         }
 
-        .event-tab-btn {
-            flex: 1 1 auto;
-            min-width: 110px;
-            max-width: 260px;
-            padding: 10px 14px;
-            font-size: 0.9rem;
+        .event-select {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 16px;
+            font-size: 1rem;
             font-weight: 600;
-            border: 1px solid var(--border-color);
+            color: var(--primary-color);
             background: #ffffff;
-            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             transition: all 0.2s;
         }
 
-        .event-tab-btn.active {
-            background: var(--accent-blue);
-            color: #ffffff;
+        .event-select:focus {
+            outline: none;
             border-color: var(--accent-blue);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         /* 主卡片區域 */
@@ -226,9 +225,9 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 事件切換頁籤：固定置中、不滑動 -->
-    <div class="event-tabs" id="eventTabsContainer">
-        <div class="loading">正在載入事件按鈕...</div>
+    <!-- 下拉式事件選單 -->
+    <div class="event-select-container" id="eventSelectContainer">
+        <div class="loading">正在載入焦點議題選單...</div>
     </div>
 
     <!-- 事件比對卡片呈現區 -->
@@ -257,11 +256,11 @@
 
             if (eventsData.length === 0) throw new Error('事件清單為空');
 
-            renderEventTabs();
+            renderEventSelect();
             renderEventCard(0);
         } catch (error) {
             console.error(error);
-            document.getElementById('eventTabsContainer').innerHTML = '';
+            document.getElementById('eventSelectContainer').innerHTML = '';
             document.getElementById('eventCardContainer').innerHTML = `
                 <div class="error-msg">
                     ⚠️ 尚無解析資料（news.json）或格式錯誤。<br>
@@ -271,29 +270,25 @@
         }
     });
 
-    function renderEventTabs() {
-        const tabsContainer = document.getElementById('eventTabsContainer');
-        tabsContainer.innerHTML = '';
-
+    function renderEventSelect() {
+        const container = document.getElementById('eventSelectContainer');
+        
+        let optionsHtml = '';
         eventsData.forEach((evt, index) => {
-            const btn = document.createElement('button');
-            btn.className = `event-tab-btn ${index === 0 ? 'active' : ''}`;
-            const titleText = evt.eventTitle ? evt.eventTitle.substring(0, 8) + '...' : `焦點 ${index + 1}`;
-            btn.textContent = `焦點 ${index + 1}：${titleText}`;
-            btn.onclick = () => switchEvent(index);
-            tabsContainer.appendChild(btn);
+            const titleText = evt.eventTitle || `焦點事件 ${index + 1}`;
+            optionsHtml += `<option value="${index}">焦點 ${index + 1}：${titleText}</option>`;
         });
+
+        container.innerHTML = `
+            <select class="event-select" id="eventDropdown" onchange="onSelectChange(this.value)">
+                ${optionsHtml}
+            </select>
+        `;
     }
 
-    function switchEvent(index) {
-        currentEventIndex = index;
-        
-        const buttons = document.querySelectorAll('.event-tabs button');
-        buttons.forEach((b, idx) => {
-            b.classList.toggle('active', idx === index);
-        });
-
-        renderEventCard(index);
+    function onSelectChange(index) {
+        currentEventIndex = parseInt(index);
+        renderEventCard(currentEventIndex);
     }
 
     function renderEventCard(index) {
@@ -305,7 +300,6 @@
         let perspectivesHtml = '';
         if (evt.perspectives && Array.isArray(evt.perspectives)) {
             evt.perspectives.forEach(p => {
-                // 💡 使用中文標準 Google 搜尋，並強制加入 &hl=zh-TW 參數確保介面與結果為繁體中文
                 const queryText = p.searchQuery || `${evt.eventTitle} ${p.groupName}`;
                 const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryText)}&hl=zh-TW`;
 
