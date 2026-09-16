@@ -315,7 +315,7 @@
             evt.perspectives.forEach(p => {
                 // 💡 直接使用後端 AI 精心客製化的 searchQuery 產生 Google 新聞檢索連結
                 const queryText = p.searchQuery || `${evt.eventTitle} ${p.groupName}`;
-                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryText)}&tbm=nws`;
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryText)}`;
 
                 perspectivesHtml += `
                     <div class="perspective-card">
