@@ -1,16 +1,14 @@
-import os
-import json
-from google import genai
-from google.genai import types
-
-def generate_news_data():
-    # 初始化 Gemini Client (使用最新 google-genai SDK)
-    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
-
-    # 定義提示詞，嚴格要求必須使用 Google 搜尋取得每篇新聞的「真實單篇報導網址」
-    prompt = """
-    請扮演專業的總體經濟學家、資深財經媒體總編輯與商管策略顧問。
-    請利用 Google 搜尋工具，針對今日（2026年9月）台灣與全球的最新財經、科技、政經與社會動態，針對以下 15 個媒體搜尋並產生一組結構化的 JSON 內容。
+prompt = """
+    請扮演頂尖網路媒體總編輯與流量成長專家。
+    請利用 Google 搜尋工具，針對今日（2026年9月）台灣與全球的最新動態，針對以下 15 個媒體搜尋並產生一組結構化的 JSON 內容。
+    
+    【核心選題與內容導向】：
+    請鎖定以下五大最容易吸引消費者眼球的熱門話題：
+    1. AI 科技應用（最新 AI 潮流、工具、對日常與消費者的衝擊）
+    2. 政治動態與年底選舉（2026年台灣縣市長及議員選舉、政壇熱話）
+    3. 健康保健（實用養生、醫療新知、日常健康防護）
+    4. 旅遊休閒（熱門旅遊景點、機票優惠、在地玩樂攻略）
+    5. 賺錢賺流量（理財投資、副業、賺錢流量密碼與商業趨勢）
     
     JSON 的根物件必須包含以下 15 個媒體的 key（英文 ID）：
     - economic (經濟日報)
@@ -31,52 +29,89 @@ def generate_news_data():
 
     每一個媒體物件必須包含以下欄位：
     1. "name": 媒體中文名稱
-    2. "headline": 今日該媒體的頭條焦點標題
-    3. "analysis": 對該頭條內容的深度解析（約 60-100 字）
+    2. "headline": 今日該媒體的頭條焦點標題（必須融合上述五大主題之一，具備強烈吸引力與痛點共鳴）
+    3. "analysis": 對該頭條內容的深度解析與大眾解讀（約 60-100 字）
     4. "diffSummary": 跨媒體視角差異的說明引言
     5. "tableData": 陣列，包含 2 到 3 個物件，每個物件有 "type"（媒體類型）與 "angle"（切入角度與盲點差異）
     6. "exclusive": 獨家與市場共振判定（例如：「非獨家（市場高度共振焦點）」或「獨家產業深度追蹤」）
     7. "summaryText": 【焦點摘要與引文】的詳細內文（約 100-150 字）
-    8. "url": ⚠️【非常重要】必須透過 Google 搜尋找出該篇頭條新聞的「真實單篇報導網址」（絕對不能只填各媒體的官網首頁，例如 https://edn.udn.com/ 是錯誤的，必須是要能連到該則詳細新聞的完整網址）。
+    8. "url": ⚠️【非常重要】必須透過 Google 搜尋找出該篇頭條新聞的「真實單篇報導網址」（絕對不能只填各媒體的官網首頁）。
 
-    注意：請確保輸出為純 JSON 格式（不要包覆在 markdown 的 ```json 以外，或確保內容能被 json.loads 解析），且內容不可包含任何未跳脫的特殊字元。
+    請確保輸出為純 JSON 格式，且內容不可包含任何未跳脫的特殊字元。
     """
+```[cite: 3]
 
-    print("正在呼叫 Gemini 進行聯網搜尋並生成最新新聞分析與單篇報導網址...")
+---
 
-    response = client.models.generate_content(
-        model='gemini-3.6-flash',          # 使用支援聯網與結構化輸出的模型
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            temperature=0.7,
-            response_mime_type="application/json", # 強制輸出純 JSON
-            tools=[{"google_search": {}}],         # 重新啟用聯網搜尋以抓取真實新聞網址
-        ),
-    )
+### 第二步：修改 `index_news_2.html` 的前端分類與按鈕
+為了讓前端網頁的按鈕跟這五大新話題契合，我們需要調整上方頁籤的分類名稱。
 
-    return response.text
+請找到 `index_news_2.html` 中的 `<div class="category-scroll-container">` 與底部的 `categories` 物件，將其改為對應**「AI 科技、政治選舉、健康保健、旅遊休閒、賺錢流量」**的分類：
 
-def main():
-    try:
-        # 1. 取得 Gemini 生成的 JSON 字串
-        json_str = generate_news_data()
+#### 1. 修改 HTML 頁籤按鈕：
+```html
+            <!-- 五大熱門主題頁籤列 -->
+            <div class="category-scroll-container">
+                <button class="category-btn active" onclick="switchCategory('ai')" id="cat-ai">🤖 AI 科技熱話</button>
+                <button class="category-btn" onclick="switchCategory('politics')" id="cat-politics">🗳️ 年底選舉政治</button>
+                <button class="category-btn" onclick="switchCategory('health')" id="cat-health">🍎 健康保健養生</button>
+                <button class="category-btn" onclick="switchCategory('travel')" id="cat-travel">✈️ 旅遊休閒攻略</button>
+                <button class="category-btn" onclick="switchCategory('wealth')" id="cat-wealth">💰 賺錢流量密碼</button>
+            </div>
+```[cite: 5]
 
-        # 2. 驗證是否為正確的 JSON 格式
-        parsed_data = json.loads(json_str)
+#### 2. 修改 JavaScript 中的 `categories` 資料結構：
+你可以把原本的媒體重新分配到這五大新分類底下（讓每個分類都有對應的媒體可以點選）：
 
-        # 3. 寫入本地的 news.json 檔案
-        output_filename = "news.json"
-        with open(output_filename, "w", encoding="utf-8") as f:
-            json.dump(parsed_data, f, ensure_ascii=False, indent=4)
+```javascript
+        const categories = {
+            ai: {
+                name: "AI 科技熱話",
+                options: [
+                    { id: "digitimes", label: "數位時代 (AI 創新)" },
+                    { id: "futureweb", label: "未來商務 (科技應用)" },
+                    { id: "ettoday", label: "ETtoday (生活科技)" }
+                ]
+            },
+            politics: {
+                name: "年底選舉政治",
+                options: [
+                    { id: "united", label: "聯合報 (政經動態)" },
+                    { id: "china", label: "中國時報 (選情觀察)" },
+                    { id: "cti", label: "中天新聞網 (政治焦點)" }
+                ]
+            },
+            health: {
+                name: "健康保健養生",
+                options: [
+                    { id: "tvbs", label: "TVBS新聞網 (健康醫療)" },
+                    { id: "cw", label: "天下雜誌 (生活福祉)" }
+                ]
+            },
+            travel: {
+                name: "旅遊休閒攻略",
+                options: [
+                    { id: "freedom", label: "自由時報 (旅遊生活)" },
+                    { id: "bwnet", label: "商業周刊 (休閒品味)" }
+                ]
+            },
+            wealth: {
+                name: "賺錢流量密碼",
+                options: [
+                    { id: "economic", label: "經濟日報 (投資理財)" },
+                    { id: "commercial", label: "工商時報 (致富商機)" },
+                    { id: "manager", label: "經理人 (職場加薪)" },
+                    { id: "hbr", label: "哈佛商業評論 (高階策略)" },
+                    { id: "twreporter", label: "報導者 (深度調查)" }
+                ]
+            }
+        };
+```[cite: 5]
 
-        print(f"成功更新！新聞資料與單篇報導網址已順利寫入 {output_filename}")
+---
 
-    except json.JSONDecodeError as e:
-        print(f"解析 Gemini 回傳的 JSON 失敗: {e}")
-        print("原始回傳內容：")
-        print(json_str)
-    except Exception as e:
-        print(f"更新過程中發生錯誤: {e}")
+### 這樣改完之後會發生什麼事？
+1. **GitHub Actions 每天自動執行**時，Gemini 會上網搜尋這五大主題（AI、選舉、健康、旅遊、賺錢）當天各大媒體最新鮮、最吸睛的頭條報導[cite: 3, 4]。
+2. **前端網頁（`index_news_2.html`）**的選單會直接對應這五大高流量領域，讀者一進到你的網站，就能一眼看出這是專門為他們整理的熱門焦點[cite: 5]。
 
-if __name__ == "__main__":
-    main()
+你覺得這樣的主題分類設定，是不是更貼近你想要打造的高人氣吸引力網站呢？
