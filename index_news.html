@@ -51,42 +51,32 @@
             color: var(--text-secondary);
         }
 
-        /* 事件頁籤選單（手機版單列橫向滑動、桌面版置中） */
+        /* 事件頁籤選單：手機與桌面皆置中、不允許隨意左右滑動、平均分配 */
         .event-tabs {
             display: flex;
-            justify-content: flex-start;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            gap: 8px;
-            padding-bottom: 8px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 20px;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .event-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        @media (min-width: 768px) {
-            .event-tabs {
-                justify-content: center;
-                flex-wrap: wrap;
-                overflow-x: visible;
-            }
         }
 
         .event-tab-btn {
-            flex: 0 0 auto;
-            padding: 10px 18px;
-            font-size: 0.95rem;
+            flex: 1 1 auto;
+            min-width: 110px;
+            max-width: 260px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
             font-weight: 600;
             border: 1px solid var(--border-color);
             background: #ffffff;
             color: var(--text-secondary);
             border-radius: 8px;
             cursor: pointer;
+            text-align: center;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             transition: all 0.2s;
         }
 
@@ -236,10 +226,12 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
+    <!-- 事件切換頁籤：固定置中、不滑動 -->
     <div class="event-tabs" id="eventTabsContainer">
         <div class="loading">正在載入事件按鈕...</div>
     </div>
 
+    <!-- 事件比對卡片呈現區 -->
     <div id="eventCardContainer">
         <div class="loading">正在載入多維度解析資料...</div>
     </div>
@@ -286,7 +278,7 @@
         eventsData.forEach((evt, index) => {
             const btn = document.createElement('button');
             btn.className = `event-tab-btn ${index === 0 ? 'active' : ''}`;
-            const titleText = evt.eventTitle ? evt.eventTitle.substring(0, 10) + '...' : `焦點事件 ${index + 1}`;
+            const titleText = evt.eventTitle ? evt.eventTitle.substring(0, 8) + '...' : `焦點 ${index + 1}`;
             btn.textContent = `焦點 ${index + 1}：${titleText}`;
             btn.onclick = () => switchEvent(index);
             tabsContainer.appendChild(btn);
@@ -313,9 +305,9 @@
         let perspectivesHtml = '';
         if (evt.perspectives && Array.isArray(evt.perspectives)) {
             evt.perspectives.forEach(p => {
-                // 💡 直接使用後端 AI 精心客製化的 searchQuery 產生 Google 新聞檢索連結
+                // 💡 使用中文標準 Google 搜尋，並強制加入 &hl=zh-TW 參數確保介面與結果為繁體中文
                 const queryText = p.searchQuery || `${evt.eventTitle} ${p.groupName}`;
-                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryText)}`;
+                const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryText)}&hl=zh-TW`;
 
                 perspectivesHtml += `
                     <div class="perspective-card">
@@ -325,7 +317,7 @@
                             <div class="angle-note"><strong>💡 延伸視角：</strong>${p.blindspot || ''}</div>
                         </div>
                         <div class="perspective-link">
-                            <a href="${searchUrl}" target="_blank" class="btn-mini-link">Google 新聞即時檢索 ↗</a>
+                            <a href="${searchUrl}" target="_blank" class="btn-mini-link">Google 即時檢索 ↗</a>
                         </div>
                     </div>
                 `;
