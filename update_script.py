@@ -1,19 +1,75 @@
-prompt = """
+import os
+import json
+from google import genai
+from google.genai import types
+
+def generate_media_bias_analysis():
+    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
+    # 定義嚴格的 JSON 結構規範，確保三個視角一定要有各自的 url
+    schema = {
+        "type": "OBJECT",
+        "properties": {
+            "events": {
+                "type": "ARRAY",
+                "items": {
+                    "type": "OBJECT",
+                    "properties": {
+                        "eventId": {"type": "STRING"},
+                        "eventTitle": {"type": "STRING"},
+                        "coreFacts": {"type": "STRING"},
+                        "perspectives": {
+                            "type": "ARRAY",
+                            "items": {
+                                "type": "OBJECT",
+                                "properties": {
+                                    "groupName": {"type": "STRING"},
+                                    "focus": {"type": "STRING"},
+                                    "blindspot": {"type": "STRING"},
+                                    "url": {"type": "STRING", "description": "該特定視角所對應的真實新聞報導網址，絕對不能空白，且三個視角的網址必須不同"}
+                                },
+                                "required": ["groupName", "focus", "blindspot", "url"]
+                            }
+                        },
+                        "neutralSummary": {"type": "STRING"}
+                    },
+                    "required": ["eventId", "eventTitle", "coreFacts", "perspectives", "neutralSummary"]
+                }
+            }
+        },
+        "required": ["events"]
+    }
+
+    prompt = """
     請扮演頂尖的跨領域媒體分析師與輿情解讀專家。
-    請利用 Google 搜尋工具，找出今日（2026年9月）台灣社會最受矚目、最具代表性的 **3 個重大焦點議題**。
+    請利用 Google 搜尋工具，找出今日（2026年9月）台灣社會最受矚目、最具代表性的 3 個重大焦點議題。
 
-    針對每一個議題，請進行深入的「多維度事件解析」，從不同媒體與立場的切入點中抽絲剝繭，提供客觀、不帶情緒批判的全景觀測。
-
-    輸出必須是一個純 JSON 物件，包含一個名為 "events" 的陣列，陣列中包含 3 個事件物件。每個事件物件必須包含以下欄位：
-    1. "eventId": 事件代號（例如 "event1", "event2", "event3"）
-    2. "eventTitle": 該重大議題的簡短客觀標題
-    3. "coreFacts": 該議題去蕪存菁後的【事件核心與客觀背景】（約 80-100 字）
-    4. "perspectives": 陣列，必須包含 **3 種不同切入面或立場群體的觀點**（例如：產經專業視角、社會民意視角、政策推動視角）。每個物件必須嚴格包含以下四個欄位：
-       - "groupName": 觀點群體名稱（例如：「產經專業視角」、「社會民意視角」、「政策推動視角」）
-       - "focus": 該群體最強調的核心訴求（約 60 字）
-       - "blindspot": 該切入面延伸出的獨特側重點或視角差異（約 60 字）
-       - "url": ⚠️【極重要】必須透過 Google 搜尋，找出**對應或代表該特定視角的真實新聞報導網址**（絕對不能全部填一樣的網址，每一個視角都要有它各自獨立的來源新聞網址）。
-    5. "neutralSummary": 【綜合觀點與事件本質解析】（跳脫單一框架，點出事件對大眾長遠的真正意涵與本質，約 80 字）
-
-    請確保輸出為純 JSON 格式，且內容不可包含任何未跳脫的特殊字元。
+    針對每一個議題，請進行深入的「多維度事件解析」：
+    1. 必須包含 3 種不同切入面或立場群體（例如：「產經專業視角」、「社會民意視角」、「政策推動視角」）。
+    2. 【極重要】每一種觀點（perspective）都必須透過 Google 搜尋找出該視角對應的**真實、獨立新聞報導網址**填入 "url" 欄位中。產經視角找經濟/工商等財經報導，社會視角找大眾媒體，政策視角找政策公告或主流政經媒體。絕對不能讓三個視角的 url 互相重複或空白。
     """
+
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            temperature=0.7,
+            response_mime_type="application/json",
+            response_schema=schema,
+            tools=[{"google_search": {}}],
+        ),
+    )
+    return response.text
+
+def main():
+    try:
+        json_str = generate_media_bias_analysis()
+        parsed_data = json.loads(json_str)
+        with open("news.json", "w", encoding="utf-8") as f:
+            json.dump(parsed_data, f, ensure_ascii=False, indent=4)
+        print("成功更新多維度解析資料 (news.json)！")
+    except Exception as e:
+        print(f"發生錯誤: {e}")
+
+if __name__ == "__main__":
+    main()
