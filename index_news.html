@@ -40,7 +40,6 @@
             margin-bottom: 24px;
         }
 
-        /* 調整標題大小，確保在手機版也能完美單行呈現 */
         header h1 {
             font-size: 1.35rem;
             color: var(--primary-color);
@@ -59,31 +58,35 @@
             color: var(--text-secondary);
         }
 
-        /* 改為下拉式選單容器 */
-        .event-select-container {
+        /* 簡潔的焦點頁籤：三顆按鈕平分一列，不滑動 */
+        .event-tabs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 24px;
-            text-align: center;
         }
 
-        .event-select {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px 16px;
-            font-size: 1rem;
+        .event-tab-btn {
+            flex: 1;
+            max-width: 150px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: var(--primary-color);
+            border: 1px solid var(--border-color);
             background: #ffffff;
-            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            text-align: center;
             transition: all 0.2s;
         }
 
-        .event-select:focus {
-            outline: none;
+        .event-tab-btn.active {
+            background: var(--accent-blue);
+            color: #ffffff;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         /* 主卡片區域 */
@@ -225,9 +228,9 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 下拉式事件選單 -->
-    <div class="event-select-container" id="eventSelectContainer">
-        <div class="loading">正在載入焦點議題選單...</div>
+    <!-- 簡潔的三個焦點頁籤按鈕 -->
+    <div class="event-tabs" id="eventTabsContainer">
+        <div class="loading">正在載入頁籤...</div>
     </div>
 
     <!-- 事件比對卡片呈現區 -->
@@ -256,11 +259,11 @@
 
             if (eventsData.length === 0) throw new Error('事件清單為空');
 
-            renderEventSelect();
+            renderEventTabs();
             renderEventCard(0);
         } catch (error) {
             console.error(error);
-            document.getElementById('eventSelectContainer').innerHTML = '';
+            document.getElementById('eventTabsContainer').innerHTML = '';
             document.getElementById('eventCardContainer').innerHTML = `
                 <div class="error-msg">
                     ⚠️ 尚無解析資料（news.json）或格式錯誤。<br>
@@ -270,25 +273,28 @@
         }
     });
 
-    function renderEventSelect() {
-        const container = document.getElementById('eventSelectContainer');
-        
-        let optionsHtml = '';
-        eventsData.forEach((evt, index) => {
-            const titleText = evt.eventTitle || `焦點事件 ${index + 1}`;
-            optionsHtml += `<option value="${index}">焦點 ${index + 1}：${titleText}</option>`;
-        });
+    function renderEventTabs() {
+        const tabsContainer = document.getElementById('eventTabsContainer');
+        tabsContainer.innerHTML = '';
 
-        container.innerHTML = `
-            <select class="event-select" id="eventDropdown" onchange="onSelectChange(this.value)">
-                ${optionsHtml}
-            </select>
-        `;
+        eventsData.forEach((evt, index) => {
+            const btn = document.createElement('button');
+            btn.className = `event-tab-btn ${index === 0 ? 'active' : ''}`;
+            btn.textContent = `焦點 ${index + 1}`;
+            btn.onclick = () => switchEvent(index);
+            tabsContainer.appendChild(btn);
+        });
     }
 
-    function onSelectChange(index) {
-        currentEventIndex = parseInt(index);
-        renderEventCard(currentEventIndex);
+    function switchEvent(index) {
+        currentEventIndex = index;
+        
+        const buttons = document.querySelectorAll('.event-tabs button');
+        buttons.forEach((b, idx) => {
+            b.classList.toggle('active', idx === index);
+        });
+
+        renderEventCard(index);
     }
 
     function renderEventCard(index) {
