@@ -51,18 +51,35 @@
             color: var(--text-secondary);
         }
 
-        /* 事件頁籤選單（置中與自動換行） */
+        /* 事件頁籤選單（手機版單列橫向滑動、桌面版置中） */
         .event-tabs {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            justify-content: flex-start; /* 手機預設靠左，讓使用者可左右滑動 */
+            flex-wrap: nowrap;          /* 絕對不換行，讓焦點按鈕排在同一列 */
+            overflow-x: auto;           /* 支援橫向左右滾動 */
             gap: 8px;
             padding-bottom: 8px;
             margin-bottom: 20px;
+            scrollbar-width: none;      /* 隱藏 Firefox 捲軸 */
+            -webkit-overflow-scrolling: touch; /* iOS 觸控滑動更流暢 */
+        }
+
+        /* 隱藏 Chrome / Safari 的捲軸，保持畫面簡潔 */
+        .event-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 桌面版（大螢幕）時自動置中排列，並允許必要時換行 */
+        @media (min-width: 768px) {
+            .event-tabs {
+                justify-content: center;
+                flex-wrap: wrap;
+                overflow-x: visible;
+            }
         }
 
         .event-tab-btn {
-            flex: 0 0 auto;
+            flex: 0 0 auto;             /* 確保按鈕不會被壓縮變形 */
             padding: 10px 18px;
             font-size: 0.95rem;
             font-weight: 600;
@@ -71,6 +88,7 @@
             color: var(--text-secondary);
             border-radius: 8px;
             cursor: pointer;
+            white-space: nowrap;        /* 文字不折行 */
             transition: all 0.2s;
         }
 
@@ -221,7 +239,7 @@
         <p>新聞透鏡：多維度事件解析</p>
     </header>
 
-    <!-- 事件切換頁籤（已置中，保證會動態建立所有事件按鈕） -->
+    <!-- 事件切換頁籤（手機版單列橫向滑動） -->
     <div class="event-tabs" id="eventTabsContainer">
         <div class="loading">正在載入事件按鈕...</div>
     </div>
@@ -271,14 +289,14 @@
         const tabsContainer = document.getElementById('eventTabsContainer');
         tabsContainer.innerHTML = '';
 
-        // 確保陣列中的每一個事件都會被建立成一顆按鈕
+        // 動態建立所有事件按鈕
         eventsData.forEach((evt, index) => {
             const btn = document.createElement('button');
             btn.className = `event-tab-btn ${index === 0 ? 'active' : ''}`;
             const titleText = evt.eventTitle ? evt.eventTitle.substring(0, 10) + '...' : `焦點事件 ${index + 1}`;
             btn.textContent = `焦點 ${index + 1}：${titleText}`;
             
-            // 綁定點擊事件
+            // 綁定點擊切換事件
             btn.onclick = () => switchEvent(index);
             tabsContainer.appendChild(btn);
         });
