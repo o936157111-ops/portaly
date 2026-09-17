@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全方位熱門焦點情報站</title>
+    <title>焦點議題多元視角觀測站</title>
     <style>
         :root {
             --primary-color: #2563eb;
@@ -13,7 +13,6 @@
             --text-main: #1e293b;
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
-            --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         }
 
         * {
@@ -41,27 +40,32 @@
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--text-main);
             margin-bottom: 6px;
         }
 
         header p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-secondary);
         }
 
-        /* 媒體下拉選單區 */
+        /* 媒體與焦點新聞下拉選單區 */
         .media-select-container {
             margin-bottom: 20px;
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         .media-select-container label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
         }
 
         select {
@@ -70,7 +74,7 @@
             font-size: 1rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            background-color: #ffffff;
+            background-color: #f8fafc;
             color: var(--text-main);
             outline: none;
             transition: border-color 0.2s;
@@ -86,7 +90,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            padding: 20px;
+            padding: 24px;
             margin-bottom: 20px;
         }
 
@@ -94,9 +98,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 12px;
         }
 
         .media-badge {
@@ -104,7 +108,7 @@
             color: var(--primary-color);
             padding: 4px 10px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
         }
 
@@ -112,25 +116,25 @@
             font-size: 0.75rem;
             color: #d97706;
             background: #fef3c7;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-weight: 600;
         }
 
         .headline {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             line-height: 1.4;
         }
 
         .section-title {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--primary-color);
-            margin-top: 14px;
-            margin-bottom: 4px;
+            margin-top: 16px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -138,35 +142,18 @@
         .content-box {
             font-size: 0.95rem;
             color: #334155;
-            margin-bottom: 10px;
-        }
-
-        /* 跨媒體視角表格 */
-        .diff-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
-        .diff-table th, .diff-table td {
-            border: 1px solid var(--border-color);
-            padding: 8px 10px;
-            text-align: left;
-        }
-
-        .diff-table th {
-            background-color: #f8fafc;
-            color: var(--text-secondary);
-            font-weight: 600;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
         }
 
         /* 摘要收合按鈕與內容 */
         .summary-container {
-            margin-top: 14px;
+            margin-top: 16px;
             border-top: 1px dashed var(--border-color);
-            padding-top: 10px;
+            padding-top: 12px;
         }
 
         .toggle-summary-btn {
@@ -174,7 +161,7 @@
             border: none;
             color: var(--primary-color);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -183,12 +170,12 @@
         }
 
         .summary-content {
-            margin-top: 8px;
+            margin-top: 10px;
             font-size: 0.9rem;
             color: var(--text-secondary);
             background: #f8fafc;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 14px;
+            border-radius: 8px;
             display: none;
         }
 
@@ -198,7 +185,7 @@
 
         /* 前往原網站按鈕 */
         .external-link-container {
-            margin-top: 16px;
+            margin-top: 20px;
             text-align: center;
         }
 
@@ -206,16 +193,17 @@
             display: inline-block;
             background: var(--primary-color);
             color: #ffffff;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
 
         .btn-link:hover {
             background: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         .loading, .error-msg {
@@ -223,6 +211,9 @@
             padding: 40px;
             color: var(--text-secondary);
             font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
 
         .error-msg {
@@ -234,13 +225,13 @@
 
 <div class="container">
     <header>
-        <h1>🔥 全方位熱門焦點情報站</h1>
-        <p id="headerSubtitle">科技新聞與趨勢每日自動彙整</p>
+        <h1>🔍 焦點議題多元視角觀測站</h1>
+        <p id="headerSubtitle">新聞透鏡：多維度事件解析（每日自動彙整）</p>
     </header>
 
-    <!-- 媒體下拉選單 -->
+    <!-- 焦點新聞下拉選單 -->
     <div class="media-select-container">
-        <label for="mediaSelect" id="selectLabel">選擇今日焦點新聞：</label>
+        <label for="mediaSelect" id="selectLabel">選擇焦點新聞：</label>
         <select id="mediaSelect" onchange="renderSelectedNews()">
             <!-- 動態生成選項 -->
         </select>
@@ -248,7 +239,7 @@
 
     <!-- 新聞資訊卡片呈現區 -->
     <div id="newsCardContainer">
-        <div class="loading">正在載入最新情報資料...</div>
+        <div class="loading">正在讀取新聞透鏡資料庫...</div>
     </div>
 </div>
 
@@ -264,7 +255,7 @@
     window.addEventListener('DOMContentLoaded', async () => {
         try {
             const response = await fetch('news.json');
-            if (!response.ok) throw new Error('無法讀取新聞資料庫檔案');
+            if (!response.ok) throw new Error('無法讀取 news.json');
             newsData = await response.json();
             
             initNewsApp();
@@ -272,7 +263,7 @@
             document.getElementById('newsCardContainer').innerHTML = `
                 <div class="error-msg">
                     ⚠️ 尚無解析資料（news.json）或格式錯誤。<br>
-                    請確認您的 news.json 檔案存在且格式正確！
+                    請確認您的 news.json 檔案已成功更新且路徑正確！
                 </div>
             `;
         }
@@ -285,12 +276,12 @@
 
         const subtitle = document.getElementById('headerSubtitle');
         if (subtitle) {
-            subtitle.textContent = `${newsData.category || '科技新聞'}（更新日期：${newsData.date || '今日'}）`;
+            subtitle.textContent = `新聞透鏡：多維度事件解析（更新日期：${newsData.date || '今日'}）`;
         }
 
         const selectLabel = document.getElementById('selectLabel');
         if (selectLabel) {
-            selectLabel.textContent = `選擇今日焦點新聞（共 ${newsData.total_articles || 0} 篇）：`;
+            selectLabel.textContent = `選擇今日焦點新聞（共 ${newsData.total_articles || newsData.articles.length} 則多元視角）：`;
         }
 
         if (newsData.articles && Array.isArray(newsData.articles)) {
@@ -305,7 +296,7 @@
         renderSelectedNews();
     }
 
-    // 渲染當前選定文章的新聞內容（保留原本豐富的排版區塊）
+    // 渲染當前選定文章的新聞內容與多元視角解析
     function renderSelectedNews() {
         const selectElement = document.getElementById('mediaSelect');
         const selectedId = Number(selectElement.value);
@@ -316,29 +307,31 @@
         const item = newsData.articles.find(art => art.id === selectedId);
 
         if (!item) {
-            container.innerHTML = `<div class="error-msg">目前該新聞尚無詳細資料。</div>`;
+            container.innerHTML = `<div class="error-msg">目前該則新聞尚無詳細資料。</div>`;
             return;
         }
 
-        // 組裝完整排版的卡片 HTML（完美對應新 JSON 欄位，並兼顧擴充性）
+        // 組裝精緻的卡片 HTML，完美呈現多維度解析與原網址按鈕
         container.innerHTML = `
             <div class="card">
                 <div class="card-header">
                     <span class="media-badge">來源：${item.source || '專業媒體'}</span>
-                    <span class="exclusive-badge">分類：${item.category || '科技焦點'}</span>
+                    <span class="exclusive-badge">視角分類：${item.category || '焦點透鏡'}</span>
                 </div>
                 
                 <h2 class="headline">${item.title || '無標題'}</h2>
                 
-                <div class="section-title">💡 深度解析與摘要</div>
+                <div class="section-title">💡 事件透鏡與深度解析</div>
                 <div class="content-box">${item.summary || '暫無摘要'}</div>
 
                 <div class="summary-container">
                     <button class="toggle-summary-btn" onclick="toggleSummary(this)">
-                        <span>▶ 展開詳細焦點摘要與引文</span>
+                        <span>▶ 展開多維度補充與詳細引文</span>
                     </button>
                     <div class="summary-content">
-                        ${item.summary || '暫無詳細引文內容。'}
+                        <strong>【多維度事件解讀】</strong><br>
+                        本則報導由 <strong>${item.source}</strong> 提供，針對「${item.title}」進行深度追蹤。透過多元視角觀測，助您釐清事件核心脈絡與產業影響。<br><br>
+                        <em>原始摘要內容：</em>${item.summary}
                     </div>
                 </div>
 
@@ -356,10 +349,10 @@
         
         if (isShown) {
             content.classList.remove('show');
-            btn.querySelector('span').textContent = '▶ 展開詳細焦點摘要與引文';
+            btn.querySelector('span').textContent = '▶ 展開多維度補充與詳細引文';
         } else {
             content.classList.add('show');
-            btn.querySelector('span').textContent = '▼ 收合詳細焦點摘要與引文';
+            btn.querySelector('span').textContent = '▼ 收合多維度補充與詳細引文';
         }
     }
 </script>
