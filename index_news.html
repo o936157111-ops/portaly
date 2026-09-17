@@ -50,38 +50,47 @@
             color: var(--text-secondary);
         }
 
-        /* 媒體與焦點新聞下拉選單區 */
-        .media-select-container {
+        /* 頁籤選單列（支援電腦版置中/手機版橫向滑動） */
+        .category-scroll-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
             margin-bottom: 20px;
-            background: #ffffff;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            scrollbar-width: none; /* Firefox */
         }
 
-        .media-select-container label {
-            display: block;
+        .category-scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+
+        .category-btn {
+            flex: 0 0 auto;
+            padding: 10px 18px;
             font-size: 0.9rem;
             font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-        }
-
-        select {
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: #f8fafc;
-            color: var(--text-main);
-            outline: none;
-            transition: border-color 0.2s;
+            background: #ffffff;
+            color: var(--text-secondary);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        select:focus {
+        .category-btn.active {
+            background: var(--primary-color);
+            color: #ffffff;
             border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        /* 電腦版樣式優化：若螢幕較寬，讓頁籤自動置中並排得更漂亮 */
+        @media (min-width: 768px) {
+            .category-scroll-container {
+                justify-content: center;
+                flex-wrap: wrap;
+                overflow-x: visible;
+            }
         }
 
         /* 卡片主體樣式 */
@@ -144,7 +153,7 @@
             color: #334155;
             margin-bottom: 12px;
             background: #f8fafc;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             border-left: 4px solid var(--primary-color);
         }
@@ -229,12 +238,9 @@
         <p id="headerSubtitle">新聞透鏡：多維度事件解析（每日自動彙整）</p>
     </header>
 
-    <!-- 焦點新聞下拉選單 -->
-    <div class="media-select-container">
-        <label for="mediaSelect" id="selectLabel">選擇焦點新聞：</label>
-        <select id="mediaSelect" onchange="renderSelectedNews()">
-            <!-- 動態生成選項 -->
-        </select>
+    <!-- 焦點新聞頁籤選單（自動對應 news.json 的 articles） -->
+    <div class="category-scroll-container" id="tabContainer">
+        <!-- 動態生成頁籤 -->
     </div>
 
     <!-- 新聞資訊卡片呈現區 -->
@@ -250,6 +256,8 @@
         total_articles: 0,
         articles: []
     };
+
+    let currentArticleId = 1;
 
     // 頁面載入時抓取新聞 JSON 並初始化
     window.addEventListener('DOMContentLoaded', async () => {
@@ -269,49 +277,58 @@
         }
     });
 
-    // 初始化應用程式與選單選項
+    // 初始化應用程式與頁籤選項
     function initNewsApp() {
-        const selectElement = document.getElementById('mediaSelect');
-        selectElement.innerHTML = '';
+        const tabContainer = document.getElementById('tabContainer');
+        tabContainer.innerHTML = '';
 
         const subtitle = document.getElementById('headerSubtitle');
         if (subtitle) {
             subtitle.textContent = `新聞透鏡：多維度事件解析（更新日期：${newsData.date || '今日'}）`;
         }
 
-        const selectLabel = document.getElementById('selectLabel');
-        if (selectLabel) {
-            selectLabel.textContent = `選擇今日焦點新聞（共 ${newsData.total_articles || newsData.articles.length} 則多元視角）：`;
-        }
-
-        if (newsData.articles && Array.isArray(newsData.articles)) {
-            newsData.articles.forEach(article => {
-                const optionEl = document.createElement('option');
-                optionEl.value = article.id;
-                optionEl.textContent = `[${article.source}] ${article.title}`;
-                selectElement.appendChild(optionEl);
+        if (newsData.articles && Array.isArray(newsData.articles) && newsData.articles.length > 0) {
+            newsData.articles.forEach((article, index) => {
+                const btn = document.createElement('button');
+                btn.className = `category-btn ${index === 0 ? 'active' : ''}`;
+                btn.id = `tab-${article.id}`;
+                btn.textContent = `[${article.source}] ${article.category}`;
+                btn.onclick = () => switchArticle(article.id);
+                tabContainer.appendChild(btn);
             });
-        }
 
-        renderSelectedNews();
+            // 預設顯示第一篇
+            currentArticleId = newsData.articles[0].id;
+            renderSelectedNews(currentArticleId);
+        }
     }
 
-    // 渲染當前選定文章的新聞內容與多元視角解析
-    function renderSelectedNews() {
-        const selectElement = document.getElementById('mediaSelect');
-        const selectedId = Number(selectElement.value);
-        const container = document.getElementById('newsCardContainer');
+    // 切換文章頁籤
+    function switchArticle(articleId) {
+        currentArticleId = articleId;
 
+        // 更新頁籤按鈕樣式
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const activeBtn = document.getElementById(`tab-${articleId}`);
+        if (activeBtn) activeBtn.classList.add('active');
+
+        renderSelectedNews(articleId);
+    }
+
+    // 渲染指定 ID 的新聞內容
+    function renderSelectedNews(articleId) {
+        const container = document.getElementById('newsCardContainer');
         if (!newsData.articles) return;
 
-        const item = newsData.articles.find(art => art.id === selectedId);
+        const item = newsData.articles.find(art => art.id === articleId);
 
         if (!item) {
             container.innerHTML = `<div class="error-msg">目前該則新聞尚無詳細資料。</div>`;
             return;
         }
 
-        // 組裝精緻的卡片 HTML，完美呈現多維度解析與原網址按鈕
         container.innerHTML = `
             <div class="card">
                 <div class="card-header">
