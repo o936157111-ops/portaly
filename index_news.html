@@ -51,26 +51,19 @@
             color: var(--text-secondary);
         }
 
-        /* 頁籤容器：嚴格控制滾動與對齊，避免隨意漂移 */
+        /* 頁籤容器：改為置中並自動換行，徹底解決手機版靠左與露出一半的問題 */
         .category-scroll-container {
             display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 4px 16px 12px 16px;
-            margin: 0 -16px 20px -16px;
-            scrollbar-width: none; /* Firefox 隱藏捲軸 */
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .category-scroll-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari 隱藏捲軸 */
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
         }
 
         .category-btn {
-            flex: 0 0 auto;
-            padding: 10px 18px;
-            font-size: 0.9rem;
+            flex: 0 1 auto;
+            padding: 8px 16px;
+            font-size: 0.85rem;
             font-weight: 600;
             border: 1px solid var(--border-color);
             background: #ffffff;
@@ -86,17 +79,6 @@
             color: #ffffff;
             border-color: var(--primary-color);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
-
-        /* 電腦版樣式優化：若螢幕較寬，讓頁籤自動置中並允許換行 */
-        @media (min-width: 768px) {
-            .category-scroll-container {
-                justify-content: center;
-                flex-wrap: wrap;
-                overflow-x: visible;
-                margin: 0 0 20px 0;
-                padding: 0;
-            }
         }
 
         /* 卡片主體樣式 */
@@ -244,7 +226,7 @@
         <p id="headerSubtitle">科技新聞與趨勢每日自動彙整</p>
     </header>
 
-    <!-- 焦點新聞頁籤選單 -->
+    <!-- 焦點新聞頁籤選單（置中且自動換行） -->
     <div class="category-scroll-container" id="tabContainer">
         <!-- 動態生成頁籤 -->
     </div>
@@ -309,7 +291,7 @@
         }
     }
 
-    // 切換文章頁籤，精確將被點擊的頁籤置中對齊
+    // 切換文章頁籤
     function switchArticle(articleId) {
         currentArticleId = articleId;
 
@@ -320,20 +302,12 @@
         const activeBtn = document.getElementById(`tab-${articleId}`);
         if (activeBtn) {
             activeBtn.classList.add('active');
-            
-            // 精確計算並置中滾動位置
-            const container = document.getElementById('tabContainer');
-            const scrollLeft = activeBtn.offsetLeft - (container.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
-            container.scrollTo({
-                left: scrollLeft,
-                behavior: 'smooth'
-            });
         }
 
         renderSelectedNews(articleId);
     }
 
-    // 渲染指定 ID 的新聞內容（採用 Google 智慧搜尋連結，徹底解決 404）
+    // 渲染指定 ID 的新聞內容
     function renderSelectedNews(articleId) {
         const container = document.getElementById('newsCardContainer');
         if (!newsData.articles) return;
