@@ -1,4 +1,39 @@
 {
-    "updated_at": "2026-09-17 01:19:34",
-    "content": "```json\n{\n  \"date\": \"2024-10-25\",\n  \"category\": \"科技新聞摘要\",\n  \"total_articles\": 4,\n  \"articles\": [\n    {\n      \"id\": 1,\n      \"title\": \"OpenAI 發表全新 AI 搜尋功能，直接挑戰 Google 龍頭地位\",\n      \"category\": \"人工智慧\",\n      \"summary\": \"OpenAI 宣布在 ChatGPT 中正式整合即時網路搜尋功能。使用者現在可以獲得包含最新新聞、股價、體育賽事比分等即時資訊，並附帶原始資料來源連結，大幅提升回答的精確度與時效性。\",\n      \"source\": \"TechCrunch\",\n      \"url\": \"https://techcrunch.com/example/openai-search-launch\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"台積電 2 奈米製程進展超乎預期，預計明年底如期量產\",\n      \"category\": \"半導體\",\n      \"summary\": \"台積電在最新的供應鏈論壇中表示，2 奈米（N2）製程技術研發順利，將採用全環繞柵極（GAA）晶體管架構。預計蘋果與微軟將成為首批採用該製程的客戶，能源效率預計將提升 25% 至 30%。\",\n      \"source\": \"Bloomberg\",\n      \"url\": \"https://www.bloomberg.com/example/tsmc-2nm-progress\"\n    },\n    {\n      \"id\": 3,\n      \"title\": \"蘋果 Apple Intelligence 正式上線，iOS 18.1 推送 AI 新功能\",\n      \"category\": \"消費性電子\",\n      \"summary\": \"蘋果正式向全球使用者推送 iOS 18.1 更新，首波 Apple Intelligence 功能登場。包含智慧型寫作工具、照片「消除」功能、逐字稿摘要以及更自然順暢的 Siri 互動，強調個人隱私保護與端對端安全。\",\n      \"source\": \"The Verge\",\n      \"url\": \"https://www.theverge.com/example/apple-intelligence-ios-18-1\"\n    },\n    {\n      \"id\": 4,\n      \"title\": \"NVIDIA Blackwell 架構晶片全面量產，緩解全球 AI 算力荒\",\n      \"category\": \"硬體與雲端\",\n      \"summary\": \"NVIDIA 執行長黃仁勳確認，新一代 Blackwell 架構 GPU 已克服初期良率問題並進入全面量產。各大雲端服務提供商（微軟、亞馬遜、 Google）均已大量下單，預計將於第四季開始大規模出貨。\",\n      \"source\": \"Reuters\",\n      \"url\": \"https://www.reuters.com/example/nvidia-blackwell-shipment\"\n    }\n  ]\n}\n```"
+    "date": "2024-05-20",
+    "category": "科技新聞摘要",
+    "total_articles": 4,
+    "articles": [
+        {
+            "id": 1,
+            "title": "OpenAI 發布新一代旗艦模型 GPT-4o，提供更即時的語音與多模態互動",
+            "category": "人工智慧",
+            "summary": "OpenAI 推出最新旗艦模型 GPT-4o，機能涵蓋文字、語音與視覺處理，反應速度達到人類對話等級，並宣佈免費開放給所有用戶體驗。",
+            "source": "TechCrunch",
+            "url": "https://techcrunch.com/2024/05/13/openai-launches-gpt-4o/"
+        },
+        {
+            "id": 2,
+            "title": "Google I/O 2024 大會聚焦 AI，搜尋引擎全面導入 AI 總覽功能",
+            "category": "軟體與雲端",
+            "summary": "Google 於年度開發者大會發表多項重大 AI 技術升級，包括 Gemini 1.5 Pro 模型更新，並宣佈在搜尋結果中加入由 AI 生成的內容摘要（AI Overviews）。",
+            "source": "The Verge",
+            "url": "https://www.theverge.com/2024/5/14/24155823/google-io-2024-biggest-announcements-gemini-ai"
+        },
+        {
+            "id": 3,
+            "title": "微軟發表 Copilot+ PC 新標準，攜手高通打造新一代高效能 AI 電腦",
+            "category": "硬體與消費電子",
+            "summary": "微軟推出專為 AI 運算設計的 Copilot+ PC 規格，首波產品搭載高通 Snapdragon X Elite 晶片，強調具備出色的電池續航力與突破性的本地 NPU 算力。",
+            "source": "Wired",
+            "url": "https://www.wired.com/story/microsoft-copilot-plus-pcs-event-announcements/"
+        },
+        {
+            "id": 4,
+            "title": "台積電 2 奈米製程進展順利，預計 2025 年如期量產滿足強勁 AI 需求",
+            "category": "半導體",
+            "summary": "台積電於技術論壇強調其採用 GAA 架構的 2 奈米（N2）製程開發進度符合預期，並將同步導入新一代 A16 製程技術，全力支應全球 AI 晶片產能需求。",
+            "source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/7984000"
+        }
+    ]
 }
