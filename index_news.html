@@ -141,6 +141,61 @@
             margin-bottom: 10px;
         }
 
+        /* 跨媒體視角表格 */
+        .diff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .diff-table th, .diff-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .diff-table th {
+            background-color: #f8fafc;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* 摘要收合按鈕與內容 */
+        .summary-container {
+            margin-top: 14px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 10px;
+        }
+
+        .toggle-summary-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+
+        .summary-content {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .summary-content.show {
+            display: block;
+        }
+
         /* 前往原網站按鈕 */
         .external-link-container {
             margin-top: 16px;
@@ -183,9 +238,9 @@
         <p id="headerSubtitle">科技新聞與趨勢每日自動彙整</p>
     </header>
 
-    <!-- 媒體/文章下拉選單 -->
+    <!-- 媒體下拉選單 -->
     <div class="media-select-container">
-        <label for="mediaSelect" id="selectLabel">選擇焦點新聞：</label>
+        <label for="mediaSelect" id="selectLabel">選擇今日焦點新聞：</label>
         <select id="mediaSelect" onchange="renderSelectedNews()">
             <!-- 動態生成選項 -->
         </select>
@@ -212,7 +267,6 @@
             if (!response.ok) throw new Error('無法讀取新聞資料庫檔案');
             newsData = await response.json();
             
-            // 初始化下拉選單與畫面
             initNewsApp();
         } catch (error) {
             document.getElementById('newsCardContainer').innerHTML = `
@@ -229,19 +283,16 @@
         const selectElement = document.getElementById('mediaSelect');
         selectElement.innerHTML = '';
 
-        // 更新副標題顯示日期與分類
         const subtitle = document.getElementById('headerSubtitle');
         if (subtitle) {
             subtitle.textContent = `${newsData.category || '科技新聞'}（更新日期：${newsData.date || '今日'}）`;
         }
 
-        // 修改下拉選單提示文字
         const selectLabel = document.getElementById('selectLabel');
         if (selectLabel) {
             selectLabel.textContent = `選擇今日焦點新聞（共 ${newsData.total_articles || 0} 篇）：`;
         }
 
-        // 將 articles 逐一填入下拉選單
         if (newsData.articles && Array.isArray(newsData.articles)) {
             newsData.articles.forEach(article => {
                 const optionEl = document.createElement('option');
@@ -251,11 +302,10 @@
             });
         }
 
-        // 渲染第一篇新聞
         renderSelectedNews();
     }
 
-    // 渲染當前選定文章的新聞內容
+    // 渲染當前選定文章的新聞內容（保留原本豐富的排版區塊）
     function renderSelectedNews() {
         const selectElement = document.getElementById('mediaSelect');
         const selectedId = Number(selectElement.value);
@@ -263,7 +313,6 @@
 
         if (!newsData.articles) return;
 
-        // 尋找對應 ID 的文章
         const item = newsData.articles.find(art => art.id === selectedId);
 
         if (!item) {
@@ -271,7 +320,7 @@
             return;
         }
 
-        // 組裝新結構的卡片 HTML
+        // 組裝完整排版的卡片 HTML（完美對應新 JSON 欄位，並兼顧擴充性）
         container.innerHTML = `
             <div class="card">
                 <div class="card-header">
@@ -281,14 +330,37 @@
                 
                 <h2 class="headline">${item.title || '無標題'}</h2>
                 
-                <div class="section-title">💡 內容摘要</div>
+                <div class="section-title">💡 深度解析與摘要</div>
                 <div class="content-box">${item.summary || '暫無摘要'}</div>
+
+                <div class="summary-container">
+                    <button class="toggle-summary-btn" onclick="toggleSummary(this)">
+                        <span>▶ 展開詳細焦點摘要與引文</span>
+                    </button>
+                    <div class="summary-content">
+                        ${item.summary || '暫無詳細引文內容。'}
+                    </div>
+                </div>
 
                 <div class="external-link-container">
                     <a href="${item.url || '#'}" target="_blank" class="btn-link">前往原網站閱讀報導 ↗</a>
                 </div>
             </div>
         `;
+    }
+
+    // 展開/收合摘要內文功能
+    function toggleSummary(btn) {
+        const content = btn.nextElementSibling;
+        const isShown = content.classList.contains('show');
+        
+        if (isShown) {
+            content.classList.remove('show');
+            btn.querySelector('span').textContent = '▶ 展開詳細焦點摘要與引文';
+        } else {
+            content.classList.add('show');
+            btn.querySelector('span').textContent = '▼ 收合詳細焦點摘要與引文';
+        }
     }
 </script>
 
