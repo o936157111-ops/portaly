@@ -1,7 +1,6 @@
 import os
 import json
 from google import genai
-from google.genai import types
 
 def update_news():
     # 檢查 API Key 是否存在
@@ -15,17 +14,16 @@ def update_news():
     # 提示詞，請依您的需求調整
     prompt = "請幫我整理今天最新的重要科技或相關新聞摘要，並以 JSON 格式輸出（包含標題與連結或內文摘要）。"
 
-    # 呼叫 Gemini 模型（使用 gemini-2.5-flash）
+    # 呼叫 Gemini 模型（使用 gemini-3.6-flash）
     response = client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-3.6-flash',
         contents=prompt,
     )
 
     news_content = response.text
     print("成功取得 AI 回應內容")
 
-    # 這裡假設您要將結果寫入 news.json
-    # 如果您的指令本來就會處理特定格式，可依原邏輯儲存
+    # 儲存為 news.json
     data = {
         "updated_at": os.popen("date -u +'%Y-%m-%d %H:%M:%S'").read().strip(),
         "content": news_content
