@@ -1,39 +1,39 @@
 {
-    "date": "2024-05-20",
+    "date": "2026-03-30",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發布新一代旗艦模型 GPT-4o，提供更即時的語音與多模態互動",
+            "title": "OpenAI 推出全新推理增強模型，顯著提升複雜代碼與數學邏輯能力",
             "category": "人工智慧",
-            "summary": "OpenAI 推出最新旗艦模型 GPT-4o，機能涵蓋文字、語音與視覺處理，反應速度達到人類對話等級，並宣佈免費開放給所有用戶體驗。",
+            "summary": "OpenAI 今日宣布為其 flagship AI 系列推出最新架構更新，針對複雜邏輯推理與長期對話上下文處理進行深度優化，同時將 API 調用延遲降低 30%。",
             "source": "TechCrunch",
-            "url": "https://techcrunch.com/2024/05/13/openai-launches-gpt-4o/"
+            "url": "https://techcrunch.com/2026/03/30/openai-next-gen-reasoning-model"
         },
         {
             "id": 2,
-            "title": "Google I/O 2024 大會聚焦 AI，搜尋引擎全面導入 AI 總覽功能",
-            "category": "軟體與雲端",
-            "summary": "Google 於年度開發者大會發表多項重大 AI 技術升級，包括 Gemini 1.5 Pro 模型更新，並宣佈在搜尋結果中加入由 AI 生成的內容摘要（AI Overviews）。",
-            "source": "The Verge",
-            "url": "https://www.theverge.com/2024/5/14/24155823/google-io-2024-biggest-announcements-gemini-ai"
+            "title": "台積電 2 奈米 GAA 製程良率超預期，蘋果與英偉達搶先鎖定產能",
+            "category": "半導體",
+            "summary": "台積電最新供應鏈消息顯示，2 奈米（N2）製程已順利進入高良率試產階段，蘋果下一代旗艦晶片與英偉達高效能 AI 加速卡已確定包下首批核心產能。",
+            "source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/823001"
         },
         {
             "id": 3,
-            "title": "微軟發表 Copilot+ PC 新標準，攜手高通打造新一代高效能 AI 電腦",
-            "category": "硬體與消費電子",
-            "summary": "微軟推出專為 AI 運算設計的 Copilot+ PC 規格，首波產品搭載高通 Snapdragon X Elite 晶片，強調具備出色的電池續航力與突破性的本地 NPU 算力。",
-            "source": "Wired",
-            "url": "https://www.wired.com/story/microsoft-copilot-plus-pcs-event-announcements/"
+            "title": "蘋果傳正研發次世代輕量化 AI 智慧眼鏡，預計於 WWDC 公開最新開發進勢",
+            "category": "消費電子",
+            "summary": "據彭博社記者報導，蘋果正加速擴充穿戴式 AI 裝置生態，預計於今年全球開發者大會展示整合端側 AI 視覺識別與即時語音互動的智慧眼鏡原型。",
+            "source": "Bloomberg",
+            "url": "https://www.bloomberg.com/news/articles/2026-03-30/apple-ai-smart-glasses-tech"
         },
         {
             "id": 4,
-            "title": "台積電 2 奈米製程進展順利，預計 2025 年如期量產滿足強勁 AI 需求",
-            "category": "半導體",
-            "summary": "台積電於技術論壇強調其採用 GAA 架構的 2 奈米（N2）製程開發進度符合預期，並將同步導入新一代 A16 製程技術，全力支應全球 AI 晶片產能需求。",
-            "source": "經濟日報",
-            "url": "https://money.udn.com/money/story/5612/7984000"
+            "title": "Google Quantum AI 達成重大突破，首次實現大規模可擴展的容錯量子糾錯",
+            "category": "前沿科技",
+            "summary": "Google 量子計算團隊在國際頂尖期刊發布研究成果，成功在多個邏輯量子位元間維持穩定糾錯，解決了量子算力規模化過程中最關鍵的退相干瓶頸。",
+            "source": "Nature",
+            "url": "https://www.nature.com/articles/s41586-026-0330-x"
         }
     ]
 }
