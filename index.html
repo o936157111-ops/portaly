@@ -36,7 +36,7 @@
         
         .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
-        /* 即時資訊區塊：預設電腦版單行，手機版拆為上下兩列且均置中 */
+        /* 即時資訊區塊 */
         .realtime-info {
             width: 100%;
             background: transparent;
@@ -314,10 +314,10 @@
 
         <!-- 頁籤一：生活 -->
         <div id="tab-1" class="button-group active">
-            <!-- 新增的「日常作習」主按鈕，用來控制底下項目的展開與隱藏 -->
+            <!-- 「日常作習」主按鈕，用來控制底下項目的展開與隱藏 -->
             <button type="button" class="btn" onclick="toggleDailyRoutine()">日常作習</button>
 
-            <!-- 點擊日常作習後會展開的區塊（包含原本的輸入框、搜尋、天氣，未來您也可以直接加新按鈕在這裡面） -->
+            <!-- 點擊日常作習後會展開的區塊 -->
             <div id="daily-routine-content" class="collapsible-content">
                 <!-- 自訂 Google 搜尋輸入與按鈕 -->
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
@@ -328,7 +328,18 @@
                 <!-- 今日天氣按鈕 -->
                 <a href="https://www.google.com/search?q=天氣" class="btn" target="_blank" rel="noopener noreferrer">今日天氣</a>
 
-                <!-- 預留未來新增按鈕的位置：您未來可以在此處繼續加入新的 <a href="..." class="btn" ...>其他按鈕</a> -->
+                <!-- 改版後的「大眾交通工具」起終點查詢區塊 -->
+                <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
+                    <div style="font-size: 0.9em; font-weight: bold; color: #555; text-align: center;">大眾交通工具查詢</div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <input type="text" id="transit-from" placeholder="起點 (例: 土城)" style="flex: 1; min-width: 0; height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.95em; background: #fff;">
+                        <span style="font-weight: bold; color: #666; font-size: 0.9em;">到</span>
+                        <input type="text" id="transit-to" placeholder="終點 (例: 台南新營)" style="flex: 1; min-width: 0; height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.95em; background: #fff;">
+                    </div>
+                    <button type="button" class="btn" style="height: 44px; margin: 0; background-color: #333; color: #fff;" onclick="submitTransitSearch()">查詢大眾交通工具</button>
+                </div>
+
+                <!-- 預留未來新增按鈕的位置 -->
             </div>
 
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
@@ -366,26 +377,9 @@
             <a href="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/87/a2/fc/87a2fc3f6825666f0335a226feeb2317.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/87/a2/fc/87a2fc3f6825666f0335a226feeb2317.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/6f/13/eb/6f13eb3365ae7f83e89bf6a5823a5596.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/6f/13/eb/6f13eb3365ae7f83e89bf6a5823a5596.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/17/f7/84/17f784d3baf4a109ba76850855beeae2.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/17/f7/84/17f784d3baf4a109ba76850855beeae2.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/57/d6/05/57d605601aa1ef16adcddcee28933015.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/57/d6/05/57d605601aa1ef16adcddcee28933015.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a>
             <a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a>        
-            <a href="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/76/1e/c1/761ec1000d311cd3076137f7f2debf7e.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/76/1e/c1/761ec1000d311cd3076137f7f2debf7e.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/d8/36/d9/d836d9b3bc34a0b00e48ee89fbda74f6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/d8/36/d9/d836d9b3bc34a0b00e48ee89fbda74f6.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-img" alt="攝影作品"></a>
-                                             
-            
         </div>
     </div>
 </div>
@@ -403,7 +397,6 @@
         </div>
         
         <div class="card-icons-row">
-            <a href="https://portaly.cc/myezlife" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
             <a href="https://myeztravellife.blogspot.com" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></a>
             <a href="https://www.youtube.com/@myezlife" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
             <a href="https://www.flickr.com/photos/0936157111/" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="5"/><circle cx="17" cy="12" r="5"/></svg></a>
@@ -432,7 +425,7 @@
     </div>
 </div>
 
-<!-- Lightbox 燈箱容器（含前往原始連結按鈕） -->
+<!-- Lightbox 燈箱容器 -->
 <div id="lightbox-modal" onclick="closeLightbox(event)">
     <span id="lightbox-close">&times;</span>
     <div class="lightbox-content" onclick="event.stopPropagation()">
@@ -459,6 +452,20 @@ function submitGoogleSearch() {
     }
 }
 
+// 大眾交通工具起終點組合搜尋函式
+function submitTransitSearch() {
+    const fromVal = document.getElementById('transit-from').value.trim();
+    const toVal = document.getElementById('transit-to').value.trim();
+    
+    if (fromVal && toVal) {
+        const queryStr = `從 ${fromVal} 到 ${toVal} 大眾交通工具`;
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryStr)}`;
+        window.open(searchUrl, '_blank', 'noopener,noreferrer');
+    } else {
+        alert('請完整輸入「起點」與「終點」！');
+    }
+}
+
 // 讓使用者在輸入框按下 Enter 鍵時也能直接觸發搜尋
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById('google-search-input');
@@ -466,6 +473,15 @@ document.addEventListener("DOMContentLoaded", function() {
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 submitGoogleSearch();
+            }
+        });
+    }
+
+    const transitTo = document.getElementById('transit-to');
+    if (transitTo) {
+        transitTo.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitTransitSearch();
             }
         });
     }
