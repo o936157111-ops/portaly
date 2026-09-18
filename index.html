@@ -299,7 +299,13 @@
 
         <!-- 頁籤一：生活 -->
         <div id="tab-1" class="button-group active">
-            <!-- 今日天氣按鈕（改為直接新分頁開啟 Google 天氣，自動依使用者所在位置顯示） -->
+            <!-- 自訂 Google 搜尋輸入與按鈕 -->
+            <div style="display: flex; gap: 8px; width: 100%;">
+                <input type="text" id="google-search-input" placeholder="輸入關鍵字搜尋 Google..." style="flex: 1; height: 50px; padding: 0 15px; border-radius: 12px; border: 2px solid #dcdcdc; outline: none; font-size: 1em; background-color: #f4f4f9;">
+                <button type="button" class="btn" style="width: 80px; margin: 0;" onclick="submitGoogleSearch()">搜尋</button>
+            </div>
+
+            <!-- 今日天氣按鈕 -->
             <a href="https://www.google.com/search?q=天氣" class="btn" target="_blank" rel="noopener noreferrer">今日天氣</a>
 
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
@@ -421,17 +427,38 @@
 </div>
 
 <script>
+// 自訂 Google 搜尋觸發函式
+function submitGoogleSearch() {
+    const inputVal = document.getElementById('google-search-input').value.trim();
+    if (inputVal) {
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(inputVal)}`;
+        window.open(searchUrl, '_blank', 'noopener,noreferrer');
+    } else {
+        alert('請先輸入要搜尋的關鍵字！');
+    }
+}
+
+// 讓使用者在輸入框按下 Enter 鍵時也能直接觸發搜尋
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById('google-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitGoogleSearch();
+            }
+        });
+    }
+});
+
 // 即時更新日期、時間與動態切換日夜天氣圖示
 function updateRealtimeInfo() {
     const now = new Date();
     
-    // 日期與星期
     const m = String(now.getMonth() + 1).padStart(2, '0');
     const d = String(now.getDate()).padStart(2, '0');
     const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     const wk = weekdays[now.getDay()];
     
-    // 即時時間
     const h = String(now.getHours()).padStart(2, '0');
     const min = String(now.getMinutes()).padStart(2, '0');
     const s = String(now.getSeconds()).padStart(2, '0');
@@ -441,14 +468,13 @@ function updateRealtimeInfo() {
     if (datetimeEl) datetimeEl.innerText = datetimeStr;
 }
 
-// 結合 IP 取得鄉鎮市區層級定位，並依當地時間對應日夜天氣圖示
 async function fetchLocationAndWeather() {
     const locationEl = document.getElementById('location-text');
     const tempEl = document.getElementById('weather-temp');
     const iconEl = document.getElementById('weather-icon');
 
     const nowHour = new Date().getHours();
-    const isNight = nowHour < 6 || nowHour >= 18; // 判斷是否為夜間 (18:00 ~ 06:00)
+    const isNight = nowHour < 6 || nowHour >= 18;
 
     try {
         const res = await fetch('https://ipapi.co/json/');
