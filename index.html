@@ -93,6 +93,23 @@
         .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.3s ease; width: 100%; cursor: pointer; }
         .btn:hover { background-color: #000 !important; color: #fff !important; border-color: #000 !important; transform: translateY(-2px) !important; }
 
+        /* 可收合的日常作習選單區塊樣式 */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+        .collapsible-content.show {
+            max-height: 800px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
         /* 下半部：純圖片 Pinterest 瀑布流風格 */
         .pinterest-masonry { 
             column-count: 2; 
@@ -265,15 +282,13 @@
             </a>
         </div>
         
-        <!-- 即時資訊區塊：手機版嚴格拆為兩列，皆置中對齊 -->
+        <!-- 即時資訊區塊 -->
         <div class="realtime-info" id="realtime-info-box">
-            <!-- 第一列：天氣圖 + 溫度 + 定位位置 -->
             <div class="realtime-row">
                 <span id="weather-icon">⛅</span>
                 <span id="weather-temp">--°C</span>
                 <span id="location-text">定位中...</span>
             </div>
-            <!-- 第二列：日期及時間 -->
             <div class="realtime-row">
                 <span id="datetime-text">--/-- (─) 00:00:00</span>
             </div>
@@ -299,14 +314,22 @@
 
         <!-- 頁籤一：生活 -->
         <div id="tab-1" class="button-group active">
-            <!-- 自訂 Google 搜尋輸入與按鈕（已修正手機超出寬度問題） -->
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
-                <input type="text" id="google-search-input" placeholder="輸入關鍵字搜尋 Google..." style="flex: 1; min-width: 0; height: 50px; padding: 0 15px; border-radius: 12px; border: 2px solid #dcdcdc; outline: none; font-size: 1em; background-color: #f4f4f9;">
-                <button type="button" class="btn" style="flex-shrink: 0; width: 80px; margin: 0;" onclick="submitGoogleSearch()">搜尋</button>
-            </div>
+            <!-- 新增的「日常作習」主按鈕，用來控制底下項目的展開與隱藏 -->
+            <button type="button" class="btn" onclick="toggleDailyRoutine()">日常作習</button>
 
-            <!-- 今日天氣按鈕 -->
-            <a href="https://www.google.com/search?q=天氣" class="btn" target="_blank" rel="noopener noreferrer">今日天氣</a>
+            <!-- 點擊日常作習後會展開的區塊（包含原本的輸入框、搜尋、天氣，未來您也可以直接加新按鈕在這裡面） -->
+            <div id="daily-routine-content" class="collapsible-content">
+                <!-- 自訂 Google 搜尋輸入與按鈕 -->
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
+                    <input type="text" id="google-search-input" placeholder="輸入關鍵字搜尋 Google..." style="flex: 1; min-width: 0; height: 50px; padding: 0 15px; border-radius: 12px; border: 2px solid #dcdcdc; outline: none; font-size: 1em; background-color: #f4f4f9;">
+                    <button type="button" class="btn" style="flex-shrink: 0; width: 80px; margin: 0;" onclick="submitGoogleSearch()">搜尋</button>
+                </div>
+
+                <!-- 今日天氣按鈕 -->
+                <a href="https://www.google.com/search?q=天氣" class="btn" target="_blank" rel="noopener noreferrer">今日天氣</a>
+
+                <!-- 預留未來新增按鈕的位置：您未來可以在此處繼續加入新的 <a href="..." class="btn" ...>其他按鈕</a> -->
+            </div>
 
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
             <a href="https://portaly.cc/myezlife/pages/readingshare" class="btn" target="_blank" rel="noopener noreferrer">生活閱讀-讀後分享</a>
@@ -351,7 +374,8 @@
             <a href="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/4f/a5/14/4fa514308e468d9df72e0a5a57734c18.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/38/46/e0/3846e044a60e222e19db425eb7ed92b1.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/b2/90/aa/b290aa4b875255e6427ad50e5fc07f0f.jpg" class="pin-img" alt="攝影作品"></a>
-               
+            <a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a>
+            <a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a>        
             <a href="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/0a/78/6b/0a786b7a1313a04e867e13c17d701ff6.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/af/44/80/af4480235f5431fa96cc9d503e4752b2.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/17/7b/55/177b553f3d13bfbfd9b37cf4b157a838.jpg" class="pin-img" alt="攝影作品"></a>
@@ -360,8 +384,16 @@
             <a href="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/11/f7/41/11f7413e916e6d11c4a46bb04f5314e3.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/ed/51/fe/ed51fea3f0fe9d35c280997d1bda6b0c.jpg" class="pin-img" alt="攝影作品"></a>
             <a href="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-card" target="_blank"><img src="https://i.pinimg.com/1200x/39/7b/a6/397ba636cd15e0a1ba31ac521b343cf0.jpg" class="pin-img" alt="攝影作品"></a>
-           
-            
+            <a href="https://go.portaly.cc/5a9826a0" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/suww9pHrDlSYaXL5n1Uh%2Fproducts%2FPls3FQmDlFjVMQ8R6deJ%2Fimage?alt=media&token=676cc137-5896-46a8-987a-49a99a09a10d" class="pin-img" alt="【Notion 模版】訂閱服務管理系統"></a>
+            <a href="https://go.portaly.cc/-27s8HM0" class="pin-card" target="_blank"><img src="https://img.portaly.cc/hbli07OoX37NsFKuGNjYaWyvZX6Map9lszbYC5oxHqY/rs:fill:640/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjIvYi9wb3J0YWx5-NhOWUxLmFwcHNwb3QuY29tL28vY1JjSjFOazcxVmVuYUFXdGlacW0lMkZwcm9kdWN0cyUyRnJIRXVyZHNBaHUxYUFEdWIxbXRjJTJGaW1hZ2U_YWx0PW1lZGlhJnRva2VuPWJkZTBjZDliLTk4OTYtNDQ4Zi1hMmMyLTVkZDliMWQ0MDRjNw" class="pin-img" alt="《電子書》IG變現計畫：AI寫電子書"></a>
+            <a href="https://go.portaly.cc/af10b5ee" class="pin-card" target="_blank"><img src="https://img.portaly.cc/PMHrKv3lM7kI0mpHfsrtWgxWnSBB6NPoHgFGWfCfN1A/rs:fill:640/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjIvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vd3ZrMHlFcWowS1VXb2FvelpQQ3IlMkZwcm9kdWN0cyUyRm5UT0JEbjVRd3g1cUdFa2RmSno2JTJGaW1hZ2U_YWx0PW1lZGlhJnRva2VuPTM2MWIxOTE0LWIwY2YtNGIwOC04NWU3LWRjMGE3OTJhN2JjNQ" class="pin-img" alt="完整版《破億下載Podcast製作人的經營指南》電子書"></a>
+            <a href="https://go.portaly.cc/28d3d72e" class="pin-card" target="_blank"><img src="https://firebasestorage.googleapis.com/v0/b/portaly-ca9e1.appspot.com/o/Y1CFcamCHpEaLlyr6jaq%2Fproducts%2FN88jIjq2woP7MPwNhrKd%2Fimage?alt=media&token=e5860d1d-eb86-42a1-b14d-18dcce7e5a70" class="pin-img" alt="排版微調電子"></a>
+            <a href="https://go.portaly.cc/6d66963f" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/DD15Q2QIeVh5hWmPjG1Y" class="pin-img" alt="沖繩。初旅"></a>
+            <a href="https://go.portaly.cc/c6db0cc3" class="pin-card" target="_blank"><img src="https://rewards.portaly.cc/images/ugFatGEu6tyuUe4kL0WO" class="pin-img" alt="用 120 萬走過 28 國的兩年環遊世界"></a>
+            <a href="https://go.portaly.cc/ec4aff45" class="pin-card" target="_blank"><img src="https://img.portaly.cc/igEobXs7Jd0EJRRqJzQNpbq4CXEzOivYKeVzPEk8FBU/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjIvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZXUXd3VU9XMmJFR3NLeWVadHZq3yUyRml0ZW1NYXPoNmFCZm9Fb3BwN1JqZ2xNRS1lZzVLLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj0xZTljODcwOC00M2FhLTQ2ZjktYmNhZC1hOWRlNDk0MWE5NzM" class="pin-img" alt="把理想活成日常"></a>
+            <a href="https://go.portaly.cc/Ql8XjsTz" class="pin-card" target="_blank"><img src="https://img.portaly.cc/x0YNqhK_hcuh6bNbBFmzVhnICQfc5omq3iCM_k3Chko/rs:fill:828/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjIvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZ4eHAyWEhsaUxxWlpETkpYYWNjMSUyRml0ZW1NYXAuaU5LUnl3VWpPVEU2ZE9FbDIyXzIwLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj05Yjg3NjlhNS00NzhhLTQ5YTgtYmFiNy1lMjBkY2YwNTdkMGM" class="pin-img" alt="你也可以做到！每月加薪3萬：自媒體新手的經營全攻略"></a>
+            <a href="https://go.portaly.cc/8fd4ef3b" class="pin-card" target="_blank"><img src="https://img.portaly.cc/CzqGDv9dAl79LrZCfipFkLgFzfHOoYYLaqVaFWJ5v00/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjIvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZRZTJmNXduZ3lUTWVRd0t5VkhrNSUyRml0ZW1NYXAuaU5LUnl3VWpPVEU2ZE9FbDIyXzIwLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj04YTVlYWEzNi02OTM1LTRjM2ItYjZhNy1hODIwMGExNTFjNTE" class="pin-img" alt="把理想活成日常"></a>
+            <a href="https://go.portaly.cc/e245f1bc" class="pin-card" target="_blank"><img src="https://img.portaly.cc/KNuP6UZIuTCvHI2hDrlre7VoqGkSaZ2WxN2ZY96Wrco/rs:fill:1080/q:75/aHR0cHM6Ly9maXJlYmFzZXN0b3JhZ2UuZ29vZ2xlYXBpcy5jb20vdjIvYi9wb3J0YWx5LWNhOWUxLmFwcHNwb3QuY29tL28vVGFzUFRxSkpFOFNFTmpVRllCSTQlMkZibG9ja3MlMkZZdlp2TjQ0MXBPVUhERjY0a1V6MCUyRml0ZW1NYXAuZWVyVW5ESVU1Rlh0bFRjdzFYVG1KLmltYWdlP2FsdD1tZWRpYSZ0b2tlbj1lM2M2MzIwOS1kMTNiLTRkYjYtODY2ZS0yNzRjYjQxNjU3NDQ" class="pin-img" alt="把理想活成日常"></a>
         </div>
     </div>
 </div>
@@ -418,6 +450,12 @@
 </div>
 
 <script>
+// 控制「日常作習」區塊展開與收合的函式
+function toggleDailyRoutine() {
+    const content = document.getElementById('daily-routine-content');
+    content.classList.toggle('show');
+}
+
 // 自訂 Google 搜尋觸發函式
 function submitGoogleSearch() {
     const inputVal = document.getElementById('google-search-input').value.trim();
