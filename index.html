@@ -29,42 +29,74 @@
         .container { max-width: 440px; width: 100%; margin: 0 auto; }
         .card-container { background-color: #FCFCFF; border-radius: 24px; border: 1px solid #F0F0F0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); overflow: hidden; padding: 40px 20px; width: 100%; position: relative; }
         
-        .logo-wrapper { position: relative; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto 10px auto; }
+        .logo-wrapper { position: relative; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto 5px auto; }
         .logo-link { display: none; width: 100%; transition: transform 0.3s ease; }
         .logo-link:hover { transform: scale(1.02); }
         .logo-img { width: 100%; height: auto; border-radius: 12px; display: block; }
         
         .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
-        /* 即時資訊區塊 */
+        /* 改為全部置中的天氣資訊區塊（無底框） */
         .realtime-info {
             width: 100%;
             background: transparent;
             border: none;
-            padding: 4px 0;
-            margin-bottom: 25px;
+            padding: 4px 4px 15px 4px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .realtime-main-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            font-size: 14px;
-            color: #555;
-            text-align: center;
+            flex-wrap: wrap;
         }
-        
-        .realtime-row {
+
+        #weather-icon-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .weather-temp-box {
+            font-size: 19px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .weather-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .realtime-sub-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 12px;
+            color: #555;
         }
 
-        @media (max-width: 768px) {
-            .realtime-info {
-                flex-direction: column;
-                gap: 6px;
-                align-items: center;
-            }
+        .realtime-bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 11px;
+            color: #777;
+            border-top: 1px solid #eee;
+            width: 80%;
+            padding-top: 6px;
+            margin-top: 2px;
         }
 
         /* 載入器樣式 */
@@ -105,7 +137,7 @@
             width: 100%;
         }
         .collapsible-content.show {
-            max-height: 800px;
+            max-height: 1200px;
             opacity: 1;
             margin-top: 12px;
         }
@@ -282,15 +314,21 @@
             </a>
         </div>
         
-        <!-- 即時資訊區塊 -->
+        <!-- 自動載入的 Google 風格即時天氣卡片區塊（全部置中、無底框） -->
         <div class="realtime-info" id="realtime-info-box">
-            <div class="realtime-row">
-                <span id="weather-icon">⛅</span>
-                <span id="weather-temp">--°C</span>
-                <span id="location-text">定位中...</span>
+            <div class="realtime-main-row">
+                <img id="weather-icon-img" src="https://ssl.gstatic.com/onebox/weather/64/sunny.png" alt="天氣圖示">
+                <div class="weather-temp-box"><span id="weather-temp">--°C</span></div>
+                <div class="weather-desc" id="weather-desc-text">氣象資料載入中...</div>
             </div>
-            <div class="realtime-row">
+            <div class="realtime-sub-row">
+                <span id="location-text" style="font-weight: bold; color: #333;">定位中...</span>
+                <span>•</span>
+                <span id="weather-range">高: --° 低: --°</span>
+            </div>
+            <div class="realtime-bottom-row">
                 <span id="datetime-text">--/-- (─) 00:00:00</span>
+                <span>Google 氣象同步</span>
             </div>
         </div>
 
@@ -314,21 +352,14 @@
 
         <!-- 頁籤一：生活 -->
         <div id="tab-1" class="button-group active">
-            <!-- 「日常作習」主按鈕，用來控制底下項目的展開與隱藏 -->
             <button type="button" class="btn" onclick="toggleDailyRoutine()">日常作習</button>
 
-            <!-- 點擊日常作習後會展開的區塊 -->
             <div id="daily-routine-content" class="collapsible-content">
-                <!-- 自訂 Google 搜尋輸入與按鈕 -->
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
                     <input type="text" id="google-search-input" placeholder="輸入關鍵字搜尋 Google..." style="flex: 1; min-width: 0; height: 50px; padding: 0 15px; border-radius: 12px; border: 2px solid #dcdcdc; outline: none; font-size: 1em; background-color: #f4f4f9;">
                     <button type="button" class="btn" style="flex-shrink: 0; width: 80px; margin: 0;" onclick="submitGoogleSearch()">搜尋</button>
                 </div>
 
-                <!-- 今日天氣按鈕 -->
-                <a href="https://www.google.com/search?q=天氣" class="btn" target="_blank" rel="noopener noreferrer">今日天氣</a>
-
-                <!-- 改版後的「大眾交通工具」起終點查詢區塊 -->
                 <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
                     <div style="font-size: 0.9em; font-weight: bold; color: #555; text-align: center;">大眾交通工具查詢</div>
                     <div style="display: flex; gap: 6px; align-items: center;">
@@ -338,8 +369,6 @@
                     </div>
                     <button type="button" class="btn" style="height: 44px; margin: 0; background-color: #333; color: #fff;" onclick="submitTransitSearch()">查詢大眾交通工具</button>
                 </div>
-
-                <!-- 預留未來新增按鈕的位置 -->
             </div>
 
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
@@ -435,109 +464,179 @@
 </div>
 
 <script>
-// 控制「日常作習」區塊展開與收合的函式
 function toggleDailyRoutine() {
     const content = document.getElementById('daily-routine-content');
     content.classList.toggle('show');
 }
 
-// 自訂 Google 搜尋觸發函式
+const cityMap = {
+    "Taipei": "台北市", "New Taipei": "新北市", "New Taipei City": "新北市",
+    "Taichung": "台中市", "Taichung City": "台中市", "Kaohsiung": "高雄市",
+    "Kaohsiung City": "高雄市", "Tainan": "台南市", "Tainan City": "台南市",
+    "Taoyuan": "桃園市", "Taoyuan City": "桃園市", "Keelung": "基隆市",
+    "Hsinchu": "新竹市", "Chiayi": "嘉義市", "Tucheng": "土城區",
+    "Banqiao": "板橋區", "Zhonghe": "中和區", "Yonghe": "永和區"
+};
+
+function translateCity(cityName) {
+    if (!cityName) return "新北市";
+    return cityMap[cityName] || cityMap[cityName.trim()] || cityName;
+}
+
 function submitGoogleSearch() {
     const inputVal = document.getElementById('google-search-input').value.trim();
     if (inputVal) {
-        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(inputVal)}`;
-        window.open(searchUrl, '_blank', 'noopener,noreferrer');
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(inputVal)}`, '_blank', 'noopener,noreferrer');
     } else {
         alert('請先輸入要搜尋的關鍵字！');
     }
 }
 
-// 大眾交通工具起終點組合搜尋函式
 function submitTransitSearch() {
     const fromVal = document.getElementById('transit-from').value.trim();
     const toVal = document.getElementById('transit-to').value.trim();
-    
     if (fromVal && toVal) {
-        const queryStr = `從 ${fromVal} 到 ${toVal} 大眾交通工具`;
-        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(queryStr)}`;
-        window.open(searchUrl, '_blank', 'noopener,noreferrer');
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(`從 ${fromVal} 到 ${toVal} 大眾交通工具`)}`, '_blank', 'noopener,noreferrer');
     } else {
         alert('請完整輸入「起點」與「終點」！');
     }
 }
 
-// 讓使用者在輸入框按下 Enter 鍵時也能直接觸發搜尋
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById('google-search-input');
     if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                submitGoogleSearch();
-            }
-        });
+        searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') submitGoogleSearch(); });
     }
-
     const transitTo = document.getElementById('transit-to');
     if (transitTo) {
-        transitTo.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                submitTransitSearch();
-            }
-        });
+        transitTo.addEventListener('keypress', function(e) { if (e.key === 'Enter') submitTransitSearch(); });
     }
 });
 
-// 即時更新日期、時間與動態切換日夜天氣圖示
 function updateRealtimeInfo() {
     const now = new Date();
-    
     const m = String(now.getMonth() + 1).padStart(2, '0');
     const d = String(now.getDate()).padStart(2, '0');
-    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-    const wk = weekdays[now.getDay()];
-    
+    const wk = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()];
     const h = String(now.getHours()).padStart(2, '0');
     const min = String(now.getMinutes()).padStart(2, '0');
     const s = String(now.getSeconds()).padStart(2, '0');
     
-    const datetimeStr = `${m}/${d} (${wk}) ${h}:${min}:${s}`;
     const datetimeEl = document.getElementById('datetime-text');
-    if (datetimeEl) datetimeEl.innerText = datetimeStr;
+    if (datetimeEl) datetimeEl.innerText = `${m}/${d} (${wk}) ${h}:${min}:${s}`;
+}
+
+function getWeatherDetails(code, isNight) {
+    let desc = "晴朗";
+    let iconUrl = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_clear.png" : "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
+
+    if (code === 0) {
+        desc = isNight ? "晴朗" : "晴朗";
+        iconUrl = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_clear.png" : "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
+    } else if (code >= 1 && code <= 2) {
+        desc = "多雲時晴";
+        iconUrl = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_partly_cloudy.png" : "https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png";
+    } else if (code === 3) {
+        desc = "陰天";
+        iconUrl = "https://ssl.gstatic.com/onebox/weather/64/cloudy.png";
+    } else if (code >= 45 && code <= 48) {
+        desc = "起霧";
+        iconUrl = "https://ssl.gstatic.com/onebox/weather/64/fog.png";
+    } else if (code >= 51 && code <= 67) {
+        desc = "降雨";
+        iconUrl = "https://ssl.gstatic.com/onebox/weather/64/rain.png";
+    } else if (code >= 71 && code <= 77) {
+        desc = "降雪";
+        iconUrl = "https://ssl.gstatic.com/onebox/weather/64/snow.png";
+    } else if (code >= 95) {
+        desc = "雷雨";
+        iconUrl = "https://ssl.gstatic.com/onebox/weather/64/thunderstorms.png";
+    }
+    return { desc, iconUrl };
 }
 
 async function fetchLocationAndWeather() {
     const locationEl = document.getElementById('location-text');
     const tempEl = document.getElementById('weather-temp');
-    const iconEl = document.getElementById('weather-icon');
+    const descEl = document.getElementById('weather-desc-text');
+    const rangeEl = document.getElementById('weather-range');
+    const iconImg = document.getElementById('weather-icon-img');
 
     const nowHour = new Date().getHours();
     const isNight = nowHour < 6 || nowHour >= 18;
 
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            try {
+                const [ipRes, weatherRes] = await Promise.all([
+                    fetch('https://ipapi.co/json/'),
+                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto`)
+                ]);
+                
+                const ipData = await ipRes.json();
+                const weatherData = await weatherRes.json();
+                
+                if (ipData && (ipData.city || ipData.region)) {
+                    locationEl.innerText = translateCity(ipData.city || ipData.region);
+                } else {
+                    locationEl.innerText = "新北市";
+                }
+
+                if (weatherData && weatherData.current_weather) {
+                    const temp = weatherData.current_weather.temperature;
+                    const code = weatherData.current_weather.weathercode;
+                    const weatherInfo = getWeatherDetails(code, isNight);
+                    
+                    let maxTemp = "--";
+                    let minTemp = "--";
+                    if (weatherData.daily && weatherData.daily.temperature_2m_max && weatherData.daily.temperature_2m_min) {
+                        maxTemp = Math.round(weatherData.daily.temperature_2m_max[0]);
+                        minTemp = Math.round(weatherData.daily.temperature_2m_min[0]);
+                    }
+
+                    tempEl.innerText = `${temp}°C`;
+                    descEl.innerText = weatherInfo.desc;
+                    rangeEl.innerText = `高: ${maxTemp}° 低: ${minTemp}°`;
+                    iconImg.src = weatherInfo.iconUrl;
+                }
+            } catch (e) {
+                fallbackWeather(locationEl, tempEl, descEl, rangeEl, iconImg, isNight);
+            }
+        }, function(error) {
+            fallbackWeatherByIpOnly(locationEl, tempEl, descEl, rangeEl, iconImg, isNight);
+        }, { timeout: 8000 });
+    } else {
+        fallbackWeatherByIpOnly(locationEl, tempEl, descEl, rangeEl, iconImg, isNight);
+    }
+}
+
+async function fallbackWeatherByIpOnly(locationEl, tempEl, descEl, rangeEl, iconImg, isNight) {
     try {
         const res = await fetch('https://ipapi.co/json/');
         const data = await res.json();
-        
         if (data && (data.city || data.region)) {
-            const districtOrCity = data.city || data.region;
-            locationEl.innerText = districtOrCity;
+            locationEl.innerText = translateCity(data.city || data.region);
         } else {
             locationEl.innerText = "新北市";
         }
-
-        const temp = 26;
-        tempEl.innerText = `${temp}°C`;
-
-        if (isNight) {
-            iconEl.innerText = "🌙";
-        } else {
-            iconEl.innerText = "☀️";
-        }
-
-    } catch (e) {
-        locationEl.innerText = "新北市";
         tempEl.innerText = "26°C";
-        iconEl.innerText = isNight ? "🌙" : "⛅";
+        descEl.innerText = "晴時多雲";
+        rangeEl.innerText = "高: 29° 低: 22°";
+        iconImg.src = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_clear.png" : "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
+    } catch (e) {
+        fallbackWeather(locationEl, tempEl, descEl, rangeEl, iconImg, isNight);
     }
+}
+
+function fallbackWeather(locationEl, tempEl, descEl, rangeEl, iconImg, isNight) {
+    locationEl.innerText = "新北市";
+    tempEl.innerText = "26°C";
+    descEl.innerText = "晴朗";
+    rangeEl.innerText = "高: 29° 低: 22°";
+    iconImg.src = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_clear.png" : "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
 }
 
 setInterval(updateRealtimeInfo, 1000);
