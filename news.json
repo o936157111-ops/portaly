@@ -5,35 +5,35 @@
     "articles": [
         {
             "id": 1,
-            "title": "微軟發表 Copilot+ PC 全新架構 AI 電腦，深度整合 OpenAI 模型與 NPU 算力",
+            "title": "微軟發表 Copilot+ PC 架構，結合高通 Snapdragon X 晶片重塑個人電腦",
             "category": "人工智慧 / 硬體",
-            "summary": "微軟推出全新 Copilot+ PC 系列個人電腦，搭載高通 Snapdragon X Elite 處理器與強大 NPU，支援 Recall（回顧）功能與即時生成 AI 工具，宣告 Windows 邁入 AI 原生時代。",
-            "source": "TechNews 科技新報",
-            "url": "https://technews.tw/2024/05/21/microsoft-copilot-plus-pc/"
+            "summary": "微軟推出全新 Copilot+ PC 規格標準，要求裝置需具備超過 40 TOPS 的 NPU 算力。首批產品採用高通 ARM 架構晶片，提供「Recall（召回）」生成式搜尋與即時語音翻譯等系統級 AI 功能。",
+            "source": "TechCrunch",
+            "url": "https://techcrunch.com"
         },
         {
             "id": 2,
-            "title": "Google I/O 2024 發表 Gemini 1.5 Flash 與 Project Astra，全面加速 AI 布局",
-            "category": "人工智慧 / 軟體",
-            "summary": "Google 於開發者大會上推出更輕量且高速度的 Gemini 1.5 Flash 模型，並展示具備即時視覺與語音互動能力的 Project Astra，大幅提升 AI 助理的實用性。",
-            "source": "iThome",
-            "url": "https://www.ithome.com.tw/news/162888"
+            "title": "台積電發表 A16 埃米級技術，結合背面供電架構預計 2026 年量產",
+            "category": "半導體",
+            "summary": "台積電於北美技術論壇正式公開 A16（1.6 奈米級）新製程，首度採用超級電軌（Super Power Rail）背面供電網路，將顯著提升 AI 晶片的運算速度與能效表現。",
+            "source": "Reuters",
+            "url": "https://www.reuters.com"
         },
         {
             "id": 3,
-            "title": "蘋果發表全新 M4 晶片與 iPad Pro，極致纖薄並強化 AI 算力",
-            "category": "消費電子 / 半導體",
-            "summary": "蘋果推出採用第二代 3 奈米製程的 M4 晶片，神經網路引擎速度大幅提升，首度搭載於全新 OLED 螢幕的 iPad Pro，為 AI 應用提供強大的硬體基石。",
-            "source": "數位時代",
-            "url": "https://www.bnext.com.tw/article/79058/apple-m4-ipad-pro"
+            "title": "OpenAI 與國際媒體巨頭達成合作，獲得新聞內容授權與 AI 訓練許可",
+            "category": "人工智慧 / 產業動態",
+            "summary": "OpenAI 與新聞集團（News Corp）簽署多年的全球授權協議，ChatGPT 將可直接引用《華爾街日報》、《泰晤士報》等權威媒體的最新新聞內容，並利用其歷史數據進行模型訓練。",
+            "source": "The Verge",
+            "url": "https://www.theverge.com"
         },
         {
             "id": 4,
-            "title": "台積電加速 2 奈米量產進度，預計 2025 年推出 GAA 架構晶片",
-            "category": "半導體",
-            "summary": "台積電重申 2 奈米（N2）製程進展順利，將採用 GAA 電晶體架構，並規畫推出效能更佳的 N2P 與 A16 製程，滿足全球強勁的 AI 晶片需求。",
-            "source": "中央社",
-            "url": "https://www.cna.com.tw/news/afe/202405230123.aspx"
+            "title": "Google 全面導入 Gemini 1.5 Pro，搜尋引擎推出 AI Overviews 功能",
+            "category": "網際網路 / AI",
+            "summary": "Google 將 Gemini 1.5 Pro 模型的上下文窗口擴展至 200 萬 Token，並正式於美國搜尋服務中推出「AI Overviews」摘要功能，讓使用者能透過自然語言獲取精準的解答。",
+            "source": "Wired",
+            "url": "https://www.wired.com"
         }
     ]
 }
