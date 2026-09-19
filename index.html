@@ -44,8 +44,10 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            font-size: 13px;
-            color: #70757a;
+            /* 放大字型與下方字型大小一致 (1.25em) 且加粗 */
+            font-size: 1.25em;
+            font-weight: bold;
+            color: #444;
             border-bottom: 1px solid #eee;
         }
 
@@ -82,7 +84,7 @@
             width: 100%;
         }
         .collapsible-content.show {
-            max-height: 1800px;
+            max-height: 1500px;
             opacity: 1;
             margin-top: 12px;
         }
@@ -279,18 +281,8 @@
             <button type="button" class="btn" onclick="toggleDailyRoutine()">日常作習</button>
 
             <div id="daily-routine-content" class="collapsible-content">
-                <!-- 新增：今日天氣按鈕與向下展開 Google 天氣查詢 -->
-                <button type="button" class="btn" style="background-color: #333; color: #fff;" onclick="toggleWeatherSection()">今日天氣</button>
-
-                <div id="weather-section-content" class="collapsible-content" style="background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
-                    <div style="font-size: 0.88em; color: #555; text-align: center; margin-bottom: 8px; font-weight: bold;">Google 即時天氣查詢</div>
-                    <div style="width: 100%; height: 350px; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
-                        <iframe src="https://www.google.com/search?q=%E6%96%B0%E5%8C%97%E5%B8%82%E5%9C%9f%E5%9F%8E%E5%8D%80%E5%A4%A9%E6%B0%A3" style="width: 100%; height: 100%; border: none;" title="Google天氣查詢"></iframe>
-                    </div>
-                    <div style="text-align: center; margin-top: 8px;">
-                        <a href="https://www.google.com/search?q=%E6%96%B0%E5%8C%97%E5%B8%82%E5%9C%9f%E5%9F%8E%E5%8D%80%E5%A4%A9%E6%B0%A3" target="_blank" style="font-size: 0.85em; color: #0275d8; text-decoration: none; font-weight: bold;">🌐 在新視窗中開啟完整 Google 天氣</a>
-                    </div>
-                </div>
+                <!-- 修改：今日天氣按鈕改為點擊後在新視窗開啟 Google 天氣查詢 -->
+                <a href="https://www.google.com/search?q=%E6%96%B0%E5%8C%97%E5%B8%82%E5%9C%9f%E5%9F%8E%E5%8D%80%E5%A4%A9%E6%B0%A3" target="_blank" rel="noopener noreferrer" class="btn" style="background-color: #333; color: #fff;">今日天氣</a>
 
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
                     <input type="text" id="google-search-input" placeholder="輸入關鍵字搜尋 Google..." style="flex: 1; min-width: 0; height: 50px; padding: 0 15px; border-radius: 12px; border: 2px solid #dcdcdc; outline: none; font-size: 1em; background-color: #f4f4f9;">
@@ -412,11 +404,6 @@
 <script>
 function toggleDailyRoutine() {
     const content = document.getElementById('daily-routine-content');
-    content.classList.toggle('show');
-}
-
-function toggleWeatherSection() {
-    const content = document.getElementById('weather-section-content');
     content.classList.toggle('show');
 }
 
