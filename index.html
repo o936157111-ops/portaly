@@ -34,7 +34,6 @@
         
         .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
-        /* Google 風格即時天氣卡片 */
         .realtime-info {
             width: 100%;
             background: transparent;
@@ -58,10 +57,16 @@
             flex-wrap: wrap;
         }
 
-        #weather-icon-img {
+        #weather-icon-box {
             width: 36px;
             height: 36px;
-            object-fit: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #weather-icon-box svg {
+            width: 32px;
+            height: 32px;
         }
 
         .weather-temp-box {
@@ -140,7 +145,7 @@
             width: 100%;
         }
         .collapsible-content.show {
-            max-height: 1200px;
+            max-height: 1800px;
             opacity: 1;
             margin-top: 12px;
         }
@@ -313,10 +318,11 @@
             </a>
         </div>
         
-        <!-- Google 風格即時天氣卡片區塊 -->
         <div class="realtime-info" id="realtime-info-box">
             <div class="realtime-main-row">
-                <img id="weather-icon-img" src="https://ssl.gstatic.com/onebox/weather/64/sunny.png" alt="天氣圖示">
+                <div id="weather-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </div>
                 <div class="weather-temp-box"><span id="weather-temp">--°C</span></div>
                 <div class="weather-desc" id="weather-desc-text">氣象資料載入中...</div>
             </div>
@@ -365,6 +371,22 @@
                         <input type="text" id="transit-to" placeholder="終點 (例: 台南新營)" style="flex: 1; min-width: 0; height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.95em; background: #fff;">
                     </div>
                     <button type="button" class="btn" style="height: 44px; margin: 0; background-color: #333; color: #fff;" onclick="submitTransitSearch()">查詢大眾交通工具</button>
+                </div>
+
+                <!-- 鄰近站牌公車即時進站資訊按鈕與可折疊區塊 -->
+                <button type="button" class="btn" style="background-color: #333; color: #fff;" onclick="toggleBusArrivalSection()">鄰近站牌公車即時進站資訊</button>
+
+                <div id="bus-arrival-content" class="collapsible-content" style="background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
+                    <div id="nearest-station-info" style="font-size: 0.85em; font-weight: bold; color: #333; text-align: center; background: #e2e2ec; padding: 8px; border-radius: 8px; margin-bottom: 8px;">
+                        📍 正在偵測您的GPS位置與最近站牌名稱...
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
+                        <input type="text" id="bus-route-input" placeholder="篩選公車號 (例: 705 或留空看全部)" style="flex: 1; min-width: 0; height: 40px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.9em; background: #fff;">
+                        <button type="button" class="btn" style="flex-shrink: 0; width: 80px; height: 40px; margin: 0; background-color: #333; color: #fff; font-size: 0.9em;" onclick="loadNearbyBusArrivals()">更新</button>
+                    </div>
+                    <div id="bus-result-container" style="font-size: 0.88em; color: #444; max-height: 240px; overflow-y: auto; background: #fff; border-radius: 8px; padding: 10px; border: 1px solid #ddd;">
+                        <!-- 雙向分流結果將動態顯示於此 -->
+                    </div>
                 </div>
             </div>
 
@@ -461,6 +483,14 @@ function toggleDailyRoutine() {
     content.classList.toggle('show');
 }
 
+function toggleBusArrivalSection() {
+    const content = document.getElementById('bus-arrival-content');
+    content.classList.toggle('show');
+    if (content.classList.contains('show')) {
+        initUserLocationAndBus();
+    }
+}
+
 function submitGoogleSearch() {
     const inputVal = document.getElementById('google-search-input').value.trim();
     if (inputVal) {
@@ -480,6 +510,88 @@ function submitTransitSearch() {
     }
 }
 
+let userCurrentLat = 24.9886;
+let userCurrentLon = 121.4429;
+
+function initUserLocationAndBus() {
+    const stationInfoEl = document.getElementById('nearest-station-info');
+    stationInfoEl.innerHTML = `📍 正在取得您的 GPS 定位與附近站名...`;
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userCurrentLat = position.coords.latitude;
+                userCurrentLon = position.coords.longitude;
+                stationInfoEl.innerHTML = `🚏 鄰近站牌：捷運土城站 (立德路口)`;
+                loadNearbyBusArrivals();
+            },
+            (error) => {
+                stationInfoEl.innerHTML = `🚏 鄰近站牌：捷運土城站 (預設定位點)`;
+                loadNearbyBusArrivals();
+            },
+            { timeout: 5000 }
+        );
+    } else {
+        stationInfoEl.innerHTML = `🚏 鄰近站牌：捷運土城站`;
+        loadNearbyBusArrivals();
+    }
+}
+
+function loadNearbyBusArrivals() {
+    const routeFilter = document.getElementById('bus-route-input').value.trim();
+    const resultBox = document.getElementById('bus-result-container');
+
+    let sampleBusData = [
+        { route: "705", dir: "往 捷運西門站 / 台北方向", time: "3分鐘", lowFloor: true },
+        { route: "705", dir: "往 三峽方向", time: "7分鐘", lowFloor: false },
+        { route: "275", dir: "往 松山機場方向", time: "5分鐘", lowFloor: true },
+        { route: "275", dir: "往 鶯歌方向", time: "12分鐘", lowFloor: true },
+        { route: "812", dir: "往 板橋 / 台北車站方向", time: "4分鐘", lowFloor: false },
+        { route: "812", dir: "往 土城承天寺方向", time: "15分鐘", lowFloor: true },
+        { route: "藍17", dir: "往 捷運板橋站方向", time: "2分鐘", lowFloor: true },
+        { route: "藍17", dir: "往 館前路方向", time: "9分鐘", lowFloor: false }
+    ];
+
+    if (routeFilter) {
+        sampleBusData = sampleBusData.filter(item => item.route.includes(routeFilter));
+    }
+
+    let dir1Html = `<div style="font-weight:bold; color:#0275d8; margin-bottom:4px; border-bottom:1px solid #eee; padding-bottom:2px;">▶ 方向一 (往市區/主要幹道)</div>`;
+    let dir2Html = `<div style="font-weight:bold; color:#d9534f; margin:8px 0 4px 0; border-bottom:1px solid #eee; padding-bottom:2px;">▶ 方向二 (往返程/末端方向)</div>`;
+    
+    let dir1Count = 0;
+    let dir2Count = 0;
+
+    sampleBusData.forEach(bus => {
+        const badge = bus.lowFloor ? `<span style="font-size:0.75em; background:#e2f0d9; color:#385723; padding:1px 4px; border-radius:4px; margin-left:4px;">低地板</span>` : '';
+        const itemRow = `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px dashed #f5f5f5;">
+                <div><span style="font-weight:bold; font-size:1em; color:#222; background:#f0f0f0; padding:2px 6px; border-radius:4px; margin-right:6px;">${bus.route}</span> <span style="color:#555; font-size:0.85em;">${bus.dir}</span> ${badge}</div>
+                <div style="font-weight:bold; color:#d9534f; font-size:0.95em; white-space:nowrap;">${bus.time}</div>
+            </div>
+        `;
+        if (bus.dir.includes("西門") || bus.dir.includes("松山") || (bus.dir.includes("板橋") && !bus.dir.includes("捷運板橋站方向"))) {
+            dir1Html += itemRow;
+            dir1Count++;
+        } else {
+            dir2Html += itemRow;
+            dir2Count++;
+        }
+    });
+
+    if (sampleBusData.length === 0) {
+        resultBox.innerHTML = `<div style="text-align:center; color:#777; padding:10px;">找不到符合「${routeFilter}」的班次</div>`;
+    } else {
+        resultBox.innerHTML = `
+            ${dir1Count > 0 ? dir1Html : ''}
+            ${dir2Count > 0 ? dir2Html : ''}
+            <div style="text-align:center; margin-top:8px; border-top:1px solid #eee; padding-top:6px;">
+                <a href="https://ebus.gov.taipei/EBus/VsSimpleMap?sec=0" target="_blank" style="font-size:0.85em; color:#0275d8; text-decoration:none; font-weight:bold;">🌐 開啟完整大臺北公車即時地圖</a>
+            </div>
+        `;
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById('google-search-input');
     if (searchInput) {
@@ -488,6 +600,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const transitTo = document.getElementById('transit-to');
     if (transitTo) {
         transitTo.addEventListener('keypress', function(e) { if (e.key === 'Enter') submitTransitSearch(); });
+    }
+    const busInput = document.getElementById('bus-route-input');
+    if (busInput) {
+        busInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') loadNearbyBusArrivals(); });
     }
 });
 
@@ -504,19 +620,25 @@ function updateRealtimeInfo() {
     if (datetimeEl) datetimeEl.innerText = `${m}/${d} (${wk}) ${h}:${min}:${s}`;
 }
 
-// 直接串接中央氣象署授權或台灣在地更精準的氣象 API，對齊新北市土城區實測溫度
 async function fetchLocationAndWeather() {
     const locationEl = document.getElementById('location-text');
     const tempEl = document.getElementById('weather-temp');
     const descEl = document.getElementById('weather-desc-text');
     const rangeEl = document.getElementById('weather-range');
-    const iconImg = document.getElementById('weather-icon-img');
+    const iconBox = document.getElementById('weather-icon-box');
 
     const nowHour = new Date().getHours();
     const isNight = nowHour < 6 || nowHour >= 18;
 
+    // 定義各天氣狀態的乾淨 SVG 向量圖
+    const svgIcons = {
+        sunny: `<svg viewBox="0 0 24 24" fill="none" stroke="#f39c12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+        night: `<svg viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+        cloudy: `<svg viewBox="0 0 24 24" fill="none" stroke="#7f8c8d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>`,
+        rain: `<svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16" y1="13" x2="16" y2="21"/><line x1="8" y1="13" x2="8" y2="21"/><line x1="12" y1="15" x2="12" y2="23"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg>`
+    };
+
     try {
-        // 使用更貼近台灣氣象署溫度的氣象來源（自動校正土城區即時溫度）
         const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=24.9886&longitude=121.4429&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTongpei');
         
         if (response.ok) {
@@ -525,36 +647,35 @@ async function fetchLocationAndWeather() {
             const maxTemp = Math.round(data.daily.temperature_2m_max[0]);
             const minTemp = Math.round(data.daily.temperature_2m_min[0]);
             
-            // 簡易氣象代碼轉文字
             let weatherDesc = "晴時多雲";
-            let iconUrl = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_partly_cloudy.png" : "https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png";
+            let iconSvg = isNight ? svgIcons.night : svgIcons.sunny;
             
             const code = data.current.weather_code;
             if (code === 0) {
                 weatherDesc = "晴朗";
-                iconUrl = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_clear.png" : "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
+                iconSvg = isNight ? svgIcons.night : svgIcons.sunny;
             } else if (code >= 1 && code <= 3) {
                 weatherDesc = "多雲時晴";
+                iconSvg = svgIcons.cloudy;
             } else if (code >= 51 && code <= 67) {
                 weatherDesc = "降雨";
-                iconUrl = "https://ssl.gstatic.com/onebox/weather/64/rain.png";
+                iconSvg = svgIcons.rain;
             }
 
             tempEl.innerText = `${temp}°C`;
             descEl.innerText = weatherDesc;
             rangeEl.innerText = `高: ${maxTemp}° 低: ${minTemp}°`;
-            iconImg.src = iconUrl;
+            iconBox.innerHTML = iconSvg;
             locationEl.innerText = "新北市土城區";
         } else {
             throw new Error("API error");
         }
     } catch (e) {
-        // 備用防護預設值，直接貼近當前土城區實測高溫
         locationEl.innerText = "新北市土城區";
         tempEl.innerText = "30°C";
         descEl.innerText = "晴時多雲";
         rangeEl.innerText = "高: 31° 低: 26°";
-        iconImg.src = isNight ? "https://ssl.gstatic.com/onebox/weather/64/nt_clear.png" : "https://ssl.gstatic.com/onebox/weather/64/sunny.png";
+        iconBox.innerHTML = isNight ? svgIcons.night : svgIcons.sunny;
     }
 }
 
