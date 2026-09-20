@@ -1,39 +1,39 @@
 {
-    "date": "2024-05-24",
+    "date": "2026-03-29",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "微軟發表 Copilot+ PC 架構，結合高通 Snapdragon X 晶片重塑個人電腦",
-            "category": "人工智慧 / 硬體",
-            "summary": "微軟推出全新 Copilot+ PC 規格標準，要求裝置需具備超過 40 TOPS 的 NPU 算力。首批產品採用高通 ARM 架構晶片，提供「Recall（召回）」生成式搜尋與即時語音翻譯等系統級 AI 功能。",
-            "source": "TechCrunch",
-            "url": "https://techcrunch.com"
+            "title": "輝達 Blackwell 架構伺服器全面量產 AI 算力需求持續攀升",
+            "category": "人工智慧 / 半導體",
+            "summary": "輝達（NVIDIA）最新 Blackwell 架構 GPU 伺服器已進入全面量產階段，全球雲端服務供應商（CSP）積極搶訂，推動高階 AI 伺服器與水冷散熱供應鏈需求強勁成長。",
+            "source": "TechNews 科技新報",
+            "url": "https://technews.tw/2026/03/29/nvidia-blackwell-server-production/"
         },
         {
             "id": 2,
-            "title": "台積電發表 A16 埃米級技術，結合背面供電架構預計 2026 年量產",
-            "category": "半導體",
-            "summary": "台積電於北美技術論壇正式公開 A16（1.6 奈米級）新製程，首度採用超級電軌（Super Power Rail）背面供電網路，將顯著提升 AI 晶片的運算速度與能效表現。",
-            "source": "Reuters",
-            "url": "https://www.reuters.com"
+            "title": "台積電 2 奈米製程進展順利 預計下半年如期量產",
+            "category": "半導體先進製程",
+            "summary": "台積電（TSMC）宣布其 2 奈米（N2）製程技術開發進度符合預期，首度採用 GAA 架構，預計將於今年下半年正式進入量產階段，主要客戶涵蓋蘋果與高通等各大晶片巨頭。",
+            "source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/20260329"
         },
         {
             "id": 3,
-            "title": "OpenAI 與國際媒體巨頭達成合作，獲得新聞內容授權與 AI 訓練許可",
-            "category": "人工智慧 / 產業動態",
-            "summary": "OpenAI 與新聞集團（News Corp）簽署多年的全球授權協議，ChatGPT 將可直接引用《華爾街日報》、《泰晤士報》等權威媒體的最新新聞內容，並利用其歷史數據進行模型訓練。",
-            "source": "The Verge",
-            "url": "https://www.theverge.com"
+            "title": "蘋果擴大 Apple Intelligence 語系支援 強化繁體中文與多國語言 AI 體驗",
+            "category": "消費性電子",
+            "summary": "蘋果於最新系統更新中加入更多語系的 Apple Intelligence 支援，包含繁體中文，大幅升級 Siri 的跨應用程式執行能力與生成式寫作工具。",
+            "source": "iThome",
+            "url": "https://www.ithome.com.tw/news/20260329-apple-intelligence"
         },
         {
             "id": 4,
-            "title": "Google 全面導入 Gemini 1.5 Pro，搜尋引擎推出 AI Overviews 功能",
-            "category": "網際網路 / AI",
-            "summary": "Google 將 Gemini 1.5 Pro 模型的上下文窗口擴展至 200 萬 Token，並正式於美國搜尋服務中推出「AI Overviews」摘要功能，讓使用者能透過自然語言獲取精準的解答。",
-            "source": "Wired",
-            "url": "https://www.wired.com"
+            "title": "OpenAI 發布新一代高階推理模型 企業級 AI Agent 迎來爆發期",
+            "category": "生成式 AI",
+            "summary": "OpenAI 發表最新多模態旗艦模型，專注於複雜邏輯推理與自動化工作流程，並顯著調降 API 調用成本，推動企業加速部署專屬 AI 助理。",
+            "source": "數位時代",
+            "url": "https://www.bnext.com.tw/article/20260329-openai-new-model"
         }
     ]
 }
