@@ -44,7 +44,6 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            /* 放大字型與下方字型大小一致 (1.25em) 且加粗 */
             font-size: 1.25em;
             font-weight: bold;
             color: #444;
@@ -84,7 +83,7 @@
             width: 100%;
         }
         .collapsible-content.show {
-            max-height: 1500px;
+            max-height: 2000px;
             opacity: 1;
             margin-top: 12px;
         }
@@ -281,7 +280,6 @@
             <button type="button" class="btn" onclick="toggleDailyRoutine()">日常作習</button>
 
             <div id="daily-routine-content" class="collapsible-content">
-                <!-- 修改：今日天氣按鈕改為點擊後在新視窗開啟 Google 天氣查詢 -->
                 <a href="https://www.google.com/search?q=%E6%96%B0%E5%8C%97%E5%B8%82%E5%9C%9f%E5%9F%8E%E5%8D%80%E5%A4%A9%E6%B0%A3" target="_blank" rel="noopener noreferrer" class="btn" style="background-color: #333; color: #fff;">今日天氣</a>
 
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
@@ -289,29 +287,60 @@
                     <button type="button" class="btn" style="flex-shrink: 0; width: 80px; margin: 0;" onclick="submitGoogleSearch()">搜尋</button>
                 </div>
 
+                <!-- 自動定位與最近站牌公車即時進站資訊 -->
+                <button type="button" class="btn" style="background-color: #333; color: #fff;" onclick="toggleBusArrivalSection()">鄰近站牌公車即時進站資訊</button>
+
+                <div id="bus-arrival-content" class="collapsible-content" style="background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
+                    
+                    <div id="nearest-stop-title" style="font-size: 0.9em; font-weight: bold; color: #333; text-align: center; margin-bottom: 4px;">📍 正在定位最近公車站牌...</div>
+                    <div id="location-status" style="font-size: 0.75em; color: #666; text-align: center; margin-bottom: 12px;">請允許手機定位權以自動取得鄰近站牌</div>
+
+                    <!-- 往北公車區塊 -->
+                    <div style="background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
+                        <div style="font-weight: bold; color: #0275d8; margin-bottom: 6px; font-size: 0.9em;">⬆️ 往北方向（完整路線）</div>
+                        <div id="bus-north-list" style="font-size: 0.85em; color: #333; margin-bottom: 8px; line-height: 1.6;">
+                            <!-- 動態正確填入往北各公車 -->
+                        </div>
+                        <!-- 修改處：改為垂直堆疊 (flex-direction: column) 確保按鈕與選單各自佔滿一行 -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <select id="north-select" style="width: 100%; height: 42px; padding: 0 8px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.9em; background: #fafafa;">
+                                <option value="" disabled selected>選擇往北公車號看明細</option>
+                            </select>
+                            <button type="button" class="btn" style="width: 100%; height: 42px; font-size: 0.9em; background-color: #333; color: #fff; margin: 0;" onclick="goToBusDetail('north')">查看明細</button>
+                        </div>
+                    </div>
+
+                    <!-- 往南公車區塊 -->
+                    <div style="background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ddd;">
+                        <div style="font-weight: bold; color: #d9534f; margin-bottom: 6px; font-size: 0.9em;">⬇️ 往南方向（完整路線）</div>
+                        <div id="bus-south-list" style="font-size: 0.85em; color: #333; margin-bottom: 8px; line-height: 1.6;">
+                            <!-- 動態正確填入往南各公車 -->
+                        </div>
+                        <!-- 修改處：改為垂直堆疊 (flex-direction: column) 確保按鈕與選單各自佔滿一行 -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <select id="south-select" style="width: 100%; height: 42px; padding: 0 8px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.9em; background: #fafafa;">
+                                <option value="" disabled selected>選擇往南公車號看明細</option>
+                            </select>
+                            <button type="button" class="btn" style="width: 100%; height: 42px; font-size: 0.9em; background-color: #333; color: #fff; margin: 0;" onclick="goToBusDetail('south')">查看明細</button>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 5px;">
+                        <a href="https://ebus.gov.taipei/EBus/VsSimpleMap?sec=0" target="_blank" style="font-size: 0.8em; color: #0275d8; text-decoration: none; font-weight: bold;">🌐 開啟完整大臺北公車即時地圖</a>
+                    </div>
+                </div>
+
+                <!-- 大眾交通工具查詢 -->
                 <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
-                    <div style="font-size: 0.9em; font-weight: bold; color: #555; text-align: center;">大眾交通工具查詢</div>
+                    <div style="font-size: 0.9em; font-weight: bold; color: #555; text-align: center;">跨區大眾交通工具查詢</div>
                     <div style="display: flex; gap: 6px; align-items: center;">
                         <input type="text" id="transit-from" placeholder="起點 (例: 土城)" style="flex: 1; min-width: 0; height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.95em; background: #fff;">
                         <span style="font-weight: bold; color: #666; font-size: 0.9em;">到</span>
                         <input type="text" id="transit-to" placeholder="終點 (例: 台南新營)" style="flex: 1; min-width: 0; height: 44px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.95em; background: #fff;">
                     </div>
-                    <button type="button" class="btn" style="height: 44px; margin: 0; background-color: #333; color: #fff;" onclick="submitTransitSearch()">查詢大眾交通工具</button>
+                    <button type="button" class="btn" style="height: 44px; margin: 0; background-color: #333; color: #fff;" onclick="submitTransitSearch()">查詢路線規劃</button>
                 </div>
 
-                <button type="button" class="btn" style="background-color: #333; color: #fff;" onclick="toggleBusArrivalSection()">鄰近站牌公車即時進站資訊</button>
-
-                <div id="bus-arrival-content" class="collapsible-content" style="background: #f0f0f5; padding: 12px; border-radius: 14px; border: 2px solid #dcdcdc;">
-                    <div id="nearest-station-info" style="font-size: 0.85em; font-weight: bold; color: #333; text-align: center; background: #e2e2ec; padding: 8px; border-radius: 8px; margin-bottom: 8px;">
-                        📍 正在偵測您的GPS位置與最近站牌名稱...
-                    </div>
-                    <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
-                        <input type="text" id="bus-route-input" placeholder="篩選公車號 (例: 705 或留空看全部)" style="flex: 1; min-width: 0; height: 40px; padding: 0 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; font-size: 0.9em; background: #fff;">
-                        <button type="button" class="btn" style="flex-shrink: 0; width: 80px; height: 40px; margin: 0; background-color: #333; color: #fff; font-size: 0.9em;" onclick="loadNearbyBusArrivals()">更新</button>
-                    </div>
-                    <div id="bus-result-container" style="font-size: 0.88em; color: #444; max-height: 240px; overflow-y: auto; background: #fff; border-radius: 8px; padding: 10px; border: 1px solid #ddd;">
-                    </div>
-                </div>
             </div>
 
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
@@ -411,8 +440,164 @@ function toggleBusArrivalSection() {
     const content = document.getElementById('bus-arrival-content');
     content.classList.toggle('show');
     if (content.classList.contains('show')) {
-        initUserLocationAndBus();
+        detectUserLocationAndBus();
     }
+}
+
+// 自動定位與最近站牌計算（已加入精準度過濾與即時抓取）
+function detectUserLocationAndBus() {
+    const titleEl = document.getElementById('nearest-stop-title');
+    const statusEl = document.getElementById('location-status');
+
+    if (!navigator.geolocation) {
+        titleEl.innerText = "📍 您的瀏覽器不支援自動定位";
+        statusEl.innerText = "改為顯示預設鄰近站牌";
+        renderBusStopData(defaultBusStop);
+        return;
+    }
+
+    statusEl.innerText = "正在取得您的 GPS 位置...";
+    
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+            const accuracy = position.coords.accuracy; // 誤差範圍（公尺）
+
+            if (accuracy > 100) {
+                console.warn(`定位誤差過大（${Math.round(accuracy)} 公尺），已忽略並使用預設站牌`);
+                titleEl.innerText = `📍 預設站牌：土城農會 (室內定位誤差過大)`;
+                statusEl.innerText = `自動定位誤差達 ${Math.round(accuracy)}m，已切換至預設站牌`;
+                renderBusStopData(defaultBusStop);
+                return;
+            }
+            
+            const nearest = findNearestStop(userLat, userLon);
+            titleEl.innerText = `📍 最近站牌：${nearest.name} (約 ${nearest.distance} 公尺)`;
+            statusEl.innerText = `GPS 定位成功 (精準度: ±${Math.round(accuracy)}m)`;
+            renderBusStopData(nearest);
+        },
+        (error) => {
+            console.warn("定位失敗或被拒絕: ", error.message);
+            titleEl.innerText = `📍 預設站牌：土城農會`;
+            statusEl.innerText = `已使用預設站牌 (未開啓定位或逾時)`;
+            renderBusStopData(defaultBusStop);
+        },
+        { timeout: 10000, maximumAge: 0, enableHighAccuracy: true }
+    );
+}
+
+// 站牌資料庫：已更新為您指定的正確 rid 代號
+const busStopsDatabase = [
+    {
+        name: "土城農會",
+        lat: 24.9753,
+        lon: 121.4431,
+        north: [
+            { no: "705", dest: "往板橋方向", time: "3分", rid: "10195" },
+            { no: "707", dest: "往富錦街口方向", time: "5分", rid: "16461" },
+            { no: "573", dest: "局部區域接駁", time: "10分", rid: "16900" },
+            { no: "805", dest: "往五股方向", time: "6分", rid: "17524" },
+            { no: "1851", dest: "國光客運 (板橋→臺中)", time: "時刻表", rid: "17912" },
+            { no: "1962", dest: "大有巴士 (板橋→桃園機場)", time: "時刻表", rid: "17764" }
+        ],
+        south: [
+            { no: "705", dest: "往三峽方向", time: "8分", rid: "10195" },
+            { no: "707", dest: "往三峽二站方向", time: "7分", rid: "16461" },
+            { no: "573", dest: "局部區域接駁", time: "15分", rid: "16900" },
+            { no: "805", dest: "往捷運永寧站一帶", time: "4分", rid: "17524" },
+            { no: "1851", dest: "國光客運 (臺中→板橋)", time: "時刻表", rid: "17913" },
+            { no: "1962", dest: "大有巴士 (桃園機場→板橋)", time: "時刻表", rid: "17763" }
+        ]
+    },
+    {
+        name: "捷運土城站",
+        lat: 24.9735,
+        lon: 121.4420,
+        north: [
+            { no: "705", dest: "往西門", time: "2分", rid: "10195" },
+            { no: "805", dest: "往五股", time: "5分", rid: "17524" }
+        ],
+        south: [
+            { no: "705", dest: "往三峽", time: "9分", rid: "10195" },
+            { no: "805", dest: "往永寧", time: "6分", rid: "17524" }
+        ]
+    }
+];
+
+const defaultBusStop = busStopsDatabase[0];
+let currentActiveStop = defaultBusStop;
+
+function findNearestStop(lat, lon) {
+    let nearest = busStopsDatabase[0];
+    let minDistance = Infinity;
+
+    busStopsDatabase.forEach(stop => {
+        const dist = getDistanceFromLatLonInMeters(lat, lon, stop.lat, stop.lon);
+        if (dist < minDistance) {
+            minDistance = dist;
+            nearest = stop;
+        }
+    });
+    nearest.distance = Math.round(minDistance);
+    return nearest;
+}
+
+function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
+    const R = 6371000;
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2); 
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))); 
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180);
+}
+
+function renderBusStopData(stopObj) {
+    currentActiveStop = stopObj;
+    
+    const northListEl = document.getElementById('bus-north-list');
+    const northSelect = document.getElementById('north-select');
+    let northHtml = '';
+    let northSelectHtml = '<option value="" disabled selected>選擇往北公車號看明細</option>';
+    
+    stopObj.north.forEach(r => {
+        northHtml += `<span style="display:inline-block; margin-right:12px; margin-bottom:4px;"><b style="color:#000;">${r.no}</b> (${r.dest})：<span style="color:#d9534f; font-weight:bold;">${r.time}</span></span>`;
+        northSelectHtml += `<option value="${r.rid}">${r.no} 號 (${r.dest})</option>`;
+    });
+    northListEl.innerHTML = northHtml || '<span style="color:#888;">目前無往北路線</span>';
+    northSelect.innerHTML = northSelectHtml;
+
+    const southListEl = document.getElementById('bus-south-list');
+    const southSelect = document.getElementById('south-select');
+    let southHtml = '';
+    let southSelectHtml = '<option value="" disabled selected>選擇往南公車號看明細</option>';
+    
+    stopObj.south.forEach(r => {
+        southHtml += `<span style="display:inline-block; margin-right:12px; margin-bottom:4px;"><b style="color:#000;">${r.no}</b> (${r.dest})：<span style="color:#d9534f; font-weight:bold;">${r.time}</span></span>`;
+        southSelectHtml += `<option value="${r.rid}">${r.no} 號 (${r.dest})</option>`;
+    });
+    southListEl.innerHTML = southHtml || '<span style="color:#888;">目前無往南路線</span>';
+    southSelect.innerHTML = southSelectHtml;
+}
+
+function goToBusDetail(direction) {
+    const selectId = direction === 'north' ? 'north-select' : 'south-select';
+    const selectEl = document.getElementById(selectId);
+    const rid = selectEl.value;
+
+    if (!rid) {
+        alert('請先從下拉選單中選擇一個公車號碼！');
+        return;
+    }
+    
+    // 統一使用大臺北公車 PDA 系統連結
+    window.open(`https://pda5284.gov.taipei/MQS/route.jsp?rid=${rid}`, '_blank', 'noopener,noreferrer');
 }
 
 function submitGoogleSearch() {
@@ -434,88 +619,6 @@ function submitTransitSearch() {
     }
 }
 
-let userCurrentLat = 24.9886;
-let userCurrentLon = 121.4429;
-
-function initUserLocationAndBus() {
-    const stationInfoEl = document.getElementById('nearest-station-info');
-    stationInfoEl.innerHTML = `📍 正在取得您的 GPS 定位與附近站名...`;
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                userCurrentLat = position.coords.latitude;
-                userCurrentLon = position.coords.longitude;
-                stationInfoEl.innerHTML = `🚏 鄰近站牌：捷運土城站 (立德路口)`;
-                loadNearbyBusArrivals();
-            },
-            (error) => {
-                stationInfoEl.innerHTML = `🚏 鄰近站牌：捷運土城站 (預設定位點)`;
-                loadNearbyBusArrivals();
-            },
-            { timeout: 5000 }
-        );
-    } else {
-        stationInfoEl.innerHTML = `🚏 鄰近站牌：捷運土城站`;
-        loadNearbyBusArrivals();
-    }
-}
-
-function loadNearbyBusArrivals() {
-    const routeFilter = document.getElementById('bus-route-input').value.trim();
-    const resultBox = document.getElementById('bus-result-container');
-
-    let sampleBusData = [
-        { route: "705", dir: "往 捷運西門站 / 台北方向", time: "3分鐘", lowFloor: true },
-        { route: "705", dir: "往 三峽方向", time: "7分鐘", lowFloor: false },
-        { route: "275", dir: "往 松山機場方向", time: "5分鐘", lowFloor: true },
-        { route: "275", dir: "往 鶯歌方向", time: "12分鐘", lowFloor: true },
-        { route: "812", dir: "往 板橋 / 台北車站方向", time: "4分鐘", lowFloor: false },
-        { route: "812", dir: "往 土城承天寺方向", time: "15分鐘", lowFloor: true },
-        { route: "藍17", dir: "往 捷運板橋站方向", time: "2分鐘", lowFloor: true },
-        { route: "藍17", dir: "往 館前路方向", time: "9分鐘", lowFloor: false }
-    ];
-
-    if (routeFilter) {
-        sampleBusData = sampleBusData.filter(item => item.route.includes(routeFilter));
-    }
-
-    let dir1Html = `<div style="font-weight:bold; color:#0275d8; margin-bottom:4px; border-bottom:1px solid #eee; padding-bottom:2px;">▶ 方向一 (往市區/主要幹道)</div>`;
-    let dir2Html = `<div style="font-weight:bold; color:#d9534f; margin:8px 0 4px 0; border-bottom:1px solid #eee; padding-bottom:2px;">▶ 方向二 (往返程/末端方向)</div>`;
-    
-    let dir1Count = 0;
-    let dir2Count = 0;
-
-    sampleBusData.forEach(bus => {
-        const badge = bus.lowFloor ? `<span style="font-size:0.75em; background:#e2f0d9; color:#385723; padding:1px 4px; border-radius:4px; margin-left:4px;">低地板</span>` : '';
-        const itemRow = `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px dashed #f5f5f5;">
-                <div><span style="font-weight:bold; font-size:1em; color:#222; background:#f0f0f0; padding:2px 6px; border-radius:4px; margin-right:6px;">${bus.route}</span> <span style="color:#555; font-size:0.85em;">${bus.dir}</span> ${badge}</div>
-                <div style="font-weight:bold; color:#d9534f; font-size:0.95em; white-space:nowrap;">${bus.time}</div>
-            </div>
-        `;
-        if (bus.dir.includes("西門") || bus.dir.includes("松山") || (bus.dir.includes("板橋") && !bus.dir.includes("捷運板橋站方向"))) {
-            dir1Html += itemRow;
-            dir1Count++;
-        } else {
-            dir2Html += itemRow;
-            dir2Count++;
-        }
-    });
-
-    if (sampleBusData.length === 0) {
-        resultBox.innerHTML = `<div style="text-align:center; color:#777; padding:10px;">找不到符合「${routeFilter}」的班次</div>`;
-    } else {
-        resultBox.innerHTML = `
-            ${dir1Count > 0 ? dir1Html : ''}
-            ${dir2Count > 0 ? dir2Html : ''}
-            <div style="text-align:center; margin-top:8px; border-top:1px solid #eee; padding-top:6px;">
-                <a href="https://ebus.gov.taipei/EBus/VsSimpleMap?sec=0" target="_blank" style="font-size:0.85em; color:#0275d8; text-decoration:none; font-weight:bold;">🌐 開啟完整大臺北公車即時地圖</a>
-            </div>
-        `;
-    }
-}
-
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById('google-search-input');
     if (searchInput) {
@@ -524,10 +627,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const transitTo = document.getElementById('transit-to');
     if (transitTo) {
         transitTo.addEventListener('keypress', function(e) { if (e.key === 'Enter') submitTransitSearch(); });
-    }
-    const busInput = document.getElementById('bus-route-input');
-    if (busInput) {
-        busInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') loadNearbyBusArrivals(); });
     }
 });
 
