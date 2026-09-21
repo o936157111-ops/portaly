@@ -457,11 +457,11 @@
         <!-- 今日推薦電子書專區 -->
         <div class="daily-special-card" id="dailySpecialCard">
             <span class="daily-special-badge">✨ 今日推薦線上電子書</span>
-            <div class="daily-title" id="dailyTitle">載入中...</div>
-            <div class="daily-author" id="dailyAuthor">作者：--</div>
-            <div class="daily-desc" id="dailyDesc">正在為您挑選今日好書...</div>
+            <div class="daily-title" id="dailyTitle">《偷書賊》</div>
+            <div class="daily-author" id="dailyAuthor">作者： 馬格斯．朱薩克</div>
+            <div class="daily-desc" id="dailyDesc">獨特視角：故事由“死神”冷靜中帶著悲憫與好奇的語調娓娓道來...</div>
             <div class="daily-footer">
-                <a href="#" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
+                <a href="https://www.haodoo.net/?M=u&amp;P=H16N0:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
                 <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
             </div>
         </div>
@@ -478,21 +478,21 @@
             <button class="tab-btn" onclick="filterCategory('歷史演義')">歷史演義</button>
             <button class="tab-btn" onclick="filterCategory('偵探推理')">偵探推理</button>
             <button class="tab-btn" onclick="filterCategory('小說園地')">小說園地</button>
-        </div>
+        <button class="tab-btn" onclick="filterCategory('懸疑小說')">懸疑小說</button></div>
 
         <!-- 作者群組清單 -->
         <div id="authorGroupsContainer">
 
             <!-- 作者 1: 金庸 -->
             <div class="author-group" data-category="武俠小說" data-author="金庸" style="display: block;">
-                <button class="author-header" onclick="toggleAuthor(this)">
+                <button class="author-header active" onclick="toggleAuthor(this)">
                     <div class="author-info">
                         <span>金庸</span>
                         <span class="book-count-badge">5 本書</span>
                     </div>
                     <span class="arrow-icon">▼</span>
                 </button>
-                <div class="book-list-container" style="border-top-color: transparent;">
+                <div class="book-list-container" style="border-top-color: rgb(240, 240, 240); max-height: 777px;">
                     <div class="book-list-inner">
                         <div class="book-card" data-title="笑傲江湖" data-search="笑傲江湖 金庸 武俠小說">
                             <div class="book-title">笑傲江湖</div>
@@ -539,7 +539,7 @@
             </div>
 
             <!-- 作者 2: 羅貫中 -->
-            <div class="author-group" data-category="歷史演義" data-author="羅貫中" style="display: block;">
+            <div class="author-group" data-category="小說園地" data-author="羅貫中" style="display: block;">
                 <button class="author-header" onclick="toggleAuthor(this)">
                     <div class="author-info">
                         <span>羅貫中</span>
@@ -549,12 +549,12 @@
                 </button>
                 <div class="book-list-container">
                     <div class="book-list-inner">
-                        <div class="book-card" data-title="三國演義" data-search="三國演義 羅貫中 歷史演義">
+                        <div class="book-card" data-title="三國演義" data-search="三國演義 羅貫中 小說園地">
                             <div class="book-title">三國演義</div>
                             <div class="book-desc">中國古典四大名著之一，描繪漢末三國時期長達近百年的群雄爭霸歷史故事。</div>
                             <div class="book-footer">
-                                <span class="category-tag">歷史演義</span>
-                                <a href="https://www.haodoo.net/" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
+                                <span class="category-tag">小說園地</span>
+                                <a href="https://www.haodoo.net/?M=u&amp;P=H84:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
                             </div>
                         </div>
                     </div>
@@ -562,27 +562,7 @@
             </div>
 
             <!-- 作者 3: 柯南道爾 -->
-            <div class="author-group" data-category="偵探推理" data-author="柯南道爾" style="display: block;">
-                <button class="author-header" onclick="toggleAuthor(this)">
-                    <div class="author-info">
-                        <span>柯南道爾</span>
-                        <span class="book-count-badge">1 本書</span>
-                    </div>
-                    <span class="arrow-icon">▼</span>
-                </button>
-                <div class="book-list-container">
-                    <div class="book-list-inner">
-                        <div class="book-card" data-title="福爾摩斯探案全集" data-search="福爾摩斯探案全集 柯南道爾 偵探推理">
-                            <div class="book-title">福爾摩斯探案全集</div>
-                            <div class="book-desc">古典推理小說的傳奇，跟隨名偵探福爾摩斯與華生醫生破解一樁樁離奇懸案。</div>
-                            <div class="book-footer">
-                                <span class="category-tag">偵探推理</span>
-                                <a href="https://www.haodoo.net/" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
 
             <!-- 作者 4: 海蓮．漢芙 -->
             <div class="author-group" data-category="小說園地" data-author="海蓮．漢芙" style="display: block;">
@@ -630,7 +610,25 @@
                 </div>
             </div>
 
-        </div>
+        <div class="author-group" data-category="懸疑小說" data-author="柯南．道爾">
+                                <button class="author-header" onclick="toggleAuthor(this)">
+                                    <div class="author-info">
+                                        <span>柯南．道爾</span>
+                                        <span class="book-count-badge">1 本書</span>
+                                    </div>
+                                    <span class="arrow-icon">▼</span>
+                                </button>
+                                <div class="book-list-container">
+                                    <div class="book-list-inner"><div class="book-card" data-title="福爾摩斯探案全集" data-search="福爾摩斯探案全集 柯南．道爾 懸疑小說">
+                            <div class="book-title">福爾摩斯探案全集</div>
+                            <div class="book-desc">古典推理小說的傳奇，跟隨名偵探福爾摩斯與華生醫生破解一樁樁離奇懸案。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">懸疑小說</span>
+                                <a href="https://www.haodoo.net/?M=book&amp;P=1146" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
+                            </div>
+                        </div></div>
+                                </div>
+                            </div></div>
 
         <div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
 
@@ -663,9 +661,7 @@
                 <button class="btn-submit" id="submitBtn" onclick="saveBookAndExport()">確認新增並下載新 HTML</button>
 
                 <h3 style="margin-top: 20px;">📋 現有書籍管理 (修改 / 刪除)</h3>
-                <div id="manageBookList" style="max-height: 250px; overflow-y: auto;">
-                    <!-- 動態帶入既有書籍清單 -->
-                </div>
+                <div id="manageBookList" style="max-height: 250px; overflow-y: auto;"></div>
             </div>
         </div>
 
@@ -1042,5 +1038,6 @@
             document.body.removeChild(link);
         }
     </script>
+
 
 </body></html>
