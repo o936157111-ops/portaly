@@ -1,39 +1,39 @@
 {
-    "date": "2026-03-29",
+    "date": "2026-03-31",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "輝達 Blackwell 架構伺服器全面量產 AI 算力需求持續攀升",
-            "category": "人工智慧 / 半導體",
-            "summary": "輝達（NVIDIA）最新 Blackwell 架構 GPU 伺服器已進入全面量產階段，全球雲端服務供應商（CSP）積極搶訂，推動高階 AI 伺服器與水冷散熱供應鏈需求強勁成長。",
-            "source": "TechNews 科技新報",
-            "url": "https://technews.tw/2026/03/29/nvidia-blackwell-server-production/"
+            "title": "OpenAI 與微軟擴大 AI 算力合作，推出新一代企業級解決方案",
+            "category": "人工智慧",
+            "summary": "OpenAI 與微軟宣佈深化合作，結合最新一代大語言模型與 Azure 雲端基礎建設，提供高算力、低延遲的企業級 AI 服務，旨在提升跨國企業的自動化工作流程與數據分析效率。",
+            "Source": "TechCrunch",
+            "url": "https://techcrunch.com/news/openai-microsoft-enterprise-ai"
         },
         {
             "id": 2,
-            "title": "台積電 2 奈米製程進展順利 預計下半年如期量產",
-            "category": "半導體先進製程",
-            "summary": "台積電（TSMC）宣布其 2 奈米（N2）製程技術開發進度符合預期，首度採用 GAA 架構，預計將於今年下半年正式進入量產階段，主要客戶涵蓋蘋果與高通等各大晶片巨頭。",
-            "source": "經濟日報",
-            "url": "https://money.udn.com/money/story/5612/20260329"
+            "title": "台積電 2 奈米製程試產良率超乎預期，預計明年順利進入量產",
+            "category": "半導體",
+            "summary": "台積電於最新技術論壇指出，採用 GAA（全環繞閘極）架構的 2 奈米（N2）製程研發進度順利，試產良率表現優異，預計將於 2025 年如期量產，主要客戶包括蘋果、英偉達與高通。",
+            "Source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/tsmc-2nm-update"
         },
         {
             "id": 3,
-            "title": "蘋果擴大 Apple Intelligence 語系支援 強化繁體中文與多國語言 AI 體驗",
-            "category": "消費性電子",
-            "summary": "蘋果於最新系統更新中加入更多語系的 Apple Intelligence 支援，包含繁體中文，大幅升級 Siri 的跨應用程式執行能力與生成式寫作工具。",
-            "source": "iThome",
-            "url": "https://www.ithome.com.tw/news/20260329-apple-intelligence"
+            "title": "蘋果傳將於 WWDC 大會發表全新裝置端 AI 架構與 Siri 重大更新",
+            "category": "消費電子",
+            "summary": "供應鏈消息指出，蘋果計畫於即將舉辦的 WWDC 大會發表結合隱私保護與邊緣運算的 AI 技術，Siri 將迎來歷來最大幅度的改版，具備更強大的多輪對話與跨應用程式協同操作能力。",
+            "Source": "Bloomberg",
+            "url": "https://www.bloomberg.com/news/articles/apple-wwdc-ai-siri"
         },
         {
             "id": 4,
-            "title": "OpenAI 發布新一代高階推理模型 企業級 AI Agent 迎來爆發期",
-            "category": "生成式 AI",
-            "summary": "OpenAI 發表最新多模態旗艦模型，專注於複雜邏輯推理與自動化工作流程，並顯著調降 API 調用成本，推動企業加速部署專屬 AI 助理。",
-            "source": "數位時代",
-            "url": "https://www.bnext.com.tw/article/20260329-openai-new-model"
+            "title": "歐盟《人工智慧法案》正式上路，要求高風險 AI 系統全面符合透明度規範",
+            "category": "科技政策",
+            "summary": "歐盟全球首部具里程碑意義的《人工智慧法案》（AI Act）進入實施階段。法案規定於歐盟市場營運之 AI 業者需嚴格遵守演算法透明度、風險評估與個人資料保護規範，並禁止使用具侵犯隱私疑慮之即時生物識別技術。",
+            "Source": "Reuters",
+            "url": "https://www.reuters.com/technology/eu-ai-act-implementation"
         }
     ]
 }
