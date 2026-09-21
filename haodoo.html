@@ -61,7 +61,7 @@
             padding: 16px;
         }
 
-        /* 今日推薦特餐專區樣式 */
+        /* 今日推薦電子書專區樣式 */
         .daily-special-card {
             background: linear-gradient(135deg, #fff9e6, #fff3cd);
             border: 1px solid #ffeeba;
@@ -102,7 +102,7 @@
             line-height: 1.5;
             margin-bottom: 12px;
             display: -webkit-box;
-            -webkit-line-clamp: 3; /* 限制顯示最多三行 */
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -325,6 +325,7 @@
             display: none;
         }
 
+        /* 管理面板樣式 */
         .admin-section {
             margin-top: 30px;
             text-align: center;
@@ -353,6 +354,8 @@
             font-size: 1.1rem;
             margin-bottom: 12px;
             color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 6px;
         }
 
         .form-group {
@@ -390,10 +393,55 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 6px;
+            margin-bottom: 16px;
         }
 
         .btn-submit:hover {
             background-color: #219653;
+        }
+
+        /* 管理既有書籍清單樣式 */
+        .manage-book-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        .manage-book-info {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .manage-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .btn-edit-item {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .btn-delete-item {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -406,14 +454,14 @@
 
     <div class="container">
 
-        <!-- 今日隨機推薦特餐專區 -->
+        <!-- 今日推薦電子書專區 -->
         <div class="daily-special-card" id="dailySpecialCard">
-            <span class="daily-special-badge">✨ 今日推薦特餐</span>
+            <span class="daily-special-badge">✨ 今日推薦線上電子書</span>
             <div class="daily-title" id="dailyTitle">載入中...</div>
             <div class="daily-author" id="dailyAuthor">作者：--</div>
             <div class="daily-desc" id="dailyDesc">正在為您挑選今日好書...</div>
             <div class="daily-footer">
-                <a href="#" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">立即閱讀</a>
+                <a href="#" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
                 <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
             </div>
         </div>
@@ -572,7 +620,7 @@
                     <div class="book-list-inner">
                         <div class="book-card" data-title="《偷書賊》" data-search="《偷書賊》 馬格斯．朱薩克 小說園地">
                             <div class="book-title">《偷書賊》</div>
-                            <div class="book-desc">獨特視角：故事由「死神」冷靜中帶著悲憫與好奇的語調娓娓道來...</div>
+                            <div class="book-desc">獨特視角：故事由“死神”冷靜中帶著悲憫與好奇的語調娓娓道來...</div>
                             <div class="book-footer">
                                 <span class="category-tag">小說園地</span>
                                 <a href="https://www.haodoo.net/?M=u&amp;P=H16N0:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
@@ -586,11 +634,12 @@
 
         <div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
 
-        <!-- 隱藏的管理與加書按鈕區 -->
+        <!-- 管理與加書按鈕區 -->
         <div class="admin-section">
             <button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙️ 管理書單</button>
             <div class="admin-panel" id="adminPanel" style="display: none;">
-                <h3>➕ 新增書籍與類別並下載新 HTML</h3>
+                <input type="hidden" id="editCardId" value="">
+                <h3 id="formTitle">➕ 新增書籍與類別</h3>
                 <div class="form-group">
                     <label>書籍名稱</label>
                     <input type="text" id="newTitle" placeholder="例如：鹿鼎記">
@@ -611,7 +660,12 @@
                     <label>書籍簡介</label>
                     <textarea id="newDesc" rows="3" placeholder="請輸入精彩簡述..."></textarea>
                 </div>
-                <button class="btn-submit" onclick="addNewBookAndExport()">確認新增並下載新 HTML</button>
+                <button class="btn-submit" id="submitBtn" onclick="saveBookAndExport()">確認新增並下載新 HTML</button>
+
+                <h3 style="margin-top: 20px;">📋 現有書籍管理 (修改 / 刪除)</h3>
+                <div id="manageBookList" style="max-height: 250px; overflow-y: auto;">
+                    <!-- 動態帶入既有書籍清單 -->
+                </div>
             </div>
         </div>
 
@@ -622,28 +676,29 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             updateBookCounts();
-            pickRandomBook(); // 頁面載入時隨機挑選一本今日特餐
+            pickRandomBook();
         });
 
-        // 隨機抽選今日推薦好書
         function pickRandomBook() {
             const allCards = document.querySelectorAll('.book-card');
-            if (allCards.length === 0) return;
+            if (allCards.length === 0) {
+                document.getElementById('dailyTitle').textContent = "目前無書籍";
+                document.getElementById('dailyAuthor').textContent = "";
+                document.getElementById('dailyDesc').textContent = "請透過管理功能新增書籍。";
+                document.getElementById('dailyLink').setAttribute('href', "#");
+                return;
+            }
 
-            // 隨機取出一張卡片
             const randomIndex = Math.floor(Math.random() * allCards.length);
             const card = allCards[randomIndex];
 
-            // 取得該書的詳細資訊
             const title = card.getAttribute('data-title');
             const desc = card.querySelector('.book-desc').textContent;
             const link = card.querySelector('.btn-read').getAttribute('href');
             
-            // 找出該書屬於哪個作者
             const authorGroup = card.closest('.author-group');
             const author = authorGroup ? authorGroup.getAttribute('data-author') : '未知作者';
 
-            // 填入「今日推薦特餐」區塊
             document.getElementById('dailyTitle').textContent = title;
             document.getElementById('dailyAuthor').textContent = '作者： ' + author;
             document.getElementById('dailyDesc').textContent = desc;
@@ -657,6 +712,9 @@
                 const badge = group.querySelector('.book-count-badge');
                 if (badge) {
                     badge.textContent = cards.length + ' 本書';
+                }
+                if (cards.length === 0) {
+                    group.remove();
                 }
             });
         }
@@ -738,13 +796,89 @@
             const pwd = prompt("請輸入密碼解鎖管理功能：");
             if (pwd === "20260921") {
                 const panel = document.getElementById('adminPanel');
-                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+                if (panel.style.display === 'block') {
+                    panel.style.display = 'none';
+                } else {
+                    panel.style.display = 'block';
+                    renderManageList();
+                }
             } else if (pwd !== null) {
                 alert("密碼錯誤！");
             }
         }
 
-        function addNewBookAndExport() {
+        // 渲染管理清單
+        function renderManageList() {
+            const manageListContainer = document.getElementById('manageBookList');
+            manageListContainer.innerHTML = '';
+            
+            const cards = document.querySelectorAll('.book-card');
+            if (cards.length === 0) {
+                manageListContainer.innerHTML = '<div style="color:#888; font-size:0.85rem; padding:8px 0;">目前沒有任何書籍</div>';
+                return;
+            }
+
+            cards.forEach((card, index) => {
+                const title = card.getAttribute('data-title');
+                const authorGroup = card.closest('.author-group');
+                const author = authorGroup ? authorGroup.getAttribute('data-author') : '';
+                
+                // 給每個卡片一個暫時的識別編號以便編輯
+                card.setAttribute('data-temp-id', 'book_' + index);
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'manage-book-item';
+                itemDiv.innerHTML = `
+                    <div class="manage-book-info"><b>${title}</b> <span style="color:#666; font-size:0.8rem;">(${author})</span></div>
+                    <div class="manage-actions">
+                        <button class="btn-edit-item" onclick="prepareEditBook('book_${index}')">修改</button>
+                        <button class="btn-delete-item" onclick="deleteBook('book_${index}')">刪除</button>
+                    </div>
+                `;
+                manageListContainer.appendChild(itemDiv);
+            });
+        }
+
+        function prepareEditBook(tempId) {
+            const card = document.querySelector(`[data-temp-id="${tempId}"]`);
+            if (!card) return;
+
+            const title = card.getAttribute('data-title');
+            const desc = card.querySelector('.book-desc').textContent;
+            const url = card.querySelector('.btn-read').getAttribute('href');
+            const authorGroup = card.closest('.author-group');
+            const author = authorGroup ? authorGroup.getAttribute('data-author') : '';
+            const category = authorGroup ? authorGroup.getAttribute('data-category') : '';
+
+            document.getElementById('editCardId').value = tempId;
+            document.getElementById('newTitle').value = title;
+            document.getElementById('newAuthor').value = author;
+            document.getElementById('newCategory').value = category;
+            document.getElementById('newUrl').value = url;
+            document.getElementById('newDesc').value = desc;
+
+            document.getElementById('formTitle').textContent = "✏️ 修改書籍資料";
+            document.getElementById('submitBtn').textContent = "確認修改並下載新 HTML";
+            
+            // 捲動到表單處
+            document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteBook(tempId) {
+            if (!confirm("確定要刪除這本書嗎？")) return;
+            const card = document.querySelector(`[data-temp-id="${tempId}"]`);
+            if (card) {
+                card.remove();
+                updateBookCounts();
+                pickRandomBook();
+                renderManageList();
+                exportCurrentHtml();
+                alert("已刪除並自動下載更新後的 HTML 檔案！");
+            }
+        }
+
+        function saveBookAndExport() {
+            const editId = document.getElementById('editCardId').value;
             const title = document.getElementById('newTitle').value.trim();
             const author = document.getElementById('newAuthor').value.trim();
             const category = document.getElementById('newCategory').value.trim();
@@ -756,6 +890,7 @@
                 return;
             }
 
+            // 處理類別頁籤
             let categoryExists = false;
             const tabContainer = document.getElementById('tabContainer');
             const existingTabs = tabContainer.querySelectorAll('.tab-btn');
@@ -773,54 +908,104 @@
                 tabContainer.appendChild(newTabBtn);
             }
 
-            let authorGroup = null;
-            const groups = document.querySelectorAll('.author-group');
-            groups.forEach(g => {
-                if (g.getAttribute('data-author') === author) {
-                    authorGroup = g;
-                }
-            });
+            if (editId) {
+                // 狀態：修改現有書籍
+                const card = document.querySelector(`[data-temp-id="${editId}"]`);
+                if (card) {
+                    card.setAttribute('data-title', title);
+                    card.setAttribute('data-search', `${title} ${author} ${category}`);
+                    card.querySelector('.book-title').textContent = title;
+                    card.querySelector('.book-desc').textContent = desc;
+                    card.querySelector('.category-tag').textContent = category;
+                    card.querySelector('.btn-read').setAttribute('href', url);
 
-            if (!authorGroup) {
-                authorGroup = document.createElement('div');
-                authorGroup.className = 'author-group';
-                authorGroup.setAttribute('data-category', category);
-                authorGroup.setAttribute('data-author', author);
-                authorGroup.innerHTML = `
-                    <button class="author-header" onclick="toggleAuthor(this)">
-                        <div class="author-info">
-                            <span>${author}</span>
-                            <span class="book-count-badge">0 本書</span>
+                    // 檢查是否換了作者或類別，需要重新歸組
+                    const oldAuthorGroup = card.closest('.author-group');
+                    if (oldAuthorGroup && oldAuthorGroup.getAttribute('data-author') !== author) {
+                        // 移到對應作者群組或新建作者群組
+                        let targetAuthorGroup = null;
+                        document.querySelectorAll('.author-group').forEach(g => {
+                            if (g.getAttribute('data-author') === author) targetAuthorGroup = g;
+                        });
+
+                        if (!targetAuthorGroup) {
+                            targetAuthorGroup = document.createElement('div');
+                            targetAuthorGroup.className = 'author-group';
+                            targetAuthorGroup.setAttribute('data-category', category);
+                            targetAuthorGroup.setAttribute('data-author', author);
+                            targetAuthorGroup.innerHTML = `
+                                <button class="author-header" onclick="toggleAuthor(this)">
+                                    <div class="author-info">
+                                        <span>${author}</span>
+                                        <span class="book-count-badge">0 本書</span>
+                                    </div>
+                                    <span class="arrow-icon">▼</span>
+                                </button>
+                                <div class="book-list-container">
+                                    <div class="book-list-inner"></div>
+                                </div>
+                            `;
+                            document.getElementById('authorGroupsContainer').appendChild(targetAuthorGroup);
+                        }
+                        targetAuthorGroup.querySelector('.book-list-inner').appendChild(card);
+                        oldAuthorGroup.remove();
+                    } else if (oldAuthorGroup) {
+                        oldAuthorGroup.setAttribute('data-category', category);
+                    }
+                }
+                alert("修改成功！");
+            } else {
+                // 狀態：新增書籍
+                let authorGroup = null;
+                document.querySelectorAll('.author-group').forEach(g => {
+                    if (g.getAttribute('data-author') === author) {
+                        authorGroup = g;
+                    }
+                });
+
+                if (!authorGroup) {
+                    authorGroup = document.createElement('div');
+                    authorGroup.className = 'author-group';
+                    authorGroup.setAttribute('data-category', category);
+                    authorGroup.setAttribute('data-author', author);
+                    authorGroup.innerHTML = `
+                        <button class="author-header" onclick="toggleAuthor(this)">
+                            <div class="author-info">
+                                <span>${author}</span>
+                                <span class="book-count-badge">0 本書</span>
+                            </div>
+                            <span class="arrow-icon">▼</span>
+                        </button>
+                        <div class="book-list-container">
+                            <div class="book-list-inner"></div>
                         </div>
-                        <span class="arrow-icon">▼</span>
-                    </button>
-                    <div class="book-list-container">
-                        <div class="book-list-inner"></div>
+                    `;
+                    document.getElementById('authorGroupsContainer').appendChild(authorGroup);
+                } else {
+                    authorGroup.setAttribute('data-category', category);
+                }
+
+                const innerList = authorGroup.querySelector('.book-list-inner');
+                const newCard = document.createElement('div');
+                newCard.className = 'book-card';
+                newCard.setAttribute('data-title', title);
+                newCard.setAttribute('data-search', `${title} ${author} ${category}`);
+                newCard.innerHTML = `
+                    <div class="book-title">${title}</div>
+                    <div class="book-desc">${desc}</div>
+                    <div class="book-footer">
+                        <span class="category-tag">${category}</span>
+                        <a href="${url}" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
                     </div>
                 `;
-                document.getElementById('authorGroupsContainer').appendChild(authorGroup);
-            } else {
-                authorGroup.setAttribute('data-category', category);
+                innerList.appendChild(newCard);
+                alert("新增成功！");
             }
 
-            const innerList = authorGroup.querySelector('.book-list-inner');
-            const newCard = document.createElement('div');
-            newCard.className = 'book-card';
-            newCard.setAttribute('data-title', title);
-            newCard.setAttribute('data-search', `${title} ${author} ${category}`);
-            newCard.innerHTML = `
-                <div class="book-title">${title}</div>
-                <div class="book-desc">${desc}</div>
-                <div class="book-footer">
-                    <span class="category-tag">${category}</span>
-                    <a href="${url}" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-                </div>
-            `;
-            innerList.appendChild(newCard);
-
-            updateBookCounts();
-            pickRandomBook(); // 更新隨機清單
-
+            // 重置表單狀態
+            document.getElementById('editCardId').value = '';
+            document.getElementById('formTitle').textContent = "➕ 新增書籍與類別";
+            document.getElementById('submitBtn').textContent = "確認新增並下載新 HTML";
             document.getElementById('newTitle').value = '';
             document.getElementById('newAuthor').value = '';
             document.getElementById('newCategory').value = '';
@@ -828,19 +1013,24 @@
             document.getElementById('newDesc').value = '';
             document.getElementById('adminPanel').style.display = 'none';
 
+            updateBookCounts();
+            pickRandomBook();
             exportCurrentHtml();
-            alert("新增成功！類別頁籤與書籍已同步建立，並自動為您下載更新後的 HTML 檔案。");
         }
 
         function exportCurrentHtml() {
             const cloneDoc = document.documentElement.cloneNode(true);
             
+            // 清理暫時標記與表單輸入
+            cloneDoc.querySelectorAll('.book-card').forEach(c => c.removeAttribute('data-temp-id'));
             cloneDoc.querySelector('#adminPanel').style.display = 'none';
             cloneDoc.querySelector('#newTitle').value = '';
             cloneDoc.querySelector('#newAuthor').value = '';
             cloneDoc.querySelector('#newCategory').value = '';
             cloneDoc.querySelector('#newUrl').value = '';
             cloneDoc.querySelector('#newDesc').value = '';
+            cloneDoc.querySelector('#editCardId').value = '';
+            cloneDoc.querySelector('#manageBookList').innerHTML = '';
 
             const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
