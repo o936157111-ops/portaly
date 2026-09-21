@@ -457,11 +457,11 @@
         <!-- 今日推薦電子書專區 -->
         <div class="daily-special-card" id="dailySpecialCard">
             <span class="daily-special-badge">✨ 今日推薦線上電子書</span>
-            <div class="daily-title" id="dailyTitle">《偷書賊》</div>
-            <div class="daily-author" id="dailyAuthor">作者： 馬格斯．朱薩克</div>
-            <div class="daily-desc" id="dailyDesc">獨特視角：故事由“死神”冷靜中帶著悲憫與好奇的語調娓娓道來...</div>
+            <div class="daily-title" id="dailyTitle">查令十字路84</div>
+            <div class="daily-author" id="dailyAuthor">作者： 海蓮．漢芙</div>
+            <div class="daily-desc" id="dailyDesc">這是一間活脫是從狄更斯書裡頭蹦出來的可愛鋪子。極目所見全是書架－高聳直扺到天花板的深色的古老書架……</div>
             <div class="daily-footer">
-                <a href="https://www.haodoo.net/?M=u&amp;P=H16N0:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
+                <a href="https://www.haodoo.net/?M=u&amp;P=P1010490099:3&amp;L=Share" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
                 <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
             </div>
         </div>
@@ -628,7 +628,25 @@
                             </div>
                         </div></div>
                                 </div>
-                            </div></div>
+                            </div><div class="author-group" data-category="武俠小說" data-author="黃易">
+                        <button class="author-header" onclick="toggleAuthor(this)">
+                            <div class="author-info">
+                                <span>黃易</span>
+                                <span class="book-count-badge">1 本書</span>
+                            </div>
+                            <span class="arrow-icon">▼</span>
+                        </button>
+                        <div class="book-list-container">
+                            <div class="book-list-inner"><div class="book-card" data-title="尋秦記" data-search="尋秦記 黃易 武俠小說">
+                    <div class="book-title">尋秦記</div>
+                    <div class="book-desc">二十一世紀中國特種部隊的精銳戰士項少龍成了實驗的白老鼠，被送回公元前的戰國時代，可是時空機器發生了毀滅性的大爆炸，所有參與的科研人員均灰飛煙滅。項少龍則流落到二千多年前中國最動盪和變化急劇的時代裡。於是尋找秦始皇便成為他唯一的目標，只有成為當時尚落泊趙都邯鄲的贏政的拍擋，才有機會成為當時代的強者。其中過程，自是妙趣橫生，曲折離奇。這是絕對不能錯過天馬行空般的科幻創作。</div>
+                    <div class="book-footer">
+                        <span class="category-tag">武俠小說</span>
+                        <a href="https://www.haodoo.net/?M=book&amp;P=69" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
+                    </div>
+                </div></div>
+                        </div>
+                    </div></div>
 
         <div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
 
@@ -1038,6 +1056,7 @@
             document.body.removeChild(link);
         }
     </script>
+
 
 
 </body></html>
