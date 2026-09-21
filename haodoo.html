@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的好讀書單</title>
+    
+    <!-- PWA 支援與手機優化 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4a90e2">
+    
+    <!-- 內嵌 PWA Manifest -->
+    <link rel="manifest" href="data:application/json;charset=utf-8,{&quot;name&quot;:&quot;我的好讀書單&quot;,&quot;short_name&quot;:&quot;好讀書單&quot;,&quot;start_url&quot;:&quot;./&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#f4f7f6&quot;,&quot;theme_color&quot;:&quot;#4a90e2&quot;}">
+
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --primary-light: #eef2f7;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            padding: 24px 16px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* 搜尋列 */
+        .search-box {
+            margin-bottom: 14px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            outline: none;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* 類別頁籤 (四方形、緊密相連) */
+        .tabs-container {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            background: white;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .tabs-container::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+        }
+
+        .tab-btn {
+            background: white;
+            border: none;
+            border-right: 1px solid #ddd;
+            color: var(--text-secondary);
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-btn:last-child {
+            border-right: none;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* 作者群組 (手風琴) */
+        .author-group {
+            margin-bottom: 12px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .author-header {
+            width: 100%;
+            background: white;
+            border: none;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .author-header:hover {
+            background: #fafafa;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .book-count-badge {
+            font-size: 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: normal;
+        }
+
+        .arrow-icon {
+            font-size: 0.8rem;
+            color: #999;
+            transition: transform 0.3s ease;
+        }
+
+        .author-header.active .arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        /* 展開的書單容器 */
+        .book-list-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #fdfdfd;
+            border-top: 1px solid transparent;
+        }
+
+        .book-list-inner {
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* 書籍小卡片 */
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px 14px;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .book-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .book-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .book-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 6px;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .category-tag {
+            font-size: 0.75rem;
+            background: #eef2f7;
+            color: #555;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .btn-read {
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        .btn-read:hover {
+            background-color: #357abd;
+        }
+
+        /* 無結果提示 */
+        .no-result {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 40px;
+            display: none;
+        }
+
+        /* 底部管理按鈕與管理面板樣式 */
+        .admin-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-admin-toggle {
+            background: none;
+            border: none;
+            color: #bbb;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .admin-panel {
+            display: none;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+
+        .admin-panel h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn-submit {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .btn-submit:hover {
+            background-color: #219653;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📚 我的私房好讀書單</h1>
+        <p>精選好讀網站經典推薦，隨身帶著走</p>
+    </header>
+
+    <div class="container">
+        <!-- 搜尋列 -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜尋書名或作者..." onkeyup="filterContent()">
+        </div>
+
+        <!-- 類別頁籤 (四方形、緊密相連) -->
+        <div class="tabs-container" id="tabContainer">
+            <button class="tab-btn active" onclick="filterCategory('全部')">全部</button>
+            <button class="tab-btn" onclick="filterCategory('武俠小說')">武俠小說</button>
+            <button class="tab-btn" onclick="filterCategory('歷史演義')">歷史演義</button>
+            <button class="tab-btn" onclick="filterCategory('偵探推理')">偵探推理</button>
+        <button class="tab-btn" onclick="filterCategory('小說園地')">小說園地</button></div>
+
+        <!-- 作者群組清單 -->
+        <div id="authorGroupsContainer">
+
+            <!-- 作者 1: 金庸 -->
+            <div class="author-group" data-category="武俠小說" data-author="金庸" style="display: block;">
+                <button class="author-header" onclick="toggleAuthor(this)">
+                    <div class="author-info">
+                        <span>金庸</span>
+                        <span class="book-count-badge">5 本書</span>
+                    </div>
+                    <span class="arrow-icon">▼</span>
+                </button>
+                <div class="book-list-container" style="border-top-color: transparent;">
+                    <div class="book-list-inner">
+                        <div class="book-card" data-title="笑傲江湖" data-search="笑傲江湖 金庸 武俠小說" style="">
+                            <div class="book-title">笑傲江湖</div>
+                            <div class="book-desc">金庸武俠小說的巔峰之作，透過主角令狐沖的經歷展現出對自由與江湖的深刻描繪。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">武俠小說</span>
+                                <a href="https://www.haodoo.net/?M=u&amp;P=D517:1&amp;L=book" target="_blank" class="btn-read" style="">去好讀閱讀</a>
+                            </div>
+                        </div>
+                        <div class="book-card" data-title="射鵰英雄傳" data-search="射鵰英雄傳 金庸 武俠小說" style="">
+                            <div class="book-title">射鵰英雄傳</div>
+                            <div class="book-desc">刻畫郭靖與黃蓉的傳奇江湖路，為金庸「射鵰三部曲」之首部曲。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">武俠小說</span>
+                                <a href="https://www.haodoo.net/?M=u&amp;P=D301:1&amp;L=book" target="_blank" class="btn-read">去好讀閱讀</a>
+                            </div>
+                        </div>
+                        <div class="book-card" data-title="神鵰俠侶" data-search="神鵰俠侶 金庸 武俠小說" style="">
+                            <div class="book-title">神鵰俠侶</div>
+                            <div class="book-desc">楊過與小龍女的傳奇愛情故事，展現出「問世間，情為何物」的深刻意境。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">武俠小說</span>
+                                <a href="https://www.haodoo.net/?M=u&amp;P=D354:1&amp;L=book" target="_blank" class="btn-read">去好讀閱讀</a>
+                            </div>
+                        </div>
+                        <div class="book-card" data-title="倚天屠龍記" data-search="倚天屠龍記 金庸 武俠小說" style="">
+                            <div class="book-title">倚天屠龍記</div>
+                            <div class="book-desc">以元末群雄逐鹿為背景，環繞著「倚天劍」與「屠龍刀」的江湖傳說，刻畫出張無忌的成長與愛恨情仇。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">武俠小說</span>
+                                <a href="https://www.haodoo.net/?M=u&amp;P=D354:1&amp;L=book" target="_blank" class="btn-read">去好讀閱讀</a>
+                            </div>
+                        </div>
+                        <div class="book-card" data-title="天龍八部" data-search="天龍八部 金庸 武俠小說" style="">
+                            <div class="book-title">天龍八部</div>
+                            <div class="book-desc">金庸武俠小說的宏偉巨作，以北宋年間為時代背景，透過丐幫幫主喬峰、大理世子段譽、少林虛竹和尚三人的傳奇命運交織，展現出磅礡的江湖恩怨、民族大義與宿命悲劇，為金庸筆下格局最大、氣勢最恢弘的武俠經典。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">武俠小說</span>
+                                <a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" target="_blank" class="btn-read" style="">去好讀閱讀</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 作者 2: 羅貫中 -->
+            <div class="author-group" data-category="歷史演義" data-author="羅貫中" style="display: block;">
+                <button class="author-header" onclick="toggleAuthor(this)">
+                    <div class="author-info">
+                        <span>羅貫中</span>
+                        <span class="book-count-badge">1 本書</span>
+                    </div>
+                    <span class="arrow-icon">▼</span>
+                </button>
+                <div class="book-list-container">
+                    <div class="book-list-inner">
+                        <div class="book-card" data-title="三國演義" data-search="三國演義 羅貫中 歷史演義" style="">
+                            <div class="book-title">三國演義</div>
+                            <div class="book-desc">中國古典四大名著之一，描繪漢末三國時期長達近百年的群雄爭霸歷史故事。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">歷史演義</span>
+                                <a href="https://www.haodoo.net/" target="_blank" class="btn-read">去好讀閱讀</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 作者 3: 柯南道爾 -->
+            <div class="author-group" data-category="偵探推理" data-author="柯南道爾" style="display: block;">
+                <button class="author-header" onclick="toggleAuthor(this)">
+                    <div class="author-info">
+                        <span>柯南道爾</span>
+                        <span class="book-count-badge">1 本書</span>
+                    </div>
+                    <span class="arrow-icon">▼</span>
+                </button>
+                <div class="book-list-container">
+                    <div class="book-list-inner">
+                        <div class="book-card" data-title="福爾摩斯探案全集" data-search="福爾摩斯探案全集 柯南道爾 偵探推理" style="">
+                            <div class="book-title">福爾摩斯探案全集</div>
+                            <div class="book-desc">古典推理小說的傳奇，跟隨名偵探福爾摩斯與華生醫生破解一樁樁離奇懸案。</div>
+                            <div class="book-footer">
+                                <span class="category-tag">偵探推理</span>
+                                <a href="https://www.haodoo.net/" target="_blank" class="btn-read">去好讀閱讀</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="author-group" data-category="小說園地" data-author="海蓮．漢芙" style="display: block;">
+                    <button class="author-header" onclick="toggleAuthor(this)">
+                        <div class="author-info">
+                            <span>海蓮．漢芙</span>
+                            <span class="book-count-badge">1 本書</span>
+                        </div>
+                        <span class="arrow-icon">▼</span>
+                    </button>
+                    <div class="book-list-container" style="border-top-color: transparent;">
+                        <div class="book-list-inner"><div class="book-card" data-title="查令十字路84" data-search="查令十字路84 海蓮．漢芙 小說園地" style="">
+                <div class="book-title">查令十字路84</div>
+                <div class="book-desc">這是一間活脫是從狄更斯書裡頭蹦出來的可愛鋪子。
+極目所見全是書架－高聳直扺到天花板的深色的古老書架，橡木架面經過漫長歲月的洗禮，雖已褪色仍逕放光芒。接著是擺放畫片的專區：另一邊還放著幾疊迷人的古舊畫刊……</div>
+                <div class="book-footer">
+                    <span class="category-tag">小說園地</span>
+                    <a href="https://www.haodoo.net/?M=u&amp;P=P1010490099:3&amp;L=Share" target="_blank" class="btn-read" style="">去好讀閱讀</a>
+                </div>
+            </div></div>
+                    </div>
+                </div><div class="author-group" data-category="小說園地" data-author="馬格斯．朱薩克">
+                    <button class="author-header" onclick="toggleAuthor(this)">
+                        <div class="author-info">
+                            <span>馬格斯．朱薩克</span>
+                            <span class="book-count-badge">1 本書</span>
+                        </div>
+                        <span class="arrow-icon">▼</span>
+                    </button>
+                    <div class="book-list-container">
+                        <div class="book-list-inner"><div class="book-card" data-title="《偷書賊》" data-search="《偷書賊》 馬格斯．朱薩克 小說園地">
+                <div class="book-title">《偷書賊》</div>
+                <div class="book-desc">獨特視角：故事由「死神」冷靜中帶著悲憫與好奇的語調娓娓道來，死神見證了無數生命的消逝，並對人類「既醜陋又美麗」的矛盾本質深深著迷。主角莉賽爾：九歲的小女孩莉賽爾因弟弟在前往寄養家庭途中過世，在埋葬弟弟的雪地旁偷走了一本《掘墓工人手冊》，開啟了她與「書」的不解之緣。文字的力量：善良的養父教導不識字的莉賽爾認字，書本成為她對抗現實苦難與惡夢的力量。莉賽爾不僅藉由偷書和閱讀療癒自己，更在空襲時為防空洞的鄰居朗讀、在地下室為藏匿的猶太人念書，撫慰了戰亂中惶惶不安的靈魂。</div>
+                <div class="book-footer">
+                    <span class="category-tag">小說園地</span>
+                    <a href="https://www.haodoo.net/?M=u&amp;P=H16N0:1&amp;L=book" target="_blank" class="btn-read">去好讀閱讀</a>
+                </div>
+            </div></div>
+                    </div>
+                </div></div>
+
+        <div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
+
+        <!-- 隱藏的管理與加書按鈕區 -->
+        <div class="admin-section">
+            <button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙️ 管理書單</button>
+            <div class="admin-panel" id="adminPanel" style="display: none;">
+                <h3>➕ 新增書籍與類別並下載新 HTML</h3>
+                <div class="form-group">
+                    <label>書籍名稱</label>
+                    <input type="text" id="newTitle" placeholder="例如：鹿鼎記">
+                </div>
+                <div class="form-group">
+                    <label>作者名稱</label>
+                    <input type="text" id="newAuthor" placeholder="例如：金庸">
+                </div>
+                <div class="form-group">
+                    <label>類別（若輸入新類別會自動建立上方頁籤）</label>
+                    <input type="text" id="newCategory" placeholder="例如：科幻小說">
+                </div>
+                <div class="form-group">
+                    <label>好讀網址</label>
+                    <input type="text" id="newUrl" placeholder="https://www.haodoo.net/...">
+                </div>
+                <div class="form-group">
+                    <label>書籍簡介</label>
+                    <textarea id="newDesc" rows="3" placeholder="請輸入精彩簡述..."></textarea>
+                </div>
+                <button class="btn-submit" onclick="addNewBookAndExport()">確認新增並下載新 HTML</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentCategory = '全部';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateBookCounts();
+        });
+
+        function updateBookCounts() {
+            const groups = document.querySelectorAll('.author-group');
+            groups.forEach(group => {
+                const cards = group.querySelectorAll('.book-card');
+                const badge = group.querySelector('.book-count-badge');
+                if (badge) {
+                    badge.textContent = cards.length + ' 本書';
+                }
+            });
+        }
+
+        function toggleAuthor(button) {
+            button.classList.toggle('active');
+            const container = button.nextElementSibling;
+            if (container.style.maxHeight) {
+                container.style.maxHeight = null;
+                container.style.borderTopColor = 'transparent';
+            } else {
+                container.style.maxHeight = container.scrollHeight + "px";
+                container.style.borderTopColor = '#f0f0f0';
+            }
+        }
+
+        function filterCategory(categoryName) {
+            currentCategory = categoryName;
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent === categoryName) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            filterContent();
+        }
+
+        function filterContent() {
+            const input = document.getElementById('searchInput');
+            const keyword = input.value.toLowerCase().trim();
+            const groups = document.querySelectorAll('.author-group');
+            const noResult = document.getElementById('noResult');
+            let visibleGroupCount = 0;
+
+            groups.forEach(group => {
+                const groupCategory = group.getAttribute('data-category');
+                const authorName = group.getAttribute('data-author').toLowerCase();
+                const cards = group.querySelectorAll('.book-card');
+                const matchCategory = (currentCategory === '全部' || groupCategory === currentCategory);
+                let groupHasVisibleCard = false;
+
+                cards.forEach(card => {
+                    const searchData = card.getAttribute('data-search').toLowerCase();
+                    const matchKeyword = (keyword === '' || searchData.includes(keyword) || authorName.includes(keyword));
+
+                    if (matchCategory && matchKeyword) {
+                        card.style.display = '';
+                        groupHasVisibleCard = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (groupHasVisibleCard) {
+                    group.style.display = 'block';
+                    visibleGroupCount++;
+                    const header = group.querySelector('.author-header');
+                    const container = group.querySelector('.book-list-container');
+                    if (keyword !== '' && !header.classList.contains('active')) {
+                        header.classList.add('active');
+                        container.style.maxHeight = container.scrollHeight + "px";
+                        container.style.borderTopColor = '#f0f0f0';
+                    }
+                } else {
+                    group.style.display = 'none';
+                }
+            });
+
+            if (visibleGroupCount === 0) {
+                noResult.style.display = 'block';
+            } else {
+                noResult.style.display = 'none';
+            }
+        }
+
+        function tryOpenAdmin() {
+            const pwd = prompt("請輸入密碼解鎖管理功能：");
+            if (pwd === "20260921") {
+                const panel = document.getElementById('adminPanel');
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            } else if (pwd !== null) {
+                alert("密碼錯誤！");
+            }
+        }
+
+        function addNewBookAndExport() {
+            const title = document.getElementById('newTitle').value.trim();
+            const author = document.getElementById('newAuthor').value.trim();
+            const category = document.getElementById('newCategory').value.trim();
+            const url = document.getElementById('newUrl').value.trim() || 'https://www.haodoo.net/';
+            const desc = document.getElementById('newDesc').value.trim();
+
+            if (!title || !author || !category) {
+                alert("請至少填寫書名、作者與類別！");
+                return;
+            }
+
+            // 檢查該類別頁籤是否存在，若不存在則自動新增一個頁籤按鈕
+            let categoryExists = false;
+            const tabContainer = document.getElementById('tabContainer');
+            const existingTabs = tabContainer.querySelectorAll('.tab-btn');
+            existingTabs.forEach(btn => {
+                if (btn.textContent === category) {
+                    categoryExists = true;
+                }
+            });
+
+            if (!categoryExists) {
+                const newTabBtn = document.createElement('button');
+                newTabBtn.className = 'tab-btn';
+                newTabBtn.setAttribute('onclick', `filterCategory('${category}')`);
+                newTabBtn.textContent = category;
+                tabContainer.appendChild(newTabBtn);
+            }
+
+            // 尋找是否已有該作者的群組
+            let authorGroup = null;
+            const groups = document.querySelectorAll('.author-group');
+            groups.forEach(g => {
+                if (g.getAttribute('data-author') === author) {
+                    authorGroup = g;
+                }
+            });
+
+            // 如果沒有該作者群組，建立一個新的
+            if (!authorGroup) {
+                authorGroup = document.createElement('div');
+                authorGroup.className = 'author-group';
+                authorGroup.setAttribute('data-category', category);
+                authorGroup.setAttribute('data-author', author);
+                authorGroup.innerHTML = `
+                    <button class="author-header" onclick="toggleAuthor(this)">
+                        <div class="author-info">
+                            <span>${author}</span>
+                            <span class="book-count-badge">0 本書</span>
+                        </div>
+                        <span class="arrow-icon">▼</span>
+                    </button>
+                    <div class="book-list-container">
+                        <div class="book-list-inner"></div>
+                    </div>
+                `;
+                document.getElementById('authorGroupsContainer').appendChild(authorGroup);
+            } else {
+                // 如果作者已存在，順便更新其所屬類別屬性（以防萬一）
+                authorGroup.setAttribute('data-category', category);
+            }
+
+            // 建立新書卡片元素
+            const innerList = authorGroup.querySelector('.book-list-inner');
+            const newCard = document.createElement('div');
+            newCard.className = 'book-card';
+            newCard.setAttribute('data-title', title);
+            newCard.setAttribute('data-search', `${title} ${author} ${category}`);
+            newCard.innerHTML = `
+                <div class="book-title">${title}</div>
+                <div class="book-desc">${desc}</div>
+                <div class="book-footer">
+                    <span class="category-tag">${category}</span>
+                    <a href="${url}" target="_blank" class="btn-read">去好讀閱讀</a>
+                </div>
+            `;
+            innerList.appendChild(newCard);
+
+            updateBookCounts();
+
+            // 清空輸入框並關閉面板
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newAuthor').value = '';
+            document.getElementById('newCategory').value = '';
+            document.getElementById('newUrl').value = '';
+            document.getElementById('newDesc').value = '';
+            document.getElementById('adminPanel').style.display = 'none';
+
+            exportCurrentHtml();
+            alert("新增成功！類別頁籤與書籍已同步建立，並自動為您下載更新後的 HTML 檔案。");
+        }
+
+        function exportCurrentHtml() {
+            const cloneDoc = document.documentElement.cloneNode(true);
+            
+            cloneDoc.querySelector('#adminPanel').style.display = 'none';
+            cloneDoc.querySelector('#newTitle').value = '';
+            cloneDoc.querySelector('#newAuthor').value = '';
+            cloneDoc.querySelector('#newCategory').value = '';
+            cloneDoc.querySelector('#newUrl').value = '';
+            cloneDoc.querySelector('#newDesc').value = '';
+
+            const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'index.html';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+</body></html>
