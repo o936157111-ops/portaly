@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
     <meta charset="UTF-8">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+    <script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>生活・簡居・生活 | 數位名片型總入口</title>
     <link rel="manifest" href="manifest.json">
@@ -104,6 +103,48 @@
             background: #eee;
         }
 
+        /* 隱藏按鈕與管理面板樣式 */
+        .hidden-admin-trigger {
+            width: 100%;
+            height: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #admin-panel {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f1f4;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+        #admin-panel input, #admin-panel button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        #admin-panel button {
+            background: #333;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 5px 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
         #lightbox-modal {
             display: none;
             position: fixed;
@@ -173,9 +214,11 @@
             .container { display: none !important; }
             html, body { background-color: #f4f4f4 !important; overflow: hidden !important; width: 100vw !important; height: 100dvh !important; margin: 0 !important; padding: 0 !important; position: fixed !important; top: 0; left: 0; }
             body { display: flex !important; justify-content: center !important; align-items: center !important; }
-            #landscape-card-view { display: flex !important; width: 100vw !important; height: 100dvh !important; background: #ffffff !important; align-items: stretch !important; position: absolute !important; top: 0 !important; left: 0 !important; z-index: 99999; }
+            #landscape-card-view { display: flex !important; width: 100vw !important; height: 100dvh !important; background: #ffffff !important; align-items: stretch !important; position: absolute !important; top: 0 !important; left: 0 !important; z-index: 99999; flex-direction: row; }
+            #landscape-card-view.reverse-layout { flex-direction: row-reverse; }
         }
         .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 20px 15px; background-color: #FCFCFF; height: 100%; }
+        #landscape-card-view.reverse-layout .card-left { border-right: none; border-left: 1px solid #E2E8F0; }
         .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
         .card-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 8px; }
         .card-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 3px; }
@@ -224,24 +267,24 @@
 </head>
 <body>
 
-<div id="start-overlay" onclick="enterFullScreen()"></div>
+<div id="start-overlay" onclick="enterFullScreen()"><div style="padding:20px;"><h1>歡迎來到<br>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div></div>
 
 <div class="container">
     <div class="card-container">
         <div class="logo-wrapper">
-            <div id="loader-container">
+            <div id="loader-container" style="display: none;">
                 <div class="loader-text">載入日常片段中...</div>
-                <progress id="progress-bar" value="0" max="100"></progress>
+                <progress id="progress-bar" value="100" max="100"></progress>
             </div>
-            <img id="logo-avatar" src="https://myezlife.com/eric-logo.gif" alt="Avatar" class="logo-avatar" style="display:none;">
+            <img id="logo-avatar" src="https://myezlife.com/eric-logo.gif" alt="Avatar" class="logo-avatar" style="display: block;">
             
-            <a href="https://myezlife.com" class="logo-link" id="logo-link-wrap" title="返回首頁" style="display:none;">
-                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()">
+            <a href="https://myezlife.com" class="logo-link" id="logo-link-wrap" title="返回首頁" style="display: block;">
+                <img id="logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="logo-img" onload="finishLoading()" style="display: block;">
             </a>
         </div>
         
         <div class="realtime-info" id="realtime-info-box">
-            <span id="datetime-text">--/-- (─) 00:00:00</span>
+            <span id="datetime-text">09/21 (一) 21:21:03</span>
         </div>
 
         <div class="content-section">
@@ -280,33 +323,118 @@
 
         <div id="tab-3" class="button-group">
             <a href="https://myezdailylife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">零碎日常</a>
-            <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
+            <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&amp;si=2J4QFyZ2GwTpG2Ic" class="btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
             <a href="https://www.flickr.com/photos/0936157111/" class="btn" target="_blank" rel="noopener noreferrer">生活相簿</a>
             <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
         </div>
 
-        <div class="pinterest-masonry" id="random-masonry">
-            <a href="https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-img" alt="攝影作品"></a>
+        <div class="pinterest-masonry" id="random-masonry"><a href="https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a><a href="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a><a href="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg" class="pin-img" alt="攝影作品"></a></div>
 
-            <a href="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/7565/28053680683_cb0bff983b_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/7565/28053680683_cb0bff983b_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-img" alt="攝影作品"></a>
-            <a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a>
-            <a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a>        
+        <!-- 隱藏按鈕與管理面板 -->
+        <button class="hidden-admin-trigger" onclick="verifyAdminPassword()"></button>
+        <div id="admin-panel" style="display: none;">
+            <h3>圖片管理工具</h3>
+            <input type="text" id="new-img-url" placeholder="請輸入圖片網址 (src)">
+            <input type="text" id="new-link-url" placeholder="請輸入點擊連結網址 (href)">
+            <button onclick="addNewPinImage()">新增圖片</button>
+            <div id="admin-item-list" style="max-height: 150px; overflow-y: auto; margin-top: 10px;"><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg</span>
+                <div>
+                    <button onclick="editPinCard(0)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(0)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(1)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(1)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(2)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(2)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(3)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(3)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(4)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(4)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg</span>
+                <div>
+                    <button onclick="editPinCard(5)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(5)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(6)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(6)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(7)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(7)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(8)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(8)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(9)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(9)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(10)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(10)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(11)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(11)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg</span>
+                <div>
+                    <button onclick="editPinCard(12)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(12)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(13)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(13)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(14)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(14)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div><div class="admin-item">
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg</span>
+                <div>
+                    <button onclick="editPinCard(15)" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(15)" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            </div></div>
+            <button onclick="saveHtmlFile()" style="background: #2b7a0b; margin-top: 10px;">另存 HTML</button>
         </div>
     </div>
 </div>
@@ -319,14 +447,32 @@
             </a>
             <div class="card-name">簡居生活</div>
             <div id="dynamic-card-sub" class="card-sub">好歌一直聽</div>
-            <div id="dynamic-select-container"></div>
+            <div id="dynamic-select-container">
+                <select class="landscape-song-select" onchange="playSelectedContent(this)">
+                    <option value="" disabled="" selected="">🎵 選擇好歌清單</option>
+                    <option value="KSTeFTHjj14">楊乃文 - 推開世界的門</option>
+                    <option value="W9Ee85S7s2Q">楊乃文 - 我給的愛</option>
+                    <option value="1mrBdx9FH44">楊乃文 - 女爵</option>
+                    <option value="cP5te4Tl4Os">杨乃文 - 证据</option>
+                    <option value="w-flWDAO2rA">楊乃文 - 未接來電</option>
+                    <option value="uzD_BwIaeQA">楊乃文 - 祝我幸福</option> 
+                    <option value="gqJ21g7nHXY">郭靜 Claire Kuo《暖橘》</option>
+                    <option value="nZZ6xsntocU">郭靜 - 陪著我的時候想著她</option>
+                    <option value="7dp-Zi7cZVc">郭靜 下一個天亮</option>
+                    <option value="IxFZurBc79Q">郭靜 Claire Kuo【心牆】</option>
+                    <option value="RSIisC4oTpo">郭靜 Claire Kuo - 往未來飛的客機</option>
+                    <option value="rMuqgAHnXUo">我不该动情</option>
+                    <option value="Pvb8SO9PBXc">思念成災</option>
+                    <option value="tANkOuKG_28">原来你爱的不是我</option>
+                </select>
+            </div>
         </div>
         
         <div class="card-icons-row">
-            <a href="https://myeztravellife.blogspot.com" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></a>
-            <a href="https://www.youtube.com/@myezlife" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            <a href="https://www.flickr.com/photos/0936157111/" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="5"/><circle cx="17" cy="12" r="5"/></svg></a>
-            <a href="https://www.instagram.com/?hl=zh-tw" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+            <a href="https://myeztravellife.blogspot.com" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></svg></a>
+            <a href="https://www.youtube.com/@myezlife" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg></a>
+            <a href="https://www.flickr.com/photos/0936157111/" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="5"></circle><circle cx="17" cy="12" r="5"></circle></svg></a>
+            <a href="https://www.instagram.com/?hl=zh-tw" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"></path></svg></a>
         </div>
     </div>
     
@@ -340,7 +486,7 @@
                     <a href="https://www.youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac" class="panel collect-drawer-bg"><h3>收藏</h3></a>
                     <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="panel note-quill-bg"><h3>筆記</h3></a>
                     <a href="https://www.flickr.com/photos/0936157111/" class="panel old-friend-bg"><h3>舊識</h3></a>
-                    <a href="https://www.google.com/maps/d/edit?mid=1MoXFmy5gyGaD4y0bRyTwlTWk86OOKnI&usp=sharing" class="panel map-guide-bg"><h3>地圖</h3></a>
+                    <a href="https://www.google.com/maps/d/edit?mid=1MoXFmy5gyGaD4y0bRyTwlTWk86OOKnI&amp;usp=sharing" class="panel map-guide-bg"><h3>地圖</h3></a>
                 </div>
                 <div class="auto-door-system">
                     <div class="glass-leaf left-leaf"><div class="door-text">生活</div></div>
@@ -352,7 +498,7 @@
 </div>
 
 <div id="lightbox-modal" onclick="closeLightbox(event)">
-    <span id="lightbox-close">&times;</span>
+    <span id="lightbox-close">×</span>
     <div class="lightbox-content" onclick="event.stopPropagation()">
         <img id="lightbox-img" src="" alt="放大圖片">
         <a id="lightbox-link" href="" target="_blank" rel="noopener noreferrer" class="lightbox-btn">🔗 前往原始連結</a>
@@ -404,24 +550,135 @@ function initLightbox() {
     const modalLink = document.getElementById('lightbox-link');
 
     pinCards.forEach(card => {
-        card.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            const img = this.querySelector('.pin-img');
-            const href = this.getAttribute('href');
-            
-            if (img) {
-                modalImg.src = img.src;
-                modalLink.href = href;
-                modal.style.display = 'flex';
-            }
-        });
+        card.removeEventListener('click', pinCardClickHandler);
+        card.addEventListener('click', pinCardClickHandler);
     });
+}
+
+function pinCardClickHandler(e) {
+    e.preventDefault(); 
+    const img = this.querySelector('.pin-img');
+    const href = this.getAttribute('href');
+    const modal = document.getElementById('lightbox-modal');
+    const modalImg = document.getElementById('lightbox-img');
+    const modalLink = document.getElementById('lightbox-link');
+    
+    if (img) {
+        modalImg.src = img.src;
+        modalLink.href = href;
+        modal.style.display = 'flex';
+    }
 }
 
 function closeLightbox(e) {
     if (e.target.id === 'lightbox-modal' || e.target.id === 'lightbox-close') {
         document.getElementById('lightbox-modal').style.display = 'none';
     }
+}
+
+// 動態密碼驗證與管理功能
+function verifyAdminPassword() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const correctPwd = `${y}${m}${d}`;
+
+    const inputPwd = prompt("");
+    if (inputPwd === correctPwd) {
+        document.getElementById('admin-panel').style.display = 'block';
+        renderAdminList();
+    } else if (inputPwd !== null) {
+        alert("密碼錯誤");
+    }
+}
+
+function renderAdminList() {
+    const listContainer = document.getElementById('admin-item-list');
+    listContainer.innerHTML = '';
+    const cards = document.querySelectorAll('.pin-card');
+    cards.forEach((card, index) => {
+        const img = card.querySelector('.pin-img');
+        const href = card.getAttribute('href');
+        if (img) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'admin-item';
+            itemDiv.innerHTML = `
+                <span style="max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${img.src}</span>
+                <div>
+                    <button onclick="editPinCard(${index})" style="width:auto; padding:2px 6px; margin:0;">修改</button>
+                    <button onclick="deletePinCard(${index})" style="width:auto; padding:2px 6px; margin:0; background:#a90000;">刪除</button>
+                </div>
+            `;
+            listContainer.appendChild(itemDiv);
+        }
+    });
+}
+
+function addNewPinImage() {
+    const imgSrc = document.getElementById('new-img-url').value.trim();
+    const linkSrc = document.getElementById('new-link-url').value.trim();
+    if (!imgSrc || !linkSrc) {
+        alert("請完整輸入圖片與連結網址");
+        return;
+    }
+    const masonry = document.getElementById('random-masonry');
+    const newCard = document.createElement('a');
+    newCard.href = linkSrc;
+    newCard.className = 'pin-card';
+    newCard.target = '_blank';
+    newCard.innerHTML = `<img src="${imgSrc}" class="pin-img" alt="攝影作品">`;
+    masonry.insertBefore(newCard, masonry.firstChild);
+
+    document.getElementById('new-img-url').value = '';
+    document.getElementById('new-link-url').value = '';
+    initLightbox();
+    renderAdminList();
+}
+
+function deletePinCard(index) {
+    const cards = document.querySelectorAll('.pin-card');
+    if (cards[index]) {
+        cards[index].remove();
+        renderAdminList();
+    }
+}
+
+function editPinCard(index) {
+    const cards = document.querySelectorAll('.pin-card');
+    const card = cards[index];
+    if (card) {
+        const img = card.querySelector('.pin-img');
+        const currentHref = card.getAttribute('href');
+        const currentSrc = img ? img.src : '';
+
+        const newImg = prompt("修改圖片網址 (src):", currentSrc);
+        const newHref = prompt("修改連結網址 (href):", currentHref);
+
+        if (newImg !== null && newHref !== null) {
+            card.setAttribute('href', newHref);
+            if (img) img.src = newImg;
+            initLightbox();
+            renderAdminList();
+        }
+    }
+}
+
+function saveHtmlFile() {
+    // 暫時隱藏管理面板再進行另存
+    const adminPanel = document.getElementById('admin-panel');
+    adminPanel.style.display = 'none';
+
+    const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'index.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    adminPanel.style.display = 'block';
 }
 
 function handleOrientation() {
@@ -588,5 +845,5 @@ document.getElementById('logo-img').src = "https://blogger.googleusercontent.com
 window.addEventListener("resize", updateOverlay);
 updateOverlay();
 </script>
-</body>
-</html>
+
+</body></html>
