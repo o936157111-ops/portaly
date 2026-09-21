@@ -34,7 +34,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             padding-bottom: 40px;
-           line-height: 1.8; /* 確保行與行之間有適當的間距 */
+            line-height: 1.8;
         }
 
         header {
@@ -61,6 +61,82 @@
             padding: 16px;
         }
 
+        /* 今日推薦特餐專區樣式 */
+        .daily-special-card {
+            background: linear-gradient(135deg, #fff9e6, #fff3cd);
+            border: 1px solid #ffeeba;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .daily-special-badge {
+            display: inline-block;
+            background: #d48806;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .daily-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 4px;
+        }
+
+        .daily-author {
+            font-size: 0.85rem;
+            color: #a07800;
+            margin-bottom: 8px;
+        }
+
+        .daily-desc {
+            font-size: 0.85rem;
+            color: #665c3b;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* 限制顯示最多三行 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .daily-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-daily-read {
+            background-color: #d48806;
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 6px 16px;
+            border-radius: 15px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-daily-read:hover {
+            background-color: #b77103;
+        }
+
+        .btn-refresh-daily {
+            background: none;
+            border: none;
+            color: #a07800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
         /* 搜尋列 */
         .search-box {
             margin-bottom: 14px;
@@ -82,18 +158,18 @@
             border-color: var(--primary-color);
         }
 
-        /* 類別頁籤 (四方形、緊密相連) */
+        /* 類別頁籤 */
         .tabs-container {
             display: flex;
             overflow-x: auto;
             margin-bottom: 16px;
             border: 1px solid #ddd;
             background: white;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         .tabs-container::-webkit-scrollbar {
-            display: none; /* Chrome Safari */
+            display: none;
         }
 
         .tab-btn {
@@ -174,7 +250,6 @@
             transform: rotate(180deg);
         }
 
-        /* 展開的書單容器 */
         .book-list-container {
             max-height: 0;
             overflow: hidden;
@@ -190,7 +265,6 @@
             gap: 12px;
         }
 
-        /* 書籍小卡片 */
         .book-card {
             background: var(--card-bg);
             border-radius: 8px;
@@ -244,7 +318,6 @@
             background-color: #357abd;
         }
 
-        /* 無結果提示 */
         .no-result {
             text-align: center;
             color: var(--text-secondary);
@@ -252,7 +325,6 @@
             display: none;
         }
 
-        /* 底部管理按鈕與管理面板樣式 */
         .admin-section {
             margin-top: 30px;
             text-align: center;
@@ -333,12 +405,25 @@
     </header>
 
     <div class="container">
+
+        <!-- 今日隨機推薦特餐專區 -->
+        <div class="daily-special-card" id="dailySpecialCard">
+            <span class="daily-special-badge">✨ 今日推薦特餐</span>
+            <div class="daily-title" id="dailyTitle">載入中...</div>
+            <div class="daily-author" id="dailyAuthor">作者：--</div>
+            <div class="daily-desc" id="dailyDesc">正在為您挑選今日好書...</div>
+            <div class="daily-footer">
+                <a href="#" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">立即閱讀</a>
+                <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
+            </div>
+        </div>
+
         <!-- 搜尋列 -->
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="搜尋書名或作者..." onkeyup="filterContent()">
         </div>
 
-        <!-- 類別頁籤 (四方形、緊密相連) -->
+        <!-- 類別頁籤 -->
         <div class="tabs-container" id="tabContainer">
             <button class="tab-btn active" onclick="filterCategory('全部')">全部</button>
             <button class="tab-btn" onclick="filterCategory('武俠小說')">武俠小說</button>
@@ -537,7 +622,33 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             updateBookCounts();
+            pickRandomBook(); // 頁面載入時隨機挑選一本今日特餐
         });
+
+        // 隨機抽選今日推薦好書
+        function pickRandomBook() {
+            const allCards = document.querySelectorAll('.book-card');
+            if (allCards.length === 0) return;
+
+            // 隨機取出一張卡片
+            const randomIndex = Math.floor(Math.random() * allCards.length);
+            const card = allCards[randomIndex];
+
+            // 取得該書的詳細資訊
+            const title = card.getAttribute('data-title');
+            const desc = card.querySelector('.book-desc').textContent;
+            const link = card.querySelector('.btn-read').getAttribute('href');
+            
+            // 找出該書屬於哪個作者
+            const authorGroup = card.closest('.author-group');
+            const author = authorGroup ? authorGroup.getAttribute('data-author') : '未知作者';
+
+            // 填入「今日推薦特餐」區塊
+            document.getElementById('dailyTitle').textContent = title;
+            document.getElementById('dailyAuthor').textContent = '作者： ' + author;
+            document.getElementById('dailyDesc').textContent = desc;
+            document.getElementById('dailyLink').setAttribute('href', link);
+        }
 
         function updateBookCounts() {
             const groups = document.querySelectorAll('.author-group');
@@ -697,7 +808,6 @@
             newCard.className = 'book-card';
             newCard.setAttribute('data-title', title);
             newCard.setAttribute('data-search', `${title} ${author} ${category}`);
-            // 注意此處：確保透過管理面板新增的書籍也會帶有 target="_blank" 與 rel="noopener noreferrer"
             newCard.innerHTML = `
                 <div class="book-title">${title}</div>
                 <div class="book-desc">${desc}</div>
@@ -709,6 +819,7 @@
             innerList.appendChild(newCard);
 
             updateBookCounts();
+            pickRandomBook(); // 更新隨機清單
 
             document.getElementById('newTitle').value = '';
             document.getElementById('newAuthor').value = '';
