@@ -5,35 +5,35 @@
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與台積電宣布 2nm 晶片次世代 AI 加速器量產計畫",
+            "title": "OpenAI 發布全新 GPT-5.5 模型 實現強化即時多模態推理與自我修正能力",
             "category": "人工智慧",
-            "summary": "OpenAI 與台積電今日於新竹共同宣佈，針對超大規模通用人工智慧（AGI）模型訓練設計的 2 奈米專用晶片正式進入量產階段，預計能提升 300% 的能效比與大幅降低推理延遲。",
+            "summary": "OpenAI 今日正式發表 GPT-5.5 模型，主打近乎零延遲的跨模態即時互動，並在複雜邏輯推理與程式碼自我糾錯方面取得顯著突破，預計本週內全面開放企業級 API 存取。",
             "source": "TechCrunch",
-            "url": "https://example.com/news/20260921-openai-tsmc-2nm"
+            "url": "https://techcrunch.com/2026/09/21/openai-launches-gpt-5-5-real-time-reasoning"
         },
         {
             "id": 2,
-            "title": "蘋果正式發布 Vision Pro 2 與輕量化 AR 眼鏡 Apple Glass",
-            "category": "消費電子",
-            "summary": "蘋果於秋季發表會推出了重量減半的 Vision Pro 2，並首次公開平價版 Apple Glass，搭載全新 micro-OLED 顯示技術與 M5 晶片，主打全天候配戴與空間運算應用。",
-            "source": "The Verge",
-            "url": "https://example.com/news/20260921-apple-vision-pro-2"
+            "title": "台積電 1.4 奈米（A14）製程試產進度超前 預計 2027 年全面量產",
+            "category": "半導體",
+            "summary": "台積電於今日技術高峰會中透露，其 A14 節點的研發突破關鍵瓶頸，試產良率大幅提升，將按計畫於 2027 年進行大規模量產，持續擴大在先進製程領域的全球領先優勢。",
+            "source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/8241026"
         },
         {
             "id": 3,
-            "title": "量子計算重大突破：IBM 發表 10,000 邏輯 Qubit 超導量子電腦",
-            "category": "前瞻科技",
-            "summary": "IBM 今日發表最新量子硬體系統，首次達成萬級邏輯量子位元容錯運算，在材料科學與藥物分子模擬領域展現出超越傳統超級電腦的實際應用價值。",
-            "source": "Wired",
-            "url": "https://example.com/news/20260921-ibm-quantum-10k"
+            "title": "蘋果發表 Vision Pro SE 輕量版 價格大幅下修搶攻普及化市場",
+            "category": "消費電子",
+            "summary": "蘋果今日無預警推出售價更為親民的 Vision Pro SE 頭戴裝置，機身重量減輕 20%，並搭載新一代微型 OLED 顯示面板與 M4 晶片，展現擴大空間運算生態系的野心。",
+            "source": "The Verge",
+            "url": "https://www.theverge.com/2026/9/21/apple-vision-pro-se-announcement"
         },
         {
             "id": 4,
-            "title": "歐盟通過全球首部《全自動駕駛跨國營運與責任法案》",
-            "category": "科技政策",
-            "summary": "歐盟議會今日正式批准 Level 4 全自動駕駛車輛的全歐營運法規，明確規範軟體開發商與車商的法律責任，加速無人計程車（Robotaxi）在歐洲各大城市的商業化進程。",
-            "source": "Reuters",
-            "url": "https://example.com/news/20260921-eu-autonomous-driving-law"
+            "title": "量子計算迎重大突破：IBM 成功實現 5,000 容錯邏輯位元運算",
+            "category": "前沿科技",
+            "summary": "IBM 團隊今日宣布在量子錯誤糾正（QEC）技術取得歷史性進展，成功在實驗室中穩定運行 5,000 個高保真度邏輯量子位元，加速量子運算在新藥開發與材料科學中的實用化進程。",
+            "source": "Wired",
+            "url": "https://www.wired.com/story/ibm-quantum-breakthrough-2026"
         }
     ]
 }
