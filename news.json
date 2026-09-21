@@ -1,39 +1,39 @@
 {
-    "date": "2026-03-31",
+    "date": "2026-09-21",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與微軟擴大 AI 算力合作，推出新一代企業級解決方案",
+            "title": "OpenAI 與台積電宣布 2nm 晶片次世代 AI 加速器量產計畫",
             "category": "人工智慧",
-            "summary": "OpenAI 與微軟宣佈深化合作，結合最新一代大語言模型與 Azure 雲端基礎建設，提供高算力、低延遲的企業級 AI 服務，旨在提升跨國企業的自動化工作流程與數據分析效率。",
-            "Source": "TechCrunch",
-            "url": "https://techcrunch.com/news/openai-microsoft-enterprise-ai"
+            "summary": "OpenAI 與台積電今日於新竹共同宣佈，針對超大規模通用人工智慧（AGI）模型訓練設計的 2 奈米專用晶片正式進入量產階段，預計能提升 300% 的能效比與大幅降低推理延遲。",
+            "source": "TechCrunch",
+            "url": "https://example.com/news/20260921-openai-tsmc-2nm"
         },
         {
             "id": 2,
-            "title": "台積電 2 奈米製程試產良率超乎預期，預計明年順利進入量產",
-            "category": "半導體",
-            "summary": "台積電於最新技術論壇指出，採用 GAA（全環繞閘極）架構的 2 奈米（N2）製程研發進度順利，試產良率表現優異，預計將於 2025 年如期量產，主要客戶包括蘋果、英偉達與高通。",
-            "Source": "經濟日報",
-            "url": "https://money.udn.com/money/story/5612/tsmc-2nm-update"
+            "title": "蘋果正式發布 Vision Pro 2 與輕量化 AR 眼鏡 Apple Glass",
+            "category": "消費電子",
+            "summary": "蘋果於秋季發表會推出了重量減半的 Vision Pro 2，並首次公開平價版 Apple Glass，搭載全新 micro-OLED 顯示技術與 M5 晶片，主打全天候配戴與空間運算應用。",
+            "source": "The Verge",
+            "url": "https://example.com/news/20260921-apple-vision-pro-2"
         },
         {
             "id": 3,
-            "title": "蘋果傳將於 WWDC 大會發表全新裝置端 AI 架構與 Siri 重大更新",
-            "category": "消費電子",
-            "summary": "供應鏈消息指出，蘋果計畫於即將舉辦的 WWDC 大會發表結合隱私保護與邊緣運算的 AI 技術，Siri 將迎來歷來最大幅度的改版，具備更強大的多輪對話與跨應用程式協同操作能力。",
-            "Source": "Bloomberg",
-            "url": "https://www.bloomberg.com/news/articles/apple-wwdc-ai-siri"
+            "title": "量子計算重大突破：IBM 發表 10,000 邏輯 Qubit 超導量子電腦",
+            "category": "前瞻科技",
+            "summary": "IBM 今日發表最新量子硬體系統，首次達成萬級邏輯量子位元容錯運算，在材料科學與藥物分子模擬領域展現出超越傳統超級電腦的實際應用價值。",
+            "source": "Wired",
+            "url": "https://example.com/news/20260921-ibm-quantum-10k"
         },
         {
             "id": 4,
-            "title": "歐盟《人工智慧法案》正式上路，要求高風險 AI 系統全面符合透明度規範",
+            "title": "歐盟通過全球首部《全自動駕駛跨國營運與責任法案》",
             "category": "科技政策",
-            "summary": "歐盟全球首部具里程碑意義的《人工智慧法案》（AI Act）進入實施階段。法案規定於歐盟市場營運之 AI 業者需嚴格遵守演算法透明度、風險評估與個人資料保護規範，並禁止使用具侵犯隱私疑慮之即時生物識別技術。",
-            "Source": "Reuters",
-            "url": "https://www.reuters.com/technology/eu-ai-act-implementation"
+            "summary": "歐盟議會今日正式批准 Level 4 全自動駕駛車輛的全歐營運法規，明確規範軟體開發商與車商的法律責任，加速無人計程車（Robotaxi）在歐洲各大城市的商業化進程。",
+            "source": "Reuters",
+            "url": "https://example.com/news/20260921-eu-autonomous-driving-law"
         }
     ]
 }
