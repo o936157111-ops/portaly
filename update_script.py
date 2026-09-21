@@ -33,7 +33,7 @@ def update_news():
 }}"""
 
     response = client.models.generate_content(
-        model='gemini-2.5-flash',  # 修正為正確的模型名稱
+        model='gemini-3.6-flash',  # 修正為正確的模型名稱
         contents=prompt,
     )
 
