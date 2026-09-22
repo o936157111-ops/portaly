@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日常問候圖庫</title>
-    <!-- 引入 Google 字型 (Noto Serif TC + Noto Sans TC) -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&family=Noto+Serif+TC:wght@300;500&display=swap" rel="stylesheet">
+    <!-- 引入 Google 字型 (Noto Serif TC + Noto Sans TC + Ma Shan Zheng 草書/藝術感字體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@300;400&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f7f5f0;
@@ -53,7 +53,7 @@
             letter-spacing: 1px;
         }
 
-        /* 橫向滑動分類導覽 */
+        /* 橫向滑動分類導覽 (緊密貼合、不分散) */
         .categories-container {
             overflow-x: auto;
             white-space: nowrap;
@@ -68,15 +68,15 @@
 
         .categories {
             display: inline-flex;
-            gap: 10px;
+            gap: 8px; /* 緊密排列 */
         }
 
         .category-btn {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.9rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             color: var(--text-sub);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -149,20 +149,6 @@
             background-color: var(--card-bg);
         }
 
-        .card-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-tag {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            background-color: var(--bg-color);
-            padding: 3px 10px;
-            border-radius: 4px;
-        }
-
         /* 原生分享與下載按鈕排版 */
         .action-buttons {
             display: flex;
@@ -189,7 +175,7 @@
             opacity: 0.8;
         }
 
-        .btn-share { background-color: #06C755; } /* LINE 綠色系代表直接分享 */
+        .btn-share { background-color: #06C755; }
         .btn-download { background-color: var(--text-main); }
     </style>
 </head>
@@ -200,6 +186,7 @@
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
+    <!-- 緊密排列的頁籤 -->
     <div class="categories-container">
         <div class="categories">
             <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
@@ -221,12 +208,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="card-info-row">
-                    <span class="card-tag">早安問候</span>
-                </div>
                 <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📤 一鍵分享</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📥 存至相簿</button>
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg', 'artistic')">📤 一鍵分享</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg', 'artistic')">📥 存至相簿</button>
                 </div>
             </div>
         </div>
@@ -240,12 +224,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="card-info-row">
-                    <span class="card-tag">早安問候</span>
-                </div>
                 <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📤 一鍵分享到 LINE</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📥 存至相簿</button>
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg', 'classic')">📤 一鍵分享</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg', 'classic')">📥 存至相簿</button>
                 </div>
             </div>
         </div>
@@ -259,12 +240,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="card-info-row">
-                    <span class="card-tag">午安問候</span>
-                </div>
                 <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📤 一鍵分享到 LINE</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📥 存至相簿</button>
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg', 'modern')">📤 一鍵分享</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg', 'modern')">📥 存至相簿</button>
                 </div>
             </div>
         </div>
@@ -278,12 +256,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="card-info-row">
-                    <span class="card-tag">晚安問候</span>
-                </div>
                 <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📤 一鍵分享到 LINE</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📥 存至相簿</button>
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg', 'artistic')">📤 一鍵分享</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg', 'artistic')">📥 存至相簿</button>
                 </div>
             </div>
         </div>
@@ -297,12 +272,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="card-info-row">
-                    <span class="card-tag">節慶假日</span>
-                </div>
                 <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📤 一鍵分享到 LINE</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📥 存至相簿</button>
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg', 'classic')">📤 一鍵分享</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg', 'classic')">📥 存至相簿</button>
                 </div>
             </div>
         </div>
@@ -326,8 +298,8 @@
             });
         }
 
-        // 共用 Canvas 合成邏輯
-        function generateCanvas(imgElement, textContent, callback) {
+        // 支援多變排版與字型的 Canvas 合成邏輯
+        function generateCanvas(imgElement, textContent, styleType, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
             img.src = imgElement.src;
@@ -349,18 +321,39 @@
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // 3. 畫文字
+                // 3. 依據排版風格繪製文字
                 ctx.fillStyle = '#ffffff';
-                ctx.font = '32px "Noto Serif TC", serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                const textToDraw = textContent.includes('，') ? textContent.split('，') : [textContent];
-                let startY = canvas.height / 2 - ((textToDraw.length - 1) * 30);
+                const lines = textContent.includes('，') ? textContent.split('，') : [textContent];
 
-                textToDraw.forEach((line, i) => {
-                    ctx.fillText(line.trim() + (i < textToDraw.length - 1 && !line.endsWith('。') && !line.includes('，') ? '，' : ''), canvas.width / 2, startY + (i * 55));
-                });
+                if (styleType === 'artistic') {
+                    // 風格 A：首句藝術書法大字 + 細明體副標
+                    ctx.font = '70px "Ma Shan Zheng", cursive';
+                    ctx.fillText(lines[0].replace('「', '').replace('。」', ''), canvas.width / 2, canvas.height / 2 - 80);
+
+                    ctx.font = '32px "Noto Serif TC", serif';
+                    let subY = canvas.height / 2 + 20;
+                    for (let i = 1; i < lines.length; i++) {
+                        ctx.fillText(lines[i].replace('。」', ''), canvas.width / 2, subY);
+                        subY += 60;
+                    }
+                } else if (styleType === 'modern') {
+                    // 風格 B：現代簡約置中排版
+                    ctx.font = 'bold 38px "Noto Sans TC", sans-serif';
+                    let startY = canvas.height / 2 - ((lines.length - 1) * 35);
+                    lines.forEach((line, i) => {
+                        ctx.fillText(line.replace('「', '').replace('。」', ''), canvas.width / 2, startY + (i * 65));
+                    });
+                } else {
+                    // 風格 C：經典直排/文青襯線風
+                    ctx.font = '36px "Noto Serif TC", serif';
+                    let startY = canvas.height / 2 - ((lines.length - 1) * 30);
+                    lines.forEach((line, i) => {
+                        ctx.fillText(line.trim(), canvas.width / 2, startY + (i * 60));
+                    });
+                }
 
                 canvas.toBlob(function(blob) {
                     callback(blob);
@@ -368,22 +361,22 @@
             };
         }
 
-        // 功能一：原生系統分享 (支援 LINE、WhatsApp 等)
-        async function nativeShareCard(button, textContent, filename) {
+        // 功能一：原生系統分享
+        async function nativeShareCard(button, textContent, filename, styleType) {
             const card = button.closest('.card');
             const imgElement = card.querySelector('img');
 
             button.innerText = '⏳ 準備分享...';
             button.disabled = true;
 
-            generateCanvas(imgElement, textContent, async function(blob) {
+            generateCanvas(imgElement, textContent, styleType, async function(blob) {
                 const file = new File([blob], filename, { type: 'image/jpeg' });
 
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
                         await navigator.share({
                             files: [file],
-                            title: '溫柔問候圖',
+                            title: '日常問候圖',
                             text: textContent
                         });
                     } catch (error) {
@@ -392,23 +385,23 @@
                         }
                     }
                 } else {
-                    alert('您的瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」按鈕下載後再傳送到 LINE。');
+                    alert('您的瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」按鈕。');
                 }
 
-                button.innerText = '📤 一鍵分享到 LINE';
+                button.innerText = '📤 一鍵分享';
                 button.disabled = false;
             });
         }
 
         // 功能二：直接下載存至相簿
-        function downloadCardImage(button, textContent, filename) {
+        function downloadCardImage(button, textContent, filename, styleType) {
             const card = button.closest('.card');
             const imgElement = card.querySelector('img');
 
             button.innerText = '⏳ 處理中...';
             button.disabled = true;
 
-            generateCanvas(imgElement, textContent, function(blob) {
+            generateCanvas(imgElement, textContent, styleType, function(blob) {
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = filename;
