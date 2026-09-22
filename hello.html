@@ -310,7 +310,7 @@
         }
 
         .admin-btn {
-            flex: 1;
+            width: 100%;
             padding: 10px;
             border: none;
             border-radius: 6px;
@@ -320,7 +320,7 @@
         }
 
         .btn-add { background-color: #2b6cb0; color: #fff; }
-        .btn-export { background-color: #2f855a; color: #fff; }
+        
         .manage-list {
             margin-top: 15px;
             max-height: 200px;
@@ -391,16 +391,15 @@
             </select>
         </div>
         <div class="admin-form-group">
-            <label>問候文字</label>
+            <label>問候文字 (若不填寫將自動隨機產生)</label>
             <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
         </div>
         <div class="admin-form-group">
-            <label>圖片網址 (支援自訂或Flickr直連)</label>
+            <label>圖片網址 (必填)</label>
             <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
         </div>
         <div class="admin-btns">
-            <button class="admin-btn btn-add" onclick="addCard()">新增問候圖</button>
-            <button class="admin-btn btn-export" onclick="exportHTML()">另存網頁 (HTML)</button>
+            <button class="admin-btn btn-add" onclick="addCard()">新增問候圖並更新網頁</button>
         </div>
         <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
     </div>
@@ -461,7 +460,7 @@
                 "晚安。好夢相隨，明天依舊是美好的一天。",
                 "晚安。願溫柔的夜色撫平你心中的波瀾。",
                 "晚安。閉上眼睛，把煩惱通通忘掉。",
-                "晚安。月色真美，願你有個甜美的夢。",
+                "晚安. 月色真美，願你有個甜美的夢。",
                 "晚安。辛苦了整整一天，今晚好好放鬆。",
                 "晚安。在安靜的夜裡，積蓄明天的力量。",
                 "晚安。願清風入夢，祝好眠。"
@@ -561,12 +560,18 @@
 
         function addCard() {
             const cat = document.getElementById('newCategory').value;
-            const text = document.getElementById('newText').value.trim();
+            let text = document.getElementById('newText').value.trim();
             const imgUrl = document.getElementById('newImgUrl').value.trim();
 
-            if (!text || !imgUrl) {
-                alert('請完整填寫文字與圖片網址');
+            if (!imgUrl) {
+                alert('請至少填寫圖片網址！');
                 return;
+            }
+
+            // 如果沒有填寫文字，就從該分類的預設文案中隨機挑選一句
+            if (!text) {
+                const texts = defaultTexts[cat];
+                text = texts[Math.floor(Math.random() * texts.length)];
             }
 
             userCards.push({
@@ -581,7 +586,7 @@
             document.getElementById('newImgUrl').value = '';
             initGallery();
             
-            // 點擊新增後自動觸發另存 HTML，確保檔案同步更新
+            // 自動觸發另存 HTML
             exportHTML();
         }
 
@@ -590,7 +595,7 @@
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
             initGallery();
             
-            // 刪除後也自動更新並下載 HTML，確保檔案一致
+            // 刪除後也自動更新並下載 HTML
             exportHTML();
         }
 
