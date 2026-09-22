@@ -261,9 +261,26 @@
             margin-bottom: 40px;
         }
 
+        .admin-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         .admin-panel h3 {
             font-size: 1.1rem;
-            margin-bottom: 15px;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .btn-close-admin {
+            background: #e2e8f0;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
             color: var(--text-main);
         }
 
@@ -360,7 +377,10 @@
     <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
 
     <div class="admin-panel" id="adminPanel">
-        <h3>圖庫管理後台</h3>
+        <div class="admin-panel-header">
+            <h3>圖庫管理後台</h3>
+            <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉後台</button>
+        </div>
         <div class="admin-form-group">
             <label>分類</label>
             <select id="newCategory">
@@ -491,7 +511,6 @@
                 cardEl.className = 'card';
                 cardEl.setAttribute('data-category', item.category);
                 
-                // 安全跳脫文字內容避免 HTML/JS 發生屬性斷開錯誤
                 const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 
                 cardEl.innerHTML = `
@@ -527,10 +546,16 @@
         }
 
         function toggleAdmin() {
-            const pwd = prompt("請輸入密碼：");
-            if (pwd === "20260922") {
-                const panel = document.getElementById('adminPanel');
-                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            const panel = document.getElementById('adminPanel');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+            } else {
+                const pwd = prompt("請輸入密碼：");
+                if (pwd === "20260922") {
+                    panel.style.display = 'block';
+                } else if (pwd !== null) {
+                    alert("密碼錯誤！");
+                }
             }
         }
 
@@ -555,13 +580,18 @@
             document.getElementById('newText').value = '';
             document.getElementById('newImgUrl').value = '';
             initGallery();
-            alert('新增成功！');
+            
+            // 點擊新增後自動觸發另存 HTML，確保檔案同步更新
+            exportHTML();
         }
 
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
             initGallery();
+            
+            // 刪除後也自動更新並下載 HTML，確保檔案一致
+            exportHTML();
         }
 
         function updateManageList() {
