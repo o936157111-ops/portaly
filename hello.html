@@ -33,7 +33,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            overflow: hidden; /* 鎖死畫面不超過一頁 */
+            overflow: hidden;
         }
 
         header {
@@ -56,37 +56,34 @@
             letter-spacing: 1px;
         }
 
+        /* 讓頁籤自動均分版面寬度 */
         .categories-container {
-            overflow-x: auto;
-            white-space: nowrap;
             margin: 8px 0 12px;
-            padding-bottom: 2px;
-            scrollbar-width: none;
             border-bottom: 2px solid var(--border-color);
         }
 
-        .categories-container::-webkit-scrollbar {
-            display: none;
-        }
-
         .categories {
-            display: inline-flex;
-            gap: 0;
+            display: flex;
+            width: 100%;
         }
 
         .category-btn {
+            flex: 1;
             background-color: #ede7dc;
             border: 1px solid var(--border-color);
             border-bottom: none;
-            padding: 6px 12px;
+            padding: 6px 2px;
             font-size: 0.8rem;
             color: var(--text-sub);
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
-            margin-right: -1px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             border-top-left-radius: 6px;
             border-top-right-radius: 6px;
+            margin-right: -1px;
         }
 
         .category-btn.active {
@@ -119,7 +116,7 @@
         .card-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 16 / 9; /* 採用精簡的橫向比例，確保一頁塞得下 */
+            aspect-ratio: 16 / 9;
             background-color: #eee;
             overflow: hidden;
             cursor: pointer;
@@ -156,51 +153,36 @@
             text-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
 
+        /* 三個按鈕同列且等寬排版 */
         .card-footer {
-            padding: 8px 12px;
-            display: flex;
+            padding: 8px 10px;
             background-color: var(--card-bg);
         }
 
         .action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
         }
 
         .action-btn {
             flex: 1;
             border: none;
-            padding: 8px 0;
+            padding: 9px 0;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            white-space: nowrap;
         }
 
         .btn-share { background-color: #06C755; }
+        .btn-shuffle { background-color: #718096; }
         .btn-download { background-color: var(--text-main); }
-
-        .shuffle-container {
-            text-align: center;
-            margin-top: 5px;
-        }
-
-        .btn-shuffle {
-            background-color: #dcd6cd;
-            border: none;
-            color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            font-weight: 500;
-        }
 
         .lightbox {
             display: none;
@@ -363,7 +345,7 @@
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
-    <!-- 分類頁籤 -->
+    <!-- 彈性平分頁籤 -->
     <div class="categories-container">
         <div class="categories">
             <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
@@ -377,11 +359,6 @@
     <div class="main-container">
         <!-- 隨機主打卡片展示區 -->
         <div id="randomCardContainer"></div>
-
-        <!-- 換一張按鈕 -->
-        <div class="shuffle-container">
-            <button class="btn-shuffle" onclick="showRandomCard()">🎲 換一張隨機問候</button>
-        </div>
     </div>
 
     <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display: none;">
@@ -452,7 +429,7 @@
             ],
             afternoon: [
                 "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
-                "午安. 午後的陽光溫暖而慵懶，稍作休息再出發。",
+                "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
                 "午安。喝杯咖啡，讓心靈沉澱片刻。"
             ],
             night: [
@@ -472,8 +449,6 @@
 
         function getFilteredPool() {
             let poolList = [];
-            
-            // 組合預設圖庫
             ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
                 if (currentFilter === 'all' || currentFilter === cat) {
                     let pool = imagePool[cat];
@@ -489,7 +464,6 @@
                 }
             });
 
-            // 組合使用者自訂圖庫
             userCards.forEach(item => {
                 if (currentFilter === 'all' || currentFilter === item.category) {
                     poolList.push(item);
@@ -505,7 +479,7 @@
             event.target.classList.add('active');
 
             currentFilter = category;
-            showRandomCard(); // 切換頁籤時，從該分類中隨機抽出一張
+            showRandomCard();
         }
 
         function showRandomCard() {
@@ -532,6 +506,7 @@
                     <div class="card-footer">
                         <div class="action-buttons">
                             <button class="action-btn btn-share" onclick="nativeShareCard(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
+                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 換一張</button>
                             <button class="action-btn btn-download" onclick="downloadCardImage(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
                         </div>
                     </div>
@@ -748,7 +723,6 @@
             });
         }
 
-        // 網頁一載入就隨機顯示一張
         window.onload = showRandomCard;
     </script>
 </body>
