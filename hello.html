@@ -187,7 +187,6 @@
         .btn-share { background-color: #06C755; }
         .btn-download { background-color: var(--text-main); }
 
-        /* 隱藏管理後台按鈕與面板 */
         .admin-trigger {
             text-align: center;
             padding: 20px;
@@ -293,13 +292,10 @@
         </div>
     </div>
 
-    <!-- 動態圖庫渲染區 -->
     <div class="gallery-stream" id="gallery"></div>
 
-    <!-- 隱藏後台觸發點 -->
     <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
 
-    <!-- 管理後台面板 -->
     <div class="admin-panel" id="adminPanel">
         <h3>圖庫管理後台</h3>
         <div class="admin-form-group">
@@ -327,33 +323,32 @@
     </div>
 
     <script>
-        // 每日隨機圖庫種子產生器 (依據當天日期 20260922 確保當天所有訪客看到的 10 張圖一致，隔天自動換新)
         function getDailySeed() {
             const now = new Date();
             return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
         }
 
-        // 預設圖庫池（每個分類提供豐富的 Unsplash 高畫質免費圖片代碼）
+        // 更換為穩定可靠的高畫質風景圖庫池
         const imagePool = {
             morning: [
-                "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1447752875215-b2761acb3c5d",
-                "photo-1506744038136-46273834b3fb", "photo-1426604966848-d7adacbd02bff", "photo-1418065460487-3e41a6c84dc5",
-                "photo-1472214103451-9374bd1c798e", "photo-1511497584788-876761192d6e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b"
+                "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
+                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b",
+                "photo-1500530855697-b586d89ba3ee", "photo-1422493757037-147171293f66", "photo-1447752875215-b2761acb3c5d", "photo-1465146344425-f00d5f5c8f07"
             ],
             afternoon: [
                 "photo-1501339847302-ac426a4a7cbb", "photo-1509316975850-ff9c5deb0cd9", "photo-1433086966358-54859d0ed716",
-                "photo-1470071459604-3b5ec3a7fe05", "photo-1511884642898-4c92249e20b6", "photo-1498429089284-41f8cf3ffd99",
-                "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff", "photo-1509198397868-475647b2a1e5", "photo-1534447677768-be436bb09401"
+                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff",
+                "photo-1534447677768-be436bb09401", "photo-1511884642898-4c92249e20b6", "photo-1498429089284-41f8cf3ffd99", "photo-1519331379826-f10be5486c6f"
             ],
             night: [
-                "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1509114397022-ed747cca3f65",
-                "photo-1532693322450-2cb5c51106d6", "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08",
-                "photo-1517411032315-54ef2cb783bb", "photo-1518837695005-2083093ee35b", "photo-1508739773434-c26b3d09e071", "photo-1489549132488-d00b7ece80f1"
+                "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1532693322450-2cb5c51106d6",
+                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb",
+                "photo-1508739773434-c26b3d09e071", "photo-1489549132488-d00b7ece80f1", "photo-1511497584788-876761192d6e", "photo-1518837695005-2083093ee35b"
             ],
             holiday: [
                 "photo-1513151233558-d860c5398176", "photo-1492684223066-81342ee5ff30", "photo-1533174072545-7a4b6ad7a6c3",
                 "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819",
-                "photo-1469474968028-56623f02e42e", "photo-1507525428034-b723cf961d3e", "photo-1496337589254-7e19d01c441c", "photo-1527631746610-bca00a040d60"
+                "photo-1469474968028-56623f02e42e", "photo-1496337589254-7e19d01c441c", "photo-1527631746610-bca00a040d60", "photo-1507525428034-b723cf961d3e"
             ]
         };
 
@@ -408,7 +403,6 @@
             ]
         };
 
-        // 讀取儲存的自訂圖庫或初始化
         let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
 
         function initGallery() {
@@ -418,13 +412,11 @@
             let combinedCards = [];
             const seed = getDailySeed();
 
-            // 如果使用者沒有自行新增過，就用每日隨機種子從圖庫池撈出每個分類 10 張
             ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
                 let pool = imagePool[cat];
                 let texts = defaultTexts[cat];
                 
                 for(let i = 0; i < 10; i++) {
-                    // 簡單隨機選取
                     let imgId = pool[(seed + i * 7) % pool.length];
                     let text = texts[i];
                     combinedCards.push({
@@ -436,7 +428,6 @@
                 }
             });
 
-            // 合併使用者自訂新增的卡片
             combinedCards = userCards.concat(combinedCards);
 
             combinedCards.forEach((item, index) => {
@@ -463,7 +454,6 @@
             updateManageList();
         }
 
-        // 隱藏後台開關（使用當天動態密碼 20260922 驗證）
         function toggleAdmin() {
             const pwd = prompt("請輸入密碼：");
             if (pwd === "20260922") {
@@ -472,7 +462,6 @@
             }
         }
 
-        // 新增卡片
         function addCard() {
             const cat = document.getElementById('newCategory').value;
             const text = document.getElementById('newText').value.trim();
@@ -497,14 +486,12 @@
             alert('新增成功！');
         }
 
-        // 刪除自訂卡片
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
             initGallery();
         }
 
-        // 更新後台管理清單
         function updateManageList() {
             const listEl = document.getElementById('manageList');
             listEl.innerHTML = '<strong>自訂項目管理：</strong>';
@@ -520,7 +507,6 @@
             });
         }
 
-        // 另存 HTML
         function exportHTML() {
             const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -532,7 +518,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // 分類篩選
         function filterCategory(category, event) {
             const buttons = document.querySelectorAll('.category-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
@@ -548,7 +533,6 @@
             });
         }
 
-        // Canvas 合成邏輯（前二字放大）
         function generateCanvas(imgElement, textContent, styleType, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -667,7 +651,6 @@
             });
         }
 
-        // 初始化載入圖庫
         window.onload = initGallery;
     </script>
 
