@@ -5,35 +5,35 @@
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與微軟發布次世代 AI 晶片「Maia 200」，算力提升 300%",
+            "title": "OpenAI 與台積電宣佈 1.4nm 次世代 AI 晶片合作計畫",
             "category": "人工智慧與半導體",
-            "summary": "微軟與 OpenAI 今日共同發表最新資料中心 AI 加速晶片 Maia 200，採用台積電 2 奈米製程，專為大規模自主 Agent 與多模態模型訓練設計，能源效率較前代提升 40%。",
-            "source": "TechCrunch 科技新聞",
-            "url": "https://example.com/news/2026-09-22/maia-200-chip-announcement"
+            "summary": "OpenAI 今日宣佈與台積電深化戰略合作，首度公開專為超大規模超級智慧模型設計的 1.4nm (A14) 客製化晶片架構，預計將算力能效提升 40%，並計畫於 2027 年正式量產投產。",
+            "source": "TechCrunch 科技日報",
+            "url": "https://example.com/news/20260922-openai-tsmc-14nm-chip"
         },
         {
             "id": 2,
-            "title": "蘋果平價版 AR 智慧眼鏡傳將於秋季亮相，主打全天候輕量配戴",
-            "category": "消費性電子",
-            "summary": "供應鏈消息指出，蘋果預計於近期發表輕量化 AR 眼鏡 Apple Glass，重量僅約 75 公克，深度整合 Apple Intelligence 語音助理，鎖定大眾消費市場。",
-            "source": "數位時代",
-            "url": "https://example.com/news/2026-09-22/apple-smart-glasses-leak"
+            "title": "歐盟正式通過《後量子加密轉型法案》 強制關鍵基礎設施升級",
+            "category": "資安與量子科技",
+            "summary": "歐盟高峰會今日正式批准《後量子加密轉型法案》（PQC Act），要求所有會員國之金融機構、政府公共服務與關鍵基礎設施在 2028 年前全面替換傳統 RSA 演算法，升級至抗量子密碼學（PQC）標準。",
+            "source": "Reuters 路透社",
+            "url": "https://example.com/news/20260922-eu-pqc-act-passed"
         },
         {
             "id": 3,
-            "title": "IBM 宣布實現 5,000 量子位元模組化系統商業化部署",
-            "category": "前沿科技",
-            "summary": "IBM 今日發表最新量子處理器架構，成功透過高速光學互連技術串聯多個量子晶片，實現低錯誤率的 5,000 邏輯量子位元運算，首批系統已正式交付國家級研究機構。",
-            "source": "科技新報",
-            "url": "https://example.com/news/2026-09-22/ibm-quantum-breakthrough"
+            "title": "SpaceX 成功發射第二代直連手機衛星 全球無死角通訊邁向 6G 測試",
+            "category": "太空科技與通訊",
+            "summary": "SpaceX 今日成功將 50 顆第二代 Starlink 直連手機（Direct-to-Cell）衛星送入軌道。新一代衛星頻寬大幅提升，能支援低延遲語音通話與高清視訊傳輸，並啟動首批 6G 衛星與地面終端融合測試。",
+            "source": "SpaceNews 太空新聞網",
+            "url": "https://example.com/news/20260922-spacex-direct-to-cell-v2"
         },
         {
             "id": 4,
-            "title": "歐盟「人工智慧法案」全面生效，科技巨頭推出合規專屬 AI 模型",
-            "category": "科技政策",
-            "summary": "歐盟 AI 法案（EU AI Act）最終階段監管條款於今日正式生效。Google、Meta 與 Anthropic 等企業相繼發表符合嚴格隱私與訓練資料透明度規範的歐洲專屬 AI 模型。",
-            "source": "iThome",
-            "url": "https://example.com/news/2026-09-22/eu-ai-act-enforcement"
+            "title": "蘋果發表 Vision Pro SE 輕量化頭顯 售價大幅調降鎖定大眾市場",
+            "category": "智慧裝置與 XR",
+            "summary": "蘋果今日秋季發表會正式推出 Vision Pro SE，機身重量減輕 35% 並採用全新模組化外接電池設計，官方售價降至 1,299 美元，預計將加速空間計算裝置在消費者端的普及率。",
+            "source": "The Verge 科技焦點",
+            "url": "https://example.com/news/20260922-apple-vision-pro-se-launch"
         }
     ]
 }
