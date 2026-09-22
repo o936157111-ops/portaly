@@ -29,11 +29,15 @@
             padding: 15px;
             max-width: 480px;
             margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         header {
             text-align: center;
-            padding: 25px 10px 15px;
+            padding: 20px 10px 10px;
         }
 
         h1 {
@@ -51,72 +55,27 @@
             letter-spacing: 1px;
         }
 
-        .categories-container {
-            overflow-x: auto;
-            white-space: nowrap;
-            margin: 15px 0 25px;
-            padding-bottom: 2px;
-            scrollbar-width: none;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .categories-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .categories {
-            display: inline-flex;
-            gap: 0;
-        }
-
-        .category-btn {
-            background-color: #ede7dc;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            padding: 9px 16px;
-            font-size: 0.85rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            margin-right: -1px;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-        }
-
-        .category-btn:first-child {
-            border-top-left-radius: 8px;
-        }
-
-        .category-btn.active {
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            font-weight: 500;
-            border-color: var(--border-color);
-            z-index: 2;
-            padding-top: 11px;
-            margin-top: -2px;
-        }
-
-        .gallery-stream {
+        .main-container {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding-bottom: 40px;
+            justify-content: center;
+            padding-bottom: 20px;
         }
 
         .card {
             background-color: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border-color);
+            margin-bottom: 15px;
         }
 
         .card-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 16 / 9;
+            aspect-ratio: 4 / 5;
             background-color: #eee;
             overflow: hidden;
             cursor: pointer;
@@ -139,26 +98,26 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
             pointer-events: none;
         }
 
         .card-overlay-text p {
             font-family: 'Noto Serif TC', serif;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             color: #ffffff;
-            line-height: 1.5;
+            line-height: 1.6;
             letter-spacing: 1px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
 
         .card-footer {
-            padding: 10px 15px;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
             background-color: var(--card-bg);
@@ -172,9 +131,9 @@
         .action-btn {
             flex: 1;
             border: none;
-            padding: 9px 0;
+            padding: 11px 0;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
             transition: opacity 0.2s;
@@ -191,6 +150,28 @@
 
         .btn-share { background-color: #06C755; }
         .btn-download { background-color: var(--text-main); }
+
+        .shuffle-container {
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .btn-shuffle {
+            background-color: #dcd6cd;
+            border: none;
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            transition: background 0.2s;
+        }
+
+        .btn-shuffle:active {
+            background-color: #cbc3b7;
+        }
 
         .lightbox {
             display: none;
@@ -244,7 +225,7 @@
 
         .admin-trigger {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             font-size: 0.8rem;
             color: var(--border-color);
             cursor: pointer;
@@ -257,8 +238,8 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
-            margin-top: 20px;
-            margin-bottom: 40px;
+            margin-top: 15px;
+            margin-bottom: 20px;
         }
 
         .admin-panel-header {
@@ -323,7 +304,7 @@
         
         .manage-list {
             margin-top: 15px;
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
             border-top: 1px solid var(--border-color);
             padding-top: 10px;
@@ -350,21 +331,19 @@
 <body>
 
     <header>
-        <h1>日常問候</h1>
+        <h1>今日日常問候</h1>
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
-    <div class="categories-container">
-        <div class="categories">
-            <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
-            <button class="category-btn" onclick="filterCategory('morning', event)">早安</button>
-            <button class="category-btn" onclick="filterCategory('afternoon', event)">午安</button>
-            <button class="category-btn" onclick="filterCategory('night', event)">晚安</button>
-            <button class="category-btn" onclick="filterCategory('holiday', event)">節慶假日</button>
+    <div class="main-container">
+        <!-- 隨機主打卡片展示區 -->
+        <div id="randomCardContainer"></div>
+
+        <!-- 換一張按鈕 -->
+        <div class="shuffle-container">
+            <button class="btn-shuffle" onclick="showRandomCard()">🎲 換一張隨機問候</button>
         </div>
     </div>
-
-    <div class="gallery-stream" id="gallery"></div>
 
     <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display: none;">
         <div class="lightbox-content" onclick="event.stopPropagation()">
@@ -374,35 +353,37 @@
         </div>
     </div>
 
-    <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
+    <footer>
+        <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
 
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-panel-header">
-            <h3>圖庫管理後台</h3>
-            <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉後台</button>
+        <div class="admin-panel" id="adminPanel">
+            <div class="admin-panel-header">
+                <h3>圖庫管理後台</h3>
+                <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉後台</button>
+            </div>
+            <div class="admin-form-group">
+                <label>分類</label>
+                <select id="newCategory">
+                    <option value="morning">早安</option>
+                    <option value="afternoon">午安</option>
+                    <option value="night">晚安</option>
+                    <option value="holiday">節慶假日</option>
+                </select>
+            </div>
+            <div class="admin-form-group">
+                <label>問候文字 (若不填寫將自動隨機產生)</label>
+                <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
+            </div>
+            <div class="admin-form-group">
+                <label>圖片網址 (必填)</label>
+                <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="admin-btns">
+                <button class="admin-btn btn-add" onclick="addCard()">新增問候圖並更新網頁</button>
+            </div>
+            <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
         </div>
-        <div class="admin-form-group">
-            <label>分類</label>
-            <select id="newCategory">
-                <option value="morning">早安</option>
-                <option value="afternoon">午安</option>
-                <option value="night">晚安</option>
-                <option value="holiday">節慶假日</option>
-            </select>
-        </div>
-        <div class="admin-form-group">
-            <label>問候文字 (若不填寫將自動隨機產生)</label>
-            <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
-        </div>
-        <div class="admin-form-group">
-            <label>圖片網址 (必填)</label>
-            <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
-        </div>
-        <div class="admin-btns">
-            <button class="admin-btn btn-add" onclick="addCard()">新增問候圖並更新網頁</button>
-        </div>
-        <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
-    </div>
+    </footer>
 
     <script>
         const imagePool = {
@@ -460,7 +441,7 @@
                 "晚安。好夢相隨，明天依舊是美好的一天。",
                 "晚安。願溫柔的夜色撫平你心中的波瀾。",
                 "晚安。閉上眼睛，把煩惱通通忘掉。",
-                "晚安. 月色真美，願你有個甜美的夢。",
+                "晚安。月色真美，願你有個甜美的夢。",
                 "晚安。辛苦了整整一天，今晚好好放鬆。",
                 "晚安。在安靜的夜裡，積蓄明天的力量。",
                 "晚安。願清風入夢，祝好眠。"
@@ -480,13 +461,10 @@
         };
 
         let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
+        let allCardsCache = [];
 
-        function initGallery() {
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-
-            let combinedCards = [];
-
+        function buildAllCardsPool() {
+            allCardsCache = [];
             ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
                 let pool = imagePool[cat];
                 let texts = defaultTexts[cat];
@@ -494,7 +472,7 @@
                 for(let i = 0; i < 10; i++) {
                     let imgId = pool[i % pool.length];
                     let text = texts[i % texts.length];
-                    combinedCards.push({
+                    allCardsCache.push({
                         category: cat,
                         text: text,
                         imgUrl: `https://images.unsplash.com/${imgId}?auto=format&fit=crop&w=800&q=80`,
@@ -503,16 +481,25 @@
                 }
             });
 
-            combinedCards = userCards.concat(combinedCards);
+            // 將使用者自行新增的圖片也放進總隨機池中
+            if (userCards.length > 0) {
+                allCardsCache = userCards.concat(allCardsCache);
+            }
+        }
 
-            combinedCards.forEach((item, index) => {
-                const cardEl = document.createElement('div');
-                cardEl.className = 'card';
-                cardEl.setAttribute('data-category', item.category);
-                
-                const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                
-                cardEl.innerHTML = `
+        function showRandomCard() {
+            buildAllCardsPool();
+            if (allCardsCache.length === 0) return;
+
+            // 隨機抽選一張
+            const randomIndex = Math.floor(Math.random() * allCardsCache.length);
+            const item = allCardsCache[randomIndex];
+
+            const container = document.getElementById('randomCardContainer');
+            const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            
+            container.innerHTML = `
+                <div class="card">
                     <div class="card-image-box" onclick="openLightbox('${item.imgUrl}')">
                         <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
                         <div class="card-overlay-text">
@@ -525,10 +512,8 @@
                             <button class="action-btn btn-download" onclick="downloadCardImage(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
                         </div>
                     </div>
-                `;
-                gallery.appendChild(cardEl);
-            });
-
+                </div>
+            `;
             updateManageList();
         }
 
@@ -568,7 +553,6 @@
                 return;
             }
 
-            // 如果沒有填寫文字，就從該分類的預設文案中隨機挑選一句
             if (!text) {
                 const texts = defaultTexts[cat];
                 text = texts[Math.floor(Math.random() * texts.length)];
@@ -584,18 +568,15 @@
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
             document.getElementById('newText').value = '';
             document.getElementById('newImgUrl').value = '';
-            initGallery();
             
-            // 自動觸發另存 HTML
+            showRandomCard();
             exportHTML();
         }
 
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
-            initGallery();
-            
-            // 刪除後也自動更新並下載 HTML
+            showRandomCard();
             exportHTML();
         }
 
@@ -623,21 +604,6 @@
             a.download = 'hello.html';
             a.click();
             URL.revokeObjectURL(url);
-        }
-
-        function filterCategory(category, event) {
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
         }
 
         function generateCanvas(imgElement, textContent, styleType, callback) {
@@ -760,7 +726,8 @@
             });
         }
 
-        window.onload = initGallery;
+        // 網頁一載入就隨機顯示一張
+        window.onload = showRandomCard;
     </script>
 </body>
 </html>
