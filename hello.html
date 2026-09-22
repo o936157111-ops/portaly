@@ -25,34 +25,78 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.6;
-            padding: 15px;
+            line-height: 1.4;
+            padding: 10px 15px;
             max-width: 480px;
             margin: 0 auto;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            overflow: hidden; /* 鎖死畫面不超過一頁 */
         }
 
         header {
             text-align: center;
-            padding: 20px 10px 10px;
+            padding: 5px 0;
         }
 
         h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 500;
             letter-spacing: 2px;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
             color: var(--text-main);
         }
 
         p.subtitle {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--text-sub);
             letter-spacing: 1px;
+        }
+
+        .categories-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin: 8px 0 12px;
+            padding-bottom: 2px;
+            scrollbar-width: none;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .categories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .categories {
+            display: inline-flex;
+            gap: 0;
+        }
+
+        .category-btn {
+            background-color: #ede7dc;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            margin-right: -1px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+
+        .category-btn.active {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-weight: 500;
+            border-color: var(--border-color);
+            z-index: 2;
+            padding-top: 8px;
+            margin-top: -2px;
         }
 
         .main-container {
@@ -60,22 +104,22 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding-bottom: 20px;
+            max-height: calc(100vh - 160px);
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-color);
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         .card-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 5;
+            aspect-ratio: 16 / 9; /* 採用精簡的橫向比例，確保一頁塞得下 */
             background-color: #eee;
             overflow: hidden;
             cursor: pointer;
@@ -88,10 +132,6 @@
             transition: transform 0.2s;
         }
 
-        .card-image-box:active img {
-            transform: scale(0.98);
-        }
-
         .card-overlay-text {
             position: absolute;
             top: 0;
@@ -102,50 +142,45 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             pointer-events: none;
         }
 
         .card-overlay-text p {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #ffffff;
-            line-height: 1.6;
+            line-height: 1.5;
             letter-spacing: 1px;
             text-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
 
         .card-footer {
-            padding: 12px 15px;
+            padding: 8px 12px;
             display: flex;
-            flex-direction: column;
             background-color: var(--card-bg);
         }
 
         .action-buttons {
             display: flex;
             gap: 8px;
+            width: 100%;
         }
 
         .action-btn {
             flex: 1;
             border: none;
-            padding: 11px 0;
+            padding: 8px 0;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.2s;
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
-        }
-
-        .action-btn:active {
-            opacity: 0.8;
         }
 
         .btn-share { background-color: #06C755; }
@@ -160,17 +195,11 @@
             background-color: #dcd6cd;
             border: none;
             color: var(--text-main);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             font-weight: 500;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            transition: background 0.2s;
-        }
-
-        .btn-shuffle:active {
-            background-color: #cbc3b7;
         }
 
         .lightbox {
@@ -201,7 +230,6 @@
             max-height: 75vh;
             object-fit: contain;
             border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .lightbox-close {
@@ -223,10 +251,14 @@
             text-align: center;
         }
 
+        footer {
+            padding-bottom: 5px;
+        }
+
         .admin-trigger {
             text-align: center;
-            padding: 15px;
-            font-size: 0.8rem;
+            padding: 5px;
+            font-size: 0.75rem;
             color: var(--border-color);
             cursor: pointer;
             user-select: none;
@@ -236,21 +268,25 @@
             display: none;
             background: #fff;
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 15px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 12px;
+            position: absolute;
+            bottom: 30px;
+            left: 15px;
+            right: 15px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 500;
         }
 
         .admin-panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         .admin-panel h3 {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: var(--text-main);
             margin: 0;
         }
@@ -258,82 +294,85 @@
         .btn-close-admin {
             background: #e2e8f0;
             border: none;
-            padding: 4px 10px;
+            padding: 2px 8px;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             cursor: pointer;
-            color: var(--text-main);
         }
 
         .admin-form-group {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .admin-form-group label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--text-sub);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .admin-form-group input, .admin-form-group select {
             width: 100%;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .admin-btns {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
+            font-size: 0.85rem;
         }
 
         .admin-btn {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: none;
             border-radius: 6px;
             font-size: 0.85rem;
             cursor: pointer;
             font-weight: 500;
+            background-color: #2b6cb0;
+            color: #fff;
         }
-
-        .btn-add { background-color: #2b6cb0; color: #fff; }
         
         .manage-list {
-            margin-top: 15px;
-            max-height: 150px;
+            margin-top: 8px;
+            max-height: 80px;
             overflow-y: auto;
             border-top: 1px solid var(--border-color);
-            padding-top: 10px;
+            padding-top: 6px;
         }
         .manage-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
-            padding: 6px 0;
+            font-size: 0.75rem;
+            padding: 4px 0;
             border-bottom: 1px dashed var(--border-color);
         }
         .manage-item button {
             background: #c53030;
             color: #fff;
             border: none;
-            padding: 4px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>今日日常問候</h1>
+        <h1>日常問候</h1>
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
+
+    <!-- 分類頁籤 -->
+    <div class="categories-container">
+        <div class="categories">
+            <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
+            <button class="category-btn" onclick="filterCategory('morning', event)">早安</button>
+            <button class="category-btn" onclick="filterCategory('afternoon', event)">午安</button>
+            <button class="category-btn" onclick="filterCategory('night', event)">晚安</button>
+            <button class="category-btn" onclick="filterCategory('holiday', event)">節慶假日</button>
+        </div>
+    </div>
 
     <div class="main-container">
         <!-- 隨機主打卡片展示區 -->
@@ -359,7 +398,7 @@
         <div class="admin-panel" id="adminPanel">
             <div class="admin-panel-header">
                 <h3>圖庫管理後台</h3>
-                <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉後台</button>
+                <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉</button>
             </div>
             <div class="admin-form-group">
                 <label>分類</label>
@@ -371,7 +410,7 @@
                 </select>
             </div>
             <div class="admin-form-group">
-                <label>問候文字 (若不填寫將自動隨機產生)</label>
+                <label>問候文字 (不填則隨機產生)</label>
                 <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
             </div>
             <div class="admin-form-group">
@@ -379,9 +418,9 @@
                 <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
             </div>
             <div class="admin-btns">
-                <button class="admin-btn btn-add" onclick="addCard()">新增問候圖並更新網頁</button>
+                <button class="admin-btn" onclick="addCard()">新增問候圖並更新網頁</button>
             </div>
-            <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
+            <div class="manage-list" id="manageList"><strong>自訂管理：</strong></div>
         </div>
     </footer>
 
@@ -389,23 +428,19 @@
         const imagePool = {
             morning: [
                 "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
-                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b",
-                "photo-1500530855697-b586d89ba3ee", "photo-1422493757037-147171293f66", "photo-1447752875215-b2761acb3c5d", "photo-1465146344425-f00d5f5c8f07"
+                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b"
             ],
             afternoon: [
                 "photo-1501339847302-ac426a4a7cbb", "photo-1509316975850-ff9c5deb0cd9", "photo-1433086966358-54859d0ed716",
-                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff",
-                "photo-1534447677768-be436bb09401", "photo-1511884642898-4c92249e20b6", "photo-1498429089284-41f8cf3ffd99", "photo-1519331379826-f10be5486c6f"
+                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff"
             ],
             night: [
                 "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1532693322450-2cb5c51106d6",
-                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb",
-                "photo-1508739773434-c26b3d09e071", "photo-1489549132488-d00b7ece80f1", "photo-1511497584788-876761192d6e", "photo-1518837695005-2083093ee35b"
+                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb"
             ],
             holiday: [
                 "photo-1513151233558-d860c5398176", "photo-1492684223066-81342ee5ff30", "photo-1533174072545-7a4b6ad7a6c3",
-                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819",
-                "photo-1469474968028-56623f02e42e", "photo-1496337589254-7e19d01c441c", "photo-1527631746610-bca00a040d60", "photo-1507525428034-b723cf961d3e"
+                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819"
             ]
         };
 
@@ -413,89 +448,77 @@
             morning: [
                 "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
                 "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
-                "早安。迎著微風，開啟充滿希望的一天。",
-                "早安。一杯熱茶，一句問候，願你平安喜樂。",
-                "早安。把心靈歸零，迎接美好的今天。",
-                "早安。陽光總在風雨後，每天都是新的起點。",
-                "早安。微風不燥，陽光正好，祝你有個美好的一天。",
-                "早安。帶著微笑出發，幸運會一直相隨。",
-                "早安。願你眼裡有光，活出自己喜歡的樣子。",
-                "早安。願今天的努力，不負好時光。"
+                "早安。迎著微風，開啟充滿希望的一天。"
             ],
             afternoon: [
                 "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
-                "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
-                "午安。喝杯咖啡，讓心靈沉澱片刻。",
-                "午安。願你的下午時光輕鬆愉快，工作順心。",
-                "午安。給自己一個微笑，轉換好心情。",
-                "午安。偷得浮生半日閒，享受片刻寧靜。",
-                "午安。保持好節奏，離美好的一天又近了一步。",
-                "午安。願午後的微風吹散所有的疲憊。",
-                "午安。記得按時吃飯，照顧好自己。",
-                "午安。加油，再堅持一下就迎來傍晚了。"
+                "午安. 午後的陽光溫暖而慵懶，稍作休息再出發。",
+                "午安。喝杯咖啡，讓心靈沉澱片刻。"
             ],
             night: [
                 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
                 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
-                "晚安。卸下一天的疲憊，好好愛自己。",
-                "晚安。好夢相隨，明天依舊是美好的一天。",
-                "晚安。願溫柔的夜色撫平你心中的波瀾。",
-                "晚安。閉上眼睛，把煩惱通通忘掉。",
-                "晚安。月色真美，願你有個甜美的夢。",
-                "晚安。辛苦了整整一天，今晚好好放鬆。",
-                "晚安。在安靜的夜裡，積蓄明天的力量。",
-                "晚安。願清風入夢，祝好眠。"
+                "晚安。卸下一天的疲憊，好好愛自己。"
             ],
             holiday: [
                 "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
                 "假期愉快。拋開工作，享受屬於自己的悠閒時光。",
-                "週末安康。願美好與溫馨填滿你的假期。",
-                "假期愉快。去想去的地方，看想看的風景。",
-                "週末愉快。好好休息，陪伴最重要的人。",
-                "假期愉快。願時光慢流，歲月安好。",
-                "週末愉快。把生活過成自己喜歡的詩意。",
-                "假期愉快。盡情呼吸大自然的清新氣息。",
-                "週末愉快。願這份閒適治癒所有的忙碌。",
-                "假期愉快。享受陽光，收穫滿滿的喜悅。"
+                "週末安康。願美好與溫馨填滿你的假期。"
             ]
         };
 
         let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
-        let allCardsCache = [];
+        let currentFilter = 'all';
 
-        function buildAllCardsPool() {
-            allCardsCache = [];
+        function getFilteredPool() {
+            let poolList = [];
+            
+            // 組合預設圖庫
             ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
-                let pool = imagePool[cat];
-                let texts = defaultTexts[cat];
-                
-                for(let i = 0; i < 10; i++) {
-                    let imgId = pool[i % pool.length];
-                    let text = texts[i % texts.length];
-                    allCardsCache.push({
-                        category: cat,
-                        text: text,
-                        imgUrl: `https://images.unsplash.com/${imgId}?auto=format&fit=crop&w=800&q=80`,
-                        style: i % 3 === 0 ? 'artistic' : (i % 3 === 1 ? 'modern' : 'classic')
-                    });
+                if (currentFilter === 'all' || currentFilter === cat) {
+                    let pool = imagePool[cat];
+                    let texts = defaultTexts[cat];
+                    for(let i = 0; i < pool.length; i++) {
+                        poolList.push({
+                            category: cat,
+                            text: texts[i % texts.length],
+                            imgUrl: `https://images.unsplash.com/${pool[i]}?auto=format&fit=crop&w=800&q=80`,
+                            style: i % 2 === 0 ? 'artistic' : 'modern'
+                        });
+                    }
                 }
             });
 
-            // 將使用者自行新增的圖片也放進總隨機池中
-            if (userCards.length > 0) {
-                allCardsCache = userCards.concat(allCardsCache);
-            }
+            // 組合使用者自訂圖庫
+            userCards.forEach(item => {
+                if (currentFilter === 'all' || currentFilter === item.category) {
+                    poolList.push(item);
+                }
+            });
+
+            return poolList;
+        }
+
+        function filterCategory(category, event) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            currentFilter = category;
+            showRandomCard(); // 切換頁籤時，從該分類中隨機抽出一張
         }
 
         function showRandomCard() {
-            buildAllCardsPool();
-            if (allCardsCache.length === 0) return;
-
-            // 隨機抽選一張
-            const randomIndex = Math.floor(Math.random() * allCardsCache.length);
-            const item = allCardsCache[randomIndex];
-
+            const poolList = getFilteredPool();
             const container = document.getElementById('randomCardContainer');
+
+            if (poolList.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:30px; color:#888; font-size:0.9rem;">此分類目前尚無圖片，請至下方設定新增！</div>`;
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * poolList.length);
+            const item = poolList[randomIndex];
             const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
             
             container.innerHTML = `
@@ -519,14 +542,12 @@
 
         function openLightbox(imgUrl) {
             const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightboxImg');
-            lightboxImg.src = imgUrl;
+            document.getElementById('lightboxImg').src = imgUrl;
             lightbox.style.display = 'flex';
         }
 
         function closeLightbox() {
-            const lightbox = document.getElementById('lightbox');
-            lightbox.style.display = 'none';
+            document.getElementById('lightbox').style.display = 'none';
         }
 
         function toggleAdmin() {
@@ -568,6 +589,7 @@
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
             document.getElementById('newText').value = '';
             document.getElementById('newImgUrl').value = '';
+            document.getElementById('adminPanel').style.display = 'none';
             
             showRandomCard();
             exportHTML();
@@ -582,15 +604,15 @@
 
         function updateManageList() {
             const listEl = document.getElementById('manageList');
-            listEl.innerHTML = '<strong>自訂項目管理：</strong>';
+            listEl.innerHTML = '<strong>自訂管理：</strong>';
             if (userCards.length === 0) {
-                listEl.innerHTML += '<p style="font-size:0.8rem; color:#888;">目前尚無自訂卡片</p>';
+                listEl.innerHTML += '<span style="font-size:0.75rem; color:#888;"> 無自訂卡片</span>';
                 return;
             }
             userCards.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'manage-item';
-                div.innerHTML = `<span>[${item.category}] ${item.text.substring(0, 10)}...</span><button onclick="deleteCard(${index})">刪除</button>`;
+                div.innerHTML = `<span>[${item.category}] ${item.text.substring(0, 8)}...</span><button onclick="deleteCard(${index})">刪除</button>`;
                 listEl.appendChild(div);
             });
         }
@@ -679,7 +701,7 @@
             const card = button.closest('.card');
             const imgElement = card.querySelector('img');
 
-            button.innerText = '⏳ 準備分享...';
+            button.innerText = '⏳ 準備...';
             button.disabled = true;
 
             generateCanvas(imgElement, textContent, styleType, async function(blob) {
@@ -694,11 +716,11 @@
                         });
                     } catch (error) {
                         if (error.name !== 'AbortError') {
-                            console.log('分享取消或失敗', error);
+                            console.log('分享取消', error);
                         }
                     }
                 } else {
-                    alert('您的瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」按鈕。');
+                    alert('瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」。');
                 }
 
                 button.innerText = '📤 一鍵分享';
@@ -710,7 +732,7 @@
             const card = button.closest('.card');
             const imgElement = card.querySelector('img');
 
-            button.innerText = '⏳ 處理中...';
+            button.innerText = '⏳ 處理...';
             button.disabled = true;
 
             generateCanvas(imgElement, textContent, styleType, function(blob) {
