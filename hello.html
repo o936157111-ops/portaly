@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日常問候圖庫</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;family=Noto+Sans+TC:wght@300;400;700&amp;family=Noto+Serif+TC:wght@300;500;700&amp;display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f7f5f0;
@@ -350,7 +349,7 @@
 
     <div class="gallery-stream" id="gallery"></div>
 
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display: none;">
         <div class="lightbox-content" onclick="event.stopPropagation()">
             <button class="lightbox-close" onclick="closeLightbox()">✕ 關閉</button>
             <img id="lightboxImg" src="" alt="大圖預覽">
@@ -383,11 +382,10 @@
             <button class="admin-btn btn-add" onclick="addCard()">新增問候圖</button>
             <button class="admin-btn btn-export" onclick="exportHTML()">另存網頁 (HTML)</button>
         </div>
-        <div class="manage-list" id="manageList"></div>
+        <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
     </div>
 
     <script>
-        // 精選穩定 Unsplash 圖片 ID 池
         const imagePool = {
             morning: [
                 "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
@@ -443,7 +441,7 @@
                 "晚安。好夢相隨，明天依舊是美好的一天。",
                 "晚安。願溫柔的夜色撫平你心中的波瀾。",
                 "晚安。閉上眼睛，把煩惱通通忘掉。",
-                "晚安. 月色真美，願你有個甜美的夢。",
+                "晚安。月色真美，願你有個甜美的夢。",
                 "晚安。辛苦了整整一天，今晚好好放鬆。",
                 "晚安。在安靜的夜裡，積蓄明天的力量。",
                 "晚安。願清風入夢，祝好眠。"
@@ -470,14 +468,9 @@
 
             let combinedCards = [];
 
-            // 每次打開網頁（重新整理）時，獨立隨機洗牌各分類的圖片與文字
             ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
-                let pool = [...imagePool[cat]];
-                let texts = [...defaultTexts[cat]];
-                
-                // 隨機打亂順序
-                pool.sort(() => Math.random() - 0.5);
-                texts.sort(() => Math.random() - 0.5);
+                let pool = imagePool[cat];
+                let texts = defaultTexts[cat];
                 
                 for(let i = 0; i < 10; i++) {
                     let imgId = pool[i % pool.length];
@@ -491,16 +484,18 @@
                 }
             });
 
-            // 將使用者自訂的卡片合併進去
             combinedCards = userCards.concat(combinedCards);
 
             combinedCards.forEach((item, index) => {
                 const cardEl = document.createElement('div');
                 cardEl.className = 'card';
                 cardEl.setAttribute('data-category', item.category);
+                
+                // 安全跳脫文字內容避免 HTML/JS 發生屬性斷開錯誤
+                const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                
                 cardEl.innerHTML = `
                     <div class="card-image-box" onclick="openLightbox('${item.imgUrl}')">
-                        <!-- 防破圖 onerror 機制：若圖片載入失敗自動切換為安全備用圖 -->
                         <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
                         <div class="card-overlay-text">
                             <p>${item.text}</p>
@@ -508,8 +503,8 @@
                     </div>
                     <div class="card-footer">
                         <div class="action-buttons">
-                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '${item.text}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
-                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '${item.text}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
+                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
+                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
                         </div>
                     </div>
                 `;
@@ -636,7 +631,7 @@
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                let firstLine = rawLines[0];
+                let firstLine = rawLines[0] || '';
                 let greeting = firstLine.slice(0, 2);
                 let restGreeting = firstLine.slice(2);
 
@@ -732,6 +727,5 @@
 
         window.onload = initGallery;
     </script>
-
 </body>
 </html>
