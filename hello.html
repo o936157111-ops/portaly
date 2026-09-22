@@ -117,7 +117,8 @@
         .card-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 5;
+            /* 調整為 9:16 手機滿版直式比例 */
+            aspect-ratio: 9 / 16;
             background-color: #eee;
             overflow: hidden;
         }
@@ -328,7 +329,6 @@
             return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
         }
 
-        // 更換為穩定可靠的高畫質風景圖庫池
         const imagePool = {
             morning: [
                 "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
@@ -384,7 +384,7 @@
                 "晚安。好夢相隨，明天依舊是美好的一天。",
                 "晚安。願溫柔的夜色撫平你心中的波瀾。",
                 "晚安。閉上眼睛，把煩惱通通忘掉。",
-                "晚安。月色真美，願你有個甜美的夢。",
+                "晚安. 月色真美，願你有個甜美的夢。",
                 "晚安。辛苦了整整一天，今晚好好放鬆。",
                 "晚安。在安靜的夜裡，積蓄明天的力量。",
                 "晚安。願清風入夢，祝好眠。"
@@ -542,8 +542,9 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
+                // 配合 9:16 手機直式比例更新畫布尺寸 (例如 800 x 1422)
                 canvas.width = 800;
-                canvas.height = 1000;
+                canvas.height = 1422;
 
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -565,11 +566,11 @@
 
                 if (styleType === 'artistic') {
                     ctx.font = '90px "Ma Shan Zheng", cursive';
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 100);
+                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 120);
 
                     if(restGreeting) {
                         ctx.font = '34px "Noto Serif TC", serif';
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 25);
+                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 35);
                     }
 
                     ctx.font = '32px "Noto Serif TC", serif';
@@ -580,14 +581,14 @@
                     }
                 } else {
                     ctx.font = 'bold 48px "Noto Serif TC", serif';
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 70);
+                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 90);
 
                     if(restGreeting) {
                         ctx.font = '32px "Noto Serif TC", serif';
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 15);
+                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 25);
                     }
 
-                    let startY = canvas.height / 2 + 50;
+                    let startY = canvas.height / 2 + 55;
                     for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
                         ctx.fillText(rawLines[i], canvas.width / 2, startY);
                         startY += 60;
