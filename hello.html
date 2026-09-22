@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日常問候圖庫</title>
+    <title>日常・溫柔問候圖庫</title>
     <!-- 引入 Google 字型 (Noto Serif TC + Noto Sans TC) -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&family=Noto+Serif+TC:wght@300;500&display=swap" rel="stylesheet">
     <style>
@@ -163,121 +163,40 @@
             border-radius: 4px;
         }
 
-        /* 分享按鈕 */
+        /* 原生分享與下載按鈕排版 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
         .action-btn {
-            width: 100%;
+            flex: 1;
             border: none;
-            padding: 12px 0;
+            padding: 11px 0;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
             transition: opacity 0.2s;
             color: #fff;
-            background-color: #06C755;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .action-btn:active {
             opacity: 0.8;
         }
 
-        /* 自訂彈出分享選單 (Modal) 樣式 */
-        .share-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: flex-end; /* 靠底部彈出，符合手機習慣 */
-        }
-
-        .share-modal.active {
-            display: flex;
-        }
-
-        .share-sheet {
-            background-color: #ffffff;
-            width: 100%;
-            max-width: 480px;
-            border-radius: 20px 20px 0 0;
-            padding: 25px 20px 35px;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .share-sheet-title {
-            font-size: 1rem;
-            font-weight: 500;
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--text-main);
-        }
-
-        .share-options-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .share-option-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--text-main);
-        }
-
-        .share-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .icon-line { background-color: #06C755; }
-        .icon-whatsapp { background-color: #25D366; }
-        .icon-wechat { background-color: #07C160; }
-        .icon-download { background-color: var(--text-main); }
-
-        .share-cancel-btn {
-            width: 100%;
-            background-color: var(--bg-color);
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            font-weight: 500;
-        }
+        .btn-share { background-color: #06C755; } /* LINE 綠色系代表直接分享 */
+        .btn-download { background-color: var(--text-main); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>日常問候</h1>
+        <h1>日常・溫柔問候</h1>
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
@@ -305,7 +224,10 @@
                 <div class="card-info-row">
                     <span class="card-tag">早安問候</span>
                 </div>
-                <button class="action-btn" onclick="openShareModal(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📤 分享問候圖</button>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📥 存至相簿</button>
+                </div>
             </div>
         </div>
 
@@ -321,7 +243,10 @@
                 <div class="card-info-row">
                     <span class="card-tag">早安問候</span>
                 </div>
-                <button class="action-btn" onclick="openShareModal(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📤 分享問候圖</button>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📥 存至相簿</button>
+                </div>
             </div>
         </div>
 
@@ -337,7 +262,10 @@
                 <div class="card-info-row">
                     <span class="card-tag">午安問候</span>
                 </div>
-                <button class="action-btn" onclick="openShareModal(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📤 分享問候圖</button>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📥 存至相簿</button>
+                </div>
             </div>
         </div>
 
@@ -353,7 +281,10 @@
                 <div class="card-info-row">
                     <span class="card-tag">晚安問候</span>
                 </div>
-                <button class="action-btn" onclick="openShareModal(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📤 分享問候圖</button>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📥 存至相簿</button>
+                </div>
             </div>
         </div>
 
@@ -369,41 +300,16 @@
                 <div class="card-info-row">
                     <span class="card-tag">節慶假日</span>
                 </div>
-                <button class="action-btn" onclick="openShareModal(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📤 分享問候圖</button>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📥 存至相簿</button>
+                </div>
             </div>
         </div>
 
-    </div>
-
-    <!-- 自訂彈出分享選單 (Modal HTML) -->
-    <div class="share-modal" id="shareModal">
-        <div class="share-sheet">
-            <div class="share-sheet-title">選擇分享方式</div>
-            <div class="share-options-grid">
-                <button class="share-option-item" onclick="shareViaApp('line')">
-                    <div class="share-icon icon-line">💬</div>
-                    <span>LINE</span>
-                </button>
-                <button class="share-option-item" onclick="shareViaApp('whatsapp')">
-                    <div class="share-icon icon-whatsapp">💚</div>
-                    <span>WhatsApp</span>
-                </button>
-                <button class="share-option-item" onclick="shareViaApp('native')">
-                    <div class="share-icon icon-wechat">🌐</div>
-                    <span>更多選項</span>
-                </button>
-                <button class="share-option-item" onclick="shareViaApp('download')">
-                    <div class="share-icon icon-download">📥</div>
-                    <span>存至相簿</span>
-                </button>
-            </div>
-            <button class="share-cancel-btn" onclick="closeShareModal()">取消</button>
-        </div>
     </div>
 
     <script>
-        let currentActiveCardData = null;
-
         // 分類篩選
         function filterCategory(category, event) {
             const buttons = document.querySelectorAll('.category-btn');
@@ -420,28 +326,7 @@
             });
         }
 
-        // 開啟自訂分享選單
-        function openShareModal(button, textContent, filename) {
-            const card = button.closest('.card');
-            const imgElement = card.querySelector('img');
-            
-            // 暫存當前點擊的資料
-            currentActiveCardData = {
-                imgElement: imgElement,
-                textContent: textContent,
-                filename: filename
-            };
-
-            document.getElementById('shareModal').classList.add('active');
-        }
-
-        // 關閉自訂分享選單
-        function closeShareModal() {
-            document.getElementById('shareModal').classList.remove('active');
-            currentActiveCardData = null;
-        }
-
-        // 核心：Canvas 合成與分流處理
+        // 共用 Canvas 合成邏輯
         function generateCanvas(imgElement, textContent, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -454,14 +339,17 @@
                 canvas.width = 800;
                 canvas.height = 1000;
 
+                // 1. 畫背景圖
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+                // 2. 加漸層遮罩
                 const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
                 gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // 3. 畫文字
                 ctx.fillStyle = '#ffffff';
                 ctx.font = '32px "Noto Serif TC", serif';
                 ctx.textAlign = 'center';
@@ -480,51 +368,56 @@
             };
         }
 
-        // 點擊選單內的各個選項
-        async function shareViaApp(type) {
-            if (!currentActiveCardData) return;
-            const { imgElement, textContent, filename } = currentActiveCardData;
-            closeShareModal();
+        // 功能一：原生系統分享 (支援 LINE、WhatsApp 等)
+        async function nativeShareCard(button, textContent, filename) {
+            const card = button.closest('.card');
+            const imgElement = card.querySelector('img');
+
+            button.innerText = '⏳ 準備分享...';
+            button.disabled = true;
 
             generateCanvas(imgElement, textContent, async function(blob) {
                 const file = new File([blob], filename, { type: 'image/jpeg' });
 
-                if (type === 'download') {
-                    // 直接下載
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = filename;
-                    link.href = url;
-                    link.click();
-                    URL.revokeObjectURL(url);
-                } else if (type === 'line') {
-                    // LINE 專用分享連結 (帶文字與預設行為)
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        try {
-                            await navigator.share({ files: [file], title: '溫柔問候', text: textContent });
-                        } catch (e) { console.log(e); }
-                    } else {
-                        window.open(`https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(textContent)}`, '_blank');
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: '溫柔問候圖',
+                            text: textContent
+                        });
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            console.log('分享取消或失敗', error);
+                        }
                     }
-                } else if (type === 'whatsapp') {
-                    // WhatsApp 分享
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        try {
-                            await navigator.share({ files: [file], title: '溫柔問候', text: textContent });
-                        } catch (e) { console.log(e); }
-                    } else {
-                        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(textContent)}`, '_blank');
-                    }
-                } else if (type === 'native') {
-                    // 呼叫手機系統原生總選單
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        try {
-                            await navigator.share({ files: [file], title: '溫柔問候', text: textContent });
-                        } catch (e) { console.log(e); }
-                    } else {
-                        alert('您的瀏覽器不支援直接檔案分享。');
-                    }
+                } else {
+                    alert('您的瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」按鈕下載後再傳送到 LINE。');
                 }
+
+                button.innerText = '📤 一鍵分享到 LINE';
+                button.disabled = false;
+            });
+        }
+
+        // 功能二：直接下載存至相簿
+        function downloadCardImage(button, textContent, filename) {
+            const card = button.closest('.card');
+            const imgElement = card.querySelector('img');
+
+            button.innerText = '⏳ 處理中...';
+            button.disabled = true;
+
+            generateCanvas(imgElement, textContent, function(blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+
+                button.innerText = '📥 存至相簿';
+                button.disabled = false;
             });
         }
     </script>
