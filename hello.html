@@ -56,9 +56,9 @@
             letter-spacing: 1px;
         }
 
-        /* 讓頁籤自動均分版面寬度 */
+        /* 頁籤容器：取消下方間距，讓它緊貼卡片 */
         .categories-container {
-            margin: 8px 0 12px;
+            margin: 8px 0 0 0;
             border-bottom: 2px solid var(--border-color);
         }
 
@@ -104,13 +104,15 @@
             max-height: calc(100vh - 160px);
         }
 
+        /* 卡片：上方不留外距，直接接合頁籤底線 */
         .card {
             background-color: var(--card-bg);
-            border-radius: 10px;
+            border-radius: 0 0 10px 10px; /* 上方直角切齊頁籤，下方保留圓角 */
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-color);
-            margin-bottom: 8px;
+            border-top: none; /* 移除上方框線，與頁籤融為一體 */
+            margin-top: 0;
         }
 
         .card-image-box {
@@ -153,7 +155,6 @@
             text-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
 
-        /* 三個按鈕同列且等寬排版 */
         .card-footer {
             padding: 8px 10px;
             background-color: var(--card-bg);
@@ -506,7 +507,7 @@
                     <div class="card-footer">
                         <div class="action-buttons">
                             <button class="action-btn btn-share" onclick="nativeShareCard(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
-                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 換一張</button>
+                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 隨機換一張</button>
                             <button class="action-btn btn-download" onclick="downloadCardImage(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
                         </div>
                     </div>
