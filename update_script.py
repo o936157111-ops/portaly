@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from google import genai
 
 def update_news():
@@ -11,8 +11,9 @@ def update_news():
 
     client = genai.Client(api_key=api_key)
 
-    # 取得今天的真實日期 (YYYY-MM-DD)
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    # 強制設定為台灣時區 (UTC+8)，確保抓到的日期是台灣的「今天」
+    tw_timezone = timezone(timedelta(hours=8))
+    today_str = datetime.now(tw_timezone).strftime("%Y-%m-%d")
 
     prompt = f"""請幫我整理今天（{today_str}）最新的重要科技或相關新聞摘要。
 請務必只輸出標準的 JSON 格式物件（以 {{ 開頭，以 }} 結尾），不要包含任何額外的解釋文字。結構必須包含：
@@ -33,7 +34,7 @@ def update_news():
 }}"""
 
     response = client.models.generate_content(
-        model='gemini-3.6-flash',  # 修正為正確的模型名稱
+        model='gemini-3.6-flash',
         contents=prompt,
     )
 
@@ -48,13 +49,14 @@ def update_news():
 
     try:
         news_data = json.loads(json_str)
-        # 強制確保日期是今天，避免 AI 亂填
+        # 強制確保 JSON 內的日期欄位是台灣的今天
         news_data["date"] = today_str
     except json.JSONDecodeError as e:
         print(f"解析 JSON 失敗: {e}")
         print(f"擷取到的文字為:\n{json_str}")
         raise e
 
+    # 寫入檔案
     with open("news.json", "w", encoding="utf-8") as f:
         json.dump(news_data, f, ensure_ascii=False, indent=4)
     
