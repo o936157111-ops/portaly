@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日常・溫柔問候圖庫</title>
+    <!-- 引入 Google 字型 (Noto Serif TC + Noto Sans TC) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&family=Noto+Serif+TC:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f7f5f0;
+            --card-bg: #ffffff;
+            --text-main: #4a4541;
+            --text-sub: #8c857b;
+            --accent: #b5a491;
+            --border-color: #e3ded5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 15px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 10px 15px;
+        }
+
+        h1 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        p.subtitle {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+        }
+
+        /* 橫向滑動分類導覽 */
+        .categories-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin: 15px -15px 25px;
+            padding: 5px 15px;
+            scrollbar-width: none;
+        }
+
+        .categories-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .categories {
+            display: inline-flex;
+            gap: 10px;
+        }
+
+        .category-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background-color: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+        }
+
+        /* 卡片串流區 */
+        .gallery-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding-bottom: 40px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-image-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            background-color: #eee;
+            overflow: hidden;
+        }
+
+        .card-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-overlay-text p {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.2rem;
+            color: #ffffff;
+            line-height: 1.9;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .card-footer {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: var(--card-bg);
+        }
+
+        .card-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-tag {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            background-color: var(--bg-color);
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+
+        /* 原生分享與下載按鈕排版 */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            border: none;
+            padding: 11px 0;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .action-btn:active {
+            opacity: 0.8;
+        }
+
+        .btn-share { background-color: #06C755; } /* LINE 綠色系代表直接分享 */
+        .btn-download { background-color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>日常・溫柔問候</h1>
+        <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
+    </header>
+
+    <div class="categories-container">
+        <div class="categories">
+            <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
+            <button class="category-btn" onclick="filterCategory('morning', event)">早安</button>
+            <button class="category-btn" onclick="filterCategory('afternoon', event)">午安</button>
+            <button class="category-btn" onclick="filterCategory('night', event)">晚安</button>
+            <button class="category-btn" onclick="filterCategory('holiday', event)">節慶假日</button>
+        </div>
+    </div>
+
+    <div class="gallery-stream" id="gallery">
+
+        <!-- 卡片 1 -->
+        <div class="card" data-category="morning">
+            <div class="card-image-box">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="早安圖1" crossorigin="anonymous">
+                <div class="card-overlay-text">
+                    <p>「早安。<br>把步調放慢一些，<br>今天也要溫柔而堅定地過。」</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="card-info-row">
+                    <span class="card-tag">早安問候</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg')">📥 存至相簿</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片 2 -->
+        <div class="card" data-category="morning">
+            <div class="card-image-box">
+                <img src="https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=800&q=80" alt="早安圖2" crossorigin="anonymous">
+                <div class="card-overlay-text">
+                    <p>「晨光正好，<br>願你的每一個早晨，<br>都有清風與好心情相伴。」</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="card-info-row">
+                    <span class="card-tag">早安問候</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg')">📥 存至相簿</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片 3 -->
+        <div class="card" data-category="afternoon">
+            <div class="card-image-box">
+                <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80" alt="午安圖1" crossorigin="anonymous">
+                <div class="card-overlay-text">
+                    <p>「午安。<br>忙碌之中，<br>別忘了留一杯茶的時間給自己。」</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="card-info-row">
+                    <span class="card-tag">午安問候</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg')">📥 存至相簿</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片 4 -->
+        <div class="card" data-category="night">
+            <div class="card-image-box">
+                <img src="https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=800&q=80" alt="晚安圖1" crossorigin="anonymous">
+                <div class="card-overlay-text">
+                    <p>「晚安。<br>把今天所有的紛擾都留在身後，<br>做個好夢。」</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="card-info-row">
+                    <span class="card-tag">晚安問候</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg')">📥 存至相簿</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 卡片 5 -->
+        <div class="card" data-category="holiday">
+            <div class="card-image-box">
+                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80" alt="節慶圖1" crossorigin="anonymous">
+                <div class="card-overlay-text">
+                    <p>「週末愉快。<br>放慢腳步，<br>去感受生活裡微小而確切的幸福。」</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="card-info-row">
+                    <span class="card-tag">節慶假日</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📤 一鍵分享到 LINE</button>
+                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg')">📥 存至相簿</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 分類篩選
+        function filterCategory(category, event) {
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // 共用 Canvas 合成邏輯
+        function generateCanvas(imgElement, textContent, callback) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = imgElement.src;
+
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.width = 800;
+                canvas.height = 1000;
+
+                // 1. 畫背景圖
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                // 2. 加漸層遮罩
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 3. 畫文字
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '32px "Noto Serif TC", serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const textToDraw = textContent.includes('，') ? textContent.split('，') : [textContent];
+                let startY = canvas.height / 2 - ((textToDraw.length - 1) * 30);
+
+                textToDraw.forEach((line, i) => {
+                    ctx.fillText(line.trim() + (i < textToDraw.length - 1 && !line.endsWith('。') && !line.includes('，') ? '，' : ''), canvas.width / 2, startY + (i * 55));
+                });
+
+                canvas.toBlob(function(blob) {
+                    callback(blob);
+                }, 'image/jpeg', 0.9);
+            };
+        }
+
+        // 功能一：原生系統分享 (支援 LINE、WhatsApp 等)
+        async function nativeShareCard(button, textContent, filename) {
+            const card = button.closest('.card');
+            const imgElement = card.querySelector('img');
+
+            button.innerText = '⏳ 準備分享...';
+            button.disabled = true;
+
+            generateCanvas(imgElement, textContent, async function(blob) {
+                const file = new File([blob], filename, { type: 'image/jpeg' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: '溫柔問候圖',
+                            text: textContent
+                        });
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            console.log('分享取消或失敗', error);
+                        }
+                    }
+                } else {
+                    alert('您的瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」按鈕下載後再傳送到 LINE。');
+                }
+
+                button.innerText = '📤 一鍵分享到 LINE';
+                button.disabled = false;
+            });
+        }
+
+        // 功能二：直接下載存至相簿
+        function downloadCardImage(button, textContent, filename) {
+            const card = button.closest('.card');
+            const imgElement = card.querySelector('img');
+
+            button.innerText = '⏳ 處理中...';
+            button.disabled = true;
+
+            generateCanvas(imgElement, textContent, function(blob) {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+
+                button.innerText = '📥 存至相簿';
+                button.disabled = false;
+            });
+        }
+    </script>
+
+</body>
+</html>
