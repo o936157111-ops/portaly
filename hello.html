@@ -114,7 +114,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* 縮小頁面上的預覽圖尺寸，改為較小的 16:9 比例，方便快速瀏覽 */
         .card-image-box {
             position: relative;
             width: 100%;
@@ -147,7 +146,7 @@
             justify-content: center;
             padding: 15px;
             text-align: center;
-            pointer-events: none; /* 讓點擊事件透過去觸發燈箱 */
+            pointer-events: none;
         }
 
         .card-overlay-text p {
@@ -194,7 +193,6 @@
         .btn-share { background-color: #06C755; }
         .btn-download { background-color: var(--text-main); }
 
-        /* 燈箱 Modal 樣式：點擊縮圖後彈出的大圖檢視 */
         .lightbox {
             display: none;
             position: fixed;
@@ -352,7 +350,6 @@
 
     <div class="gallery-stream" id="gallery"></div>
 
-    <!-- 燈箱預覽 Modal -->
     <div class="lightbox" id="lightbox" onclick="closeLightbox()">
         <div class="lightbox-content" onclick="event.stopPropagation()">
             <button class="lightbox-close" onclick="closeLightbox()">✕ 關閉</button>
@@ -395,6 +392,7 @@
             return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
         }
 
+        // 使用精選且更穩定的 Unsplash 圖片 ID 降低失效機率
         const imagePool = {
             morning: [
                 "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
@@ -425,7 +423,7 @@
                 "早安。迎著微風，開啟充滿希望的一天。",
                 "早安。一杯熱茶，一句問候，願你平安喜樂。",
                 "早安。把心靈歸零，迎接美好的今天。",
-                "早安。陽光總在風雨後，每天都是新的起點。",
+                "早安. 陽光總在風雨後，每天都是新的起點。",
                 "早安。微風不燥，陽光正好，祝你有個美好的一天。",
                 "早安。帶著微笑出發，幸運會一直相隨。",
                 "早安。願你眼裡有光，活出自己喜歡的樣子。",
@@ -502,7 +500,8 @@
                 cardEl.setAttribute('data-category', item.category);
                 cardEl.innerHTML = `
                     <div class="card-image-box" onclick="openLightbox('${item.imgUrl}')">
-                        <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous">
+                        <!-- 加入 onerror 機制：如果圖片失效，自動替換為安全的備用圖 -->
+                        <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
                         <div class="card-overlay-text">
                             <p>${item.text}</p>
                         </div>
@@ -620,7 +619,6 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                // 使用圖片原本的真實尺寸 (naturalWidth / naturalHeight)，完全不裁切、不變形
                 canvas.width = img.naturalWidth || 1200;
                 canvas.height = img.naturalHeight || 900;
 
