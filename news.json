@@ -5,35 +5,35 @@
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 推出新一代 GPT-5.5 模型 實現微秒級端側多模態推理",
-            "category": "人工智慧",
-            "summary": "OpenAI 今日正式發表新一代 AI 模型，大幅降低端側硬體的推論延遲，並著重提升複雜邏輯推理與跨模態理解能力，預計全面整合至新一代智慧型裝置與車載系統。",
-            "source": "TechCrunch",
-            "url": "https://techcrunch.com/2026/09/23/openai-announces-gpt-5-5"
+            "title": "台積電 2 奈米量產新進展：新一代 AI 晶片能效比提升 30%",
+            "category": "半導體",
+            "summary": "台積電於今日全球半導體論壇發表 2 奈米（N2）製程最新突破，採用全環繞閘極（GAA）晶體管架構，使新一代 AI 伺服器晶片能在同等效能下降低 30% 能耗，預計第四季進一步擴增產能以滿足強勁需求。",
+            "source": "科技新報",
+            "url": "https://technews.tw/2026/09/23/tsmc-2nm-production-ai-chips/"
         },
         {
             "id": 2,
-            "title": "台積電 2 奈米製程全面進入商業化量產 蘋果與輝達搶下首波產能",
-            "category": "半導體",
-            "summary": "台積電位於新竹與高雄的 2 奈米晶圓廠今日宣佈進入全面商業化量產階段。新製程採用 GAA 奈米片架構，相比上一代 N3P 性能提升 15% 且功耗降低 30%。",
-            "source": "經濟日報",
-            "url": "https://money.udn.com/money/story/5612/20260923/tsmc-2nm-mass-production"
+            "title": "OpenAI 推出新一代多模態模型，支援即時具身智能機器人操控",
+            "category": "人工智慧",
+            "summary": "OpenAI 今日正式發布最新多模態模型，具備超低推理時延與空間幾何理解能力，並首次將具身智能（Embodied AI）控制 API 開放予工業與家用機器人開發者，大幅提升機器人複雜環境應變能力。",
+            "source": "iThome",
+            "url": "https://www.ithome.com.tw/news/20260923-openai-embodied-ai-launch"
         },
         {
             "id": 3,
-            "title": "歐盟正式通過《量子加密安全法案》 規範關鍵基礎設施防禦升級",
-            "category": "科技政策與資安",
-            "summary": "歐盟理事會今日批准新法案，要求所有關鍵基礎設施與金融機構須於 2028 年前升級至後量子加密（PQC）安全標準，以因應量子電腦對傳統加密技術帶來的威脅。",
-            "source": "Reuters",
-            "url": "https://www.reuters.com/technology/eu-passes-quantum-security-act-2026-09-23/"
+            "title": "歐盟正式通過《量子資安防護法案》，要求金融業 2028 前升級 PQC",
+            "category": "資訊安全",
+            "summary": "歐盟理事會今日通過全新資安法規，強制要求關鍵基礎設施與金融機構於 2028 年前全面採用後量子加密（PQC）標準，以抵禦未來高量子位元計算機可能帶來的密碼破解風險。",
+            "source": "數位時代",
+            "url": "https://www.bnext.com.tw/article/20260923/eu-post-quantum-cryptography-law"
         },
         {
             "id": 4,
-            "title": "SpaceX 星艦試飛取得重大突破 成功實現全系統完全重複使用",
-            "category": "太空科技",
-            "summary": "SpaceX 今日成功完成 Starship 火箭系統的新一輪軌道級試飛，首度同時順利回收第一節「超重型」推進器與第二節飛船，劃下航太史全新里程碑。",
-            "source": "SpaceNews",
-            "url": "https://spacenews.com/spacex-starship-full-reusability-milestone-2026/"
+            "title": "低軌衛星直連手機技術突破，SpaceX 與全球電信商啟動預驗證測試",
+            "category": "通訊技術",
+            "summary": "SpaceX 與多家國際電信巨頭於今日聯合宣布，成功完成次世代低軌衛星直連智慧型手機（Direct-to-Cell）的高頻寬數據傳輸測試，實現無盲區的高清影音通話，預計將於 2027 年進行全面商業化營運。",
+            "source": "電子時報",
+            "url": "https://www.digitimes.com.tw/tech/20260923-spacex-direct-to-cell-test"
         }
     ]
 }
