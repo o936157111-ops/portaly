@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日常問候圖庫</title>
-    <!-- 引入 Google 字型 (Noto Serif TC + Noto Sans TC + Ma Shan Zheng 草書/藝術感字體) -->
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -53,7 +52,6 @@
             letter-spacing: 1px;
         }
 
-        /* Excel Sheet 風格頁籤容器 */
         .categories-container {
             overflow-x: auto;
             white-space: nowrap;
@@ -101,7 +99,6 @@
             margin-top: -2px;
         }
 
-        /* 卡片串流區 */
         .gallery-stream {
             display: flex;
             flex-direction: column;
@@ -189,6 +186,94 @@
 
         .btn-share { background-color: #06C755; }
         .btn-download { background-color: var(--text-main); }
+
+        /* 隱藏管理後台按鈕與面板 */
+        .admin-trigger {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--border-color);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .admin-panel {
+            display: none;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .admin-panel h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .admin-form-group {
+            margin-bottom: 12px;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+
+        .admin-form-group input, .admin-form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .admin-btns {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .admin-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-add { background-color: #2b6cb0; color: #fff; }
+        .btn-export { background-color: #2f855a; color: #fff; }
+        .manage-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+        .manage-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .manage-item button {
+            background: #c53030;
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body>
@@ -208,91 +293,246 @@
         </div>
     </div>
 
-    <div class="gallery-stream" id="gallery">
+    <!-- 動態圖庫渲染區 -->
+    <div class="gallery-stream" id="gallery"></div>
 
-        <!-- 卡片 1 -->
-        <div class="card" data-category="morning">
-            <div class="card-image-box">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="早安圖1" crossorigin="anonymous">
-                <div class="card-overlay-text">
-                    <p>早安。<br>把步調放慢一些，<br>今天也要溫柔而堅定地過。</p>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg', 'artistic')">📤 一鍵分享</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '早安。把步調放慢一些，今天也要溫柔而堅定地過。', 'morning.jpg', 'artistic')">📥 存至相簿</button>
-                </div>
-            </div>
+    <!-- 隱藏後台觸發點 -->
+    <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
+
+    <!-- 管理後台面板 -->
+    <div class="admin-panel" id="adminPanel">
+        <h3>圖庫管理後台</h3>
+        <div class="admin-form-group">
+            <label>分類</label>
+            <select id="newCategory">
+                <option value="morning">早安</option>
+                <option value="afternoon">午安</option>
+                <option value="night">晚安</option>
+                <option value="holiday">節慶假日</option>
+            </select>
         </div>
-
-        <!-- 卡片 2 -->
-        <div class="card" data-category="morning">
-            <div class="card-image-box">
-                <img src="https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=800&q=80" alt="早安圖2" crossorigin="anonymous">
-                <div class="card-overlay-text">
-                    <p>晨光正好，<br>願你的每一個早晨，<br>都有清風與好心情相伴。</p>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg', 'classic')">📤 一鍵分享</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晨光正好，願你的每一個早晨，都有清風與好心情相伴。', 'morning2.jpg', 'classic')">📥 存至相簿</button>
-                </div>
-            </div>
+        <div class="admin-form-group">
+            <label>問候文字</label>
+            <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
         </div>
-
-        <!-- 卡片 3 -->
-        <div class="card" data-category="afternoon">
-            <div class="card-image-box">
-                <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80" alt="午安圖1" crossorigin="anonymous">
-                <div class="card-overlay-text">
-                    <p>午安。<br>忙碌之中，<br>別忘了留一杯茶的時間給自己。</p>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg', 'modern')">📤 一鍵分享</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '午安。忙碌之中，別忘了留一杯茶的時間給自己。', 'afternoon.jpg', 'modern')">📥 存至相簿</button>
-                </div>
-            </div>
+        <div class="admin-form-group">
+            <label>圖片網址 (支援自訂或Flickr直連)</label>
+            <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
         </div>
-
-        <!-- 卡片 4 -->
-        <div class="card" data-category="night">
-            <div class="card-image-box">
-                <img src="https://images.unsplash.com/photo-1507499739999-097706ad8914?auto=format&fit=crop&w=800&q=80" alt="晚安圖1" crossorigin="anonymous">
-                <div class="card-overlay-text">
-                    <p>晚安。<br>把今天所有的紛擾都留在身後，<br>做個好夢。</p>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg', 'artistic')">📤 一鍵分享</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '晚安。把今天所有的紛擾都留在身後，做個好夢。', 'night.jpg', 'artistic')">📥 存至相簿</button>
-                </div>
-            </div>
+        <div class="admin-btns">
+            <button class="admin-btn btn-add" onclick="addCard()">新增問候圖</button>
+            <button class="admin-btn btn-export" onclick="exportHTML()">另存網頁 (HTML)</button>
         </div>
-
-        <!-- 卡片 5 -->
-        <div class="card" data-category="holiday">
-            <div class="card-image-box">
-                <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80" alt="節慶圖1" crossorigin="anonymous">
-                <div class="card-overlay-text">
-                    <p>週末愉快。<br>放慢腳步，<br>去感受生活裡微小而確切的幸福。</p>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="action-buttons">
-                    <button class="action-btn btn-share" onclick="nativeShareCard(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg', 'classic')">📤 一鍵分享</button>
-                    <button class="action-btn btn-download" onclick="downloadCardImage(this, '週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。', 'holiday.jpg', 'classic')">📥 存至相簿</button>
-                </div>
-            </div>
-        </div>
-
+        <div class="manage-list" id="manageList"></div>
     </div>
 
     <script>
+        // 每日隨機圖庫種子產生器 (依據當天日期 20260922 確保當天所有訪客看到的 10 張圖一致，隔天自動換新)
+        function getDailySeed() {
+            const now = new Date();
+            return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+        }
+
+        // 預設圖庫池（每個分類提供豐富的 Unsplash 高畫質免費圖片代碼）
+        const imagePool = {
+            morning: [
+                "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1447752875215-b2761acb3c5d",
+                "photo-1506744038136-46273834b3fb", "photo-1426604966848-d7adacbd02bff", "photo-1418065460487-3e41a6c84dc5",
+                "photo-1472214103451-9374bd1c798e", "photo-1511497584788-876761192d6e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b"
+            ],
+            afternoon: [
+                "photo-1501339847302-ac426a4a7cbb", "photo-1509316975850-ff9c5deb0cd9", "photo-1433086966358-54859d0ed716",
+                "photo-1470071459604-3b5ec3a7fe05", "photo-1511884642898-4c92249e20b6", "photo-1498429089284-41f8cf3ffd99",
+                "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff", "photo-1509198397868-475647b2a1e5", "photo-1534447677768-be436bb09401"
+            ],
+            night: [
+                "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1509114397022-ed747cca3f65",
+                "photo-1532693322450-2cb5c51106d6", "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08",
+                "photo-1517411032315-54ef2cb783bb", "photo-1518837695005-2083093ee35b", "photo-1508739773434-c26b3d09e071", "photo-1489549132488-d00b7ece80f1"
+            ],
+            holiday: [
+                "photo-1513151233558-d860c5398176", "photo-1492684223066-81342ee5ff30", "photo-1533174072545-7a4b6ad7a6c3",
+                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819",
+                "photo-1469474968028-56623f02e42e", "photo-1507525428034-b723cf961d3e", "photo-1496337589254-7e19d01c441c", "photo-1527631746610-bca00a040d60"
+            ]
+        };
+
+        const defaultTexts = {
+            morning: [
+                "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+                "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
+                "早安。迎著微風，開啟充滿希望的一天。",
+                "早安。一杯熱茶，一句問候，願你平安喜樂。",
+                "早安。把心靈歸零，迎接美好的今天。",
+                "早安。陽光總在風雨後，每天都是新的起點。",
+                "早安。微風不燥，陽光正好，祝你有個美好的一天。",
+                "早安。帶著微笑出發，幸運會一直相隨。",
+                "早安。願你眼裡有光，活出自己喜歡的樣子。",
+                "早安。願今天的努力，不負好時光。"
+            ],
+            afternoon: [
+                "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+                "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
+                "午安。喝杯咖啡，讓心靈沉澱片刻。",
+                "午安。願你的下午時光輕鬆愉快，工作順心。",
+                "午安。給自己一個微笑，轉換好心情。",
+                "午安。偷得浮生半日閒，享受片刻寧靜。",
+                "午安。保持好節奏，離美好的一天又近了一步。",
+                "午安。願午後的微風吹散所有的疲憊。",
+                "午安。記得按時吃飯，照顧好自己。",
+                "午安。加油，再堅持一下就迎來傍晚了。"
+            ],
+            night: [
+                "晚安。把今天所有的紛擾都留在身後，做個好夢。",
+                "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
+                "晚安。卸下一天的疲憊，好好愛自己。",
+                "晚安。好夢相隨，明天依舊是美好的一天。",
+                "晚安。願溫柔的夜色撫平你心中的波瀾。",
+                "晚安。閉上眼睛，把煩惱通通忘掉。",
+                "晚安。月色真美，願你有個甜美的夢。",
+                "晚安。辛苦了整整一天，今晚好好放鬆。",
+                "晚安。在安靜的夜裡，積蓄明天的力量。",
+                "晚安。願清風入夢，祝好眠。"
+            ],
+            holiday: [
+                "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
+                "假期愉快。拋開工作，享受屬於自己的悠閒時光。",
+                "週末安康。願美好與溫馨填滿你的假期。",
+                "假期愉快。去想去的地方，看想看的風景。",
+                "週末愉快。好好休息，陪伴最重要的人。",
+                "假期愉快。願時光慢流，歲月安好。",
+                "週末愉快。把生活過成自己喜歡的詩意。",
+                "假期愉快。盡情呼吸大自然的清新氣息。",
+                "週末愉快。願這份閒適治癒所有的忙碌。",
+                "假期愉快。享受陽光，收穫滿滿的喜悅。"
+            ]
+        };
+
+        // 讀取儲存的自訂圖庫或初始化
+        let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
+
+        function initGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            let combinedCards = [];
+            const seed = getDailySeed();
+
+            // 如果使用者沒有自行新增過，就用每日隨機種子從圖庫池撈出每個分類 10 張
+            ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
+                let pool = imagePool[cat];
+                let texts = defaultTexts[cat];
+                
+                for(let i = 0; i < 10; i++) {
+                    // 簡單隨機選取
+                    let imgId = pool[(seed + i * 7) % pool.length];
+                    let text = texts[i];
+                    combinedCards.push({
+                        category: cat,
+                        text: text,
+                        imgUrl: `https://images.unsplash.com/${imgId}?auto=format&fit=crop&w=800&q=80`,
+                        style: i % 3 === 0 ? 'artistic' : (i % 3 === 1 ? 'modern' : 'classic')
+                    });
+                }
+            });
+
+            // 合併使用者自訂新增的卡片
+            combinedCards = userCards.concat(combinedCards);
+
+            combinedCards.forEach((item, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card';
+                cardEl.setAttribute('data-category', item.category);
+                cardEl.innerHTML = `
+                    <div class="card-image-box">
+                        <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous">
+                        <div class="card-overlay-text">
+                            <p>${item.text}</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="action-buttons">
+                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '${item.text}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
+                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '${item.text}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
+                        </div>
+                    </div>
+                `;
+                gallery.appendChild(cardEl);
+            });
+
+            updateManageList();
+        }
+
+        // 隱藏後台開關（使用當天動態密碼 20260922 驗證）
+        function toggleAdmin() {
+            const pwd = prompt("請輸入密碼：");
+            if (pwd === "20260922") {
+                const panel = document.getElementById('adminPanel');
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            }
+        }
+
+        // 新增卡片
+        function addCard() {
+            const cat = document.getElementById('newCategory').value;
+            const text = document.getElementById('newText').value.trim();
+            const imgUrl = document.getElementById('newImgUrl').value.trim();
+
+            if (!text || !imgUrl) {
+                alert('請完整填寫文字與圖片網址');
+                return;
+            }
+
+            userCards.push({
+                category: cat,
+                text: text,
+                imgUrl: imgUrl,
+                style: 'modern'
+            });
+
+            localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
+            document.getElementById('newText').value = '';
+            document.getElementById('newImgUrl').value = '';
+            initGallery();
+            alert('新增成功！');
+        }
+
+        // 刪除自訂卡片
+        function deleteCard(index) {
+            userCards.splice(index, 1);
+            localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
+            initGallery();
+        }
+
+        // 更新後台管理清單
+        function updateManageList() {
+            const listEl = document.getElementById('manageList');
+            listEl.innerHTML = '<strong>自訂項目管理：</strong>';
+            if (userCards.length === 0) {
+                listEl.innerHTML += '<p style="font-size:0.8rem; color:#888;">目前尚無自訂卡片</p>';
+                return;
+            }
+            userCards.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'manage-item';
+                div.innerHTML = `<span>[${item.category}] ${item.text.substring(0, 10)}...</span><button onclick="deleteCard(${index})">刪除</button>`;
+                listEl.appendChild(div);
+            });
+        }
+
+        // 另存 HTML
+        function exportHTML() {
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hello.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 分類篩選
         function filterCategory(category, event) {
             const buttons = document.querySelectorAll('.category-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
@@ -308,7 +548,7 @@
             });
         }
 
-        // 修改後的 Canvas 合成：前二字放大且多變排版
+        // Canvas 合成邏輯（前二字放大）
         function generateCanvas(imgElement, textContent, styleType, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -321,69 +561,40 @@
                 canvas.width = 800;
                 canvas.height = 1000;
 
-                // 1. 畫背景圖
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                // 2. 加漸層遮罩
                 const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
                 gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // 3. 處理文字與前兩字放大
-                const rawLines = textContent.includes('，') ? textContent.split('，') : [textContent];
+                const rawLines = textContent.includes('。') ? textContent.split('。') : [textContent];
                 
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
 
-                if (styleType === 'artistic') {
-                    // 藝術書法風格：第一句的前兩字用超大草書
-                    let firstLine = rawLines[0].replace('。', '');
-                    let greeting = firstLine.slice(0, 2); // 前兩字 (例: 早安)
-                    let restGreeting = firstLine.slice(2); // 剩餘字
+                let firstLine = rawLines[0];
+                let greeting = firstLine.slice(0, 2);
+                let restGreeting = firstLine.slice(2);
 
+                if (styleType === 'artistic') {
                     ctx.font = '90px "Ma Shan Zheng", cursive';
                     ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 100);
 
                     if(restGreeting) {
                         ctx.font = '34px "Noto Serif TC", serif';
-                        ctx.fillText(restGreeting + (restGreeting.endsWith('。') ? '' : '。'), canvas.width / 2, canvas.height / 2 - 25);
+                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 25);
                     }
 
                     ctx.font = '32px "Noto Serif TC", serif';
                     let subY = canvas.height / 2 + 50;
-                    for (let i = 1; i < rawLines.length; i++) {
+                    for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
                         ctx.fillText(rawLines[i], canvas.width / 2, subY);
                         subY += 60;
                     }
-                } else if (styleType === 'modern') {
-                    // 現代簡約風格：第一行放大
-                    let firstLine = rawLines[0];
-                    let greeting = firstLine.slice(0, 2);
-                    let restGreeting = firstLine.slice(2);
-
-                    ctx.font = 'bold 52px "Noto Sans TC", sans-serif';
-                    ctx.fillText(greeting, canvas.width / 2 - (restGreeting ? 40 : 0), canvas.height / 2 - 70);
-
-                    if(restGreeting) {
-                        ctx.font = '36px "Noto Sans TC", sans-serif';
-                        ctx.fillText(restGreeting, canvas.width / 2 + 30, canvas.height / 2 - 70);
-                    }
-
-                    let startY = canvas.height / 2 + 10;
-                    ctx.font = '32px "Noto Sans TC", sans-serif';
-                    for (let i = 1; i < rawLines.length; i++) {
-                        ctx.fillText(rawLines[i], canvas.width / 2, startY);
-                        startY += 60;
-                    }
                 } else {
-                    // 經典文青襯線風
-                    let firstLine = rawLines[0];
-                    let greeting = firstLine.slice(0, 2);
-                    let restGreeting = firstLine.slice(2);
-
                     ctx.font = 'bold 48px "Noto Serif TC", serif';
                     ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 70);
 
@@ -393,7 +604,7 @@
                     }
 
                     let startY = canvas.height / 2 + 50;
-                    for (let i = 1; i < rawLines.length; i++) {
+                    for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
                         ctx.fillText(rawLines[i], canvas.width / 2, startY);
                         startY += 60;
                     }
@@ -455,6 +666,9 @@
                 button.disabled = false;
             });
         }
+
+        // 初始化載入圖庫
+        window.onload = initGallery;
     </script>
 
 </body>
