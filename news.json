@@ -1,39 +1,39 @@
 {
-    "date": "2026-09-22",
+    "date": "2026-09-23",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與台積電宣佈 1.4nm 次世代 AI 晶片合作計畫",
-            "category": "人工智慧與半導體",
-            "summary": "OpenAI 今日宣佈與台積電深化戰略合作，首度公開專為超大規模超級智慧模型設計的 1.4nm (A14) 客製化晶片架構，預計將算力能效提升 40%，並計畫於 2027 年正式量產投產。",
-            "source": "TechCrunch 科技日報",
-            "url": "https://example.com/news/20260922-openai-tsmc-14nm-chip"
+            "title": "OpenAI 推出新一代 GPT-5.5 模型 實現微秒級端側多模態推理",
+            "category": "人工智慧",
+            "summary": "OpenAI 今日正式發表新一代 AI 模型，大幅降低端側硬體的推論延遲，並著重提升複雜邏輯推理與跨模態理解能力，預計全面整合至新一代智慧型裝置與車載系統。",
+            "source": "TechCrunch",
+            "url": "https://techcrunch.com/2026/09/23/openai-announces-gpt-5-5"
         },
         {
             "id": 2,
-            "title": "歐盟正式通過《後量子加密轉型法案》 強制關鍵基礎設施升級",
-            "category": "資安與量子科技",
-            "summary": "歐盟高峰會今日正式批准《後量子加密轉型法案》（PQC Act），要求所有會員國之金融機構、政府公共服務與關鍵基礎設施在 2028 年前全面替換傳統 RSA 演算法，升級至抗量子密碼學（PQC）標準。",
-            "source": "Reuters 路透社",
-            "url": "https://example.com/news/20260922-eu-pqc-act-passed"
+            "title": "台積電 2 奈米製程全面進入商業化量產 蘋果與輝達搶下首波產能",
+            "category": "半導體",
+            "summary": "台積電位於新竹與高雄的 2 奈米晶圓廠今日宣佈進入全面商業化量產階段。新製程採用 GAA 奈米片架構，相比上一代 N3P 性能提升 15% 且功耗降低 30%。",
+            "source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/20260923/tsmc-2nm-mass-production"
         },
         {
             "id": 3,
-            "title": "SpaceX 成功發射第二代直連手機衛星 全球無死角通訊邁向 6G 測試",
-            "category": "太空科技與通訊",
-            "summary": "SpaceX 今日成功將 50 顆第二代 Starlink 直連手機（Direct-to-Cell）衛星送入軌道。新一代衛星頻寬大幅提升，能支援低延遲語音通話與高清視訊傳輸，並啟動首批 6G 衛星與地面終端融合測試。",
-            "source": "SpaceNews 太空新聞網",
-            "url": "https://example.com/news/20260922-spacex-direct-to-cell-v2"
+            "title": "歐盟正式通過《量子加密安全法案》 規範關鍵基礎設施防禦升級",
+            "category": "科技政策與資安",
+            "summary": "歐盟理事會今日批准新法案，要求所有關鍵基礎設施與金融機構須於 2028 年前升級至後量子加密（PQC）安全標準，以因應量子電腦對傳統加密技術帶來的威脅。",
+            "source": "Reuters",
+            "url": "https://www.reuters.com/technology/eu-passes-quantum-security-act-2026-09-23/"
         },
         {
             "id": 4,
-            "title": "蘋果發表 Vision Pro SE 輕量化頭顯 售價大幅調降鎖定大眾市場",
-            "category": "智慧裝置與 XR",
-            "summary": "蘋果今日秋季發表會正式推出 Vision Pro SE，機身重量減輕 35% 並採用全新模組化外接電池設計，官方售價降至 1,299 美元，預計將加速空間計算裝置在消費者端的普及率。",
-            "source": "The Verge 科技焦點",
-            "url": "https://example.com/news/20260922-apple-vision-pro-se-launch"
+            "title": "SpaceX 星艦試飛取得重大突破 成功實現全系統完全重複使用",
+            "category": "太空科技",
+            "summary": "SpaceX 今日成功完成 Starship 火箭系統的新一輪軌道級試飛，首度同時順利回收第一節「超重型」推進器與第二節飛船，劃下航太史全新里程碑。",
+            "source": "SpaceNews",
+            "url": "https://spacenews.com/spacex-starship-full-reusability-milestone-2026/"
         }
     ]
 }
