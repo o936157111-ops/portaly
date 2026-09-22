@@ -102,31 +102,37 @@
         .gallery-stream {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             padding-bottom: 40px;
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border-color);
         }
 
-        /* 調整圖片在頁面上的呈現大小，改為較適中、不佔滿全螢幕的比例 (例如 4:3) */
+        /* 縮小頁面上的預覽圖尺寸，改為較小的 16:9 比例，方便快速瀏覽 */
         .card-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 16 / 9;
             background-color: #eee;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .card-image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.2s;
+        }
+
+        .card-image-box:active img {
+            transform: scale(0.98);
         }
 
         .card-overlay-text {
@@ -135,28 +141,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
+            pointer-events: none; /* 讓點擊事件透過去觸發燈箱 */
         }
 
         .card-overlay-text p {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #ffffff;
-            line-height: 1.7;
-            letter-spacing: 1.2px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            line-height: 1.5;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
         }
 
         .card-footer {
-            padding: 15px;
+            padding: 10px 15px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
             background-color: var(--card-bg);
         }
 
@@ -168,9 +174,9 @@
         .action-btn {
             flex: 1;
             border: none;
-            padding: 11px 0;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 9px 0;
+            border-radius: 6px;
+            font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
             transition: opacity 0.2s;
@@ -178,7 +184,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .action-btn:active {
@@ -187,6 +193,57 @@
 
         .btn-share { background-color: #06C755; }
         .btn-download { background-color: var(--text-main); }
+
+        /* 燈箱 Modal 樣式：點擊縮圖後彈出的大圖檢視 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 75vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .lightbox-hint {
+            color: #ccc;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            text-align: center;
+        }
 
         .admin-trigger {
             text-align: center;
@@ -295,6 +352,15 @@
 
     <div class="gallery-stream" id="gallery"></div>
 
+    <!-- 燈箱預覽 Modal -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeLightbox()">✕ 關閉</button>
+            <img id="lightboxImg" src="" alt="大圖預覽">
+            <p class="lightbox-hint">💡 點擊下方按鈕即可分享或儲存原尺寸圖檔</p>
+        </div>
+    </div>
+
     <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
 
     <div class="admin-panel" id="adminPanel">
@@ -381,7 +447,7 @@
                 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
                 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
                 "晚安。卸下一天的疲憊，好好愛自己。",
-                "晚安。好夢相随，明天依舊是美好的一天。",
+                "晚安。好夢相隨，明天依舊是美好的一天。",
                 "晚安。願溫柔的夜色撫平你心中的波瀾。",
                 "晚安。閉上眼睛，把煩惱通通忘掉。",
                 "晚安。月色真美，願你有個甜美的夢。",
@@ -435,7 +501,7 @@
                 cardEl.className = 'card';
                 cardEl.setAttribute('data-category', item.category);
                 cardEl.innerHTML = `
-                    <div class="card-image-box">
+                    <div class="card-image-box" onclick="openLightbox('${item.imgUrl}')">
                         <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous">
                         <div class="card-overlay-text">
                             <p>${item.text}</p>
@@ -452,6 +518,18 @@
             });
 
             updateManageList();
+        }
+
+        function openLightbox(imgUrl) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = imgUrl;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
         }
 
         function toggleAdmin() {
@@ -542,7 +620,7 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                // 使用圖片原本的真實尺寸 (naturalWidth / naturalHeight)，確保原尺寸輸出完全不變形、不裁切
+                // 使用圖片原本的真實尺寸 (naturalWidth / naturalHeight)，完全不裁切、不變形
                 canvas.width = img.naturalWidth || 1200;
                 canvas.height = img.naturalHeight || 900;
 
@@ -564,7 +642,6 @@
                 let greeting = firstLine.slice(0, 2);
                 let restGreeting = firstLine.slice(2);
 
-                // 根據圖片真實尺寸的寬高動態計算字型大小，避免在大圖上字體顯得過小
                 const scale = canvas.width / 800;
 
                 if (styleType === 'artistic') {
