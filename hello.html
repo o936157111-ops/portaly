@@ -13,7 +13,7 @@
             --text-main: #4a4541;
             --text-sub: #8c857b;
             --accent: #b5a491;
-            --border-color: #e3ded5;
+            --border-color: #d6cfc2;
         }
 
         * {
@@ -53,13 +53,14 @@
             letter-spacing: 1px;
         }
 
-        /* 橫向滑動分類導覽 (緊密貼合、不分散) */
+        /* Excel Sheet 風格頁籤容器 */
         .categories-container {
             overflow-x: auto;
             white-space: nowrap;
-            margin: 15px -15px 25px;
-            padding: 5px 15px;
+            margin: 15px 0 25px;
+            padding-bottom: 2px;
             scrollbar-width: none;
+            border-bottom: 2px solid var(--border-color); /* 底部基準線 */
         }
 
         .categories-container::-webkit-scrollbar {
@@ -68,24 +69,36 @@
 
         .categories {
             display: inline-flex;
-            gap: 8px; /* 緊密排列 */
+            gap: 0; /* 緊密相連無間距 */
         }
 
         .category-btn {
-            background-color: var(--card-bg);
+            background-color: #ede7dc; /* 未選取時的分頁底色 */
             border: 1px solid var(--border-color);
-            padding: 6px 16px;
-            border-radius: 20px;
+            border-bottom: none;
+            padding: 9px 16px;
             font-size: 0.85rem;
             color: var(--text-sub);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            position: relative;
+            margin-right: -1px; /* 讓邊框重疊，完美緊連 */
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+
+        .category-btn:first-child {
+            border-top-left-radius: 8px;
         }
 
         .category-btn.active {
-            background-color: var(--accent);
-            color: #ffffff;
-            border-color: var(--accent);
+            background-color: var(--card-bg); /* 選中時變成白色，像掀上來的活頁 */
+            color: var(--text-main);
+            font-weight: 500;
+            border-color: var(--border-color);
+            z-index: 2;
+            padding-top: 11px; /* 選中時稍微向上浮動的視覺感 */
+            margin-top: -2px;
         }
 
         /* 卡片串流區 */
@@ -186,7 +199,7 @@
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
-    <!-- 緊密排列的頁籤 -->
+    <!-- Excel 活頁簿風格的緊連頁籤 -->
     <div class="categories-container">
         <div class="categories">
             <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
