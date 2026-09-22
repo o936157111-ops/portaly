@@ -1,39 +1,39 @@
 {
-    "date": "2026-09-21",
+    "date": "2026-09-22",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發布全新 GPT-5.5 模型 實現強化即時多模態推理與自我修正能力",
+            "title": "OpenAI 發表 GPT-5.5 模型，主打超低延遲與具身智慧 API 整合",
             "category": "人工智慧",
-            "summary": "OpenAI 今日正式發表 GPT-5.5 模型，主打近乎零延遲的跨模態即時互動，並在複雜邏輯推理與程式碼自我糾錯方面取得顯著突破，預計本週內全面開放企業級 API 存取。",
+            "summary": "OpenAI 今日宣布推出 GPT-5.5 旗艦模型，大幅提升複雜邏輯推理與多模態即時互動速度，並首度針對具身智慧（Embodied AI）機器人硬體提供原生 API 支援。",
             "source": "TechCrunch",
-            "url": "https://techcrunch.com/2026/09/21/openai-launches-gpt-5-5-real-time-reasoning"
+            "url": "https://techcrunch.com/2026/09/22/openai-gpt-5-5-launch"
         },
         {
             "id": 2,
-            "title": "台積電 1.4 奈米（A14）製程試產進度超前 預計 2027 年全面量產",
+            "title": "台積電 1.6 奈米 (A16) 製程順利量產，首批 AI 晶片今日正式出貨",
             "category": "半導體",
-            "summary": "台積電於今日技術高峰會中透露，其 A14 節點的研發突破關鍵瓶頸，試產良率大幅提升，將按計畫於 2027 年進行大規模量產，持續擴大在先進製程領域的全球領先優勢。",
-            "source": "經濟日報",
-            "url": "https://money.udn.com/money/story/5612/8241026"
+            "summary": "台積電宣布採用超級電軌（Super Power Rail）技術的 A16 製程成功突破良率瓶頸進入大規模量產，首批次世代 AI 高效能運算晶片已開始交付全球主要客戶。",
+            "source": "科技新報",
+            "url": "https://technews.tw/2026/09/22/tsmc-a16-mass-production"
         },
         {
             "id": 3,
-            "title": "蘋果發表 Vision Pro SE 輕量版 價格大幅下修搶攻普及化市場",
-            "category": "消費電子",
-            "summary": "蘋果今日無預警推出售價更為親民的 Vision Pro SE 頭戴裝置，機身重量減輕 20%，並搭載新一代微型 OLED 顯示面板與 M4 晶片，展現擴大空間運算生態系的野心。",
-            "source": "The Verge",
-            "url": "https://www.theverge.com/2026/9/21/apple-vision-pro-se-announcement"
+            "title": "蘋果 Vision Pro 2 開放預購，重量減輕 30% 並搭載 M4 晶片",
+            "category": "智慧硬體",
+            "summary": "蘋果公司正式啟動次世代頭戴裝置 Vision Pro 2 預購，新機機身減重 30%，續航力提升至 3 小時，並深度整合全新 VisionOS 4 作業系統。",
+            "source": "Engadget 中文版",
+            "url": "https://chinese.engadget.com/2026/09/22/apple-vision-pro-2-preorder"
         },
         {
             "id": 4,
-            "title": "量子計算迎重大突破：IBM 成功實現 5,000 容錯邏輯位元運算",
-            "category": "前沿科技",
-            "summary": "IBM 團隊今日宣布在量子錯誤糾正（QEC）技術取得歷史性進展，成功在實驗室中穩定運行 5,000 個高保真度邏輯量子位元，加速量子運算在新藥開發與材料科學中的實用化進程。",
-            "source": "Wired",
-            "url": "https://www.wired.com/story/ibm-quantum-breakthrough-2026"
+            "title": "歐盟《次世代 AI 安全法案》正式生效，強化高風險模型稽核標準",
+            "category": "科技政策",
+            "summary": "歐盟最新升級版 AI 監管法案今日起全面施行，重點針對超大規模通用 AI 模型實施更嚴格的訓練資料透明度與演算法安全稽核規範。",
+            "source": "iThome",
+            "url": "https://www.ithome.com.tw/news/20260922/eu-ai-act-update"
         }
     ]
 }
