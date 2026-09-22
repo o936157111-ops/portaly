@@ -443,7 +443,7 @@
                 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
                 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
                 "晚安。卸下一天的疲憊，好好愛自己。",
-                "晚安。帶著滿滿的感恩，進入甜美的夢鄉。",
+                "晚安.帶著滿滿的感恩，進入甜美的夢鄉。",
                 "晚安。願好夢陪你到天明。"
             ],
             holiday: [
@@ -541,7 +541,15 @@
                 panel.style.display = 'none';
             } else {
                 const pwd = prompt("請輸入密碼：");
-                if (pwd === "20260922") {
+                
+                // 動態產生當天日期作為密碼 (格式: YYYYMMDD)
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                const dynamicPwd = `${year}${month}${day}`;
+
+                if (pwd === dynamicPwd) {
                     panel.style.display = 'block';
                 } else if (pwd !== null) {
                     alert("密碼錯誤！");
@@ -613,7 +621,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // 核心修改：加入自動換行處理，確保長文案不會超出圖片左右邊界
         function generateCanvas(imgElement, textContent, styleType, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -635,21 +642,18 @@
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 const scale = canvas.width / 800;
-                const maxLineWidth = canvas.width * 0.85; // 限制文字最大寬度為圖片的 85%，預留左右邊距
+                const maxLineWidth = canvas.width * 0.85;
 
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
-                // 設定字型大小
                 const fontSize = Math.round(36 * scale);
                 ctx.font = `${fontSize}px "Noto Serif TC", serif`;
 
-                // 自動斷行演算法
                 let lines = [];
                 let currentLine = "";
 
-                // 針對文字逐字檢查長度
                 for (let i = 0; i < textContent.length; i++) {
                     let char = textContent[i];
                     let testLine = currentLine + char;
@@ -665,12 +669,10 @@
                     lines.push(currentLine);
                 }
 
-                // 計算所有行數總高度，以便讓文字整體垂直置中
                 const lineHeight = fontSize * 1.5;
                 const totalHeight = lines.length * lineHeight;
                 let startY = (canvas.height - totalHeight) / 2 + (lineHeight / 2);
 
-                // 依序繪製每一行文字
                 lines.forEach((line) => {
                     ctx.fillText(line, canvas.width / 2, startY);
                     startY += lineHeight;
