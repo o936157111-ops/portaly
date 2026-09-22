@@ -114,11 +114,11 @@
             border: 1px solid var(--border-color);
         }
 
+        /* 調整圖片在頁面上的呈現大小，改為較適中、不佔滿全螢幕的比例 (例如 4:3) */
         .card-image-box {
             position: relative;
             width: 100%;
-            /* 調整為 9:16 手機滿版直式比例 */
-            aspect-ratio: 9 / 16;
+            aspect-ratio: 4 / 3;
             background-color: #eee;
             overflow: hidden;
         }
@@ -139,16 +139,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
         }
 
         .card-overlay-text p {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #ffffff;
-            line-height: 1.9;
-            letter-spacing: 1.5px;
+            line-height: 1.7;
+            letter-spacing: 1.2px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
@@ -381,10 +381,10 @@
                 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
                 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
                 "晚安。卸下一天的疲憊，好好愛自己。",
-                "晚安。好夢相隨，明天依舊是美好的一天。",
+                "晚安。好夢相随，明天依舊是美好的一天。",
                 "晚安。願溫柔的夜色撫平你心中的波瀾。",
                 "晚安。閉上眼睛，把煩惱通通忘掉。",
-                "晚安. 月色真美，願你有個甜美的夢。",
+                "晚安。月色真美，願你有個甜美的夢。",
                 "晚安。辛苦了整整一天，今晚好好放鬆。",
                 "晚安。在安靜的夜裡，積蓄明天的力量。",
                 "晚安。願清風入夢，祝好眠。"
@@ -542,9 +542,9 @@
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
 
-                // 配合 9:16 手機直式比例更新畫布尺寸 (例如 800 x 1422)
-                canvas.width = 800;
-                canvas.height = 1422;
+                // 使用圖片原本的真實尺寸 (naturalWidth / naturalHeight)，確保原尺寸輸出完全不變形、不裁切
+                canvas.width = img.naturalWidth || 1200;
+                canvas.height = img.naturalHeight || 900;
 
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -564,40 +564,43 @@
                 let greeting = firstLine.slice(0, 2);
                 let restGreeting = firstLine.slice(2);
 
+                // 根據圖片真實尺寸的寬高動態計算字型大小，避免在大圖上字體顯得過小
+                const scale = canvas.width / 800;
+
                 if (styleType === 'artistic') {
-                    ctx.font = '90px "Ma Shan Zheng", cursive';
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 120);
+                    ctx.font = `${Math.round(90 * scale)}px "Ma Shan Zheng", cursive`;
+                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - (100 * scale));
 
                     if(restGreeting) {
-                        ctx.font = '34px "Noto Serif TC", serif';
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 35);
+                        ctx.font = `${Math.round(34 * scale)}px "Noto Serif TC", serif`;
+                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - (25 * scale));
                     }
 
-                    ctx.font = '32px "Noto Serif TC", serif';
-                    let subY = canvas.height / 2 + 50;
+                    ctx.font = `${Math.round(32 * scale)}px "Noto Serif TC", serif`;
+                    let subY = canvas.height / 2 + (50 * scale);
                     for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
                         ctx.fillText(rawLines[i], canvas.width / 2, subY);
-                        subY += 60;
+                        subY += (60 * scale);
                     }
                 } else {
-                    ctx.font = 'bold 48px "Noto Serif TC", serif';
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - 90);
+                    ctx.font = `bold ${Math.round(48 * scale)}px "Noto Serif TC", serif`;
+                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - (70 * scale));
 
                     if(restGreeting) {
-                        ctx.font = '32px "Noto Serif TC", serif';
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - 25);
+                        ctx.font = `${Math.round(32 * scale)}px "Noto Serif TC", serif`;
+                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - (15 * scale));
                     }
 
-                    let startY = canvas.height / 2 + 55;
+                    let startY = canvas.height / 2 + (50 * scale);
                     for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
                         ctx.fillText(rawLines[i], canvas.width / 2, startY);
-                        startY += 60;
+                        startY += (60 * scale);
                     }
                 }
 
                 canvas.toBlob(function(blob) {
                     callback(blob);
-                }, 'image/jpeg', 0.9);
+                }, 'image/jpeg', 0.95);
             };
         }
 
