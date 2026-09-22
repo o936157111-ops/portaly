@@ -100,7 +100,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* 修正：改為季貼上方，去除上下空白 */
+            justify-content: flex-start;
             max-height: calc(100vh - 160px);
             margin-top: 0;
         }
@@ -108,11 +108,11 @@
         /* 卡片：上方不留外距，直接接合頁籤底線 */
         .card {
             background-color: var(--card-bg);
-            border-radius: 0 0 10px 10px; /* 上方直角切齊頁籤，下方保留圓角 */
+            border-radius: 0 0 10px 10px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-color);
-            border-top: none; /* 移除上方框線，與頁籤融為一體 */
+            border-top: none;
             margin-top: 0;
         }
 
@@ -235,13 +235,15 @@
             text-align: center;
         }
 
+        /* 底部與設定面板區塊調整，確保手機版不會超出畫面 */
         footer {
-            padding-bottom: 5px;
+            position: relative;
+            padding-bottom: 2px;
         }
 
         .admin-trigger {
             text-align: center;
-            padding: 5px;
+            padding: 4px;
             font-size: 0.75rem;
             color: var(--border-color);
             cursor: pointer;
@@ -253,12 +255,12 @@
             background: #fff;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 12px;
+            padding: 10px;
             position: absolute;
-            bottom: 30px;
-            left: 15px;
-            right: 15px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            bottom: 25px; /* 修正：讓後台面板順著底部浮現，不超出螢幕 */
+            left: 0;
+            right: 0;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
             z-index: 500;
         }
 
@@ -266,11 +268,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .admin-panel h3 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-main);
             margin: 0;
         }
@@ -285,30 +287,30 @@
         }
 
         .admin-form-group {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .admin-form-group label {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-sub);
             margin-bottom: 2px;
         }
 
         .admin-form-group input, .admin-form-group select {
             width: 100%;
-            padding: 6px 10px;
+            padding: 5px 8px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .admin-btn {
             width: 100%;
-            padding: 8px;
+            padding: 6px;
             border: none;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             cursor: pointer;
             font-weight: 500;
             background-color: #2b6cb0;
@@ -316,25 +318,25 @@
         }
         
         .manage-list {
-            margin-top: 8px;
-            max-height: 80px;
+            margin-top: 6px;
+            max-height: 60px;
             overflow-y: auto;
             border-top: 1px solid var(--border-color);
-            padding-top: 6px;
+            padding-top: 4px;
         }
         .manage-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.75rem;
-            padding: 4px 0;
+            font-size: 0.7rem;
+            padding: 2px 0;
             border-bottom: 1px dashed var(--border-color);
         }
         .manage-item button {
             background: #c53030;
             color: #fff;
             border: none;
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 4px;
             cursor: pointer;
         }
@@ -583,7 +585,7 @@
             const listEl = document.getElementById('manageList');
             listEl.innerHTML = '<strong>自訂管理：</strong>';
             if (userCards.length === 0) {
-                listEl.innerHTML += '<span style="font-size:0.75rem; color:#888;"> 無自訂卡片</span>';
+                listEl.innerHTML += '<span style="font-size:0.7rem; color:#888;"> 無自訂卡片</span>';
                 return;
             }
             userCards.forEach((item, index) => {
