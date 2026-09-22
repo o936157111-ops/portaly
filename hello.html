@@ -32,7 +32,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* 改為由上往下緊密排列 */
+            justify-content: flex-start;
         }
 
         header {
@@ -55,7 +55,6 @@
             letter-spacing: 1px;
         }
 
-        /* 頁籤容器：取消下方間距，讓它緊貼卡片 */
         .categories-container {
             margin: 8px 0 0 0;
             border-bottom: 2px solid var(--border-color);
@@ -100,7 +99,6 @@
             margin-top: 0;
         }
 
-        /* 卡片：上方不留外距，直接接合頁籤底線 */
         .card {
             background-color: var(--card-bg);
             border-radius: 0 0 10px 10px;
@@ -230,7 +228,6 @@
             text-align: center;
         }
 
-        /* 讓 footer 緊接在卡片下方 */
         footer {
             position: relative;
             margin-top: 8px;
@@ -253,7 +250,7 @@
             border-radius: 10px;
             padding: 12px;
             position: absolute;
-            bottom: 35px; /* 讓設定面板從設定按鈕上方彈出 */
+            bottom: 35px;
             left: 0;
             right: 0;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
@@ -345,7 +342,6 @@
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
-    <!-- 彈性平分頁籤 -->
     <div class="categories-container">
         <div class="categories">
             <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
@@ -357,24 +353,7 @@
     </div>
 
     <div class="main-container">
-        <!-- 隨機主打卡片展示區 -->
-        <div id="randomCardContainer">
-                <div class="card">
-                    <div class="card-image-box" onclick="openLightbox('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&amp;fit=crop&amp;w=800&amp;q=80')">
-                        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=800&amp;q=80';">
-                        <div class="card-overlay-text">
-                            <p>晚安。星光點點，願疲憊的你有個溫馨的夢鄉。</p>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="action-buttons">
-                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '晚安。星光點點，願疲憊的你有個溫馨的夢鄉。', 'night.jpg', 'modern')">📤 一鍵分享</button>
-                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 隨機換一張</button>
-                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '晚安。星光點點，願疲憊的你有個溫馨的夢鄉。', 'night.jpg', 'modern')">📥 存至相簿</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="randomCardContainer"></div>
     </div>
 
     <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display: none;">
@@ -388,7 +367,7 @@
     <footer>
         <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
 
-        <div class="admin-panel" id="adminPanel" style="display: none;">
+        <div class="admin-panel" id="adminPanel">
             <div class="admin-panel-header">
                 <h3>圖庫管理後台</h3>
                 <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉</button>
@@ -413,7 +392,7 @@
             <div class="admin-btns">
                 <button class="admin-btn" onclick="addCard()">新增問候圖並更新網頁</button>
             </div>
-            <div class="manage-list" id="manageList"><strong>自訂管理：</strong><div class="manage-item"><span>[morning] 新的一天，願你心...</span><button onclick="deleteCard(0)">刪除</button></div><div class="manage-item"><span>[morning] 早安，加油。...</span><button onclick="deleteCard(1)">刪除</button></div><div class="manage-item"><span>[morning] 早安。把心靈歸零...</span><button onclick="deleteCard(2)">刪除</button></div><div class="manage-item"><span>[morning] 早安。晨光正好，...</span><button onclick="deleteCard(3)">刪除</button></div><div class="manage-item"><span>[morning] 早安。把步調放慢...</span><button onclick="deleteCard(4)">刪除</button></div><div class="manage-item"><span>[morning] 早安。晨光正好，...</span><button onclick="deleteCard(5)">刪除</button></div></div>
+            <div class="manage-list" id="manageList"><strong>自訂管理：</strong></div>
         </div>
     </footer>
 
@@ -421,19 +400,27 @@
         const imagePool = {
             morning: [
                 "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
-                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b"
+                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b",
+                "photo-1447752875215-b2761acb3c5d", "photo-1426604966848-d7adacbd02bff", "photo-1510784722466-f2aa9c52fff6",
+                "photo-1495107334309-fcf20504a5ab", "photo-1500530855697-b586d89ba3ee", "photo-1418065460487-3e41a6c84dc5"
             ],
             afternoon: [
                 "photo-1501339847302-ac426a4a7cbb", "photo-1509316975850-ff9c5deb0cd9", "photo-1433086966358-54859d0ed716",
-                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff"
+                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff",
+                "photo-1511497584788-876761142197", "photo-1448375240586-882707db888b", "photo-1473448912268-2022ce9509d8",
+                "photo-1506744038136-46273834b3fb", "photo-1469474968028-56623f02e42e", "photo-1508873696983-2df5c92091c7"
             ],
             night: [
                 "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1532693322450-2cb5c51106d6",
-                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb"
+                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb",
+                "photo-1534447677768-be436bb09401", "photo-1509198397868-475647b2a1e5", "photo-1516339901601-2e1b62dc0c45",
+                "photo-1508739773434-c26b3d09e071", "photo-1519501025264-65ba15a82390", "photo-1489549842482-0622e3795554"
             ],
             holiday: [
                 "photo-1513151233558-d860c5398176", "photo-1492684223066-81342ee5ff30", "photo-1533174072545-7a4b6ad7a6c3",
-                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819"
+                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819",
+                "photo-1467810563316-b5476525c0f9", "photo-1530103862676-de8c9debad1d", "photo-1527529482837-4698179dc6ce",
+                "photo-1498931299472-f7a63a5a1cfa", "photo-1513151233558-d860c5398176", "photo-1543269865-cbf427effbad"
             ]
         };
 
@@ -441,22 +428,29 @@
             morning: [
                 "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
                 "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
-                "早安。迎著微風，開啟充滿希望的一天。"
+                "早安。迎著微風，開啟充滿希望的一天。",
+                "早安。新的一天，願平安喜樂常相隨。",
+                "早安。晨曦微露，願你今天擁有美好的一天。"
             ],
             afternoon: [
                 "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
                 "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
-                "午安。喝杯咖啡，讓心靈沉澱片刻。"
+                "午安。喝杯咖啡，讓心靈沉澱片刻。",
+                "午安。願你的午後時光輕鬆愉快，順心如意。",
+                "午安。充電過後，繼續迎接美好的下午。"
             ],
             night: [
                 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
                 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
-                "晚安。卸下一天的疲憊，好好愛自己。"
+                "晚安。卸下一天的疲憊，好好愛自己。",
+                "晚安。帶著滿滿的感恩，進入甜美的夢鄉。",
+                "晚安。願好夢陪你到天明。"
             ],
             holiday: [
                 "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
                 "假期愉快。拋開工作，享受屬於自己的悠閒時光。",
-                "週末安康。願美好與溫馨填滿你的假期。"
+                "週末安康。願美好與溫馨填滿你的假期。",
+                "祝你有個充實又放鬆的美好假期！"
             ]
         };
 
@@ -619,6 +613,7 @@
             URL.revokeObjectURL(url);
         }
 
+        // 核心修改：加入自動換行處理，確保長文案不會超出圖片左右邊界
         function generateCanvas(imgElement, textContent, styleType, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -639,48 +634,47 @@
                 ctx.fillStyle = gradient;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                const rawLines = textContent.includes('。') ? textContent.split('。') : [textContent];
-                
+                const scale = canvas.width / 800;
+                const maxLineWidth = canvas.width * 0.85; // 限制文字最大寬度為圖片的 85%，預留左右邊距
+
                 ctx.fillStyle = '#ffffff';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
+                
+                // 設定字型大小
+                const fontSize = Math.round(36 * scale);
+                ctx.font = `${fontSize}px "Noto Serif TC", serif`;
 
-                let firstLine = rawLines[0] || '';
-                let greeting = firstLine.slice(0, 2);
-                let restGreeting = firstLine.slice(2);
+                // 自動斷行演算法
+                let lines = [];
+                let currentLine = "";
 
-                const scale = canvas.width / 800;
-
-                if (styleType === 'artistic') {
-                    ctx.font = `${Math.round(90 * scale)}px "Ma Shan Zheng", cursive`;
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - (100 * scale));
-
-                    if(restGreeting) {
-                        ctx.font = `${Math.round(34 * scale)}px "Noto Serif TC", serif`;
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - (25 * scale));
-                    }
-
-                    ctx.font = `${Math.round(32 * scale)}px "Noto Serif TC", serif`;
-                    let subY = canvas.height / 2 + (50 * scale);
-                    for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
-                        ctx.fillText(rawLines[i], canvas.width / 2, subY);
-                        subY += (60 * scale);
-                    }
-                } else {
-                    ctx.font = `bold ${Math.round(48 * scale)}px "Noto Serif TC", serif`;
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - (70 * scale));
-
-                    if(restGreeting) {
-                        ctx.font = `${Math.round(32 * scale)}px "Noto Serif TC", serif`;
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - (15 * scale));
-                    }
-
-                    let startY = canvas.height / 2 + (50 * scale);
-                    for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
-                        ctx.fillText(rawLines[i], canvas.width / 2, startY);
-                        startY += (60 * scale);
+                // 針對文字逐字檢查長度
+                for (let i = 0; i < textContent.length; i++) {
+                    let char = textContent[i];
+                    let testLine = currentLine + char;
+                    let metrics = ctx.measureText(testLine);
+                    if (metrics.width > maxLineWidth && currentLine !== "") {
+                        lines.push(currentLine);
+                        currentLine = char;
+                    } else {
+                        currentLine = testLine;
                     }
                 }
+                if (currentLine) {
+                    lines.push(currentLine);
+                }
+
+                // 計算所有行數總高度，以便讓文字整體垂直置中
+                const lineHeight = fontSize * 1.5;
+                const totalHeight = lines.length * lineHeight;
+                let startY = (canvas.height - totalHeight) / 2 + (lineHeight / 2);
+
+                // 依序繪製每一行文字
+                lines.forEach((line) => {
+                    ctx.fillText(line, canvas.width / 2, startY);
+                    startY += lineHeight;
+                });
 
                 canvas.toBlob(function(blob) {
                     callback(blob);
@@ -741,6 +735,5 @@
 
         window.onload = showRandomCard;
     </script>
-
-
-<span data-test-id="pinterest-save-button" style="border-radius:10px !important;text-indent:12px !important;width:auto !important;height:20px !important;padding:0px 8px !important;text-align:center !important;vertical-align:middle !important;font:bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;color:rgb(255, 255, 255) !important;background:url(&quot;data:image/svg+xml;base64,PHN2ZyBpZD0ic291cmNlIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIGZpbGw9IiNFNjAwMjMiPjwvY2lyY2xlPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgNkMwIDguNTYxNSAxLjYwNTUgMTAuNzQ4NSAzLjg2NSAxMS42MDlDMy44MSAxMS4xNDA1IDMuNzUxNSAxMC4zNjggMy44Nzc1IDkuODI2QzMuOTg2IDkuMzYgNC41NzggNi44NTcgNC41NzggNi44NTdDNC41NzggNi44NTcgNC4zOTk1IDYuNDk5NSA0LjM5OTUgNS45N0M0LjM5OTUgNS4xNCA0Ljg4MDUgNC41MiA1LjQ4IDQuNTJDNS45OSA0LjUyIDYuMjM2IDQuOTAyNSA2LjIzNiA1LjM2MUM2LjIzNiA1Ljg3MzUgNS45MDk1IDYuNjM5NSA1Ljc0MSA3LjM1QzUuNjAwNSA3Ljk0NDUgNi4wMzk1IDguNDI5NSA2LjYyNTUgOC40Mjk1QzcuNjg3IDguNDI5NSA4LjUwMzUgNy4zMSA4LjUwMzUgNS42OTRDOC41MDM1IDQuMjYzNSA3LjQ3NTUgMy4yNjQgNi4wMDggMy4yNjRDNC4zMDkgMy4yNjQgMy4zMTE1IDQuNTM4NSAzLjMxMTUgNS44NTZDMy4zMTE1IDYuMzY5NSAzLjUwOSA2LjkxOTUgMy43NTYgNy4yMTlDMy44MDQ1IDcuMjc4NSAzLjgxMiA3LjMzIDMuNzk3NSA3LjM5MDVDMy43NTIgNy41Nzk1IDMuNjUxIDcuOTg1IDMuNjMxNSA4LjA2OEMzLjYwNSA4LjE3NyAzLjU0NSA4LjIwMDUgMy40MzE1IDguMTQ3NUMyLjY4NTUgNy44MDA1IDIuMjE5NSA2LjcxIDIuMjE5NSA1LjgzNEMyLjIxOTUgMy45NDk1IDMuNTg4IDIuMjE5NSA2LjE2NTUgMi4yMTk1QzguMjM3NSAyLjIxOTUgOS44NDggMy42OTYgOS44NDggNS42NjlDOS44NDggNy43Mjc1IDguNTUwNSA5LjM4NDUgNi43NDg1IDkuMzg0NUM2LjE0MyA5LjM4NDUgNS41NzQ1IDkuMDY5NSA1LjM3OTUgOC42OThDNS4zNzk1IDguNjk4IDUuMDggOS44MzkgNS4wMDc1IDEwLjExOEM0Ljg2NjUgMTAuNjYgNC40NzU1IDExLjM0NiA0LjIzMyAxMS43MzU1QzQuNzkyIDExLjkwNzUgNS4zODUgMTIgNiAxMkM5LjMxMzUgMTIgMTIgOS4zMTM1IDEyIDZDMTIgMi42ODY1IDkuMzEzNSAwIDYgMEMyLjY4NjUgMCAwIDIuNjg2NSAwIDZaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8L3N2Zz4=&quot;) 4px 50% / 12px 12px no-repeat rgb(230, 0, 35) !important;position:absolute !important;opacity:1 !important;z-index:9007199254740990 !important;display:none !important;cursor:pointer !important;border:none !important;-webkit-font-smoothing:antialiased !important;top:0 !important;left:0 !important;display:none !important;top:122px !important;left:402px !important">儲存</span><span data-test-id="pinterest-save-button" style="border-radius:10px !important;text-indent:12px !important;width:auto !important;height:20px !important;padding:0px 8px !important;text-align:center !important;vertical-align:middle !important;font:bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;color:rgb(255, 255, 255) !important;background:url(&quot;data:image/svg+xml;base64,PHN2ZyBpZD0ic291cmNlIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIGZpbGw9IiNFNjAwMjMiPjwvY2lyY2xlPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgNkMwIDguNTYxNSAxLjYwNTUgMTAuNzQ4NSAzLjg2NSAxMS42MDlDMy44MSAxMS4xNDA1IDMuNzUxNSAxMC4zNjggMy44Nzc1IDkuODI2QzMuOTg2IDkuMzYgNC41NzggNi44NTcgNC41NzggNi44NTdDNC41NzggNi44NTcgNC4zOTk1IDYuNDk5NSA0LjM5OTUgNS45N0M0LjM5OTUgNS4xNCA0Ljg4MDUgNC41MiA1LjQ4IDQuNTJDNS45OSA0LjUyIDYuMjM2IDQuOTAyNSA2LjIzNiA1LjM2MUM2LjIzNiA1Ljg3MzUgNS45MDk1IDYuNjM5NSA1Ljc0MSA3LjM1QzUuNjAwNSA3Ljk0NDUgNi4wMzk1IDguNDI5NSA2LjYyNTUgOC40Mjk1QzcuNjg3IDguNDI5NSA4LjUwMzUgNy4zMSA4LjUwMzUgNS42OTRDOC41MDM1IDQuMjYzNSA3LjQ3NTUgMy4yNjQgNi4wMDggMy4yNjRDNC4zMDkgMy4yNjQgMy4zMTE1IDQuNTM4NSAzLjMxMTUgNS44NTZDMy4zMTE1IDYuMzY5NSAzLjUwOSA2LjkxOTUgMy43NTYgNy4yMTlDMy44MDQ1IDcuMjc4NSAzLjgxMiA3LjMzIDMuNzk3NSA3LjM5MDVDMy43NTIgNy41Nzk1IDMuNjUxIDcuOTg1IDMuNjMxNSA4LjA2OEMzLjYwNSA4LjE3NyAzLjU0NSA4LjIwMDUgMy40MzE1IDguMTQ3NUMyLjY4NTUgNy44MDA1IDIuMjE5NSA2LjcxIDIuMjE5NSA1LjgzNEMyLjIxOTUgMy45NDk1IDMuNTg4IDIuMjE5NSA2LjE2NTUgMi4yMTk1QzguMjM3NSAyLjIxOTUgOS44NDggMy42OTYgOS44NDggNS42NjlDOS44NDggNy43Mjc1IDguNTUwNSA5LjM4NDUgNi43NDg1IDkuMzg0NUM2LjE0MyA5LjM4NDUgNS41NzQ1IDkuMDY5NSA1LjM3OTUgOC42OThDNS4zNzk1IDguNjk4IDUuMDggOS44MzkgNS4wMDc1IDEwLjExOEM0Ljg2NjUgMTAuNjYgNC40NzU1IDExLjM0NiA0LjIzMyAxMS43MzU1QzQuNzkyIDExLjkwNzUgNS4zODUgMTIgNiAxMkM5LjMxMzUgMTIgMTIgOS4zMTM1IDEyIDZDMTIgMi42ODY1IDkuMzEzNSAwIDYgMEMyLjY4NjUgMCAwIDIuNjg2NSAwIDZaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8L3N2Zz4=&quot;) 4px 50% / 12px 12px no-repeat rgb(230, 0, 35) !important;position:absolute !important;opacity:1 !important;z-index:9007199254740990 !important;display:none !important;cursor:pointer !important;border:none !important;-webkit-font-smoothing:antialiased !important;top:0 !important;left:0 !important;display:none !important;top:122px !important;left:402px !important">儲存</span></body></html>
+</body>
+</html>
