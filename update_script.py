@@ -49,18 +49,19 @@ def update_news():
 
     try:
         news_data = json.loads(json_str)
-        # 強制確保 JSON 內的日期欄位是台灣的今天
-        news_data["date"] = today_str
     except json.JSONDecodeError as e:
         print(f"解析 JSON 失敗: {e}")
         print(f"擷取到的文字為:\n{json_str}")
         raise e
 
+    # 【絕對防線】強制將 JSON 內的日期欄位覆蓋為台灣時區的今天，避免 AI 帶入舊日期
+    news_data["date"] = today_str
+
     # 寫入檔案
     with open("news.json", "w", encoding="utf-8") as f:
         json.dump(news_data, f, ensure_ascii=False, indent=4)
     
-    print("news.json 更新成功，格式正確！")
+    print(f"news.json 更新成功，已強制寫入日期: {today_str}")
 
 if __name__ == "__main__":
     update_news()
