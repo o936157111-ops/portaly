@@ -1,740 +1,592 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日常問候圖庫</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;family=Noto+Sans+TC:wght@300;400;700&amp;family=Noto+Serif+TC:wght@300;500;700&amp;display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>生活・簡居・生活 | 數位名片型總入口</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        :root {
-            --bg-color: #f7f5f0;
-            --card-bg: #ffffff;
-            --text-main: #4a4541;
-            --text-sub: #8c857b;
-            --accent: #b5a491;
-            --border-color: #d6cfc2;
+        #start-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #f9f9f9; z-index: 9999;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; cursor: pointer; color: #333;
         }
+        @media (max-width: 768px) { #start-overlay { display: flex; } }
+        
+        .guide-icon { width: 60px; height: 100px; border: 3px solid #333; border-radius: 10px; margin-bottom: 20px; position: relative; }
+        .guide-icon::after { content: ''; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #333; border-radius: 50%; }
+        @keyframes rotatePhone { 0% { transform: rotate(0deg); } 30% { transform: rotate(-90deg); } 70% { transform: rotate(-90deg); } 100% { transform: rotate(0deg); } }
+        .rotate-anim { animation: rotatePhone 2.5s infinite; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; touch-action: manipulation; }
+        html, body { background-color: #f9f9f9; margin: 0; padding: 0; width: 100%; min-height: 100%; overscroll-behavior: none; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; color: #333; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
+        
+        .container { max-width: 440px; width: 100%; margin: 0 auto; }
+        .card-container { background-color: #FCFCFF; border-radius: 24px; border: 1px solid #F0F0F0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); overflow: hidden; padding: 40px 20px; width: 100%; position: relative; }
+        
+        .logo-wrapper { position: relative; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 0 auto 15px auto; }
+        .logo-link { display: none; width: 100%; transition: transform 0.3s ease; }
+        .logo-link:hover { transform: scale(1.02); }
+        .logo-img { width: 100%; height: auto; border-radius: 12px; display: block; }
+        
+        .logo-avatar { position: absolute; top: -24px; left: 0px; width: 50px; height: 50px; border-radius: 50%; border: 3px solid #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; object-fit: cover; display: none; }
 
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.4;
-            padding: 10px 15px;
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
+        .realtime-info {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 4px 4px 10px 4px;
+            margin-bottom: 15px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        header {
-            text-align: center;
-            padding: 5px 0;
-        }
-
-        h1 {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.4rem;
-            font-weight: 500;
-            letter-spacing: 2px;
-            margin-bottom: 2px;
-            color: var(--text-main);
-        }
-
-        p.subtitle {
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            letter-spacing: 1px;
-        }
-
-        .categories-container {
-            margin: 8px 0 0 0;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .categories {
-            display: flex;
-            width: 100%;
-        }
-
-        .category-btn {
-            flex: 1;
-            background-color: #ede7dc;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            padding: 6px 2px;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-            margin-right: -1px;
-        }
-
-        .category-btn.active {
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            font-weight: 500;
-            border-color: var(--border-color);
-            z-index: 2;
-            padding-top: 8px;
-            margin-top: -2px;
-        }
-
-        .main-container {
-            width: 100%;
-            margin-top: 0;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 0 0 10px 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-            border: 1px solid var(--border-color);
-            border-top: none;
-            margin-top: 0;
-        }
-
-        .card-image-box {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background-color: #eee;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .card-image-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.2s;
-        }
-
-        .card-overlay-text {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
-            display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 15px;
             text-align: center;
-            pointer-events: none;
+            font-size: 1.25em;
+            font-weight: bold;
+            color: #444;
+            border-bottom: 1px solid #eee;
         }
 
-        .card-overlay-text p {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 0.95rem;
-            color: #ffffff;
-            line-height: 1.5;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-        }
+        #loader-container { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 80%; }
+        .loader-text { color: #999; font-size: 0.9em; }
+        progress { width: 100%; height: 8px; border-radius: 4px; border: none; background-color: #eee; }
+        progress::-webkit-progress-bar { background-color: #eee; border-radius: 4px; }
+        progress::-webkit-progress-value { background-color: #555; border-radius: 4px; transition: width 0.3s; }
+        
+        .header-tabs { margin: 10px 0; font-size: 1.4em; color: #888; text-align: center; }
+        .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; text-decoration: none; }
+        .tab-trigger.active { color: #000; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+        
+        .slogan-section { text-align: center; margin-bottom: 25px; }
+        .slogan-clickable { font-size: 1.25em; font-weight: bold; color: #444; cursor: pointer; display: inline-block; transition: color 0.2s; }
+        .slogan-clickable:hover { color: #000; }
+        
+        .poem-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out; opacity: 0; color: #666; font-size: 0.9em; line-height: 1.8; margin-top: 0; }
+        .poem-content.show { max-height: 150px; opacity: 1; margin-top: 8px; }
 
-        .card-footer {
-            padding: 8px 10px;
-            background-color: var(--card-bg);
-        }
+        .button-group { display: none; flex-direction: column; gap: 12px; width: 100%; }
+        .button-group.active { display: flex; }
+        .btn { display: flex; align-items: center; justify-content: center; height: 50px; background-color: #f4f4f9; color: #333; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #dcdcdc; transition: all 0.3s ease; width: 100%; cursor: pointer; }
+        .btn:hover { background-color: #000 !important; color: #fff !important; border-color: #000 !important; transform: translateY(-2px) !important; }
 
-        .action-buttons {
-            display: flex;
-            gap: 6px;
+        .pinterest-masonry { 
+            column-count: 2; 
+            column-gap: 10px; 
+            width: 100%; 
+            margin-top: 25px;
+        }
+        
+        .pin-card { 
+            break-inside: avoid; 
+            display: inline-block; 
             width: 100%;
+            margin-bottom: 10px; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            background: #fff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); 
+            text-decoration: none; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+        
+        .pin-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12); 
+        }
+        
+        .pin-img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            background: #eee;
         }
 
-        .action-btn {
-            flex: 1;
-            border: none;
-            padding: 9px 0;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-        }
-
-        .btn-share { background-color: #06C755; }
-        .btn-shuffle { background-color: #718096; }
-        .btn-download { background-color: var(--text-main); }
-
-        .lightbox {
+        #lightbox-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
+            width: 100vw;
+            height: 100dvh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             padding: 20px;
         }
-
         .lightbox-content {
-            position: relative;
-            max-width: 100%;
-            max-height: 90vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            max-width: 90%;
+            max-height: 90vh;
         }
-
-        .lightbox-content img {
+        #lightbox-modal img {
             max-width: 100%;
             max-height: 75vh;
-            object-fit: contain;
             border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            object-fit: contain;
+            margin-bottom: 15px;
         }
-
-        .lightbox-close {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            background: none;
-            border: none;
+        .lightbox-btn {
+            background-color: #fff;
+            color: #333;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: background 0.2s, transform 0.2s;
+        }
+        .lightbox-btn:hover {
+            background-color: #000;
             color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px 10px;
+            transform: translateY(-2px);
         }
-
-        .lightbox-hint {
-            color: #ccc;
-            font-size: 0.85rem;
-            margin-top: 15px;
-            text-align: center;
-        }
-
-        footer {
-            position: relative;
-            margin-top: 8px;
-            padding-bottom: 10px;
-        }
-
-        .admin-trigger {
-            text-align: center;
-            padding: 6px;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .admin-panel {
-            display: none;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px;
+        #lightbox-close {
             position: absolute;
-            bottom: 35px;
-            left: 0;
-            right: 0;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-            z-index: 500;
-        }
-
-        .admin-panel-header {
+            top: 20px;
+            right: 25px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 6px;
+            line-height: 1;
+            z-index: 100000;
         }
 
-        .admin-panel h3 {
-            font-size: 0.9rem;
-            color: var(--text-main);
-            margin: 0;
+        #landscape-card-view { display: none; width: 100vw; height: 100dvh; overflow: hidden; }
+        @media screen and (max-width: 950px) and (pointer: coarse) and (orientation: landscape) {
+            .container { display: none !important; }
+            html, body { background-color: #f4f4f4 !important; overflow: hidden !important; width: 100vw !important; height: 100dvh !important; margin: 0 !important; padding: 0 !important; position: fixed !important; top: 0; left: 0; }
+            body { display: flex !important; justify-content: center !important; align-items: center !important; }
+            #landscape-card-view { display: flex !important; width: 100vw !important; height: 100dvh !important; background: #ffffff !important; align-items: stretch !important; position: absolute !important; top: 0 !important; left: 0 !important; z-index: 99999; }
         }
-
-        .btn-close-admin {
-            background: #e2e8f0;
-            border: none;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            cursor: pointer;
-        }
-
-        .admin-form-group {
-            margin-bottom: 6px;
-        }
-
-        .admin-form-group label {
-            display: block;
-            font-size: 0.7rem;
-            color: var(--text-sub);
-            margin-bottom: 2px;
-        }
-
-        .admin-form-group input, .admin-form-group select {
-            width: 100%;
-            padding: 5px 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.8rem;
-        }
-
-        .admin-btn {
-            width: 100%;
-            padding: 6px;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-weight: 500;
-            background-color: #2b6cb0;
-            color: #fff;
-        }
+        .card-left { flex: 4; display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-right: 1px solid #E2E8F0; padding: 20px 15px; background-color: #FCFCFF; height: 100%; }
+        .profile-meta { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
+        .card-avatar { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #E2E8F0; margin-bottom: 8px; }
+        .card-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 3px; }
+        .card-sub { font-size: 11px; color: #64748B; letter-spacing: 2px; margin-bottom: 10px; }
         
-        .manage-list {
-            margin-top: 6px;
-            max-height: 60px;
-            overflow-y: auto;
-            border-top: 1px solid var(--border-color);
-            padding-top: 4px;
+        .landscape-song-select {
+            width: 100%; max-width: 180px; padding: 6px 10px; font-size: 12px;
+            border: 1px solid #CBD5E1; border-radius: 8px; background-color: #F8FAFC; color: #334155; outline: none; cursor: pointer; transition: all 0.2s;
         }
-        .manage-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-            padding: 2px 0;
-            border-bottom: 1px dashed var(--border-color);
-        }
-        .manage-item button {
-            background: #c53030;
-            color: #fff;
-            border: none;
-            padding: 2px 5px;
-            border-radius: 4px;
-            cursor: pointer;
+        .landscape-song-select:hover { border-color: #94A3B8; }
+
+        .card-icons-row { display: flex; justify-content: center; align-items: center; gap: 12px; width: 100%; padding-top: 12px; border-top: 1px dashed #E2E8F0; }
+        .icon-link { display: flex; justify-content: center; align-items: center; width: 34px; height: 34px; border-radius: 50%; background-color: #F1F5F9; border: 1px solid #E2E8F0; color: #475569; transition: all 0.2s ease; text-decoration: none; }
+        .icon-link:hover { background-color: #000; color: #fff; border-color: #000; transform: translateY(-3px); }
+        .icon-link svg { width: 16px; height: 16px; fill: currentColor; }
+        .card-right { flex: 6; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; background-color: #FFFFFF; height: 100%; }
+        .blogger-door-container { width: 100%; height: 100%; display: flex !important; justify-content: center !important; align-items: center !important; position: relative; overflow: hidden; padding: 10px; }
+        .facade { display: flex; width: 96%; height: 96%; position: relative; background: #111; border: 6px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.08); cursor: pointer; }
+        
+        .inner-grid { position: absolute; inset: 10px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 8px; z-index: 1; }
+        .panel { display: flex; justify-content: center; align-items: center; text-decoration: none; background: #222; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden; filter: brightness(0.6) grayscale(0.2); transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 2; }
+        .panel h3 { color: #fff; font-size: 1rem; letter-spacing: 3px; text-shadow: 1px 1px 5px #000; margin: 0; transition: all 0.4s ease; }
+        .panel:hover { filter: brightness(1.1) grayscale(0); border-color: #D4AF37; box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.4), 0 4px 15px rgba(0,0,0,0.4); transform: scale(1.02); z-index: 5; }
+        .panel:hover h3 { color: #D4AF37; letter-spacing: 6px; transform: scale(1.05); }
+        .auto-door-system { position: absolute; inset: 0; z-index: 10; display: flex; overflow: hidden; }
+        .glass-leaf { flex: 1; height: 100%; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 2px solid #E2E8F0; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative; display: flex; justify-content: center; align-items: center; }
+        .door-text { font-size: 2.2rem; color: #475569; font-weight: bold; letter-spacing: 12px; writing-mode: vertical-rl; text-orientation: upright; user-select: none; border: 2px solid #E2E8F0; padding: 15px 5px; background: rgba(255, 255, 255, 0.5); }
+        .door-open .left-leaf { transform: translateX(-99%); }
+        .door-open .right-leaf { transform: translateX(99%); }
+        .door-open .auto-door-system { pointer-events: none; }
+        .sensor-box { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 14px; background: #E2E8F0; border-radius: 0 0 8px 8px; z-index: 20; display: flex; justify-content: center; align-items: center; }
+        .sensor-light { width: 5px; height: 5px; background: #ff3333; border-radius: 50%; transition: background 0.3s; }
+        .door-open .sensor-light { background: #33ff33; box-shadow: 0 0 6px #33ff33; }
+        .read-nebula-bg { background-image: url('https://live.staticflickr.com/3701/33034841121_6de420e7b6.jpg'); }
+        .collect-drawer-bg { background-image: url('https://live.staticflickr.com/5505/10337267526_41e9cf2c27.jpg'); }
+        .old-friend-bg { background-image: url('https://live.staticflickr.com/2826/33751154010_38c96ddea2.jpg'); }
+        .explore-compass-bg { background-image: url('https://live.staticflickr.com/7361/10370156306_e44386d455.jpg'); }
+        .note-quill-bg { background-image: url('https://live.staticflickr.com/3761/10538701665_af40b6e7d5.jpg'); }
+        .map-guide-bg { background-image: url('https://live.staticflickr.com/3933/34095470126_4b21bb58f1.jpg'); }
+
+        @media screen and (min-width: 951px) {
+            .container { display: block !important; }
+            #landscape-card-view { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>日常問候</h1>
-        <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
-    </header>
+<div id="start-overlay" onclick="enterFullScreen()"></div>
 
-    <div class="categories-container">
-        <div class="categories">
-            <button class="category-btn active" onclick="filterCategory('all', event)">全部</button>
-            <button class="category-btn" onclick="filterCategory('morning', event)">早安</button>
-            <button class="category-btn" onclick="filterCategory('afternoon', event)">午安</button>
-            <button class="category-btn" onclick="filterCategory('night', event)">晚安</button>
-            <button class="category-btn" onclick="filterCategory('holiday', event)">節慶假日</button>
-        </div>
-    </div>
-
-    <div class="main-container">
-        <div id="randomCardContainer"></div>
-    </div>
-
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display: none;">
-        <div class="lightbox-content" onclick="event.stopPropagation()">
-            <button class="lightbox-close" onclick="closeLightbox()">✕ 關閉</button>
-            <img id="lightboxImg" src="" alt="大圖預覽">
-            <p class="lightbox-hint">💡 點擊下方按鈕即可分享或儲存原尺寸圖檔</p>
-        </div>
-    </div>
-
-    <footer>
-        <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
-
-        <div class="admin-panel" id="adminPanel">
-            <div class="admin-panel-header">
-                <h3>圖庫管理後台</h3>
-                <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉</button>
+<div class="container">
+    <div class="card-container">
+        <div class="logo-wrapper">
+            <div id="loader-container">
+                <div class="loader-text">載入日常片段中...</div>
+                <progress id="progress-bar" value="0" max="100"></progress>
             </div>
-            <div class="admin-form-group">
-                <label>分類</label>
-                <select id="newCategory">
-                    <option value="morning">早安</option>
-                    <option value="afternoon">午安</option>
-                    <option value="night">晚安</option>
-                    <option value="holiday">節慶假日</option>
-                </select>
-            </div>
-            <div class="admin-form-group">
-                <label>問候文字 (不填則隨機產生)</label>
-                <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
-            </div>
-            <div class="admin-form-group">
-                <label>圖片網址 (必填)</label>
-                <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
-            </div>
-            <div class="admin-btns">
-                <button class="admin-btn" onclick="addCard()">新增問候圖並更新網頁</button>
-            </div>
-            <div class="manage-list" id="manageList"><strong>自訂管理：</strong></div>
-        </div>
-    </footer>
-
-    <script>
-        // 大幅擴充圖片池，提供更豐富的隨機變化
-        const imagePool = {
-            morning: [
-                "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
-                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b",
-                "photo-1447752875215-b2761acb3c5d", "photo-1426604966848-d7adacbd02bff", "photo-1510784722466-f2aa9c52fff6",
-                "photo-1495107334309-fcf20504a5ab", "photo-1500530855697-b586d89ba3ee", "photo-1418065460487-3e41a6c84dc5"
-            ],
-            afternoon: [
-                "photo-1501339847302-ac426a4a7cbb", "photo-1509316975850-ff9c5deb0cd9", "photo-1433086966358-54859d0ed716",
-                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff",
-                "photo-1511497584788-876761142197", "photo-1448375240586-882707db888b", "photo-1473448912268-2022ce9509d8",
-                "photo-1506744038136-46273834b3fb", "photo-1469474968028-56623f02e42e", "photo-1508873696983-2df5c92091c7"
-            ],
-            night: [
-                "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1532693322450-2cb5c51106d6",
-                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb",
-                "photo-1534447677768-be436bb09401", "photo-1509198397868-475647b2a1e5", "photo-1516339901601-2e1b62dc0c45",
-                "photo-1508739773434-c26b3d09e071", "photo-1519501025264-65ba15a82390", "photo-1489549842482-0622e3795554"
-            ],
-            holiday: [
-                "photo-1513151233558-d860c5398176", "photo-1492684223066-81342ee5ff30", "photo-1533174072545-7a4b6ad7a6c3",
-                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819",
-                "photo-1467810563316-b5476525c0f9", "photo-1530103862676-de8c9debad1d", "photo-1527529482837-4698179dc6ce",
-                "photo-1498931299472-f7a63a5a1cfa", "photo-1513151233558-d860c5398176", "photo-1543269865-cbf427effbad"
-            ]
-        };
-
-        const defaultTexts = {
-            morning: [
-                "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
-                "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
-                "早安。迎著微風，開啟充滿希望的一天。",
-                "早安。新的一天，願平安喜樂常相隨。",
-                "早安。晨曦微露，願你今天擁有美好的一天。"
-            ],
-            afternoon: [
-                "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
-                "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
-                "午安。喝杯咖啡，讓心靈沉澱片刻。",
-                "午安。願你的午後時光輕鬆愉快，順心如意。",
-                "午安。充電過後，繼續迎接美好的下午。"
-            ],
-            night: [
-                "晚安。把今天所有的紛擾都留在身後，做個好夢。",
-                "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
-                "晚安。卸下一天的疲憊，好好愛自己。",
-                "晚安。帶著滿滿的感恩，進入甜美的夢鄉。",
-                "晚安。願好夢陪你到天明。"
-            ],
-            holiday: [
-                "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
-                "假期愉快。拋開工作，享受屬於自己的悠閒時光。",
-                "週末安康。願美好與溫馨填滿你的假期。",
-                "祝你有個充實又放鬆的美好假期！"
-            ]
-        };
-
-        let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
-        let currentFilter = 'all';
-
-        function getFilteredPool() {
-            let poolList = [];
-            ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
-                if (currentFilter === 'all' || currentFilter === cat) {
-                    let pool = imagePool[cat];
-                    let texts = defaultTexts[cat];
-                    for(let i = 0; i < pool.length; i++) {
-                        poolList.push({
-                            category: cat,
-                            text: texts[i % texts.length],
-                            imgUrl: `https://images.unsplash.com/${pool[i]}?auto=format&fit=crop&w=800&q=80`,
-                            style: i % 2 === 0 ? 'artistic' : 'modern'
-                        });
-                    }
-                }
-            });
-
-            userCards.forEach(item => {
-                if (currentFilter === 'all' || currentFilter === item.category) {
-                    poolList.push(item);
-                }
-            });
-
-            return poolList;
-        }
-
-        function filterCategory(category, event) {
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            currentFilter = category;
-            showRandomCard();
-        }
-
-        function showRandomCard() {
-            const poolList = getFilteredPool();
-            const container = document.getElementById('randomCardContainer');
-
-            if (poolList.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:30px; color:#888; font-size:0.9rem;">此分類目前尚無圖片，請至下方設定新增！</div>`;
-                return;
-            }
-
-            const randomIndex = Math.floor(Math.random() * poolList.length);
-            const item = poolList[randomIndex];
-            const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            <img id="logo-avatar" src="https://myezlife.com/eric-logo.gif" alt="Avatar" class="logo-avatar" style="display:none;">
             
-            container.innerHTML = `
-                <div class="card">
-                    <div class="card-image-box" onclick="openLightbox('${item.imgUrl}')">
-                        <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
-                        <div class="card-overlay-text">
-                            <p>${item.text}</p>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="action-buttons">
-                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
-                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 隨機換一張</button>
-                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
-                        </div>
-                    </div>
+            <a href="https://myezlife.com" class="logo-link" id="logo-link-wrap" title="返回首頁" style="display:none;">
+                <img id="logo-img" src="" alt="Logo" class="logo-img" onload="finishLoading()">
+            </a>
+        </div>
+        
+        <div class="realtime-info" id="realtime-info-box">
+            <span id="datetime-text">--/-- (─) 00:00:00</span>
+        </div>
+
+        <div class="content-section">
+            <div class="header-tabs">
+                <span class="tab-trigger active" onclick="openTab(event, 'tab-1')">生活</span>・
+                <span class="tab-trigger" onclick="openTab(event, 'tab-2')">簡居</span>・
+                <span class="tab-trigger" onclick="openTab(event, 'tab-3')">生活</span>
+            </div>
+
+            <div class="slogan-section">
+                <div class="slogan-clickable" onclick="togglePoem()">漫無目的  恣意生活</div>
+                <div id="poem-box" class="poem-content">
+                    用瞬間記錄永恆，拿片刻鋪滿人生；<br>
+                    在角落翻開記憶，把點滴串成一生。
                 </div>
-            `;
-            updateManageList();
-        }
+            </div>
+        </div>
 
-        function openLightbox(imgUrl) {
-            const lightbox = document.getElementById('lightbox');
-            document.getElementById('lightboxImg').src = imgUrl;
-            lightbox.style.display = 'flex';
-        }
+        <div id="tab-1" class="button-group active">
+            <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
+            <a href="https://portaly.cc/myezlife/pages/readingshare" class="btn" target="_blank" rel="noopener noreferrer">生活閱讀-讀後分享</a>
+            <a href="https://portaly.cc/myezlife/pages/wind" class="btn" target="_blank" rel="noopener noreferrer">線上看好劇</a>
+            <a href="https://o936157111-ops.github.io/portaly/mylibrary.html" class="btn" target="_blank" rel="noopener noreferrer">生活小書房</a>
+            <a href="https://o936157111-ops.github.io/portaly/haodoo.html" class="btn" target="_blank" rel="noopener noreferrer">我的私房好讀書單</a>
+            <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="btn" target="_blank" rel="noopener noreferrer">挑本書細讀</a>
+            <a href="https://myezlife.com/games.html" class="btn" target="_blank" rel="noopener noreferrer">自製簡易復古經典小遊戲</a>
+        </div>
 
-        function closeLightbox() {
-            document.getElementById('lightbox').style.display = 'none';
-        }
+        <div id="tab-2" class="button-group">
+            <a href="https://portaly.cc/myezlife" class="btn" target="_blank" rel="noopener noreferrer">Portaly</a>
+            <a href="https://myeztravellife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">Blogger</a>
+            <a href="https://www.pinterest.com/myezstore/pins/" class="btn" target="_blank" rel="noopener noreferrer">Pinterest</a>
+            <a href="https://www.youtube.com/@myezlife" class="btn" target="_blank" rel="noopener noreferrer">YouTube</a>
+            <a href="https://www.instagram.com/?hl=zh-tw" class="btn" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
 
-        function toggleAdmin() {
-            const panel = document.getElementById('adminPanel');
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
-            } else {
-                const pwd = prompt("請輸入密碼：");
-                if (pwd === "20260922") {
-                    panel.style.display = 'block';
-                } else if (pwd !== null) {
-                    alert("密碼錯誤！");
-                }
-            }
-        }
+        <div id="tab-3" class="button-group">
+            <a href="https://myezdailylife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">零碎日常</a>
+            <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&si=2J4QFyZ2GwTpG2Ic" class="btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
+            <a href="https://www.flickr.com/photos/0936157111/" class="btn" target="_blank" rel="noopener noreferrer">生活相簿</a>
+            <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
+        </div>
 
-        function addCard() {
-            const cat = document.getElementById('newCategory').value;
-            let text = document.getElementById('newText').value.trim();
-            const imgUrl = document.getElementById('newImgUrl').value.trim();
+        <div class="pinterest-masonry" id="random-masonry">
+            <a href="https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541111196_10f0300876_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541220428_a9c382a75e_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-img" alt="攝影作品"></a>
 
-            if (!imgUrl) {
-                alert('請至少填寫圖片網址！');
-                return;
-            }
+            <a href="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/1901/30178042187_2d7b1f3f0f_4k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/7565/28053680683_cb0bff983b_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/7565/28053680683_cb0bff983b_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8134/28996076300_341e106028_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-img" alt="攝影作品"></a>
+            <a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a>
+            <a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a>        
+        </div>
+    </div>
+</div>
 
-            if (!text) {
-                const texts = defaultTexts[cat];
-                text = texts[Math.floor(Math.random() * texts.length)];
-            }
+<div id="landscape-card-view">
+    <div class="card-left">
+        <div class="profile-meta">
+            <a href="https://myezlife.com" target="_blank" rel="noopener noreferrer">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="card-avatar" alt="Logo">
+            </a>
+            <div class="card-name">簡居生活</div>
+            <div id="dynamic-card-sub" class="card-sub">好歌一直聽</div>
+            <div id="dynamic-select-container"></div>
+        </div>
+        
+        <div class="card-icons-row">
+            <a href="https://myeztravellife.blogspot.com" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></a>
+            <a href="https://www.youtube.com/@myezlife" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+            <a href="https://www.flickr.com/photos/0936157111/" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="5"/><circle cx="17" cy="12" r="5"/></svg></a>
+            <a href="https://www.instagram.com/?hl=zh-tw" class="icon-link" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+        </div>
+    </div>
+    
+    <div class="card-right">
+        <div class="blogger-door-container">
+            <div id="landscape-facade" class="facade" onclick="this.classList.toggle('door-open')">
+                <div class="sensor-box"><div class="sensor-light"></div></div>
+                <div class="inner-grid">
+                    <a href="https://myezdailylife.blogspot.com" class="panel read-nebula-bg"><h3>閱覽</h3></a>
+                    <a href="https://myezlife.com/FileExplorer.html" class="panel explore-compass-bg"><h3>探索</h3></a>
+                    <a href="https://www.youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac" class="panel collect-drawer-bg"><h3>收藏</h3></a>
+                    <a href="https://myezlife.notion.site/ebb39ac941254e4ca49803d16f9df13d" class="panel note-quill-bg"><h3>筆記</h3></a>
+                    <a href="https://www.flickr.com/photos/0936157111/" class="panel old-friend-bg"><h3>舊識</h3></a>
+                    <a href="https://www.google.com/maps/d/edit?mid=1MoXFmy5gyGaD4y0bRyTwlTWk86OOKnI&usp=sharing" class="panel map-guide-bg"><h3>地圖</h3></a>
+                </div>
+                <div class="auto-door-system">
+                    <div class="glass-leaf left-leaf"><div class="door-text">生活</div></div>
+                    <div class="glass-leaf right-leaf"><div class="door-text">日常</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            userCards.push({
-                category: cat,
-                text: text,
-                imgUrl: imgUrl,
-                style: 'modern'
-            });
+<div id="lightbox-modal" onclick="closeLightbox(event)">
+    <span id="lightbox-close">&times;</span>
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <img id="lightbox-img" src="" alt="放大圖片">
+        <a id="lightbox-link" href="" target="_blank" rel="noopener noreferrer" class="lightbox-btn">🔗 前往原始連結</a>
+    </div>
+</div>
 
-            localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
-            document.getElementById('newText').value = '';
-            document.getElementById('newImgUrl').value = '';
-            document.getElementById('adminPanel').style.display = 'none';
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 移除日常作息相關事件與輸入監聽
+});
+
+function updateRealtimeInfo() {
+    const now = new Date();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const wk = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()];
+    const h = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    
+    const datetimeEl = document.getElementById('datetime-text');
+    if (datetimeEl) datetimeEl.innerText = `${m}/${d} (${wk}) ${h}:${min}:${s}`;
+}
+
+setInterval(updateRealtimeInfo, 1000);
+updateRealtimeInfo();
+
+function randomTabOnLoad() {
+    const tabs = ['tab-1', 'tab-2', 'tab-3'];
+    const triggers = document.querySelectorAll('.tab-trigger');
+    const randomIndex = Math.floor(Math.random() * tabs.length);
+    const selectedTabId = tabs[randomIndex];
+    
+    document.querySelectorAll(".button-group").forEach(el => el.classList.remove("active"));
+    triggers.forEach(el => el.classList.remove("active"));
+    
+    document.getElementById(selectedTabId).classList.add("active");
+    if (triggers[randomIndex]) {
+        triggers[randomIndex].classList.add("active");
+    }
+}
+
+randomTabOnLoad();
+
+function initLightbox() {
+    const pinCards = document.querySelectorAll('.pin-card');
+    const modal = document.getElementById('lightbox-modal');
+    const modalImg = document.getElementById('lightbox-img');
+    const modalLink = document.getElementById('lightbox-link');
+
+    pinCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            const img = this.querySelector('.pin-img');
+            const href = this.getAttribute('href');
             
-            showRandomCard();
-            exportHTML();
-        }
-
-        function deleteCard(index) {
-            userCards.splice(index, 1);
-            localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
-            showRandomCard();
-            exportHTML();
-        }
-
-        function updateManageList() {
-            const listEl = document.getElementById('manageList');
-            listEl.innerHTML = '<strong>自訂管理：</strong>';
-            if (userCards.length === 0) {
-                listEl.innerHTML += '<span style="font-size:0.7rem; color:#888;"> 無自訂卡片</span>';
-                return;
+            if (img) {
+                modalImg.src = img.src;
+                modalLink.href = href;
+                modal.style.display = 'flex';
             }
-            userCards.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = 'manage-item';
-                div.innerHTML = `<span>[${item.category}] ${item.text.substring(0, 8)}...</span><button onclick="deleteCard(${index})">刪除</button>`;
-                listEl.appendChild(div);
-            });
+        });
+    });
+}
+
+function closeLightbox(e) {
+    if (e.target.id === 'lightbox-modal' || e.target.id === 'lightbox-close') {
+        document.getElementById('lightbox-modal').style.display = 'none';
+    }
+}
+
+function handleOrientation() {
+    const view = document.getElementById('landscape-card-view');
+    const subText = document.getElementById('dynamic-card-sub');
+    const selectContainer = document.getElementById('dynamic-select-container');
+
+    if (window.matchMedia("(orientation: landscape)").matches) {
+        const isRightLandscape = window.screen.orientation && window.screen.orientation.type === 'landscape-secondary';
+
+        if (isRightLandscape) {
+            view.classList.add('reverse-layout');
+            subText.innerText = "AI好劇一直看";
+            selectContainer.innerHTML = `
+                <select class="landscape-song-select" onchange="playSelectedContent(this)">
+                    <option value="" disabled selected>🎬 選擇 AI 好劇</option>
+                    <option value="t76zhPJTS2g">春風不等舊時人</option>
+                    <option value="Zux32m7Nxjc">百日神醫</option>
+                    <option value="T6RWJ7hThMc">一瓶水背後的真相</option>
+                     <option value="oe6CQDER01g">歸墟-第一季</option>
+                    <option value="6Wz5pdMXHJY">歸墟-第二季</option>
+                    <option value="omWT8s9azZ0">現代博士穿成農門窮小子！第1~3季</option>
+                    <option value="Xv9WUt_e8xw">現代博士穿成農門窮小子！第4季</option>
+                    <option value="LvNlJjV6Jns">現代博士穿成農門窮小子！第5季</option>
+                    <option value="ITIWu-l7czg">現代博士穿成農門窮小子！第6季</option>
+                    <option value="KeITzXlcqoQ">現代博士穿成農門窮小子！第7季</option>
+                    <option value="tT3jm4TmEGE">站在外科之巅，我在急诊科疯狂摸鱼</option>
+                    <option value="Pt2PU4l9jWI">大將軍當現代苦力-第一、二季</option>
+                    <option value="XxYuxi4wdWE">大將軍當現代苦力-第三季</option>
+                </select>
+            `;
+        } else {
+            view.classList.remove('reverse-layout');
+            subText.innerText = "好歌一直聽";
+            selectContainer.innerHTML = `
+                <select class="landscape-song-select" onchange="playSelectedContent(this)">
+                    <option value="" disabled selected>🎵 選擇好歌清單</option>
+                    <option value="KSTeFTHjj14">楊乃文 - 推開世界的門</option>
+                    <option value="W9Ee85S7s2Q">楊乃文 - 我給的愛</option>
+                    <option value="1mrBdx9FH44">楊乃文 - 女爵</option>
+                    <option value="cP5te4Tl4Os">杨乃文 - 证据</option>
+                    <option value="w-flWDAO2rA">楊乃文 - 未接來電</option>
+                    <option value="uzD_BwIaeQA">楊乃文 - 祝我幸福</option> 
+                    <option value="gqJ21g7nHXY">郭靜 Claire Kuo《暖橘》</option>
+                    <option value="nZZ6xsntocU">郭靜 - 陪著我的時候想著她</option>
+                    <option value="7dp-Zi7cZVc">郭靜 下一個天亮</option>
+                    <option value="IxFZurBc79Q">郭靜 Claire Kuo【心牆】</option>
+                    <option value="RSIisC4oTpo">郭靜 Claire Kuo - 往未來飛的客機</option>
+                    <option value="rMuqgAHnXUo">我不该动情</option>
+                    <option value="Pvb8SO9PBXc">思念成災</option>
+                    <option value="tANkOuKG_28">原来你爱的不是我</option>
+                </select>
+            `;
         }
+    }
+}
 
-        function exportHTML() {
-            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'hello.html';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
+function delayedHandleOrientation() {
+    setTimeout(handleOrientation, 100);
+}
 
-        function generateCanvas(imgElement, textContent, styleType, callback) {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.src = imgElement.src;
+if (window.screen.orientation) {
+    window.screen.orientation.addEventListener("change", delayedHandleOrientation);
+}
+window.addEventListener("orientationchange", delayedHandleOrientation);
+window.addEventListener("resize", delayedHandleOrientation);
+delayedHandleOrientation();
 
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+function updateOverlay() {
+    const overlay = document.getElementById('start-overlay');
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isPortrait) {
+        overlay.innerHTML = `<div class="guide-icon rotate-anim"></div><div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>請將手機轉為橫向以獲得最佳體驗<br>或點擊此處直接進入</p></div>`;
+    } else {
+        overlay.innerHTML = `<div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div>`;
+    }
+}
 
-                canvas.width = img.naturalWidth || 1200;
-                canvas.height = img.naturalHeight || 900;
+function enterFullScreen() {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => console.log(err.message));
+    }
+    document.getElementById('start-overlay').style.display = 'none';
+}
 
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+function openTab(evt, tabName) {
+    document.querySelectorAll(".button-group").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".tab-trigger").forEach(el => el.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+}
 
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
-                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+function togglePoem() {
+    const poemBox = document.getElementById('poem-box');
+    poemBox.classList.toggle('show');
+}
 
-                const rawLines = textContent.includes('。') ? textContent.split('。') : [textContent];
-                
-                ctx.fillStyle = '#ffffff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+function playSelectedContent(selectElement) {
+    const val = selectElement.value;
+    if (!val) return;
 
-                let firstLine = rawLines[0] || '';
-                let greeting = firstLine.slice(0, 2);
-                let restGreeting = firstLine.slice(2);
+    const facade = document.getElementById('landscape-facade');
+    facade.classList.add('door-open');
 
-                const scale = canvas.width / 800;
+    let iframeContainer = facade.querySelector('.youtube-player-container');
+    if (!iframeContainer) {
+        iframeContainer = document.createElement('div');
+        iframeContainer.className = 'youtube-player-container';
+        iframeContainer.style.cssText = "position:absolute; inset:0; z-index:5; background:#000; display:flex; justify-content:center; align-items:center;";
+        facade.appendChild(iframeContainer);
+    }
 
-                if (styleType === 'artistic') {
-                    ctx.font = `${Math.round(90 * scale)}px "Ma Shan Zheng", cursive`;
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - (100 * scale));
+    if (val.startsWith("http")) {
+        iframeContainer.innerHTML = `<div style="color:#fff; text-align:center; padding:20px;">已開啟播放清單，<a href="${val}" target="_blank" style="color:#D4AF37;">點此前往 YouTube 觀賞</a></div>`;
+    } else {
+        iframeContainer.innerHTML = `
+            <iframe width="100%" height="100%" 
+                src="https://www.youtube.com/embed/${val}?autoplay=1" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen style="width:100%; height:100%;">
+            </iframe>
+        `;
+    }
+}
 
-                    if(restGreeting) {
-                        ctx.font = `${Math.round(34 * scale)}px "Noto Serif TC", serif`;
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - (25 * scale));
-                    }
+const progressBar = document.getElementById('progress-bar');
+let progress = 0;
+const interval = setInterval(() => { 
+    if (progress < 90) { 
+        progress += 5; 
+        progressBar.value = progress; 
+    } 
+}, 100);
 
-                    ctx.font = `${Math.round(32 * scale)}px "Noto Serif TC", serif`;
-                    let subY = canvas.height / 2 + (50 * scale);
-                    for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
-                        ctx.fillText(rawLines[i], canvas.width / 2, subY);
-                        subY += (60 * scale);
-                    }
-                } else {
-                    ctx.font = `bold ${Math.round(48 * scale)}px "Noto Serif TC", serif`;
-                    ctx.fillText(greeting, canvas.width / 2, canvas.height / 2 - (70 * scale));
+function finishLoading() {
+    clearInterval(interval);
+    progressBar.value = 100;
+    setTimeout(() => {
+        document.getElementById('loader-container').style.display = 'none';
+        document.getElementById('logo-img').style.display = 'block';
+        document.getElementById('logo-avatar').style.display = 'block';
+        document.getElementById('logo-link-wrap').style.display = 'block';
+    }, 200);
 
-                    if(restGreeting) {
-                        ctx.font = `${Math.round(32 * scale)}px "Noto Serif TC", serif`;
-                        ctx.fillText(restGreeting, canvas.width / 2, canvas.height / 2 - (15 * scale));
-                    }
+    const masonryContainer = document.getElementById("random-masonry");
+    const cards = Array.from(masonryContainer.children);
+    
+    for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+    
+    masonryContainer.innerHTML = "";
+    cards.slice(0, 15).forEach(card => masonryContainer.appendChild(card));
 
-                    let startY = canvas.height / 2 + (50 * scale);
-                    for (let i = 1; i < rawLines.length && rawLines[i]; i++) {
-                        ctx.fillText(rawLines[i], canvas.width / 2, startY);
-                        startY += (60 * scale);
-                    }
-                }
+    initLightbox();
+}
 
-                canvas.toBlob(function(blob) {
-                    callback(blob);
-                }, 'image/jpeg', 0.95);
-            };
-        }
+document.getElementById('logo-img').src = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
-        async function nativeShareCard(button, textContent, filename, styleType) {
-            const card = button.closest('.card');
-            const imgElement = card.querySelector('img');
-
-            button.innerText = '⏳ 準備...';
-            button.disabled = true;
-
-            generateCanvas(imgElement, textContent, styleType, async function(blob) {
-                const file = new File([blob], filename, { type: 'image/jpeg' });
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: '日常問候圖',
-                            text: textContent
-                        });
-                    } catch (error) {
-                        if (error.name !== 'AbortError') {
-                            console.log('分享取消', error);
-                        }
-                    }
-                } else {
-                    alert('瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」。');
-                }
-
-                button.innerText = '📤 一鍵分享';
-                button.disabled = false;
-            });
-        }
-
-        function downloadCardImage(button, textContent, filename, styleType) {
-            const card = button.closest('.card');
-            const imgElement = card.querySelector('img');
-
-            button.innerText = '⏳ 處理...';
-            button.disabled = true;
-
-            generateCanvas(imgElement, textContent, styleType, function(blob) {
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = url;
-                link.click();
-                URL.revokeObjectURL(url);
-
-                button.innerText = '📥 存至相簿';
-                button.disabled = false;
-            });
-        }
-
-        window.onload = showRandomCard;
-    </script>
+window.addEventListener("resize", updateOverlay);
+updateOverlay();
+</script>
 </body>
 </html>
