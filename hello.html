@@ -100,8 +100,9 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* 修正：改為季貼上方，去除上下空白 */
             max-height: calc(100vh - 160px);
+            margin-top: 0;
         }
 
         /* 卡片：上方不留外距，直接接合頁籤底線 */
