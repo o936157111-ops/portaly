@@ -1,39 +1,39 @@
 {
-    "date": "2026-09-23",
+    "date": "2026-09-24",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "台積電 2 奈米量產新進展：新一代 AI 晶片能效比提升 30%",
+            "title": "台積電2奈米量產進展順利，次世代AI晶片效能提升30%",
             "category": "半導體",
-            "summary": "台積電於今日全球半導體論壇發表 2 奈米（N2）製程最新突破，採用全環繞閘極（GAA）晶體管架構，使新一代 AI 伺服器晶片能在同等效能下降低 30% 能耗，預計第四季進一步擴增產能以滿足強勁需求。",
+            "summary": "台積電今日宣布2奈米先進製程量產進展順利，已獲多家全球科技巨頭預訂產能。該技術採用GAA（全環繞閘極）電晶體架構，能耗大幅降低並提升算力，為次世代AI晶片奠定關鍵基礎。",
             "source": "科技新報",
-            "url": "https://technews.tw/2026/09/23/tsmc-2nm-production-ai-chips/"
+            "url": "https://technews.tw/2026/09/24/tsmc-2nm-mass-production-update/"
         },
         {
             "id": 2,
-            "title": "OpenAI 推出新一代多模態模型，支援即時具身智能機器人操控",
+            "title": "OpenAI 發布新一代通用AI Agent，實現跨軟體自主工作流程",
             "category": "人工智慧",
-            "summary": "OpenAI 今日正式發布最新多模態模型，具備超低推理時延與空間幾何理解能力，並首次將具身智能（Embodied AI）控制 API 開放予工業與家用機器人開發者，大幅提升機器人複雜環境應變能力。",
+            "summary": "OpenAI 今日推出最新的 AI 代理系統，具備更強大的長期記憶與多步驟推理能力，能自動執行複雜的跨平台業務流程，標誌著企業自動化邁入全新階段。",
             "source": "iThome",
-            "url": "https://www.ithome.com.tw/news/20260923-openai-embodied-ai-launch"
+            "url": "https://www.ithome.com.tw/news/20260924-openai-next-agent"
         },
         {
             "id": 3,
-            "title": "歐盟正式通過《量子資安防護法案》，要求金融業 2028 前升級 PQC",
-            "category": "資訊安全",
-            "summary": "歐盟理事會今日通過全新資安法規，強制要求關鍵基礎設施與金融機構於 2028 年前全面採用後量子加密（PQC）標準，以抵禦未來高量子位元計算機可能帶來的密碼破解風險。",
-            "source": "數位時代",
-            "url": "https://www.bnext.com.tw/article/20260923/eu-post-quantum-cryptography-law"
+            "title": "Meta 展示輕量化AR眼鏡最新原型，整合多模態AI即時互動",
+            "category": "消費性電子",
+            "summary": "Meta 在最新技術峰會上展示專為日常配戴設計的輕量化 AR 眼鏡，機身重量僅 50 公克，整合即時視覺翻譯與多模態 AI 語音助理，預計明年正式量產。",
+            "source": "INSIDE",
+            "url": "https://www.inside.com.tw/article/2026-09-24-meta-ar-glasses-prototype"
         },
         {
             "id": 4,
-            "title": "低軌衛星直連手機技術突破，SpaceX 與全球電信商啟動預驗證測試",
-            "category": "通訊技術",
-            "summary": "SpaceX 與多家國際電信巨頭於今日聯合宣布，成功完成次世代低軌衛星直連智慧型手機（Direct-to-Cell）的高頻寬數據傳輸測試，實現無盲區的高清影音通話，預計將於 2027 年進行全面商業化營運。",
+            "title": "全球首座低軌衛星雷射通訊網全面運作，極地互聯網邁入Gbps時代",
+            "category": "前沿科技",
+            "summary": "低軌衛星通訊聯盟今日宣布全面啟用次世代衛星間雷射傳輸技術，即使在南極與偏遠海洋地區，也能提供高達 1Gbps 的高頻寬、低延遲網路連線服務。",
             "source": "電子時報",
-            "url": "https://www.digitimes.com.tw/tech/20260923-spacex-direct-to-cell-test"
+            "url": "https://www.digitimes.com.tw/tech/20260924-sat-laser-network/"
         }
     ]
 }
