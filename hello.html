@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日常問候圖庫</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&amp;family=Noto+Serif+TC:wght@300;500;700&amp;display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f7f5f0;
@@ -242,7 +240,7 @@
 <body>
 
     <div class="main-container">
-        <div id="gridContainer" class="masonry-grid"></div>
+        <div id="gridContainer" class="masonry-grid"><div class="masonry-item"><img src="https://live.staticflickr.com/1938/31253198468_68ac48510b_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1966/31253199788_6603b1fc47_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1962/30188916207_cce248a46e_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1923/45376158501_c03d32c330_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1918/31253193918_dd61a66cda_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1931/45078000062_ea6e3c5b52_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1953/45126808261_1a914ee5fd_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/53694088529_3e050e46a7_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1967/45126807931_0c78533ca9_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg" alt="問候圖" loading="lazy"></div></div>
     </div>
 
     <!-- 放大與互動預覽 Lightbox -->
@@ -261,7 +259,7 @@
     <footer>
         <div class="admin-trigger" id="adminTriggerBtn">⚙️ 後台圖庫管理</div>
 
-        <div class="admin-panel" id="adminPanel">
+        <div class="admin-panel" id="adminPanel" style="display: none;">
             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                 <strong>新增圖片與問候語</strong>
                 <button id="closeAdminBtn" style="border:none; background:none; cursor:pointer;">✕</button>
@@ -290,25 +288,77 @@
             "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。"
         ];
 
+        // 內建固定 17 張圖的清單
         let userCards = [
-            { text: "早安。把步調放慢一些，今天也要溫柔而堅定地過。", imgUrl: "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg" },
-            { text: "午安。忙碌之中，別忘了留一杯茶的時間給自己。", imgUrl: "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" },
-            { text: "晚安。把今天所有的紛擾都留在身後，做個好夢。", imgUrl: "https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg" },
-            { text: "晨光正好，願你的每一個早晨充滿喜樂。", imgUrl: "https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg" },
-            { text: "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。", imgUrl: "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg" },
-            { text: "願你今天有美好的一天。", imgUrl: "https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg" },
-            { text: "平安喜樂，順心如意。", imgUrl: "https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg" },
-            { text: "溫馨問候，天天好心情。", imgUrl: "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" }
-        ];
-
-        try {
-            const saved = localStorage.getItem('myCustomCards');
-            if (saved) {
-                userCards = JSON.parse(saved);
+            {
+                "text": "晚安。把今天所有的紛擾都留在身後，做個好夢。",
+                "imgUrl": "https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg"
+            },
+            {
+                "text": "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
+                "imgUrl": "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg"
+            },
+            {
+                "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+                "imgUrl": "https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg"
+            },
+            {
+                "text": "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
+                "imgUrl": "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg"
+            },
+            {
+                "text": "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
+                "imgUrl": "https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg"
+            },
+            {
+                "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+                "imgUrl": "https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg"
+            },
+            {
+                "text": "晚安。把今天所有的紛擾都留在身後，做個好夢。",
+                "imgUrl": "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg"
+            },
+            {
+                "text": "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
+                "imgUrl": "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg"
+            },
+            {
+                "text": "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
+                "imgUrl": "https://live.staticflickr.com/65535/53694088529_3e050e46a7_z.jpg"
+            },
+            {
+                "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+                "imgUrl": "https://live.staticflickr.com/1923/45376158501_c03d32c330_z.jpg"
+            },
+            {
+                "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+                "imgUrl": "https://live.staticflickr.com/1962/30188916207_cce248a46e_z.jpg"
+            },
+            {
+                "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+                "imgUrl": "https://live.staticflickr.com/1931/45078000062_ea6e3c5b52_z.jpg"
+            },
+            {
+                "text": "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
+                "imgUrl": "https://live.staticflickr.com/1918/31253193918_dd61a66cda_z.jpg"
+            },
+            {
+                "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+                "imgUrl": "https://live.staticflickr.com/1938/31253198468_68ac48510b_z.jpg"
+            },
+            {
+                "text": "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
+                "imgUrl": "https://live.staticflickr.com/1966/31253199788_6603b1fc47_z.jpg"
+            },
+            {
+                "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+                "imgUrl": "https://live.staticflickr.com/1967/45126807931_0c78533ca9_z.jpg"
+            },
+            {
+                "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+                "imgUrl": "https://live.staticflickr.com/1953/45126808261_1a914ee5fd_z.jpg"
             }
-        } catch (e) {
-            console.log(e);
-        }
+        ];
 
         function renderGrid() {
             const container = document.getElementById('gridContainer');
@@ -403,7 +453,6 @@
                     const originWidth = img.naturalWidth || 1000;
                     const originHeight = img.naturalHeight || 1000;
 
-                    // 使用 2 倍高畫質倍率（Retina 渲染），大幅提升手機上的文字清晰度
                     const scaleFactor = 2;
                     canvas.width = originWidth * scaleFactor;
                     canvas.height = originHeight * scaleFactor;
@@ -421,7 +470,6 @@
                         baseFontSize = 30;
                     }
 
-                    // 結合高畫質倍率計算最終字體大小
                     const scale = originWidth / 800;
                     const fontSize = Math.round(baseFontSize * scale * scaleFactor);
                     ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
@@ -538,7 +586,6 @@
             }
 
             userCards.push({ text: text, imgUrl: imgUrl });
-            localStorage.setItem('myCustomCards', JSON.stringify(userCards));
 
             textInput.value = '';
             imgUrlInput.value = '';
@@ -550,7 +597,6 @@
 
         function deleteCard(index) {
             userCards.splice(index, 1);
-            localStorage.setItem('myCustomCards', JSON.stringify(userCards));
             renderGrid();
             exportUpdatedHTML();
         }
@@ -608,5 +654,4 @@
             document.getElementById('closeLightboxBtn').addEventListener('click', closeLightbox);
         };
     </script>
-</body>
-</html>
+</body></html>
