@@ -194,12 +194,6 @@
             background-color: #2b6cb0;
             color: #fff;
             cursor: pointer;
-            margin-bottom: 8px;
-        }
-
-        .export-btn {
-            background-color: #2f855a !important;
-            margin-top: 5px;
         }
 
         .manage-list {
@@ -262,8 +256,7 @@
                 <label>圖片網址 (必填)</label>
                 <input type="text" id="newImgUrl" placeholder="https://live.staticflickr.com/...">
             </div>
-            <button class="admin-btn" id="addCardBtn">確認新增</button>
-            <button class="admin-btn export-btn" id="exportCodeBtn">📥 下載更新後的完整網頁 (更新 GitHub 用)</button>
+            <button class="admin-btn" id="addCardBtn">確認新增並下載更新檔案</button>
             <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
         </div>
     </footer>
@@ -291,7 +284,7 @@
             { text: "溫馨問候，天天好心情。", imgUrl: "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" }
         ];
 
-        // 讀取瀏覽器暫存（確保測試時不會遺失）
+        // 讀取瀏覽器暫存
         try {
             const saved = localStorage.getItem('myCustomCards');
             if (saved) {
@@ -474,6 +467,7 @@
             }
         }
 
+        // 確認新增並同時自動下載更新後的完整 HTML 檔案
         function addCard() {
             const textInput = document.getElementById('newText');
             const imgUrlInput = document.getElementById('newImgUrl');
@@ -497,15 +491,17 @@
 
             textInput.value = '';
             imgUrlInput.value = '';
+            document.getElementById('adminPanel').style.display = 'none';
 
             renderGrid();
-            alert('新增成功！記得點擊下方的「下載更新後的完整網頁」按鈕來更新 GitHub 檔案。');
+            exportUpdatedHTML(); // 新增後立刻自動打包下載
         }
 
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myCustomCards', JSON.stringify(userCards));
             renderGrid();
+            exportUpdatedHTML(); // 刪除時也自動打包下載最新的
         }
 
         function updateManageList() {
@@ -524,14 +520,10 @@
             });
         }
 
-        // 自動打包下載最新完整 HTML 的功能
         function exportUpdatedHTML() {
             const cardsJSON = JSON.stringify(userCards, null, 4);
-            
-            // 抓取當前整份文件的完整 HTML 結構
             let htmlContent = document.documentElement.outerHTML;
             
-            // 自動把最新的陣列替換進去
             const targetRegex = /let userCards = \[\s*([\s\S]*?)\s*\];/;
             const newCardsString = `let userCards = ${cardsJSON};`;
             
@@ -539,7 +531,7 @@
                 htmlContent = htmlContent.replace(targetRegex, newCardsString);
             }
 
-            // 確保下載時後台是關閉的狀態，避免把打開的後台面板狀態存進去
+            // 確保下載時後台是關閉狀態
             htmlContent = htmlContent.replace(/id="adminPanel"[^>]*style="display:\s*block;"/, 'id="adminPanel" style="display: none;"');
 
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -549,7 +541,6 @@
             a.download = 'index.html';
             a.click();
             URL.revokeObjectURL(url);
-            alert('已成功下載更新後的 index.html！請直接將此檔案上傳到 GitHub 覆蓋即可永久生效。');
         }
 
         window.onload = function() {
@@ -558,7 +549,6 @@
             document.getElementById('adminTriggerBtn').addEventListener('click', toggleAdmin);
             document.getElementById('closeAdminBtn').addEventListener('click', toggleAdmin);
             document.getElementById('addCardBtn').addEventListener('click', addCard);
-            document.getElementById('exportCodeBtn').addEventListener('click', exportUpdatedHTML);
 
             const lightbox = document.getElementById('lightbox');
             lightbox.addEventListener('click', closeLightbox);
