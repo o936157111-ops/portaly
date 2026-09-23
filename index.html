@@ -59,12 +59,48 @@
         .tab-trigger { cursor: pointer; color: #888; font-weight: normal; transition: all 0.2s; text-decoration: none; }
         .tab-trigger.active { color: #000; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
         
-        .slogan-section { text-align: center; margin-bottom: 25px; }
+        .slogan-section { text-align: center; margin-bottom: 20px; }
         .slogan-clickable { font-size: 1.25em; font-weight: bold; color: #444; cursor: pointer; display: inline-block; transition: color 0.2s; }
         .slogan-clickable:hover { color: #000; }
         
         .poem-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease-out; opacity: 0; color: #666; font-size: 0.9em; line-height: 1.8; margin-top: 0; }
         .poem-content.show { max-height: 150px; opacity: 1; margin-top: 8px; }
+
+        /* --- 新增：社群小 Logo 橫向排列樣式 --- */
+        .social-icons-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #E2E8F0;
+        }
+        .social-icon-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #F4F4F9;
+            border: 1px solid #DCDCDC;
+            color: #444;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .social-icon-link:hover {
+            background-color: #000;
+            color: #fff;
+            border-color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .social-icon-link svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
 
         .button-group { display: none; flex-direction: column; gap: 12px; width: 100%; }
         .button-group.active { display: flex; }
@@ -220,7 +256,7 @@
             #landscape-card-view { display: none !important; }
         }
 
-        /* --- 新增：隱藏按鈕與管理面板樣式 --- */
+        /* --- 隱藏按鈕與管理面板樣式 --- */
         .hidden-admin-trigger {
             width: 100%;
             height: 25px;
@@ -315,6 +351,30 @@
             </div>
         </div>
 
+        <!-- --- 新增：按鈕上方的社群小 Logo 橫向排列連結 --- -->
+        <div class="social-icons-row">
+            <!-- Portaly -->
+            <a href="https://portaly.cc/myezlife" class="social-icon-link" target="_blank" rel="noopener noreferrer" title="Portaly 數位名片">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            </a>
+            <!-- YouTube -->
+            <a href="https://www.youtube.com/@myezlife" class="social-icon-link" target="_blank" rel="noopener noreferrer" title="YouTube 頻道">
+                <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+            <!-- Pinterest -->
+            <a href="https://www.pinterest.com/myezstore/pins/" class="social-icon-link" target="_blank" rel="noopener noreferrer" title="Pinterest 靈感牆">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.399.165-1.495-.697-2.433-2.885-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.221 7.462-1.214 0-2.355-.63-2.743-1.375l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+            </a>
+            <!-- Blogger -->
+            <a href="https://myeztravellife.blogspot.com" class="social-icon-link" target="_blank" rel="noopener noreferrer" title="Blogger 部落格">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            </a>
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/?hl=zh-tw" class="social-icon-link" target="_blank" rel="noopener noreferrer" title="Instagram 專頁">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            </a>
+        </div>
+
         <div id="tab-1" class="button-group">
             <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
             <a href="https://portaly.cc/myezlife/pages/readingshare" class="btn" target="_blank" rel="noopener noreferrer">生活閱讀-讀後分享</a>
@@ -352,112 +412,16 @@
 
 <a href="https://live.staticflickr.com/1945/31242170068_ed2091c878_z.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/1945/31242170068_ed2091c878_z.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://www.eslite.com/product/10052265122683137254003" class="pin-card" target="_blank"><img src="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg" class="pin-img" alt="SOTHING向物小相機行動電源"></a><a href="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg" class="pin-img" alt="攝影作品"></a><a href="https://tw.buy.yahoo.com/gdsale/ViewSonic-%E5%84%AA%E6%B4%BE-VA1650-16%E5%9E%8B-USB-C-%E8%BC%95%E8%96%84%E5%8F%AF%E6%94%9C%E5%BC%8F%E8%9E%A2%E5%B9%95-IPS-3-5mm%E8%80%B3%E6%A9%9F%E5%AD%94-12148080.html" class="pin-card" target="_blank"><img src="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg" class="pin-img" alt="ViewSonic 優派輕薄可攜式螢幕"></a></div>
 
-        <!-- --- 新增：隱藏觸發按鈕 --- -->
+        <!-- --- 隱藏觸發按鈕 --- -->
         <button class="hidden-admin-trigger" onclick="verifyAdminPassword()"></button>
 
-        <!-- --- 新增：圖片管理後台 --- -->
+        <!-- --- 圖片管理後台 --- -->
         <div id="admin-panel" style="display: none;">
             <h3>圖片管理工具</h3>
             <input type="text" id="new-img-url" placeholder="請輸入圖片網址 (src)">
             <input type="text" id="new-link-url" placeholder="請輸入點擊連結網址 (href)">
             <button onclick="addNewPinImage()">新增圖片</button>
-            <div id="admin-item-list" style="max-height: 200px; overflow-y: auto; margin-top: 15px;"><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/1945/31242170068_ed2091c878_z.jpg">https://live.staticflickr.com/1945/31242170068_ed2091c878_z.jpg</span>
-                <div>
-                    <button onclick="editPinCard(0)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(0)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg">https://live.staticflickr.com/8744/28817140630_e1855d8ec2_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(1)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(1)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg">https://live.staticflickr.com/65535/55487694692_fd3905d860_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(2)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(2)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg">https://live.staticflickr.com/8308/29163173856_03398b9bd3_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(3)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(3)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg">https://live.staticflickr.com/65535/55541268294_561e5236ac_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(4)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(4)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg">https://live.staticflickr.com/65535/55541265833_5b9e4bb750_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(5)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(5)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg">https://live.staticflickr.com/65535/55540085672_a8606ae762_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(6)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(6)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg">https://live.staticflickr.com/8543/28819534700_abc191c82e_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(7)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(7)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg">https://live.staticflickr.com/65535/55541111161_7bded386a7_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(8)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(8)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg">https://live.staticflickr.com/8257/29476878321_0f4815672d_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(9)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(9)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg">https://s.eslite.com/b2b/newItem/2026/04/29/18186_101112721_53_ed_image.jpg</span>
-                <div>
-                    <button onclick="editPinCard(10)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(10)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg">https://live.staticflickr.com/65535/55541312774_b0df5831bc_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(11)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(11)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg">https://live.staticflickr.com/65535/55540131482_88e74de269_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(12)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(12)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg">https://live.staticflickr.com/8070/29098219566_e25b606e7c_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(13)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(13)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg">https://live.staticflickr.com/65535/55540085677_99b3e04b4a_k.jpg</span>
-                <div>
-                    <button onclick="editPinCard(14)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(14)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div><div class="admin-item">
-                <span style="max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg">https://img.yec.tw/zp/MerchandiseSpec/6AC1A96E60-SP-22952747.jpg</span>
-                <div>
-                    <button onclick="editPinCard(15)" style="width:auto; padding:4px 8px; margin:0; background:#0066cc;">修改</button>
-                    <button onclick="deletePinCard(15)" style="width:auto; padding:4px 8px; margin:0; background:#a90000;">刪除</button>
-                </div>
-            </div></div>
+            <div id="admin-item-list" style="max-height: 200px; overflow-y: auto; margin-top: 15px;"></div>
             <button onclick="saveHtmlFile()" style="background: #2b7a0b; margin-top: 15px;">另存 HTML 檔案</button>
         </div>
     </div>
@@ -759,13 +723,13 @@ window.addEventListener("resize", updateOverlay);
 updateOverlay();
 
 
-// --- 新增：動態密碼驗證與管理後台功能 ---
+// --- 動態密碼驗證與管理後台功能 ---
 function verifyAdminPassword() {
     const now = new Date();
     const y = now.getFullYear();
     const m = String(now.getMonth() + 1).padStart(2, '0');
     const d = String(now.getDate()).padStart(2, '0');
-    const correctPwd = `${y}${m}${d}`; // 格式為當天日期 (例如: 20260923)
+    const correctPwd = `${y}${m}${d}`;
 
     const inputPwd = prompt("請輸入管理密碼：");
     if (inputPwd === correctPwd) {
@@ -852,7 +816,7 @@ function editPinCard(index) {
 
 function saveHtmlFile() {
     const adminPanel = document.getElementById('admin-panel');
-    adminPanel.style.display = 'none'; // 下載前先隱藏後台
+    adminPanel.style.display = 'none';
 
     const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
     const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -863,7 +827,7 @@ function saveHtmlFile() {
     a.click();
     document.body.removeChild(a);
 
-    adminPanel.style.display = 'block'; // 下載完成後恢復顯示面板
+    adminPanel.style.display = 'block';
 }
 </script>
 
