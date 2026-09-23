@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日常問候圖庫</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;family=Noto+Sans+TC:wght@300;400;700&amp;family=Noto+Serif+TC:wght@300;500;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f7f5f0;
             --card-bg: #ffffff;
             --text-main: #4a4541;
             --text-sub: #8c857b;
-            --accent: #b5a491;
             --border-color: #d6cfc2;
         }
 
@@ -26,52 +26,58 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.4;
-            padding: 10px 15px;
-            max-width: 480px;
+            padding: 10px 12px;
+            max-width: 600px;
             margin: 0 auto;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
         }
 
         header {
             text-align: center;
-            padding: 5px 0;
+            padding: 10px 0;
         }
 
         h1 {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 500;
             letter-spacing: 2px;
-            margin-bottom: 2px;
             color: var(--text-main);
         }
 
         p.subtitle {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-sub);
             letter-spacing: 1px;
+            margin-top: 2px;
         }
 
+        /* Excel Sheet 風格頁籤 */
         .categories-container {
-            margin: 8px 0 0 0;
-            border-bottom: 2px solid var(--border-color);
+            margin: 10px 0 15px 0;
+            width: 100%;
         }
 
         .categories {
             display: flex;
             width: 100%;
+            background-color: #e2ded4;
+            padding: 2px 2px 0 2px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
         }
 
         .category-btn {
             flex: 1;
-            background-color: #ede7dc;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            padding: 6px 2px;
-            font-size: 0.8rem;
+            background-color: #ece8df;
+            border: 1px solid transparent;
+            border-bottom: 1px solid var(--border-color);
+            padding: 7px 0;
+            font-size: 0.75rem;
             color: var(--text-sub);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -79,106 +85,64 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-            margin-right: -1px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            margin-right: 2px;
+        }
+
+        .category-btn:last-child {
+            margin-right: 0;
         }
 
         .category-btn.active {
             background-color: var(--card-bg);
             color: var(--text-main);
-            font-weight: 500;
+            font-weight: 700;
             border-color: var(--border-color);
-            z-index: 2;
-            padding-top: 8px;
-            margin-top: -2px;
-        }
-
-        .main-container {
-            width: 100%;
-            margin-top: 0;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 0 0 10px 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-            border: 1px solid var(--border-color);
-            border-top: none;
-            margin-top: 0;
-        }
-
-        .card-image-box {
+            border-bottom: 1px solid var(--card-bg);
             position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background-color: #eee;
-            overflow: hidden;
-            cursor: pointer;
+            z-index: 2;
         }
 
-        .card-image-box img {
+        /* Pinterest 風格瀑布流排版 */
+        .masonry-grid {
+            column-count: 2;
+            column-gap: 10px;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 500px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+            position: relative;
+            cursor: pointer;
             transition: transform 0.2s;
         }
 
-        .card-overlay-text {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .masonry-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .masonry-item img {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            text-align: center;
-            pointer-events: none;
+            height: auto;
+            display: block;
+            object-fit: cover;
         }
 
-        .card-overlay-text p {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 0.95rem;
-            color: #ffffff;
-            line-height: 1.5;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-        }
-
-        .card-footer {
-            padding: 8px 10px;
-            background-color: var(--card-bg);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 6px;
-            width: 100%;
-        }
-
-        .action-btn {
-            flex: 1;
-            border: none;
-            padding: 9px 0;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-        }
-
-        .btn-share { background-color: #06C755; }
-        .btn-shuffle { background-color: #718096; }
-        .btn-download { background-color: var(--text-main); }
-
+        /* Lightbox 預覽視窗 */
         .lightbox {
             display: none;
             position: fixed;
@@ -190,7 +154,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
         }
 
         .lightbox-content {
@@ -204,7 +168,7 @@
 
         .lightbox-content img {
             max-width: 100%;
-            max-height: 75vh;
+            max-height: 70vh;
             object-fit: contain;
             border-radius: 8px;
         }
@@ -216,31 +180,40 @@
             background: none;
             border: none;
             color: #fff;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: pointer;
             padding: 5px 10px;
         }
 
-        .lightbox-hint {
-            color: #ccc;
-            font-size: 0.85rem;
+        .lightbox-btns {
+            display: flex;
+            gap: 10px;
             margin-top: 15px;
-            text-align: center;
+            width: 100%;
+        }
+
+        .lightbox-btns button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: #fff;
         }
 
         footer {
-            position: relative;
-            margin-top: 8px;
-            padding-bottom: 10px;
+            margin-top: auto;
+            padding: 10px 0;
         }
 
         .admin-trigger {
             text-align: center;
             padding: 6px;
-            font-size: 0.8rem;
+            font-size: 0.80rem;
             color: var(--text-sub);
             cursor: pointer;
-            user-select: none;
         }
 
         .admin-panel {
@@ -249,87 +222,62 @@
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 12px;
-            position: absolute;
-            bottom: 35px;
-            left: 0;
-            right: 0;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-            z-index: 500;
-        }
-
-        .admin-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .admin-panel h3 {
-            font-size: 0.9rem;
-            color: var(--text-main);
-            margin: 0;
-        }
-
-        .btn-close-admin {
-            background: #e2e8f0;
-            border: none;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            cursor: pointer;
+            position: relative;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .admin-form-group {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .admin-form-group label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-sub);
             margin-bottom: 2px;
         }
 
         .admin-form-group input, .admin-form-group select {
             width: 100%;
-            padding: 5px 8px;
+            padding: 6px 8px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
         .admin-btn {
             width: 100%;
-            padding: 6px;
+            padding: 8px;
             border: none;
             border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
+            font-size: 0.85rem;
             font-weight: 500;
             background-color: #2b6cb0;
             color: #fff;
+            cursor: pointer;
         }
-        
+
         .manage-list {
-            margin-top: 6px;
-            max-height: 60px;
+            margin-top: 10px;
+            max-height: 100px;
             overflow-y: auto;
             border-top: 1px solid var(--border-color);
-            padding-top: 4px;
+            padding-top: 6px;
         }
         .manage-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.7rem;
-            padding: 2px 0;
+            font-size: 0.75rem;
+            padding: 3px 0;
             border-bottom: 1px dashed var(--border-color);
         }
         .manage-item button {
             background: #c53030;
             color: #fff;
             border: none;
-            padding: 2px 5px;
+            padding: 2px 6px;
             border-radius: 4px;
             cursor: pointer;
         }
@@ -338,7 +286,7 @@
 <body>
 
     <header>
-        <h1>日常問候</h1>
+        <h1>日常問候圖庫</h1>
         <p class="subtitle">願你今日所求皆如願，所行皆坦途</p>
     </header>
 
@@ -353,43 +301,31 @@
     </div>
 
     <div class="main-container">
-        <div id="randomCardContainer">
-                <div class="card">
-                    <div class="card-image-box" onclick="openLightbox('https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&amp;fit=crop&amp;w=800&amp;q=80')">
-                        <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&amp;fit=crop&amp;w=800&amp;q=80';">
-                        <div class="card-overlay-text">
-                            <p>午安。午後的陽光溫暖而慵懶，稍作休息再出發。</p>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="action-buttons">
-                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '午安。午後的陽光溫暖而慵懶，稍作休息再出發。', 'afternoon.jpg', 'modern')">📤 一鍵分享</button>
-                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 隨機換一張</button>
-                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '午安。午後的陽光溫暖而慵懶，稍作休息再出發。', 'afternoon.jpg', 'modern')">📥 存至相簿</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="gridContainer" class="masonry-grid"></div>
     </div>
 
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()" style="display: none;">
+    <!-- 放大與互動預覽 Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
         <div class="lightbox-content" onclick="event.stopPropagation()">
             <button class="lightbox-close" onclick="closeLightbox()">✕ 關閉</button>
-            <img id="lightboxImg" src="" alt="大圖預覽">
-            <p class="lightbox-hint">💡 點擊下方按鈕即可分享或儲存原尺寸圖檔</p>
+            <img id="lightboxImg" src="" alt="預覽圖">
+            <div class="lightbox-btns">
+                <button style="background-color: #06C755;" id="lightboxShareBtn">📤 分享圖片</button>
+                <button style="background-color: #4a4541;" id="lightboxDownloadBtn">📥 儲存圖片</button>
+            </div>
         </div>
     </div>
 
     <footer>
-        <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 設定</div>
+        <div class="admin-trigger" onclick="toggleAdmin()">⚙️ 後台圖庫管理</div>
 
-        <div class="admin-panel" id="adminPanel" style="display: none;">
-            <div class="admin-panel-header">
-                <h3>圖庫管理後台</h3>
-                <button class="btn-close-admin" onclick="toggleAdmin()">✕ 關閉</button>
+        <div class="admin-panel" id="adminPanel">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <strong>新增圖片至分類</strong>
+                <button onclick="toggleAdmin()" style="border:none; background:none; cursor:pointer;">✕</button>
             </div>
             <div class="admin-form-group">
-                <label>分類</label>
+                <label>選擇分類</label>
                 <select id="newCategory">
                     <option value="morning">早安</option>
                     <option value="afternoon">午安</option>
@@ -398,17 +334,15 @@
                 </select>
             </div>
             <div class="admin-form-group">
-                <label>問候文字 (不填則隨機產生)</label>
-                <input type="text" id="newText" placeholder="例如：早安。新的一天加油！">
+                <label>自訂問候語 (選填，不填則隨機)</label>
+                <input type="text" id="newText" placeholder="例如：早安！美好的一天開始囉。">
             </div>
             <div class="admin-form-group">
                 <label>圖片網址 (必填)</label>
                 <input type="text" id="newImgUrl" placeholder="https://images.unsplash.com/...">
             </div>
-            <div class="admin-btns">
-                <button class="admin-btn" onclick="addCard()">新增問候圖並更新網頁</button>
-            </div>
-            <div class="manage-list" id="manageList"><strong>自訂管理：</strong><div class="manage-item"><span>[morning] 早安。新的一天，...</span><button onclick="deleteCard(0)">刪除</button></div><div class="manage-item"><span>[morning] 早安。把步調放慢...</span><button onclick="deleteCard(1)">刪除</button></div><div class="manage-item"><span>[morning] 早安。晨曦微露，...</span><button onclick="deleteCard(2)">刪除</button></div><div class="manage-item"><span>[morning] 早安。迎著微風，...</span><button onclick="deleteCard(3)">刪除</button></div><div class="manage-item"><span>[morning] 早安。新的一天，...</span><button onclick="deleteCard(4)">刪除</button></div><div class="manage-item"><span>[morning] 早安。晨曦微露，...</span><button onclick="deleteCard(5)">刪除</button></div></div>
+            <button class="admin-btn" onclick="addCard()">確認新增並儲存</button>
+            <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
         </div>
     </footer>
 
@@ -416,27 +350,19 @@
         const imagePool = {
             morning: [
                 "photo-1507525428034-b723cf961d3e", "photo-1470240731273-7821a6eeb6bd", "photo-1506744038136-46273834b3fb",
-                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b",
-                "photo-1447752875215-b2761acb3c5d", "photo-1426604966848-d7adacbd02bff", "photo-1510784722466-f2aa9c52fff6",
-                "photo-1495107334309-fcf20504a5ab", "photo-1500530855697-b586d89ba3ee", "photo-1418065460487-3e41a6c84dc5"
+                "photo-1472214103451-9374bd1c798e", "photo-1501785888041-af3ef285b470", "photo-1464822759023-fed622ff2c3b"
             ],
             afternoon: [
                 "photo-1501339847302-ac426a4a7cbb", "photo-1509316975850-ff9c5deb0cd9", "photo-1433086966358-54859d0ed716",
-                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff",
-                "photo-1511497584788-876761142197", "photo-1448375240586-882707db888b", "photo-1473448912268-2022ce9509d8",
-                "photo-1506744038136-46273834b3fb", "photo-1469474968028-56623f02e42e", "photo-1508873696983-2df5c92091c7"
+                "photo-1470071459604-3b5ec3a7fe05", "photo-1546069901-ba9599a7e63c", "photo-1526772662000-3f88f10405ff"
             ],
             night: [
-                "photo-1507499739999-097706ad8914", "photo-1519681393784-d120267933ba", "photo-1532693322450-2cb5c51106d6",
-                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb",
-                "photo-1534447677768-be436bb09401", "photo-1509198397868-475647b2a1e5", "photo-1516339901601-2e1b62dc0c45",
-                "photo-1508739773434-c26b3d09e071", "photo-1519501025264-65ba15a82390", "photo-1489549842482-0622e3795554"
+                "photo-1509198397868-475647b2a1e5", "photo-1519681393784-d120267933ba", "photo-1511447333015-45b65e60f6d5",
+                "photo-1518709268805-4e9042af9f23", "photo-1505506874110-6a7a69069a08", "photo-1517411032315-54ef2cb783bb"
             ],
             holiday: [
                 "photo-1513151233558-d860c5398176", "photo-1492684223066-81342ee5ff30", "photo-1533174072545-7a4b6ad7a6c3",
-                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819",
-                "photo-1467810563316-b5476525c0f9", "photo-1530103862676-de8c9debad1d", "photo-1527529482837-4698179dc6ce",
-                "photo-1498931299472-f7a63a5a1cfa", "photo-1513151233558-d860c5398176", "photo-1543269865-cbf427effbad"
+                "photo-1506157786151-b8491531f063", "photo-1511578314322-379afb476865", "photo-1514525253161-7a46d19cd819"
             ]
         };
 
@@ -444,106 +370,108 @@
             morning: [
                 "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
                 "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
-                "早安。迎著微風，開啟充滿希望的一天。",
-                "早安。新的一天，願平安喜樂常相隨。",
-                "早安。晨曦微露，願你今天擁有美好的一天。"
+                "早安。迎著微風，開啟充滿希望的一天。"
             ],
             afternoon: [
                 "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
                 "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
-                "午安。喝杯咖啡，讓心靈沉澱片刻。",
-                "午安。願你的午後時光輕鬆愉快，順心如意。",
-                "午安。充電過後，繼續迎接美好的下午。"
+                "午安。喝杯咖啡，讓心靈沉澱片刻。"
             ],
             night: [
                 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
                 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
-                "晚安。卸下一天的疲憊，好好愛自己。",
-                "晚安.帶著滿滿的感恩，進入甜美的夢鄉。",
-                "晚安。願好夢陪你到天明。"
+                "晚安。卸下一天的疲憊，好好愛自己。"
             ],
             holiday: [
                 "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
-                "假期愉快。拋開工作，享受屬於自己的悠閒時光。",
-                "週末安康。願美好與溫馨填滿你的假期。",
-                "祝你有個充實又放鬆的美好假期！"
+                "假期愉快。拋開工作，享受屬於自己的悠閒時光。"
             ]
         };
 
         let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
         let currentFilter = 'all';
 
-        function getFilteredPool() {
-            let poolList = [];
-            ['morning', 'afternoon', 'night', 'holiday'].forEach(cat => {
+        function getCategoryPool(cat) {
+            let list = [];
+            let pool = imagePool[cat] || [];
+            let texts = defaultTexts[cat] || ["願你今天一切安好"];
+            for (let i = 0; i < pool.length; i++) {
+                list.push({
+                    category: cat,
+                    text: texts[i % texts.length],
+                    imgUrl: `https://images.unsplash.com/${pool[i]}?auto=format&fit=crop&w=600&q=80`
+                });
+            }
+            return list;
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+
+            let allItems = [];
+            const cats = ['morning', 'afternoon', 'night', 'holiday'];
+            
+            cats.forEach(cat => {
                 if (currentFilter === 'all' || currentFilter === cat) {
-                    let pool = imagePool[cat];
-                    let texts = defaultTexts[cat];
-                    for(let i = 0; i < pool.length; i++) {
-                        poolList.push({
-                            category: cat,
-                            text: texts[i % texts.length],
-                            imgUrl: `https://images.unsplash.com/${pool[i]}?auto=format&fit=crop&w=800&q=80`,
-                            style: i % 2 === 0 ? 'artistic' : 'modern'
-                        });
-                    }
+                    allItems = allItems.concat(getCategoryPool(cat));
                 }
             });
 
             userCards.forEach(item => {
                 if (currentFilter === 'all' || currentFilter === item.category) {
-                    poolList.push(item);
+                    allItems.push(item);
                 }
             });
 
-            return poolList;
-        }
-
-        function filterCategory(category, event) {
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            currentFilter = category;
-            showRandomCard();
-        }
-
-        function showRandomCard() {
-            const poolList = getFilteredPool();
-            const container = document.getElementById('randomCardContainer');
-
-            if (poolList.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:30px; color:#888; font-size:0.9rem;">此分類目前尚無圖片，請至下方設定新增！</div>`;
+            if (allItems.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:30px; color:#888;">此分類目前尚無圖片，請至下方後台新增！</div>`;
                 return;
             }
 
-            const randomIndex = Math.floor(Math.random() * poolList.length);
-            const item = poolList[randomIndex];
-            const safeText = item.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-            
-            container.innerHTML = `
-                <div class="card">
-                    <div class="card-image-box" onclick="openLightbox('${item.imgUrl}')">
-                        <img src="${item.imgUrl}" alt="問候圖" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
-                        <div class="card-overlay-text">
-                            <p>${item.text}</p>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="action-buttons">
-                            <button class="action-btn btn-share" onclick="nativeShareCard(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📤 一鍵分享</button>
-                            <button class="action-btn btn-shuffle" onclick="showRandomCard()">🎲 隨機換一張</button>
-                            <button class="action-btn btn-download" onclick="downloadCardImage(this, '${safeText}', '${item.category}.jpg', '${item.style}')">📥 存至相簿</button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            allItems.sort(() => Math.random() - 0.5);
+
+            allItems.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'masonry-item';
+                
+                const img = document.createElement('img');
+                img.src = item.imgUrl;
+                img.alt = "問候圖";
+                img.loading = "lazy";
+                
+                // 改用安全的事件綁定，避免文字中的引號或特殊符號中斷 JS 執行
+                img.addEventListener('click', () => {
+                    openLightbox(item.imgUrl, item.text, item.category);
+                });
+                
+                div.appendChild(img);
+                container.appendChild(div);
+            });
+
             updateManageList();
         }
 
-        function openLightbox(imgUrl) {
+        function filterCategory(cat, event) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            currentFilter = cat;
+            renderGrid();
+        }
+
+        function openLightbox(imgUrl, text, category) {
             const lightbox = document.getElementById('lightbox');
-            document.getElementById('lightboxImg').src = imgUrl;
+            const previewImg = document.getElementById('lightboxImg');
+            
+            previewImg.src = imgUrl;
+            generateTextOnImage(imgUrl, text, function(blob) {
+                const objectUrl = URL.createObjectURL(blob);
+                previewImg.src = objectUrl;
+            });
+            
+            document.getElementById('lightboxShareBtn').onclick = () => shareCardDirect(imgUrl, text, `${category}.jpg`);
+            document.getElementById('lightboxDownloadBtn').onclick = () => downloadCardDirect(imgUrl, text, `${category}.jpg`);
+            
             lightbox.style.display = 'flex';
         }
 
@@ -551,20 +479,94 @@
             document.getElementById('lightbox').style.display = 'none';
         }
 
+        function generateTextOnImage(imgUrl, textContent, callback) {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = imgUrl;
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = img.naturalWidth || 1000;
+                canvas.height = img.naturalHeight || 1000;
+
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const scale = canvas.width / 800;
+                const fontSize = Math.round(46 * scale);
+                ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const maxLineWidth = canvas.width * 0.85;
+                let lines = [];
+                let currentLine = "";
+
+                for (let i = 0; i < textContent.length; i++) {
+                    let char = textContent[i];
+                    let testLine = currentLine + char;
+                    if (ctx.measureText(testLine).width > maxLineWidth && currentLine !== "") {
+                        lines.push(currentLine);
+                        currentLine = char;
+                    } else {
+                        currentLine = testLine;
+                    }
+                }
+                if (currentLine) lines.push(currentLine);
+
+                const lineHeight = fontSize * 1.6;
+                let startY = (canvas.height - (lines.length * lineHeight)) / 2 + (lineHeight / 2);
+
+                lines.forEach(line => {
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+                    ctx.shadowBlur = 10;
+                    ctx.fillText(line, canvas.width / 2, startY);
+                    startY += lineHeight;
+                });
+
+                canvas.toBlob(blob => callback(blob), 'image/jpeg', 0.95);
+            };
+        }
+
+        async function shareCardDirect(imgUrl, text, filename) {
+            generateTextOnImage(imgUrl, text, async function(blob) {
+                const file = new File([blob], filename, { type: 'image/jpeg' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({ files: [file], title: '日常問候圖', text: text });
+                    } catch (e) { console.log('分享取消'); }
+                } else {
+                    alert('您的瀏覽器不支援直接分享圖片檔案，請使用「儲存圖片」按鈕。');
+                }
+            });
+        }
+
+        function downloadCardDirect(imgUrl, text, filename) {
+            generateTextOnImage(imgUrl, text, function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
         function toggleAdmin() {
             const panel = document.getElementById('adminPanel');
             if (panel.style.display === 'block') {
                 panel.style.display = 'none';
             } else {
-                const pwd = prompt("請輸入密碼：");
-                
-                // 動態產生當天日期作為密碼 (格式: YYYYMMDD)
                 const today = new Date();
-                const year = today.getFullYear();
-                const month = String(today.getMonth() + 1).padStart(2, '0');
-                const day = String(today.getDate()).padStart(2, '0');
-                const dynamicPwd = `${year}${month}${day}`;
-
+                const pwd = prompt("");
+                const dynamicPwd = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+                
                 if (pwd === dynamicPwd) {
                     panel.style.display = 'block';
                 } else if (pwd !== null) {
@@ -579,43 +581,39 @@
             const imgUrl = document.getElementById('newImgUrl').value.trim();
 
             if (!imgUrl) {
-                alert('請至少填寫圖片網址！');
+                alert('請填寫圖片網址！');
                 return;
             }
 
-            if (!text) {
-                const texts = defaultTexts[cat];
+            // 如果未填寫問候語，自動隨機抓取對應分類的一句
+            if (text === "") {
+                const texts = defaultTexts[cat] || ["願你今天平安喜樂"];
                 text = texts[Math.floor(Math.random() * texts.length)];
             }
 
-            userCards.push({
-                category: cat,
-                text: text,
-                imgUrl: imgUrl,
-                style: 'modern'
-            });
-
+            userCards.push({ category: cat, text: text, imgUrl: imgUrl });
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
+
             document.getElementById('newText').value = '';
             document.getElementById('newImgUrl').value = '';
             document.getElementById('adminPanel').style.display = 'none';
-            
-            showRandomCard();
+
+            renderGrid();
             exportHTML();
         }
 
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
-            showRandomCard();
+            renderGrid();
             exportHTML();
         }
 
         function updateManageList() {
             const listEl = document.getElementById('manageList');
-            listEl.innerHTML = '<strong>自訂管理：</strong>';
+            listEl.innerHTML = '<strong>自訂項目管理：</strong>';
             if (userCards.length === 0) {
-                listEl.innerHTML += '<span style="font-size:0.7rem; color:#888;"> 無自訂卡片</span>';
+                listEl.innerHTML += '<span style="font-size:0.75rem; color:#888;"> 目前無自訂圖片</span>';
                 return;
             }
             userCards.forEach((item, index) => {
@@ -637,121 +635,7 @@
             URL.revokeObjectURL(url);
         }
 
-        function generateCanvas(imgElement, textContent, styleType, callback) {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.src = imgElement.src;
-
-            img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                canvas.width = img.naturalWidth || 1200;
-                canvas.height = img.naturalHeight || 900;
-
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
-                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                const scale = canvas.width / 800;
-                const maxLineWidth = canvas.width * 0.85;
-
-                ctx.fillStyle = '#ffffff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                
-                const fontSize = Math.round(36 * scale);
-                ctx.font = `${fontSize}px "Noto Serif TC", serif`;
-
-                let lines = [];
-                let currentLine = "";
-
-                for (let i = 0; i < textContent.length; i++) {
-                    let char = textContent[i];
-                    let testLine = currentLine + char;
-                    let metrics = ctx.measureText(testLine);
-                    if (metrics.width > maxLineWidth && currentLine !== "") {
-                        lines.push(currentLine);
-                        currentLine = char;
-                    } else {
-                        currentLine = testLine;
-                    }
-                }
-                if (currentLine) {
-                    lines.push(currentLine);
-                }
-
-                const lineHeight = fontSize * 1.5;
-                const totalHeight = lines.length * lineHeight;
-                let startY = (canvas.height - totalHeight) / 2 + (lineHeight / 2);
-
-                lines.forEach((line) => {
-                    ctx.fillText(line, canvas.width / 2, startY);
-                    startY += lineHeight;
-                });
-
-                canvas.toBlob(function(blob) {
-                    callback(blob);
-                }, 'image/jpeg', 0.95);
-            };
-        }
-
-        async function nativeShareCard(button, textContent, filename, styleType) {
-            const card = button.closest('.card');
-            const imgElement = card.querySelector('img');
-
-            button.innerText = '⏳ 準備...';
-            button.disabled = true;
-
-            generateCanvas(imgElement, textContent, styleType, async function(blob) {
-                const file = new File([blob], filename, { type: 'image/jpeg' });
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: '日常問候圖',
-                            text: textContent
-                        });
-                    } catch (error) {
-                        if (error.name !== 'AbortError') {
-                            console.log('分享取消', error);
-                        }
-                    }
-                } else {
-                    alert('瀏覽器不支援直接分享圖片檔案，請使用「存至相簿」。');
-                }
-
-                button.innerText = '📤 一鍵分享';
-                button.disabled = false;
-            });
-        }
-
-        function downloadCardImage(button, textContent, filename, styleType) {
-            const card = button.closest('.card');
-            const imgElement = card.querySelector('img');
-
-            button.innerText = '⏳ 處理...';
-            button.disabled = true;
-
-            generateCanvas(imgElement, textContent, styleType, function(blob) {
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = url;
-                link.click();
-                URL.revokeObjectURL(url);
-
-                button.innerText = '📥 存至相簿';
-                button.disabled = false;
-            });
-        }
-
-        window.onload = showRandomCard;
+        window.onload = renderGrid;
     </script>
-
-<span data-test-id="pinterest-save-button" style="border-radius:10px !important;text-indent:12px !important;width:auto !important;height:20px !important;padding:0px 8px !important;text-align:center !important;vertical-align:middle !important;font:bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;color:rgb(255, 255, 255) !important;background:url(&quot;data:image/svg+xml;base64,PHN2ZyBpZD0ic291cmNlIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIGZpbGw9IiNFNjAwMjMiPjwvY2lyY2xlPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgNkMwIDguNTYxNSAxLjYwNTUgMTAuNzQ4NSAzLjg2NSAxMS42MDlDMy44MSAxMS4xNDA1IDMuNzUxNSAxMC4zNjggMy44Nzc1IDkuODI2QzMuOTg2IDkuMzYgNC41NzggNi44NTcgNC41NzggNi44NTdDNC41NzggNi44NTcgNC4zOTk1IDYuNDk5NSA0LjM5OTUgNS45N0M0LjM5OTUgNS4xNCA0Ljg4MDUgNC41MiA1LjQ4IDQuNTJDNS45OSA0LjUyIDYuMjM2IDQuOTAyNSA2LjIzNiA1LjM2MUM2LjIzNiA1Ljg3MzUgNS45MDk1IDYuNjM5NSA1Ljc0MSA3LjM1QzUuNjAwNSA3Ljk0NDUgNi4wMzk1IDguNDI5NSA2LjYyNTUgOC40Mjk1QzcuNjg3IDguNDI5NSA4LjUwMzUgNy4zMSA4LjUwMzUgNS42OTRDOC41MDM1IDQuMjYzNSA3LjQ3NTUgMy4yNjQgNi4wMDggMy4yNjRDNC4zMDkgMy4yNjQgMy4zMTE1IDQuNTM4NSAzLjMxMTUgNS44NTZDMy4zMTE1IDYuMzY5NSAzLjUwOSA2LjkxOTUgMy43NTYgNy4yMTlDMy44MDQ1IDcuMjc4NSAzLjgxMiA3LjMzIDMuNzk3NSA3LjM5MDVDMy43NTIgNy41Nzk1IDMuNjUxIDcuOTg1IDMuNjMxNSA4LjA2OEMzLjYwNSA4LjE3NyAzLjU0NSA4LjIwMDUgMy40MzE1IDguMTQ3NUMyLjY4NTUgNy44MDA1IDIuMjE5NSA2LjcxIDIuMjE5NSA1LjgzNEMyLjIxOTUgMy45NDk1IDMuNTg4IDIuMjE5NSA2LjE2NTUgMi4yMTk1QzguMjM3NSAyLjIxOTUgOS44NDggMy42OTYgOS44NDggNS42NjlDOS44NDggNy43Mjc1IDguNTUwNSA5LjM4NDUgNi43NDg1IDkuMzg0NUM2LjE0MyA5LjM4NDUgNS41NzQ1IDkuMDY5NSA1LjM3OTUgOC42OThDNS4zNzk1IDguNjk4IDUuMDggOS44MzkgNS4wMDc1IDEwLjExOEM0Ljg2NjUgMTAuNjYgNC40NzU1IDExLjM0NiA0LjIzMyAxMS43MzU1QzQuNzkyIDExLjkwNzUgNS4zODUgMTIgNiAxMkM5LjMxMzUgMTIgMTIgOS4zMTM1IDEyIDZDMTIgMi42ODY1IDkuMzEzNSAwIDYgMEMyLjY4NjUgMCAwIDIuNjg2NSAwIDZaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8L3N2Zz4=&quot;) 4px 50% / 12px 12px no-repeat rgb(230, 0, 35) !important;position:absolute !important;opacity:1 !important;z-index:9007199254740990 !important;display:none !important;cursor:pointer !important;border:none !important;-webkit-font-smoothing:antialiased !important;top:0 !important;left:0 !important;display:none !important;top:121px !important;left:408px !important">儲存</span><span data-test-id="pinterest-save-button" style="border-radius:10px !important;text-indent:12px !important;width:auto !important;height:20px !important;padding:0px 8px !important;text-align:center !important;vertical-align:middle !important;font:bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;color:rgb(255, 255, 255) !important;background:url(&quot;data:image/svg+xml;base64,PHN2ZyBpZD0ic291cmNlIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIGZpbGw9IiNFNjAwMjMiPjwvY2lyY2xlPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgNkMwIDguNTYxNSAxLjYwNTUgMTAuNzQ4NSAzLjg2NSAxMS42MDlDMy44MSAxMS4xNDA1IDMuNzUxNSAxMC4zNjggMy44Nzc1IDkuODI2QzMuOTg2IDkuMzYgNC41NzggNi44NTcgNC41NzggNi44NTdDNC41NzggNi44NTcgNC4zOTk1IDYuNDk5NSA0LjM5OTUgNS45N0M0LjM5OTUgNS4xNCA0Ljg4MDUgNC41MiA1LjQ4IDQuNTJDNS45OSA0LjUyIDYuMjM2IDQuOTAyNSA2LjIzNiA1LjM2MUM2LjIzNiA1Ljg3MzUgNS45MDk1IDYuNjM5NSA1Ljc0MSA3LjM1QzUuNjAwNSA3Ljk0NDUgNi4wMzk1IDguNDI5NSA2LjYyNTUgOC40Mjk1QzcuNjg3IDguNDI5NSA4LjUwMzUgNy4zMSA4LjUwMzUgNS42OTRDOC41MDM1IDQuMjYzNSA3LjQ3NTUgMy4yNjQgNi4wMDggMy4yNjRDNC4zMDkgMy4yNjQgMy4zMTE1IDQuNTM4NSAzLjMxMTUgNS44NTZDMy4zMTE1IDYuMzY5NSAzLjUwOSA2LjkxOTUgMy43NTYgNy4yMTlDMy44MDQ1IDcuMjc4NSAzLjgxMiA3LjMzIDMuNzk3NSA3LjM5MDVDMy43NTIgNy41Nzk1IDMuNjUxIDcuOTg1IDMuNjMxNSA4LjA2OEMzLjYwNSA4LjE3NyAzLjU0NSA4LjIwMDUgMy40MzE1IDguMTQ3NUMyLjY4NTUgNy44MDA1IDIuMjE5NSA2LjcxIDIuMjE5NSA1LjgzNEMyLjIxOTUgMy45NDk1IDMuNTg4IDIuMjE5NSA2LjE2NTUgMi4yMTk1QzguMjM3NSAyLjIxOTUgOS44NDggMy42OTYgOS44NDggNS42NjlDOS44NDggNy43Mjc1IDguNTUwNSA5LjM4NDUgNi43NDg1IDkuMzg0NUM2LjE0MyA5LjM4NDUgNS41NzQ1IDkuMDY5NSA1LjM3OTUgOC42OThDNS4zNzk1IDguNjk4IDUuMDggOS44MzkgNS4wMDc1IDEwLjExOEM0Ljg2NjUgMTAuNjYgNC40NzU1IDExLjM0NiA0LjIzMyAxMS43MzU1QzQuNzkyIDExLjkwNzUgNS4zODUgMTIgNiAxMkM5LjMxMzUgMTIgMTIgOS4zMTM1IDEyIDZDMTIgMi42ODY1IDkuMzEzNSAwIDYgMEMyLjY4NjUgMCAwIDIuNjg2NSAwIDZaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8L3N2Zz4=&quot;) 4px 50% / 12px 12px no-repeat rgb(230, 0, 35) !important;position:absolute !important;opacity:1 !important;z-index:9007199254740990 !important;display:none !important;cursor:pointer !important;border:none !important;-webkit-font-smoothing:antialiased !important;top:0 !important;left:0 !important;display:none !important;top:121px !important;left:408px !important">儲存</span></body></html>
+</body>
+</html>
