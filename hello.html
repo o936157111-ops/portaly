@@ -249,7 +249,6 @@
     <div class="lightbox" id="lightbox">
         <div class="lightbox-content" id="lightboxContentBox">
             <button class="lightbox-close" id="closeLightboxBtn">✕ 關閉</button>
-            <!-- 新增：問候語選擇下拉選單 -->
             <select id="lightboxTextSelector" class="lightbox-text-selector"></select>
             <img id="lightboxImg" src="" alt="預覽圖">
             <div class="lightbox-btns">
@@ -291,7 +290,6 @@
             "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。"
         ];
 
-        // 圖片清單
         let userCards = [
             { text: "早安。把步調放慢一些，今天也要溫柔而堅定地過。", imgUrl: "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg" },
             { text: "午安。忙碌之中，別忘了留一杯茶的時間給自己。", imgUrl: "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" },
@@ -303,7 +301,6 @@
             { text: "溫馨問候，天天好心情。", imgUrl: "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" }
         ];
 
-        // 讀取瀏覽器暫存
         try {
             const saved = localStorage.getItem('myCustomCards');
             if (saved) {
@@ -337,7 +334,8 @@
                 img.loading = "lazy";
                 
                 img.addEventListener('click', () => {
-                    openLightbox(item.imgUrl, item.text);
+                    const randomDefault = item.text || randomTexts[Math.floor(Math.random() * randomTexts.length)];
+                    openLightbox(item.imgUrl, randomDefault);
                 });
                 
                 div.appendChild(img);
@@ -351,7 +349,6 @@
             const lightbox = document.getElementById('lightbox');
             const selector = document.getElementById('lightboxTextSelector');
             
-            // 建立下拉選單選項（把 randomTexts 跟現有卡片的文字結合，去除重複）
             const allPossibleTexts = Array.from(new Set([...randomTexts, ...userCards.map(c => c.text)]));
             
             selector.innerHTML = '';
@@ -365,10 +362,8 @@
                 selector.appendChild(option);
             });
 
-            // 更新預覽圖片與文字
             updatePreviewImage(imgUrl, selector.value);
 
-            // 當下拉選單切換時，即時更新圖片上的文字
             selector.onchange = function() {
                 updatePreviewImage(imgUrl, selector.value);
             };
@@ -378,7 +373,7 @@
 
         function updatePreviewImage(imgUrl, text) {
             const previewImg = document.getElementById('lightboxImg');
-            previewImg.src = imgUrl; // 先顯示原圖防閃爍
+            previewImg.src = imgUrl;
 
             generateTextOnImage(imgUrl, text, function(blob) {
                 if (blob) {
@@ -395,6 +390,7 @@
             document.getElementById('lightbox').style.display = 'none';
         }
 
+        // 高解析度 Retina 畫布文字合成核心
         function generateTextOnImage(imgUrl, textContent, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -403,8 +399,14 @@
                 try {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    canvas.width = img.naturalWidth || 1000;
-                    canvas.height = img.naturalHeight || 1000;
+                    
+                    const originWidth = img.naturalWidth || 1000;
+                    const originHeight = img.naturalHeight || 1000;
+
+                    // 使用 2 倍高畫質倍率（Retina 渲染），大幅提升手機上的文字清晰度
+                    const scaleFactor = 2;
+                    canvas.width = originWidth * scaleFactor;
+                    canvas.height = originHeight * scaleFactor;
 
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -414,14 +416,14 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // 橫向與直式圖的字體大小動態調整
                     let baseFontSize = 42;
-                    if (canvas.width > canvas.height) {
+                    if (originWidth > originHeight) {
                         baseFontSize = 30;
                     }
 
-                    const scale = canvas.width / 800;
-                    const fontSize = Math.round(baseFontSize * scale);
+                    // 結合高畫質倍率計算最終字體大小
+                    const scale = originWidth / 800;
+                    const fontSize = Math.round(baseFontSize * scale * scaleFactor);
                     ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
                     ctx.fillStyle = '#ffffff';
                     ctx.textAlign = 'center';
@@ -448,7 +450,7 @@
 
                     lines.forEach(line => {
                         ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-                        ctx.shadowBlur = 10;
+                        ctx.shadowBlur = 12 * scaleFactor;
                         ctx.fillText(line, canvas.width / 2, startY);
                         startY += lineHeight;
                     });
