@@ -388,7 +388,9 @@
             ]
         };
 
-        let userCards = JSON.parse(localStorage.getItem('myGreetingCards')) || [];
+        // 從瀏覽器 localStorage 載入自訂項目（若沒有則為空陣列）
+        let userCards = JSON.parse(localStorage.getItem('myGreetingCards') || '[]');
+
         let currentFilter = 'all';
 
         function getCategoryPool(cat) {
@@ -440,7 +442,6 @@
                 img.alt = "問候圖";
                 img.loading = "lazy";
                 
-                // 改用安全的事件綁定，避免文字中的引號或特殊符號中斷 JS 執行
                 img.addEventListener('click', () => {
                     openLightbox(item.imgUrl, item.text, item.category);
                 });
@@ -464,9 +465,12 @@
             const previewImg = document.getElementById('lightboxImg');
             
             previewImg.src = imgUrl;
+
             generateTextOnImage(imgUrl, text, function(blob) {
-                const objectUrl = URL.createObjectURL(blob);
-                previewImg.src = objectUrl;
+                if (blob) {
+                    const objectUrl = URL.createObjectURL(blob);
+                    previewImg.src = objectUrl;
+                }
             });
             
             document.getElementById('lightboxShareBtn').onclick = () => shareCardDirect(imgUrl, text, `${category}.jpg`);
@@ -482,60 +486,75 @@
         function generateTextOnImage(imgUrl, textContent, callback) {
             const img = new Image();
             img.crossOrigin = 'anonymous';
-            img.src = imgUrl;
+            
             img.onload = function() {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = img.naturalWidth || 1000;
-                canvas.height = img.naturalHeight || 1000;
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.naturalWidth || 1000;
+                    canvas.height = img.naturalHeight || 1000;
 
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
-                gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    gradient.addColorStop(0, 'rgba(0, 0, 0, 0.15)');
+                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                const scale = canvas.width / 800;
-                const fontSize = Math.round(46 * scale);
-                ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
-                ctx.fillStyle = '#ffffff';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+                    const scale = canvas.width / 800;
+                    const fontSize = Math.round(46 * scale);
+                    ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
 
-                const maxLineWidth = canvas.width * 0.85;
-                let lines = [];
-                let currentLine = "";
+                    const maxLineWidth = canvas.width * 0.85;
+                    let lines = [];
+                    let currentLine = "";
 
-                for (let i = 0; i < textContent.length; i++) {
-                    let char = textContent[i];
-                    let testLine = currentLine + char;
-                    if (ctx.measureText(testLine).width > maxLineWidth && currentLine !== "") {
-                        lines.push(currentLine);
-                        currentLine = char;
-                    } else {
-                        currentLine = testLine;
+                    for (let i = 0; i < textContent.length; i++) {
+                        let char = textContent[i];
+                        let testLine = currentLine + char;
+                        if (ctx.measureText(testLine).width > maxLineWidth && currentLine !== "") {
+                            lines.push(currentLine);
+                            currentLine = char;
+                        } else {
+                            currentLine = testLine;
+                        }
                     }
+                    if (currentLine) lines.push(currentLine);
+
+                    const lineHeight = fontSize * 1.6;
+                    let startY = (canvas.height - (lines.length * lineHeight)) / 2 + (lineHeight / 2);
+
+                    lines.forEach(line => {
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+                        ctx.shadowBlur = 10;
+                        ctx.fillText(line, canvas.width / 2, startY);
+                        startY += lineHeight;
+                    });
+
+                    canvas.toBlob(blob => callback(blob), 'image/jpeg', 0.95);
+                } catch (e) {
+                    console.log("CORS 限制無法直接修改畫布", e);
+                    callback(null);
                 }
-                if (currentLine) lines.push(currentLine);
-
-                const lineHeight = fontSize * 1.6;
-                let startY = (canvas.height - (lines.length * lineHeight)) / 2 + (lineHeight / 2);
-
-                lines.forEach(line => {
-                    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-                    ctx.shadowBlur = 10;
-                    ctx.fillText(line, canvas.width / 2, startY);
-                    startY += lineHeight;
-                });
-
-                canvas.toBlob(blob => callback(blob), 'image/jpeg', 0.95);
             };
+
+            img.onerror = function() {
+                callback(null);
+            };
+
+            img.src = imgUrl;
         }
 
         async function shareCardDirect(imgUrl, text, filename) {
             generateTextOnImage(imgUrl, text, async function(blob) {
+                if (!blob) {
+                    alert('此圖片網址受到伺服器跨域安全保護，無法直接透過程式合成文字與分享，請改用支援跨域的圖片網址。');
+                    return;
+                }
                 const file = new File([blob], filename, { type: 'image/jpeg' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     try {
@@ -549,6 +568,10 @@
 
         function downloadCardDirect(imgUrl, text, filename) {
             generateTextOnImage(imgUrl, text, function(blob) {
+                if (!blob) {
+                    alert('此圖片網址受到伺服器跨域安全保護，無法直接合成文字下載。');
+                    return;
+                }
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -585,7 +608,6 @@
                 return;
             }
 
-            // 如果未填寫問候語，自動隨機抓取對應分類的一句
             if (text === "") {
                 const texts = defaultTexts[cat] || ["願你今天平安喜樂"];
                 text = texts[Math.floor(Math.random() * texts.length)];
@@ -599,14 +621,12 @@
             document.getElementById('adminPanel').style.display = 'none';
 
             renderGrid();
-            exportHTML();
         }
 
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myGreetingCards', JSON.stringify(userCards));
             renderGrid();
-            exportHTML();
         }
 
         function updateManageList() {
@@ -622,17 +642,6 @@
                 div.innerHTML = `<span>[${item.category}] ${item.text.substring(0, 8)}...</span><button onclick="deleteCard(${index})">刪除</button>`;
                 listEl.appendChild(div);
             });
-        }
-
-        function exportHTML() {
-            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'hello.html';
-            a.click();
-            URL.revokeObjectURL(url);
         }
 
         window.onload = renderGrid;
