@@ -194,6 +194,12 @@
             background-color: #2b6cb0;
             color: #fff;
             cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .export-btn {
+            background-color: #2f855a !important;
+            margin-top: 5px;
         }
 
         .manage-list {
@@ -257,6 +263,7 @@
                 <input type="text" id="newImgUrl" placeholder="https://live.staticflickr.com/...">
             </div>
             <button class="admin-btn" id="addCardBtn">確認新增</button>
+            <button class="admin-btn export-btn" id="exportCodeBtn">📥 下載更新後的完整網頁 (更新 GitHub 用)</button>
             <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
         </div>
     </footer>
@@ -272,16 +279,19 @@
             "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。"
         ];
 
-        // 圖片清單：你可以直接在這裡增減圖片與專屬文案
+        // 圖片清單
         let userCards = [
             { text: "早安。把步調放慢一些，今天也要溫柔而堅定地過。", imgUrl: "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg" },
             { text: "午安。忙碌之中，別忘了留一杯茶的時間給自己。", imgUrl: "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" },
             { text: "晚安。把今天所有的紛擾都留在身後，做個好夢。", imgUrl: "https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg" },
             { text: "晨光正好，願你的每一個早晨充滿喜樂。", imgUrl: "https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg" },
-            { text: "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。", imgUrl: "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg" }
+            { text: "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。", imgUrl: "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg" },
+            { text: "願你今天有美好的一天。", imgUrl: "https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg" },
+            { text: "平安喜樂，順心如意。", imgUrl: "https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg" },
+            { text: "溫馨問候，天天好心情。", imgUrl: "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" }
         ];
 
-        // 讀取瀏覽器暫存（如果有的話）
+        // 讀取瀏覽器暫存（確保測試時不會遺失）
         try {
             const saved = localStorage.getItem('myCustomCards');
             if (saved) {
@@ -367,7 +377,6 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // 字體放大與完善的自動斷行排版
                     const scale = canvas.width / 800;
                     const fontSize = Math.round(42 * scale);
                     ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
@@ -488,10 +497,9 @@
 
             textInput.value = '';
             imgUrlInput.value = '';
-            document.getElementById('adminPanel').style.display = 'none';
 
             renderGrid();
-            alert('新增成功！圖片已即時加入。');
+            alert('新增成功！記得點擊下方的「下載更新後的完整網頁」按鈕來更新 GitHub 檔案。');
         }
 
         function deleteCard(index) {
@@ -516,12 +524,41 @@
             });
         }
 
+        // 自動打包下載最新完整 HTML 的功能
+        function exportUpdatedHTML() {
+            const cardsJSON = JSON.stringify(userCards, null, 4);
+            
+            // 抓取當前整份文件的完整 HTML 結構
+            let htmlContent = document.documentElement.outerHTML;
+            
+            // 自動把最新的陣列替換進去
+            const targetRegex = /let userCards = \[\s*([\s\S]*?)\s*\];/;
+            const newCardsString = `let userCards = ${cardsJSON};`;
+            
+            if (targetRegex.test(htmlContent)) {
+                htmlContent = htmlContent.replace(targetRegex, newCardsString);
+            }
+
+            // 確保下載時後台是關閉的狀態，避免把打開的後台面板狀態存進去
+            htmlContent = htmlContent.replace(/id="adminPanel"[^>]*style="display:\s*block;"/, 'id="adminPanel" style="display: none;"');
+
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('已成功下載更新後的 index.html！請直接將此檔案上傳到 GitHub 覆蓋即可永久生效。');
+        }
+
         window.onload = function() {
             renderGrid();
 
             document.getElementById('adminTriggerBtn').addEventListener('click', toggleAdmin);
             document.getElementById('closeAdminBtn').addEventListener('click', toggleAdmin);
             document.getElementById('addCardBtn').addEventListener('click', addCard);
+            document.getElementById('exportCodeBtn').addEventListener('click', exportUpdatedHTML);
 
             const lightbox = document.getElementById('lightbox');
             lightbox.addEventListener('click', closeLightbox);
