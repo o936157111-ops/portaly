@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
+<html lang="zh-TW"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>日常問候圖庫</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Noto+Serif+TC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&amp;family=Noto+Serif+TC:wght@300;500;700&amp;display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f7f5f0;
@@ -242,7 +240,7 @@
 <body>
 
     <div class="main-container">
-        <div id="gridContainer" class="masonry-grid"></div>
+        <div id="gridContainer" class="masonry-grid"><div class="masonry-item"><img src="https://live.staticflickr.com/1962/30188916207_cce248a46e_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1938/31253198468_68ac48510b_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1966/31253199788_6603b1fc47_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1931/45078000062_ea6e3c5b52_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1918/31253193918_dd61a66cda_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/53694088529_3e050e46a7_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg" alt="問候圖" loading="lazy"></div><div class="masonry-item"><img src="https://live.staticflickr.com/1923/45376158501_c03d32c330_z.jpg" alt="問候圖" loading="lazy"></div></div>
     </div>
 
     <!-- 放大與互動預覽 Lightbox -->
@@ -261,7 +259,7 @@
     <footer>
         <div class="admin-trigger" id="adminTriggerBtn">⚙️ 後台圖庫管理</div>
 
-        <div class="admin-panel" id="adminPanel">
+        <div class="admin-panel" id="adminPanel" style="display: none;">
             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
                 <strong>新增圖片與問候語</strong>
                 <button id="closeAdminBtn" style="border:none; background:none; cursor:pointer;">✕</button>
@@ -275,7 +273,7 @@
                 <input type="text" id="newImgUrl" placeholder="https://live.staticflickr.com/...">
             </div>
             <button class="admin-btn" id="addCardBtn">確認新增並下載更新檔案</button>
-            <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
+            <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong><div class="manage-item"><span>晚安。把今天所有的紛...</span><button type="button" onclick="deleteCard(0)">刪除</button></div><div class="manage-item"><span>晚安。星光點點，願疲...</span><button type="button" onclick="deleteCard(1)">刪除</button></div><div class="manage-item"><span>午安。忙碌之中，別忘...</span><button type="button" onclick="deleteCard(2)">刪除</button></div><div class="manage-item"><span>早安。晨光正好，願你...</span><button type="button" onclick="deleteCard(3)">刪除</button></div><div class="manage-item"><span>晚安。星光點點，願疲...</span><button type="button" onclick="deleteCard(4)">刪除</button></div><div class="manage-item"><span>早安。把步調放慢一些...</span><button type="button" onclick="deleteCard(5)">刪除</button></div><div class="manage-item"><span>晚安。把今天所有的紛...</span><button type="button" onclick="deleteCard(6)">刪除</button></div><div class="manage-item"><span>午安。午後的陽光溫暖...</span><button type="button" onclick="deleteCard(7)">刪除</button></div><div class="manage-item"><span>週末愉快。放慢腳步，...</span><button type="button" onclick="deleteCard(8)">刪除</button></div><div class="manage-item"><span>午安。忙碌之中，別忘...</span><button type="button" onclick="deleteCard(9)">刪除</button></div><div class="manage-item"><span>早安。把步調放慢一些...</span><button type="button" onclick="deleteCard(10)">刪除</button></div><div class="manage-item"><span>午安。忙碌之中，別忘...</span><button type="button" onclick="deleteCard(11)">刪除</button></div><div class="manage-item"><span>午安。午後的陽光溫暖...</span><button type="button" onclick="deleteCard(12)">刪除</button></div><div class="manage-item"><span>早安。把步調放慢一些...</span><button type="button" onclick="deleteCard(13)">刪除</button></div><div class="manage-item"><span>早安。晨光正好，願你...</span><button type="button" onclick="deleteCard(14)">刪除</button></div></div>
         </div>
     </footer>
 
@@ -291,15 +289,67 @@
         ];
 
         let userCards = [
-            { text: "早安。把步調放慢一些，今天也要溫柔而堅定地過。", imgUrl: "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg" },
-            { text: "午安。忙碌之中，別忘了留一杯茶的時間給自己。", imgUrl: "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg" },
-            { text: "晚安。把今天所有的紛擾都留在身後，做個好夢。", imgUrl: "https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg" },
-            { text: "晨光正好，願你的每一個早晨充滿喜樂。", imgUrl: "https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg" },
-            { text: "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。", imgUrl: "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg" },
-            { text: "願你今天有美好的一天。", imgUrl: "https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg" },
-            { text: "平安喜樂，順心如意。", imgUrl: "https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg" },
-            { text: "溫馨問候，天天好心情。", imgUrl: "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg" }
-        ];
+    {
+        "text": "晚安。把今天所有的紛擾都留在身後，做個好夢。",
+        "imgUrl": "https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg"
+    },
+    {
+        "text": "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
+        "imgUrl": "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg"
+    },
+    {
+        "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+        "imgUrl": "https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg"
+    },
+    {
+        "text": "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
+        "imgUrl": "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg"
+    },
+    {
+        "text": "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
+        "imgUrl": "https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg"
+    },
+    {
+        "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+        "imgUrl": "https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg"
+    },
+    {
+        "text": "晚安。把今天所有的紛擾都留在身後，做個好夢。",
+        "imgUrl": "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg"
+    },
+    {
+        "text": "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
+        "imgUrl": "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg"
+    },
+    {
+        "text": "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
+        "imgUrl": "https://live.staticflickr.com/65535/53694088529_3e050e46a7_z.jpg"
+    },
+    {
+        "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+        "imgUrl": "https://live.staticflickr.com/1923/45376158501_c03d32c330_z.jpg"
+    },
+    {
+        "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+        "imgUrl": "https://live.staticflickr.com/1962/30188916207_cce248a46e_z.jpg"
+    },
+    {
+        "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+        "imgUrl": "https://live.staticflickr.com/1931/45078000062_ea6e3c5b52_z.jpg"
+    },
+    {
+        "text": "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
+        "imgUrl": "https://live.staticflickr.com/1918/31253193918_dd61a66cda_z.jpg"
+    },
+    {
+        "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+        "imgUrl": "https://live.staticflickr.com/1938/31253198468_68ac48510b_z.jpg"
+    },
+    {
+        "text": "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
+        "imgUrl": "https://live.staticflickr.com/1966/31253199788_6603b1fc47_z.jpg"
+    }
+];
 
         try {
             const saved = localStorage.getItem('myCustomCards');
@@ -608,5 +658,6 @@
             document.getElementById('closeLightboxBtn').addEventListener('click', closeLightbox);
         };
     </script>
-</body>
-</html>
+
+
+<span data-test-id="pinterest-save-button" style="border-radius:10px !important;text-indent:12px !important;width:auto !important;height:20px !important;padding:0px 8px !important;text-align:center !important;vertical-align:middle !important;font:bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;color:rgb(255, 255, 255) !important;background:url(&quot;data:image/svg+xml;base64,PHN2ZyBpZD0ic291cmNlIiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNiIgY3k9IjYiIHI9IjYiIGZpbGw9IiNFNjAwMjMiPjwvY2lyY2xlPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgNkMwIDguNTYxNSAxLjYwNTUgMTAuNzQ4NSAzLjg2NSAxMS42MDlDMy44MSAxMS4xNDA1IDMuNzUxNSAxMC4zNjggMy44Nzc1IDkuODI2QzMuOTg2IDkuMzYgNC41NzggNi44NTcgNC41NzggNi44NTdDNC41NzggNi44NTcgNC4zOTk1IDYuNDk5NSA0LjM5OTUgNS45N0M0LjM5OTUgNS4xNCA0Ljg4MDUgNC41MiA1LjQ4IDQuNTJDNS45OSA0LjUyIDYuMjM2IDQuOTAyNSA2LjIzNiA1LjM2MUM2LjIzNiA1Ljg3MzUgNS45MDk1IDYuNjM5NSA1Ljc0MSA3LjM1QzUuNjAwNSA3Ljk0NDUgNi4wMzk1IDguNDI5NSA2LjYyNTUgOC40Mjk1QzcuNjg3IDguNDI5NSA4LjUwMzUgNy4zMSA4LjUwMzUgNS42OTRDOC41MDM1IDQuMjYzNSA3LjQ3NTUgMy4yNjQgNi4wMDggMy4yNjRDNC4zMDkgMy4yNjQgMy4zMTE1IDQuNTM4NSAzLjMxMTUgNS44NTZDMy4zMTE1IDYuMzY5NSAzLjUwOSA2LjkxOTUgMy43NTYgNy4yMTlDMy44MDQ1IDcuMjc4NSAzLjgxMiA3LjMzIDMuNzk3NSA3LjM5MDVDMy43NTIgNy41Nzk1IDMuNjUxIDcuOTg1IDMuNjMxNSA4LjA2OEMzLjYwNSA4LjE3NyAzLjU0NSA4LjIwMDUgMy40MzE1IDguMTQ3NUMyLjY4NTUgNy44MDA1IDIuMjE5NSA2LjcxIDIuMjE5NSA1LjgzNEMyLjIxOTUgMy45NDk1IDMuNTg4IDIuMjE5NSA2LjE2NTUgMi4yMTk1QzguMjM3NSAyLjIxOTUgOS44NDggMy42OTYgOS44NDggNS42NjlDOS44NDggNy43Mjc1IDguNTUwNSA5LjM4NDUgNi43NDg1IDkuMzg0NUM2LjE0MyA5LjM4NDUgNS41NzQ1IDkuMDY5NSA1LjM3OTUgOC42OThDNS4zNzk1IDguNjk4IDUuMDggOS44MzkgNS4wMDc1IDEwLjExOEM0Ljg2NjUgMTAuNjYgNC40NzU1IDExLjM0NiA0LjIzMyAxMS43MzU1QzQuNzkyIDExLjkwNzUgNS4zODUgMTIgNiAxMkM5LjMxMzUgMTIgMTIgOS4zMTM1IDEyIDZDMTIgMi42ODY1IDkuMzEzNSAwIDYgMEMyLjY4NjUgMCAwIDIuNjg2NSAwIDZaIiBmaWxsPSJ3aGl0ZSI+PC9wYXRoPgo8L3N2Zz4=&quot;) 4px 50% / 12px 12px no-repeat rgb(230, 0, 35) !important;position:absolute !important;opacity:1 !important;z-index:9007199254740990 !important;display:none !important;cursor:pointer !important;border:none !important;-webkit-font-smoothing:antialiased !important;top:0 !important;left:0 !important;display:none !important;top:665px !important;left:532px !important">儲存</span></body></html>
