@@ -370,8 +370,14 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                    // 判斷圖片是橫向還是直式，自動調整字體大小比例
+                    let baseFontSize = 42;
+                    if (canvas.width > canvas.height) {
+                        baseFontSize = 30; // 橫向圖片使用較小的字體，避免過大
+                    }
+
                     const scale = canvas.width / 800;
-                    const fontSize = Math.round(42 * scale);
+                    const fontSize = Math.round(baseFontSize * scale);
                     ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
                     ctx.fillStyle = '#ffffff';
                     ctx.textAlign = 'center';
@@ -467,7 +473,6 @@
             }
         }
 
-        // 確認新增並同時自動下載更新後的完整 HTML 檔案
         function addCard() {
             const textInput = document.getElementById('newText');
             const imgUrlInput = document.getElementById('newImgUrl');
@@ -494,14 +499,14 @@
             document.getElementById('adminPanel').style.display = 'none';
 
             renderGrid();
-            exportUpdatedHTML(); // 新增後立刻自動打包下載
+            exportUpdatedHTML();
         }
 
         function deleteCard(index) {
             userCards.splice(index, 1);
             localStorage.setItem('myCustomCards', JSON.stringify(userCards));
             renderGrid();
-            exportUpdatedHTML(); // 刪除時也自動打包下載最新的
+            exportUpdatedHTML();
         }
 
         function updateManageList() {
@@ -531,7 +536,6 @@
                 htmlContent = htmlContent.replace(targetRegex, newCardsString);
             }
 
-            // 確保下載時後台是關閉狀態
             htmlContent = htmlContent.replace(/id="adminPanel"[^>]*style="display:\s*block;"/, 'id="adminPanel" style="display: none;"');
 
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
