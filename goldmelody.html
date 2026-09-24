@@ -58,7 +58,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* 每一頁的單一影片卡片 (剛好佔滿一頁) */
+        /* 每一頁的單一影片卡片 (剛好佔滿一頁，垂直置中) */
         .reel-card {
             width: 100%;
             height: 100%;
@@ -67,20 +67,21 @@
             position: relative;
             display: flex;
             justify-content: center;
-            align-items: center;
-            background-color: #111;
+            align-items: center; /* 讓橫式影片完美垂直置中 */
+            background-color: #000; /* 全黑背景，上下留白更有質感 */
         }
 
-        /* YouTube 嵌入 iframe 滿版適配 */
+        /* 採用 16:9 黃金比例容器，確保橫式影片完整呈現不變形 */
         .video-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
+            aspect-ratio: 16 / 9;
+            position: relative;
         }
 
         .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100% !important;
             height: 100% !important;
             border: none;
@@ -89,7 +90,7 @@
         /* 覆蓋在影片下方的資訊列（往上移避免與 YouTube 底部控制列重疊） */
         .overlay-info {
             position: absolute;
-            bottom: 70px;
+            bottom: 50px;
             left: 16px;
             right: 16px;
             z-index: 10;
@@ -134,32 +135,27 @@
            ========================================================== */
         const songDatabase = [
             { 
-                title: "人潮有多擁擠 就有多想你", 
+                title: "人潮有多擁擠 就有多想你 1", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?si=Vidg56-9ILIU8FWF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "放過自己", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/o2JDwBQneZU?si=CsjqF5OHRz3Z2A0c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-
-{ 
+            { 
                 title: "我不該動情", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/rMuqgAHnXUo?si=PJVJc-68n0nBj4kM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-
-{ 
+            { 
                 title: "到最后受伤的是我", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/pW1thfYePWY?si=lvjb1GfRIZ05BTLX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-
-
-
             { 
-                title: "人潮有多擁擠 就有多想你", 
+                title: "人潮有多擁擠 就有多想你 2", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?si=X-96_OB_Xk51xHT_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             }
@@ -213,3 +209,4 @@
     </script>
 </body>
 </html>
+```[cite: 4]
