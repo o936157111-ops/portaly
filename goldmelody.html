@@ -59,6 +59,8 @@
             scroll-snap-type: y mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            /* 開啟硬體加速，大幅減少捲動時的畫面抖動與閃爍 */
+            transform: translateZ(0);
         }
 
         .reel-container::-webkit-scrollbar {
@@ -216,8 +218,7 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 為了實現順暢的無限循環，我們將歌曲清單複製 3 組接在一起
-            // 讓使用者一開始落在中間的那組，往上或往下都能無限延伸
+            // 複製 3 組接在一起達成無限循環
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
             const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
 
@@ -225,7 +226,6 @@
                 const card = document.createElement('div');
                 card.className = 'reel-card';
                 card.dataset.embed = song.embedCode;
-                card.dataset.index = index;
                 card.innerHTML = `
                     <div class="video-wrapper"></div>
                     <div class="overlay-info">
@@ -239,28 +239,37 @@
             const cards = document.querySelectorAll('.reel-card');
             const totalOriginal = songDatabase.length;
 
-            // 網頁開啟時，隨機挑選「第二組（中間那組）」的其中一首來播放
+            // 初始隨機落在中間那一組
             if (cards.length > 0) {
                 const randomOffset = Math.floor(Math.random() * totalOriginal);
                 const targetIndex = totalOriginal + randomOffset;
+                // 使用 instant 確保一開局定位不閃爍
                 container.scrollTop = cards[targetIndex].offsetTop;
             }
 
-            // 監聽滾動位置：當使用者滑到最前或最後一組的邊界時，無縫瞬移回中間組
+            // 改用 scrollend 或透過計時器防手抖，確保使用者在「停止滑動」或「觸碰結束」瞬間才安靜無息地跳轉，徹底消除閃爍
+            let scrollTimeout;
             container.addEventListener('scroll', () => {
-                const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
-                
-                // 如果滑到太上面（第一組），瞬間無縫跳回第二組對應位置
-                if (container.scrollTop < singleBlockHeight * 0.5) {
-                    container.scrollTop += singleBlockHeight;
-                } 
-                // 如果滑到太下面（第三組），瞬間無縫跳回第二組對應位置
-                else if (container.scrollTop > singleBlockHeight * 2.2) {
-                    container.scrollTop -= singleBlockHeight;
-                }
-            });
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
+                    
+                    // 當滑到第一組（太上面）時，靜默無閃爍拉回第二組
+                    if (container.scrollTop < singleBlockHeight * 0.4) {
+                        container.style.scrollSnapType = 'none'; // 暫時關閉吸附避免干擾
+                        container.scrollTop += singleBlockHeight;
+                        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+                    } 
+                    // 當滑到第三組（太下面）時，靜默無閃爍拉回第二組
+                    else if (container.scrollTop > singleBlockHeight * 2.3) {
+                        container.style.scrollSnapType = 'none';
+                        container.scrollTop -= singleBlockHeight;
+                        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+                    }
+                }, 100); // 停止滾動 100ms 後才執行位置重置，畫面完全不會閃爍
+            }, { passive: true });
 
-            // 建立交叉觀察器：畫面滑到哪一首，就載入哪一首；滑開就清空 iframe 停止聲音
+            // 建立交叉觀察器
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const wrapper = entry.target.querySelector('.video-wrapper');
@@ -279,7 +288,6 @@
             });
         }
 
-        // 頁面初次載入時執行
         window.onload = initReels;
     </script>
 </body>
