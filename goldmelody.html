@@ -14,7 +14,7 @@
             background-color: #000;
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow: hidden; /* 由內部 container 控制滾動 */
+            overflow: hidden;
         }
 
         /* 滿版滑動容器 (類似 Shorts 滾動效果) */
@@ -45,7 +45,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: auto; /* 允許點擊 YouTube 播放控制 */
+            pointer-events: auto;
         }
 
         .video-wrapper iframe {
@@ -61,7 +61,7 @@
             left: 16px;
             right: 80px;
             z-index: 10;
-            pointer-events: none; /* 讓點擊能穿透到 YouTube 影片 */
+            pointer-events: none;
         }
 
         .song-title {
@@ -141,14 +141,13 @@
     </div>
 
     <script>
-        // 包含你提供的影片以及其他破百萬華語金曲清單
+        // 經過驗證、允許網頁外部嵌入的華語金曲清單
         const songDatabase = [
-            { title: "精選華語熱門金曲", views: "🔥 突破百萬點擊", embedCode: '<iframe src="https://www.youtube.com/embed/1w5r0tbvTCk?si=d9sc6LX3kGLoOfhs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' },
-            { title: "鄧紫棋 G.E.M. - 光年之外", views: "🔥 突破 2.5 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/T67qqQpaG1U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "周杰倫 Jay Chou - 告白氣球", views: "🔥 突破 2.3 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/bu7nU9Mhpyo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "田馥甄 Hebe Tien - 小幸運", views: "🔥 突破 1.9 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/_sQSJzhjWXw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
+            { title: "韋禮安 WeiBird - 如果可以 (破億神曲)", views: "🔥 破億熱門金曲", embedCode: '<iframe src="https://www.youtube.com/embed/WkI-cbsGf_4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
             { title: "周興哲 Eric Chou - 怎麼了", views: "🔥 突破 1.7 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/gyIPibWoWtg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "茄子蛋 EggPlantEgg - 浪子回頭", views: "🔥 突破 1.6 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/rhTlqIb87vU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' }
+            { title: "茄子蛋 EggPlantEgg - 浪子回頭", views: "🔥 突破 1.6 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/rhTlqIb87vU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
+            { title: "八三夭 831 - 想見你想見你想見你", views: "🔥 破億熱門金曲", embedCode: '<iframe src="https://www.youtube.com/embed/ZX8x1gN9vG0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
+            { title: "精選華語熱門金曲", views: "🔥 突破百萬點擊", embedCode: '<iframe src="https://www.youtube.com/embed/1w5r0tbvTCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' }
         ];
 
         function initReels() {
@@ -158,7 +157,7 @@
             // 隨機打亂順序
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
 
-            shuffledSongs.forEach((song, index) => {
+            shuffledSongs.forEach((song) => {
                 const card = document.createElement('div');
                 card.className = 'reel-card';
                 card.innerHTML = `
