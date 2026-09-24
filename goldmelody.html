@@ -85,12 +85,12 @@
             border: none;
         }
 
-        /* 覆蓋在影片下方的資訊列 */
+        /* 覆蓋在影片下方的資訊列（往上移避免與 YouTube 底部控制列重疊） */
         .overlay-info {
             position: absolute;
-            bottom: 40px;
+            bottom: 70px;
             left: 16px;
-            right: 80px;
+            right: 16px;
             z-index: 10;
             pointer-events: none; /* 讓點擊能穿透到 YouTube 控制列 */
         }
@@ -110,64 +110,11 @@
             padding: 4px 8px;
             border-radius: 4px;
         }
-
-        /* 右側互動按鈕列 (TikTok 風格) */
-        .side-actions {
-            position: absolute;
-            right: 12px;
-            bottom: 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            z-index: 10;
-            align-items: center;
-        }
-
-        .action-btn {
-            background: rgba(0, 0, 0, 0.4);
-            border: none;
-            color: white;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            font-size: 18px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
-
-        /* 頂部隨機重整按鈕 */
-        .top-bar {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            z-index: 100;
-        }
-
-        .shuffle-btn {
-            background-color: rgba(29, 185, 84, 0.9);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 13px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
     </style>
 </head>
 <body>
 
     <div class="app-frame">
-        <!-- 頂部隨機換歌按鈕 -->
-        <div class="top-bar">
-            <button class="shuffle-btn" onclick="initReels()">🔄 隨機換一批</button>
-        </div>
-
         <!-- 手機上下滑動滿版容器 -->
         <div class="reel-container" id="reelContainer">
             <!-- 影片卡片會由 JavaScript 動態填入 -->
@@ -186,34 +133,34 @@
            ========================================================== */
         const songDatabase = [
             { 
-                title: "人潮有多擁擠 就有多想你 1", 
-                views: "🔥 熱門歌曲", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?si=6QfgFQ_zYgLqFJgh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                title: "自訂熱門歌曲 1", 
+                views: "🔥 點擊量破百萬", 
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?si=Vidg56-9ILIU8FWF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
-                title: "人潮有多擁擠 就有多想你 2", 
-                views: "🔥 熱門歌曲", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?si=Mbx7MT7VvxUczxeZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                title: "自訂熱門歌曲 2", 
+                views: "🔥 點擊量破百萬", 
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?si=X-96_OB_Xk51xHT_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "韋禮安 WeiBird - 如果可以", 
                 views: "🔥 破億熱門金曲", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/8MG--WuNW1Y?si=yGHopO1bvUtGhDWy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                embedCode: '<iframe src="https://www.youtube.com/embed/WkI-cbsGf_4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
             },
             { 
                 title: "周興哲 Eric Chou - 怎麼了", 
                 views: "🔥 突破 1.7 億觀看", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/Y2ge3KrdeWs?si=SMuuJi-y0FjQ4CBJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                embedCode: '<iframe src="https://www.youtube.com/embed/gyIPibWoWtg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
             },
             { 
                 title: "茄子蛋 EggPlantEgg - 浪子回頭", 
                 views: "🔥 突破 1.6 億觀看", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/x3bDhtuC5yk?si=lIsiCadEp3IBWJe1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                embedCode: '<iframe src="https://www.youtube.com/embed/rhTlqIb87vU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
             },
             { 
                 title: "八三夭 831 - 想見你想見你想見你", 
                 views: "🔥 破億熱門金曲", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/4iRupuNet3Q?si=NSZsZCOLy4P3iF3A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                embedCode: '<iframe src="https://www.youtube.com/embed/ZX8x1gN9vG0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
             }
         ];
 
@@ -221,7 +168,7 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 每次重新整理或點擊按鈕時隨機洗牌順序
+            // 每次重新整理網頁時隨機洗牌順序
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
 
             shuffledSongs.forEach((song) => {
@@ -234,10 +181,6 @@
                     <div class="overlay-info">
                         <div class="song-title">${song.title}</div>
                         <div class="song-views">${song.views}</div>
-                    </div>
-                    <div class="side-actions">
-                        <button class="action-btn" onclick="alert('已加入最愛！')">❤️</button>
-                        <button class="action-btn" onclick="alert('分享連結已複製！')">🔗</button>
                     </div>
                 `;
                 container.appendChild(card);
