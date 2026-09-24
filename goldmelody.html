@@ -177,10 +177,24 @@
     <script>
         /* ==========================================================
            【如何自行加入新歌曲？】
-           只需要複製下方格式，貼上你的歌名、點擊數，
-           以及把從 YouTube 複製的 <iframe ...> 整個貼在 embedCode 裡面即可！
+           格式如下：
+           { 
+               title: "你的歌名", 
+               views: "你的觀看次數標籤", 
+               embedCode: '把整個 <iframe ...> 貼在這裡，用單引號包起來' 
+           },
            ========================================================== */
         const songDatabase = [
+            { 
+                title: "人潮有多擁擠 就有多想你 1", 
+                views: "🔥 熱門歌曲", 
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?si=6QfgFQ_zYgLqFJgh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+            },
+            { 
+                title: "人潮有多擁擠 就有多想你 2", 
+                views: "🔥 熱門歌曲", 
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?si=Mbx7MT7VvxUczxeZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+            },
             { 
                 title: "韋禮安 WeiBird - 如果可以", 
                 views: "🔥 破億熱門金曲", 
@@ -200,13 +214,7 @@
                 title: "八三夭 831 - 想見你想見你想見你", 
                 views: "🔥 破億熱門金曲", 
                 embedCode: '<iframe src="https://www.youtube.com/embed/ZX8x1gN9vG0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
-            },
-            { 
-                title: "精選華語熱門金曲", 
-                views: "🔥 突破百萬點擊", 
-                embedCode: '<iframe src="https://www.youtube.com/embed/1w5r0tbvTCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
             }
-            /* 你想加新歌，只要在上面依樣畫葫蘆逗號隔開新增即可 */
         ];
 
         function initReels() {
