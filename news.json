@@ -1,39 +1,39 @@
 {
-    "date": "2026-09-24",
+    "date": "2026-09-25",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "台積電2奈米量產進展順利，次世代AI晶片效能提升30%",
-            "category": "半導體",
-            "summary": "台積電今日宣布2奈米先進製程量產進展順利，已獲多家全球科技巨頭預訂產能。該技術採用GAA（全環繞閘極）電晶體架構，能耗大幅降低並提升算力，為次世代AI晶片奠定關鍵基礎。",
-            "source": "科技新報",
-            "url": "https://technews.tw/2026/09/24/tsmc-2nm-mass-production-update/"
+            "title": "OpenAI 與台積電宣佈啟動 2nm「NextGen AI」晶片量產合作",
+            "category": "人工智慧 / 半導體",
+            "summary": "OpenAI 與台積電於今日（25日）共同發表聲明，針對下一代超大規模 AI 推理專用晶片達成全面架構合作，預計首批 2 奈米晶片將於 2027 年初正式供貨，大幅提升能效比與算力密度。",
+            "source": "科技新報 (TechNews)",
+            "url": "https://technews.tw/2026/09/25/openai-tsmc-2nm-ai-chip/"
         },
         {
             "id": 2,
-            "title": "OpenAI 發布新一代通用AI Agent，實現跨軟體自主工作流程",
-            "category": "人工智慧",
-            "summary": "OpenAI 今日推出最新的 AI 代理系統，具備更強大的長期記憶與多步驟推理能力，能自動執行複雜的跨平台業務流程，標誌著企業自動化邁入全新階段。",
-            "source": "iThome",
-            "url": "https://www.ithome.com.tw/news/20260924-openai-next-agent"
+            "title": "蘋果發佈新一代輕量化 AR 眼鏡 Apple Glass，搭載視網膜微型投影技術",
+            "category": "穿戴裝置 / 擴增實境",
+            "summary": "蘋果今日舉辦秋季發表會，正式推出重量僅 75 公克的 Apple Glass。該裝置結合視覺語言模型（VLM）與視網膜微型雷射投影，提供即時跨語言翻譯與混合實境導航功能。",
+            "source": "INSIDE 硬塞的網路趨勢觀察",
+            "url": "https://www.inside.com.tw/article/2026-09-25-apple-glass-launch"
         },
         {
             "id": 3,
-            "title": "Meta 展示輕量化AR眼鏡最新原型，整合多模態AI即時互動",
-            "category": "消費性電子",
-            "summary": "Meta 在最新技術峰會上展示專為日常配戴設計的輕量化 AR 眼鏡，機身重量僅 50 公克，整合即時視覺翻譯與多模態 AI 語音助理，預計明年正式量產。",
-            "source": "INSIDE",
-            "url": "https://www.inside.com.tw/article/2026-09-24-meta-ar-glasses-prototype"
+            "title": "量子運算突破：IBM 發表 5,000 量子位元系統「Condor II」並通過後量子加密認證",
+            "category": "量子科技 / 資安",
+            "summary": "IBM 於今日全球量子峰會上公開最新 5,000 錯算容忍量子位元晶片，同步展示全球首個全面符合 NIST 後量子加密（PQC）標準的企業級雲端資安平台。",
+            "source": "電子時報 (DIGITIMES)",
+            "url": "https://www.digitimes.com.tw/tech/20260925-ibm-quantum-condor-ii"
         },
         {
             "id": 4,
-            "title": "全球首座低軌衛星雷射通訊網全面運作，極地互聯網邁入Gbps時代",
-            "category": "前沿科技",
-            "summary": "低軌衛星通訊聯盟今日宣布全面啟用次世代衛星間雷射傳輸技術，即使在南極與偏遠海洋地區，也能提供高達 1Gbps 的高頻寬、低延遲網路連線服務。",
-            "source": "電子時報",
-            "url": "https://www.digitimes.com.tw/tech/20260924-sat-laser-network/"
+            "title": "Waymo 與特斯拉 Robotaxi 獲准於歐洲三大城市擴大無人駕駛營運",
+            "category": "自動駕駛 / 智慧交通",
+            "summary": "歐盟交通安全局今天正式批准 Waymo 與 Tesla 在倫敦、巴黎及柏林開展 L4 級全自動駕駛計程車商業化服務，標誌著歐洲自動駕駛市場迎來重大法規突破。",
+            "source": "數位時代 (BusinessNext)",
+            "url": "https://www.bnext.com.tw/article/20260925/waymo-tesla-europe-robotaxi"
         }
     ]
 }
