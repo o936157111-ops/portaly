@@ -21,7 +21,6 @@
             overflow: hidden;
         }
 
-        /* 電腦版時的外觀防護：限制最大寬度並置中，營造手機App質感 */
         @media (min-width: 768px) {
             body {
                 display: flex;
@@ -50,7 +49,6 @@
             }
         }
 
-        /* 滿版上下滑動容器 */
         .reel-container {
             width: 100%;
             height: 100%;
@@ -65,7 +63,6 @@
             display: none;
         }
 
-        /* 每一頁的單一影片卡片：佔滿全螢幕、黑底沉浸式播放 */
         .reel-card {
             width: 100%;
             height: 100%;
@@ -79,7 +76,6 @@
             overflow: hidden;
         }
 
-        /* 滿版直式容器：確保影片完整撐滿背景 */
         .video-wrapper {
             position: absolute;
             top: 0;
@@ -99,7 +95,7 @@
             object-fit: cover;
         }
 
-        /* 自訂封面層樣式 */
+        /* 預設自訂封面層樣式 */
         .custom-cover-layer {
             position: absolute;
             top: 0;
@@ -115,6 +111,18 @@
             align-items: center;
             cursor: pointer;
             transition: opacity 0.5s ease;
+        }
+
+        /* 「原來你愛的不是我」專屬封面圖片 */
+        .custom-cover-layer.cover-not-you {
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+                        url('https://live.staticflickr.com/65535/55549181083_2c4e3a898f_z.jpg') center/cover no-repeat;
+        }
+
+        /* 「推開世界的門」專屬封面圖片 */
+        .custom-cover-layer.cover-open-door {
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+                        url('https://live.staticflickr.com/65535/55549472775_73c62a848f_z.jpg') center/cover no-repeat;
         }
 
         .custom-cover-layer.fade-out {
@@ -147,7 +155,6 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
         }
 
-        /* 仿 YouTube Shorts 的底部資訊漸層遮罩 */
         .overlay-info {
             position: absolute;
             bottom: 0;
@@ -181,10 +188,7 @@
 <body>
 
     <div class="app-frame">
-        <!-- 手機上下滑動滿版容器 -->
-        <div class="reel-container" id="reelContainer">
-            <!-- 影片卡片會由 JavaScript 動態填入 -->
-        </div>
+        <div class="reel-container" id="reelContainer"></div>
     </div>
 
     <script>
@@ -193,22 +197,29 @@
                 title: "人潮有多擁擠 就有多想你", 
                 views: "🔥 專屬封面熱門", 
                 isCustomCover: true,
+                coverClass: "", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?autoplay=1&si=Vidg56-9ILIU8FWF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "城北的花", 
-                views: "🔥 好聽熱門", 
+                views: "🔥 好聽熱門",
+                isCustomCover: true,
+                coverClass: "",  
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/wKpNtrmQ1a0?si=QMTLkgfQU25NGFXo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "推開世界的門", 
-                views: "🔥 楊乃文", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/KSTeFTHjj14?si=g2KQtF20HNUQGK1j" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                views: "🔥 專屬情感封面", 
+                isCustomCover: true,
+                coverClass: "cover-open-door", 
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/KSTeFTHjj14?autoplay=1&si=g2KQtF20HNUQGK1j" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "原來你愛的不是我", 
-                views: "🔥 好聽熱門", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/tANkOuKG_28?si=24iPy0Kp78VZcmvW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                views: "🔥 專屬情感封面", 
+                isCustomCover: true,
+                coverClass: "cover-not-you", 
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/tANkOuKG_28?autoplay=1&si=24iPy0Kp78VZcmvW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "值得", 
@@ -219,11 +230,6 @@
                 title: "愛到盡頭", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/HfJEquKgjRw?si=UBbMucW63OV3RSfh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
-            },
-            { 
-                title: "愛到盡頭", 
-                views: "🔥 好聽熱門", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/jrWD_p_VoE8?si=iNAzgL5QA4ZCmdml" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "換我做你的山", 
@@ -244,17 +250,6 @@
                 title: "我不該動情", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/rMuqgAHnXUo?si=PJVJc-68n0nBj4kM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
-            },
-            { 
-                title: "到最后受伤的是我", 
-                views: "🔥 好聽熱門", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/pW1thfYePWY?si=lvjb1GfRIZ05BTLX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
-            },
-            { 
-                title: "人潮有多擁擠 就有多想你", 
-                views: "🔥 專屬封面熱門", 
-                isCustomCover: true,
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?autoplay=1&si=X-96_OB_Xk51xHT_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             }
         ];
 
@@ -269,11 +264,11 @@
                 const card = document.createElement('div');
                 card.className = 'reel-card';
                 
-                // 組合卡片內部 HTML
                 let coverHtml = '';
                 if (song.isCustomCover) {
+                    const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
                     coverHtml = `
-                        <div class="custom-cover-layer" onclick="playCustomSong(this)">
+                        <div class="custom-cover-layer${extraClass}" onclick="playCustomSong(this)">
                             <div class="cover-play-btn">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -291,7 +286,6 @@
                     </div>
                 `;
                 
-                // 把 embedCode 存放在 dataset 中供觀測器或點擊使用
                 card.dataset.embed = song.embedCode;
                 container.appendChild(card);
             });
@@ -331,7 +325,6 @@
                     const hasCover = card.dataset.hasCover === "true";
 
                     if (entry.isIntersecting) {
-                        // 如果是有自訂封面的卡片，且封面還沒被點開，先不載入 iframe（保持封面靜止）
                         const coverLayer = card.querySelector('.custom-cover-layer');
                         if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
                             return; 
@@ -341,7 +334,6 @@
                             wrapper.innerHTML = card.dataset.embed;
                         }
                     } else {
-                        // 離開畫面時清空一般影片，但如果自訂封面還沒被點擊過，保留封面
                         if (!hasCover || (hasCover && card.querySelector('.custom-cover-layer')?.classList.contains('fade-out'))) {
                             wrapper.innerHTML = '';
                         }
@@ -354,17 +346,14 @@
             });
         }
 
-        // 點擊自訂封面後的播放行為
         function playCustomSong(coverElement) {
             const card = coverElement.closest('.reel-card');
             const wrapper = card.querySelector('.video-wrapper');
             
-            // 載入影片並自動播放
             if (!wrapper.hasChildNodes()) {
                 wrapper.innerHTML = card.dataset.embed;
             }
 
-            // 淡出封面
             coverElement.classList.add('fade-out');
         }
 
