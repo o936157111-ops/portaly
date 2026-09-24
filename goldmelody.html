@@ -107,8 +107,9 @@
             z-index: 5;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-end; /* 改為靠下對齊，騰出上方空間 */
+            align-items: flex-end;     /* 改為靠右對齊，避免擋住正中央的主角臉部 */
+            padding: 0 30px 100px 0;   /* 調整右側與底部間距 */
             cursor: pointer;
             transition: opacity 0.5s ease;
         }
@@ -137,8 +138,8 @@
         }
 
         .cover-play-btn {
-            width: 64px;
-            height: 64px;
+            width: 60px;
+            height: 60px;
             background-color: #ff3b30;
             border-radius: 50%;
             display: flex;
@@ -149,8 +150,8 @@
         }
 
         .cover-play-btn svg {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             fill: #ffffff;
             transform: translateX(2px);
         }
