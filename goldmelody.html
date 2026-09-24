@@ -105,11 +105,6 @@
             background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
             z-index: 5;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end; /* 改為靠下對齊，騰出上方空間 */
-            align-items: flex-end;     /* 改為靠右對齊，避免擋住正中央的主角臉部 */
-            padding: 0 30px 100px 0;   /* 調整右側與底部間距 */
             cursor: pointer;
             transition: opacity 0.5s ease;
         }
@@ -138,8 +133,8 @@
         }
 
         .cover-play-btn {
-            width: 60px;
-            height: 60px;
+            width: 52px;
+            height: 52px;
             background-color: #ff3b30;
             border-radius: 50%;
             display: flex;
@@ -147,11 +142,13 @@
             align-items: center;
             box-shadow: 0 4px 20px rgba(255, 59, 48, 0.5);
             animation: pulse 2s infinite;
+            flex-shrink: 0;
+            cursor: pointer;
         }
 
         .cover-play-btn svg {
-            width: 26px;
-            height: 26px;
+            width: 22px;
+            height: 22px;
             fill: #ffffff;
             transform: translateX(2px);
         }
@@ -162,6 +159,7 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
         }
 
+        /* 底部資訊與按鈕共用同一列容器 */
         .overlay-info {
             position: absolute;
             bottom: 0;
@@ -170,7 +168,21 @@
             padding: 40px 16px calc(30px + env(safe-area-inset-bottom)) 16px;
             background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
             z-index: 10;
-            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: none; /* 讓容器本身穿透點擊，內部按鈕開啟 pointer-events */
+        }
+
+        /* 確保資訊區塊與按鈕可以正常接收點擊事件 */
+        .song-text-group {
+            pointer-events: auto;
+            flex-grow: 1;
+            margin-right: 16px;
+        }
+
+        .cover-play-btn-wrapper {
+            pointer-events: auto;
         }
 
         .song-title {
@@ -276,13 +288,7 @@
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    coverHtml = `
-                        <div class="custom-cover-layer${extraClass}" onclick="playCustomSong(this)">
-                            <div class="cover-play-btn">
-                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            </div>
-                        </div>
-                    `;
+                    coverHtml = `<div class="custom-cover-layer${extraClass}"></div>`;
                     card.dataset.hasCover = "true";
                 }
 
@@ -290,8 +296,16 @@
                     ${coverHtml}
                     <div class="video-wrapper"></div>
                     <div class="overlay-info">
-                        <div class="song-title">${song.title}</div>
-                        <div class="song-views">${song.views}</div>
+                        <div class="song-text-group">
+                            <div class="song-title">${song.title}</div>
+                            <div class="song-views">${song.views}</div>
+                        </div>
+                        ${song.isCustomCover ? `
+                        <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
+                            <div class="cover-play-btn">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>` : ''}
                     </div>
                 `;
                 
@@ -355,15 +369,18 @@
             });
         }
 
-        function playCustomSong(coverElement) {
-            const card = coverElement.closest('.reel-card');
+        function playCustomSong(btnWrapper) {
+            const card = btnWrapper.closest('.reel-card');
             const wrapper = card.querySelector('.video-wrapper');
+            const coverLayer = card.querySelector('.custom-cover-layer');
             
             if (!wrapper.hasChildNodes()) {
                 wrapper.innerHTML = card.dataset.embed;
             }
 
-            coverElement.classList.add('fade-out');
+            if (coverLayer) {
+                coverLayer.classList.add('fade-out');
+            }
         }
 
         window.onload = initReels;
