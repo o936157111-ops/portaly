@@ -49,13 +49,20 @@
             }
         }
 
-        /* 滿版上下滑動容器 (Shorts / 抖音風格) */
+        /* 滿版上下滑動容器 (Shorts / 抖音風格)，並隱藏右側捲軸 */
         .reel-container {
             width: 100%;
             height: 100%;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             -webkit-overflow-scrolling: touch;
+            /* 隱藏捲軸：針對 Firefox */
+            scrollbar-width: none;
+        }
+
+        /* 隱藏捲軸：針對 Chrome, Safari, Edge */
+        .reel-container::-webkit-scrollbar {
+            display: none;
         }
 
         /* 每一頁的單一影片卡片 (剛好佔滿一頁，垂直置中) */
@@ -165,7 +172,7 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 每次重新整理網頁時隨機洗牌順序
+            // 每次重新整理網頁時隨機洗牌順序（達到每次下滑或進來都隨機的效果）
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
 
             shuffledSongs.forEach((song) => {
@@ -199,9 +206,17 @@
                 });
             }, { threshold: 0.6 }); // 當卡片露出超過 60% 時觸發
 
-            document.querySelectorAll('.reel-card').forEach(card => {
+            const cards = document.querySelectorAll('.reel-card');
+            cards.forEach(card => {
                 observer.observe(card);
             });
+
+            // 1. 網頁開啟時隨機挑選其中一首播放
+            if (cards.length > 0) {
+                const randomIndex = Math.floor(Math.random() * cards.length);
+                // 讓視捲軸瞬間滾動到隨機的那一首歌
+                container.scrollTop = cards[randomIndex].offsetTop;
+            }
         }
 
         // 頁面初次載入時執行
@@ -209,4 +224,3 @@
     </script>
 </body>
 </html>
-```[cite: 4]
