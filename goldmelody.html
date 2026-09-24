@@ -99,6 +99,54 @@
             object-fit: cover;
         }
 
+        /* 自訂封面層樣式 */
+        .custom-cover-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+                        url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        .custom-cover-layer.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cover-play-btn {
+            width: 64px;
+            height: 64px;
+            background-color: #ff3b30;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(255, 59, 48, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .cover-play-btn svg {
+            width: 28px;
+            height: 28px;
+            fill: #ffffff;
+            transform: translateX(2px);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.6); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 59, 48, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+        }
+
         /* 仿 YouTube Shorts 的底部資訊漸層遮罩 */
         .overlay-info {
             position: absolute;
@@ -143,8 +191,9 @@
         const songDatabase = [
             { 
                 title: "人潮有多擁擠 就有多想你", 
-                views: "🔥 好聽熱門", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?si=Vidg56-9ILIU8FWF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                views: "🔥 專屬封面熱門", 
+                isCustomCover: true,
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?autoplay=1&si=Vidg56-9ILIU8FWF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
                 title: "城北的花", 
@@ -203,8 +252,9 @@
             },
             { 
                 title: "人潮有多擁擠 就有多想你", 
-                views: "🔥 好聽熱門", 
-                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?si=X-96_OB_Xk51xHT_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
+                views: "🔥 專屬封面熱門", 
+                isCustomCover: true,
+                embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/VdDSpgwfZrA?autoplay=1&si=X-96_OB_Xk51xHT_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             }
         ];
 
@@ -218,14 +268,31 @@
             infiniteSongs.forEach((song) => {
                 const card = document.createElement('div');
                 card.className = 'reel-card';
-                card.dataset.embed = song.embedCode;
+                
+                // 組合卡片內部 HTML
+                let coverHtml = '';
+                if (song.isCustomCover) {
+                    coverHtml = `
+                        <div class="custom-cover-layer" onclick="playCustomSong(this)">
+                            <div class="cover-play-btn">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                    `;
+                    card.dataset.hasCover = "true";
+                }
+
                 card.innerHTML = `
+                    ${coverHtml}
                     <div class="video-wrapper"></div>
                     <div class="overlay-info">
                         <div class="song-title">${song.title}</div>
                         <div class="song-views">${song.views}</div>
                     </div>
                 `;
+                
+                // 把 embedCode 存放在 dataset 中供觀測器或點擊使用
+                card.dataset.embed = song.embedCode;
                 container.appendChild(card);
             });
 
@@ -259,13 +326,25 @@
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    const wrapper = entry.target.querySelector('.video-wrapper');
+                    const card = entry.target;
+                    const wrapper = card.querySelector('.video-wrapper');
+                    const hasCover = card.dataset.hasCover === "true";
+
                     if (entry.isIntersecting) {
+                        // 如果是有自訂封面的卡片，且封面還沒被點開，先不載入 iframe（保持封面靜止）
+                        const coverLayer = card.querySelector('.custom-cover-layer');
+                        if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
+                            return; 
+                        }
+
                         if (!wrapper.hasChildNodes()) {
-                            wrapper.innerHTML = entry.target.dataset.embed;
+                            wrapper.innerHTML = card.dataset.embed;
                         }
                     } else {
-                        wrapper.innerHTML = '';
+                        // 離開畫面時清空一般影片，但如果自訂封面還沒被點擊過，保留封面
+                        if (!hasCover || (hasCover && card.querySelector('.custom-cover-layer')?.classList.contains('fade-out'))) {
+                            wrapper.innerHTML = '';
+                        }
                     }
                 });
             }, { threshold: 0.6 });
@@ -273,6 +352,20 @@
             cards.forEach(card => {
                 observer.observe(card);
             });
+        }
+
+        // 點擊自訂封面後的播放行為
+        function playCustomSong(coverElement) {
+            const card = coverElement.closest('.reel-card');
+            const wrapper = card.querySelector('.video-wrapper');
+            
+            // 載入影片並自動播放
+            if (!wrapper.hasChildNodes()) {
+                wrapper.innerHTML = card.dataset.embed;
+            }
+
+            // 淡出封面
+            coverElement.classList.add('fade-out');
         }
 
         window.onload = initReels;
