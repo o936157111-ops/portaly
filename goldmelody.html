@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>華語百萬金曲沉浸滑動牆</title>
+    <title>華語金曲隨機短影音牆</title>
     <style>
-        /* 確保全螢幕滿版，支援手機流暢上下滑動 */
+        /* 基礎重置與手機外觀模擬（若用電腦開會置中並加上手機框） */
+        * {
+            box-sizing: border-box;
+        }
+
         html, body {
             margin: 0;
             padding: 0;
@@ -17,19 +21,47 @@
             overflow: hidden;
         }
 
-        /* 滿版滑動容器 (類似 Shorts 滾動效果) */
+        /* 電腦版時的外觀防護：限制最大寬度並置中，營造手機App質感 */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #121212;
+            }
+            .app-frame {
+                width: 100%;
+                max-width: 430px; /* 模擬主流手機寬度 */
+                height: 100vh;
+                max-height: 932px; /* 模擬主流手機高度 */
+                border-radius: 24px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+                position: relative;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .app-frame {
+                width: 100%;
+                height: 100vh;
+                position: relative;
+            }
+        }
+
+        /* 滿版上下滑動容器 (Shorts / 抖音風格) */
         .reel-container {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             -webkit-overflow-scrolling: touch;
         }
 
-        /* 每一頁的單一影片卡片 */
+        /* 每一頁的單一影片卡片 (剛好佔滿一頁) */
         .reel-card {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             scroll-snap-align: start;
             position: relative;
             display: flex;
@@ -38,14 +70,13 @@
             background-color: #111;
         }
 
-        /* YouTube 影片滿版適配 */
+        /* YouTube 嵌入 iframe 滿版適配 */
         .video-wrapper {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: auto;
         }
 
         .video-wrapper iframe {
@@ -54,25 +85,25 @@
             border: none;
         }
 
-        /* 覆蓋在影片下方的資訊列與按鈕 */
+        /* 覆蓋在影片下方的資訊列 */
         .overlay-info {
             position: absolute;
             bottom: 40px;
             left: 16px;
             right: 80px;
             z-index: 10;
-            pointer-events: none;
+            pointer-events: none; /* 讓點擊能穿透到 YouTube 控制列 */
         }
 
         .song-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 6px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
         .song-views {
-            font-size: 14px;
+            font-size: 13px;
             color: #1db954;
             background: rgba(0,0,0,0.6);
             display: inline-block;
@@ -80,26 +111,26 @@
             border-radius: 4px;
         }
 
-        /* 右側互動按鈕列 */
+        /* 右側互動按鈕列 (TikTok 風格) */
         .side-actions {
             position: absolute;
-            right: 16px;
+            right: 12px;
             bottom: 60px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             z-index: 10;
             align-items: center;
         }
 
         .action-btn {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             border: none;
             color: white;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -107,54 +138,82 @@
             backdrop-filter: blur(4px);
         }
 
-        /* 頂部重新隨機洗牌按鈕 */
+        /* 頂部隨機重整按鈕 */
         .top-bar {
-            position: fixed;
+            position: absolute;
             top: 16px;
             right: 16px;
             z-index: 100;
         }
 
         .shuffle-btn {
-            background-color: #1db954;
+            background-color: rgba(29, 185, 84, 0.9);
             color: white;
             border: none;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.5);
             cursor: pointer;
+            backdrop-filter: blur(4px);
         }
     </style>
 </head>
 <body>
 
-    <!-- 頂部隨機換歌按鈕 -->
-    <div class="top-bar">
-        <button class="shuffle-btn" onclick="initReels()">🔄 隨機換一批歌</button>
-    </div>
+    <div class="app-frame">
+        <!-- 頂部隨機換歌按鈕 -->
+        <div class="top-bar">
+            <button class="shuffle-btn" onclick="initReels()">🔄 隨機換一批</button>
+        </div>
 
-    <!-- 手機上下滑動滿版容器 -->
-    <div class="reel-container" id="reelContainer">
-        <!-- 影片卡片會由 JavaScript 動態填入 -->
+        <!-- 手機上下滑動滿版容器 -->
+        <div class="reel-container" id="reelContainer">
+            <!-- 影片卡片會由 JavaScript 動態填入 -->
+        </div>
     </div>
 
     <script>
-        // 經過驗證、允許網頁外部嵌入的華語金曲清單
+        /* ==========================================================
+           【如何自行加入新歌曲？】
+           只需要複製下方格式，貼上你的歌名、點擊數，
+           以及把從 YouTube 複製的 <iframe ...> 整個貼在 embedCode 裡面即可！
+           ========================================================== */
         const songDatabase = [
-            { title: "韋禮安 WeiBird - 如果可以 (破億神曲)", views: "🔥 破億熱門金曲", embedCode: '<iframe src="https://www.youtube.com/embed/WkI-cbsGf_4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "周興哲 Eric Chou - 怎麼了", views: "🔥 突破 1.7 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/gyIPibWoWtg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "茄子蛋 EggPlantEgg - 浪子回頭", views: "🔥 突破 1.6 億觀看", embedCode: '<iframe src="https://www.youtube.com/embed/rhTlqIb87vU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "八三夭 831 - 想見你想見你想見你", views: "🔥 破億熱門金曲", embedCode: '<iframe src="https://www.youtube.com/embed/ZX8x1gN9vG0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-            { title: "精選華語熱門金曲", views: "🔥 突破百萬點擊", embedCode: '<iframe src="https://www.youtube.com/embed/1w5r0tbvTCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' }
+            { 
+                title: "韋禮安 WeiBird - 如果可以", 
+                views: "🔥 破億熱門金曲", 
+                embedCode: '<iframe src="https://www.youtube.com/embed/WkI-cbsGf_4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
+            },
+            { 
+                title: "周興哲 Eric Chou - 怎麼了", 
+                views: "🔥 突破 1.7 億觀看", 
+                embedCode: '<iframe src="https://www.youtube.com/embed/gyIPibWoWtg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
+            },
+            { 
+                title: "茄子蛋 EggPlantEgg - 浪子回頭", 
+                views: "🔥 突破 1.6 億觀看", 
+                embedCode: '<iframe src="https://www.youtube.com/embed/rhTlqIb87vU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
+            },
+            { 
+                title: "八三夭 831 - 想見你想見你想見你", 
+                views: "🔥 破億熱門金曲", 
+                embedCode: '<iframe src="https://www.youtube.com/embed/ZX8x1gN9vG0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
+            },
+            { 
+                title: "精選華語熱門金曲", 
+                views: "🔥 突破百萬點擊", 
+                embedCode: '<iframe src="https://www.youtube.com/embed/1w5r0tbvTCk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' 
+            }
+            /* 你想加新歌，只要在上面依樣畫葫蘆逗號隔開新增即可 */
         ];
 
         function initReels() {
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 隨機打亂順序
+            // 每次重新整理或點擊按鈕時隨機洗牌順序
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
 
             shuffledSongs.forEach((song) => {
