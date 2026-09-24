@@ -216,13 +216,16 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 每次重新整理網頁時隨機洗牌順序
+            // 為了實現順暢的無限循環，我們將歌曲清單複製 3 組接在一起
+            // 讓使用者一開始落在中間的那組，往上或往下都能無限延伸
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
+            const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
 
-            shuffledSongs.forEach((song) => {
+            infiniteSongs.forEach((song, index) => {
                 const card = document.createElement('div');
                 card.className = 'reel-card';
                 card.dataset.embed = song.embedCode;
+                card.dataset.index = index;
                 card.innerHTML = `
                     <div class="video-wrapper"></div>
                     <div class="overlay-info">
@@ -231,6 +234,30 @@
                     </div>
                 `;
                 container.appendChild(card);
+            });
+
+            const cards = document.querySelectorAll('.reel-card');
+            const totalOriginal = songDatabase.length;
+
+            // 網頁開啟時，隨機挑選「第二組（中間那組）」的其中一首來播放
+            if (cards.length > 0) {
+                const randomOffset = Math.floor(Math.random() * totalOriginal);
+                const targetIndex = totalOriginal + randomOffset;
+                container.scrollTop = cards[targetIndex].offsetTop;
+            }
+
+            // 監聽滾動位置：當使用者滑到最前或最後一組的邊界時，無縫瞬移回中間組
+            container.addEventListener('scroll', () => {
+                const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
+                
+                // 如果滑到太上面（第一組），瞬間無縫跳回第二組對應位置
+                if (container.scrollTop < singleBlockHeight * 0.5) {
+                    container.scrollTop += singleBlockHeight;
+                } 
+                // 如果滑到太下面（第三組），瞬間無縫跳回第二組對應位置
+                else if (container.scrollTop > singleBlockHeight * 2.2) {
+                    container.scrollTop -= singleBlockHeight;
+                }
             });
 
             // 建立交叉觀察器：畫面滑到哪一首，就載入哪一首；滑開就清空 iframe 停止聲音
@@ -247,16 +274,9 @@
                 });
             }, { threshold: 0.6 });
 
-            const cards = document.querySelectorAll('.reel-card');
             cards.forEach(card => {
                 observer.observe(card);
             });
-
-            // 網頁開啟時隨機挑選其中一首播放
-            if (cards.length > 0) {
-                const randomIndex = Math.floor(Math.random() * cards.length);
-                container.scrollTop = cards[randomIndex].offsetTop;
-            }
         }
 
         // 頁面初次載入時執行
