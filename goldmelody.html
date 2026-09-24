@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>華語金曲隨機短影音牆</title>
     <style>
         /* 基礎重置與手機外觀模擬（若用電腦開會置中並加上手機框） */
@@ -15,8 +15,9 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
-            color: #fff;
+            /* 改為白色底色，完美融入手機介面 */
+            background-color: #ffffff;
+            color: #111;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
         }
@@ -27,7 +28,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-color: #121212;
+                background-color: #f0f2f5;
             }
             .app-frame {
                 width: 100%;
@@ -36,8 +37,9 @@
                 max-height: 932px; /* 模擬主流手機高度 */
                 border-radius: 24px;
                 overflow: hidden;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
                 position: relative;
+                background-color: #ffffff;
             }
         }
 
@@ -56,16 +58,14 @@
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
             -webkit-overflow-scrolling: touch;
-            /* 隱藏捲軸：針對 Firefox */
             scrollbar-width: none;
         }
 
-        /* 隱藏捲軸：針對 Chrome, Safari, Edge */
         .reel-container::-webkit-scrollbar {
             display: none;
         }
 
-        /* 每一頁的單一影片卡片 (剛好佔滿一頁，垂直置中) */
+        /* 每一頁的單一影片卡片：加入安全區域，並在白色背景下完美置中 */
         .reel-card {
             width: 100%;
             height: 100%;
@@ -74,11 +74,14 @@
             position: relative;
             display: flex;
             justify-content: center;
-            align-items: center; /* 讓橫式影片完美垂直置中 */
-            background-color: #000; /* 全黑背景，上下留白更有質感 */
+            align-items: center;
+            background-color: #ffffff;
+            /* 自動避開頂部相機與底部手勢條空間 */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* 採用 16:9 黃金比例容器，確保橫式影片完整呈現不變形 */
+        /* 採用 16:9 黃金比例容器，確保橫式影片在安全空間內完整置中不變形 */
         .video-wrapper {
             width: 100%;
             aspect-ratio: 16 / 9;
@@ -94,10 +97,10 @@
             border: none;
         }
 
-        /* 覆蓋在影片下方的資訊列（往上移避免與 YouTube 底部控制列重疊） */
+        /* 覆蓋在影片下方的資訊列（避開底部安全距離） */
         .overlay-info {
             position: absolute;
-            bottom: 50px;
+            bottom: calc(50px + env(safe-area-inset-bottom));
             left: 16px;
             right: 16px;
             z-index: 10;
@@ -108,13 +111,14 @@
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 6px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            color: #111;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
         }
 
         .song-views {
             font-size: 13px;
-            color: #1db954;
-            background: rgba(0,0,0,0.6);
+            color: #fff;
+            background: rgba(0, 0, 0, 0.75);
             display: inline-block;
             padding: 4px 8px;
             border-radius: 4px;
@@ -146,42 +150,42 @@
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/1w5r0tbvTCk?si=Vidg56-9ILIU8FWF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "城北的花", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/wKpNtrmQ1a0?si=QMTLkgfQU25NGFXo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "推開世界的門", 
                 views: "🔥 楊乃文", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/KSTeFTHjj14?si=g2KQtF20HNUQGK1j" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "原來你愛的不是我", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/tANkOuKG_28?si=24iPy0Kp78VZcmvW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "值得", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/M5hHynlk9v0?si=HycN1e6zqJh9PTO1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "愛到盡頭", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/HfJEquKgjRw?si=UBbMucW63OV3RSfh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "愛到盡頭", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/jrWD_p_VoE8?si=iNAzgL5QA4ZCmdml" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "換我做你的山", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/9k2whbvdcLE?si=_59n03V_0bI9vaEV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
-{ 
+            { 
                 title: "思念成災", 
                 views: "🔥 好聽熱門", 
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/Pvb8SO9PBXc?si=gP6dOHMv5Kn_RLZ1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
@@ -212,13 +216,12 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 每次重新整理網頁時隨機洗牌順序（達到每次下滑或進來都隨機的效果）
+            // 每次重新整理網頁時隨機洗牌順序
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
 
             shuffledSongs.forEach((song) => {
                 const card = document.createElement('div');
                 card.className = 'reel-card';
-                // 將 iframe 語法暫存於 dataset 中，滑到該頁時才載入
                 card.dataset.embed = song.embedCode;
                 card.innerHTML = `
                     <div class="video-wrapper"></div>
@@ -235,26 +238,23 @@
                 entries.forEach(entry => {
                     const wrapper = entry.target.querySelector('.video-wrapper');
                     if (entry.isIntersecting) {
-                        // 進入畫面：載入影片播放
                         if (!wrapper.hasChildNodes()) {
                             wrapper.innerHTML = entry.target.dataset.embed;
                         }
                     } else {
-                        // 離開畫面：清空容器，強制停止上一首歌的聲音
                         wrapper.innerHTML = '';
                     }
                 });
-            }, { threshold: 0.6 }); // 當卡片露出超過 60% 時觸發
+            }, { threshold: 0.6 });
 
             const cards = document.querySelectorAll('.reel-card');
             cards.forEach(card => {
                 observer.observe(card);
             });
 
-            // 1. 網頁開啟時隨機挑選其中一首播放
+            // 網頁開啟時隨機挑選其中一首播放
             if (cards.length > 0) {
                 const randomIndex = Math.floor(Math.random() * cards.length);
-                // 讓視捲軸瞬間滾動到隨機的那一首歌
                 container.scrollTop = cards[randomIndex].offsetTop;
             }
         }
@@ -264,3 +264,4 @@
     </script>
 </body>
 </html>
+```[cite: 5]
