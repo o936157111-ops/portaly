@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>華語金曲隨機短影音牆</title>
+    <title>華語金曲隨機短影音牆 - Shorts 風格</title>
     <style>
-        /* 基礎重置與手機外觀模擬（若用電腦開會置中並加上手機框） */
+        /* 基礎重置與手機外觀模擬 */
         * {
             box-sizing: border-box;
         }
@@ -15,7 +15,6 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            /* 白色底色，完美融入手機介面 */
             background-color: #ffffff;
             color: #111;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -32,9 +31,9 @@
             }
             .app-frame {
                 width: 100%;
-                max-width: 430px; /* 模擬主流手機寬度 */
+                max-width: 430px;
                 height: 100vh;
-                max-height: 932px; /* 模擬主流手機高度 */
+                max-height: 932px;
                 border-radius: 24px;
                 overflow: hidden;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -51,7 +50,7 @@
             }
         }
 
-        /* 滿版上下滑動容器 (Shorts / 抖音風格)，並隱藏右側捲軸 */
+        /* 滿版上下滑動容器 */
         .reel-container {
             width: 100%;
             height: 100%;
@@ -59,7 +58,6 @@
             scroll-snap-type: y mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            /* 開啟硬體加速，大幅減少捲動時的畫面抖動與閃爍 */
             transform: translateZ(0);
         }
 
@@ -67,7 +65,7 @@
             display: none;
         }
 
-        /* 每一頁的單一影片卡片：加入安全區域，並在白色背景下完美置中 */
+        /* 每一頁的單一影片卡片：佔滿全螢幕、黑底沉浸式播放 */
         .reel-card {
             width: 100%;
             height: 100%;
@@ -77,53 +75,58 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ffffff;
-            /* 自動避開頂部相機與底部手勢條空間 */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
+            background-color: #000000;
+            overflow: hidden;
         }
 
-        /* 採用 16:9 黃金比例容器，確保橫式影片在安全空間內完整置中不變形 */
+        /* 滿版直式容器：確保影片完整撐滿背景 */
         .video-wrapper {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            position: relative;
-        }
-
-        .video-wrapper iframe {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-wrapper iframe {
             width: 100% !important;
             height: 100% !important;
             border: none;
+            object-fit: cover;
         }
 
-        /* 覆蓋在影片下方的資訊列（避開底部安全距離） */
+        /* 仿 YouTube Shorts 的底部資訊漸層遮罩 */
         .overlay-info {
             position: absolute;
-            bottom: calc(50px + env(safe-area-inset-bottom));
-            left: 16px;
-            right: 16px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px 16px calc(30px + env(safe-area-inset-bottom)) 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
             z-index: 10;
-            pointer-events: none; /* 讓點擊能穿透到 YouTube 控制列 */
+            pointer-events: none;
         }
 
         .song-title {
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 6px;
-            color: #111;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
 
         .song-views {
-            font-size: 13px;
+            font-size: 12px;
             color: #fff;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 3px 10px;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -137,15 +140,6 @@
     </div>
 
     <script>
-        /* ==========================================================
-           【如何自行加入新歌曲？】
-           格式如下：
-           { 
-               title: "你的歌名", 
-               views: "你的觀看次數標籤", 
-               embedCode: '把整個 <iframe ...> 貼在這裡，用單引號包起來' 
-           },
-           ========================================================== */
         const songDatabase = [
             { 
                 title: "人潮有多擁擠 就有多想你", 
@@ -218,11 +212,10 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-            // 複製 3 組接在一起達成無限循環
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
             const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
 
-            infiniteSongs.forEach((song, index) => {
+            infiniteSongs.forEach((song) => {
                 const card = document.createElement('div');
                 card.className = 'reel-card';
                 card.dataset.embed = song.embedCode;
@@ -239,37 +232,31 @@
             const cards = document.querySelectorAll('.reel-card');
             const totalOriginal = songDatabase.length;
 
-            // 初始隨機落在中間那一組
             if (cards.length > 0) {
                 const randomOffset = Math.floor(Math.random() * totalOriginal);
                 const targetIndex = totalOriginal + randomOffset;
-                // 使用 instant 確保一開局定位不閃爍
                 container.scrollTop = cards[targetIndex].offsetTop;
             }
 
-            // 改用 scrollend 或透過計時器防手抖，確保使用者在「停止滑動」或「觸碰結束」瞬間才安靜無息地跳轉，徹底消除閃爍
             let scrollTimeout;
             container.addEventListener('scroll', () => {
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
                     
-                    // 當滑到第一組（太上面）時，靜默無閃爍拉回第二組
                     if (container.scrollTop < singleBlockHeight * 0.4) {
-                        container.style.scrollSnapType = 'none'; // 暫時關閉吸附避免干擾
+                        container.style.scrollSnapType = 'none';
                         container.scrollTop += singleBlockHeight;
                         setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
                     } 
-                    // 當滑到第三組（太下面）時，靜默無閃爍拉回第二組
                     else if (container.scrollTop > singleBlockHeight * 2.3) {
                         container.style.scrollSnapType = 'none';
                         container.scrollTop -= singleBlockHeight;
                         setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
                     }
-                }, 100); // 停止滾動 100ms 後才執行位置重置，畫面完全不會閃爍
+                }, 100);
             }, { passive: true });
 
-            // 建立交叉觀察器
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const wrapper = entry.target.querySelector('.video-wrapper');
