@@ -141,6 +141,12 @@
                         url('https://images.pexels.com/photos/4581380/pexels-photo-4581380.jpeg') center/cover no-repeat;
         }
 
+        /* 「放過自己」專屬封面圖片 */
+        .custom-cover-layer.cover-let-go {
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+                        url('https://live.staticflickr.com/65535/55548228317_3b99571f91_z.jpg') center/cover no-repeat;
+        }
+
         .custom-cover-layer.fade-out {
             opacity: 0;
             pointer-events: none;
@@ -281,7 +287,9 @@
             },
             { 
                 title: "放過自己", 
-                views: "🔥 好聽熱門", 
+                views: "🔥 專屬情感封面", 
+                isCustomCover: true,
+                coverClass: "cover-let-go",
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/o2JDwBQneZU?autoplay=1&si=CsjqF5OHRz3Z2A0c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             },
             { 
