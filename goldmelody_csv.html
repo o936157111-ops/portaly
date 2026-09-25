@@ -365,14 +365,13 @@
 
                 const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
                 
-                // 判斷 C 欄填的是「圖片網址」還是「CSS 代號」
                 let coverUrl = "";
                 let coverClass = "";
                 
                 if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
-                    coverUrl = coverValue; // 如果直接填網址，就用這張圖
+                    coverUrl = coverValue;
                 } else {
-                    coverClass = coverValue; // 如果是英文代號，就對應原本的樣式
+                    coverClass = coverValue;
                 }
 
                 const song = {
