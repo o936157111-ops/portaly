@@ -349,13 +349,14 @@
             if (!rows.length) return [];
             const headers = rows[0];
             const titleCol = findColumn(headers, ["歌曲名稱", "歌曲", "歌名", "title", "song", "name"]);
-            const viewsCol = findColumn(headers, ["熱門標籤", "views", "標籤", "分類", "描述"]);
-            const coverCol = findColumn(headers, ["封面樣式", "封面圖片網址", "coverclass", "coverurl", "封面"]);
             const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片網址", "影片連結", "video", "videoid", "youtubeid", "embedcode", "連結", "網址"]);
-            
+            const viewsCol = findColumn(headers, ["views", "標籤", "分類", "描述", "熱門標籤"]);
+            const coverCol = findColumn(headers, ["coverclass", "封面class", "封面樣式"]);
+            const coverUrlCol = findColumn(headers, ["封面網址", "封面圖片", "coverurl", "cover"]);
+            const customCol = findColumn(headers, ["iscustomcover", "自訂封面", "使用封面"]);
             const dataRows = titleCol >= 0 && videoCol >= 0 ? rows.slice(1) : rows;
             const titleIndex = titleCol >= 0 && videoCol >= 0 ? titleCol : 0;
-            const videoIndex = titleCol >= 0 && videoCol >= 0 ? videoCol : 3;
+            const videoIndex = titleCol >= 0 && videoCol >= 0 ? videoCol : 1;
 
             return dataRows.map(row => {
                 const title = String(row[titleIndex] || "").trim();
@@ -363,25 +364,21 @@
                 const videoId = extractYouTubeId(videoValue);
                 if (!title || !videoId) return null;
 
-                const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
-                
-                let coverUrl = "";
-                let coverClass = "";
-                
-                if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
-                    coverUrl = coverValue;
-                } else {
-                    coverClass = coverValue;
-                }
-
+                const preset = coverSettings[title] || {};
+                const customValue = customCol >= 0 ? String(row[customCol] || "").trim().toLowerCase() : "";
+                const isCustomCover = customValue
+                    ? ["true", "1", "yes", "是", "y"].includes(customValue)
+                    : Boolean(preset.isCustomCover || (coverUrlCol >= 0 && String(row[coverUrlCol] || "").trim()));
                 const song = {
                     title,
                     views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 正在播放",
-                    isCustomCover: true,
-                    coverClass: coverClass,
-                    coverUrl: coverUrl,
-                    embedCode: ``
+                    isCustomCover,
+                    coverClass: coverCol >= 0 && row[coverCol] ? String(row[coverCol]).trim() : (preset.coverClass || ""),
+                    embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${title.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
                 };
+                if (coverUrlCol >= 0 && String(row[coverUrlCol] || "").trim()) {
+                    song.coverUrl = String(row[coverUrlCol]).trim();
+                }
                 return song;
             }).filter(Boolean);
         }
