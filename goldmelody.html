@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- 啟用手機全螢幕與沉浸式模式 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>華語金曲隨機短影音牆 - Shorts 風格</title>
     <style>
-        /* 基礎重置與手機外觀模擬 */
+        /* 基礎重置：確保手機版直接滿版全螢幕 */
         * {
             box-sizing: border-box;
         }
@@ -15,18 +21,23 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffffff;
+            background-color: #000000;
             color: #111;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
+        /* 電腦版或大螢幕時：置中顯示手機比例框體 */
         @media (min-width: 768px) {
             body {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 background-color: #f0f2f5;
+                position: static;
             }
             .app-frame {
                 width: 100%;
@@ -42,12 +53,20 @@
             }
         }
 
+        /* 手機版：直接強制 100% 全螢幕覆蓋 */
         @media (max-width: 767px) {
             .app-frame {
-                width: 100%;
+                width: 100vw;
                 height: 100vh;
                 height: 100dvh;
-                position: relative;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border-radius: 0;
+                box-shadow: none;
+                background-color: #000000;
             }
         }
 
@@ -179,7 +198,7 @@
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
         }
 
-        /* 底部資訊與按鈕共用同一列容器，大幅增加底部安全距離避免被 A55 系統導覽列切到 */
+        /* 底部資訊與按鈕共用同一列容器，適應安全距離 */
         .overlay-info {
             position: absolute;
             bottom: 0;
