@@ -130,6 +130,13 @@
             transition: opacity 0.5s ease;
         }
 
+         /* 「我不該動情」專屬封面圖片 */
+        .custom-cover-layer.cover-not-falling-you {
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+                        url('https://live.staticflickr.com/65535/55549550848_c03d08fe1a_z.jpg') center/cover no-repeat;
+        }
+       
+
         /* 「原來你愛的不是我」專屬封面圖片 */
         .custom-cover-layer.cover-not-you {
             background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
@@ -320,6 +327,8 @@
             { 
                 title: "我不該動情", 
                 views: "🔥 好聽熱門", 
+                isCustomCover: true,
+                coverClass:"cover-not-falling-you",  
                 embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/rMuqgAHnXUo?autoplay=1&si=PJVJc-68n0nBj4kM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' 
             }
         ];
