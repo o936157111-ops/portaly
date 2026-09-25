@@ -5,35 +5,35 @@
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與台積電宣佈啟動 2nm「NextGen AI」晶片量產合作",
-            "category": "人工智慧 / 半導體",
-            "summary": "OpenAI 與台積電於今日（25日）共同發表聲明，針對下一代超大規模 AI 推理專用晶片達成全面架構合作，預計首批 2 奈米晶片將於 2027 年初正式供貨，大幅提升能效比與算力密度。",
-            "source": "科技新報 (TechNews)",
-            "url": "https://technews.tw/2026/09/25/openai-tsmc-2nm-ai-chip/"
+            "title": "OpenAI 發布 GPT-5.5 旗艦模型，推理能力與多模態整合再升級",
+            "category": "人工智慧",
+            "summary": "OpenAI 今日正式推出新一代旗艦模型 GPT-5.5，主打極低的延遲、突破性的自主邏輯推理能力，並全面整合實時音訊與影片分析功能，預計將大幅改變企業級 AI 應用的開發生態。",
+            "source": "TechCrunch",
+            "url": "https://techcrunch.com/2026/09/25/openai-launches-gpt-5-5"
         },
         {
             "id": 2,
-            "title": "蘋果發佈新一代輕量化 AR 眼鏡 Apple Glass，搭載視網膜微型投影技術",
-            "category": "穿戴裝置 / 擴增實境",
-            "summary": "蘋果今日舉辦秋季發表會，正式推出重量僅 75 公克的 Apple Glass。該裝置結合視覺語言模型（VLM）與視網膜微型雷射投影，提供即時跨語言翻譯與混合實境導航功能。",
-            "source": "INSIDE 硬塞的網路趨勢觀察",
-            "url": "https://www.inside.com.tw/article/2026-09-25-apple-glass-launch"
+            "title": "台積電 1.4 奈米製程首度公開進度，預計 2027 年正式量產",
+            "category": "半導體",
+            "summary": "台積電於今日的高峰論壇中宣佈 1.4 奈米（A14）製程的最新研發進展，採用新一代 High-NA EUV 光刻技術，效能較 2 奈米提升 15%，功耗降低 30%，目前良率超乎預期。",
+            "source": "經濟日報",
+            "url": "https://money.udn.com/money/story/5612/2026092501"
         },
         {
             "id": 3,
-            "title": "量子運算突破：IBM 發表 5,000 量子位元系統「Condor II」並通過後量子加密認證",
-            "category": "量子科技 / 資安",
-            "summary": "IBM 於今日全球量子峰會上公開最新 5,000 錯算容忍量子位元晶片，同步展示全球首個全面符合 NIST 後量子加密（PQC）標準的企業級雲端資安平台。",
-            "source": "電子時報 (DIGITIMES)",
-            "url": "https://www.digitimes.com.tw/tech/20260925-ibm-quantum-condor-ii"
+            "title": "蘋果推出全新輕量化 AR 眼鏡 Vision Air，主打全天候佩戴體驗",
+            "category": "消費電子",
+            "summary": "蘋果今日突襲發表 Vision Air 智慧眼鏡，重量僅 75 公克，售價大幅下修至 899 美元。產品搭載微型 micro-OLED 顯示器與空間音訊，強調日常通知提示與實時翻譯功能。",
+            "source": "The Verge",
+            "url": "https://theverge.com/2026/9/25/apple-announces-vision-air-glasses"
         },
         {
             "id": 4,
-            "title": "Waymo 與特斯拉 Robotaxi 獲准於歐洲三大城市擴大無人駕駛營運",
-            "category": "自動駕駛 / 智慧交通",
-            "summary": "歐盟交通安全局今天正式批准 Waymo 與 Tesla 在倫敦、巴黎及柏林開展 L4 級全自動駕駛計程車商業化服務，標誌著歐洲自動駕駛市場迎來重大法規突破。",
-            "source": "數位時代 (BusinessNext)",
-            "url": "https://www.bnext.com.tw/article/20260925/waymo-tesla-europe-robotaxi"
+            "title": "全球量子計算新里程碑：谷歌量子晶片達成 1,000 邏輯位元糾纏",
+            "category": "前沿科技",
+            "summary": "谷歌量子 AI 團隊今日發表論文，宣佈成功實現超過 1,000 個邏輯量子位元（Logical Qubits）的高保真度糾纏，為破解複雜分子結構與新藥研發帶來實質性突破。",
+            "source": "Wired",
+            "url": "https://wired.com/story/google-quantum-1000-logical-qubits-2026"
         }
     ]
 }
