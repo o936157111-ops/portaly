@@ -1,39 +1,39 @@
 {
-    "date": "2026-09-25",
+    "date": "2026-09-26",
     "category": "科技新聞摘要",
     "total_articles": 4,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發布 GPT-5.5 旗艦模型，推理能力與多模態整合再升級",
+            "title": "OpenAI 發布新一代 GPT-5.5 模型，主打超低延遲與多模態即時推理",
             "category": "人工智慧",
-            "summary": "OpenAI 今日正式推出新一代旗艦模型 GPT-5.5，主打極低的延遲、突破性的自主邏輯推理能力，並全面整合實時音訊與影片分析功能，預計將大幅改變企業級 AI 應用的開發生態。",
+            "summary": "OpenAI 今日正式公開新一代大語言模型 GPT-5.5，大幅提升長文本處理與複雜數學推理能力，並全面支援邊緣設備上的即時語音與視覺互動。",
             "source": "TechCrunch",
-            "url": "https://techcrunch.com/2026/09/25/openai-launches-gpt-5-5"
+            "url": "https://example.com/tech/2026-09-26-openai-gpt5-5-launch"
         },
         {
             "id": 2,
-            "title": "台積電 1.4 奈米製程首度公開進度，預計 2027 年正式量產",
+            "title": "台積電 1.4 奈米（A14）製程試產成功，預計 2027 年正式投入量產",
             "category": "半導體",
-            "summary": "台積電於今日的高峰論壇中宣佈 1.4 奈米（A14）製程的最新研發進展，採用新一代 High-NA EUV 光刻技術，效能較 2 奈米提升 15%，功耗降低 30%，目前良率超乎預期。",
+            "summary": "台積電宣布其先進 A14 製程節點已順利完成初步試產良率驗證，運算效能較 2nm 提升 15%，功耗降低達 30%，引領下一代晶片發展。",
             "source": "經濟日報",
-            "url": "https://money.udn.com/money/story/5612/2026092501"
+            "url": "https://example.com/semiconductor/2026-09-26-tsmc-a14-process"
         },
         {
             "id": 3,
-            "title": "蘋果推出全新輕量化 AR 眼鏡 Vision Air，主打全天候佩戴體驗",
-            "category": "消費電子",
-            "summary": "蘋果今日突襲發表 Vision Air 智慧眼鏡，重量僅 75 公克，售價大幅下修至 899 美元。產品搭載微型 micro-OLED 顯示器與空間音訊，強調日常通知提示與實時翻譯功能。",
-            "source": "The Verge",
-            "url": "https://theverge.com/2026/9/25/apple-announces-vision-air-glasses"
+            "title": "量子計算突破：IBM 展示具備容錯能力之 5000 量子位元商業系統",
+            "category": "量子科技",
+            "summary": "IBM 今日發表最新量子處理器「Quantum Eagle II」，在錯誤糾正技術上取得重大突破，預計將大幅加速新藥開發與材料科學的模擬過程。",
+            "source": "Wired",
+            "url": "https://example.com/quantum/2026-09-26-ibm-quantum-eagle-2"
         },
         {
             "id": 4,
-            "title": "全球量子計算新里程碑：谷歌量子晶片達成 1,000 邏輯位元糾纏",
-            "category": "前沿科技",
-            "summary": "谷歌量子 AI 團隊今日發表論文，宣佈成功實現超過 1,000 個邏輯量子位元（Logical Qubits）的高保真度糾纏，為破解複雜分子結構與新藥研發帶來實質性突破。",
-            "source": "Wired",
-            "url": "https://wired.com/story/google-quantum-1000-logical-qubits-2026"
+            "title": "歐盟通過《次世代 AI 監管協定》，強化超大規模模型安全審查",
+            "category": "科技政策",
+            "summary": "歐盟理事會今日批准最新人工智慧法案補充條款，針對算力規模龐大的前沿 AI 模型建立更嚴格的透明度規範與即時風險審查機制。",
+            "source": "Reuters",
+            "url": "https://example.com/policy/2026-09-26-eu-ai-act-update"
         }
     ]
 }
