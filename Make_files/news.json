@@ -1,0 +1,39 @@
+{
+    "date": "2026-09-26",
+    "category": "科技新聞摘要",
+    "total_articles": 4,
+    "articles": [
+        {
+            "id": 1,
+            "title": "OpenAI 發布新一代 GPT-5.5 模型，主打超低延遲與多模態即時推理",
+            "category": "人工智慧",
+            "summary": "OpenAI 今日正式公開新一代大語言模型 GPT-5.5，大幅提升長文本處理與複雜數學推理能力，並全面支援邊緣設備上的即時語音與視覺互動。",
+            "source": "TechCrunch",
+            "url": "https://example.com/tech/2026-09-26-openai-gpt5-5-launch"
+        },
+        {
+            "id": 2,
+            "title": "台積電 1.4 奈米（A14）製程試產成功，預計 2027 年正式投入量產",
+            "category": "半導體",
+            "summary": "台積電宣布其先進 A14 製程節點已順利完成初步試產良率驗證，運算效能較 2nm 提升 15%，功耗降低達 30%，引領下一代晶片發展。",
+            "source": "經濟日報",
+            "url": "https://example.com/semiconductor/2026-09-26-tsmc-a14-process"
+        },
+        {
+            "id": 3,
+            "title": "量子計算突破：IBM 展示具備容錯能力之 5000 量子位元商業系統",
+            "category": "量子科技",
+            "summary": "IBM 今日發表最新量子處理器「Quantum Eagle II」，在錯誤糾正技術上取得重大突破，預計將大幅加速新藥開發與材料科學的模擬過程。",
+            "source": "Wired",
+            "url": "https://example.com/quantum/2026-09-26-ibm-quantum-eagle-2"
+        },
+        {
+            "id": 4,
+            "title": "歐盟通過《次世代 AI 監管協定》，強化超大規模模型安全審查",
+            "category": "科技政策",
+            "summary": "歐盟理事會今日批准最新人工智慧法案補充條款，針對算力規模龐大的前沿 AI 模型建立更嚴格的透明度規範與即時風險審查機制。",
+            "source": "Reuters",
+            "url": "https://example.com/policy/2026-09-26-eu-ai-act-update"
+        }
+    ]
+}

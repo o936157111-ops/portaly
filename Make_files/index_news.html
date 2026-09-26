@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全方位熱門焦點情報站</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 標題與副標題區塊 */
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* 頁籤容器：嚴格置中，隱藏超出範圍的頁籤，確保畫面乾淨不露邊 */
+        .category-scroll-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden; /* 隱藏未選中或超出畫面兩側的頁籤 */
+            padding: 4px 0 16px 0;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .category-btn {
+            display: none; /* 預設全部隱藏，透過 JS 只顯示當前活躍的頁籤 */
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1px solid var(--primary-color);
+            background: #ffffff;
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            display: inline-block; /* 只有當前頁籤會顯示在正中央 */
+            background: var(--primary-color);
+            color: #ffffff;
+        }
+
+        /* 左右切換導航按鈕（讓手機與電腦都能輕鬆點擊切換上一篇/下一篇） */
+        .nav-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .nav-btn {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* 卡片主體樣式 */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .media-badge {
+            background: #eff6ff;
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .exclusive-badge {
+            font-size: 0.75rem;
+            color: #d97706;
+            background: #fef3c7;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .headline {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 16px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-box {
+            font-size: 0.95rem;
+            color: #334155;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        /* 摘要收合按鈕與內容 */
+        .summary-container {
+            margin-top: 16px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 12px;
+        }
+
+        .toggle-summary-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+
+        .summary-content {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .summary-content.show {
+            display: block;
+        }
+
+        /* Google 相關新聞搜尋按鈕 */
+        .external-link-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-link:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .loading, .error-msg {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .error-msg {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🔥 全方位熱門焦點情報站</h1>
+        <p id="headerSubtitle">科技新聞與趨勢每日自動彙整</p>
+    </header>
+
+    <!-- 獨立置中的單一頁籤顯示區 -->
+    <div class="category-scroll-container" id="tabContainer">
+        <!-- 動態生成單一活躍頁籤 -->
+    </div>
+
+    <!-- 左右切換導航列 -->
+    <div class="nav-pagination">
+        <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">◀ 上一則</button>
+        <span class="page-indicator" id="pageIndicator">1 / 4</span>
+        <button class="nav-btn" id="nextBtn" onclick="changePage(1)">下一則 ▶</button>
+    </div>
+
+    <!-- 新聞資訊卡片呈現區 -->
+    <div id="newsCardContainer">
+        <div class="loading">正在讀取最新情報資料...</div>
+    </div>
+</div>
+
+<script>
+    let newsData = {
+        date: "",
+        category: "",
+        total_articles: 0,
+        articles: []
+    };
+
+    let currentIndex = 0; // 記錄當前文章索引 (0 到 3)
+
+    // 頁面載入時抓取新聞 JSON 並初始化
+    window.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('news.json');
+            if (!response.ok) throw new Error('無法讀取 news.json');
+            newsData = await response.json();
+            
+            initNewsApp();
+        } catch (error) {
+            document.getElementById('newsCardContainer').innerHTML = `
+                <div class="error-msg">
+                    ⚠️ 尚無解析資料（news.json）或格式錯誤。<br>
+                    請確認您的 news.json 檔案已成功更新且路徑正確！
+                </div>
+            `;
+        }
+    });
+
+    // 初始化應用程式
+    function initNewsApp() {
+        const subtitle = document.getElementById('headerSubtitle');
+        if (subtitle) {
+            subtitle.textContent = `${newsData.category || '科技新聞'}（更新日期：${newsData.date || '今日'}）`;
+        }
+
+        if (newsData.articles && Array.isArray(newsData.articles) && newsData.articles.length > 0) {
+            currentIndex = 0;
+            renderCurrentView();
+        }
+    }
+
+    // 上一則 / 下一則按鈕切換
+    function changePage(direction) {
+        if (!newsData.articles) return;
+        currentIndex += direction;
+        
+        // 確保索引不超出範圍
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= newsData.articles.length) currentIndex = newsData.articles.length - 1;
+
+        renderCurrentView();
+    }
+
+    // 渲染當前畫面的頁籤與新聞內容
+    function renderCurrentView() {
+        const articles = newsData.articles;
+        const currentItem = articles[currentIndex];
+        
+        // 1. 渲染正中央的單一頁籤
+        const tabContainer = document.getElementById('tabContainer');
+        tabContainer.innerHTML = '';
+
+        const btn = document.createElement('button');
+        btn.className = 'category-btn active';
+        btn.textContent = `[${currentItem.source}] ${currentItem.category}`;
+        tabContainer.appendChild(btn);
+
+        // 2. 更新頁碼指示與上下頁按鈕狀態
+        document.getElementById('pageIndicator').textContent = `${currentIndex + 1} / ${articles.length}`;
+        document.getElementById('prevBtn').disabled = (currentIndex === 0);
+        document.getElementById('nextBtn').disabled = (currentIndex === articles.length - 1);
+
+        // 3. 渲染對應的新聞卡片內容
+        const container = document.getElementById('newsCardContainer');
+        const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(currentItem.title)}`;
+
+        container.innerHTML = `
+            <div class="card">
+                <div class="card-header">
+                    <span class="media-badge">來源：${currentItem.source || '專業媒體'}</span>
+                    <span class="exclusive-badge">視角分類：${currentItem.category || '焦點透鏡'}</span>
+                </div>
+                
+                <h2 class="headline">${currentItem.title || '無標題'}</h2>
+                
+                <div class="section-title">💡 內容摘要</div>
+                <div class="content-box">${currentItem.summary || '暫無摘要'}</div>
+
+                <div class="summary-container">
+                    <button class="toggle-summary-btn" onclick="toggleSummary(this)">
+                        <span>▶ 展開詳細焦點摘要與引文</span>
+                    </button>
+                    <div class="summary-content">
+                        <strong>【焦點深度解讀】</strong><br>
+                        本則報導由 <strong>${currentItem.source}</strong> 提供，針對「${currentItem.title}」進行即時追蹤。助您快速掌握事件核心脈絡與產業趨勢。<br><br>
+                        <em>原始摘要內容：</em>${currentItem.summary}
+                    </div>
+                </div>
+
+                <div class="external-link-container">
+                    <a href="${googleSearchUrl}" target="_blank" class="btn-link">🔍 Google 相關新聞搜尋 ↗</a>
+                </div>
+            </div>
+        `;
+    }
+
+    // 展開/收合摘要內文功能
+    function toggleSummary(btn) {
+        const content = btn.nextElementSibling;
+        const isShown = content.classList.contains('show');
+        
+        if (isShown) {
+            content.classList.remove('show');
+            btn.querySelector('span').textContent = '▶ 展開詳細焦點摘要與引文';
+        } else {
+            content.classList.add('show');
+            btn.querySelector('span').textContent = '▼ 收合詳細焦點摘要與引文';
+        }
+    }
+</script>
+
+</body>
+</html>
