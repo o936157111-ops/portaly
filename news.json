@@ -1,39 +1,71 @@
 {
     "date": "2026-09-26",
-    "category": "科技新聞摘要",
-    "total_articles": 4,
+    "category": "全方位焦點情報",
+    "total_articles": 8,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發布新一代 GPT-5.5 模型，主打超低延遲與多模態即時推理",
+            "title": "OpenAI 與台積電合作推進 2nm 專屬 AI 晶片量產計畫",
             "category": "人工智慧",
-            "summary": "OpenAI 今日正式公開新一代大語言模型 GPT-5.5，大幅提升長文本處理與複雜數學推理能力，並全面支援邊緣設備上的即時語音與視覺互動。",
-            "source": "TechCrunch",
-            "url": "https://example.com/tech/2026-09-26-openai-gpt5-5-launch"
+            "summary": "OpenAI 與晶圓代工龍頭台積電今日宣佈達成戰略合作，將於 2026 年底前正式投入 2 奈米技術量產下一代專用 AI 晶片，以應對大語言模型暴增的算力需求與節能挑戰。",
+            "source": "科技新報",
+            "url": "https://technews.tw/2026/09/26/openai-tsmc-2nm-ai-chip/"
         },
         {
             "id": 2,
-            "title": "台積電 1.4 奈米（A14）製程試產成功，預計 2027 年正式投入量產",
+            "title": "台積電 A16 埃米級製程迎來首批客戶訂單 預計下半年全面啟動",
             "category": "半導體",
-            "summary": "台積電宣布其先進 A14 製程節點已順利完成初步試產良率驗證，運算效能較 2nm 提升 15%，功耗降低達 30%，引領下一代晶片發展。",
-            "source": "經濟日報",
-            "url": "https://example.com/semiconductor/2026-09-26-tsmc-a14-process"
+            "summary": "台積電今日於技術說明會中證實，旗下 A16 (1.6nm級) 埃米級製程技術進展超乎預期，包含蘋果與超微在內的多家高科技巨頭已完成設計定案，預計下半年投入量產。",
+            "source": "電子時報",
+            "url": "https://digitimes.com.tw/2026/09/26/tsmc-a16-process-update/"
         },
         {
             "id": 3,
-            "title": "量子計算突破：IBM 展示具備容錯能力之 5000 量子位元商業系統",
-            "category": "量子科技",
-            "summary": "IBM 今日發表最新量子處理器「Quantum Eagle II」，在錯誤糾正技術上取得重大突破，預計將大幅加速新藥開發與材料科學的模擬過程。",
-            "source": "Wired",
-            "url": "https://example.com/quantum/2026-09-26-ibm-quantum-eagle-2"
+            "title": "蘋果推出全新 Vision Pro 2 輕量化頭戴裝置 聚焦 AR 居家生態圈",
+            "category": "智慧裝置",
+            "summary": "蘋果公司發表新一代 Vision Pro 2，機身重量較前代大幅減輕 40%，並搭載最新 M5 晶片與 visionOS 4 系統，全面升級空間運算體驗與智慧家庭裝置的連動。",
+            "source": "INSIDE 硬塞的網路趨勢觀察",
+            "url": "https://inside.com.tw/2026/09/26/apple-vision-pro-2-launch/"
         },
         {
             "id": 4,
-            "title": "歐盟通過《次世代 AI 監管協定》，強化超大規模模型安全審查",
-            "category": "科技政策",
-            "summary": "歐盟理事會今日批准最新人工智慧法案補充條款，針對算力規模龐大的前沿 AI 模型建立更嚴格的透明度規範與即時風險審查機制。",
-            "source": "Reuters",
-            "url": "https://example.com/policy/2026-09-26-eu-ai-act-update"
+            "title": "全球量子加密網路標準正式確立 後量子時代資安防護大升級",
+            "category": "網路資安",
+            "summary": "國際電信聯盟（ITU）聯合各國科技巨頭，於今日正式頒布全球首套「後量子加密（PQC）」通訊協定標準，旨在防禦未來量子電腦對現行密碼體系與關鍵基礎設施的威脅。",
+            "source": "iThome 科技報",
+            "url": "https://ithome.com.tw/2026/09/26/post-quantum-cryptography-standard/"
+        },
+        {
+            "id": 5,
+            "title": "《阿凡達 3：火與灰》全球首支預告片公布 視覺特效再創影史新高",
+            "category": "強檔電影",
+            "summary": "詹姆斯卡麥隆執導的《阿凡達 3：火與灰》今日釋出首支官方預告，展示全新灰燼族部落與驚人的水火交融特效，預計今年底聖誕檔期全球同步上映。",
+            "source": "電影神搜",
+            "url": "https://agentm.tw/2026/09/26/avatar-3-fire-and-ash-trailer/"
+        },
+        {
+            "id": 6,
+            "title": "泰勒絲無預警推出全新概念專輯 首波單曲上架即刷爆全球榜單",
+            "category": "流行音樂",
+            "summary": "流行天后泰勒絲（Taylor Swift）於今日午夜驚喜推出第 12 張個人原創概念專輯，融合復古電子與民謠風格，上架僅數小時即刷新 Spotify 單日全球播放歷史紀錄。",
+            "source": "滾石雜誌中文網",
+            "url": "https://rollingstone.com.tw/2026/09/26/taylor-swift-new-album-release/"
+        },
+        {
+            "id": 7,
+            "title": "影集《魷魚遊戲 3》金球獎入圍名單揭曉 導演證實將為系列最終章",
+            "category": "影集劇集",
+            "summary": "Netflix 熱門影集《魷魚遊戲》第三季獲得金球獎最佳戲劇類影集等四項大獎提名，導演黃東赫在受訪時表示，第三季將迎來驚悚且感人的最終大結局。",
+            "source": "娛樂週報",
+            "url": "https://e-news.com.tw/2026/09/26/squid-game-season-3-final/"
+        },
+        {
+            "id": 8,
+            "title": "《俠盜獵車手 VI》(GTA 6) 宣佈全球同步上市 數百萬玩家湧入伺服器",
+            "category": "電玩娛樂",
+            "summary": "備受期待的跨時代遊戲巨作《俠盜獵車手 VI》於今日正式發售，全球玩家熱情湧入導致線上伺服器一度壅塞，開盤首日銷量預估突破影音娛樂歷史紀錄。",
+            "source": "巴哈姆特 GNN",
+            "url": "https://gnn.gamer.com.tw/2026/09/26/gta6-official-release/"
         }
     ]
 }
