@@ -1,18 +1,17 @@
 name: Auto Update Website
 on: workflow_dispatch
 
-permissions:
-  contents: write
-
 jobs:
-build:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v4
-- run: echo "Hello" > index_python.html
-- run: |
-      git config --global user.name "Bot"
-      git config --global user.email "bot@bot.com"
-      git add index_python.html
-      git commit -m "update" || echo "no changes"
-      git push
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Hello" > index_python.html
+      - run: |
+          git config --global user.name "Bot"
+          git config --global user.email "bot@bot.com"
+          git add index_python.html
+          git commit -m "update" || echo "no changes"
+          git push
