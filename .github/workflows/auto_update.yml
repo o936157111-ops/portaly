@@ -1,43 +1,35 @@
 name: Auto Update Website
 
-# 設定觸發條件：您可以手動在 GitHub 網頁上按按鈕觸發，或者設定排程
 on:
-  workflow_dispatch: # 讓您可以在 GitHub 網頁手動點擊「Run workflow」來執行
-  # push: [main]     # 如果取消註解這行，代表每次您推送到 main 分支時也會自動執行
+  workflow_dispatch: # 允許在 GitHub 網頁手動點擊執行
 
 permissions:
-  contents: write # 賦予這個工作流程修改並寫入倉庫檔案的權限
+  contents: write # 賦予寫入倉庫的權限
 
 jobs:
   build:
-    runs-on: ubuntu-latest # 使用 GitHub 提供的免費 Linux 雲端主機
+    runs-on: ubuntu-latest
 
     steps:
-    # 1. 把您的 GitHub 倉庫程式碼下載到雲端主機上
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 2. 在雲端主機上安裝 Python 環境
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    # 3. 安裝 Python 需要的第三方套件（這裡需要 beautifulsoup4）
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install beautifulsoup4
 
-    # 4. 執行您的 Python 程式
     - name: Run Python script
-      run: python update_site.py
+      run: python python/update_site.py
 
-    # 5. 自動把 Python 修改後的 index.html 提交並存回您的 GitHub 倉庫
     - name: Commit and push changes
       run: |
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
-        git add index.html
-        git commit -m "Auto-update index.html via GitHub Actions [skip ci]" || echo "No changes to commit"
+        git add index_python.html
+        git commit -m "Auto-update index_python.html via Python [skip ci]" || echo "No changes to commit"
         git push
