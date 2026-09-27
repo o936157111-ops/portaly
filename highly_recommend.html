@@ -264,17 +264,34 @@
             return match ? match[1] : "";
         }
 
-        function rowsToSongs(rows) {
-            if (!rows.length) return [];
-            const headers = rows[0];
-            const titleCol = findColumn(headers, ["產品名稱"]);
-            const coverCol = findColumn(headers, ["圖片網址"]);
-            const videoCol = findColumn(headers, ["分潤連結"]);
-            const viewsCol = findColumn(headers, ["熱門標籤"]);
-            
-            const dataRows = titleCol >= 0 && videoCol >= 0 ? rows.slice(1) : rows;
-            const titleIndex = titleCol >= 0 && videoCol >= 0 ? titleCol : 0;
-            const videoIndex = titleCol >= 0 && videoCol >= 0 ? videoCol : 3;
+       function rowsToProducts(rows) {
+    if (!rows.length) return [];
+    const headers = rows[0];
+    const titleCol = findColumn(headers, ["產品名稱", "品名", "名稱"]);
+    const coverCol = findColumn(headers, ["圖片網址", "圖片", "封面"]);
+    const linkCol = findColumn(headers, ["分潤連結", "產品連結", "網址", "連結"]);
+    const tagCol = findColumn(headers, ["熱門標籤", "標籤", "分類"]);
+    
+    const dataRows = titleCol >= 0 && linkCol >= 0 ? rows.slice(1) : rows;
+    const titleIndex = titleCol >= 0 ? titleCol : 0;
+    const linkIndex = linkCol >= 0 ? linkCol : 2;
+
+    return dataRows.map(row => {
+        const title = String(row[titleIndex] || "").trim();
+        const productLink = String(row[linkIndex] || "").trim();
+        if (!title || !productLink) return null;
+
+        const coverUrl = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
+        const tag = tagCol >= 0 && row[tagCol] ? String(row[tagCol]).trim() : "🔥 熱銷推薦";
+
+        return {
+            title,
+            productLink,
+            coverUrl: coverUrl || "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
+            tag
+        };
+    }).filter(Boolean);
+}
 
             return dataRows.map(row => {
                 const title = String(row[titleIndex] || "").trim();
