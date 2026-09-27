@@ -3,7 +3,7 @@ name: Daily News Auto Update
 on:
   schedule:
     - cron: '0 22 * * *'  # 每天世界標準時間 22:00 執行（台灣時間早上 6 點）
-  workflow_dispatch:      # 允許你隨時手動在 GitHub 點擊按鈕觸發
+  workflow_dispatch:      # 允許手動點擊觸發
 
 jobs:
   update-news:
@@ -20,8 +20,10 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: 安裝相依套件
-        run: pip install google-genai beautifulsoup4 requests
+      - name: 升級 pip 並安裝相依套件
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-genai requests
 
       - name: 執行更新腳本
         env:
@@ -33,5 +35,5 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "bot@github.com"
           git add news.json
-          git commit -m "chore: 每日自動更新最新新聞摘要 [skip ci]" || echo "No changes to commit"
+          git diff --staged --quiet || git commit -m "chore: 每日自動更新最新新聞摘要 [skip ci]"
           git push origin HEAD:${{ github.ref_name }}
