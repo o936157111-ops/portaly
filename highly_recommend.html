@@ -298,47 +298,50 @@ function initReels(productDatabase) {
     container.innerHTML = '';
     const totalOriginal = productDatabase.length;
 
-    for (let i = 0; i < productDatabase.length; i++) {
-        let p = productDatabase[i];
+    // 將資料複製 3 次以達成無縫循環滾動
+    for (let loop = 0; loop < 3; loop++) {
+        for (let i = 0; i < productDatabase.length; i++) {
+            let p = productDatabase[i];
 
-        let card = document.createElement('div');
-        card.className = 'reel-card';
+            let card = document.createElement('div');
+            card.className = 'reel-card';
 
-        let img = document.createElement('img');
-        img.src = p.coverUrl;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'cover';
-        img.style.position = 'absolute';
-        img.style.top = '0';
-        img.style.left = '0';
-        card.appendChild(img);
+            let img = document.createElement('img');
+            img.src = p.coverUrl;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.style.position = 'absolute';
+            img.style.top = '0';
+            img.style.left = '0';
+            card.appendChild(img);
 
-        let info = document.createElement('div');
-        info.className = 'overlay-info';
+            let info = document.createElement('div');
+            info.className = 'overlay-info';
 
-        let title = document.createElement('div');
-        title.className = 'product-title';
-        title.textContent = p.title;
-        info.appendChild(title);
+            let title = document.createElement('div');
+            title.className = 'product-title';
+            title.textContent = p.title;
+            info.appendChild(title);
 
-        let tag = document.createElement('div');
-        tag.className = 'product-tag';
-        tag.textContent = p.tag;
-        info.appendChild(tag);
+            let tag = document.createElement('div');
+            tag.className = 'product-tag';
+            tag.textContent = p.tag;
+            info.appendChild(tag);
 
-        let btn = document.createElement('a');
-        btn.className = 'buy-btn';
-        btn.href = p.productLink;
-        btn.target = '_blank';
-        btn.textContent = '立即購買';
-        info.appendChild(btn);
+            let btn = document.createElement('a');
+            btn.className = 'buy-btn';
+            btn.href = p.productLink;
+            btn.target = '_blank';
+            btn.textContent = '立即購買';
+            info.appendChild(btn);
 
-        card.appendChild(info);
-        container.appendChild(card);
-    } // <--- 迴圈在這裡結束，所有的 card.appendChild 都在迴圈裡面！
+            card.appendChild(info);
+            container.appendChild(card);
+        }
+    } // <--- 雙層迴圈在這裡結束
 
-    // 隨機定位捲軸（現在它在迴圈外面了，且 cards 變數也抓得到）
+    // 隨機定位捲軸（此時總卡片數夠多，不會再抓不到 offsetTop）
     const cards = document.querySelectorAll('.reel-card');
     if (cards.length > 0) {
         const randomOffset = Math.floor(Math.random() * totalOriginal);
@@ -346,6 +349,7 @@ function initReels(productDatabase) {
         container.scrollTop = cards[targetIndex].offsetTop;
     }
 
+    // 接著是原本的無限滾動監聽...
         // 無限滾動的監聽與位置重置
         let scrollTimeout;
         container.addEventListener('scroll', () => {
