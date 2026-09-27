@@ -161,7 +161,7 @@
             pointer-events: none;
         }
 
-        .song-text-group {
+        .product-text-group {
             pointer-events: auto;
             flex-grow: 1;
             margin-right: 16px;
@@ -171,7 +171,7 @@
             pointer-events: auto;
         }
 
-        .song-title {
+        .product-title {
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 8px;
@@ -179,7 +179,7 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
 
-        .song-views {
+        .product-views {
             font-size: 12px;
             color: #fff;
             background: rgba(255, 255, 255, 0.2);
@@ -291,42 +291,97 @@
             tag
         };
     }).filter(Boolean);
+     }
+
+function initReels(productDatabase) {
+    const container = document.getElementById('reelContainer');
+    container.innerHTML = '';
+
+    for (let i = 0; i < productDatabase.length; i++) {
+        let p = productDatabase[i];
+
+        let card = document.createElement('div');
+        card.className = 'reel-card';
+
+        let img = document.createElement('img');
+        img.src = p.coverUrl;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.position = 'absolute';
+        img.style.top = '0';
+        img.style.left = '0';
+        card.appendChild(img);
+
+        let info = document.createElement('div');
+        info.className = 'overlay-info';
+
+        let title = document.createElement('div');
+        title.className = 'product-title';
+        title.textContent = p.title;
+        info.appendChild(title);
+
+        let tag = document.createElement('div');
+        tag.className = 'product-tag';
+        tag.textContent = p.tag;
+        info.appendChild(tag);
+
+        let btn = document.createElement('a');
+        btn.className = 'buy-btn';
+        btn.href = p.productLink;
+        btn.target = '_blank';
+        btn.textContent = '立即購買';
+        info.appendChild(btn);
+
+        card.appendChild(info);
+        container.appendChild(card);
+    }
 }
 
-            return dataRows.map(row => {
-                const title = String(row[titleIndex] || "").trim();
-                const videoValue = String(row[videoIndex] || "").trim();
-                const videoId = extractYouTubeId(videoValue);
-                if (!title || !videoId) return null;
+        // 隨機定位捲軸
+    const cards = document.querySelectorAll('.reel-card');
+    if (cards.length > 0) {
+        const randomOffset = Math.floor(Math.random() * totalOriginal);
+        const targetIndex = totalOriginal + randomOffset;
+        container.scrollTop = cards[targetIndex].offsetTop;
+    }
+}
 
-                const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
+        // 無限滾動的監聽與位置重置
+        let scrollTimeout;
+        container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
                 
-                let coverUrl = "";
-                let coverClass = "";
-                
-                if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
-                    coverUrl = coverValue;
-                } else {
-                    coverClass = coverValue;
+                if (container.scrollTop < singleBlockHeight * 0.4) {
+                    container.style.scrollSnapType = 'none';
+                    container.scrollTop += singleBlockHeight;
+                    setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+                } 
+                else if (container.scrollTop > singleBlockHeight * 2.3) {
+                    container.style.scrollSnapType = 'none';
+                    container.scrollTop -= singleBlockHeight;
+                    setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
                 }
+            }, 100);
+        }, { passive: true });
+    }
+           
                
 
         async function loadProductDatabase() {
     const response = await fetch(CSV_URL, { cache: "no-store" });
     if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
     const csvText = await response.text();
-    // 這裡把 rowsToSongs 改成你的商品解析函式
+    // 這裡把 rowsToproducts 改成你的商品解析函式
     const products = rowsToProducts(parseCSV(csvText.replace(/^\uFEFF/, "")));
     // 錯誤提示也順便改掉，才不會誤導
     if (!products.length) throw new Error("CSV 中找不到有效商品。請確認欄位包含產品名稱與購買連結。");
     return products;
 }            
 
-            if (cards.length > 0) {
-                const randomOffset = Math.floor(Math.random() * totalOriginal);
-                const targetIndex = totalOriginal + randomOffset;
-                container.scrollTop = cards[targetIndex].offsetTop;
-            }
+            
 
             let scrollTimeout;
             container.addEventListener('scroll', () => {
@@ -352,9 +407,9 @@
        window.onload = async function () {
     const container = document.getElementById("reelContainer");
     try {
-        // 把 loadSongDatabase 改成 loadProductDatabase
+        // 把 loadproductDatabase 改成 loadProductDatabase
         const productDatabase = await loadProductDatabase();
-        // 把 songDatabase 改成 productDatabase
+        // 把 productDatabase 改成 productDatabase
         initReels(productDatabase);
     } catch (error) {
         console.error("商品資料載入失敗：", error);
