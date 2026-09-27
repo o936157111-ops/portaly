@@ -296,6 +296,7 @@
 function initReels(productDatabase) {
     const container = document.getElementById('reelContainer');
     container.innerHTML = '';
+    const totalOriginal = productDatabase.length;
 
     for (let i = 0; i < productDatabase.length; i++) {
         let p = productDatabase[i];
@@ -335,8 +336,7 @@ function initReels(productDatabase) {
 
         card.appendChild(info);
         container.appendChild(card);
-    }
-}
+   
 
         // 隨機定位捲軸
     const cards = document.querySelectorAll('.reel-card');
@@ -379,12 +379,9 @@ function initReels(productDatabase) {
     // 錯誤提示也順便改掉，才不會誤導
     if (!products.length) throw new Error("CSV 中找不到有效商品。請確認欄位包含產品名稱與購買連結。");
     return products;
-}            
+}       
 
-            
-
-            let scrollTimeout;
-            container.addEventListener('scroll', () => {
+ 
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
