@@ -335,11 +335,12 @@ function initReels(productDatabase) {
             let card = document.createElement('div');
             card.className = 'reel-card';
 
-            let img = document.createElement('img');
+           let img = document.createElement('img');
             img.src = p.coverUrl;
             img.style.width = '100%';
             img.style.height = '100%';
-            img.style.objectFit = 'cover';
+            img.style.objectFit = 'contain'; // 更改這裡：讓圖片完整縮放到框塊內，不被裁切
+            img.style.backgroundColor = '#000000'; // 加上背景色，讓留白的地方保持黑色
             img.style.position = 'absolute';
             img.style.top = '0';
             img.style.left = '0';
