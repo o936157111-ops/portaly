@@ -11,8 +11,8 @@ steps:
 - uses: actions/checkout@v4
 - run: echo "Hello" > index_python.html
 - run: |
-git config --global user.name "Bot"
-git config --global user.email "bot@bot.com"
-git add index_python.html
-git commit -m "update" || echo "no changes"
-git push
+      git config --global user.name "Bot"
+      git config --global user.email "bot@bot.com"
+      git add index_python.html
+      git commit -m "update" || echo "no changes"
+      git push
