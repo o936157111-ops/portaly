@@ -1,0 +1,31 @@
+import os
+
+
+def generate_html():
+  # 這裡定義您想在網頁上呈現的圖片資料（以後您可以從 API 或清單讀取）
+  # 格式範例：(圖片連結, 點擊後的跳轉網址, 標題)
+  pins = [
+      {
+          'img': 'https://picsum.photos/300/400?random=1',
+          'link': 'https://github.com',
+          'alt': '圖片 1',
+      },
+      {
+          'img': 'https://picsum.photos/300/400?random=2',
+          'link': 'https://google.com',
+          'alt': '圖片 2',
+      },
+      {
+          'img': 'https://picsum.photos/300/400?random=3',
+          'link': 'https://python.org',
+          'alt': '圖片 3',
+      },
+  ]
+
+  # 用 Python 組合出整個 HTML 的內容
+  html_content = f"""
+
+
+    
+    
+    Python 自動生成的網頁
