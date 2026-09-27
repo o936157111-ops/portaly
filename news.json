@@ -5,67 +5,67 @@
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與科技巨頭聯合發表「次世代自主 AI Agent 跨系統對接標準」",
+            "title": "OpenAI 與台積電宣佈 2nm 晶片客製化合作計畫 突破下一代模型算力瓶頸",
             "category": "人工智慧",
-            "summary": "為了解決跨平台 AI 代理人運作孤島問題，全球多家科技巨頭於今日共同頒布全新開放式協議，大幅提升 Enterprise AI 在自動化工作流程中的協同效率與安全性。",
-            "source": "TechCrunch 科技脈動",
-            "url": "https://example.com/tech/20260927-ai-agent-protocol"
+            "summary": "OpenAI 今日宣布將與台積電深化合作，採用最新 2 奈米製程打造專為多模態 AGI 設計的次世代推理晶片，預計於 2027 年投產，可大幅降低數據中心能耗。",
+            "source": "科技新報",
+            "url": "https://technews.tw/2026/09/27/openai-tsmc-2nm-chip/"
         },
         {
             "id": 2,
-            "title": "台積電 A14 埃米製程試產良率超預期 預計 2027 年如期邁入量產",
+            "title": "英特爾宣布量產 18A 製程成功突破產能瓶頸 伺服器晶片市占率大幅回升",
             "category": "半導體",
-            "summary": "半導體龍頭台積電今日於技術論壇宣佈，1.4 奈米（A14）製程技術取得重大突破，試產片良率顯著提升，將為未來超級電腦與次世代 AI 晶片提供強大算力支持。",
-            "source": "半導體科技評論",
-            "url": "https://example.com/tech/20260927-tsmc-a14-update"
+            "summary": "英特爾於第三季技術論壇展示最新 Intel 18A 製程晶片，並確認已達成高良率量產目標，吸引多家大型雲端服務供應商（CSP）下單，為全球半導體市場注入新局。",
+            "source": "電子時報",
+            "url": "https://www.digitimes.com.tw/tech/20260927-intel-18a-mass-production"
         },
         {
             "id": 3,
-            "title": "蘋果發表 Vision Pro 3 輕量化空間運算裝置 機身重量減半並整合次世代 AI",
-            "category": "前沿科技",
-            "summary": "蘋果於秋季第二場線上發表會中突襲推出 Vision Pro 3，主打配戴舒適度全面升級，並導入全新微型顯示技術與實時生成式空間選單，開賣首日引發預購熱潮。",
-            "source": "數位時代 TechNext",
-            "url": "https://example.com/tech/20260927-apple-vision-pro-3"
+            "title": "IBM 展示 5,000 算位量子電腦 實用化化學模擬與材料科學迎重大突破",
+            "category": "量子運算",
+            "summary": "IBM 於今日發表最新量子架構「Condor II」，成功實現超過 5,000 個高精確度量子位元，並在電池新材料模擬試驗中取得關鍵進展，商業化時程預估提前至 2028 年。",
+            "source": "iThome",
+            "url": "https://www.ithome.com.tw/news/20260927-ibm-quantum-breakthrough"
         },
         {
             "id": 4,
-            "title": "全固態電池商業化邁入新里程碑 首批純電休旅車續航力突破 1,200 公里",
-            "category": "綠能與電動車",
-            "summary": "國際車企龍頭與能源研究團隊今日聯合宣布，搭載最新固態電池技術的量產車款正式通過全球嚴格安全認證，大幅縮短充電時間並徹底解決里程焦慮。",
-            "source": "綠色科技觀察",
-            "url": "https://example.com/tech/20260927-solid-state-battery"
+            "title": "蘋果秋季第二波發表會倒數 兼具柔性螢幕與 AI 助理的折疊 iPhone 首度亮相",
+            "category": "智慧行動與硬體",
+            "summary": "業界期待已久的蘋果折疊手機「iPhone Fold」預計將於次月正式推出，據供應鏈消息，該機款搭載專屬 Siri Pro 深度感知模型與無痕螢幕技術，引發市場高度關注。",
+            "source": "數位時代",
+            "url": "https://www.bnext.com.tw/article/20260927-apple-iphone-fold-rumors"
         },
         {
             "id": 5,
-            "title": "詹姆斯卡麥隆《阿凡達 4》全球首支預告片震撼發布 無鏡片 3D 技術引發熱議",
+            "title": "《阿凡達3：帶火者》全球首支預告片釋出 上映首日預售票瞬間秒殺",
             "category": "強檔電影",
-            "summary": "影史巨作《阿凡達》系列第四集今日釋出首支概念預告，展現全新潘朵拉星球地貌與突破性的視覺特效，官方宣佈將於今年底全球同步壓軸上映。",
-            "source": "影視娛樂焦點",
-            "url": "https://example.com/ent/20260927-avatar-4-trailer"
+            "summary": "導演詹姆斯卡麥隆執導的《阿凡達》系列第三部作品今日釋出官方預告，全台威秀影城 IMAX 預售票一開賣即造成系統癱瘓，新登場的「火之族群」視覺效果震撼全球影迷。",
+            "source": "電影神搜",
+            "url": "https://news.agentm.tw/2026/09/27/avatar-3-trailer-release"
         },
         {
             "id": 6,
-            "title": "泰勒絲（Taylor Swift）全新世界巡迴演唱會台北站開唱 吸引十萬歌迷朝聖",
+            "title": "泰勒絲（Taylor Swift）大巨蛋演唱會加場票今開賣 吸引超過百萬人同時上線搶票",
             "category": "流行音樂",
-            "summary": "全球流行天后泰勒絲全新主題巡迴演唱會今晚於台北大巨蛋隆重開唱，結合頂級全息投影技術與經典金曲連發，再次刷新台灣演唱會票房與週邊經濟效益紀錄。",
-            "source": "音樂流行線上",
-            "url": "https://example.com/ent/20260927-taylor-swift-taipei-tour"
+            "summary": "流行天后泰勒絲「The Eras Tour II」巡迴演唱會台北大巨蛋加演場今日正式開賣，數十萬張門票在 3 分鐘內全數售罄，再次刷新台灣演唱會票務系統最高在線人數紀錄。",
+            "source": "KKBOX 音樂誌",
+            "url": "https://magazine.kkbox.com/article/20260927-taylor-swift-taipei-dome"
         },
         {
             "id": 7,
-            "title": "第 78 屆艾美獎頒獎典禮落幕 科幻神劇《星際邊緣》狂攬 9 項大獎成最大贏家",
+            "title": "Netflix 旗艦台劇《華燈初上：續章》劇組宣告殺青 預計年底全球獨家上架",
             "category": "影集劇集",
-            "summary": "美國電視界盛事第 78 屆艾美獎於今日揭曉，由知名串流平台原創的科幻劇集《星際邊緣》包辦最佳戲劇類影集、最佳導演與最佳男主角等多項重量級大獎。",
-            "source": "環球娛樂報",
-            "url": "https://example.com/ent/20260927-emmy-awards-2026"
+            "summary": "由原班人馬打造的《華燈初上》全新續作今日正式殺青，劇情將跨越至 1990 年代的條通酒吧，劇組透露這次故事更具懸疑感，並有重量級國際影星客串演出。",
+            "source": "鏡週刊娛樂",
+            "url": "https://www.mirrormedia.mg/story/20260927-light-the-night-sequel-wrap"
         },
         {
             "id": 8,
-            "title": "任天堂新主機 Switch 2 銷量突破 3000 萬台 宣布推出首款沉浸式虛擬實境配件",
-            "category": "電玩娛樂",
-            "summary": "任天堂今日舉行線上發表會，宣布旗下熱銷主機全球銷量創下新高紀錄，並驚喜公布專為熱門 IP 設計的全新沉浸式外設配件與限定專屬遊戲。",
-            "source": "遊戲角落 GameZone",
-            "url": "https://example.com/ent/20260927-nintendo-switch2-vr"
+            "title": "第 61 屆金鐘獎入圍名單揭曉 沉浸式實境節目與串流原創劇集領跑",
+            "category": "串流娛樂",
+            "summary": "文化部今日公布今年金鐘獎入圍名單，隨著 AI 與 VR 技術融入影視製作，本次「最佳創新節目獎」競爭異常激烈，多部結合互動科技的串流劇集獲得多項提名。",
+            "source": "聯合報娛樂",
+            "url": "https://udn.com/news/story/20260927-golden-bell-awards-nomination"
         }
     ]
 }
