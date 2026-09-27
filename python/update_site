@@ -2,8 +2,7 @@ import os
 
 
 def generate_html():
-  # 這裡定義您想在網頁上呈現的圖片資料（以後您可以從 API 或清單讀取）
-  # 格式範例：(圖片連結, 點擊後的跳轉網址, 標題)
+  # 定義要展示的圖片與連結資料
   pins = [
       {
           'img': 'https://picsum.photos/300/400?random=1',
@@ -22,10 +21,10 @@ def generate_html():
       },
   ]
 
-  # 用 Python 組合出整個 HTML 的內容
-  html_content = f"""
+  # 組合 HTML 內容
+  html_content = """
 
 
     
     
-    Python 自動生成的網頁
+    Python 學習作業 - index_python.html
