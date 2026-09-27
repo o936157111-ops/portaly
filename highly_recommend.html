@@ -336,16 +336,15 @@ function initReels(productDatabase) {
 
         card.appendChild(info);
         container.appendChild(card);
-   
+    } // <--- 迴圈在這裡結束，所有的 card.appendChild 都在迴圈裡面！
 
-        // 隨機定位捲軸
+    // 隨機定位捲軸（現在它在迴圈外面了，且 cards 變數也抓得到）
     const cards = document.querySelectorAll('.reel-card');
     if (cards.length > 0) {
         const randomOffset = Math.floor(Math.random() * totalOriginal);
         const targetIndex = totalOriginal + randomOffset;
         container.scrollTop = cards[targetIndex].offsetTop;
     }
-}
 
         // 無限滾動的監聽與位置重置
         let scrollTimeout;
@@ -380,26 +379,7 @@ function initReels(productDatabase) {
     if (!products.length) throw new Error("CSV 中找不到有效商品。請確認欄位包含產品名稱與購買連結。");
     return products;
 }       
-
- 
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
                     
-                    if (container.scrollTop < singleBlockHeight * 0.4) {
-                        container.style.scrollSnapType = 'none';
-                        container.scrollTop += singleBlockHeight;
-                        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-                    } 
-                    else if (container.scrollTop > singleBlockHeight * 2.3) {
-                        container.style.scrollSnapType = 'none';
-                        container.scrollTop -= singleBlockHeight;
-                        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-                    }
-                }, 100);
-            }, { passive: true });         
-
-   
 
        window.onload = async function () {
     const container = document.getElementById("reelContainer");
