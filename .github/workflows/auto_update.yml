@@ -1,10 +1,10 @@
 name: Auto Update Website
 
 on:
-  workflow_dispatch: # 允許在 GitHub 網頁手動點擊執行
+  workflow_dispatch:
 
 permissions:
-  contents: write # 賦予寫入倉庫的權限
+  contents: write
 
 jobs:
   build:
@@ -23,12 +23,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    # 🔴 關鍵修改：我們直接指定這一步要在 python/ 資料夾裡面執行！
+    # 🔴 直接從根目錄執行 python 資料夾裡的檔案
     - name: Run Python script
-      run: python update_site.py
-      working-directory: ./python
+      run: python python/update_site.py
 
-    # 🔴 提交時因為要回到根目錄存回 index_python.html，所以這裡切回根目錄
     - name: Commit and push changes
       run: |
         git config --global user.name "GitHub Actions Bot"
