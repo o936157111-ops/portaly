@@ -147,18 +147,33 @@
         }
 
         /* 底部資訊與按鈕共用同一列容器，適應安全距離 */
-        .overlay-info {
+     .overlay-info {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 40px 16px calc(65px + env(safe-area-inset-bottom)) 16px;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+            padding: 30px 20px 50px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
             z-index: 10;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            pointer-events: none; /* 讓背景空白處可以順暢滑動 */
+        }
+
+        /* 確保標籤、標題與購買按鈕可以正常點擊 */
+        .product-title, .product-tag, .buy-btn {
             pointer-events: auto;
+        }
+
+        .product-tag {
+         font-size: 12px;
+         color: #ffffff;
+         background: rgba(255, 59, 48, 0.9);
+         padding: 4px 12px;
+         border-radius: 12px;
+         font-weight: bold;
         }
 
         .product-text-group {
@@ -171,13 +186,27 @@
             pointer-events: auto;
         }
 
-        .product-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #fff;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-        }
+       .product-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 1.4;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+
+.buy-btn {
+    display: inline-block;
+    background-color: #ff3b30;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 24px;
+    border-radius: 22px;
+    box-shadow: 0 4px 15px rgba(255, 59, 48, 0.5);
+    margin-top: 4px;
+}
+
 
         .product-views {
             font-size: 12px;
@@ -316,29 +345,31 @@ function initReels(productDatabase) {
             img.style.left = '0';
             card.appendChild(img);
 
-            let info = document.createElement('div');
+let info = document.createElement('div');
             info.className = 'overlay-info';
 
-            let title = document.createElement('div');
-            title.className = 'product-title';
-            title.textContent = p.title;
-            info.appendChild(title);
-
+            // 1. 標籤放最上方
             let tag = document.createElement('div');
             tag.className = 'product-tag';
             tag.textContent = p.tag;
             info.appendChild(tag);
 
+            // 2. 名稱放中間
+            let title = document.createElement('div');
+            title.className = 'product-title';
+            title.textContent = p.title;
+            info.appendChild(title);
+
+            // 3. 購買按鈕放最下方
             let btn = document.createElement('a');
             btn.className = 'buy-btn';
             btn.href = p.productLink;
             btn.target = '_blank';
-            btn.textContent = '立即購買';
+            btn.textContent = '立即購買 🛒';
             info.appendChild(btn);
 
             card.appendChild(info);
-            container.appendChild(card);
-        }
+            container.appendChild(card);        }
     } // <--- 雙層迴圈在這裡結束
 
 // 隨機定位捲軸（加上安全防護）
