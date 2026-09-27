@@ -341,14 +341,22 @@ function initReels(productDatabase) {
         }
     } // <--- 雙層迴圈在這裡結束
 
-    // 隨機定位捲軸（此時總卡片數夠多，不會再抓不到 offsetTop）
+// 隨機定位捲軸（加上安全防護）
     const cards = document.querySelectorAll('.reel-card');
+    console.log("總卡片數：", cards.length, "原始數量：", totalOriginal);
+    
     if (cards.length > 0) {
         const randomOffset = Math.floor(Math.random() * totalOriginal);
         const targetIndex = totalOriginal + randomOffset;
-        container.scrollTop = cards[targetIndex].offsetTop;
+        
+        // 確保 targetIndex 不會超出實際卡片範圍
+        if (cards[targetIndex]) {
+            container.scrollTop = cards[targetIndex].offsetTop;
+        } else {
+            console.warn("目標索引超出範圍，改用第一張卡片");
+            container.scrollTop = cards[0].offsetTop;
+        }
     }
-
     // 接著是原本的無限滾動監聽...
         // 無限滾動的監聽與位置重置
         let scrollTimeout;
