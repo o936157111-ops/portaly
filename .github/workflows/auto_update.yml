@@ -2,7 +2,7 @@ name: Auto Update Website
 on: workflow_dispatch
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
 build:
