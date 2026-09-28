@@ -377,19 +377,20 @@
             const viewsCol = findColumn(headers, ["熱門標籤", "views", "標籤", "分類", "描述"]);
             const coverCol = findColumn(headers, ["封面樣式", "封面圖片網址", "coverclass", "coverurl", "封面"]);
             const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片網址", "影片連結", "video", "videoid", "youtubeid", "embedcode", "連結", "網址"]);
+            const linkCol = findColumn(headers, ["歌曲連結", "音樂連結", "link", "url", "songlink"]);
             
             const dataRows = titleCol >= 0 && videoCol >= 0 ? rows.slice(1) : rows;
             const titleIndex = titleCol >= 0 && videoCol >= 0 ? titleCol : 0;
             const videoIndex = titleCol >= 0 && videoCol >= 0 ? videoCol : 3;
 
             return dataRows.map(row => {
-                const title = String(row[titleIndex] || "").trim();
+                const rawTitle = String(row[titleIndex] || "").trim();
+                const songLink = linkCol >= 0 && row[linkCol] ? String(row[linkCol]).trim() : "";
                 const videoValue = String(row[videoIndex] || "").trim();
                 const videoId = extractYouTubeId(videoValue);
-                if (!title || !videoId) return null;
+                if (!rawTitle || !videoId) return null;
 
                 const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
-                
                 let coverUrl = "";
                 let coverClass = "";
                 
@@ -399,15 +400,17 @@
                     coverClass = coverValue;
                 }
 
-                const song = {
-                    title,
+                const embedCode = [String.fromCharCode(60), 'iframe src="https://www.youtube.com/embed/', videoId, '?autoplay=1&enablejsapi=1&playsinline=1&loop=1&playlist=', videoId, '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>', String.fromCharCode(60), '/iframe'].join('');
+
+                return {
+                    title: rawTitle,
+                    link: songLink,
                     views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 正在播放",
                     isCustomCover: true,
                     coverClass: coverClass,
                     coverUrl: coverUrl,
-                    embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${title.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+                    embedCode: embedCode
                 };
-                return song;
             }).filter(Boolean);
         }
 
@@ -437,6 +440,11 @@
                     coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
                     card.dataset.hasCover = "true";
                 }
+
+             // 判斷是否有填寫連結，若有則產生超連結，否則單純顯示文字
+    const titleHtml = song.link 
+        ? `[${song.title}](${song.link})` 
+        : song.title;
 
                 card.innerHTML = `
                     ${coverHtml}
