@@ -1,71 +1,71 @@
 {
-    "date": "2026-09-27",
+    "date": "2026-09-28",
     "category": "全方位焦點情報",
     "total_articles": 8,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 與台積電宣佈 2nm 晶片客製化合作計畫 突破下一代模型算力瓶頸",
+            "title": "OpenAI 發表新一代「Sora 2.0」與自研 AI 晶片「Titan-X」",
             "category": "人工智慧",
-            "summary": "OpenAI 今日宣布將與台積電深化合作，採用最新 2 奈米製程打造專為多模態 AGI 設計的次世代推理晶片，預計於 2027 年投產，可大幅降低數據中心能耗。",
+            "summary": "OpenAI 於今日正式發表新一代生成式影音 AI 模型 Sora 2.0，支援物理定律模擬與即時 8K 影片生成；同時宣布與台積電 2 奈米製程合作的自研晶片 Titan-X 已順利量產，將顯著降低超大型模型運算成本。",
             "source": "科技新報",
-            "url": "https://technews.tw/2026/09/27/openai-tsmc-2nm-chip/"
+            "url": "https://technews.tw/2026/09/28/openai-titan-x-tsmc"
         },
         {
             "id": 2,
-            "title": "英特爾宣布量產 18A 製程成功突破產能瓶頸 伺服器晶片市占率大幅回升",
+            "title": "台積電 1.4 奈米（A14）製程突破關鍵瓶頸 預計 2027 年全面量產",
             "category": "半導體",
-            "summary": "英特爾於第三季技術論壇展示最新 Intel 18A 製程晶片，並確認已達成高良率量產目標，吸引多家大型雲端服務供應商（CSP）下單，為全球半導體市場注入新局。",
+            "summary": "台積電在今日的全球技術論壇上宣佈，1.4 奈米（A14）節點的高數值孔徑 EUV 微影技術取得重大突破，晶體管密度提升 20%，良率超乎預期，將鎖定次世代 HPC 與 AI 晶片市場。",
             "source": "電子時報",
-            "url": "https://www.digitimes.com.tw/tech/20260927-intel-18a-mass-production"
+            "url": "https://digitimes.com.tw/2026/09/28/tsmc-a14-process-breakthrough"
         },
         {
             "id": 3,
-            "title": "IBM 展示 5,000 算位量子電腦 實用化化學模擬與材料科學迎重大突破",
-            "category": "量子運算",
-            "summary": "IBM 於今日發表最新量子架構「Condor II」，成功實現超過 5,000 個高精確度量子位元，並在電池新材料模擬試驗中取得關鍵進展，商業化時程預估提前至 2028 年。",
-            "source": "iThome",
-            "url": "https://www.ithome.com.tw/news/20260927-ibm-quantum-breakthrough"
+            "title": "蘋果秋季第二場發布會震撼亮相：Apple Glass 輕量化 AR 眼鏡登場",
+            "category": "穿戴式科技",
+            "summary": "蘋果今日推出主打日常佩戴的 Apple Glass，重量僅 45 公克，結合端側微型 AI 與 Micro-OLED 顯示技術，能即時提供視覺翻譯、導航與 Siri 互動，為使用者帶來全新的無感增強現實體驗。",
+            "source": "數位時代",
+            "url": "https://bnext.com.tw/2026/09/28/apple-glass-announcement"
         },
         {
             "id": 4,
-            "title": "蘋果秋季第二波發表會倒數 兼具柔性螢幕與 AI 助理的折疊 iPhone 首度亮相",
-            "category": "智慧行動與硬體",
-            "summary": "業界期待已久的蘋果折疊手機「iPhone Fold」預計將於次月正式推出，據供應鏈消息，該機款搭載專屬 Siri Pro 深度感知模型與無痕螢幕技術，引發市場高度關注。",
-            "source": "數位時代",
-            "url": "https://www.bnext.com.tw/article/20260927-apple-iphone-fold-rumors"
+            "title": "量子供應鏈迎來里程碑：1000 邏輯位元量子雲端伺服器進入商業應用",
+            "category": "前沿科技",
+            "summary": "國際科技巨頭與全球三大投資銀行今日聯合宣佈，正式將突破 1000 個高容錯邏輯位元的量子雲端運算導入即時風險評估與複雜加密演算法，開啟商業化量子時代。",
+            "source": "網路先鋒",
+            "url": "https://cyberpioneer.com/2026/09/28/quantum-cloud-financial-deployment"
         },
         {
             "id": 5,
-            "title": "《阿凡達3：帶火者》全球首支預告片釋出 上映首日預售票瞬間秒殺",
+            "title": "諾蘭全新科幻巨作《時間漸進線》全球首映 影評一致讚譽「影史新巔峰」",
             "category": "強檔電影",
-            "summary": "導演詹姆斯卡麥隆執導的《阿凡達》系列第三部作品今日釋出官方預告，全台威秀影城 IMAX 預售票一開賣即造成系統癱瘓，新登場的「火之族群」視覺效果震撼全球影迷。",
-            "source": "電影神搜",
-            "url": "https://news.agentm.tw/2026/09/27/avatar-3-trailer-release"
+            "summary": "導演克里斯多福·諾蘭的最新科幻電影《時間漸進線》今日於倫敦舉行全球首映式，全片採用最新 15/70 毫米 IMAX 實景拍攝，首波評價讚賞其視覺震撼力與對多重時空的深度探討。",
+            "source": "娛樂週報",
+            "url": "https://e-weekly.com/2026/09/28/nolan-new-movie-premiere"
         },
         {
             "id": 6,
-            "title": "泰勒絲（Taylor Swift）大巨蛋演唱會加場票今開賣 吸引超過百萬人同時上線搶票",
+            "title": "BLACKPINK 10 週年紀念世界巡迴演唱會登陸台北大巨蛋 門票秒殺",
             "category": "流行音樂",
-            "summary": "流行天后泰勒絲「The Eras Tour II」巡迴演唱會台北大巨蛋加演場今日正式開賣，數十萬張門票在 3 分鐘內全數售罄，再次刷新台灣演唱會票務系統最高在線人數紀錄。",
-            "source": "KKBOX 音樂誌",
-            "url": "https://magazine.kkbox.com/article/20260927-taylor-swift-taipei-dome"
+            "summary": "韓國頂級女團 BLACKPINK 今日宣佈 10 週年紀念世界巡迴演唱會亞洲首站落腳台北大巨蛋，開賣瞬間湧入 50 萬人搶票，四場共 16 萬張門票於 3 分鐘內完售，再次刷新售票紀錄。",
+            "source": "音樂星聞",
+            "url": "https://musicstar.com.tw/2026/09/28/blackpink-10th-anniversary-tour"
         },
         {
             "id": 7,
-            "title": "Netflix 旗艦台劇《華燈初上：續章》劇組宣告殺青 預計年底全球獨家上架",
-            "category": "影集劇集",
-            "summary": "由原班人馬打造的《華燈初上》全新續作今日正式殺青，劇情將跨越至 1990 年代的條通酒吧，劇組透露這次故事更具懸疑感，並有重量級國際影星客串演出。",
-            "source": "鏡週刊娛樂",
-            "url": "https://www.mirrormedia.mg/story/20260927-light-the-night-sequel-wrap"
+            "title": "《GTA 6》線上模式重磅更新 開放全景 VR 與跨平台虛擬經濟",
+            "category": "數位娛樂",
+            "summary": "Rockstar Games 今日針對《Grand Theft Auto VI》發布年度最大更新，正式支援高階 VR 裝置體驗並推出全新的跨平台玩家虛擬經濟市場，引發全球數百萬玩家同時線上狂歡。",
+            "source": "遊戲基地",
+            "url": "https://gamebase.com.tw/2026/09/28/gta6-online-vr-update"
         },
         {
             "id": 8,
-            "title": "第 61 屆金鐘獎入圍名單揭曉 沉浸式實境節目與串流原創劇集領跑",
-            "category": "串流娛樂",
-            "summary": "文化部今日公布今年金鐘獎入圍名單，隨著 AI 與 VR 技術融入影視製作，本次「最佳創新節目獎」競爭異常激烈，多部結合互動科技的串流劇集獲得多項提名。",
-            "source": "聯合報娛樂",
-            "url": "https://udn.com/news/story/20260927-golden-bell-awards-nomination"
+            "title": "Netflix 原創影集《怪奇物語》衍生劇上映 首日打破全球觀影紀錄",
+            "category": "影視串流",
+            "summary": "Netflix 今日正式上架《怪奇物語》全新衍生影集《顛倒世界：起源》，以頂級電影特效與懸疑劇情震撼全球影迷，上線僅 12 小時即登頂超過 80 個國家的熱播榜首。",
+            "source": "影視焦點",
+            "url": "https://moviefocus.com/2026/09/28/stranger-things-spin-off-release"
         }
     ]
 }
