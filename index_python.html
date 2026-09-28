@@ -370,25 +370,27 @@
             return match ? match[1] : "";
         }
 
-        function rowsToSongs(rows) {
+ function rowsToSongs(rows) {
             if (!rows.length) return [];
             const headers = rows[0];
             const titleCol = findColumn(headers, ["歌曲名稱", "歌曲", "歌名", "title", "song", "name"]);
             const viewsCol = findColumn(headers, ["熱門標籤", "views", "標籤", "分類", "描述"]);
             const coverCol = findColumn(headers, ["封面樣式", "封面圖片網址", "coverclass", "coverurl", "封面"]);
             const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片網址", "影片連結", "video", "videoid", "youtubeid", "embedcode", "連結", "網址"]);
-            const linkCol = findColumn(headers, ["歌曲連結", "音樂連結", "link", "url", "songlink"]);
+            const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
             
-            const dataRows = titleCol >= 0 && videoCol >= 0 ? rows.slice(1) : rows;
-            const titleIndex = titleCol >= 0 && videoCol >= 0 ? titleCol : 0;
-            const videoIndex = titleCol >= 0 && videoCol >= 0 ? videoCol : 3;
+            const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
+            const titleIndex = titleCol >= 0 ? titleCol : 0;
+            const videoIndex = videoCol >= 0 ? videoCol : 3;
+            const productIndex = productCol >= 0 ? productCol : 4;
 
             return dataRows.map(row => {
-                const rawTitle = String(row[titleIndex] || "").trim();
-                const songLink = linkCol >= 0 && row[linkCol] ? String(row[linkCol]).trim() : "";
+                const title = String(row[titleIndex] || "").trim();
                 const videoValue = String(row[videoIndex] || "").trim();
                 const videoId = extractYouTubeId(videoValue);
-                if (!rawTitle || !videoId) return null;
+                const productUrl = productCol >= 0 ? String(row[productIndex] || "").trim() : "";
+
+                if (!title || (!videoId && !productUrl)) return null;
 
                 const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
                 let coverUrl = "";
@@ -400,20 +402,17 @@
                     coverClass = coverValue;
                 }
 
-                const embedCode = [String.fromCharCode(60), 'iframe src="https://www.youtube.com/embed/', videoId, '?autoplay=1&enablejsapi=1&playsinline=1&loop=1&playlist=', videoId, '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>', String.fromCharCode(60), '/iframe'].join('');
-
                 return {
-                    title: rawTitle,
-                    link: songLink,
-                    views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 正在播放",
+                    title,
+                    views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
                     isCustomCover: true,
-                    coverClass: coverClass,
-                    coverUrl: coverUrl,
-                    embedCode: embedCode
+                    coverClass,
+                    coverUrl,
+                    productUrl,
+                    embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
                 };
             }).filter(Boolean);
         }
-
         async function loadSongDatabase() {
             const response = await fetch(CSV_URL, { cache: "no-store" });
             if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
@@ -441,11 +440,6 @@
                     card.dataset.hasCover = "true";
                 }
 
-             // 判斷是否有填寫連結，若有則產生超連結，否則單純顯示文字
-    const titleHtml = song.link 
-        ? `[${song.title}](${song.link})` 
-        : song.title;
-
                 card.innerHTML = `
                     ${coverHtml}
                     <div class="video-wrapper"></div>
@@ -463,7 +457,8 @@
                     </div>
                 `;
                 
-                card.dataset.embed = song.embedCode;
+               card.dataset.embed = song.embedCode;
+                card.dataset.productUrl = song.productUrl; // 綁定產品網址到 DOM
                 container.appendChild(card);
             });
 
@@ -523,17 +518,26 @@
             });
         }
 
-        function playCustomSong(btnWrapper) {
+      function playCustomSong(btnWrapper) {
             const card = btnWrapper.closest('.reel-card');
             const wrapper = card.querySelector('.video-wrapper');
             const coverLayer = card.querySelector('.custom-cover-layer');
-            
-            if (!wrapper.hasChildNodes()) {
-                wrapper.innerHTML = card.dataset.embed;
-            }
+            const embedCode = card.dataset.embed;
+            const productUrl = card.dataset.productUrl;
 
-            if (coverLayer) {
-                coverLayer.classList.add('fade-out');
+            if (embedCode) {
+                // 如果有 YouTube 影片：正常播放影片、淡出封面
+                if (!wrapper.hasChildNodes()) {
+                    wrapper.innerHTML = embedCode;
+                }
+                if (coverLayer) {
+                    coverLayer.classList.add('fade-out');
+                }
+            } else if (productUrl) {
+                // 如果沒有 YT 影片，但有填寫產品網址：直接另開視窗跳轉
+                window.open(productUrl, '_blank');
+            } else {
+                alert("此項目目前沒有設定播放影片或產品連結");
             }
         }
 
