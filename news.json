@@ -1,71 +1,71 @@
 {
-    "date": "2026-09-28",
+    "date": "2026-09-29",
     "category": "全方位焦點情報",
     "total_articles": 8,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發表新一代「Sora 2.0」與自研 AI 晶片「Titan-X」",
+            "title": "OpenAI 發表新世代多模態推論架構，自主代理人技術邁入實時物理環境整合",
             "category": "人工智慧",
-            "summary": "OpenAI 於今日正式發表新一代生成式影音 AI 模型 Sora 2.0，支援物理定律模擬與即時 8K 影片生成；同時宣布與台積電 2 奈米製程合作的自研晶片 Titan-X 已順利量產，將顯著降低超大型模型運算成本。",
-            "source": "科技新報",
-            "url": "https://technews.tw/2026/09/28/openai-titan-x-tsmc"
+            "summary": "OpenAI 今日正式釋出最新一代旗艦模型架構，大幅強化跨模態自我校正與長期任務規劃能力。該模型具備直接調用物理感測介面之功能，展示在智慧製造與個人生活助理上的高度自律執行能力，標誌著通用人工智慧（AGI）在邊緣協同上的重大跨步。",
+            "source": "TechCrunch",
+            "url": "https://techcrunch.com/2026/09/29/openai-next-gen-reasoning-agents"
         },
         {
             "id": 2,
-            "title": "台積電 1.4 奈米（A14）製程突破關鍵瓶頸 預計 2027 年全面量產",
+            "title": "台積電 1.4 奈米（A14）製程完成首批晶圓試產驗證，能效表現超乎市場預期",
             "category": "半導體",
-            "summary": "台積電在今日的全球技術論壇上宣佈，1.4 奈米（A14）節點的高數值孔徑 EUV 微影技術取得重大突破，晶體管密度提升 20%，良率超乎預期，將鎖定次世代 HPC 與 AI 晶片市場。",
+            "summary": "半導體龍頭台積電於今日舉行的先進技術論壇中宣布，採用新一代高數值孔徑極紫外光（High-NA EUV）曝光技術的 A14 製程試產良率突破初期目標，預計將於 2027 年上半年進入商業化量產，主要客戶群已鎖定次世代 AI 伺服器晶片與頂級旗艦智慧型手機。",
             "source": "電子時報",
-            "url": "https://digitimes.com.tw/2026/09/28/tsmc-a14-process-breakthrough"
+            "url": "https://digitimes.com/news/20260929-tsmc-a14-process-validation"
         },
         {
             "id": 3,
-            "title": "蘋果秋季第二場發布會震撼亮相：Apple Glass 輕量化 AR 眼鏡登場",
-            "category": "穿戴式科技",
-            "summary": "蘋果今日推出主打日常佩戴的 Apple Glass，重量僅 45 公克，結合端側微型 AI 與 Micro-OLED 顯示技術，能即時提供視覺翻譯、導航與 Siri 互動，為使用者帶來全新的無感增強現實體驗。",
-            "source": "數位時代",
-            "url": "https://bnext.com.tw/2026/09/28/apple-glass-announcement"
+            "title": "IBM 攜手國際頂尖實驗室實現首座百萬量子位元容錯量子運算叢集",
+            "category": "量子科技",
+            "summary": "IBM 宣布其模組化量子系統成功整合逾百萬個物理量子位元，並透過量子低密度同位檢查碼（qLDPC）實現低延遲邏輯量子位元容錯運算。此一突破讓複雜分子模擬與新材料開發的計算時間自數十年縮短至數小時，大幅推進商業化進程。",
+            "source": "Wired",
+            "url": "https://wired.com/2026/09/29/ibm-fault-tolerant-quantum-cluster"
         },
         {
             "id": 4,
-            "title": "量子供應鏈迎來里程碑：1000 邏輯位元量子雲端伺服器進入商業應用",
-            "category": "前沿科技",
-            "summary": "國際科技巨頭與全球三大投資銀行今日聯合宣佈，正式將突破 1000 個高容錯邏輯位元的量子雲端運算導入即時風險評估與複雜加密演算法，開啟商業化量子時代。",
-            "source": "網路先鋒",
-            "url": "https://cyberpioneer.com/2026/09/28/quantum-cloud-financial-deployment"
+            "title": "Meta 與雷朋聯合發表第三代神經手勢控制 AR 眼鏡，重量僅 55 公克",
+            "category": "空間運算",
+            "summary": "Meta 發表最新款全天候 AR 智慧眼鏡，搭載肌電感應（EMG）腕帶實現微手勢無感操作，並導入微型 Micro-LED 全彩波導顯示器。整機外觀幾近一般光學眼鏡，具備即時語意視覺翻譯與場景空間音訊分析功能。",
+            "source": "The Verge",
+            "url": "https://theverge.com/2026/09/29/meta-rayban-gen3-emg-ar-glasses"
         },
         {
             "id": 5,
-            "title": "諾蘭全新科幻巨作《時間漸進線》全球首映 影評一致讚譽「影史新巔峰」",
+            "title": "科幻史詩鉅作《沙丘：彌賽亞》全球首波試映口碑解禁，爛番茄新鮮度高達 96%",
             "category": "強檔電影",
-            "summary": "導演克里斯多福·諾蘭的最新科幻電影《時間漸進線》今日於倫敦舉行全球首映式，全片採用最新 15/70 毫米 IMAX 實景拍攝，首波評價讚賞其視覺震撼力與對多重時空的深度探討。",
-            "source": "娛樂週報",
-            "url": "https://e-weekly.com/2026/09/28/nolan-new-movie-premiere"
+            "summary": "由丹尼·維勒納夫執導的沙丘三部曲終章《沙丘：彌賽亞》今日於威尼斯舉行全球媒體首映，影評盛讚其視覺哲思與悲劇史詩氣度超越前作，並精湛呈現保羅·亞崔迪在宇宙權力漩渦中的終局掙扎，預售票房已打破秋季檔期影史紀錄。",
+            "source": "Variety",
+            "url": "https://variety.com/2026/film/news/dune-messiah-first-reviews-box-office"
         },
         {
             "id": 6,
-            "title": "BLACKPINK 10 週年紀念世界巡迴演唱會登陸台北大巨蛋 門票秒殺",
+            "title": "Taylor Swift 啟動全新「時空迴廊」沉浸式世界巡迴，結合全息投影創百萬人線上同歡",
             "category": "流行音樂",
-            "summary": "韓國頂級女團 BLACKPINK 今日宣佈 10 週年紀念世界巡迴演唱會亞洲首站落腳台北大巨蛋，開賣瞬間湧入 50 萬人搶票，四場共 16 萬張門票於 3 分鐘內完售，再次刷新售票紀錄。",
-            "source": "音樂星聞",
-            "url": "https://musicstar.com.tw/2026/09/28/blackpink-10th-anniversary-tour"
+            "summary": "流行天后 Taylor Swift 於今日正式宣布展開 2027 全球體育場級巡演，並首次引進空間光場全息技術，讓未能到場的全球歌迷能透過各品牌 XR 裝置同步進入虛擬第一排視角，首賣即創下數百萬張線上門票秒殺的現象級紀錄。",
+            "source": "Billboard",
+            "url": "https://billboard.com/2026/09/29/taylor-swift-new-immersive-tour-announcement"
         },
         {
             "id": 7,
-            "title": "《GTA 6》線上模式重磅更新 開放全景 VR 與跨平台虛擬經濟",
-            "category": "數位娛樂",
-            "summary": "Rockstar Games 今日針對《Grand Theft Auto VI》發布年度最大更新，正式支援高階 VR 裝置體驗並推出全新的跨平台玩家虛擬經濟市場，引發全球數百萬玩家同時線上狂歡。",
-            "source": "遊戲基地",
-            "url": "https://gamebase.com.tw/2026/09/28/gta6-online-vr-update"
+            "title": "Netflix 年度奇幻旗艦影集《維綸密鑰》完結篇上線，單日串流播放突破八千萬小時",
+            "category": "串流影集",
+            "summary": "耗資數億美元打造的奇幻大作《維綸密鑰》最終季今日正式上架全集。憑藉電影級的即時虛擬攝影棚技術與高潮迭起的政爭反轉劇情，一舉刷新平台開播當日全球不分類觀看榜榜首紀錄，社群討論熱度全面引爆。",
+            "source": "The Hollywood Reporter",
+            "url": "https://hollywoodreporter.com/tv/news/netflix-the-key-of-vaelon-finale-record"
         },
         {
             "id": 8,
-            "title": "Netflix 原創影集《怪奇物語》衍生劇上映 首日打破全球觀影紀錄",
-            "category": "影視串流",
-            "summary": "Netflix 今日正式上架《怪奇物語》全新衍生影集《顛倒世界：起源》，以頂級電影特效與懸疑劇情震撼全球影迷，上線僅 12 小時即登頂超過 80 個國家的熱播榜首。",
-            "source": "影視焦點",
-            "url": "https://moviefocus.com/2026/09/28/stranger-things-spin-off-release"
+            "title": "第 69 屆葛萊美獎宣布增設「最佳人機協同音樂創作獎」，引發音樂產業正反思辨",
+            "category": "流行音樂",
+            "summary": "美國錄音學院今日公布新規章，確認自本屆起增設認證 AI 輔助創作工具的專門獎項，評審標準強調人類核心創意與演算法協作的平衡。此舉獲得眾多前衛電子音樂人讚許，但亦有傳統音樂人工會對版權透明機制提出強烈質疑。",
+            "source": "Rolling Stone",
+            "url": "https://rollingstone.com/music/news/grammys-2027-new-ai-music-category-debate"
         }
     ]
 }
