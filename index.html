@@ -382,7 +382,7 @@
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
+                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0) 0%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
                     card.dataset.hasCover = "true";
                 }
 
