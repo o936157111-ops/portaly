@@ -54,7 +54,7 @@ def update_news():
     print("正在呼叫 Gemini API 取得最新新聞...")
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-2.5-flash',  # 建議使用穩定且支援度極佳的型號
+        model_name='gemini-3.8-flash',  # 建議使用穩定且支援度極佳的型號
         contents=prompt
     )
     
