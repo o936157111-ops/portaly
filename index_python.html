@@ -426,7 +426,7 @@
             container.innerHTML = '';
 
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
-            const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
+            const infiniteSongs = [...shuffledSongs];
 
             infiniteSongs.forEach((song) => {
                 const card = document.createElement('div');
