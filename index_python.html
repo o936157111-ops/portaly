@@ -21,7 +21,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #ffffff;
+            background-color: #000000;
             color: #111;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
@@ -36,7 +36,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background-color: #ffffff;
+                background-color: #f0f2f5;
                 position: static;
             }
 
@@ -67,7 +67,7 @@
                 bottom: 0;
                 border-radius: 0;
                 box-shadow: none;
-                background-color: #ffffff;
+                background-color: #000000;
             }
         }
 
@@ -94,7 +94,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ffffff;
+            background-color: #000000;
             overflow: hidden;
         }
 
@@ -124,7 +124,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+                        url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
             z-index: 5;
             cursor: pointer;
             transition: opacity 0.5s ease;
@@ -132,58 +133,58 @@
 
          /* 「我不該動情」專屬封面圖片 */
         .custom-cover-layer.cover-not-falling-you {
-            background: 
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549550848_c03d08fe1a_z.jpg') center/cover no-repeat;
         }
        
 
         /* 「原來你愛的不是我」專屬封面圖片 */
         .custom-cover-layer.cover-not-you {
-            background: 
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549181083_2c4e3a898f_z.jpg') center/cover no-repeat;
         }
 
 
         /* 「換我做你的山」專屬封面圖片 */
         .custom-cover-layer.cover-be-your-mountain {
-            background: 
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549502531_eb0574e77b_z.jpg') center/cover no-repeat;
         }
 
 
         /* 「推開世界的門」專屬封面圖片 */
         .custom-cover-layer.cover-open-door {
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549231861_1b96d1fb77_z.jpg') center/cover no-repeat;
         }
 
         /* 「愛到盡頭」專屬封面圖片 */
         .custom-cover-layer.cover-end-of-love {
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549482870_24b4f389ed_z.jpg') center/cover no-repeat;
         }
 
         /* 「值得」專屬封面圖片 */
         .custom-cover-layer.cover-worthy {
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549218606_28d06dcf0b_z.jpg') center/cover no-repeat;
         }
 
         /* 「思念成災」專屬封面圖片 */
         .custom-cover-layer.cover-miss-disaster {
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://images.pexels.com/photos/4581380/pexels-photo-4581380.jpeg') center/cover no-repeat;
         }
 
         /* 「放過自己」專屬封面圖片 */
         .custom-cover-layer.cover-let-go {
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55548228317_3b99571f91_z.jpg') center/cover no-repeat;
         }
 
         /* 「城北的花」專屬封面圖片 */
         .custom-cover-layer.cover-city-flower {
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549402588_d46db8d284_z.jpg') center/cover no-repeat;
         }
 
@@ -195,7 +196,7 @@
         .cover-play-btn {
             width: 52px;
             height: 52px;
-            background-color: #ffffff;
+            background-color: #ff3b30;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -226,7 +227,7 @@
             left: 0;
             right: 0;
             padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
-            background:
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
             z-index: 10;
             display: flex;
             justify-content: space-between;
@@ -276,7 +277,7 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 9999;
     object-fit: cover;
-    background-color: #ffffff;
+    background-color: #fff;
     transition: transform 0.2s ease;
 }
 .top-left-logo:hover {
@@ -435,7 +436,7 @@
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
+                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
                     card.dataset.hasCover = "true";
                 }
 
