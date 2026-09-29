@@ -366,9 +366,7 @@
             const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
 
 
-            const firstSong = songs[0];
-            const restSongs = songs.slice(1).sort(() => Math.random() - 0.5);
-            const finalSongs = [firstSong, ...restSongs];
+            const finalSongs = songs;
 
 
             if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
@@ -379,11 +377,7 @@
             const container = document.getElementById('reelContainer');
             container.innerHTML = '';
 
-           const firstSong = songDatabase[0];
-           const restSongs = songDatabase.slice(1).sort(() => 0.5 - Math.random());
-           const shuffledSongs = [firstSong, ...restSongs];
-            
-           const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
+           const infiniteSongs = [...songDatabase, ...songDatabase, ...songDatabase];
 
             infiniteSongs.forEach((song) => {
                 const card = document.createElement('div');
@@ -422,9 +416,8 @@
             const totalOriginal = songDatabase.length;
 
             if (cards.length > 0) {
-                const randomOffset = Math.floor(Math.random() * totalOriginal);
-                const targetIndex = totalOriginal + randomOffset;
-                container.scrollTop = cards[targetIndex].offsetTop;
+               const targetIndex = totalOriginal; // 定位在第二組（中間循環區塊）的第一個
+               container.scrollTop = cards[targetIndex].offsetTop;
             }
 
             let scrollTimeout;
