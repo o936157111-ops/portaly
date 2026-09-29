@@ -15,8 +15,8 @@ def update_news_with_retry(client, model_name, contents, max_retries=3):
             )
             return response
         except ServerError as e:
-            if e.status_code == 503 and attempt < max_retries - 1:
-                print(f"遇到伺服器繁忙 (503)，正在進行第 {attempt + 1} 次重試...")
+            if attempt < max_retries - 1:
+                print(f"遇到伺服器繁忙或異常，正在進行第 {attempt + 1} 次重試... (原因: {e})")
                 time.sleep(5)  # 等待 5 秒後重試
             else:
                 raise e
