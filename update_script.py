@@ -1,8 +1,25 @@
 import os
 import json
 import re
+import time
 from datetime import datetime, timedelta, timezone
 from google import genai
+from google.genai.errors import ServerError
+
+def update_news_with_retry(client, model_name, contents, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=contents
+            )
+            return response
+        except ServerError as e:
+            if e.status_code == 503 and attempt < max_retries - 1:
+                print(f"遇到伺服器繁忙 (503)，正在進行第 {attempt + 1} 次重試...")
+                time.sleep(5)  # 等待 5 秒後重試
+            else:
+                raise e
 
 def update_news():
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -34,11 +51,13 @@ def update_news():
   ]
 }}"""
 
-    response = client.models.generate_content(
-        model='gemini-3.6-flash',
-        contents=prompt,
+    print("正在呼叫 Gemini API 取得最新新聞...")
+    response = update_news_with_retry(
+        client=client,
+        model_name='gemini-2.5-flash',  # 建議使用穩定且支援度極佳的型號
+        contents=prompt
     )
-
+    
     raw_text = response.text.strip()
     print("成功取得 AI 回應內容")
 
