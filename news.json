@@ -1,71 +1,71 @@
 {
-    "date": "2026-09-29",
+    "date": "2026-09-30",
     "category": "全方位焦點情報",
     "total_articles": 8,
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發表新世代多模態推論架構，自主代理人技術邁入實時物理環境整合",
+            "title": "次世代具身智能模型重大突破 OpenAI發表支援物理機器人即時協調架構",
             "category": "人工智慧",
-            "summary": "OpenAI 今日正式釋出最新一代旗艦模型架構，大幅強化跨模態自我校正與長期任務規劃能力。該模型具備直接調用物理感測介面之功能，展示在智慧製造與個人生活助理上的高度自律執行能力，標誌著通用人工智慧（AGI）在邊緣協同上的重大跨步。",
+            "summary": "OpenAI今日發表最新具身智能（Embodied AI）基礎模型，結合高維度環境感知與端到端實時運動控制，能讓異質雙足與四足機器人零樣本適應複雜非結構化環境，加速通用服務機器人進入商業落地階段。",
             "source": "TechCrunch",
-            "url": "https://techcrunch.com/2026/09/29/openai-next-gen-reasoning-agents"
+            "url": "https://techcrunch.com/2026/09/30/embodied-ai-robotics-breakthrough"
         },
         {
             "id": 2,
-            "title": "台積電 1.4 奈米（A14）製程完成首批晶圓試產驗證，能效表現超乎市場預期",
+            "title": "台積電A16埃米級製程提前全面量產 蘋果與輝達鎖定首波晶圓產能",
             "category": "半導體",
-            "summary": "半導體龍頭台積電於今日舉行的先進技術論壇中宣布，採用新一代高數值孔徑極紫外光（High-NA EUV）曝光技術的 A14 製程試產良率突破初期目標，預計將於 2027 年上半年進入商業化量產，主要客戶群已鎖定次世代 AI 伺服器晶片與頂級旗艦智慧型手機。",
-            "source": "電子時報",
-            "url": "https://digitimes.com/news/20260929-tsmc-a14-process-validation"
+            "summary": "晶圓代工龍頭台積電宣布A16（1.6奈米）先進製程正式步入大規模量產階段，採用超級電軌（Super Power Rail, SPR）背面供電技術，能效較2奈米提升超過15%，主要AI與旗艦行動晶片客戶已全數預訂首季產能。",
+            "source": "科技新報",
+            "url": "https://technews.tw/2026/09/30/tsmc-a16-mass-production-launch"
         },
         {
             "id": 3,
-            "title": "IBM 攜手國際頂尖實驗室實現首座百萬量子位元容錯量子運算叢集",
-            "category": "量子科技",
-            "summary": "IBM 宣布其模組化量子系統成功整合逾百萬個物理量子位元，並透過量子低密度同位檢查碼（qLDPC）實現低延遲邏輯量子位元容錯運算。此一突破讓複雜分子模擬與新材料開發的計算時間自數十年縮短至數小時，大幅推進商業化進程。",
+            "title": "IBM宣布達成千量子位元容錯系統 生物製藥分子模擬邁入實用化",
+            "category": "量子運算",
+            "summary": "IBM量子團隊成功展示具備千位元規模的主動邏輯錯誤修正系統，能在室溫介面控制下維持長相干時間，成功模擬複雜蛋白質折疊與新型靶向抗癌藥物合成機制，標誌著量子運算正式跨過商業實用門檻。",
             "source": "Wired",
-            "url": "https://wired.com/2026/09/29/ibm-fault-tolerant-quantum-cluster"
+            "url": "https://www.wired.com/2026/09/30/ibm-fault-tolerant-quantum-milestone"
         },
         {
             "id": 4,
-            "title": "Meta 與雷朋聯合發表第三代神經手勢控制 AR 眼鏡，重量僅 55 公克",
-            "category": "空間運算",
-            "summary": "Meta 發表最新款全天候 AR 智慧眼鏡，搭載肌電感應（EMG）腕帶實現微手勢無感操作，並導入微型 Micro-LED 全彩波導顯示器。整機外觀幾近一般光學眼鏡，具備即時語意視覺翻譯與場景空間音訊分析功能。",
+            "title": "全彩光波導微型顯示技術成熟 45克超輕量旗艦級智慧眼鏡問世",
+            "category": "消費電子",
+            "summary": "新一代Micro LED全彩光波導顯示模組取得突破，業者發表外觀與普通眼鏡無異、重量僅45克的穿戴式AI眼鏡，具備全天候眼球追蹤與情境即時翻譯功能，推動消費級空間運算設備普及。",
             "source": "The Verge",
-            "url": "https://theverge.com/2026/09/29/meta-rayban-gen3-emg-ar-glasses"
+            "url": "https://www.theverge.com/2026/09/30/ultralight-micro-led-ai-glasses"
         },
         {
             "id": 5,
-            "title": "科幻史詩鉅作《沙丘：彌賽亞》全球首波試映口碑解禁，爛番茄新鮮度高達 96%",
+            "title": "諾蘭全新科幻史詩鉅作定檔2027 首波IMAX特製前導預告引爆全球關注",
             "category": "強檔電影",
-            "summary": "由丹尼·維勒納夫執導的沙丘三部曲終章《沙丘：彌賽亞》今日於威尼斯舉行全球媒體首映，影評盛讚其視覺哲思與悲劇史詩氣度超越前作，並精湛呈現保羅·亞崔迪在宇宙權力漩渦中的終局掙扎，預售票房已打破秋季檔期影史紀錄。",
-            "source": "Variety",
-            "url": "https://variety.com/2026/film/news/dune-messiah-first-reviews-box-office"
+            "summary": "導演克里斯多福·諾蘭（Christopher Nolan）備受矚目的神秘科幻新片今日釋出首款前導預告與概念海報，影片全程採用新一代70mm IMAX膠卷技術拍攝，預計於2027年暑期檔席捲全球大銀幕。",
+            "source": "綜藝報 Variety",
+            "url": "https://variety.com/2026/film/news/christopher-nolan-sci-fi-epic-teaser"
         },
         {
             "id": 6,
-            "title": "Taylor Swift 啟動全新「時空迴廊」沉浸式世界巡迴，結合全息投影創百萬人線上同歡",
+            "title": "泰勒絲全新概念專輯全球同步串流上架 首日播放量再度改寫歷史紀錄",
             "category": "流行音樂",
-            "summary": "流行天后 Taylor Swift 於今日正式宣布展開 2027 全球體育場級巡演，並首次引進空間光場全息技術，讓未能到場的全球歌迷能透過各品牌 XR 裝置同步進入虛擬第一排視角，首賣即創下數百萬張線上門票秒殺的現象級紀錄。",
+            "summary": "流行天后泰勒絲（Taylor Swift）無預警釋出全新錄音室專輯，上線僅三小時即登上全球各大串流榜首，多首曲目在社群平台引發解密風潮，再次刷新全球首日最高數位串流聆聽紀錄。",
             "source": "Billboard",
-            "url": "https://billboard.com/2026/09/29/taylor-swift-new-immersive-tour-announcement"
+            "url": "https://www.billboard.com/2026/09/30/taylor-swift-surprise-album-record"
         },
         {
             "id": 7,
-            "title": "Netflix 年度奇幻旗艦影集《維綸密鑰》完結篇上線，單日串流播放突破八千萬小時",
-            "category": "串流影集",
-            "summary": "耗資數億美元打造的奇幻大作《維綸密鑰》最終季今日正式上架全集。憑藉電影級的即時虛擬攝影棚技術與高潮迭起的政爭反轉劇情，一舉刷新平台開播當日全球不分類觀看榜榜首紀錄，社群討論熱度全面引爆。",
-            "source": "The Hollywood Reporter",
-            "url": "https://hollywoodreporter.com/tv/news/netflix-the-key-of-vaelon-finale-record"
+            "title": "HBO《龍族前傳》第四季前瞻劇照公開 終極黑綠陣營決戰規模創影史新高",
+            "category": "串流影視",
+            "summary": "HBO熱門奇幻影集《龍族前傳》製作團隊公布第四季首批劇照與花絮訪談，預告全劇將迎來血龍狂舞最壯烈的高潮決戰，單集後製特效預算突破串流影集紀錄，預計將於今年冬季正式開播。",
+            "source": "好萊塢報導 The Hollywood Reporter",
+            "url": "https://www.hollywoodreporter.com/tv/2026/09/30/house-of-the-dragon-season-4-preview"
         },
         {
             "id": 8,
-            "title": "第 69 屆葛萊美獎宣布增設「最佳人機協同音樂創作獎」，引發音樂產業正反思辨",
-            "category": "流行音樂",
-            "summary": "美國錄音學院今日公布新規章，確認自本屆起增設認證 AI 輔助創作工具的專門獎項，評審標準強調人類核心創意與演算法協作的平衡。此舉獲得眾多前衛電子音樂人讚許，但亦有傳統音樂人工會對版權透明機制提出強烈質疑。",
-            "source": "Rolling Stone",
-            "url": "https://rollingstone.com/music/news/grammys-2027-new-ai-music-category-debate"
+            "title": "任天堂攜手索尼影業 《薩爾達傳說》真人電影公開首支概念視覺圖",
+            "category": "動漫影視",
+            "summary": "任天堂與索尼影業聯合打造的《薩爾達傳說》（The Legend of Zelda）真人改編電影首次公開海拉魯王國概念視覺與主演陣容輪廓，並確認全片採用實景與尖端動態捕捉技術拍攝，定檔2027年春季上映。",
+            "source": "IGN",
+            "url": "https://www.ign.com/articles/2026/09/30/zelda-live-action-first-look-reveal"
         }
     ]
 }
