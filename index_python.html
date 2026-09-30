@@ -124,14 +124,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 80%),
+            background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%),
                         url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
             z-index: 5;
             cursor: pointer;
             transition: opacity 0.5s ease;
         }
 
- 
+     
         .custom-cover-layer.fade-out {
             opacity: 0;
             pointer-events: none;
@@ -171,7 +171,7 @@
             left: 0;
             right: 0;
             padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
-            background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 80%, transparent 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
             z-index: 10;
             display: flex;
             justify-content: space-between;
@@ -221,50 +221,12 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 9999;
     object-fit: cover;
-    background-color: #fff;
+    background-color: #ff3b30;
     transition: transform 0.2s ease;
 }
 .top-left-logo:hover {
     transform: scale(1.08);
 }
-
-  /* 啟動引導封面遮罩層樣式 */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            height: 100dvh;
-            background-color: #ffffff;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
-        }
-
-        #splash-screen img {
-            width: 120px;
-            height: auto;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            transition: transform 0.2s ease;
-        }
-
-        #splash-screen img:hover {
-            transform: scale(1.05);
-        }
-
-        #splash-screen p {
-            margin-top: 16px;
-            font-size: 14px;
-            color: #666;
-            letter-spacing: 1px;
-        }
-
 
     </style>
 </head>
@@ -418,7 +380,7 @@
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0) 0%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
+                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
                     card.dataset.hasCover = "true";
                 }
 
@@ -530,7 +492,7 @@
                 initReels(songDatabase);
             } catch (error) {
                 console.error("歌曲資料載入失敗：", error);
-                container.innerHTML = `<div style="color:#333;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
+                container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
             }
         };
     </script>
