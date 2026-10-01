@@ -9,6 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 
+
 <!-- 啟用手機全螢幕與沉浸式模式 -->
 
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -75,7 +76,11 @@ width: 100%;
 
 height: 100%;
 
-background-color: #ffffff;
+background: rgba(255, 255, 255, 0.96);
+
+backdrop-filter: blur(10px);
+
+-webkit-backdrop-filter: blur(10px);
 
 z-index: 99999;
 
@@ -89,9 +94,35 @@ align-items: center;
 
 transition: opacity 0.4s ease;
 
+padding: 20px;
+
 }
 
 
+
+/* 環繞選單的整體容器（確保中心對齊） */
+
+.splash-orbit-wrapper {
+
+position: relative;
+
+width: 260px;
+
+height: 260px;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+margin-bottom: 20px;
+
+}
+
+
+
+/* 中央 Logo */
 
 .splash-logo {
 
@@ -109,6 +140,10 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 
 transition: transform 0.2s ease;
 
+position: relative;
+
+z-index: 2;
+
 }
 
 
@@ -121,15 +156,111 @@ transform: scale(1.05);
 
 
 
-.splash-text {
+/* 環繞按鈕定位基礎 */
 
-margin-top: 15px;
+.splash-orbit-btn {
+
+position: absolute;
+
+padding: 8px 14px;
+
+background: rgba(255, 255, 255, 0.9);
+
+backdrop-filter: blur(6px);
+
+-webkit-backdrop-filter: blur(6px);
+
+border: 1px solid rgba(0, 0, 0, 0.12);
+
+color: #333;
+
+font-size: 13px;
+
+font-weight: 600;
+
+text-align: center;
+
+border-radius: 20px;
+
+text-decoration: none;
+
+box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+
+transition: all 0.2s ease;
+
+cursor: pointer;
+
+white-space: nowrap;
+
+z-index: 3;
+
+}
+
+
+
+.splash-orbit-btn:hover {
+
+background: rgba(0, 0, 0, 0.05);
+
+transform: scale(1.08);
+
+border-color: rgba(0, 0, 0, 0.3);
+
+}
+
+
+
+/* 三個按鈕環繞位置分佈（以中央為基準向外擴散） */
+
+/* 按鈕 1：上方 */
+
+.btn-top {
+
+top: 10px;
+
+left: 50%;
+
+transform: translateX(-50%);
+
+}
+
+
+
+/* 按鈕 2：左下方 */
+
+.btn-bottom-left {
+
+bottom: 25px;
+
+left: 15px;
+
+}
+
+
+
+/* 按鈕 3：右下方 */
+
+.btn-bottom-right {
+
+bottom: 25px;
+
+right: 15px;
+
+}
+
+
+
+.splash-text {
 
 font-size: 14px;
 
-color: #555;
+color: #666;
 
 letter-spacing: 1px;
+
+cursor: pointer;
+
+margin-top: 5px;
 
 }
 
@@ -530,13 +661,30 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：解決弱網白屏問題 -->
+<!-- 輕量開場迎賓遮罩：中央 Logo 結合環繞按鈕 -->
 
 <div id="splash-screen">
 
+<div class="splash-orbit-wrapper">
+
+<!-- 環繞的 3 個按鈕 -->
+
+<a href="#news" class="splash-orbit-btn btn-top" onclick="handleSplashNav(event, 'news')">新聞劃重點</a>
+
+<a href="#books" class="splash-orbit-btn btn-bottom-left" onclick="handleSplashNav(event, 'books')">私房好讀書單</a>
+
+<a href="#explorer" class="splash-orbit-btn btn-bottom-right" onclick="handleSplashNav(event, 'explorer')">檔案總管</a>
+
+
+
+<!-- 中央 Logo -->
+
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
-<div class="splash-text">點擊進入瀏覽</div>
+</div>
+
+
+<div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
 </div>
 
@@ -554,9 +702,36 @@ transform: scale(1.08);
 
 <script>
 
-// 點擊開場 Logo 進入全螢幕並淡出遮罩
+// 點擊 Logo 或下方文字進入瀏覽
 
 function enterFullScreen() {
+
+closeSplash();
+
+}
+
+
+
+// 點擊 3 個環繞按鈕時的處理函式
+
+function handleSplashNav(event, targetType) {
+
+event.preventDefault();
+
+closeSplash();
+
+
+console.log("使用者點擊了環繞按鈕：" + targetType);
+
+// 這裡後續可依需求帶入對應的跳轉網址
+
+}
+
+
+
+// 關閉遮罩的共用動作
+
+function closeSplash() {
 
 const splash = document.getElementById('splash-screen');
 
@@ -580,7 +755,7 @@ document.documentElement.requestFullscreen().catch(() => {});
 
 
 
-// 歌曲資料改由 Google 試算表公開 CSV 載入
+// 歌曲資料改由 Google 試算表公開 CSV 載入[span_0](start_span)[span_0](end_span)
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
