@@ -96,35 +96,29 @@ padding: 20px;
 
 
 
-/* 仿時鐘/羅盤外環結構容器 */
+/* 迎賓容器：中央 Logo 與提示文字 */
 
-.splash-orbit-wrapper {
-
-position: relative;
-
-width: 300px;
-
-height: 300px;
+.splash-content-wrapper {
 
 display: flex;
 
-justify-content: center;
+flex-direction: column;
 
 align-items: center;
 
-margin-bottom: 15px;
+margin-bottom: 25px;
 
 }
 
 
 
-/* 中央 Logo（內圓心） */
+/* 中央 Logo */
 
 .splash-logo {
 
-width: 90px;
+width: 100px;
 
-height: 90px;
+height: 100px;
 
 border-radius: 50%;
 
@@ -136,13 +130,11 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 
 transition: transform 0.2s ease;
 
-position: relative;
-
-z-index: 5;
-
 background: #fff;
 
 border: 3px solid #fff;
+
+margin-bottom: 15px;
 
 }
 
@@ -156,181 +148,95 @@ transform: scale(1.05);
 
 
 
-/* 外環軌道基準框（營造時鐘盤面感） */
-
-.splash-orbit-wrapper::before {
-
-content: '';
-
-position: absolute;
-
-width: 280px;
-
-height: 280px;
-
-border: 2px solid rgba(0, 0, 0, 0.08);
-
-border-radius: 50%;
-
-z-index: 1;
-
-pointer-events: none;
-
-}
-
-
-
-/* 3 個環形拼圖按鈕：利用絕對定位與旋轉，形成 120 度均分的外環大圓 */
-
-.splash-orbit-btn {
-
-position: absolute;
-
-width: 120px;
-
-height: 120px;
-
-background: rgba(255, 255, 255, 0.96);
-
-backdrop-filter: blur(8px);
-
--webkit-backdrop-filter: blur(8px);
-
-border: 1px solid rgba(0, 0, 0, 0.12);
-
-color: #222;
-
-font-size: 14px;
-
-font-weight: 600;
-
-text-decoration: none;
-
-box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-
-transition: all 0.25s ease;
-
-cursor: pointer;
-
-display: flex;
-
-justify-content: center;
-
-align-items: center;
-
-z-index: 3;
-
-/* 關鍵：透過圓角與形狀模擬環形區塊，讓外圍 3 個按鈕拼合成大圓 */
-
-border-radius: 60px 60px 30px 30px;
-
-}
-
-
-
-.splash-orbit-btn:hover {
-
-background: #111;
-
-color: #fff;
-
-transform: scale(1.08);
-
-z-index: 6;
-
-box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-
-}
-
-
-
-/*
-
-利用三角函數佈局 3 個方向 (以 300px 容器為基準)
-
-按鈕 1：正上方 (0度 / 12點鐘)
-
-按鈕 2：右下方 (120度 / 4點鐘)
-
-按鈕 3：左下方 (240度 / 8點鐘)
-
-*/
-
-.btn-top {
-
-top: 10px;
-
-left: 50%;
-
-transform: translateX(-50%);
-
-border-radius: 50px 50px 20px 20px;
-
-}
-
-
-
-.btn-right {
-
-bottom: 30px;
-
-right: 20px;
-
-transform: rotate(60deg);
-
-transform-origin: bottom left;
-
-}
-
-
-
-.btn-left {
-
-bottom: 30px;
-
-left: 20px;
-
-transform: rotate(-60deg);
-
-transform-origin: bottom right;
-
-}
-
-
-
-/* 修正旋轉後的文字角度，確保文字永遠是正的 */
-
-.btn-right span {
-
-display: inline-block;
-
-transform: rotate(-60deg);
-
-}
-
-
-
-.btn-left span {
-
-display: inline-block;
-
-transform: rotate(60deg);
-
-}
-
-
-
 .splash-text {
 
-font-size: 14px;
+font-size: 15px;
 
-color: #666;
+color: #444;
+
+font-weight: 500;
 
 letter-spacing: 1px;
 
 cursor: pointer;
 
-margin-top: 10px;
+padding: 8px 20px;
+
+background: rgba(0, 0, 0, 0.04);
+
+border-radius: 20px;
+
+transition: background 0.2s ease;
+
+}
+
+
+
+.splash-text:hover {
+
+background: rgba(0, 0, 0, 0.08);
+
+}
+
+
+
+/* 放置於下方的 3 個功能按鈕群組 */
+
+.splash-nav-buttons {
+
+display: flex;
+
+gap: 10px;
+
+width: 100%;
+
+max-width: 320px;
+
+justify-content: center;
+
+}
+
+
+
+.splash-btn {
+
+flex: 1;
+
+padding: 12px 8px;
+
+background: #f5f5f7;
+
+border: 1px solid rgba(0, 0, 0, 0.08);
+
+border-radius: 12px;
+
+color: #222;
+
+font-size: 13px;
+
+font-weight: 600;
+
+text-align: center;
+
+text-decoration: none;
+
+box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+
+transition: all 0.2s ease;
+
+}
+
+
+
+.splash-btn:hover {
+
+background: #111;
+
+color: #fff;
+
+transform: translateY(-2px);
+
+box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 
 }
 
@@ -729,30 +635,35 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：3 等分外環環繞拼圖設計 -->
+<!-- 輕量開場迎賓遮罩 -->
 
 <div id="splash-screen">
 
-<div class="splash-orbit-wrapper">
+<div class="splash-content-wrapper">
 
-<!-- 外環的 3 個環形區塊按鈕（120度均分，環繞中央 Logo） -->
-
-<a href="#news" class="splash-orbit-btn btn-top" onclick="handleSplashNav(event, 'news')"><span>新聞劃重點</span></a>
-
-<a href="#books" class="splash-orbit-btn btn-right" onclick="handleSplashNav(event, 'books')"><span>私房書單</span></a>
-
-<a href="#explorer" class="splash-orbit-btn btn-left" onclick="handleSplashNav(event, 'explorer')"><span>檔案總管</span></a>
-
-
-
-<!-- 中央 Logo（內圓心） -->
+<!-- 中央 Logo -->
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
+
+
+<!-- 點擊進入瀏覽提示 -->
+
+<div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
 </div>
 
 
-<div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
+<!-- 3 個功能按鈕放置於下方 -->
+
+<div class="splash-nav-buttons">
+
+<a href="#news" class="splash-btn" onclick="handleSplashNav(event, 'news')">新聞劃重點</a>
+
+<a href="#books" class="splash-btn" onclick="handleSplashNav(event, 'books')">私房書單</a>
+
+<a href="#explorer" class="splash-btn" onclick="handleSplashNav(event, 'explorer')">檔案總管</a>
+
+</div>
 
 </div>
 
@@ -784,7 +695,7 @@ event.preventDefault();
 
 closeSplash();
 
-console.log("使用者點擊了環形按鈕：" + targetType);
+console.log("使用者點擊了下方按鈕：" + targetType);
 
 }
 
