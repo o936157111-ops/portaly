@@ -646,26 +646,25 @@ closeSplash();
 
 
 
-// 修正後的按鈕點擊處理：關閉遮罩並正確跳轉至指定網址
+// 修正後的按鈕點擊處理：直接瞬間跳轉，不經過首頁
 
 function handleSplashNav(event, targetUrl) {
 
+if (event) {
+
 event.preventDefault();
 
-closeSplash();
+event.stopPropagation();
 
+}
 
-setTimeout(() => {
-
-window.location.href = targetUrl;
-
-}, 300);
+window.location.replace(targetUrl);
 
 }
 
 
 
-// 關閉遮罩的共用動作
+// 關閉遮罩的共用動作（保留給點擊 Logo 時使用）
 
 function closeSplash() {
 
