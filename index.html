@@ -62,7 +62,7 @@ left: 0;
 
 
 
-/* 1. 輕量開場迎賓遮罩 (Splash Screen) 結合 3 個導覽按鈕 */
+/* 1. 輕量開場迎賓遮罩 (Splash Screen) 改為 100% 純白不透明，無模糊底框 */
 
 #splash-screen {
 
@@ -76,11 +76,7 @@ width: 100%;
 
 height: 100%;
 
-background: rgba(255, 255, 255, 0.95);
-
-backdrop-filter: blur(8px);
-
--webkit-backdrop-filter: blur(8px);
+background: #ffffff;
 
 z-index: 99999;
 
@@ -140,6 +136,8 @@ color: #555;
 
 letter-spacing: 1px;
 
+cursor: pointer;
+
 }
 
 
@@ -162,7 +160,7 @@ max-width: 260px;
 
 
 
-/* 透明質感按鈕樣式 */
+/* 按鈕樣式 (實心/邊框質感) */
 
 .splash-btn {
 
@@ -170,13 +168,9 @@ width: 100%;
 
 padding: 12px 18px;
 
-background: rgba(0, 0, 0, 0.05);
+background: #f7f7f7;
 
-backdrop-filter: blur(4px);
-
--webkit-backdrop-filter: blur(4px);
-
-border: 1px solid rgba(0, 0, 0, 0.15);
+border: 1px solid #ddd;
 
 color: #222;
 
@@ -190,7 +184,7 @@ border-radius: 12px;
 
 text-decoration: none;
 
-box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 
 transition: all 0.2s ease;
 
@@ -202,7 +196,9 @@ cursor: pointer;
 
 .splash-btn:hover {
 
-background: rgba(0, 0, 0, 0.1);
+background: #222;
+
+color: #fff;
 
 transform: translateY(-2px);
 
@@ -611,16 +607,16 @@ transform: scale(1.08);
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
-<div class="splash-text" onclick="enterFullScreen()" style="cursor: pointer;">點擊進入瀏覽</div>
+<div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
 
 <div class="splash-btn-container">
 
-<a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, 'news')">新聞劃重點</a>
+<a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
 
-<a href="https://myezlife.com/haodoo.html" class="splash-btn" onclick="handleSplashNav(event, 'books')">私房好讀書單</a>
+<a href="https://myezlife.com/haodoo.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">私房好讀書單</a>
 
-<a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, 'explorer')">檔案總管</a>
+<a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
 
 </div>
 
@@ -650,20 +646,20 @@ closeSplash();
 
 
 
-// 點擊 3 個功能按鈕時的處理函式
+// 修正後的按鈕點擊處理：關閉遮罩並正確跳轉至指定網址
 
-function handleSplashNav(event, targetType) {
+function handleSplashNav(event, targetUrl) {
 
 event.preventDefault();
 
 closeSplash();
 
 
-// 這裡可以依據點擊的按鈕做後續跳轉或對應動作
+setTimeout(() => {
 
-console.log("使用者點擊了：" + targetType);
+window.location.href = targetUrl;
 
-// 例如：if(targetType === 'news') { window.location.href = '你的新聞頁網址'; }
+}, 300);
 
 }
 
@@ -695,35 +691,9 @@ document.documentElement.requestFullscreen().catch(() => {});
 
 
 
-// 歌曲資料改由 Google 試算表公開 CSV 載入[span_0](start_span)[span_0](end_span)
+// 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
-
-
-
-const coverSettings = {
-
-"人潮有多擁擠 就有多想你": { isCustomCover: true, coverClass: "" },
-
-"城北的花": { isCustomCover: true, coverClass: "cover-city-flower" },
-
-"推開世界的門": { isCustomCover: true, coverClass: "cover-open-door" },
-
-"原來你愛的不是我": { isCustomCover: true, coverClass: "cover-not-you" },
-
-"值得": { isCustomCover: true, coverClass: "cover-worthy" },
-
-"愛到盡頭": { isCustomCover: true, coverClass: "cover-end-of-love" },
-
-"換我做你的山": { isCustomCover: true, coverClass: "cover-be-your-mountain" },
-
-"思念成災": { isCustomCover: true, coverClass: "cover-miss-disaster" },
-
-"放過自己": { isCustomCover: true, coverClass: "cover-let-go" },
-
-"我不該動情": { isCustomCover: true, coverClass: "cover-not-falling-you" }
-
-};
 
 
 
@@ -1201,3 +1171,4 @@ container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">�
 </body>
 
 </html> 
+
