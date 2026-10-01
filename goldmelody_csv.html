@@ -141,9 +141,9 @@ background-color: #000000;
 
 
 
-/* 左上角首頁 Logo 樣式 */
+/* 左上角首頁 Logo 樣式（對應 index.htm 設定） */
 
-.home-logo {
+.top-left-logo {
 
 position: absolute;
 
@@ -151,23 +151,21 @@ top: max(16px, env(safe-area-inset-top));
 
 left: 16px;
 
-z-index: 100;
+width: 44px;
 
-display: flex;
+height: 44px;
 
-align-items: center;
+border-radius: 50%;
 
-text-decoration: none;
+border: 2px solid rgba(255, 255, 255, 0.8);
 
-background: rgba(0, 0, 0, 0.4);
+box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 
-backdrop-filter: blur(6px);
+z-index: 9999;
 
-padding: 6px 12px;
+object-fit: cover;
 
-border-radius: 20px;
-
-border: 1px solid rgba(255, 255, 255, 0.15);
+background-color: #ff3b30;
 
 transition: transform 0.2s ease;
 
@@ -175,39 +173,17 @@ transition: transform 0.2s ease;
 
 
 
-.home-logo:active {
+.top-left-logo:hover {
+
+transform: scale(1.08);
+
+}
+
+
+
+.top-left-logo:active {
 
 transform: scale(0.95);
-
-}
-
-
-
-.home-logo img {
-
-width: 24px;
-
-height: 24px;
-
-border-radius: 50%;
-
-object-fit: cover;
-
-margin-right: 6px;
-
-}
-
-
-
-.home-logo span {
-
-color: #ffffff;
-
-font-size: 13px;
-
-font-weight: 500;
-
-text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 
 }
 
@@ -599,13 +575,11 @@ border-radius: 12px;
 
 <div class="app-frame">
 
-<!-- 左上角首頁 Logo 與連結（可依需求修改 href 與圖片網址） -->
+<!-- 左上角首頁 Logo 與連結（對應 index.htm 設定） -->
 
-<a href="#" class="home-logo">
+<a href="https://myezlife.com/index-1.html">
 
-<img src="https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg" alt="Logo">
-
-<span>首頁</span>
+<img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Logo">
 
 </a>
 
@@ -773,7 +747,7 @@ const videoValue = String(row[videoIndex] || "").trim();
 const videoId = extractYouTubeId(videoValue);
 
 
-// 如果沒有歌名，或者沒有有效的 YouTube 網址/ID，則直接過濾掉（不顯示）
+// 如果沒有歌名，或者沒有有效的 YouTube 網址/ID，則直接過濾掉（不顯示）[span_0](start_span)[span_0](end_span)
 
 if (!title || !videoId) return null;
 
