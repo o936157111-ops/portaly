@@ -10,6 +10,8 @@
 
 
 
+<!-- 啟用手機全螢幕與沉浸式模式 -->
+
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,6 +23,8 @@
 <title>生活・簡居・生活 | 數位名片型總入口</title>
 
 <style>
+
+/* 基礎重置：確保手機版直接滿版全螢幕 */
 
 * {
 
@@ -58,7 +62,7 @@ left: 0;
 
 
 
-/* 1. 輕量開場迎賓遮罩 (Splash Screen) */
+/* 1. 輕量開場迎賓遮罩 (Splash Screen) 結合 3 個導覽按鈕 */
 
 #splash-screen {
 
@@ -72,11 +76,11 @@ width: 100%;
 
 height: 100%;
 
-background: rgba(255, 255, 255, 0.97);
+background: rgba(255, 255, 255, 0.95);
 
-backdrop-filter: blur(12px);
+backdrop-filter: blur(8px);
 
--webkit-backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(8px);
 
 z-index: 99999;
 
@@ -96,29 +100,11 @@ padding: 20px;
 
 
 
-/* 迎賓容器：中央 Logo 與提示文字 */
-
-.splash-content-wrapper {
-
-display: flex;
-
-flex-direction: column;
-
-align-items: center;
-
-margin-bottom: 25px;
-
-}
-
-
-
-/* 中央 Logo */
-
 .splash-logo {
 
-width: 100px;
+width: 80px;
 
-height: 100px;
+height: 80px;
 
 border-radius: 50%;
 
@@ -130,11 +116,7 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 
 transition: transform 0.2s ease;
 
-background: #fff;
-
-border: 3px solid #fff;
-
-margin-bottom: 15px;
+margin-bottom: 12px;
 
 }
 
@@ -150,79 +132,69 @@ transform: scale(1.05);
 
 .splash-text {
 
-font-size: 15px;
+margin-bottom: 24px;
 
-color: #444;
+font-size: 14px;
 
-font-weight: 500;
+color: #555;
 
 letter-spacing: 1px;
 
-cursor: pointer;
-
-padding: 8px 20px;
-
-background: rgba(0, 0, 0, 0.04);
-
-border-radius: 20px;
-
-transition: background 0.2s ease;
-
 }
 
 
 
-.splash-text:hover {
+/* 3 個按鈕的容器樣式 */
 
-background: rgba(0, 0, 0, 0.08);
-
-}
-
-
-
-/* 放置於下方的 3 個功能按鈕群組 */
-
-.splash-nav-buttons {
+.splash-btn-container {
 
 display: flex;
 
-gap: 10px;
+flex-direction: column;
+
+gap: 12px;
 
 width: 100%;
 
-max-width: 320px;
-
-justify-content: center;
+max-width: 260px;
 
 }
 
 
 
+/* 透明質感按鈕樣式 */
+
 .splash-btn {
 
-flex: 1;
+width: 100%;
 
-padding: 12px 8px;
+padding: 12px 18px;
 
-background: #f5f5f7;
+background: rgba(0, 0, 0, 0.05);
 
-border: 1px solid rgba(0, 0, 0, 0.08);
+backdrop-filter: blur(4px);
 
-border-radius: 12px;
+-webkit-backdrop-filter: blur(4px);
+
+border: 1px solid rgba(0, 0, 0, 0.15);
 
 color: #222;
 
-font-size: 13px;
+font-size: 15px;
 
 font-weight: 600;
 
 text-align: center;
 
+border-radius: 12px;
+
 text-decoration: none;
 
-box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 
 transition: all 0.2s ease;
+
+cursor: pointer;
 
 }
 
@@ -230,13 +202,9 @@ transition: all 0.2s ease;
 
 .splash-btn:hover {
 
-background: #111;
-
-color: #fff;
+background: rgba(0, 0, 0, 0.1);
 
 transform: translateY(-2px);
-
-box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 
 }
 
@@ -412,6 +380,8 @@ object-fit: cover;
 }
 
 
+
+/* 預設自訂封面層樣式 */
 
 .custom-cover-layer {
 
@@ -635,31 +605,20 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩 -->
+<!-- 輕量開場迎賓遮罩：包含 Logo、提示文字與 3 個快速導覽按鈕 -->
 
 <div id="splash-screen">
 
-<div class="splash-content-wrapper">
-
-<!-- 中央 Logo -->
-
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
-
-<!-- 點擊進入瀏覽提示 -->
-
-<div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
-
-</div>
+<div class="splash-text" onclick="enterFullScreen()" style="cursor: pointer;">點擊進入瀏覽</div>
 
 
-<!-- 3 個功能按鈕放置於下方 -->
-
-<div class="splash-nav-buttons">
+<div class="splash-btn-container">
 
 <a href="#news" class="splash-btn" onclick="handleSplashNav(event, 'news')">新聞劃重點</a>
 
-<a href="#books" class="splash-btn" onclick="handleSplashNav(event, 'books')">私房書單</a>
+<a href="#books" class="splash-btn" onclick="handleSplashNav(event, 'books')">私房好讀書單</a>
 
 <a href="#explorer" class="splash-btn" onclick="handleSplashNav(event, 'explorer')">檔案總管</a>
 
@@ -681,6 +640,8 @@ transform: scale(1.08);
 
 <script>
 
+// 點擊 Logo 或空白處進入瀏覽
+
 function enterFullScreen() {
 
 closeSplash();
@@ -689,17 +650,26 @@ closeSplash();
 
 
 
+// 點擊 3 個功能按鈕時的處理函式
+
 function handleSplashNav(event, targetType) {
 
 event.preventDefault();
 
 closeSplash();
 
-console.log("使用者點擊了下方按鈕：" + targetType);
+
+// 這裡可以依據點擊的按鈕做後續跳轉或對應動作
+
+console.log("使用者點擊了：" + targetType);
+
+// 例如：if(targetType === 'news') { window.location.href = '你的新聞頁網址'; }
 
 }
 
 
+
+// 關閉遮罩的共用動作
 
 function closeSplash() {
 
@@ -725,7 +695,35 @@ document.documentElement.requestFullscreen().catch(() => {});
 
 
 
+// 歌曲資料改由 Google 試算表公開 CSV 載入[span_0](start_span)[span_0](end_span)
+
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+
+
+
+const coverSettings = {
+
+"人潮有多擁擠 就有多想你": { isCustomCover: true, coverClass: "" },
+
+"城北的花": { isCustomCover: true, coverClass: "cover-city-flower" },
+
+"推開世界的門": { isCustomCover: true, coverClass: "cover-open-door" },
+
+"原來你愛的不是我": { isCustomCover: true, coverClass: "cover-not-you" },
+
+"值得": { isCustomCover: true, coverClass: "cover-worthy" },
+
+"愛到盡頭": { isCustomCover: true, coverClass: "cover-end-of-love" },
+
+"換我做你的山": { isCustomCover: true, coverClass: "cover-be-your-mountain" },
+
+"思念成災": { isCustomCover: true, coverClass: "cover-miss-disaster" },
+
+"放過自己": { isCustomCover: true, coverClass: "cover-let-go" },
+
+"我不該動情": { isCustomCover: true, coverClass: "cover-not-falling-you" }
+
+};
 
 
 
@@ -1018,7 +1016,6 @@ ${song.isCustomCover ? `
 card.dataset.embed = song.embedCode;
 
 card.dataset.productUrl = song.productUrl;
-
 
 container.appendChild(card);
 
