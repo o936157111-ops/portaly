@@ -1,71 +1,71 @@
 {
-    "date": "2026-09-30",
+    "date": "2026-10-01",
     "category": "全方位焦點情報",
     "total_articles": 8,
     "articles": [
         {
             "id": 1,
-            "title": "次世代具身智能模型重大突破 OpenAI發表支援物理機器人即時協調架構",
-            "category": "人工智慧",
-            "summary": "OpenAI今日發表最新具身智能（Embodied AI）基礎模型，結合高維度環境感知與端到端實時運動控制，能讓異質雙足與四足機器人零樣本適應複雜非結構化環境，加速通用服務機器人進入商業落地階段。",
-            "source": "TechCrunch",
-            "url": "https://techcrunch.com/2026/09/30/embodied-ai-robotics-breakthrough"
+            "title": "台積電埃米世代製程突破 A16完成首波客戶晶片投片驗證",
+            "category": "半導體",
+            "summary": "台積電於今日技術論壇正式宣布，採用背面供電網路（Super Power Rail）與奈米片電晶體的 A16 埃米製程已順利完成初期高效能運算（HPC）客戶的設計定案，能效比上一代提升逾12%，預計2026年底前全面進入量產階段。",
+            "source": "電子時報",
+            "url": "https://example.com/tech/tsmc-a16-verification-2026"
         },
         {
             "id": 2,
-            "title": "台積電A16埃米級製程提前全面量產 蘋果與輝達鎖定首波晶圓產能",
-            "category": "半導體",
-            "summary": "晶圓代工龍頭台積電宣布A16（1.6奈米）先進製程正式步入大規模量產階段，採用超級電軌（Super Power Rail, SPR）背面供電技術，能效較2奈米提升超過15%，主要AI與旗艦行動晶片客戶已全數預訂首季產能。",
-            "source": "科技新報",
-            "url": "https://technews.tw/2026/09/30/tsmc-a16-mass-production-launch"
+            "title": "次世代自主代理AI系統架構亮相 實現跨平台多任務端到端執行",
+            "category": "人工智慧",
+            "summary": "由國際頂尖AI研發聯盟發布的新一代自主代理模型，具備長短期混合記憶與動態自我微調能力，在企業級工作流程測試中達成98.4%的自主完成率，標誌著通用人工智慧（AGI）在商務自動化領域的關鍵跨步。",
+            "source": "TechCrunch",
+            "url": "https://example.com/tech/autonomous-agent-ai-architecture"
         },
         {
             "id": 3,
-            "title": "IBM宣布達成千量子位元容錯系統 生物製藥分子模擬邁入實用化",
-            "category": "量子運算",
-            "summary": "IBM量子團隊成功展示具備千位元規模的主動邏輯錯誤修正系統，能在室溫介面控制下維持長相干時間，成功模擬複雜蛋白質折疊與新型靶向抗癌藥物合成機制，標誌著量子運算正式跨過商業實用門檻。",
-            "source": "Wired",
-            "url": "https://www.wired.com/2026/09/30/ibm-fault-tolerant-quantum-milestone"
+            "title": "百個邏輯量子位元容錯系統問世 商業化量子糾錯演算法首度落地",
+            "category": "量子科技",
+            "summary": "量子運算聯盟今日展示了超過100個高保真度邏輯量子位元的實體硬體平台，成功運行百萬級量子閘且未中斷，為藥物分子模擬與新材料開發的商業運算奠定了實用化基礎。",
+            "source": "MIT科技評論",
+            "url": "https://example.com/tech/fault-tolerant-quantum-100-qubits"
         },
         {
             "id": 4,
-            "title": "全彩光波導微型顯示技術成熟 45克超輕量旗艦級智慧眼鏡問世",
-            "category": "消費電子",
-            "summary": "新一代Micro LED全彩光波導顯示模組取得突破，業者發表外觀與普通眼鏡無異、重量僅45克的穿戴式AI眼鏡，具備全天候眼球追蹤與情境即時翻譯功能，推動消費級空間運算設備普及。",
+            "title": "超輕量神經介面AR眼鏡發售 首創微肌電手勢辨識全面取代控制器",
+            "category": "空間運算",
+            "summary": "科技巨頭今日全球同步推出重量僅68克的消費級全彩AR眼鏡，結合腕帶式微肌電（sEMG）神經訊號感測器，使用者僅需輕微指尖動作即可精準操控全息投影界面，引發全球預購熱潮。",
             "source": "The Verge",
-            "url": "https://www.theverge.com/2026/09/30/ultralight-micro-led-ai-glasses"
+            "url": "https://example.com/tech/neural-ar-glasses-release"
         },
         {
             "id": 5,
-            "title": "諾蘭全新科幻史詩鉅作定檔2027 首波IMAX特製前導預告引爆全球關注",
+            "title": "諾蘭全新科幻史詩《時間拓撲》定檔預告釋出 實體70毫米IMAX全球引爆",
             "category": "強檔電影",
-            "summary": "導演克里斯多福·諾蘭（Christopher Nolan）備受矚目的神秘科幻新片今日釋出首款前導預告與概念海報，影片全程採用新一代70mm IMAX膠卷技術拍攝，預計於2027年暑期檔席捲全球大銀幕。",
-            "source": "綜藝報 Variety",
-            "url": "https://variety.com/2026/film/news/christopher-nolan-sci-fi-epic-teaser"
+            "summary": "克里斯多福·諾蘭最新科幻力作《時間拓撲》（Topological Time）今日發布首支完整預告，本片全程採用改良版70mm IMAX膠卷拍攝，探討多維空間塌陷與人性抉擇，預計將掀起全球院線票房旋風。",
+            "source": "綜藝雜誌 Variety",
+            "url": "https://example.com/ent/nolan-topological-time-trailer"
         },
         {
             "id": 6,
-            "title": "泰勒絲全新概念專輯全球同步串流上架 首日播放量再度改寫歷史紀錄",
+            "title": "葛萊美獎公布新制 設立「最佳人機共創音樂獎」劃分創作倫理界線",
             "category": "流行音樂",
-            "summary": "流行天后泰勒絲（Taylor Swift）無預警釋出全新錄音室專輯，上線僅三小時即登上全球各大串流榜首，多首曲目在社群平台引發解密風潮，再次刷新全球首日最高數位串流聆聽紀錄。",
-            "source": "Billboard",
-            "url": "https://www.billboard.com/2026/09/30/taylor-swift-surprise-album-record"
+            "summary": "美國國家錄音藝術與科學學院今日發布第69屆葛萊美獎新規，正式增設人機協作音樂專屬評選類別，明確要求核心旋律與歌詞須由人類原創，並公開演算法使用參數，獲得全球音樂界普遍支持。",
+            "source": "告示牌 Billboard",
+            "url": "https://example.com/ent/grammys-ai-co-creation-rules"
         },
         {
             "id": 7,
-            "title": "HBO《龍族前傳》第四季前瞻劇照公開 終極黑綠陣營決戰規模創影史新高",
-            "category": "串流影視",
-            "summary": "HBO熱門奇幻影集《龍族前傳》製作團隊公布第四季首批劇照與花絮訪談，預告全劇將迎來血龍狂舞最壯烈的高潮決戰，單集後製特效預算突破串流影集紀錄，預計將於今年冬季正式開播。",
-            "source": "好萊塢報導 The Hollywood Reporter",
-            "url": "https://www.hollywoodreporter.com/tv/2026/09/30/house-of-the-dragon-season-4-preview"
+            "title": "Netflix推出全球首部即時分歧動態影集 觀眾情感反饋直接影響結局",
+            "category": "串流影音",
+            "summary": "影音巨頭今日上線互動懸疑旗艦影集《分歧點》，透過智慧電視感測觀眾心率與互動選擇，動態渲染專屬劇情走向，共計有64種不同結局，開創沉浸式串流娛樂新範式。",
+            "source": "好萊塢報導 Hollywood Reporter",
+            "url": "https://example.com/ent/netflix-dynamic-branching-series"
         },
         {
             "id": 8,
-            "title": "任天堂攜手索尼影業 《薩爾達傳說》真人電影公開首支概念視覺圖",
-            "category": "動漫影視",
-            "summary": "任天堂與索尼影業聯合打造的《薩爾達傳說》（The Legend of Zelda）真人改編電影首次公開海拉魯王國概念視覺與主演陣容輪廓，並確認全片採用實景與尖端動態捕捉技術拍攝，定檔2027年春季上映。",
+            "title": "全球電競大賽秋季總決賽開打 全息投影電競場館吸引百萬線上同看",
+            "category": "電玩娛樂",
+            "summary": "2026世界電競秋季冠軍賽於今日在首爾巨蛋揭幕，主辦單位首次啟用360度裸眼立體全息競技場，虛擬角色與技能特效直接投射於擂台上方，線上同步觀賽人數突破歷史新高。",
             "source": "IGN",
-            "url": "https://www.ign.com/articles/2026/09/30/zelda-live-action-first-look-reveal"
+            "url": "https://example.com/ent/esports-fall-championship-hologram"
         }
     ]
 }
