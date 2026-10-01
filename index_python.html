@@ -171,19 +171,12 @@
             left: 0;
             right: 0;
             padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
-            background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
             z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            pointer-events: none;
-        }
-
-        .bottom-content-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            width: 100%;
+            pointer-events: none;
         }
 
         .song-text-group {
@@ -215,37 +208,6 @@
             display: inline-block;
             padding: 3px 10px;
             border-radius: 12px;
-        }
-
-        /* 新增：3個核心功能導航按鈕列 */
-        .quick-nav-bar {
-            pointer-events: auto;
-            display: flex;
-            gap: 8px;
-            margin-top: 14px;
-            width: 100%;
-        }
-
-        .quick-nav-btn {
-            flex: 1;
-            text-align: center;
-            padding: 8px 4px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: #ffffff;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 8px;
-            text-decoration: none;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            transition: all 0.2s ease;
-        }
-
-        .quick-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.45);
-            transform: translateY(-2px);
         }
 
         .top-left-logo {
@@ -398,7 +360,7 @@
             const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
             const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
 
-            infiniteSongs.forEach((song, index) => {
+            infiniteSongs.forEach((song) => {
                 const card = document.createElement('div');
                 card.className = 'reel-card';
                 
@@ -409,33 +371,20 @@
                     card.dataset.hasCover = "true";
                 }
 
-                // 只有在第一張卡片（或你可以改為每張卡片）加入 3 個快捷按鈕
-                // 這裡示範將 3 個按鈕放在點擊進入後的介面下方
-                const quickNavHtml = `
-                    <div class="quick-nav-bar">
-                        <a href="#news" class="quick-nav-btn">新聞劃重點</a>
-                        <a href="#books" class="quick-nav-btn">私房好讀書單</a>
-                        <a href="#explorer" class="quick-nav-btn">檔案總管</a>
-                    </div>
-                `;
-
                 card.innerHTML = `
                     ${coverHtml}
                     <div class="video-wrapper"></div>
                     <div class="overlay-info">
-                        <div class="bottom-content-row">
-                            <div class="song-text-group">
-                                <div class="song-title">${song.title}</div>
-                                <div class="song-views">${song.views}</div>
-                            </div>
-                            ${song.isCustomCover ? `
-                            <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
-                                <div class="cover-play-btn">
-                                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                </div>
-                            </div>` : ''}
+                        <div class="song-text-group">
+                            <div class="song-title">${song.title}</div>
+                            <div class="song-views">${song.views}</div>
                         </div>
-                        ${quickNavHtml}
+                        ${song.isCustomCover ? `
+                        <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
+                            <div class="cover-play-btn">
+                                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>` : ''}
                     </div>
                 `;
                 
