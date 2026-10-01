@@ -61,6 +61,80 @@ left: 0;
 
 
 
+/* 1. 輕量開場迎賓遮罩 (Splash Screen) */
+
+#splash-screen {
+
+position: fixed;
+
+top: 0;
+
+left: 0;
+
+width: 100%;
+
+height: 100%;
+
+background-color: #ffffff;
+
+z-index: 99999;
+
+display: flex;
+
+flex-direction: column;
+
+justify-content: center;
+
+align-items: center;
+
+transition: opacity 0.4s ease;
+
+}
+
+
+
+.splash-logo {
+
+width: 90px;
+
+height: 90px;
+
+border-radius: 50%;
+
+object-fit: cover;
+
+cursor: pointer;
+
+box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+
+transition: transform 0.2s ease;
+
+}
+
+
+
+.splash-logo:hover {
+
+transform: scale(1.05);
+
+}
+
+
+
+.splash-text {
+
+margin-top: 15px;
+
+font-size: 14px;
+
+color: #555;
+
+letter-spacing: 1px;
+
+}
+
+
+
 /* 電腦版或大螢幕時：置中顯示手機比例框體 */
 
 @media (min-width: 768px) {
@@ -135,122 +209,6 @@ box-shadow: none;
 background-color: #ffffff;
 
 }
-
-}
-
-
-
-/* 最上層的過渡頁面（Splash Screen），其餘透明、只放 3 個按鈕 */
-
-.splash-overlay {
-
-position: absolute;
-
-top: 0;
-
-left: 0;
-
-width: 100%;
-
-height: 100%;
-
-background: rgba(0, 0, 0, 0.2); /* 極淡的透明背景，可依喜好調整，或改為 transparent */
-
-backdrop-filter: blur(6px); /* 毛玻璃質感，讓底下的畫面隱約透出 */
-
--webkit-backdrop-filter: blur(6px);
-
-z-index: 20000;
-
-display: flex;
-
-flex-direction: column;
-
-justify-content: center;
-
-align-items: center;
-
-transition: opacity 0.5s ease, visibility 0.5s ease;
-
-}
-
-
-
-.splash-overlay.fade-out {
-
-opacity: 0;
-
-visibility: hidden;
-
-pointer-events: none;
-
-}
-
-
-
-/* 3 個按鈕的置中容器 */
-
-.splash-btn-container {
-
-display: flex;
-
-flex-direction: column;
-
-gap: 16px;
-
-width: 80%;
-
-max-width: 280px;
-
-}
-
-
-
-/* 透明質感按鈕樣式 */
-
-.splash-btn {
-
-width: 100%;
-
-padding: 14px 20px;
-
-background: rgba(255, 255, 255, 0.25);
-
-backdrop-filter: blur(4px);
-
--webkit-backdrop-filter: blur(4px);
-
-border: 1px solid rgba(255, 255, 255, 0.5);
-
-color: #ffffff;
-
-font-size: 16px;
-
-font-weight: 600;
-
-text-align: center;
-
-border-radius: 12px;
-
-text-decoration: none;
-
-text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-
-box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-
-transition: all 0.2s ease;
-
-cursor: pointer;
-
-}
-
-
-
-.splash-btn:hover {
-
-background: rgba(255, 255, 255, 0.45);
-
-transform: translateY(-2px);
 
 }
 
@@ -440,8 +398,6 @@ transform: translateX(2px);
 
 
 
-/* 底部資訊與按鈕共用同一列容器，適應安全距離 */
-
 .overlay-info {
 
 position: absolute;
@@ -566,8 +522,6 @@ transform: scale(1.08);
 
 }
 
-
-
 </style>
 
 </head>
@@ -576,27 +530,21 @@ transform: scale(1.08);
 
 
 
+<!-- 輕量開場迎賓遮罩：解決弱網白屏問題 -->
+
+<div id="splash-screen">
+
+<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
+
+<div class="splash-text">點擊進入瀏覽</div>
+
+</div>
+
+
+
 <div class="app-frame">
 
-<!-- 最上層過渡頁：只有 3 個透明按鈕，其餘透明 -->
-
-<div class="splash-overlay" id="splashOverlay">
-
-<div class="splash-btn-container">
-
-<a href="#news" class="splash-btn" onclick="enterApp(event, 'news')">新聞劃重點</a>
-
-<a href="#books" class="splash-btn" onclick="enterApp(event, 'books')">私房好讀書單</a>
-
-<a href="#explorer" class="splash-btn" onclick="enterApp(event, 'explorer')">檔案總管</a>
-
-</div>
-
-</div>
-
-
-
-<a href="https://myezlife.com/index-1.html"><img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo"></a>
+<a href="https://myezlife.com/index-1.html"><img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Home"></a>
 
 <div class="reel-container" id="reelContainer"></div>
 
@@ -606,29 +554,27 @@ transform: scale(1.08);
 
 <script>
 
-// 點擊過渡頁按鈕進入的控制函式
+// 點擊開場 Logo 進入全螢幕並淡出遮罩
 
-function enterApp(event, targetType) {
+function enterFullScreen() {
 
-event.preventDefault(); // 防止預設跳轉（你可以之後把這三個按鈕改成對應你的實際網址或動作）
+const splash = document.getElementById('splash-screen');
 
+splash.style.opacity = '0';
 
-// 淡出過渡頁
+setTimeout(() => {
 
-const splash = document.getElementById('splashOverlay');
+splash.style.display = 'none';
 
-splash.classList.add('fade-out');
-
-
-
-// 這裡可以依據 targetType 做你想要的動作，例如跳轉或展開特定內容
-
-console.log("使用者點擊了：" + targetType);
+}, 400);
 
 
-// 如果你希望點下去直接去到對應頁面，可以改成：
 
-// if (targetType === 'news') window.location.href = '你的新聞網址';
+if (document.documentElement.requestFullscreen) {
+
+document.documentElement.requestFullscreen().catch(() => {});
+
+}
 
 }
 
@@ -637,6 +583,32 @@ console.log("使用者點擊了：" + targetType);
 // 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+
+
+
+const coverSettings = {
+
+"人潮有多擁擠 就有多想你": { isCustomCover: true, coverClass: "" },
+
+"城北的花": { isCustomCover: true, coverClass: "cover-city-flower" },
+
+"推開世界的門": { isCustomCover: true, coverClass: "cover-open-door" },
+
+"原來你愛的不是我": { isCustomCover: true, coverClass: "cover-not-you" },
+
+"值得": { isCustomCover: true, coverClass: "cover-worthy" },
+
+"愛到盡頭": { isCustomCover: true, coverClass: "cover-end-of-love" },
+
+"換我做你的山": { isCustomCover: true, coverClass: "cover-be-your-mountain" },
+
+"思念成災": { isCustomCover: true, coverClass: "cover-miss-disaster" },
+
+"放過自己": { isCustomCover: true, coverClass: "cover-let-go" },
+
+"我不該動情": { isCustomCover: true, coverClass: "cover-not-falling-you" }
+
+};
 
 
 
