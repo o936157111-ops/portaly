@@ -100,15 +100,15 @@ padding: 20px;
 
 
 
-/* 環繞選單的整體容器（確保中心對齊） */
+/* 雙層同心圓軌道容器 */
 
 .splash-orbit-wrapper {
 
 position: relative;
 
-width: 260px;
+width: 280px;
 
-height: 260px;
+height: 280px;
 
 display: flex;
 
@@ -116,13 +116,13 @@ justify-content: center;
 
 align-items: center;
 
-margin-bottom: 20px;
+margin-bottom: 10px;
 
 }
 
 
 
-/* 中央 Logo */
+/* 中央 Logo（內圓） */
 
 .splash-logo {
 
@@ -156,23 +156,49 @@ transform: scale(1.05);
 
 
 
-/* 環繞按鈕定位基礎 */
+/* 外環軌道裝飾線（選配：淡淡的大圓框，突顯環形軌道感） */
+
+.splash-orbit-wrapper::after {
+
+content: '';
+
+position: absolute;
+
+width: 210px;
+
+height: 210px;
+
+border: 1px dashed rgba(0, 0, 0, 0.12);
+
+border-radius: 50%;
+
+z-index: 1;
+
+pointer-events: none;
+
+}
+
+
+
+/* 3 個環形外圍按鈕：組合成更大的圓形軌道 */
 
 .splash-orbit-btn {
 
 position: absolute;
 
-padding: 8px 14px;
+width: 76px;
 
-background: rgba(255, 255, 255, 0.9);
+height: 76px;
+
+background: rgba(255, 255, 255, 0.95);
 
 backdrop-filter: blur(6px);
 
 -webkit-backdrop-filter: blur(6px);
 
-border: 1px solid rgba(0, 0, 0, 0.12);
+border: 1px solid rgba(0, 0, 0, 0.15);
 
-color: #333;
+color: #222;
 
 font-size: 13px;
 
@@ -180,7 +206,7 @@ font-weight: 600;
 
 text-align: center;
 
-border-radius: 20px;
+border-radius: 50%; /* 完美正圓形按鈕 */
 
 text-decoration: none;
 
@@ -190,7 +216,17 @@ transition: all 0.2s ease;
 
 cursor: pointer;
 
-white-space: nowrap;
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+padding: 4px;
+
+word-break: break-all;
+
+line-height: 1.2;
 
 z-index: 3;
 
@@ -202,21 +238,23 @@ z-index: 3;
 
 background: rgba(0, 0, 0, 0.05);
 
-transform: scale(1.08);
+transform: scale(1.1);
 
 border-color: rgba(0, 0, 0, 0.3);
+
+z-index: 4;
 
 }
 
 
 
-/* 三個按鈕環繞位置分佈（以中央為基準向外擴散） */
+/* 利用絕對定位讓 3 個圓形按鈕均勻環繞在外圍大圓上 (12點鐘、左下方、右下方) */
 
-/* 按鈕 1：上方 */
+/* 按鈕 1：正上方 (12 點鐘方向) */
 
 .btn-top {
 
-top: 10px;
+top: 15px;
 
 left: 50%;
 
@@ -226,25 +264,25 @@ transform: translateX(-50%);
 
 
 
-/* 按鈕 2：左下方 */
+/* 按鈕 2：左下方 (約 7 點鐘方向) */
 
 .btn-bottom-left {
 
-bottom: 25px;
+bottom: 22px;
 
-left: 15px;
+left: 28px;
 
 }
 
 
 
-/* 按鈕 3：右下方 */
+/* 按鈕 3：右下方 (約 5 點鐘方向) */
 
 .btn-bottom-right {
 
-bottom: 25px;
+bottom: 22px;
 
-right: 15px;
+right: 28px;
 
 }
 
@@ -260,7 +298,7 @@ letter-spacing: 1px;
 
 cursor: pointer;
 
-margin-top: 5px;
+margin-top: 15px;
 
 }
 
@@ -661,23 +699,23 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：中央 Logo 結合環繞按鈕 -->
+<!-- 輕量開場迎賓遮罩：雙層同心圓環繞設計 -->
 
 <div id="splash-screen">
 
 <div class="splash-orbit-wrapper">
 
-<!-- 環繞的 3 個按鈕 -->
+<!-- 外環的 3 個圓形按鈕（構成另一個更大的圓形軌道） -->
 
 <a href="#news" class="splash-orbit-btn btn-top" onclick="handleSplashNav(event, 'news')">新聞劃重點</a>
 
-<a href="#books" class="splash-orbit-btn btn-bottom-left" onclick="handleSplashNav(event, 'books')">私房好讀書單</a>
+<a href="#books" class="splash-orbit-btn btn-bottom-left" onclick="handleSplashNav(event, 'books')">私房書單</a>
 
 <a href="#explorer" class="splash-orbit-btn btn-bottom-right" onclick="handleSplashNav(event, 'explorer')">檔案總管</a>
 
 
 
-<!-- 中央 Logo -->
+<!-- 中央 Logo（內圓） -->
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
@@ -712,7 +750,7 @@ closeSplash();
 
 
 
-// 點擊 3 個環繞按鈕時的處理函式
+// 點擊 3 個環形按鈕時的處理函式
 
 function handleSplashNav(event, targetType) {
 
@@ -721,9 +759,7 @@ event.preventDefault();
 closeSplash();
 
 
-console.log("使用者點擊了環繞按鈕：" + targetType);
-
-// 這裡後續可依需求帶入對應的跳轉網址
+console.log("使用者點擊了環形按鈕：" + targetType);
 
 }
 
@@ -755,35 +791,9 @@ document.documentElement.requestFullscreen().catch(() => {});
 
 
 
-// 歌曲資料改由 Google 試算表公開 CSV 載入[span_0](start_span)[span_0](end_span)
+// 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
-
-
-
-const coverSettings = {
-
-"人潮有多擁擠 就有多想你": { isCustomCover: true, coverClass: "" },
-
-"城北的花": { isCustomCover: true, coverClass: "cover-city-flower" },
-
-"推開世界的門": { isCustomCover: true, coverClass: "cover-open-door" },
-
-"原來你愛的不是我": { isCustomCover: true, coverClass: "cover-not-you" },
-
-"值得": { isCustomCover: true, coverClass: "cover-worthy" },
-
-"愛到盡頭": { isCustomCover: true, coverClass: "cover-end-of-love" },
-
-"換我做你的山": { isCustomCover: true, coverClass: "cover-be-your-mountain" },
-
-"思念成災": { isCustomCover: true, coverClass: "cover-miss-disaster" },
-
-"放過自己": { isCustomCover: true, coverClass: "cover-let-go" },
-
-"我不該動情": { isCustomCover: true, coverClass: "cover-not-falling-you" }
-
-};
 
 
 
