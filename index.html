@@ -10,8 +10,6 @@
 
 
 
-<!-- 啟用手機全螢幕與沉浸式模式 -->
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,8 +21,6 @@
 <title>生活・簡居・生活 | 數位名片型總入口</title>
 
 <style>
-
-/* 基礎重置：確保手機版直接滿版全螢幕 */
 
 * {
 
@@ -76,11 +72,11 @@ width: 100%;
 
 height: 100%;
 
-background: rgba(255, 255, 255, 0.96);
+background: rgba(255, 255, 255, 0.97);
 
-backdrop-filter: blur(10px);
+backdrop-filter: blur(12px);
 
--webkit-backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(12px);
 
 z-index: 99999;
 
@@ -100,15 +96,15 @@ padding: 20px;
 
 
 
-/* 雙層同心圓軌道容器 */
+/* 仿時鐘/羅盤外環結構容器 */
 
 .splash-orbit-wrapper {
 
 position: relative;
 
-width: 280px;
+width: 300px;
 
-height: 280px;
+height: 300px;
 
 display: flex;
 
@@ -116,13 +112,13 @@ justify-content: center;
 
 align-items: center;
 
-margin-bottom: 10px;
+margin-bottom: 15px;
 
 }
 
 
 
-/* 中央 Logo（內圓） */
+/* 中央 Logo（內圓心） */
 
 .splash-logo {
 
@@ -142,7 +138,11 @@ transition: transform 0.2s ease;
 
 position: relative;
 
-z-index: 2;
+z-index: 5;
+
+background: #fff;
+
+border: 3px solid #fff;
 
 }
 
@@ -156,19 +156,19 @@ transform: scale(1.05);
 
 
 
-/* 外環軌道裝飾線（選配：淡淡的大圓框，突顯環形軌道感） */
+/* 外環軌道基準框（營造時鐘盤面感） */
 
-.splash-orbit-wrapper::after {
+.splash-orbit-wrapper::before {
 
 content: '';
 
 position: absolute;
 
-width: 210px;
+width: 280px;
 
-height: 210px;
+height: 280px;
 
-border: 1px dashed rgba(0, 0, 0, 0.12);
+border: 2px solid rgba(0, 0, 0, 0.08);
 
 border-radius: 50%;
 
@@ -180,39 +180,35 @@ pointer-events: none;
 
 
 
-/* 3 個環形外圍按鈕：組合成更大的圓形軌道 */
+/* 3 個環形拼圖按鈕：利用絕對定位與旋轉，形成 120 度均分的外環大圓 */
 
 .splash-orbit-btn {
 
 position: absolute;
 
-width: 76px;
+width: 120px;
 
-height: 76px;
+height: 120px;
 
-background: rgba(255, 255, 255, 0.95);
+background: rgba(255, 255, 255, 0.96);
 
-backdrop-filter: blur(6px);
+backdrop-filter: blur(8px);
 
--webkit-backdrop-filter: blur(6px);
+-webkit-backdrop-filter: blur(8px);
 
-border: 1px solid rgba(0, 0, 0, 0.15);
+border: 1px solid rgba(0, 0, 0, 0.12);
 
 color: #222;
 
-font-size: 13px;
+font-size: 14px;
 
 font-weight: 600;
 
-text-align: center;
-
-border-radius: 50%; /* 完美正圓形按鈕 */
-
 text-decoration: none;
 
-box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+box-shadow: 0 4px 15px rgba(0,0,0,0.06);
 
-transition: all 0.2s ease;
+transition: all 0.25s ease;
 
 cursor: pointer;
 
@@ -222,13 +218,11 @@ justify-content: center;
 
 align-items: center;
 
-padding: 4px;
-
-word-break: break-all;
-
-line-height: 1.2;
-
 z-index: 3;
+
+/* 關鍵：透過圓角與形狀模擬環形區塊，讓外圍 3 個按鈕拼合成大圓 */
+
+border-radius: 60px 60px 30px 30px;
 
 }
 
@@ -236,53 +230,91 @@ z-index: 3;
 
 .splash-orbit-btn:hover {
 
-background: rgba(0, 0, 0, 0.05);
+background: #111;
 
-transform: scale(1.1);
+color: #fff;
 
-border-color: rgba(0, 0, 0, 0.3);
+transform: scale(1.08);
 
-z-index: 4;
+z-index: 6;
+
+box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 
 }
 
 
 
-/* 利用絕對定位讓 3 個圓形按鈕均勻環繞在外圍大圓上 (12點鐘、左下方、右下方) */
+/*
 
-/* 按鈕 1：正上方 (12 點鐘方向) */
+利用三角函數佈局 3 個方向 (以 300px 容器為基準)
+
+按鈕 1：正上方 (0度 / 12點鐘)
+
+按鈕 2：右下方 (120度 / 4點鐘)
+
+按鈕 3：左下方 (240度 / 8點鐘)
+
+*/
 
 .btn-top {
 
-top: 15px;
+top: 10px;
 
 left: 50%;
 
 transform: translateX(-50%);
 
-}
-
-
-
-/* 按鈕 2：左下方 (約 7 點鐘方向) */
-
-.btn-bottom-left {
-
-bottom: 22px;
-
-left: 28px;
+border-radius: 50px 50px 20px 20px;
 
 }
 
 
 
-/* 按鈕 3：右下方 (約 5 點鐘方向) */
+.btn-right {
 
-.btn-bottom-right {
+bottom: 30px;
 
-bottom: 22px;
+right: 20px;
 
-right: 28px;
+transform: rotate(60deg);
+
+transform-origin: bottom left;
+
+}
+
+
+
+.btn-left {
+
+bottom: 30px;
+
+left: 20px;
+
+transform: rotate(-60deg);
+
+transform-origin: bottom right;
+
+}
+
+
+
+/* 修正旋轉後的文字角度，確保文字永遠是正的 */
+
+.btn-right span {
+
+display: inline-block;
+
+transform: rotate(-60deg);
+
+}
+
+
+
+.btn-left span {
+
+display: inline-block;
+
+transform: rotate(60deg);
 
 }
 
@@ -298,7 +330,7 @@ letter-spacing: 1px;
 
 cursor: pointer;
 
-margin-top: 15px;
+margin-top: 10px;
 
 }
 
@@ -474,8 +506,6 @@ object-fit: cover;
 }
 
 
-
-/* 預設自訂封面層樣式 */
 
 .custom-cover-layer {
 
@@ -699,23 +729,23 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：雙層同心圓環繞設計 -->
+<!-- 輕量開場迎賓遮罩：3 等分外環環繞拼圖設計 -->
 
 <div id="splash-screen">
 
 <div class="splash-orbit-wrapper">
 
-<!-- 外環的 3 個圓形按鈕（構成另一個更大的圓形軌道） -->
+<!-- 外環的 3 個環形區塊按鈕（120度均分，環繞中央 Logo） -->
 
-<a href="#news" class="splash-orbit-btn btn-top" onclick="handleSplashNav(event, 'news')">新聞劃重點</a>
+<a href="#news" class="splash-orbit-btn btn-top" onclick="handleSplashNav(event, 'news')"><span>新聞劃重點</span></a>
 
-<a href="#books" class="splash-orbit-btn btn-bottom-left" onclick="handleSplashNav(event, 'books')">私房書單</a>
+<a href="#books" class="splash-orbit-btn btn-right" onclick="handleSplashNav(event, 'books')"><span>私房書單</span></a>
 
-<a href="#explorer" class="splash-orbit-btn btn-bottom-right" onclick="handleSplashNav(event, 'explorer')">檔案總管</a>
+<a href="#explorer" class="splash-orbit-btn btn-left" onclick="handleSplashNav(event, 'explorer')"><span>檔案總管</span></a>
 
 
 
-<!-- 中央 Logo（內圓） -->
+<!-- 中央 Logo（內圓心） -->
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
@@ -740,8 +770,6 @@ transform: scale(1.08);
 
 <script>
 
-// 點擊 Logo 或下方文字進入瀏覽
-
 function enterFullScreen() {
 
 closeSplash();
@@ -750,22 +778,17 @@ closeSplash();
 
 
 
-// 點擊 3 個環形按鈕時的處理函式
-
 function handleSplashNav(event, targetType) {
 
 event.preventDefault();
 
 closeSplash();
 
-
 console.log("使用者點擊了環形按鈕：" + targetType);
 
 }
 
 
-
-// 關閉遮罩的共用動作
 
 function closeSplash() {
 
@@ -790,8 +813,6 @@ document.documentElement.requestFullscreen().catch(() => {});
 }
 
 
-
-// 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
@@ -1086,6 +1107,7 @@ ${song.isCustomCover ? `
 card.dataset.embed = song.embedCode;
 
 card.dataset.productUrl = song.productUrl;
+
 
 container.appendChild(card);
 
