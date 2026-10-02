@@ -886,7 +886,7 @@ coverUrl,
 
 productUrl,
 
-embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
+embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&enablejsapi=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
 
 };
 
@@ -1048,49 +1048,31 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 
 
 const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const card = entry.target;
+    const wrapper = card.querySelector('.video-wrapper');
+    const hasCover = card.dataset.hasCover === "true";
+    const coverLayer = card.querySelector('.custom-cover-layer');
 
-entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // 如果有封面但封面還沒淡出（代表使用者還沒主動點擊播放），則先不自動播放
+      if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
+        return;
+      }
 
-const card = entry.target;
-
-const wrapper = card.querySelector('.video-wrapper');
-
-const hasCover = card.dataset.hasCover === "true";
-
-
-
-if (entry.isIntersecting) {
-
-const coverLayer = card.querySelector('.custom-cover-layer');
-
-if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
-
-return;
-
-}
-
-
-
-if (!wrapper.hasChildNodes()) {
-
-wrapper.innerHTML = card.dataset.embed;
-
-}
-
-} else {
-
-if (!hasCover || (hasCover && card.querySelector('.custom-cover-layer')?.classList.contains('fade-out'))) {
-
-wrapper.innerHTML = '';
-
-}
-
-}
-
-});
-
+      // 當滑到該卡片且符合播放條件時，若尚未載入影片則自動載入播放
+      if (!wrapper.hasChildNodes()) {
+        wrapper.innerHTML = card.dataset.embed;
+      }
+    } else {
+      // 當滑出畫面時，清空 iframe 讓影片停止播放
+      wrapper.innerHTML = '';
+      
+      // 如果希望滑走後下次滑回來時「重置封面」，可以把下面這行取消註解：
+      // if (coverLayer) coverLayer.classList.remove('fade-out');
+    }
+  });
 }, { threshold: 0.6 });
-
 
 
 cards.forEach(card => {
