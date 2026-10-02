@@ -5,67 +5,67 @@
     "articles": [
         {
             "id": 1,
-            "title": "次世代通用多模態具身智慧架構發表 物理交互精準度大幅躍升",
+            "title": "次世代自主多模態代理架構問世 全面改寫邊緣端即時決策模式",
             "category": "人工智慧",
-            "summary": "尖端AI實驗室今日發表新一代具身智慧神經網路模型，結合高動態視覺觸覺融合與實時反饋決策，成功突破機器人於複雜非結構化環境中的自主操作極限，預計全面導入智慧製造與長照護理領域。",
-            "source": "全球科技趨勢網",
-            "url": "https://example.com/tech/ai-embodied-breakthrough-2026"
+            "summary": "國際頂尖AI實驗室發表具備連續自我修正能力的新一代輕量化多模態模型，能在無網路環境下於邊緣裝置獨立處理複雜邏輯推理與跨感官資料融合，推動個人助理邁向全自主時代。",
+            "source": "科技脈動報",
+            "url": "https://example.com/tech/ai-multimodal-edge-2026"
         },
         {
             "id": 2,
-            "title": "先進埃米製程正式步入量產階段 背面供電技術推動能效突破",
+            "title": "埃米級半導體製程迎來突破性進展 全環繞閘極良率超乎市場預期",
             "category": "半導體",
-            "summary": "晶圓代工龍頭宣布其 A16 埃米級製程技術正式啟動商業化量產，全面導入晶背供電網絡（BSPDN）與新一代環繞閘極電晶體，運算效能較前代提升達 15%，功耗降低超過 25%。",
-            "source": "電子工程與晶片周刊",
-            "url": "https://example.com/tech/semiconductor-angstrom-mass-production"
+            "summary": "晶圓代工巨頭宣布新一代A16（埃米級）製程與背面供電網路技術取得關鍵進展，試產良率突破瓶頸，預計將於明年下半年支援全球旗艦AI加速晶片的大規模量產。",
+            "source": "半導體前瞻網",
+            "url": "https://example.com/tech/angstrom-process-breakthrough"
         },
         {
             "id": 3,
-            "title": "容錯量子運算迎來關鍵里程碑 邏輯量子位元錯誤率降至新低",
-            "category": "量子科技",
-            "summary": "國際聯合研究團隊宣布成功構建具備主動糾錯機制的千位元超導邏輯量子處理器，首次在長時間運算下維持相干狀態，為複雜分子動力學模擬與新型材料合成開啟全新可能。",
-            "source": "量子科學綜報",
-            "url": "https://example.com/tech/fault-tolerant-quantum-milestone"
+            "title": "常溫混合量子算力平台首度進入商轉 加速新藥開發分子模擬",
+            "category": "量子運算",
+            "summary": "國際產學合作聯盟成功將分散式容錯量子處理器與超算雲端整合，提供製藥業者即時常溫分子動態模擬服務，大幅縮短罕見疾病標靶藥物的研發篩選週期。",
+            "source": "未來運算周刊",
+            "url": "https://example.com/tech/quantum-cloud-platform-launch"
         },
         {
             "id": 4,
-            "title": "輕量化神經感知 AR 眼鏡發表 全天候空間運算生態系成形",
-            "category": "智慧終端",
-            "summary": "消費性科技大廠發表重量僅 48 克的次世代智慧眼鏡，搭載微型光波導模組與肌電神經手環控制器，無縫結合環境感知生成式 AI，實現無需螢幕的沉浸式日常虛實互動。",
-            "source": "數位硬體前沿",
-            "url": "https://example.com/tech/ar-glasses-spatial-computing-2026"
+            "title": "神經感知超輕量AR眼鏡發表 虛實融合介面擺脫傳統實體控制器",
+            "category": "空間運算",
+            "summary": "科技巨頭推出重量僅58克的日常型空間運算眼鏡，結合肌電微手勢識別與眼動追蹤，讓使用者能以極微小的手部動作精準操控虛擬視窗，被視為消費級穿戴設備的重要里程碑。",
+            "source": "數位革新觀察",
+            "url": "https://example.com/tech/lightweight-ar-glasses-release"
         },
         {
             "id": 5,
-            "title": "原創科幻史詩鉅作全球首映週末票房登頂 突破全球影史十月紀錄",
+            "title": "年度科幻史詩巨作首週末票房打破影史紀錄 沉浸式視覺美學獲全球讚譽",
             "category": "強檔電影",
-            "summary": "備受矚目的科幻大片今日在多國上映首週傳出捷報，全數位 IMAX 沉浸廳入座率達百分之百，視覺特效與深沉哲學敘事獲得權威影評一致盛讚，被看好問鼎明年度奧斯卡多項大獎。",
-            "source": "國際娛樂快報",
-            "url": "https://example.com/entertainment/box-office-sci-fi-epic-record"
+            "summary": "由金獎導演執導的科幻續作本週在全球同步上映，以突破性的虛擬實景拍攝與全光譜色調重塑宇宙宏觀敘事，首週末全球票房狂攬近5億美元，創下近年影院市場新高。",
+            "source": "全球影藝焦點",
+            "url": "https://example.com/ent/sci-fi-box-office-record"
         },
         {
             "id": 6,
-            "title": "流行天團跨國巡迴演唱會最終站落幕 空間音訊同步全球虛擬直播",
+            "title": "跨國流行天后展開全息沉浸巡演 突破虛擬舞台與現場樂迷互動邊界",
             "category": "流行音樂",
-            "summary": "全球知名流行天團於倫敦溫布利球場迎來世界巡演最終場，吸引逾十萬名現場觀眾，並透過全景空間音效向超過兩千萬名付費線上虛擬觀眾同步直播，締造混合實境音樂會新標竿。",
-            "source": "音樂潮流評鑑",
-            "url": "https://example.com/entertainment/world-tour-finale-virtual-streaming"
+            "summary": "知名天后開啟全球巡迴演唱會首場演出，全面導入裸眼3D光影與即時動作捕捉技術，讓各地觀眾無論身處體育場何處都能享受零死角的立體聲光互動，門票全數秒殺。",
+            "source": "星光音樂誌",
+            "url": "https://example.com/ent/pop-star-holographic-tour"
         },
         {
             "id": 7,
-            "title": "高人氣改編奇幻影集第二季全數上線 48小時內打破串流點播紀錄",
-            "category": "串流影集",
-            "summary": "主流串流影音平台年度旗艦奇幻劇第二季於今日零時全集釋出，引發全球追劇熱潮，上線首兩日總觀看時數突破 3.5 億小時，伺服器一度因瞬時巨大流量短暫過載。",
-            "source": "影視視界指南",
-            "url": "https://example.com/entertainment/streaming-fantasy-series-record"
+            "title": "現象級懸疑影集開播即登頂串流榜首 雙重敘事手法掀起跨國解謎狂潮",
+            "category": "串流影視",
+            "summary": "改編自國際暢銷小說的心理懸疑影集全季一次釋出，以非線性雙線敘事結構與反轉不斷的精湛劇本迅速引發熱議，首播24小時內攻佔逾80個國家與地區的收視榜首。",
+            "source": "娛樂時光線",
+            "url": "https://example.com/ent/mystery-series-streaming-hit"
         },
         {
             "id": 8,
-            "title": "年度 3A 開放世界動作冒險大作今日全球解鎖 玩家社群盛讚生態系細緻度",
-            "category": "互動娛樂",
-            "summary": "歷經五年精雕細琢的旗艦開放世界單機 RPG 今日正式向各平台開放遊玩，遊戲內具備高度自治的 NPC 生態系統與無接縫氣候地貌變化，Steam 同時在線人數迅速突破百萬大關。",
-            "source": "電玩互動脈動",
-            "url": "https://example.com/entertainment/triple-a-rpg-launch-success"
+            "title": "國際流行音樂大獎揭曉入圍名單 獨立創作新秀跨界融合作品成最大亮點",
+            "category": "音樂盛事",
+            "summary": "最新一屆音樂大獎公布年度入圍名單，融合傳統民族器樂與未來電子音色的多組獨立音樂人強勢領跑多項大獎，展現多元文化融合與原創精神在全球樂壇的嶄新趨勢。",
+            "source": "文化風向標",
+            "url": "https://example.com/ent/music-awards-nominees-2026"
         }
     ]
 }
