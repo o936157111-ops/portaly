@@ -62,7 +62,7 @@ left: 0;
 
 
 
-/* 1. 輕量開場迎賓遮罩 (Splash Screen) 改為 100% 純白不透明 */
+/* 1. 輕量開場迎賓遮罩 (Splash Screen) 改為 100% 純白不透明，無模糊底框 */
 
 #splash-screen {
 
@@ -160,7 +160,7 @@ max-width: 260px;
 
 
 
-/* 按鈕樣式 */
+/* 按鈕樣式 (實心/邊框質感) */
 
 .splash-btn {
 
@@ -223,6 +223,7 @@ background-color: #ffffff;
 position: static;
 
 }
+
 
 .app-frame {
 
@@ -600,14 +601,13 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩 -->
+<!-- 輕量開場迎賓遮罩：包含 Logo、提示文字與 3 個快速導覽按鈕 -->
 
 <div id="splash-screen">
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
-
 
 
 <div class="splash-btn-container">
@@ -636,11 +636,7 @@ transform: scale(1.08);
 
 <script>
 
-let globalSongDatabase = [];
-
-let isDataLoaded = false;
-
-
+// 點擊 Logo 或空白處進入瀏覽
 
 function enterFullScreen() {
 
@@ -649,6 +645,8 @@ closeSplash();
 }
 
 
+
+// 修正後的按鈕點擊處理：直接瞬間跳轉，不經過首頁
 
 function handleSplashNav(event, targetUrl) {
 
@@ -666,6 +664,8 @@ window.location.replace(targetUrl);
 
 
 
+// 關閉遮罩的共用動作（保留給點擊 Logo 時使用）
+
 function closeSplash() {
 
 const splash = document.getElementById('splash-screen');
@@ -680,28 +680,6 @@ splash.style.display = 'none';
 
 
 
-// 當使用者點擊進入後，若資料已就緒則立即初始化
-
-if (isDataLoaded && globalSongDatabase.length > 0) {
-
-initReels(globalSongDatabase);
-
-} else {
-
-// 若資料仍在載入或剛才失敗，給予預設提示
-
-const container = document.getElementById('reelContainer');
-
-if (!container.hasChildNodes()) {
-
-container.innerHTML = `<div style="color:#333;padding:40px;text-align:center;font-size:15px;">資料正在載入中，請稍候...<br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;border-radius:8px;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;">重新整理</button></div>`;
-
-}
-
-}
-
-
-
 if (document.documentElement.requestFullscreen) {
 
 document.documentElement.requestFullscreen().catch(() => {});
@@ -711,6 +689,8 @@ document.documentElement.requestFullscreen().catch(() => {});
 }
 
 
+
+// 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
@@ -847,7 +827,6 @@ const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片�
 const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
 
 
-
 const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
 
 const titleIndex = titleCol >= 0 ? titleCol : 0;
@@ -881,7 +860,6 @@ let coverUrl = "";
 let coverClass = "";
 
 
-
 if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
 
 coverUrl = coverValue;
@@ -900,7 +878,7 @@ title,
 
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
 
-hasVideo: !!videoId,
+isCustomCover: true,
 
 coverClass,
 
@@ -908,7 +886,7 @@ coverUrl,
 
 productUrl,
 
-embedCode: videoId ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : ""
+embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
 
 };
 
@@ -928,7 +906,7 @@ const csvText = await response.text();
 
 const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
 
-if (!songs.length) throw new Error("CSV 中找不到有效資料。");
+if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
 
 return songs;
 
@@ -957,20 +935,15 @@ const card = document.createElement('div');
 card.className = 'reel-card';
 
 
-
 let coverHtml = '';
 
-if (!song.hasVideo) {
+if (song.isCustomCover) {
 
 const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
 
 coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
 
 card.dataset.hasCover = "true";
-
-} else {
-
-card.dataset.hasCover = "false";
 
 }
 
@@ -992,7 +965,7 @@ ${coverHtml}
 
 </div>
 
-${!song.hasVideo ? `
+${song.isCustomCover ? `
 
 <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
 
@@ -1007,7 +980,6 @@ ${!song.hasVideo ? `
 </div>
 
 `;
-
 
 
 card.dataset.embed = song.embedCode;
@@ -1049,7 +1021,6 @@ scrollTimeout = setTimeout(() => {
 const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
 
 
-
 if (container.scrollTop < singleBlockHeight * 0.4) {
 
 container.style.scrollSnapType = 'none';
@@ -1084,13 +1055,13 @@ const card = entry.target;
 
 const wrapper = card.querySelector('.video-wrapper');
 
-const coverLayer = card.querySelector('.custom-cover-layer');
-
 const hasCover = card.dataset.hasCover === "true";
 
 
 
 if (entry.isIntersecting) {
+
+const coverLayer = card.querySelector('.custom-cover-layer');
 
 if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
 
@@ -1098,41 +1069,17 @@ return;
 
 }
 
-if (!wrapper.hasChildNodes() && card.dataset.embed) {
+
+
+if (!wrapper.hasChildNodes()) {
 
 wrapper.innerHTML = card.dataset.embed;
-
-
-
-const iframe = wrapper.querySelector('iframe');
-
-if (iframe) {
-
-iframe.onload = function() {
-
-setTimeout(() => {
-
-iframe.contentWindow.postMessage(JSON.stringify({
-
-event: 'command',
-
-func: 'setVolume',
-
-args: [30]
-
-}), '*');
-
-}, 500);
-
-};
-
-}
 
 }
 
 } else {
 
-if (!hasCover) {
+if (!hasCover || (hasCover && card.querySelector('.custom-cover-layer')?.classList.contains('fade-out'))) {
 
 wrapper.innerHTML = '';
 
@@ -1164,25 +1111,39 @@ const wrapper = card.querySelector('.video-wrapper');
 
 const coverLayer = card.querySelector('.custom-cover-layer');
 
+const embedCode = card.dataset.embed;
+
 const productUrl = card.dataset.productUrl;
 
 
 
-if (productUrl) {
+if (embedCode) {
 
-window.open(productUrl, '_blank');
+if (!wrapper.hasChildNodes()) {
 
-} else if (coverLayer) {
+wrapper.innerHTML = embedCode;
+
+}
+
+if (coverLayer) {
 
 coverLayer.classList.add('fade-out');
 
 }
 
+} else if (productUrl) {
+
+window.open(productUrl, '_blank');
+
+} else {
+
+alert("此項目目前沒有設定播放影片或產品連結");
+
+}
+
 }
 
 
-
-// 頁面載入時在背景預先抓取 CSV 資料
 
 window.onload = async function () {
 
@@ -1190,25 +1151,15 @@ const container = document.getElementById("reelContainer");
 
 try {
 
-globalSongDatabase = await loadSongDatabase();
+const songDatabase = await loadSongDatabase();
 
-isDataLoaded = true;
-
-// 如果使用者已經點開過迎賓遮罩，立刻初始化畫面
-
-const splash = document.getElementById("splash-screen");
-
-if (splash.style.display === 'none' || splash.style.opacity === '0') {
-
-initReels(globalSongDatabase);
-
-}
+initReels(songDatabase);
 
 } catch (error) {
 
-console.error("資料載入失敗：", error);
+console.error("歌曲資料載入失敗：", error);
 
-container.innerHTML = `<div style="color:#000;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;cursor:pointer;">重新載入</button></div>`;
+container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
 
 }
 
