@@ -1048,7 +1048,7 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 
 
 
-const observer = new IntersectionObserver((entries) => {
+Const observer = new IntersectionObserver((entries) => {
 
 entries.forEach(entry => {
 
@@ -1064,25 +1064,48 @@ const hasCover = card.dataset.hasCover === "true";
 
 if (entry.isIntersecting) {
 
-// 如果是無影片的卡片，維持封面不動
-
 if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
 
 return;
 
 }
 
-// 如果是有 YT 影片的卡片，一滑到立刻自動播放
-
 if (!wrapper.hasChildNodes() && card.dataset.embed) {
 
 wrapper.innerHTML = card.dataset.embed;
 
+
+// 取得剛才產生的 iframe 並在載入後設定音量（例如 30 分貝/30%）
+
+const iframe = wrapper.querySelector('iframe');
+
+if (iframe) {
+
+iframe.onload = function() {
+
+// 透過 postMessage 控制 YouTube iframe API 將音量設為 30 (範圍 0 ~ 100)
+
+setTimeout(() => {
+
+iframe.contentWindow.postMessage(JSON.stringify({
+
+event: 'command',
+
+func: 'setVolume',
+
+args: [30] // 數字可自行調整，例如 20、30 或 50
+
+}), '*');
+
+}, 500);
+
+};
+
+}
+
 }
 
 } else {
-
-// 離開畫面時清空影片，節省效能
 
 if (!hasCover) {
 
@@ -1094,7 +1117,8 @@ wrapper.innerHTML = '';
 
 });
 
-}, { threshold: 0.6 });
+}, { threshold: 0.6 }); 
+
 
 
 
