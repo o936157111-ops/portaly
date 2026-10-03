@@ -871,7 +871,7 @@ title,
 
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
 
-hasVideo: !!videoId, // 判斷是否有 YT 網址
+hasVideo: !!videoId,
 
 coverClass,
 
@@ -879,7 +879,8 @@ coverUrl,
 
 productUrl,
 
-embedCode: videoId ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&enablejsapi=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : ""
+embedCode: videoId ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : ""
+
 };
 
 }).filter(Boolean);
@@ -929,8 +930,6 @@ card.className = 'reel-card';
 
 
 let coverHtml = '';
-
-// 只有「沒有 YouTube 影片網址」的項目才長出封面
 
 if (!song.hasVideo) {
 
@@ -1048,7 +1047,7 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 
 
 
-Const observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver((entries) => {
 
 entries.forEach(entry => {
 
@@ -1075,15 +1074,11 @@ if (!wrapper.hasChildNodes() && card.dataset.embed) {
 wrapper.innerHTML = card.dataset.embed;
 
 
-// 取得剛才產生的 iframe 並在載入後設定音量（例如 30 分貝/30%）
-
 const iframe = wrapper.querySelector('iframe');
 
 if (iframe) {
 
 iframe.onload = function() {
-
-// 透過 postMessage 控制 YouTube iframe API 將音量設為 30 (範圍 0 ~ 100)
 
 setTimeout(() => {
 
@@ -1093,7 +1088,7 @@ event: 'command',
 
 func: 'setVolume',
 
-args: [30] // 數字可自行調整，例如 20、30 或 50
+args: [30]
 
 }), '*');
 
@@ -1117,8 +1112,7 @@ wrapper.innerHTML = '';
 
 });
 
-}, { threshold: 0.6 }); 
-
+}, { threshold: 0.6 });
 
 
 
