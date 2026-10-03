@@ -378,8 +378,6 @@ height: 22px;
 
 fill: #ffffff;
 
-transform: translateX(2px);
-
 }
 
 
@@ -774,15 +772,15 @@ ${coverHtml}
 
 ${song.isCustomCover ? `
 
-<div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
+<a href="https://myezlife.com/index-1.html" target="_blank" class="cover-play-btn-wrapper" style="text-decoration: none;">
 
-<div class="cover-play-btn">
+<div class="cover-play-btn" title="回首頁">
 
-<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
 
 </div>
 
-</div>` : ''}
+</a>` : ''}
 
 </div>
 
@@ -854,8 +852,6 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 
 
 
-/* 改進的 IntersectionObserver：當滑動到該卡片時自動播放並淡出封面 */
-
 const observer = new IntersectionObserver((entries) => {
 
 entries.forEach(entry => {
@@ -905,32 +901,6 @@ cards.forEach(card => {
 observer.observe(card);
 
 });
-
-}
-
-
-
-function playCustomSong(btnWrapper) {
-
-const card = btnWrapper.closest('.reel-card');
-
-const wrapper = card.querySelector('.video-wrapper');
-
-const coverLayer = card.querySelector('.custom-cover-layer');
-
-
-
-if (!wrapper.hasChildNodes()) {
-
-wrapper.innerHTML = card.dataset.embed;
-
-}
-
-if (coverLayer) {
-
-coverLayer.classList.add('fade-out');
-
-}
 
 }
 
