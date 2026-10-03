@@ -62,7 +62,7 @@ left: 0;
 
 
 
-/* 1. 輕量開場迎賓遮罩 (Splash Screen) 改為 100% 純白不透明，無模糊底框 */
+/* 1. 輕量開場迎賓遮罩 (Splash Screen) 改為 100% 純白不透明 */
 
 #splash-screen {
 
@@ -160,7 +160,7 @@ max-width: 260px;
 
 
 
-/* 按鈕樣式 (實心/邊框質感) */
+/* 按鈕樣式 */
 
 .splash-btn {
 
@@ -223,7 +223,6 @@ background-color: #ffffff;
 position: static;
 
 }
-
 
 .app-frame {
 
@@ -377,7 +376,7 @@ object-fit: cover;
 
 
 
-/* 預設自訂封面層樣式 */
+/* 預設自訂封面層樣式 (無 YT 網址的項目才會用到) */
 
 .custom-cover-layer {
 
@@ -601,7 +600,7 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：包含 Logo、提示文字與 3 個快速導覽按鈕 -->
+<!-- 輕量開場迎賓遮罩 -->
 
 <div id="splash-screen">
 
@@ -636,8 +635,6 @@ transform: scale(1.08);
 
 <script>
 
-// 點擊 Logo 或空白處進入瀏覽
-
 function enterFullScreen() {
 
 closeSplash();
@@ -645,8 +642,6 @@ closeSplash();
 }
 
 
-
-// 修正後的按鈕點擊處理：直接瞬間跳轉，不經過首頁
 
 function handleSplashNav(event, targetUrl) {
 
@@ -663,8 +658,6 @@ window.location.replace(targetUrl);
 }
 
 
-
-// 關閉遮罩的共用動作（保留給點擊 Logo 時使用）
 
 function closeSplash() {
 
@@ -689,8 +682,6 @@ document.documentElement.requestFullscreen().catch(() => {});
 }
 
 
-
-// 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
@@ -827,6 +818,7 @@ const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片�
 const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
 
 
+
 const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
 
 const titleIndex = titleCol >= 0 ? titleCol : 0;
@@ -860,6 +852,7 @@ let coverUrl = "";
 let coverClass = "";
 
 
+
 if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
 
 coverUrl = coverValue;
@@ -878,7 +871,7 @@ title,
 
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
 
-isCustomCover: true,
+hasVideo: !!videoId, // 判斷是否有 YT 網址
 
 coverClass,
 
@@ -886,7 +879,7 @@ coverUrl,
 
 productUrl,
 
-embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&enablejsapi=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
+embedCode: videoId ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : ""
 
 };
 
@@ -906,7 +899,7 @@ const csvText = await response.text();
 
 const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
 
-if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
+if (!songs.length) throw new Error("CSV 中找不到有效資料。");
 
 return songs;
 
@@ -935,15 +928,22 @@ const card = document.createElement('div');
 card.className = 'reel-card';
 
 
+
 let coverHtml = '';
 
-if (song.isCustomCover) {
+// 只有「沒有 YouTube 影片網址」的項目才長出封面
+
+if (!song.hasVideo) {
 
 const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
 
 coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
 
 card.dataset.hasCover = "true";
+
+} else {
+
+card.dataset.hasCover = "false";
 
 }
 
@@ -965,7 +965,7 @@ ${coverHtml}
 
 </div>
 
-${song.isCustomCover ? `
+${!song.hasVideo ? `
 
 <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
 
@@ -980,6 +980,7 @@ ${song.isCustomCover ? `
 </div>
 
 `;
+
 
 
 card.dataset.embed = song.embedCode;
@@ -1021,6 +1022,7 @@ scrollTimeout = setTimeout(() => {
 const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
 
 
+
 if (container.scrollTop < singleBlockHeight * 0.4) {
 
 container.style.scrollSnapType = 'none';
@@ -1048,31 +1050,54 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 
 
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const card = entry.target;
-    const wrapper = card.querySelector('.video-wrapper');
-    const coverLayer = card.querySelector('.custom-cover-layer');
 
-    if (entry.isIntersecting) {
-      // 1. 一旦滑入畫面，立刻隱藏封面
-      if (coverLayer) {
-        coverLayer.classList.add('fade-out');
-      }
-      // 2. 如果還沒載入影片，立刻載入（內含 autoplay=1 參數就會自動播放）
-      if (!wrapper.hasChildNodes()) {
-        wrapper.innerHTML = card.dataset.embed;
-      }
-    } else {
-      // 3. 離開畫面時清空影片，節省流量與效能
-      wrapper.innerHTML = '';
-      
-      // 4. 如果希望下次滑回來時重新顯示封面，可以保留下面這行；若希望滑回來直接看影片可註解掉
-      if (coverLayer) {
-        coverLayer.classList.remove('fade-out');
-      }
-    }
-  });
+entries.forEach(entry => {
+
+const card = entry.target;
+
+const wrapper = card.querySelector('.video-wrapper');
+
+const coverLayer = card.querySelector('.custom-cover-layer');
+
+const hasCover = card.dataset.hasCover === "true";
+
+
+
+if (entry.isIntersecting) {
+
+// 如果是無影片的卡片，維持封面不動
+
+if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
+
+return;
+
+}
+
+// 如果是有 YT 影片的卡片，一滑到立刻自動播放
+
+if (!wrapper.hasChildNodes() && card.dataset.embed) {
+
+wrapper.innerHTML = card.dataset.embed;
+
+}
+
+} else {
+
+// 離開畫面時清空影片，節省效能
+
+if (!hasCover) {
+
+wrapper.innerHTML = '';
+
+}
+
+}
+
+});
+
 }, { threshold: 0.6 });
+
+
 
 cards.forEach(card => {
 
@@ -1092,33 +1117,17 @@ const wrapper = card.querySelector('.video-wrapper');
 
 const coverLayer = card.querySelector('.custom-cover-layer');
 
-const embedCode = card.dataset.embed;
-
 const productUrl = card.dataset.productUrl;
 
 
 
-if (embedCode) {
-
-if (!wrapper.hasChildNodes()) {
-
-wrapper.innerHTML = embedCode;
-
-}
-
-if (coverLayer) {
-
-coverLayer.classList.add('fade-out');
-
-}
-
-} else if (productUrl) {
+if (productUrl) {
 
 window.open(productUrl, '_blank');
 
-} else {
+} else if (coverLayer) {
 
-alert("此項目目前沒有設定播放影片或產品連結");
+coverLayer.classList.add('fade-out');
 
 }
 
@@ -1138,9 +1147,9 @@ initReels(songDatabase);
 
 } catch (error) {
 
-console.error("歌曲資料載入失敗：", error);
+console.error("資料載入失敗：", error);
 
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
+container.innerHTML = `<div style="color:#000;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
 
 }
 
