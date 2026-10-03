@@ -943,22 +943,15 @@ cursor: pointer;
 
 <span class="daily-special-badge">✨ 今日推薦線上電子書</span>
 
-<div class="daily-title" id="dailyTitle">東方快車謀殺案</div>
+<div class="daily-title" id="dailyTitle">天龍八部</div>
 
-<div class="daily-author" id="dailyAuthor">作者： 阿嘉莎．克莉絲蒂</div>
+<div class="daily-author" id="dailyAuthor">作者： 金庸</div>
 
-<div class="daily-desc" id="dailyDesc">故事大綱與核心設定
-• 背景：一列由伊斯坦堡開往歐洲的傳奇豪華列車「東方快車」，在行經南斯拉夫（現巴爾幹半島地區）途中遇上大風雪，被迫困在雪地中。
-• 命案：深夜，車廂內發生了一起慘絕人寰的謀殺案，美國富商雷切特（Ratchett）身中多刀，陳屍於反鎖的包廂中。
-• 名偵探：正巧也在車上的比利時神探赫丘利·白羅（Hercule Poirot）受託展開調查。
-案件特色
-• 密室與嫌疑：火車因大雪受困，外人無法登車或逃逸，兇手必然藏在同一節車廂的乘客之中。
-• 錯綜複雜的線索：車上的13位嫌疑人背景各異、國籍不同，且各自擁有看似完美的偽造不在場證明與互相矛盾的證詞。
-• 震撼的結局：白羅運用他著名的「灰色腦細胞」、細密的邏輯推理，最終揭開一個打破傳統觀點、直探道德與正義灰色地帶的驚人真相。</div>
+<div class="daily-desc" id="dailyDesc">金庸武俠小說的宏偉巨作，以北宋年間為時代背景...</div>
 
 <div class="daily-footer">
 
-<a href="https://www.haodoo.net/?M=u&amp;P=I1037:1&amp;L=Share" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
+<a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
 
 <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
 
@@ -978,7 +971,7 @@ cursor: pointer;
 
 <div class="tabs-container" id="tabContainer">
 
-<button class="tab-btn" onclick="filterCategory('全部')">全部</button>
+<button class="tab-btn active" onclick="filterCategory('全部')">全部</button>
 
 <button class="tab-btn" onclick="filterCategory('武俠小說')">武俠小說</button>
 
@@ -988,7 +981,7 @@ cursor: pointer;
 
 <button class="tab-btn" onclick="filterCategory('小說園地')">小說園地</button>
 
-<button class="tab-btn active" onclick="filterCategory('懸疑小說')">懸疑小說</button>
+<button class="tab-btn" onclick="filterCategory('懸疑小說')">懸疑小說</button>
 
 </div>
 
@@ -996,7 +989,7 @@ cursor: pointer;
 
 <div id="authorGroupsContainer">
 
-<div class="author-group" data-category="武俠小說" data-author="金庸" style="display: none;">
+<div class="author-group" data-category="武俠小說" data-author="金庸" style="display: block;">
 
 <button class="author-header active" onclick="toggleAuthor(this)">
 
@@ -1012,11 +1005,11 @@ cursor: pointer;
 
 </button>
 
-<div class="book-list-container" style="max-height: 994px; border-top-color: rgb(240, 240, 240);">
+<div class="book-list-container" style="border-top-color: rgb(240, 240, 240); max-height: 1010px;">
 
 <div class="book-list-inner">
 
-<div class="book-card" data-title="笑傲江湖" data-search="笑傲江湖 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="笑傲江湖" data-search="笑傲江湖 金庸 武俠小說" style="">
 
 <div class="book-title">笑傲江湖</div>
 
@@ -1032,7 +1025,7 @@ cursor: pointer;
 
 </div>
 
-<div class="book-card" data-title="射鵰英雄傳" data-search="射鵰英雄傳 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="射鵰英雄傳" data-search="射鵰英雄傳 金庸 武俠小說" style="">
 
 <div class="book-title">射鵰英雄傳</div>
 
@@ -1048,7 +1041,7 @@ cursor: pointer;
 
 </div>
 
-<div class="book-card" data-title="神鵰俠侶" data-search="神鵰俠侶 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="神鵰俠侶" data-search="神鵰俠侶 金庸 武俠小說" style="">
 
 <div class="book-title">神鵰俠侶</div>
 
@@ -1064,7 +1057,7 @@ cursor: pointer;
 
 </div>
 
-<div class="book-card" data-title="倚天屠龍記" data-search="倚天屠龍記 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="倚天屠龍記" data-search="倚天屠龍記 金庸 武俠小說" style="">
 
 <div class="book-title">倚天屠龍記</div>
 
@@ -1080,7 +1073,7 @@ cursor: pointer;
 
 </div>
 
-<div class="book-card" data-title="天龍八部" data-search="天龍八部 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="天龍八部" data-search="天龍八部 金庸 武俠小說" style="">
 
 <div class="book-title">天龍八部</div>
 
@@ -1096,7 +1089,7 @@ cursor: pointer;
 
 </div>
 
-<div class="book-card" data-title="雪山飛狐" data-search="雪山飛狐 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="雪山飛狐" data-search="雪山飛狐 金庸 武俠小說" style="">
 
 <div class="book-title">雪山飛狐</div>
 
@@ -1112,7 +1105,7 @@ cursor: pointer;
 
 </div>
 
-<div class="book-card" data-title="鹿鼎記" data-search="鹿鼎記 金庸 武俠小說" style="display: none;">
+<div class="book-card" data-title="鹿鼎記" data-search="鹿鼎記 金庸 武俠小說" style="">
 
 <div class="book-title">鹿鼎記</div>
 
@@ -1134,9 +1127,9 @@ cursor: pointer;
 
 </div>
 
-<div class="author-group" data-category="懸疑小說" data-author="阿嘉莎．克莉絲蒂" style="display: none;">
+<div class="author-group" data-category="懸疑小說" data-author="阿嘉莎．克莉絲蒂" style="display: block;">
 
-<button class="author-header active" onclick="toggleAuthor(this)">
+<button class="author-header" onclick="toggleAuthor(this)">
 
 <div class="author-info">
 
@@ -1150,9 +1143,9 @@ cursor: pointer;
 
 </button>
 
-<div class="book-list-container" style="max-height: 348px; border-top-color: rgb(240, 240, 240);">
+<div class="book-list-container" style="border-top-color: transparent;">
 
-<div class="book-list-inner"><div class="book-card" data-title="尼羅河謀殺案" data-search="尼羅河謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="display: none;">
+<div class="book-list-inner"><div class="book-card" data-title="尼羅河謀殺案" data-search="尼羅河謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="">
 
 <div class="book-title">尼羅河謀殺案</div>
 
@@ -1173,7 +1166,7 @@ cursor: pointer;
 
 </div>
 
-</div><div class="book-card" data-title="東方快車謀殺案" data-search="東方快車謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="display: none;">
+</div><div class="book-card" data-title="東方快車謀殺案" data-search="東方快車謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="">
 
 <div class="book-title">東方快車謀殺案</div>
 
@@ -1198,7 +1191,7 @@ cursor: pointer;
 
 </div>
 
-</div><div class="author-group" data-category="懸疑小說" data-author="東野圭吾">
+</div><div class="author-group" data-category="懸疑小說" data-author="東野圭吾" style="display: block;">
 
 <button class="author-header" onclick="toggleAuthor(this)">
 
@@ -1214,9 +1207,9 @@ cursor: pointer;
 
 </button>
 
-<div class="book-list-container">
+<div class="book-list-container" style="border-top-color: transparent;">
 
-<div class="book-list-inner"><div class="book-card" data-title="秘密" data-search="秘密 東野圭吾 懸疑小說">
+<div class="book-list-inner"><div class="book-card" data-title="秘密" data-search="秘密 東野圭吾 懸疑小說" style="">
 
 <div class="book-title">秘密</div>
 
@@ -1241,11 +1234,51 @@ cursor: pointer;
 
 </div>
 
+</div><div class="author-group" data-category="小說園地" data-author="海蓮．漢芙">
+
+<button class="author-header" onclick="toggleAuthor(this)">
+
+<div class="author-info">
+
+<span>海蓮．漢芙</span>
+
+<span class="book-count-badge">1 本書</span>
+
+</div>
+
+<span class="arrow-icon">▼</span>
+
+</button>
+
+<div class="book-list-container">
+
+<div class="book-list-inner"><div class="book-card" data-title="查令十字路84號" data-search="查令十字路84號 海蓮．漢芙 小說園地">
+
+<div class="book-title">查令十字路84號</div>
+
+<div class="book-desc">這是一間活脫是從狄更斯書裡頭蹦出來的可愛鋪子。
+
+店外陳列了幾架書，開門進去前，我先站在外頭假裝隨意翻閱幾本書，好讓自己看起來像是若無其事地逛書店。一走進店內，暄囂全被關在門外。一陣古書的陳舊氣味撲鼻而來。我實在不知該怎麼形容：那是一種混雜著黴味兒、長年積塵的氣息，加上牆壁、地板散發的木頭香……店內左手邊有張書桌，坐著一位年約五十、長著一只霍加斯式鼻子的男士。他站起身來，操著北方口音對我說：「日安。」我回答說我只是隨意逛逛，而他則有禮地說：「請。」
+
+極目所見全是書架－高聳直扺到天花板的深色的古老書架，橡木架面經過漫長歲月的洗禮，雖已褪色仍逕放光芒。接著是擺放畫片的專區：另一邊還放著幾疊迷人的古舊畫刊……</div>
+
+<div class="book-footer">
+
+<span class="category-tag">小說園地</span>
+
+<a href="https://www.haodoo.net/?M=u&amp;P=P1010490099:3&amp;L=Share" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
+
+</div>
+
+</div></div>
+
+</div>
+
 </div></div>
 
 
 
-<div class="no-result" id="noResult" style="display: block;">找不到符合的書籍或作者</div>
+<div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
 
 
 
