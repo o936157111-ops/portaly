@@ -62,7 +62,7 @@ left: 0;
 
 
 
-/* 1. 輕量開場迎賓遮罩 (Splash Screen) 改為 100% 純白不透明，無模糊底框 */
+/* 1. 輕量開場迎賓遮罩 (Splash Screen) */
 
 #splash-screen {
 
@@ -142,7 +142,7 @@ cursor: pointer;
 
 
 
-/* 3 個按鈕的容器樣式 */
+/* 按鈕容器樣式 (擴充為 4 個按鈕) */
 
 .splash-btn-container {
 
@@ -160,7 +160,7 @@ max-width: 260px;
 
 
 
-/* 按鈕樣式 (實心/邊框質感) */
+/* 按鈕樣式 */
 
 .splash-btn {
 
@@ -223,7 +223,6 @@ background-color: #ffffff;
 position: static;
 
 }
-
 
 .app-frame {
 
@@ -376,8 +375,6 @@ object-fit: cover;
 }
 
 
-
-/* 預設自訂封面層樣式 */
 
 .custom-cover-layer {
 
@@ -601,13 +598,14 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：包含 Logo、提示文字與 3 個快速導覽按鈕 -->
+<!-- 輕量開場迎賓遮罩：加入第四個按鈕 -->
 
 <div id="splash-screen">
 
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
+
 
 
 <div class="splash-btn-container">
@@ -617,6 +615,8 @@ transform: scale(1.08);
 <a href="https://myezlife.com/haodoo.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">私房好讀書單</a>
 
 <a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
+
+<a href="https://myezlife.com/goldmelody_csv.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
 
 </div>
 
@@ -636,8 +636,6 @@ transform: scale(1.08);
 
 <script>
 
-// 點擊 Logo 或空白處進入瀏覽
-
 function enterFullScreen() {
 
 closeSplash();
@@ -645,8 +643,6 @@ closeSplash();
 }
 
 
-
-// 修正後的按鈕點擊處理：直接瞬間跳轉，不經過首頁
 
 function handleSplashNav(event, targetUrl) {
 
@@ -663,8 +659,6 @@ window.location.replace(targetUrl);
 }
 
 
-
-// 關閉遮罩的共用動作（保留給點擊 Logo 時使用）
 
 function closeSplash() {
 
@@ -689,8 +683,6 @@ document.documentElement.requestFullscreen().catch(() => {});
 }
 
 
-
-// 歌曲資料改由 Google 試算表公開 CSV 載入
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
@@ -827,6 +819,7 @@ const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片�
 const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
 
 
+
 const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
 
 const titleIndex = titleCol >= 0 ? titleCol : 0;
@@ -858,6 +851,7 @@ const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
 let coverUrl = "";
 
 let coverClass = "";
+
 
 
 if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
@@ -935,6 +929,7 @@ const card = document.createElement('div');
 card.className = 'reel-card';
 
 
+
 let coverHtml = '';
 
 if (song.isCustomCover) {
@@ -982,6 +977,7 @@ ${song.isCustomCover ? `
 `;
 
 
+
 card.dataset.embed = song.embedCode;
 
 card.dataset.productUrl = song.productUrl;
@@ -1019,6 +1015,7 @@ clearTimeout(scrollTimeout);
 scrollTimeout = setTimeout(() => {
 
 const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
+
 
 
 if (container.scrollTop < singleBlockHeight * 0.4) {
