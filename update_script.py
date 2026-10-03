@@ -152,7 +152,7 @@ def update_news():
     print("正在呼叫 Gemini API 取得最新多類別新聞...")
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-2.5-flash',  # 確保使用您順手且支援的模型
+        model_name='gemini-3.8-flash',  # 確保使用您順手且支援的模型
         contents=prompt
     )
     
