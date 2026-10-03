@@ -32,18 +32,55 @@ def update_news():
     tw_timezone = timezone(timedelta(hours=8))
     today_str = datetime.now(tw_timezone).strftime("%Y-%m-%d")
 
-    prompt = f"""請幫我整理今天（{today_str}）最新的重要焦點新聞，涵蓋以下 6 個類別：
-1. 國家大事 (national)
-2. 經濟財經 (finance)
-3. 社會新聞 (society)
-4. 國際新聞 (international)
-5. 生活與民生新聞 (life)
-6. 體育新聞 (sports)
+    prompt = f"""請幫我整理今天（{today_str}）最新的重要焦點新聞，總共必須涵蓋以下 8 個類別：
+1. 科技新聞 (tech)
+2. 娛樂新聞 (entertainment)
+3. 國家大事 (national)
+4. 經濟財經 (finance)
+5. 社會新聞 (society)
+6. 國際新聞 (international)
+7. 生活與民生新聞 (life)
+8. 體育新聞 (sports)
 
-每個類別請提供 2 則代表性新聞。請務必只輸出標準的 JSON 格式物件（以 {{ 開頭，以 }} 結尾），不要包含任何額外的解釋文字。結構必須嚴格包含：
+【非常重要】每一個類別底下都必須確實提供 2 則代表性新聞！總共會有 16 則新聞。
+請務必只輸出標準的 JSON 格式物件（以 {{ 開頭，以 }} 結尾），不要包含任何額外的解釋文字。結構必須嚴格包含：
 {{
   "date": "{today_str}",
   "categories": {{
+    "tech": {{
+      "name": "科技新聞",
+      "articles": [
+        {{
+          "source": "專業媒體",
+          "category": "科技新聞",
+          "title": "新聞標題1",
+          "summary": "摘要內容..."
+        }},
+        {{
+          "source": "專業媒體",
+          "category": "科技新聞",
+          "title": "新聞標題2",
+          "summary": "摘要內容..."
+        }}
+      ]
+    }},
+    "entertainment": {{
+      "name": "娛樂新聞",
+      "articles": [
+        {{
+          "source": "專業媒體",
+          "category": "娛樂新聞",
+          "title": "新聞標題1",
+          "summary": "摘要內容..."
+        }},
+        {{
+          "source": "專業媒體",
+          "category": "娛樂新聞",
+          "title": "新聞標題2",
+          "summary": "摘要內容..."
+        }}
+      ]
+    }},
     "national": {{
       "name": "國家大事",
       "articles": [
@@ -149,10 +186,10 @@ def update_news():
   }}
 }}"""
 
-    print("正在呼叫 Gemini API 取得最新多類別新聞...")
+    print("正在呼叫 Gemini API 取得完整 8 大類別新聞...")
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-3.8-flash',  # 確保使用您順手且支援的模型
+        model_name='gemini-3.8-flash',
         contents=prompt
     )
     
@@ -179,7 +216,7 @@ def update_news():
     with open("news.json", "w", encoding="utf-8") as f:
         json.dump(news_data, f, ensure_ascii=False, indent=4)
     
-    print(f"news.json 更新成功，已產出 6 大類別的多則焦點新聞，並強制寫入日期: {today_str}")
+    print(f"news.json 更新成功，已完整產出 8 大類別焦點新聞，並強制寫入日期: {today_str}")
 
 if __name__ == "__main__":
     update_news()
