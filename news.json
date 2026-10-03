@@ -5,67 +5,67 @@
     "articles": [
         {
             "id": 1,
-            "title": "OpenAI 發表次世代自主代理模型「GPT-6」 實現跨平台多工自主演繹",
+            "title": "次世代自主代理模型架構亮相：多模態即時推理邁入實體世界",
             "category": "人工智慧",
-            "summary": "OpenAI 今日於秋季發表會正式亮相全新一代大語言模型 GPT-6。該模型具備真正的多工自主運算能力，不僅大幅提升邏輯推理與跨模態理解，更能在無人干預下自主串接軟體完成複雜工程與商業分析流程，被視為通用人工智慧（AGI）發展的重要分水嶺。",
+            "summary": "頂尖AI研究機構今日發表具備持續自我修正能力的次世代大模型，突破過往僅限於數位空間的限制，在機器人操控、物理世界互動與即時複雜決策上展現接近人類水準的適應力。",
             "source": "TechCrunch",
-            "url": "https://example.com/tech/gpt-6-launch"
+            "url": "https://example.com/tech/ai-agent-breakthrough-2026"
         },
         {
             "id": 2,
-            "title": "台積電宣布 A14（1.4 奈米）製程試產進展順利 預計 2027 上半年全面量產",
+            "title": "埃米級製程重大進展：背面供電技術良率突破量產臨界點",
             "category": "半導體",
-            "summary": "晶圓代工龍頭台積電今日在技術論壇上公布最新技術進度，其 1.4 奈米級的 A14 製程在測試良率上超乎預期，結合第二代晶背供電（Backside Power Delivery）與環繞式閘極（GAA）架構，將為未來的頂級 AI 晶片提供更高的效能功耗比。",
-            "source": "電子時報",
-            "url": "https://example.com/tech/tsmc-a14-milestone"
+            "summary": "全球晶圓代工龍頭宣布A16埃米級節點試產良率超乎預期，全面導入背面供電技術（Super Power Rail）後，晶片能耗比提升超過30%，預計於下半年正式啟動商業規模交付。",
+            "source": "EE Times",
+            "url": "https://example.com/tech/semiconductor-angstrom-node-yield"
         },
         {
             "id": 3,
-            "title": "量子運算迎重大突破 國際科研團隊實現千位級容錯邏輯量子位元",
-            "category": "量子科技",
-            "summary": "由美歐頂尖實驗室組成的聯合研究團隊今日在《自然》期刊發表最新成果，成功構建出超過 1,000 個高保真度容錯邏輯量子位元系統，大幅壓低錯誤率，為新藥分子結構模擬及氣候預測模型運算開啟全新紀元。",
-            "source": "Nature Science",
-            "url": "https://example.com/tech/quantum-fault-tolerant-breakthrough"
+            "title": "輕量化空間運算頭戴裝置引爆熱潮：消費級混合實境生態成形",
+            "category": "空間運算",
+            "summary": "科技巨擘今日正式發表重量降至250克以下的全新空間運算裝置，搭載新一代微型Micro-OLED顯示模組，親民售價迅速在預購首日創下突破百萬台的銷售佳績。",
+            "source": "The Verge",
+            "url": "https://example.com/tech/spatial-computing-headset-launch"
         },
         {
             "id": 4,
-            "title": "蘋果發表輕量化「Apple Vision Air」 售價大幅親民推進空間運算普及",
-            "category": "空間運算",
-            "summary": "蘋果今日無預警推出第二款空間運算裝置「Apple Vision Air」。新機重量較前代減少 42%，並導入最新的微型矽基 OLED 與輕量碳纖維結構，定價壓至千元美金區間，預料將帶動消費級空間運算生態系的全面爆發。",
-            "source": "The Verge",
-            "url": "https://example.com/tech/apple-vision-air-announced"
+            "title": "容錯量子計算取得里程碑：千位元糾纏系統完成實時錯誤修正",
+            "category": "量子科技",
+            "summary": "國際量子研究團隊成功在邏輯量子位元系統中維持高達數毫秒的超長相干時間，大幅降低商用量子模擬與抗量子密碼學防禦的技術門檻，為產業落地奠定堅實基礎。",
+            "source": "Wired",
+            "url": "https://example.com/tech/quantum-fault-tolerant-milestone"
         },
         {
             "id": 5,
-            "title": "克里斯多福諾蘭全新科幻力作《時空回響》首支前導預告震撼全球",
+            "title": "名導全新科幻鉅作全球前導預告釋出：首波IMAX預售刷新影史紀錄",
             "category": "強檔電影",
-            "summary": "知名導演克里斯多福諾蘭最新科幻史詩《時空回響》（Echoes of Time）今日全球同步釋出前導預告片。本片全程採用次世代 70mm IMAX 攝影機實景拍攝，探討多重時空維度的因果悖論，預計於 2027 年全球同步院線上映。",
+            "summary": "知名好萊塢大導籌備三年的原創硬科幻電影今日公開首支正式預告，主打純光學70毫米膠卷拍攝與非線性敘事架構，預售票開賣一小時內即癱瘓多家全球連鎖院線售票系統。",
             "source": "Variety",
-            "url": "https://example.com/entertainment/nolan-echoes-of-time-trailer"
+            "url": "https://example.com/entertainment/sci-fi-blockbuster-trailer"
         },
         {
             "id": 6,
-            "title": "泰勒絲新專輯首日全球串流突破 8 億次 刷新 Spotify 歷史全紀錄",
+            "title": "全球流行天后突襲發行概念新專：結合全息沉浸聲波引爆串流榜單",
             "category": "流行音樂",
-            "summary": "流行天后泰勒絲（Taylor Swift）睽違兩年推出的全新原創錄音室專輯今日午夜上架，短短 24 小時內全球累積播放量突破 8 億次，橫掃全球 100 多個國家與地區排行榜冠軍，再度寫下串流音樂史上的傳奇紀錄。",
+            "summary": "當紅天后無預警公開第十二張個人錄音室專輯，並同步於各大平台啟用全景空間聲場技術，上線首日即在Apple Music與Spotify同步橫掃全球逾80個國家與地區的熱門榜首。",
             "source": "Billboard",
-            "url": "https://example.com/entertainment/taylor-swift-new-album-record"
+            "url": "https://example.com/entertainment/pop-queen-surprise-album"
         },
         {
             "id": 7,
-            "title": "Netflix 年度奇幻鉅作《獵魔士：終局篇章》今日全季上架 霸榜全球 85 國排行榜",
-            "category": "串流影集",
-            "summary": "改編自知名奇幻小說與遊戲的 Netflix 旗艦影集《獵魔士》最終章今日全季釋出。劇組耗資近三億美元打造宏大戰役場面與視覺特效，上線僅半天即登上包括台灣、歐美在內全球 85 個地區的單日熱門冠軍榜。",
+            "title": "現象級電玩改編真人影集第二季首映：收視口碑再度雙雙打破天花板",
+            "category": "串流影音",
+            "summary": "知名串流平台旗艦影集第二季今日零時全集上線，開局爛番茄新鮮度高達98%，細膩的人物刻畫與高度還原的末日世界觀獲得全球影評與原作遊戲粉絲的一致盛讚。",
             "source": "The Hollywood Reporter",
-            "url": "https://example.com/entertainment/the-witcher-final-season"
+            "url": "https://example.com/entertainment/streaming-series-season2-premiere"
         },
         {
             "id": 8,
-            "title": "《俠盜獵車手 VI》線上模式首部資料片更新釋出 物理光影與 NPC 互動驚艷全球",
-            "category": "遊戲娛樂",
-            "summary": "Rockstar Games 今日正式推送《俠盜獵車手 VI》（GTA 6）次世代線上模式的大型版本更新。本次更新導入了由神經網絡輔助的動態天氣與高度擬真的市民行為生態系統，開服首日伺服器瞬間湧入數百萬名玩家擠爆伺服器。",
+            "title": "次世代開放世界旗艦遊戲展開全球封測：動態光影與物理生態驚豔各界",
+            "category": "電玩娛樂",
+            "summary": "備受矚目的全球年度3A級開放世界遊戲正式展開多平台限定封閉測試，以完全無縫的動態天氣交互系統與高度擬真的NPC生態循環，被業界譽為下一個十年的互動娛樂新標竿。",
             "source": "IGN",
-            "url": "https://example.com/entertainment/gta6-online-major-expansion"
+            "url": "https://example.com/entertainment/open-world-game-beta"
         }
     ]
 }
