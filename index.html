@@ -635,6 +635,10 @@ transform: scale(1.08);
 
 <script>
 
+let globalSongDatabase = null;
+
+
+
 function enterFullScreen() {
 
 closeSplash();
@@ -670,6 +674,16 @@ setTimeout(() => {
 splash.style.display = 'none';
 
 }, 400);
+
+
+
+// 只有當使用者點擊進入後，才開始渲染影片卡片與啟動播放
+
+if (globalSongDatabase && globalSongDatabase.length > 0) {
+
+initReels(globalSongDatabase);
+
+}
 
 
 
@@ -1152,15 +1166,15 @@ coverLayer.classList.add('fade-out');
 
 
 
+// 頁面載入時僅在背景預先抓取 CSV 資料，但不建立 DOM 卡片與觀察器
+
 window.onload = async function () {
 
 const container = document.getElementById("reelContainer");
 
 try {
 
-const songDatabase = await loadSongDatabase();
-
-initReels(songDatabase);
+globalSongDatabase = await loadSongDatabase();
 
 } catch (error) {
 
