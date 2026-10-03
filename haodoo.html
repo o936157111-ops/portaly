@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-
-<html lang="zh-TW">
-
-<head>
+<html lang="zh-TW"><head>
 
 <meta charset="UTF-8">
 
@@ -946,15 +943,15 @@ cursor: pointer;
 
 <span class="daily-special-badge">✨ 今日推薦線上電子書</span>
 
-<div class="daily-title" id="dailyTitle">天龍八部</div>
+<div class="daily-title" id="dailyTitle">笑傲江湖</div>
 
 <div class="daily-author" id="dailyAuthor">作者： 金庸</div>
 
-<div class="daily-desc" id="dailyDesc">金庸武俠小說的宏偉巨作，以北宋年間為時代背景...</div>
+<div class="daily-desc" id="dailyDesc">金庸武俠小說的巔峰之作，透過主角令狐沖的經歷展現出對自由與江湖的深刻描繪。</div>
 
 <div class="daily-footer">
 
-<a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
+<a href="https://www.haodoo.net/?M=u&amp;P=D517:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
 
 <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
 
@@ -1130,7 +1127,50 @@ cursor: pointer;
 
 </div>
 
+<div class="author-group" data-category="懸疑小說" data-author="阿嘉莎．克莉絲蒂">
+
+<button class="author-header" onclick="toggleAuthor(this)">
+
+<div class="author-info">
+
+<span>阿嘉莎．克莉絲蒂</span>
+
+<span class="book-count-badge">1 本書</span>
+
 </div>
+
+<span class="arrow-icon">▼</span>
+
+</button>
+
+<div class="book-list-container">
+
+<div class="book-list-inner"><div class="book-card" data-title="尼羅河謀殺案" data-search="尼羅河謀殺案 阿嘉莎．克莉絲蒂 懸疑小說">
+
+<div class="book-title">尼羅河謀殺案</div>
+
+<div class="book-desc">故事簡介
+• 核心情節：年輕貌美、繼承龐大遺產的富家女林內特（Linnet），剛閃婚嫁給了賽門（Simon）。兩人前往埃及展開蜜月旅行，搭乘尼羅河上的卡納克號遊輪。
+• 衝突起因：賽門原本的未婚妻賈桂琳（Jackie）因愛生恨、心碎狂亂，一路死纏爛打、陰魂不散地跟蹤這對新婚夫妻到埃及，甚至揚言要殺了林內特。
+• 命案發生：在航行途中，林內特在睡夢中遭人槍殺身亡，隨後遊輪上又接連發生幾起命案。
+核心特色
+• 神探白羅登場：比利時名偵探白羅（Hercule Poirot）剛好也在船上度假，於是展開調查，透過細膩的心理分析與邏輯推理抽絲剝繭。
+• 移動的密室：故事舞台設定在緩緩航行的遊輪上，形成一種封閉的「移動式暴風雨山莊」情境，每位乘客都有各自的祕密與謀殺動機。
+• 深刻的人性描寫：故事深刻探討了金錢、嫉妒、貪婪與「愛到發狂」的毀滅性心理，結局的真相與轉折往往令人拍案叫絕。</div>
+
+<div class="book-footer">
+
+<span class="category-tag">懸疑小說</span>
+
+<a href="https://www.haodoo.net/?M=u&amp;P=E1231:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
+
+</div>
+
+</div></div>
+
+</div>
+
+</div></div>
 
 
 
@@ -1142,7 +1182,7 @@ cursor: pointer;
 
 <button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙️️ 管理書單</button>
 
-<div class="admin-panel" id="adminPanel">
+<div class="admin-panel" id="adminPanel" style="display: none;">
 
 <input type="hidden" id="editCardId" value="">
 
@@ -1942,7 +1982,8 @@ document.body.removeChild(link);
 
 
 
-</body>
 
-</html> 
 
+ 
+
+</body></html>
