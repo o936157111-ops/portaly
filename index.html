@@ -376,7 +376,7 @@ object-fit: cover;
 
 
 
-/* 預設自訂封面層樣式 (無 YT 網址的項目才會用到) */
+/* 預設自訂封面層樣式 */
 
 .custom-cover-layer {
 
@@ -609,6 +609,7 @@ transform: scale(1.08);
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
 
+
 <div class="splash-btn-container">
 
 <a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
@@ -635,7 +636,9 @@ transform: scale(1.08);
 
 <script>
 
-let globalSongDatabase = null;
+let globalSongDatabase = [];
+
+let isDataLoaded = false;
 
 
 
@@ -677,11 +680,23 @@ splash.style.display = 'none';
 
 
 
-// 只有當使用者點擊進入後，才開始渲染影片卡片與啟動播放
+// 當使用者點擊進入後，若資料已就緒則立即初始化
 
-if (globalSongDatabase && globalSongDatabase.length > 0) {
+if (isDataLoaded && globalSongDatabase.length > 0) {
 
 initReels(globalSongDatabase);
+
+} else {
+
+// 若資料仍在載入或剛才失敗，給予預設提示
+
+const container = document.getElementById('reelContainer');
+
+if (!container.hasChildNodes()) {
+
+container.innerHTML = `<div style="color:#333;padding:40px;text-align:center;font-size:15px;">資料正在載入中，請稍候...<br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;border-radius:8px;border:1px solid #ccc;background:#f7f7f7;cursor:pointer;">重新整理</button></div>`;
+
+}
 
 }
 
@@ -1088,6 +1103,7 @@ if (!wrapper.hasChildNodes() && card.dataset.embed) {
 wrapper.innerHTML = card.dataset.embed;
 
 
+
 const iframe = wrapper.querySelector('iframe');
 
 if (iframe) {
@@ -1166,7 +1182,7 @@ coverLayer.classList.add('fade-out');
 
 
 
-// 頁面載入時僅在背景預先抓取 CSV 資料，但不建立 DOM 卡片與觀察器
+// 頁面載入時在背景預先抓取 CSV 資料
 
 window.onload = async function () {
 
@@ -1176,11 +1192,23 @@ try {
 
 globalSongDatabase = await loadSongDatabase();
 
+isDataLoaded = true;
+
+// 如果使用者已經點開過迎賓遮罩，立刻初始化畫面
+
+const splash = document.getElementById("splash-screen");
+
+if (splash.style.display === 'none' || splash.style.opacity === '0') {
+
+initReels(globalSongDatabase);
+
+}
+
 } catch (error) {
 
 console.error("資料載入失敗：", error);
 
-container.innerHTML = `<div style="color:#000;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
+container.innerHTML = `<div style="color:#000;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;cursor:pointer;">重新載入</button></div>`;
 
 }
 
