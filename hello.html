@@ -1,906 +1,1812 @@
 <html lang="zh-TW"><head>
 
+
+
 <meta charset="UTF-8">
+
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+
 <title>日常問候圖庫</title>
+
+
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&amp;family=Noto+Serif+TC:wght@300;500;700&amp;display=swap" rel="stylesheet">
 
+
+
 <style>
+
+
 
 :root {
 
+
+
 --bg-color: #f7f5f0;
+
+
 
 --card-bg: #ffffff;
 
+
+
 --text-main: #4a4541;
+
+
 
 --text-sub: #b5afa4;
 
+
+
 --border-color: #d6cfc2;
 
+
+
 }
+
+
+
+
 
 
 
 * {
 
+
+
 box-sizing: border-box;
+
+
 
 margin: 0;
 
+
+
 padding: 0;
+
+
 
 -webkit-tap-highlight-color: transparent;
 
+
+
 }
+
+
+
+
 
 
 
 body {
 
+
+
 font-family: 'Noto Sans TC', sans-serif;
+
+
 
 background-color: var(--bg-color);
 
+
+
 color: var(--text-main);
+
+
 
 line-height: 1.4;
 
+
+
 padding: 15px 12px;
+
+
 
 max-width: 600px;
 
+
+
 margin: 0 auto;
+
+
 
 min-height: 100vh;
 
+
+
 display: flex;
+
+
 
 flex-direction: column;
 
+
+
 }
+
+
+
+
 
 
 
 /* Pinterest 風格瀑布流排版 */
 
+
+
 .masonry-grid {
+
+
 
 column-count: 2;
 
+
+
 column-gap: 10px;
+
+
 
 width: 100%;
 
+
+
 margin-bottom: 20px;
 
+
+
 }
+
+
+
+
 
 
 
 @media (min-width: 500px) {
 
+
+
 .masonry-grid {
+
+
 
 column-count: 3;
 
-}
+
 
 }
+
+
+
+}
+
+
+
+
 
 
 
 .masonry-item {
 
+
+
 break-inside: avoid;
+
+
 
 background-color: var(--card-bg);
 
+
+
 border-radius: 8px;
+
+
 
 overflow: hidden;
 
+
+
 margin-bottom: 10px;
+
+
 
 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 
+
+
 border: 1px solid var(--border-color);
+
+
 
 position: relative;
 
+
+
 cursor: pointer;
+
+
 
 transition: transform 0.2s;
 
+
+
 }
+
+
+
+
 
 
 
 .masonry-item:hover {
 
+
+
 transform: translateY(-2px);
 
+
+
 }
+
+
+
+
 
 
 
 .masonry-item img {
 
+
+
 width: 100%;
+
+
 
 height: auto;
 
+
+
 display: block;
+
+
 
 object-fit: cover;
 
+
+
 }
+
+
+
+
 
 
 
 /* Lightbox 預覽視窗 */
 
+
+
 .lightbox {
+
+
 
 display: none;
 
+
+
 position: fixed;
+
+
 
 top: 0;
 
+
+
 left: 0;
+
+
 
 width: 100%;
 
+
+
 height: 100%;
+
+
 
 background-color: rgba(0, 0, 0, 0.85);
 
+
+
 z-index: 1000;
+
+
 
 justify-content: center;
 
+
+
 align-items: center;
+
+
 
 padding: 15px;
 
+
+
 }
+
+
+
+
 
 
 
 .lightbox-content {
 
+
+
 position: relative;
+
+
 
 max-width: 100%;
 
+
+
 max-height: 90vh;
+
+
 
 display: flex;
 
+
+
 flex-direction: column;
+
+
 
 align-items: center;
 
+
+
 width: 100%;
 
+
+
 }
+
+
+
+
 
 
 
 /* 問候語選擇與控制面板樣式 */
 
+
+
 .lightbox-controls {
+
+
 
 width: 100%;
 
+
+
 max-width: 450px;
+
+
 
 margin-bottom: 10px;
 
+
+
 display: flex;
+
+
 
 flex-direction: column;
 
+
+
 gap: 6px;
 
+
+
 }
+
+
+
+
 
 
 
 .lightbox-text-selector {
 
+
+
 width: 100%;
+
+
 
 padding: 8px 12px;
 
+
+
 border-radius: 6px;
+
+
 
 border: 1px solid #d6cfc2;
 
+
+
 background-color: #fff;
+
+
 
 color: #4a4541;
 
+
+
 font-size: 0.85rem;
+
+
 
 font-family: 'Noto Sans TC', sans-serif;
 
+
+
 outline: none;
 
+
+
 }
+
+
+
+
 
 
 
 /* 字體大小按鈕列 */
 
+
+
 .font-size-toolbar {
+
+
 
 display: flex;
 
+
+
 gap: 5px;
+
+
 
 align-items: center;
 
+
+
 background: rgba(255, 255, 255, 0.1);
+
+
 
 padding: 4px;
 
+
+
 border-radius: 6px;
 
+
+
 }
+
+
+
+
 
 
 
 .font-size-label {
 
+
+
 font-size: 0.75rem;
+
+
 
 color: #fff;
 
+
+
 padding: 0 4px;
+
+
 
 white-space: nowrap;
 
+
+
 }
+
+
+
+
 
 
 
 .font-size-btn {
 
+
+
 flex: 1;
+
+
 
 padding: 4px 6px;
 
+
+
 border: 1px solid #d6cfc2;
+
+
 
 background: #fff;
 
+
+
 color: #4a4541;
+
+
 
 border-radius: 4px;
 
+
+
 font-size: 0.75rem;
+
+
 
 cursor: pointer;
 
+
+
 transition: all 0.2s;
 
+
+
 }
+
+
+
+
 
 
 
 .font-size-btn.active {
 
+
+
 background: #4a4541;
+
+
 
 color: #fff;
 
+
+
 border-color: #4a4541;
+
+
 
 font-weight: 700;
 
+
+
 }
+
+
+
+
 
 
 
 .lightbox-content img {
 
+
+
 max-width: 100%;
+
+
 
 max-height: 60vh;
 
+
+
 object-fit: contain;
+
+
 
 border-radius: 8px;
 
+
+
 }
+
+
+
+
 
 
 
 .lightbox-close {
 
+
+
 position: absolute;
+
+
 
 top: -40px;
 
+
+
 right: 0;
+
+
 
 background: none;
 
+
+
 border: none;
+
+
 
 color: #fff;
 
+
+
 font-size: 1.2rem;
+
+
 
 cursor: pointer;
 
+
+
 padding: 5px 10px;
 
+
+
 }
+
+
+
+
 
 
 
 .lightbox-btns {
 
+
+
 display: flex;
+
+
 
 gap: 10px;
 
+
+
 margin-top: 15px;
+
+
 
 width: 100%;
 
+
+
 max-width: 450px;
 
+
+
 }
+
+
+
+
 
 
 
 .lightbox-btns button {
 
+
+
 flex: 1;
+
+
 
 padding: 10px;
 
+
+
 border: none;
+
+
 
 border-radius: 6px;
 
+
+
 font-size: 0.85rem;
+
+
 
 font-weight: 500;
 
+
+
 cursor: pointer;
+
+
 
 color: #fff;
 
+
+
 }
+
+
+
+
 
 
 
 footer {
 
+
+
 margin-top: auto;
+
+
 
 padding: 10px 0;
 
+
+
 }
+
+
+
+
 
 
 
 /* 極度淡化的後台按鈕 */
 
+
+
 .admin-trigger {
+
+
 
 text-align: center;
 
+
+
 padding: 6px;
+
+
 
 font-size: 0.70rem;
 
+
+
 color: var(--text-sub);
+
+
 
 cursor: pointer;
 
+
+
 opacity: 0.4;
+
+
 
 transition: opacity 0.2s;
 
+
+
 user-select: none;
 
+
+
 }
+
+
+
+
 
 
 
 .admin-trigger:hover {
 
+
+
 opacity: 1;
 
+
+
 }
+
+
+
+
 
 
 
 .admin-panel {
 
+
+
 display: none;
+
+
 
 background: #fff;
 
+
+
 border: 1px solid var(--border-color);
+
+
 
 border-radius: 10px;
 
+
+
 padding: 12px;
+
+
 
 position: relative;
 
+
+
 margin-top: 10px;
+
+
 
 box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 
+
+
 }
+
+
+
+
 
 
 
 .admin-form-group {
 
+
+
 margin-bottom: 8px;
 
+
+
 }
+
+
+
+
 
 
 
 .admin-form-group label {
 
+
+
 display: block;
+
+
 
 font-size: 0.75rem;
 
+
+
 color: #8c857b;
+
+
 
 margin-bottom: 2px;
 
+
+
 }
+
+
+
+
 
 
 
 .admin-form-group input {
 
+
+
 width: 100%;
+
+
 
 padding: 6px 8px;
 
+
+
 border: 1px solid var(--border-color);
+
+
 
 border-radius: 6px;
 
+
+
 font-size: 0.85rem;
 
+
+
 }
+
+
+
+
 
 
 
 .admin-btn {
 
+
+
 width: 100%;
+
+
 
 padding: 8px;
 
+
+
 border: none;
+
+
 
 border-radius: 6px;
 
+
+
 font-size: 0.85rem;
+
+
 
 font-weight: 500;
 
+
+
 background-color: #2b6cb0;
+
+
 
 color: #fff;
 
+
+
 cursor: pointer;
 
+
+
 }
+
+
+
+
 
 
 
 .manage-list {
 
+
+
 margin-top: 10px;
+
+
 
 max-height: 120px;
 
+
+
 overflow-y: auto;
+
+
 
 border-top: 1px solid var(--border-color);
 
+
+
 padding-top: 6px;
 
+
+
 }
+
+
 
 .manage-item {
 
+
+
 display: flex;
+
+
 
 justify-content: space-between;
 
+
+
 align-items: center;
+
+
 
 font-size: 0.75rem;
 
+
+
 padding: 3px 0;
+
+
 
 border-bottom: 1px dashed var(--border-color);
 
+
+
 color: #4a4541;
 
+
+
 }
+
+
 
 .manage-item button {
 
+
+
 background: #c53030;
+
+
 
 color: #fff;
 
+
+
 border: none;
+
+
 
 padding: 2px 6px;
 
+
+
 border-radius: 4px;
+
+
 
 cursor: pointer;
 
+
+
 }
+
+
 
 </style>
 
+
+
 </head>
+
+
 
 <body>
 
 
 
+
+
+
+
 <div class="main-container">
+
+
 
 <div id="gridContainer" class="masonry-grid"></div>
 
+
+
 </div>
+
+
+
+
 
 
 
 <!-- 放大與互動預覽 Lightbox -->
 
+
+
 <div class="lightbox" id="lightbox" style="display: none;">
+
+
 
 <div class="lightbox-content" id="lightboxContentBox">
 
+
+
 <button class="lightbox-close" id="closeLightboxBtn">✕ 關閉</button>
+
+
 
 <div class="lightbox-controls">
 
+
+
 <select id="lightboxTextSelector" class="lightbox-text-selector"></select>
+
+
 
 <div class="font-size-toolbar">
 
+
+
 <span class="font-size-label">字體大小：</span>
+
+
 
 <button type="button" class="font-size-btn" data-size="32">小</button>
 
+
+
 <button type="button" class="font-size-btn active" data-size="42">中</button>
+
+
 
 <button type="button" class="font-size-btn" data-size="54">大</button>
 
+
+
 <button type="button" class="font-size-btn" data-size="68">特大</button>
 
-</div>
+
 
 </div>
+
+
+
+</div>
+
+
 
 <img id="lightboxImg" src="" alt="預覽圖">
 
+
+
 <div class="lightbox-btns">
+
+
 
 <button style="background-color: #06C755;" id="lightboxShareBtn">📤 分享圖片</button>
 
+
+
 <button style="background-color: #4a4541;" id="lightboxDownloadBtn">📥 儲存圖片</button>
 
-</div>
+
 
 </div>
 
+
+
 </div>
+
+
+
+</div>
+
+
+
+
 
 
 
 <footer>
 
+
+
 <div class="admin-trigger" id="adminTriggerBtn">⚙️ 後台圖庫管理</div>
+
+
+
+
 
 
 
 <div class="admin-panel" id="adminPanel" style="display: none;">
 
+
+
 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+
+
 
 <strong>新增圖片與問候語</strong>
 
+
+
 <button id="closeAdminBtn" style="border:none; background:none; cursor:pointer;">✕</button>
+
+
 
 </div>
 
+
+
 <div class="admin-form-group">
+
+
 
 <label>問候語 (選填，不填則隨機)</label>
 
+
+
 <input type="text" id="newText" placeholder="例如：早安！美好的一天開始囉。">
 
+
+
 </div>
+
+
 
 <div class="admin-form-group">
 
+
+
 <label>圖片網址 (必填)</label>
+
+
 
 <input type="text" id="newImgUrl" placeholder="https://live.staticflickr.com/...">
 
+
+
 </div>
+
+
 
 <button class="admin-btn" id="addCardBtn">確認新增並下載更新檔案</button>
 
+
+
 <div class="manage-list" id="manageList"><strong>自訂項目管理：</strong></div>
 
+
+
 </div>
+
+
 
 </footer>
 
 
 
+
+
+
+
 <script>
+
+
 
 const greetingGroups = [
 
+
+
 [
+
+
 
 "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
 
+
+
 "早安。迎著微風，把腳步放輕鬆，開啟美好的一天。",
+
+
 
 "早安呀。給自己一個微笑，願今天的心情像陽光般晴朗。"
 
+
+
 ],
 
+
+
 [
+
+
 
 "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
 
+
+
 "早安。新的一天開始，願平安、喜樂與你同行。",
+
+
 
 "早安。晨曦微露，願你今天收穫滿滿的溫暖與活力。"
 
+
+
 ],
 
+
+
 [
+
+
 
 "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
 
+
+
 "午安。工作之餘記得喝口水，歇口氣再繼續前行。",
+
+
 
 "午安呀。放慢忙碌的腳步，給心靈一個舒適的小歇。"
 
+
+
 ],
 
+
+
 [
+
+
 
 "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
 
+
+
 "午安。享受片刻的靜好，願你的午後輕鬆又愜意。",
+
+
 
 "午安。陽光正好，給自己充個電，迎接美好的下半場。"
 
+
+
 ],
 
+
+
 [
+
+
 
 "晚安。把今天所有的紛擾都留在身後，做個好夢。",
 
+
+
 "晚安。卸下一天的疲憊，今晚有個香甜的好夢。",
+
+
 
 "晚安。讓溫柔的夜色陪伴你，好好放鬆入眠。"
 
+
+
 ],
 
+
+
 [
+
+
 
 "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
 
+
+
 "晚安. 夜幕低垂，願你帶著安穩的心情迎接好眠。",
+
+
 
 "晚安. 繁星相伴，願你的夢裡充滿溫馨與甜美。"
 
+
+
 ],
+
+
 
 [
 
+
+
 "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
+
+
 
 "週末愉快。好好享受屬於自己的悠閒時光與好心情。",
 
+
+
 "週末愉快。願這兩天充滿陽光、慢活與自在。"
+
+
 
 ]
 
+
+
 ];
+
+
+
+
 
 
 
 let randomTexts = [];
 
+
+
 function refreshRandomTexts() {
+
+
 
 randomTexts = greetingGroups.map(group => {
 
+
+
 const randomIndex = Math.floor(Math.random() * group.length);
+
+
 
 return group[randomIndex];
 
+
+
 });
 
+
+
 }
+
+
+
+
 
 
 
 let userCards = [
 
+
+
 {
 
+
+
 "text": "晚安。把今天所有的紛擾都留在身後，做個好夢。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/65535/55541265828_1b03519f64_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/65535/55541265833_1a649c8ab4_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/65535/55541312774_de1e601307_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/65535/55541312744_615164f2fc_z.jpg"
 
+
+
 },
 
+
+
 {
+
+
 
 "text": "晚安。星光點點，願疲憊的你有個溫馨的夢鄉。",
 
+
+
 "imgUrl": "https://live.staticflickr.com/65535/55540085677_dd4f7c6eac_z.jpg"
+
+
 
 },
 
+
+
 {
 
+
+
 "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/65535/55541111196_fc2672f254_z.jpg"
 
+
+
 },
 
+
+
 {
+
+
 
 "text": "晚安。把今天所有的紛擾都留在身後，做個好夢。",
 
+
+
 "imgUrl": "https://live.staticflickr.com/65535/55541268294_082453369a_z.jpg"
+
+
 
 },
 
+
+
 {
 
+
+
 "text": "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/65535/55499113703_906bdf089a_z.jpg"
 
+
+
 },
 
+
+
 {
+
+
 
 "text": "週末愉快。放慢腳步，去感受生活裡微小而確切的幸福。",
 
+
+
 "imgUrl": "https://live.staticflickr.com/65535/53694088529_3e050e46a7_z.jpg"
+
+
 
 },
 
+
+
 {
 
+
+
 "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/1923/45376158501_c03d32c330_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/1962/30188916207_cce248a46e_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/1931/45078000062_ea6e3c5b52_z.jpg"
 
+
+
 },
 
+
+
 {
+
+
 
 "text": "午安。午後的陽光溫暖而慵懶，稍作休息再出發。",
 
+
+
 "imgUrl": "https://live.staticflickr.com/1918/31253193918_dd61a66cda_z.jpg"
+
+
 
 },
 
+
+
 {
+
+
 
 "text": "早安。把步調放慢一些，今天也要溫柔而堅定地過。",
 
+
+
 "imgUrl": "https://live.staticflickr.com/1938/31253198468_68ac48510b_z.jpg"
+
+
 
 },
 
+
+
 {
+
+
 
 "text": "早安。晨光正好，願你的每一個早晨，都有清風與好心情相伴。",
 
+
+
 "imgUrl": "https://live.staticflickr.com/1966/31253199788_6603b1fc47_z.jpg"
+
+
 
 },
 
+
+
 {
 
+
+
 "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/1967/45126807931_0c78533ca9_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/1953/45126808261_1a914ee5fd_z.jpg"
 
+
+
 },
+
+
 
 {
 
+
+
 "text": "午安。忙碌之中，別忘了留一杯茶的時間給自己。",
+
+
 
 "imgUrl": "https://live.staticflickr.com/7101/27498706492_65a270d01e_z.jpg"
 
+
+
 }
 
+
+
 ];
+
+
+
+
 
 
 
@@ -908,225 +1814,459 @@ let currentFontSize = 42; // 預設中型字體
 
 
 
+
+
+
+
 function renderGrid() {
+
+
 
 const container = document.getElementById('gridContainer');
 
+
+
 if (!container) return;
+
+
 
 container.innerHTML = '';
 
 
 
+
+
+
+
 if (userCards.length === 0) {
+
+
 
 container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#888; font-size:0.9rem;">目前尚無圖片<br>請點擊下方管理按鈕新增！</div>`;
 
+
+
 updateManageList();
+
+
 
 return;
 
+
+
 }
+
+
+
+
 
 
 
 let displayCards = [...userCards];
 
+
+
 displayCards.sort(() => Math.random() - 0.5);
+
+
+
+
 
 
 
 displayCards.forEach((item) => {
 
+
+
 const div = document.createElement('div');
+
+
 
 div.className = 'masonry-item';
 
 
+
+
+
 const img = document.createElement('img');
+
+
 
 img.src = item.imgUrl;
 
+
+
 img.alt = "問候圖";
+
+
 
 img.loading = "lazy";
 
 
+
+
+
 img.addEventListener('click', () => {
+
+
 
 const randomDefault = randomTexts[Math.floor(Math.random() * randomTexts.length)];
 
+
+
 openLightbox(item.imgUrl, randomDefault);
 
+
+
 });
+
+
+
 
 
 div.appendChild(img);
 
+
+
 container.appendChild(div);
 
+
+
 });
+
+
+
+
 
 
 
 updateManageList();
 
+
+
 }
+
+
+
+
 
 
 
 function openLightbox(imgUrl, defaultText) {
 
+
+
 const lightbox = document.getElementById('lightbox');
+
+
 
 const selector = document.getElementById('lightboxTextSelector');
 
 
+
+
+
+// 記錄原始圖檔網址，避免切換大小時計算錯基準
+
+lightbox.dataset.originalImgUrl = imgUrl;
+
+
+
+
+
 let allPossibleTexts = Array.from(new Set([...randomTexts, ...userCards.map(c => c.text)]));
 
+
+
 allPossibleTexts.sort(() => Math.random() - 0.5);
+
+
+
 
 
 selector.innerHTML = '';
 
 
+
+
+
 allPossibleTexts.forEach(t => {
+
+
 
 const option = document.createElement('option');
 
+
+
 option.value = t;
+
+
 
 option.textContent = t;
 
+
+
 if (t === defaultText) {
+
+
 
 option.selected = true;
 
+
+
 }
+
+
 
 selector.appendChild(option);
 
+
+
 });
+
+
+
+
 
 
 
 const customOption = document.createElement('option');
 
+
+
 customOption.value = "__CUSTOM__";
 
+
+
 customOption.textContent = "✏️ 自行輸入其他問候語...";
+
+
 
 selector.appendChild(customOption);
 
 
 
+
+
+
+
 updatePreviewImage(imgUrl, selector.value, currentFontSize);
+
+
+
+
 
 
 
 selector.onchange = function() {
 
+
+
 if (selector.value === "__CUSTOM__") {
+
+
 
 const customText = prompt("請輸入您想顯示的自訂問候語：");
 
+
+
 if (customText && customText.trim() !== "") {
+
+
 
 const newOpt = document.createElement('option');
 
+
+
 newOpt.value = customText.trim();
+
+
 
 newOpt.textContent = customText.trim();
 
+
+
 selector.insertBefore(newOpt, customOption);
+
+
 
 selector.value = customText.trim();
 
+
+
 } else {
+
+
 
 selector.value = defaultText;
 
-}
+
 
 }
+
+
+
+}
+
+
 
 updatePreviewImage(imgUrl, selector.value, currentFontSize);
+
+
 
 };
 
 
+
+
+
 lightbox.style.display = 'flex';
 
+
+
 }
+
+
+
+
 
 
 
 function updatePreviewImage(imgUrl, text, fontSize) {
 
+
+
 const previewImg = document.getElementById('lightboxImg');
+
+
 
 previewImg.src = imgUrl;
 
 
 
+
+
+
+
 generateTextOnImage(imgUrl, text, fontSize, function(blob) {
+
+
 
 if (blob) {
 
+
+
 const objectUrl = URL.createObjectURL(blob);
+
+
 
 previewImg.src = objectUrl;
 
+
+
 }
+
+
 
 });
 
 
+
+
+
 document.getElementById('lightboxShareBtn').onclick = () => shareCardDirect(imgUrl, document.getElementById('lightboxTextSelector').value, currentFontSize, 'greeting.jpg');
+
+
 
 document.getElementById('lightboxDownloadBtn').onclick = () => downloadCardDirect(imgUrl, document.getElementById('lightboxTextSelector').value, currentFontSize, 'greeting.jpg');
 
+
+
 }
+
+
+
+
 
 
 
 function closeLightbox() {
 
+
+
 document.getElementById('lightbox').style.display = 'none';
+
+
 
 }
 
 
 
+
+
+
+
 // 高解析度 Retina 畫布文字合成核心（支援自訂字體大小）
+
+
 
 function generateTextOnImage(imgUrl, textContent, baseFontSize, callback) {
 
+
+
 const img = new Image();
+
+
 
 img.crossOrigin = 'anonymous';
 
 
+
+
+
 img.onload = function() {
+
+
 
 try {
 
+
+
 const canvas = document.createElement('canvas');
+
+
 
 const ctx = canvas.getContext('2d');
 
 
+
+
+
 const originWidth = img.naturalWidth || 1000;
+
+
 
 const originHeight = img.naturalHeight || 1000;
 
 
 
+
+
+
+
 const scaleFactor = 2;
+
+
 
 canvas.width = originWidth * scaleFactor;
 
+
+
 canvas.height = originHeight * scaleFactor;
+
+
+
+
 
 
 
@@ -1134,243 +2274,487 @@ ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
 
 
+
+
+
+
 const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+
+
 
 gradient.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
 
+
+
 gradient.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
 
+
+
 ctx.fillStyle = gradient;
+
+
 
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 
 
+
+
+
+
 const scale = originWidth / 800;
+
+
 
 const fontSize = Math.round(baseFontSize * scale * scaleFactor);
 
+
+
 ctx.font = `500 ${fontSize}px "Noto Serif TC", serif`;
+
+
 
 ctx.fillStyle = '#ffffff';
 
+
+
 ctx.textAlign = 'center';
+
+
 
 ctx.textBaseline = 'middle';
 
 
 
+
+
+
+
 const maxLineWidth = canvas.width * 0.82;
 
+
+
 let lines = [];
+
+
 
 let currentLine = "";
 
 
 
+
+
+
+
 for (let i = 0; i < textContent.length; i++) {
+
+
 
 let char = textContent[i];
 
+
+
 let testLine = currentLine + char;
+
+
 
 if (ctx.measureText(testLine).width > maxLineWidth && currentLine !== "") {
 
+
+
 lines.push(currentLine);
+
+
 
 currentLine = char;
 
+
+
 } else {
+
+
 
 currentLine = testLine;
 
-}
+
 
 }
+
+
+
+}
+
+
 
 if (currentLine) lines.push(currentLine);
 
 
 
+
+
+
+
 const lineHeight = fontSize * 1.5;
+
+
 
 let startY = (canvas.height - (lines.length * lineHeight)) / 2 + (lineHeight / 2);
 
 
 
+
+
+
+
 lines.forEach(line => {
+
+
 
 ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
 
+
+
 ctx.shadowBlur = 12 * scaleFactor;
+
+
 
 ctx.fillText(line, canvas.width / 2, startY);
 
+
+
 startY += lineHeight;
 
+
+
 });
+
+
+
+
 
 
 
 canvas.toBlob(blob => callback(blob), 'image/jpeg', 0.95);
 
+
+
 } catch (e) {
+
+
 
 console.log("CORS 限制無法直接修改畫布", e);
 
+
+
 callback(null);
+
+
 
 }
 
+
+
 };
+
+
+
+
 
 
 
 img.onerror = function() {
 
+
+
 callback(null);
+
+
 
 };
 
 
 
+
+
+
+
 img.src = imgUrl;
 
+
+
 }
+
+
+
+
 
 
 
 async function shareCardDirect(imgUrl, text, fontSize, filename) {
 
+
+
 generateTextOnImage(imgUrl, text, fontSize, async function(blob) {
+
+
 
 if (!blob) {
 
+
+
 alert('此圖片網址受到伺服器跨域安全保護，無法直接透過程式合成文字與分享。');
+
+
 
 return;
 
+
+
 }
+
+
 
 const file = new File([blob], filename, { type: 'image/jpeg' });
 
+
+
 if (navigator.canShare && navigator.canShare({ files: [file] })) {
+
+
 
 try {
 
+
+
 await navigator.share({ files: [file], title: '日常問候圖', text: text });
+
+
 
 } catch (e) { console.log('分享取消'); }
 
+
+
 } else {
+
+
 
 alert('您的瀏覽器不支援直接分享圖片檔案，請使用「儲存圖片」按鈕。');
 
+
+
 }
+
+
 
 });
 
+
+
 }
+
+
+
+
 
 
 
 function downloadCardDirect(imgUrl, text, fontSize, filename) {
 
+
+
 generateTextOnImage(imgUrl, text, fontSize, function(blob) {
+
+
 
 if (!blob) {
 
+
+
 alert('此圖片網址受到伺服器跨域安全保護，無法直接合成文字下載。');
+
+
 
 return;
 
+
+
 }
+
+
 
 const url = URL.createObjectURL(blob);
 
+
+
 const a = document.createElement('a');
+
+
 
 a.href = url;
 
+
+
 a.download = filename;
+
+
 
 a.click();
 
+
+
 URL.revokeObjectURL(url);
+
+
 
 });
 
+
+
 }
+
+
+
+
 
 
 
 function toggleAdmin() {
 
+
+
 const panel = document.getElementById('adminPanel');
+
+
 
 if (!panel) return;
 
+
+
 if (panel.style.display === 'block') {
+
+
 
 panel.style.display = 'none';
 
+
+
 } else {
+
+
 
 const today = new Date();
 
+
+
 const pwd = prompt("請輸入後台管理密碼：");
+
+
 
 const dynamicPwd = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
 
 
+
+
+
 if (pwd === dynamicPwd) {
+
+
 
 panel.style.display = 'block';
 
+
+
 } else if (pwd !== null) {
+
+
 
 alert("密碼錯誤！");
 
-}
+
 
 }
 
+
+
 }
+
+
+
+}
+
+
+
+
 
 
 
 function addCard() {
 
+
+
 const textInput = document.getElementById('newText');
 
+
+
 const imgUrlInput = document.getElementById('newImgUrl');
+
+
+
 
 
 if (!textInput || !imgUrlInput) return;
 
 
 
+
+
+
+
 let text = textInput.value.trim();
+
+
 
 const imgUrl = imgUrlInput.value.trim();
 
 
 
+
+
+
+
 if (!imgUrl) {
+
+
 
 alert('請填寫圖片網址！');
 
+
+
 return;
 
+
+
 }
+
+
+
+
 
 
 
 if (!text) {
 
+
+
 text = randomTexts[Math.floor(Math.random() * randomTexts.length)];
 
+
+
 }
+
+
+
+
 
 
 
@@ -1378,83 +2762,167 @@ userCards.push({ text: text, imgUrl: imgUrl });
 
 
 
+
+
+
+
 textInput.value = '';
 
+
+
 imgUrlInput.value = '';
+
+
 
 document.getElementById('adminPanel').style.display = 'none';
 
 
 
+
+
+
+
 renderGrid();
+
+
 
 exportUpdatedHTML();
 
+
+
 }
+
+
+
+
 
 
 
 function deleteCard(index) {
 
+
+
 userCards.splice(index, 1);
+
+
 
 renderGrid();
 
+
+
 exportUpdatedHTML();
 
+
+
 }
+
+
+
+
 
 
 
 function updateManageList() {
 
+
+
 const listEl = document.getElementById('manageList');
+
+
 
 if (!listEl) return;
 
+
+
 listEl.innerHTML = '<strong>自訂項目管理：</strong>';
+
+
 
 if (userCards.length === 0) {
 
+
+
 listEl.innerHTML += '<span style="font-size:0.75rem; color:#888;"> 目前無圖片</span>';
+
+
 
 return;
 
+
+
 }
+
+
 
 userCards.forEach((item, index) => {
 
+
+
 const div = document.createElement('div');
+
+
 
 div.className = 'manage-item';
 
+
+
 div.innerHTML = `<span>${item.text.substring(0, 10)}...</span><button type="button" onclick="deleteCard(${index})">刪除</button>`;
+
+
 
 listEl.appendChild(div);
 
+
+
 });
 
+
+
 }
+
+
+
+
 
 
 
 function exportUpdatedHTML() {
 
+
+
 const cardsJSON = JSON.stringify(userCards, null, 4);
+
+
 
 let htmlContent = document.documentElement.outerHTML;
 
 
+
+
+
 const targetRegex = /let userCards = \[\s*([\s\S]*?)\s*\];/;
+
+
 
 const newCardsString = `let userCards = ${cardsJSON};`;
 
 
+
+
+
 if (targetRegex.test(htmlContent)) {
+
+
 
 htmlContent = htmlContent.replace(targetRegex, newCardsString);
 
+
+
 }
+
+
+
+
 
 
 
@@ -1462,86 +2930,179 @@ htmlContent = htmlContent.replace(/id="adminPanel"[^>]*style="display:\s*block;"
 
 
 
+
+
+
+
 const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+
+
 
 const url = URL.createObjectURL(blob);
 
+
+
 const a = document.createElement('a');
+
+
 
 a.href = url;
 
+
+
 a.download = 'index.html';
+
+
 
 a.click();
 
+
+
 URL.revokeObjectURL(url);
 
+
+
 }
+
+
+
+
 
 
 
 window.onload = function() {
 
+
+
 refreshRandomTexts();
+
+
 
 renderGrid();
 
 
 
+
+
+
+
 document.getElementById('adminTriggerBtn').addEventListener('click', toggleAdmin);
 
+
+
 document.getElementById('closeAdminBtn').addEventListener('click', toggleAdmin);
+
+
 
 document.getElementById('addCardBtn').addEventListener('click', addCard);
 
 
 
+
+
+
+
 // 字體大小按鈕點擊事件監聽
+
+
 
 const sizeBtns = document.querySelectorAll('.font-size-btn');
 
+
+
 sizeBtns.forEach(btn => {
+
+
 
 btn.addEventListener('click', function() {
 
+
+
 sizeBtns.forEach(b => b.classList.remove('active'));
 
+
+
 this.classList.add('active');
+
+
 
 currentFontSize = parseInt(this.getAttribute('data-size'));
 
 
-const currentImgUrl = document.getElementById('lightboxImg').src;
-
-const currentText = document.getElementById('lightboxTextSelector').value;
-
-if (document.getElementById('lightbox').style.display === 'flex') {
-
-updatePreviewImage(currentImgUrl, currentText, currentFontSize);
-
-}
-
-});
-
-});
 
 
 
 const lightbox = document.getElementById('lightbox');
 
-lightbox.addEventListener('click', closeLightbox);
 
-document.getElementById('lightboxContentBox').addEventListener('click', function(e) {
 
-e.stopPropagation();
+const currentImgUrl = lightbox.dataset.originalImgUrl;
+
+
+
+const currentText = document.getElementById('lightboxTextSelector').value;
+
+
+
+if (lightbox.style.display === 'flex' && currentImgUrl) {
+
+
+
+updatePreviewImage(currentImgUrl, currentText, currentFontSize);
+
+
+
+}
+
+
 
 });
 
+
+
+});
+
+
+
+
+
+
+
+const lightbox = document.getElementById('lightbox');
+
+
+
+lightbox.addEventListener('click', closeLightbox);
+
+
+
+document.getElementById('lightboxContentBox').addEventListener('click', function(e) {
+
+
+
+e.stopPropagation();
+
+
+
+});
+
+
+
 document.getElementById('closeLightboxBtn').addEventListener('click', closeLightbox);
+
+
 
 };
 
+
+
 </script>
+
+
+
+
+
+
 
 
 
