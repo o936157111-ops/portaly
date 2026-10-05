@@ -142,7 +142,7 @@ cursor: pointer;
 
 
 
-/* 按鈕容器樣式 (擴充為 4 個按鈕) */
+/* 按鈕容器樣式 */
 
 .splash-btn-container {
 
@@ -598,7 +598,7 @@ transform: scale(1.08);
 
 
 
-<!-- 輕量開場迎賓遮罩：加入第四個按鈕 -->
+<!-- 輕量開場迎賓遮罩 -->
 
 <div id="splash-screen">
 
@@ -609,6 +609,8 @@ transform: scale(1.08);
 
 
 <div class="splash-btn-container">
+
+<a href="#" class="splash-btn" onclick="openWeatherSearch(event)">今日天氣</a>
 
 <a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
 
@@ -655,6 +657,54 @@ event.stopPropagation();
 }
 
 window.location.replace(targetUrl);
+
+}
+
+
+
+/* 偵測使用者所在地並導向 Google 天氣搜尋 */
+
+function openWeatherSearch(event) {
+
+if (event) {
+
+event.preventDefault();
+
+event.stopPropagation();
+
+}
+
+
+
+if (navigator.geolocation) {
+
+navigator.geolocation.getCurrentPosition(
+
+(position) => {
+
+const lat = position.coords.latitude;
+
+const lon = position.coords.longitude;
+
+window.open(`https://www.google.com/search?q=weather+${lat},${lon}`, '_blank');
+
+},
+
+(error) => {
+
+window.open('https://www.google.com/search?q=台灣天氣', '_blank');
+
+},
+
+{ timeout: 10000 }
+
+);
+
+} else {
+
+window.open('https://www.google.com/search?q=台灣天氣', '_blank');
+
+}
 
 }
 
