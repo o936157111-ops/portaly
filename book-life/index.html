@@ -102,7 +102,7 @@ button.active { background: var(--accent-color); color: #fff; border-color: var(
 
 
 
-/* 密碼解鎖遮罩與提示樣式 */
+/* 解鎖按鈕提示區塊樣式 */
 
 #password-mask {
 
@@ -126,29 +126,11 @@ background: rgba(255, 255, 255, 0.05);
 
 }
 
-#password-mask input {
-
-padding: 8px 12px;
-
-font-size: 14px;
-
-border: 1px solid var(--border-color);
-
-border-radius: 4px;
-
-margin-right: 8px;
-
-background: var(--bg-color);
-
-color: var(--text-color);
-
-}
-
 #password-mask button {
 
-padding: 8px 16px;
+padding: 10px 20px;
 
-font-size: 14px;
+font-size: 15px;
 
 background: var(--accent-color);
 
@@ -157,6 +139,10 @@ color: #fff;
 border: none;
 
 font-weight: bold;
+
+cursor: pointer;
+
+border-radius: 6px;
 
 }
 
@@ -569,11 +555,6 @@ let visiblePart = allText.substring(0, splitIdx);
 let hiddenPart = allText.substring(splitIdx);
 
 
-// 當產生密碼遮罩時，延遲一點點時間自動捲動到底部讓輸入框露出
-
-setTimeout(scrollToPasswordMask, 100);
-
-
 
 return `
 
@@ -581,11 +562,9 @@ return `
 
 <div id="password-mask" style="display:block;">
 
-<p>🔒 <strong>已達到閱讀限制</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>點擊下方按鈕將跳出視窗輸入今日動態密碼以解鎖後續內容：</p>
 
-<input type="password" id="pwd-input" placeholder="請輸入動態密碼">
-
-<button onclick="verifyPassword()">確認解鎖</button>
+<button onclick="requestUnlock()">🔑 輸入解鎖密碼</button>
 
 <div id="hidden-content-data" style="display:none;">${encodeURIComponent(hiddenPart)}</div>
 
@@ -645,23 +624,15 @@ return htmlContent;
 
 
 
-// 當產生密碼遮罩時，延遲一點點時間自動捲動到底部讓輸入框露出
-
-setTimeout(scrollToPasswordMask, 100);
-
-
-
 return `
 
 <div class="part-1">${visibleHtml}</div>
 
 <div id="password-mask">
 
-<p>🔒 <strong>已達到閱讀限制</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>點擊下方按鈕將跳出視窗輸入今日動態密碼以解鎖後續內容：</p>
 
-<input type="password" id="pwd-input" placeholder="請輸入動態密碼">
-
-<button onclick="verifyPassword()">確認解鎖</button>
+<button onclick="requestUnlock()">🔑 輸入解鎖密碼</button>
 
 <div id="hidden-content-data" style="display:none;">${encodeURIComponent(hiddenHtml)}</div>
 
@@ -677,23 +648,44 @@ return `
 
 
 
-// 自動捲動到密碼輸入框位置的輔助函數
+// 點擊後跳出系統的 prompt 視窗輸入密碼
 
-function scrollToPasswordMask() {
+function requestUnlock() {
 
-const mask = document.getElementById('password-mask');
+const inputVal = prompt("請輸入今日動態密碼：");
 
-const readerArea = document.getElementById('reader-area');
+if (inputVal === null) return; // 使用者按了取消
 
-if (mask && readerArea) {
 
-readerArea.scrollTo({
 
-top: mask.offsetTop - 50,
+const now = new Date();
 
-behavior: 'smooth'
+const yyyy = now.getFullYear();
 
-});
+const mm = String(now.getMonth() + 1).padStart(2, '0');
+
+const dd = String(now.getDate()).padStart(2, '0');
+
+const correctPwd = `${yyyy}${mm}${dd}`;
+
+
+
+if (inputVal.trim() === correctPwd) {
+
+const encodedHidden = document.getElementById('hidden-content-data').innerText;
+
+const decodedHidden = decodeURIComponent(encodedHidden);
+
+
+document.getElementById('password-mask').style.display = 'none';
+
+document.getElementById('unlocked-content').innerHTML = decodedHidden;
+
+alert("密碼正確，解鎖成功！");
+
+} else {
+
+alert("密碼錯誤或格式不符，請重新輸入！");
 
 }
 
@@ -722,46 +714,6 @@ return text.length;
 function escapeHtml(text) {
 
 return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-}
-
-
-
-function verifyPassword() {
-
-const inputVal = document.getElementById('pwd-input').value.trim();
-
-
-const now = new Date();
-
-const yyyy = now.getFullYear();
-
-const mm = String(now.getMonth() + 1).padStart(2, '0');
-
-const dd = String(now.getDate()).padStart(2, '0');
-
-const correctPwd = `${yyyy}${mm}${dd}`;
-
-
-
-if (inputVal === correctPwd) {
-
-const encodedHidden = document.getElementById('hidden-content-data').innerText;
-
-const decodedHidden = decodeURIComponent(encodedHidden);
-
-
-document.getElementById('password-mask').style.display = 'none';
-
-document.getElementById('unlocked-content').innerHTML = decodedHidden;
-
-alert("密碼正確，解鎖成功！");
-
-} else {
-
-alert("密碼錯誤或格式不符，請重新輸入！");
-
-}
 
 }
 
@@ -946,3 +898,4 @@ window.onresize = updateStyle;
 </body>
 
 </html> 
+
