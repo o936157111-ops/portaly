@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Word 轉書籍閱讀器</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- 引入 mammoth.js 用於在瀏覽器解析 docx -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+<style>
+
+:root { --bg-color: #ffffff; --text-color: #000000; --accent-color: #2c3e50; --sub-color: #555555; --panel-bg: #f9f9f9; --border-color: rgba(0, 0, 0, 0.1); }
+
+.theme-sepia { --bg-color: #f4f1ea; --text-color: #332b22; --accent-color: #8b4513; --sub-color: #7a6e61; --panel-bg: #ede9df; --border-color: rgba(0, 0, 0, 0.15); }
+
+.theme-dark { --bg-color: #1a1a1a; --text-color: #e0e0e0; --accent-color: #d4af37; --sub-color: #888888; --panel-bg: #252525; --border-color: #333333; }
+
+body { margin: 0; display: flex; height: 100vh; background: var(--bg-color); transition: background 0.3s; font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif; overflow: hidden; color: var(--text-color); }
+
+
+
+#sidebar { width: 300px; background: rgba(0, 0, 0, 0.03); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; height: 100%; box-sizing: border-box; z-index: 100; }
+
+.theme-dark #sidebar { background: #222; }
+
+
+
+#book-info { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+
+#book-title { font-size: 16px; font-weight: bold; color: var(--accent-color); cursor: pointer; }
+
+
+
+#upload-container { padding: 15px; border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.02); }
+
+.theme-dark #upload-container { background: #1f1f1f; }
+
+
+
+#tree-area { flex: 1; overflow-y: auto; padding: 10px; }
+
+
+
+.tree-item { padding: 6px 8px; font-size: 13px; cursor: pointer; border-radius: 4px; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color); margin-bottom: 2px; }
+
+.tree-item:hover { background: rgba(0, 0, 0, 0.05); }
+
+.theme-dark .tree-item:hover { background: rgba(255, 255, 255, 0.1); }
+
+.tree-item.active { background: var(--accent-color); color: #fff !important; }
+
+.tree-item.heading-item { font-weight: bold; color: var(--accent-color); margin-top: 6px; }
+
+
+
+#main-container { flex: 1; display: flex; flex-direction: column; height: 100%; overflow: hidden; position: relative; }
+
+
+
+#toolbar { height: 50px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; box-sizing: border-box; background: var(--bg-color); z-index: 10; flex-wrap: wrap; gap: 5px; }
+
+.btn-group { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+
+
+button { background: transparent; border: 1px solid rgba(0, 0, 0, 0.2); padding: 4px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; color: var(--text-color); font-family: inherit; transition: background 0.2s; }
+
+button:hover { background: rgba(0, 0, 0, 0.05); }
+
+.theme-dark button { border-color: #555; }
+
+.theme-dark button:hover { background: #333; }
+
+button.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+
+
+#reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; }
+
+#reader-main-area { width: 100%; max-width: 700px; font-size: 16px; }
+
+
+
+#reader-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid var(--accent-color); padding-bottom: 8px; }
+
+#content-title { font-size: 24px; font-weight: bold; color: var(--accent-color); margin: 0; }
+
+
+
+#content-body { line-height: 1.5; }
+
+#content-body p { margin-block-start: 0.5em; margin-block-end: 0.8em; }
+
+
+
+@media (max-width: 768px) {
+
+#sidebar { width: 220px; }
+
+#reader-area { padding: 25px 15px; }
+
+#content-title { font-size: 20px; }
+
+#toolbar { height: auto; padding: 8px; }
+
+}
+
+</style>
+
+</head>
+
+<body class="theme-light">
+
+<div id="sidebar">
+
+<div id="book-info">
+
+<div id="book-title" onclick="changeBookTitle()">📖 我的自訂書名</div>
+
+</div>
+
+<div id="upload-container">
+
+<div style="font-size: 12px; font-weight: bold; margin-bottom: 5px; color: var(--sub-color);">上傳/更換 Word 檔案</div>
+
+<input type="file" id="upload" accept=".docx" style="font-size: 12px; width: 100%; cursor: pointer;">
+
+</div>
+
+
+
+<div id="tree-area"></div>
+
+</div>
+
+<div id="main-container">
+
+<div id="toolbar">
+
+<div class="btn-group" id="desktop-theme-group">
+
+<button onclick="setTheme('light')" id="btn-light" class="theme-btn active">明亮</button>
+
+<button onclick="setTheme('sepia')" id="btn-sepia" class="theme-btn">羊皮紙</button>
+
+<button onclick="setTheme('dark')" id="btn-dark" class="theme-btn">深色</button>
+
+</div>
+
+
+
+<div class="btn-group" id="desktop-config-group">
+
+<button onclick="changeFontSize(1)">字型＋</button>
+
+<button onclick="changeFontSize(-1)">字型－</button>
+
+<button onclick="changeLineHeight(0.2)">行距＋</button>
+
+<button onclick="changeLineHeight(-0.2)">行距－</button>
+
+<button onclick="changeFont('Microsoft JhengHei')">正黑體</button>
+
+<button onclick="changeFont('Noto Sans TC')">思源黑體</button>
+
+</div>
+
+
+
+<div id="export-btn-wrapper">
+
+<button onclick="exportHTML()" style="background: var(--accent-color); color: #fff; font-weight: bold;">💾 另存網頁 (HTML)</button>
+
+</div>
+
+</div>
+
+
+
+<div id="reader-area">
+
+<div id="reader-main-area">
+
+<div id="reader-header-bar">
+
+<div id="content-title">歡迎使用 Word 轉書籍閱讀器</div>
+
+</div>
+
+<div id="content-body">請點擊左側的「上傳 Word 檔案」，系統會自動解析您的文件內容並產生目錄與排版！您可以隨時切換主題、調整字體大小，並透過上方按鈕「另存網頁」永久保留。</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let database = {
+
+"bookTitle": "我的匯入書籍",
+
+"chapters": []
+
+};
+
+
+
+let currentFontSize = 16;
+
+let currentLineHeight = 1.5;
+
+let currentFont = 'Microsoft JhengHei';
+
+let currentIndex = 0;
+
+
+
+function init() {
+
+let localData = localStorage.getItem('word_book_db');
+
+if (localData) {
+
+try { database = JSON.parse(localData); } catch(e) { console.error(e); }
+
+}
+
+
+
+if (database.chapters && database.chapters.length > 0) {
+
+renderTree();
+
+selectChapter(0);
+
+} else {
+
+renderTree();
+
+}
+
+
+
+let titleEl = document.getElementById('book-title');
+
+if(titleEl) titleEl.innerText = "📖 " + (database.bookTitle || "我的匯入書籍");
+
+updateStyle();
+
+}
+
+
+
+const uploadInput = document.getElementById('upload');
+
+if (uploadInput) {
+
+uploadInput.addEventListener('change', function(event) {
+
+const file = event.target.files[0];
+
+if (!file) return;
+
+
+
+database.bookTitle = file.name.replace(/\.[^/.]+$/, "");
+
+let titleEl = document.getElementById('book-title');
+
+if(titleEl) titleEl.innerText = "📖 " + database.bookTitle;
+
+
+
+const reader = new FileReader();
+
+reader.onload = function(loadEvent) {
+
+const arrayBuffer = loadEvent.target.result;
+
+mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+
+.then(function(result) {
+
+const tempDiv = document.createElement('div');
+
+tempDiv.innerHTML = result.value;
+
+
+
+database.chapters = [];
+
+let currentCh = { title: "前言 / 導讀", content: "" };
+
+
+
+Array.from(tempDiv.children).forEach(el => {
+
+if (['H1', 'H2', 'H3'].includes(el.tagName)) {
+
+if (currentCh.content.trim() !== "" || currentCh.title !== "前言 / 導讀") {
+
+database.chapters.push(currentCh);
+
+}
+
+currentCh = { title: el.textContent.trim(), content: "" };
+
+} else {
+
+currentCh.content += el.outerHTML + "\n";
+
+}
+
+});
+
+database.chapters.push(currentCh);
+
+
+
+localStorage.setItem('word_book_db', JSON.stringify(database));
+
+renderTree();
+
+if (database.chapters.length > 0) {
+
+selectChapter(0);
+
+}
+
+alert("Word 檔案解析成功！");
+
+})
+
+.catch(function(err) {
+
+console.error(err);
+
+alert("解析檔案發生錯誤！請確認是否為有效的 .docx 檔案。");
+
+});
+
+};
+
+reader.readAsArrayBuffer(file);
+
+});
+
+}
+
+
+
+function renderTree() {
+
+const treeArea = document.getElementById('tree-area');
+
+if (!treeArea) return;
+
+treeArea.innerHTML = '';
+
+
+
+database.chapters.forEach((ch, idx) => {
+
+let itemDiv = document.createElement('div');
+
+itemDiv.className = 'tree-item';
+
+if (ch.title.length > 0 && ch.content.length < 50 && !ch.content.includes('<p>')) {
+
+itemDiv.classList.add('heading-item');
+
+itemDiv.innerText = "📑 " + ch.title;
+
+} else {
+
+itemDiv.innerText = "📄 " + (ch.title || ("章節 " + (idx + 1)));
+
+}
+
+
+
+if (currentIndex === idx) {
+
+itemDiv.classList.add('active');
+
+}
+
+
+
+itemDiv.onclick = function() {
+
+selectChapter(idx);
+
+};
+
+treeArea.appendChild(itemDiv);
+
+});
+
+}
+
+
+
+function selectChapter(idx) {
+
+currentIndex = idx;
+
+document.querySelectorAll('.tree-item').forEach((e, i) => {
+
+if (i === idx) e.classList.add('active');
+
+else e.classList.remove('active');
+
+});
+
+
+
+if (database.chapters && database.chapters[idx]) {
+
+const ch = database.chapters[idx];
+
+let titleDiv = document.getElementById('content-title');
+
+let bodyDiv = document.getElementById('content-body');
+
+if(titleDiv) titleDiv.innerText = ch.title;
+
+if(bodyDiv) bodyDiv.innerHTML = ch.content || "（本章節無內容）";
+
+}
+
+}
+
+
+
+function changeBookTitle() {
+
+let newTitle = prompt("請輸入新的書名：", database.bookTitle);
+
+if (newTitle) {
+
+database.bookTitle = newTitle;
+
+let titleEl = document.getElementById('book-title');
+
+if(titleEl) titleEl.innerText = "📖 " + newTitle;
+
+localStorage.setItem('word_book_db', JSON.stringify(database));
+
+}
+
+}
+
+
+
+function changeFontSize(dir) {
+
+currentFontSize += dir * 2;
+
+if (currentFontSize < 12) currentFontSize = 12;
+
+if (currentFontSize > 36) currentFontSize = 36;
+
+updateStyle();
+
+}
+
+
+
+function changeLineHeight(dir) {
+
+currentLineHeight += dir;
+
+if (currentLineHeight < 1.2) currentLineHeight = 1.2;
+
+if (currentLineHeight > 2.5) currentLineHeight = 2.5;
+
+updateStyle();
+
+}
+
+
+
+function changeFont(font) {
+
+currentFont = font;
+
+updateStyle();
+
+}
+
+
+
+function updateStyle() {
+
+const mainArea = document.getElementById('reader-main-area');
+
+if (mainArea) {
+
+mainArea.style.fontSize = currentFontSize + 'px';
+
+mainArea.style.fontFamily = currentFont;
+
+}
+
+const bodyArea = document.getElementById('content-body');
+
+if (bodyArea) {
+
+bodyArea.style.lineHeight = currentLineHeight;
+
+}
+
+}
+
+
+
+function setTheme(theme) {
+
+document.body.className = 'theme-' + theme;
+
+
+
+document.querySelectorAll('#desktop-theme-group .theme-btn').forEach(b => b.classList.remove('active'));
+
+let dBtn = document.getElementById('btn-' + theme);
+
+if (dBtn) dBtn.classList.add('active');
+
+
+
+updateStyle();
+
+}
+
+
+
+function exportHTML() {
+
+const sidebar = document.getElementById('sidebar');
+
+if (sidebar) {
+
+sidebar.style.display = 'none';
+
+}
+
+
+
+const exportBtnWrapper = document.getElementById('export-btn-wrapper');
+
+if (exportBtnWrapper) exportBtnWrapper.remove();
+
+
+
+const mainContainer = document.getElementById('main-container');
+
+if (mainContainer) {
+
+mainContainer.style.width = '100%';
+
+}
+
+
+
+const readerArea = document.getElementById('reader-area');
+
+if (readerArea) {
+
+readerArea.style.padding = '40px 20px';
+
+readerArea.style.display = 'flex';
+
+readerArea.style.justifyContent = 'center';
+
+}
+
+
+
+const dbString = "let database = " + JSON.stringify(database, null, 4) + ";";
+
+let fullHTML = document.documentElement.outerHTML;
+
+let newHTML = fullHTML.replace(/let database = \{[\s\S]*?\};/, dbString);
+
+
+
+const blob = new Blob([newHTML], { type: "text/html" });
+
+const a = document.createElement("a");
+
+a.href = URL.createObjectURL(blob);
+
+a.download = `${database.bookTitle || 'my_book'}.html`;
+
+a.click();
+
+
+
+setTimeout(() => { location.reload(); }, 500);
+
+}
+
+
+
+window.onload = init;
+
+window.onresize = updateStyle;
+
+</script>
+
+</body>
+
+</html> 
+
