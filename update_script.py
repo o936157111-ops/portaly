@@ -4,9 +4,9 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 from google import genai
-from google.genai.errors import ServerError
+from google.genai.errors import ServerError, ClientError
 
-def update_news_with_retry(client, model_name, contents, max_retries=5):
+def update_news_with_retry(client, model_name, contents, max_retries=3):
     for attempt in range(max_retries):
         try:
             response = client.models.generate_content(
@@ -14,9 +14,15 @@ def update_news_with_retry(client, model_name, contents, max_retries=5):
                 contents=contents
             )
             return response
+        except ClientError as e:
+            # 針對 429 額度不足的特別捕捉與提示
+            if e.code == 429:
+                print(f"⚠ 警告：Gemini API 免費額度已達上限 (429 RESOURCE_EXHAUSTED)。")
+                print(f"請稍後再試，或檢查您的 Google AI Studio 帳戶額度。詳細錯誤: {e}")
+            raise e
         except ServerError as e:
             if attempt < max_retries - 1:
-                wait_time = (attempt + 1) * 10  # 遞增等待時間：10秒、20秒、30秒...
+                wait_time = (attempt + 1) * 10  # 遞增等待時間：10秒、20秒...
                 print(f"遇到伺服器繁忙 (503)，正在進行第 {attempt + 1} 次重試，等待 {wait_time} 秒... (原因: {e})")
                 time.sleep(wait_time)
             else:
@@ -123,10 +129,10 @@ def update_news():
   }}
 }}"""
 
-    print("正在呼叫 Gemini API 取得完整 8 大類別（每類 4 則）新聞...")
+    print("正在呼叫 Gemini API (gemini-3.5-flash) 取得完整 8 大類別（每類 4 則）新聞...")
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-1.5-flash',
+        model_name='gemini-3.5-flash',
         contents=prompt
     )
     
