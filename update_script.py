@@ -126,7 +126,7 @@ def update_news():
     print("正在呼叫 Gemini API 取得完整 8 大類別（每類 4 則）新聞...")
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-2.5-flash',
+        model_name='gemini-1.5-flash',
         contents=prompt
     )
     
