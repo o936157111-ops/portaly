@@ -617,7 +617,7 @@ return `
 
 <div class="part-1">${visibleHtml}</div>
 
-<div id="unlock-trigger-point">🔒 已達到閱讀限制（向下捲動將自動跳出密碼驗證）</div>
+<div id="unlock-trigger-point">🔒 已達到閱讀限制</div>
 
 <div id="unlocked-content" style="display:none;">${hiddenHtml}</div>
 
@@ -681,7 +681,7 @@ if (isUnlockedCurrentChapter) return;
 
 
 
-const inputVal = prompt("🔒 已達到閱讀限制\n請輸入今日動態密碼以解鎖後續內容：");
+const inputVal = prompt("🔒 已達到閱讀限制：");
 
 if (inputVal === null) {
 
