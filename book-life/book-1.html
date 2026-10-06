@@ -82,7 +82,7 @@ button.active { background: var(--accent-color); color: #fff; border-color: var(
 
 #reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; position: relative; }
 
-#reader-main-area { width: 100%; max-width: 700px; font-size: 16px; }
+#reader-main-area { width: 100%; max-width: 700px; font-size: 16px; padding-bottom: 80px; } /* 增加底部留白，確保輸入框不貼底 */
 
 
 
@@ -254,7 +254,7 @@ font-weight: bold;
 
 <div id="password-mask">
 
-<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+<p>🔒 <strong>已達到閱讀限制</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
 
 <input type="password" id="pwd-input" placeholder="請輸入動態密碼">
 
@@ -518,28 +518,27 @@ let rawHtml = ch.content || "（本章節無內容）";
 
 bodyDiv.innerHTML = processContentWithPassword(rawHtml);
 
-}
+
+// 切換章節時，將閱讀區域捲動回最上方
+
+const readerArea = document.getElementById('reader-area');
+
+if(readerArea) readerArea.scrollTop = 0;
 
 }
 
 }
 
+}
 
 
-// 檢查並處理內容是否超過 100 行，若超過則進行動態密碼保護
 
 function processContentWithPassword(htmlContent) {
-
-// 建立臨時容器來計算行數或段落行數
 
 const tempDiv = document.createElement('div');
 
 tempDiv.innerHTML = htmlContent;
 
-
-// 將內容以換行或段落拆解，模擬計算大約行數（這裡以總文字長度或段落/換行來精準判斷第 100 行）
-
-// 為了確保在第 100 行後攔截，我們檢查文字內容累積的行數
 
 let textLines = [];
 
@@ -557,8 +556,6 @@ lines.forEach(l => textLines.push(l));
 
 
 
-// 如果總行數小於等於 100 行，直接回傳完整內容
-
 if (textLines.length <= 100 && tempDiv.innerHTML.length < 2500) {
 
 return htmlContent;
@@ -567,15 +564,9 @@ return htmlContent;
 
 
 
-// 若超過 100 行，我們需要將內容切成兩部分：前 100 行直接顯示，之後的內容加上密碼保護
-
-// 簡單實作：依據段落標籤逐一組合直到大約累積滿 100 行或一定長度，其餘隱藏
-
 let children = Array.from(tempDiv.children);
 
 if (children.length === 0) {
-
-// 如果沒有 HTML 標籤，純文字處理
 
 let allText = tempDiv.innerText;
 
@@ -596,7 +587,7 @@ return `
 
 <div id="password-mask" style="display:block;">
 
-<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+<p>🔒 <strong>已達到閱讀限制</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
 
 <input type="password" id="pwd-input" placeholder="請輸入動態密碼">
 
@@ -612,8 +603,6 @@ return `
 
 } else {
 
-// 透過 HTML 結構安全切分
-
 let currentLineCount = 0;
 
 let visibleHtml = "";
@@ -626,7 +615,7 @@ let isLocked = false;
 
 children.forEach(el => {
 
-let lineLen = Math.max(1, Math.ceil(el.innerText.length / 40)); // 粗估每行 40 字
+let lineLen = Math.max(1, Math.ceil(el.innerText.length / 40));
 
 if (!isLocked) {
 
@@ -668,7 +657,7 @@ return `
 
 <div id="password-mask">
 
-<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+<p>🔒 <strong>已達到閱讀限制</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
 
 <input type="password" id="pwd-input" placeholder="請輸入動態密碼">
 
@@ -714,14 +703,10 @@ return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 
 
-// 驗證動態密碼函式 (格式為 YYYYMMDD，例如 20261006)
-
 function verifyPassword() {
 
 const inputVal = document.getElementById('pwd-input').value.trim();
 
-
-// 動態產生今日正確密碼 (YYYYMMDD)
 
 const now = new Date();
 
