@@ -84,9 +84,9 @@ button.active { background: var(--accent-color); color: #fff; border-color: var(
 
 
 
-#reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; position: relative; }
+#reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; position: relative; scroll-behavior: smooth; }
 
-#reader-main-area { width: 100%; max-width: 700px; font-size: 16px; padding-bottom: 80px; } /* 增加底部留白，確保輸入框不貼底 */
+#reader-main-area { width: 100%; max-width: 700px; font-size: 16px; padding-bottom: 120px; }
 
 
 
@@ -246,7 +246,7 @@ font-weight: bold;
 
 
 
-<div id="reader-area" id="reader-area-container">
+<div id="reader-area">
 
 <div id="reader-main-area">
 
@@ -569,6 +569,12 @@ let visiblePart = allText.substring(0, splitIdx);
 let hiddenPart = allText.substring(splitIdx);
 
 
+// 當產生密碼遮罩時，延遲一點點時間自動捲動到底部讓輸入框露出
+
+setTimeout(scrollToPasswordMask, 100);
+
+
+
 return `
 
 <div class="part-1">${escapeHtml(visiblePart)}</div>
@@ -639,6 +645,12 @@ return htmlContent;
 
 
 
+// 當產生密碼遮罩時，延遲一點點時間自動捲動到底部讓輸入框露出
+
+setTimeout(scrollToPasswordMask, 100);
+
+
+
 return `
 
 <div class="part-1">${visibleHtml}</div>
@@ -658,6 +670,30 @@ return `
 <div id="unlocked-content"></div>
 
 `;
+
+}
+
+}
+
+
+
+// 自動捲動到密碼輸入框位置的輔助函數
+
+function scrollToPasswordMask() {
+
+const mask = document.getElementById('password-mask');
+
+const readerArea = document.getElementById('reader-area');
+
+if (mask && readerArea) {
+
+readerArea.scrollTo({
+
+top: mask.offsetTop - 50,
+
+behavior: 'smooth'
+
+});
 
 }
 
