@@ -84,7 +84,7 @@ button.active { background: var(--accent-color); color: #fff; border-color: var(
 
 
 
-#reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; }
+#reader-area { flex: 1; overflow-y: auto; padding: 30px; box-sizing: border-box; display: flex; justify-content: center; position: relative; }
 
 #reader-main-area { width: 100%; max-width: 700px; font-size: 16px; }
 
@@ -99,6 +99,66 @@ button.active { background: var(--accent-color); color: #fff; border-color: var(
 #content-body { line-height: 1.5; }
 
 #content-body p { margin-block-start: 0.5em; margin-block-end: 0.8em; }
+
+
+
+/* 密碼解鎖遮罩與提示樣式 */
+
+#password-mask {
+
+margin-top: 40px;
+
+padding: 25px;
+
+background: rgba(0, 0, 0, 0.04);
+
+border: 2px dashed var(--accent-color);
+
+border-radius: 8px;
+
+text-align: center;
+
+}
+
+.theme-dark #password-mask {
+
+background: rgba(255, 255, 255, 0.05);
+
+}
+
+#password-mask input {
+
+padding: 8px 12px;
+
+font-size: 14px;
+
+border: 1px solid var(--border-color);
+
+border-radius: 4px;
+
+margin-right: 8px;
+
+background: var(--bg-color);
+
+color: var(--text-color);
+
+}
+
+#password-mask button {
+
+padding: 8px 16px;
+
+font-size: 14px;
+
+background: var(--accent-color);
+
+color: #fff;
+
+border: none;
+
+font-weight: bold;
+
+}
 
 
 
@@ -228,11 +288,15 @@ let currentIndex = 0;
 
 function init() {
 
+if (!database.chapters || database.chapters.length === 0) {
+
 let localData = localStorage.getItem('word_book_db');
 
 if (localData) {
 
 try { database = JSON.parse(localData); } catch(e) { console.error(e); }
+
+}
 
 }
 
@@ -436,7 +500,245 @@ let bodyDiv = document.getElementById('content-body');
 
 if(titleDiv) titleDiv.innerText = ch.title;
 
-if(bodyDiv) bodyDiv.innerHTML = ch.content || "（本章節無內容）";
+if(bodyDiv) {
+
+let rawHtml = ch.content || "（本章節無內容）";
+
+bodyDiv.innerHTML = processContentWithPassword(rawHtml);
+
+}
+
+}
+
+}
+
+
+
+// 檢查並處理內容是否超過 100 行，若超過則進行動態密碼保護
+
+function processContentWithPassword(htmlContent) {
+
+// 建立臨時容器來計算行數或段落行數
+
+const tempDiv = document.createElement('div');
+
+tempDiv.innerHTML = htmlContent;
+
+
+// 將內容以換行或段落拆解，模擬計算大約行數（這裡以總文字長度或段落/換行來精準判斷第 100 行）
+
+// 為了確保在第 100 行後攔截，我們檢查文字內容累積的行數
+
+let textLines = [];
+
+const walk = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null, false);
+
+let node;
+
+while(node = walk.nextNode()) {
+
+let lines = node.nodeValue.split('\n');
+
+lines.forEach(l => textLines.push(l));
+
+}
+
+
+
+// 如果總行數小於等於 100 行，直接回傳完整內容
+
+if (textLines.length <= 100 && tempDiv.innerHTML.length < 2500) {
+
+return htmlContent;
+
+}
+
+
+
+// 若超過 100 行，我們需要將內容切成兩部分：前 100 行直接顯示，之後的內容加上密碼保護
+
+// 簡單實作：依據段落標籤逐一組合直到大約累積滿 100 行或一定長度，其餘隱藏
+
+let children = Array.from(tempDiv.children);
+
+if (children.length === 0) {
+
+// 如果沒有 HTML 標籤，純文字處理
+
+let allText = tempDiv.innerText;
+
+let splitIdx = getCharIndexAtLine(allText, 100);
+
+if (allText.length <= splitIdx) return htmlContent;
+
+
+
+let visiblePart = allText.substring(0, splitIdx);
+
+let hiddenPart = allText.substring(splitIdx);
+
+
+return `
+
+<div class="part-1">${escapeHtml(visiblePart)}</div>
+
+<div id="password-mask" style="display:block;">
+
+<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+
+<input type="password" id="pwd-input" placeholder="請輸入動態密碼">
+
+<button onclick="verifyPassword()">確認解鎖</button>
+
+<div id="hidden-content-data" style="display:none;">${encodeURIComponent(hiddenPart)}</div>
+
+</div>
+
+<div id="unlocked-content"></div>
+
+`;
+
+} else {
+
+// 透過 HTML 結構安全切分
+
+let currentLineCount = 0;
+
+let visibleHtml = "";
+
+let hiddenHtml = "";
+
+let isLocked = false;
+
+
+
+children.forEach(el => {
+
+let lineLen = Math.max(1, Math.ceil(el.innerText.length / 40)); // 粗估每行 40 字
+
+if (!isLocked) {
+
+currentLineCount += lineLen;
+
+if (currentLineCount > 100) {
+
+isLocked = true;
+
+hiddenHtml += el.outerHTML;
+
+} else {
+
+visibleHtml += el.outerHTML;
+
+}
+
+} else {
+
+hiddenHtml += el.outerHTML;
+
+}
+
+});
+
+
+
+if (!isLocked) {
+
+return htmlContent;
+
+}
+
+
+
+return `
+
+<div class="part-1">${visibleHtml}</div>
+
+<div id="password-mask">
+
+<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>請輸入今日動態密碼以解鎖並繼續閱讀下方內容：</p>
+
+<input type="password" id="pwd-input" placeholder="請輸入動態密碼">
+
+<button onclick="verifyPassword()">確認解鎖</button>
+
+<div id="hidden-content-data" style="display:none;">${encodeURIComponent(hiddenHtml)}</div>
+
+</div>
+
+<div id="unlocked-content"></div>
+
+`;
+
+}
+
+}
+
+
+
+function getCharIndexAtLine(text, targetLine) {
+
+let count = 0;
+
+for(let i=0; i<text.length; i++) {
+
+if(text[i] === '\n') count++;
+
+if(count >= targetLine) return i;
+
+}
+
+return text.length;
+
+}
+
+
+
+function escapeHtml(text) {
+
+return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+}
+
+
+
+// 驗證動態密碼函式 (格式為 YYYYMMDD，例如 20261006)
+
+function verifyPassword() {
+
+const inputVal = document.getElementById('pwd-input').value.trim();
+
+
+// 動態產生今日正確密碼 (YYYYMMDD)
+
+const now = new Date();
+
+const yyyy = now.getFullYear();
+
+const mm = String(now.getMonth() + 1).padStart(2, '0');
+
+const dd = String(now.getDate()).padStart(2, '0');
+
+const correctPwd = `${yyyy}${mm}${dd}`;
+
+
+
+if (inputVal === correctPwd) {
+
+const encodedHidden = document.getElementById('hidden-content-data').innerText;
+
+const decodedHidden = decodeURIComponent(encodedHidden);
+
+
+document.getElementById('password-mask').style.display = 'none';
+
+document.getElementById('unlocked-content').innerHTML = decodedHidden;
+
+alert("密碼正確，解鎖成功！");
+
+} else {
+
+alert("密碼錯誤或格式不符，請重新輸入！");
 
 }
 
