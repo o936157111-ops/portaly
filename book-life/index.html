@@ -102,47 +102,23 @@ button.active { background: var(--accent-color); color: #fff; border-color: var(
 
 
 
-/* 解鎖按鈕提示區塊樣式 */
+/* 觸發解鎖的隱形監控點樣式 */
 
-#password-mask {
+#unlock-trigger-point {
 
-margin-top: 40px;
+margin-top: 30px;
 
-padding: 25px;
-
-background: rgba(0, 0, 0, 0.04);
-
-border: 2px dashed var(--accent-color);
-
-border-radius: 8px;
+padding: 15px;
 
 text-align: center;
 
-}
-
-.theme-dark #password-mask {
-
-background: rgba(255, 255, 255, 0.05);
-
-}
-
-#password-mask button {
-
-padding: 10px 20px;
-
-font-size: 15px;
-
-background: var(--accent-color);
-
-color: #fff;
-
-border: none;
-
-font-weight: bold;
-
-cursor: pointer;
+border: 2px dashed var(--border-color);
 
 border-radius: 6px;
+
+color: var(--sub-color);
+
+font-size: 14px;
 
 }
 
@@ -269,6 +245,8 @@ let currentLineHeight = 1.5;
 let currentFont = 'Microsoft JhengHei';
 
 let currentIndex = 0;
+
+let isUnlockedCurrentChapter = false; // 記錄當前章節是否已解鎖
 
 
 
@@ -466,6 +444,10 @@ function selectChapter(idx) {
 
 currentIndex = idx;
 
+isUnlockedCurrentChapter = false; // 換章節重設解鎖狀態
+
+
+
 document.querySelectorAll('.tree-item').forEach((e, i) => {
 
 if (i === idx) e.classList.add('active');
@@ -498,6 +480,11 @@ bodyDiv.innerHTML = processContentWithPassword(rawHtml);
 const readerArea = document.getElementById('reader-area');
 
 if(readerArea) readerArea.scrollTop = 0;
+
+
+// 監控捲動，當滑到限制處時自動跳出視窗
+
+setupScrollListener();
 
 }
 
@@ -532,6 +519,8 @@ lines.forEach(l => textLines.push(l));
 
 if (textLines.length <= 100 && tempDiv.innerHTML.length < 2500) {
 
+isUnlockedCurrentChapter = true; // 不需要解鎖
+
 return htmlContent;
 
 }
@@ -546,7 +535,13 @@ let allText = tempDiv.innerText;
 
 let splitIdx = getCharIndexAtLine(allText, 100);
 
-if (allText.length <= splitIdx) return htmlContent;
+if (allText.length <= splitIdx) {
+
+isUnlockedCurrentChapter = true;
+
+return htmlContent;
+
+}
 
 
 
@@ -560,17 +555,9 @@ return `
 
 <div class="part-1">${escapeHtml(visiblePart)}</div>
 
-<div id="password-mask" style="display:block;">
+<div id="unlock-trigger-point">🔒 已達到第 100 行閱讀限制（向下捲動將自動跳出密碼驗證）</div>
 
-<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>點擊下方按鈕將跳出視窗輸入今日動態密碼以解鎖後續內容：</p>
-
-<button onclick="requestUnlock()">🔑 輸入解鎖密碼</button>
-
-<div id="hidden-content-data" style="display:none;">${encodeURIComponent(hiddenPart)}</div>
-
-</div>
-
-<div id="unlocked-content"></div>
+<div id="unlocked-content" style="display:none;">${escapeHtml(hiddenPart)}</div>
 
 `;
 
@@ -618,6 +605,8 @@ hiddenHtml += el.outerHTML;
 
 if (!isLocked) {
 
+isUnlockedCurrentChapter = true;
+
 return htmlContent;
 
 }
@@ -628,17 +617,9 @@ return `
 
 <div class="part-1">${visibleHtml}</div>
 
-<div id="password-mask">
+<div id="unlock-trigger-point">🔒 已達到第 100 行閱讀限制（向下捲動將自動跳出密碼驗證）</div>
 
-<p>🔒 <strong>已達到閱讀限制（第100行）</strong><br>點擊下方按鈕將跳出視窗輸入今日動態密碼以解鎖後續內容：</p>
-
-<button onclick="requestUnlock()">🔑 輸入解鎖密碼</button>
-
-<div id="hidden-content-data" style="display:none;">${encodeURIComponent(hiddenHtml)}</div>
-
-</div>
-
-<div id="unlocked-content"></div>
+<div id="unlocked-content" style="display:none;">${hiddenHtml}</div>
 
 `;
 
@@ -648,13 +629,67 @@ return `
 
 
 
-// 點擊後跳出系統的 prompt 視窗輸入密碼
+// 監控閱讀區域捲動位置，當碰到限制提示點時自動彈出 prompt
 
-function requestUnlock() {
+function setupScrollListener() {
 
-const inputVal = prompt("請輸入今日動態密碼：");
+const readerArea = document.getElementById('reader-area');
 
-if (inputVal === null) return; // 使用者按了取消
+const triggerPoint = document.getElementById('unlock-trigger-point');
+
+if (!readerArea || !triggerPoint || isUnlockedCurrentChapter) return;
+
+
+
+function checkPosition() {
+
+if (isUnlockedCurrentChapter) return;
+
+const rect = triggerPoint.getBoundingClientRect();
+
+const containerRect = readerArea.getBoundingClientRect();
+
+
+
+// 當觸發點進入或接近畫面可視範圍時
+
+if (rect.top <= containerRect.bottom - 50) {
+
+triggerUnlockPrompt();
+
+}
+
+}
+
+
+
+readerArea.onscroll = checkPosition;
+
+// 首次載入如果剛好在畫面內也檢查一次
+
+setTimeout(checkPosition, 200);
+
+}
+
+
+
+// 彈出系統密碼輸入視窗
+
+function triggerUnlockPrompt() {
+
+if (isUnlockedCurrentChapter) return;
+
+
+
+const inputVal = prompt("🔒 已達到閱讀限制（第100行）\n請輸入今日動態密碼以解鎖後續內容：");
+
+if (inputVal === null) {
+
+// 使用者點擊取消，稍微往下捲一點避免一直重複彈跳
+
+return;
+
+}
 
 
 
@@ -672,20 +707,29 @@ const correctPwd = `${yyyy}${mm}${dd}`;
 
 if (inputVal.trim() === correctPwd) {
 
-const encodedHidden = document.getElementById('hidden-content-data').innerText;
+isUnlockedCurrentChapter = true;
 
-const decodedHidden = decodeURIComponent(encodedHidden);
+const triggerPoint = document.getElementById('unlock-trigger-point');
+
+const unlockedContent = document.getElementById('unlocked-content');
 
 
-document.getElementById('password-mask').style.display = 'none';
+if (triggerPoint) triggerPoint.style.display = 'none';
 
-document.getElementById('unlocked-content').innerHTML = decodedHidden;
+if (unlockedContent) unlockedContent.style.display = 'block';
+
+
+const readerArea = document.getElementById('reader-area');
+
+if (readerArea) readerArea.onscroll = null; // 解除監控
+
+
 
 alert("密碼正確，解鎖成功！");
 
 } else {
 
-alert("密碼錯誤或格式不符，請重新輸入！");
+alert("密碼錯誤，請重新嘗試捲動解鎖。");
 
 }
 
