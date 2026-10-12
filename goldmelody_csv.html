@@ -94,6 +94,112 @@ transform: scale(1.08);
 transform: scale(0.95);
 }
 
+/* 🌟 右上角「新增 YT 歌單」按鈕與浮動輸入面板樣式 */
+.top-right-add-btn {
+position: absolute;
+top: max(16px, env(safe-area-inset-top));
+right: 16px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+border: 2px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+z-index: 9999;
+background-color: rgba(0, 0, 0, 0.6);
+backdrop-filter: blur(4px);
+display: flex;
+justify-content: center;
+align-items: center;
+cursor: pointer;
+transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.top-right-add-btn:hover {
+transform: scale(1.08);
+background-color: rgba(255, 59, 48, 0.8);
+}
+
+.top-right-add-btn svg {
+width: 22px;
+height: 22px;
+fill: #ffffff;
+}
+
+/* 浮動新增面板 */
+#addSongModal {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.75);
+backdrop-filter: blur(6px);
+z-index: 10000;
+display: none;
+justify-content: center;
+align-items: center;
+padding: 24px;
+}
+
+.modal-card {
+background: #1e1e1e;
+color: #fff;
+width: 100%;
+max-width: 340px;
+padding: 24px;
+border-radius: 16px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+display: flex;
+flex-direction: column;
+gap: 16px;
+}
+
+.modal-card h3 {
+margin: 0;
+font-size: 18px;
+text-align: center;
+}
+
+.modal-card input {
+width: 100%;
+padding: 12px;
+border-radius: 8px;
+border: 1px solid #444;
+background: #2a2a2a;
+color: #fff;
+font-size: 14px;
+outline: none;
+}
+
+.modal-card input:focus {
+border-color: #ff3b30;
+}
+
+.modal-btns {
+display: flex;
+gap: 10px;
+}
+
+.modal-btns button {
+flex: 1;
+padding: 10px;
+border-radius: 8px;
+border: none;
+font-weight: bold;
+cursor: pointer;
+font-size: 14px;
+}
+
+.btn-cancel {
+background: #444;
+color: #fff;
+}
+
+.btn-submit {
+background: #ff3b30;
+color: #fff;
+}
+
 .reel-container {
 width: 100%;
 height: 100%;
@@ -242,9 +348,28 @@ border-radius: 12px;
 <body>
 
 <div class="app-frame">
+<!-- 左上角回首頁 Logo -->
 <a href="https://myezlife.com/index-1.html">
 <img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Logo">
 </a>
+
+<!-- 右上角新增 YouTube 影片按鈕 -->
+<div class="top-right-add-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
+<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+</div>
+
+<!-- 彈出式新增視窗 -->
+<div id="addSongModal">
+<div class="modal-card">
+<h3>新增 YouTube 歌曲</h3>
+<input type="text" id="ytUrlInput" placeholder="請貼上 YouTube 影片網址...">
+<input type="text" id="ytTitleInput" placeholder="輸入歌曲名稱（選填）">
+<div class="modal-btns">
+<button class="btn-cancel" onclick="closeAddModal()">取消</button>
+<button class="btn-submit" onclick="addNewYouTubeSong()">立即加入</button>
+</div>
+</div>
+</div>
 
 <div class="reel-container" id="reelContainer"></div>
 </div>
@@ -319,7 +444,7 @@ const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片�
 
 const dataRows = titleCol >= 0 && videoCol >= 0 ? rows.slice(1) : rows;
 const titleIndex = titleCol >= 0 && videoCol >= 0 ? titleCol : 0;
-const videoIndex = titleCol >= 0 && videoCol >= 0 ? videoCol : 3;
+const videoIndex = videoCol >= 0 && videoCol >= 0 ? videoCol : 3;
 
 return dataRows.map(row => {
 const title = String(row[titleIndex] || "").trim();
@@ -349,7 +474,7 @@ embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/
 }).filter(Boolean);
 }
 
-// 🌟 記錄使用者的點擊喜好到 localStorage
+// 🌟 記錄使用者的點擊喜好與手動新增清單到 localStorage
 function recordUserClick(songTitle) {
   try {
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
@@ -360,7 +485,7 @@ function recordUserClick(songTitle) {
     } else {
       history.push({
         title: songTitle,
-        clicks: 1,
+        clicks: 3, // 手動新增或點擊給予較高權重
         lastWatched: new Date().getTime()
       });
     }
@@ -371,9 +496,75 @@ function recordUserClick(songTitle) {
   }
 }
 
-// 🌟 依照使用者的歷史點擊紀錄進行智慧排序（點過的排前面）
+// 🌟 取得使用者額外自訂新增的歌曲清單
+function getCustomUserSongs() {
+  try {
+    return JSON.parse(localStorage.getItem('user_added_songs')) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+// 🌟 處理介面開啟與關閉
+function openAddModal() {
+  document.getElementById('addSongModal').style.display = 'flex';
+}
+
+function closeAddModal() {
+  document.getElementById('addSongModal').style.display = 'none';
+  document.getElementById('ytUrlInput').value = '';
+  document.getElementById('ytTitleInput').value = '';
+}
+
+// 🌟 執行新增 YouTube 網址邏輯
+function addNewYouTubeSong() {
+  const urlVal = document.getElementById('ytUrlInput').value.trim();
+  let titleVal = document.getElementById('ytTitleInput').value.trim();
+  
+  const videoId = extractYouTubeId(urlVal);
+  if (!videoId) {
+    alert("請輸入有效的 YouTube 影片網址！");
+    return;
+  }
+  
+  if (!titleVal) {
+    titleVal = "自訂加入的精選好歌 (" + videoId + ")";
+  }
+
+  const newSong = {
+    title: titleVal,
+    views: "🌟 自訂收藏",
+    isCustomCover: true,
+    coverClass: "",
+    coverUrl: "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
+    embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${titleVal.replace(/"/g, '&quot;')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+  };
+
+  // 1. 儲存至自訂清單 localStorage
+  try {
+    let customSongs = getCustomUserSongs();
+    customSongs.unshift(newSong); // 放到最前面
+    localStorage.setItem('user_added_songs', JSON.stringify(customSongs));
+    
+    // 同時記錄點擊權重，讓它直接排在最頂端
+    recordUserClick(newSong.title);
+  } catch (e) {
+    console.error("儲存自訂歌曲失敗", e);
+  }
+
+  alert("新增成功！已將此歌曲排入您的專屬播放頂端。");
+  closeAddModal();
+  location.reload(); // 重新整理頁面以載入最新清單
+}
+
+// 🌟 依照使用者的歷史點擊紀錄與自訂清單進行智慧排序
 function applyUserPreferenceSorting(songsArray) {
   try {
+    // 合併使用者自己手動新增的歌曲
+    let customSongs = getCustomUserSongs();
+    // 濾除重複，將自訂歌曲與試算表歌曲結合
+    songsArray = [...customSongs, ...songsArray];
+
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
     if (history.length === 0) return songsArray;
 
@@ -398,9 +589,8 @@ const response = await fetch(CSV_URL, { cache: "no-store" });
 if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
 const csvText = await response.text();
 let songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
-if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
-  
-// 🌟 套用個人化智慧排序：將點閱過的歌曲排在前面，其餘保持隨機或原樣
+
+// 🌟 套用個人化智慧排序（結合手動新增與瀏覽記錄）
 songs = applyUserPreferenceSorting(songs);
 return songs;
 }
@@ -409,8 +599,6 @@ function initReels(songDatabase) {
 const container = document.getElementById('reelContainer');
 container.innerHTML = '';
 
-// 如果您希望沒點過的項目保持隨機，點過的優先，這裡可以直接使用排好序的 songDatabase
-// 為了保留短影音流暢感，我們直接使用已經過智慧排序的清單
 const infiniteSongs = [...songDatabase, ...songDatabase];
 
 infiniteSongs.forEach((song) => {
@@ -442,7 +630,7 @@ ${song.isCustomCover ? `
 `;
 
 card.dataset.embed = song.embedCode;
-card.dataset.title = song.title; // 記錄歌名以便監聽點擊
+card.dataset.title = song.title;
 container.appendChild(card);
 });
 
@@ -450,7 +638,6 @@ const cards = document.querySelectorAll('.reel-card');
 const totalOriginal = songDatabase.length;
 
 if (cards.length > 0) {
-// 預設從第一部開始（或可依需求調整）
 container.scrollTop = 0;
 }
 
@@ -487,7 +674,6 @@ if (coverLayer) {
 coverLayer.classList.add('fade-out');
 }
   
-// 🌟 當卡片進入畫面並播放時，自動記錄該歌曲已被點閱觀看
 if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
