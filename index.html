@@ -290,9 +290,96 @@ z-index: 9999;
 object-fit: cover;
 background-color: #fff;
 transition: transform 0.2s ease;
+cursor: pointer;
 }
 .top-left-logo:hover {
 transform: scale(1.08);
+}
+
+/* 🌟 左側滑出選單（Drawer）樣式 */
+.side-drawer-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+z-index: 10000;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.side-drawer-overlay.active {
+opacity: 1;
+visibility: visible;
+}
+
+.side-drawer {
+position: fixed;
+top: 0;
+left: -280px;
+width: 280px;
+height: 100%;
+background: #ffffff;
+z-index: 10001;
+box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+display: flex;
+flex-direction: column;
+padding: 24px 20px;
+}
+
+.side-drawer.active {
+left: 0;
+}
+
+.drawer-header {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 24px;
+padding-bottom: 16px;
+border-bottom: 1px solid #eee;
+}
+
+.drawer-header img {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+object-fit: cover;
+}
+
+.drawer-title {
+font-size: 15px;
+font-weight: bold;
+color: #222;
+}
+
+.drawer-btn-container {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.drawer-btn {
+width: 100%;
+padding: 12px 18px;
+background: #f7f7f7;
+border: 1px solid #ddd;
+color: #222;
+font-size: 15px;
+font-weight: 600;
+text-align: center;
+border-radius: 12px;
+text-decoration: none;
+box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+transition: all 0.2s ease;
+}
+
+.drawer-btn:hover {
+background: #222;
+color: #fff;
 }
 </style>
 </head>
@@ -312,13 +399,37 @@ transform: scale(1.08);
 </div>
 
 <div class="app-frame">
-<a href="https://myezlife.com/index-1.html"><img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Home"></a>
+<!-- 🌟 點擊左上角 Logo 改為呼叫開啟左側滑出選單 -->
+<img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
 <div class="reel-container" id="reelContainer"></div>
+</div>
+
+<!-- 🌟 左側滑出選單結構 -->
+<div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="side-drawer" id="sideDrawer">
+<div class="drawer-header">
+<img src="https://myezlife.com/eric-logo.gif" alt="Logo">
+<div class="drawer-title">功能選單</div>
+</div>
+<div class="drawer-btn-container">
+<a href="https://myezlife.com/FileExplorer.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
+<a href="https://myezlife.com/index_news.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
+<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
+<a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
+</div>
 </div>
 
 <script>
 function enterFullScreen() {
 closeSplash();
+}
+
+// 🌟 控制左側選單開關的函式
+function toggleDrawer() {
+const drawer = document.getElementById('sideDrawer');
+const overlay = document.getElementById('drawerOverlay');
+drawer.classList.toggle('active');
+overlay.classList.toggle('active');
 }
 
 function handleSplashNav(event, targetUrl) {
@@ -335,8 +446,6 @@ splash.style.opacity = '0';
 setTimeout(() => {
 splash.style.display = 'none';
 }, 400);
-
-// 已移除自動進入全螢幕的語法，這樣手機版瀏覽時就不會再跳出提示字眼
 }
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
@@ -442,7 +551,6 @@ embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" 
 }).filter(Boolean);
 }
 
-// 🌟 【新增功能】記錄使用者點擊過的影片到 localStorage
 function recordUserClick(song) {
   try {
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
@@ -457,7 +565,6 @@ function recordUserClick(song) {
         lastWatched: new Date().getTime()
       });
     }
-    // 最多保留最近互動的 100 筆紀錄
     if (history.length > 100) history.shift();
     localStorage.setItem('user_watch_history', JSON.stringify(history));
   } catch (e) {
@@ -571,7 +678,6 @@ observer.observe(card);
 }
 
 function playCustomSong(btnWrapper, songObj) {
-// 🌟 記錄使用者的點擊喜好
 recordUserClick(songObj);
 
 const card = btnWrapper.closest('.reel-card');
