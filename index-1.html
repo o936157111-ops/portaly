@@ -12,7 +12,6 @@
             display: none; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; cursor: pointer; color: #333;
         }
-        @media (max-width: 768px) { #start-overlay { display: flex; } }
         
         .guide-icon { width: 60px; height: 100px; border: 3px solid #333; border-radius: 10px; margin-bottom: 20px; position: relative; }
         .guide-icon::after { content: ''; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #333; border-radius: 50%; }
@@ -315,7 +314,7 @@
 </head>
 <body>
 
-<div id="start-overlay" onclick="enterFullScreen()"><div style="padding:20px;"><h1>歡迎來到<br>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div></div>
+<div id="start-overlay" onclick="enterFullScreen()" style="display: none !important;"><div style="padding:20px;"><h1>歡迎來到<br>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div></div>
 
 <div class="container">
     <div class="card-container">
@@ -327,7 +326,7 @@
             <img id="logo-avatar" src="https://myezlife.com/eric-logo.gif" alt="Avatar" class="logo-avatar" style="display: block;">
             
             <a href="https://myezlife.com" class="logo-link" id="logo-link-wrap" title="返回首頁" style="display: block;">
-                <img id="logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHE6funSqnK80BBjnDg_P776cRB4W_RJGo5BK70icYE2LfSTXwB7T-V-FZgwfEH9GjOu0v_YxtBddWC8ogf4cJrOi6rbZiSFC4Y17t456a2g5wIYrymneEoHGLGQ_AHEY75IkndveCyaajfMcJdzmUR_Dxq0lTsbqERhpZpzMdbqYYhREf68TFY0t9fY7F/w400-h400-rw/logo-1.gif" alt="Logo" class="logo-img" onload="finishLoading()" style="display: block;">
+                <img id="logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="logo-img" onload="finishLoading()" style="display: block;">
             </a>
         </div>
         
@@ -379,8 +378,11 @@
         </div>
 
         <div id="tab-1" class="button-group">
-            <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
             
+            <a href="https://myezlife.com/highly_recommend.html" class="btn" target="_blank" rel="noopener noreferrer">好物推薦</a>
+
+            <a href="https://myezlife.com/index_news.html" class="btn" target="_blank" rel="noopener noreferrer">每日幫你把新聞劃重點</a>
+
             <a href="https://www.myezlife.com/hello.html" class="btn" target="_blank" rel="noopener noreferrer" style="">日常問候圖</a>
            
             <a href="https://myezdailylife.blogspot.com" class="btn" target="_blank" rel="noopener noreferrer">零碎日常</a>   
@@ -414,6 +416,9 @@
         <div class="pinterest-masonry" id="random-masonry">
 
 <a href="https://live.staticflickr.com/2826/33751154010_38c96ddea2_z.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/2826/33751154010_38c96ddea2_z.jpg" class="pin-img" alt="攝影作品"></a>
+
+<a href="https://youtu.be/JY8Db6IufxY?si=O4usaHTI3_6Vpya5" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/65535/55551723671_beb980b7bb_z.jpg" class="pin-img" alt="攝影作品"></a>
+
 
 <a href="https://live.staticflickr.com/4170/34189296930_a7da48fc7b_z.jpg" class="pin-card" target="_blank"><img src="https://live.staticflickr.com/4170/34189296930_a7da48fc7b_z.jpg" class="pin-img" alt="攝影作品"></a>
 
@@ -645,12 +650,7 @@ delayedHandleOrientation();
 
 function updateOverlay() {
     const overlay = document.getElementById('start-overlay');
-    const isPortrait = window.innerHeight > window.innerWidth;
-    if (isPortrait) {
-        overlay.innerHTML = `<div class="guide-icon rotate-anim"></div><div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>請將手機轉為橫向以獲得最佳體驗<br>或點擊此處直接進入</p></div>`;
-    } else {
-        overlay.innerHTML = `<div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div>`;
-    }
+    overlay.innerHTML = `<div style="padding:20px;"><h1>歡迎來到<BR>生活・簡居・生活</h1><p>點擊畫面以進入全螢幕體驗</p></div>`;
 }
 
 function enterFullScreen() {
