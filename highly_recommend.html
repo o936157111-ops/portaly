@@ -189,4 +189,146 @@
 
         function findColumn(headers, aliases) {
             const normalized = headers.map(normalizeHeader);
-            for (const alias
+            for (const alias of aliases) {
+                const index = normalized.indexOf(normalizeHeader(alias));
+                if (index >= 0) return index;
+            }
+            return -1;
+        }
+
+        function rowsToProducts(rows) {
+            if (!rows.length) return [];
+            const headers = rows[0];
+            const titleCol = findColumn(headers, ["產品名稱", "品名", "名稱"]);
+            const coverCol = findColumn(headers, ["圖片網址", "圖片", "封面"]);
+            const linkCol = findColumn(headers, ["分潤連結", "產品連結", "網址", "連結"]);
+            const tagCol = findColumn(headers, ["熱門標籤", "標籤", "分類"]);
+            
+            const dataRows = titleCol >= 0 && linkCol >= 0 ? rows.slice(1) : rows;
+            const titleIndex = titleCol >= 0 ? titleCol : 0;
+            const linkIndex = linkCol >= 0 ? linkCol : 2;
+
+            return dataRows.map(row => {
+                const title = String(row[titleIndex] || "").trim();
+                const productLink = String(row[linkIndex] || "").trim();
+                if (!title || !productLink) return null;
+
+                const coverUrl = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
+                const tag = tagCol >= 0 && row[tagCol] ? String(row[tagCol]).trim() : "🔥 熱銷推薦";
+
+                return {
+                    title,
+                    productLink,
+                    coverUrl: coverUrl || "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
+                    tag
+                };
+            }).filter(Boolean);
+        }
+
+        function initReels(productDatabase) {
+            const container = document.getElementById('reelContainer');
+            container.innerHTML = '';
+            const totalOriginal = productDatabase.length;
+
+            // 將資料複製 3 次以達成無縫循環滾動
+            for (let loop = 0; loop < 3; loop++) {
+                for (let i = 0; i < productDatabase.length; i++) {
+                    let p = productDatabase[i];
+
+                    let card = document.createElement('div');
+                    card.className = 'reel-card';
+
+                    let img = document.createElement('img');
+                    img.src = p.coverUrl;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover'; // 調整為 cover 讓圖片滿版填滿
+                    img.style.position = 'absolute';
+                    img.style.top = '0';
+                    img.style.left = '0';
+                    card.appendChild(img);
+
+                    let info = document.createElement('div');
+                    info.className = 'overlay-info';
+
+                    // 1. 標籤放最上方
+                    let tag = document.createElement('div');
+                    tag.className = 'product-tag';
+                    tag.textContent = p.tag;
+                    info.appendChild(tag);
+
+                    // 2. 名稱放中間
+                    let title = document.createElement('div');
+                    title.className = 'product-title';
+                    title.textContent = p.title;
+                    info.appendChild(title);
+
+                    // 3. 購買按鈕放最下方
+                    let btn = document.createElement('a');
+                    btn.className = 'buy-btn';
+                    btn.href = p.productLink;
+                    btn.target = '_blank';
+                    btn.textContent = '看看內容 🛒';
+                    info.appendChild(btn);
+
+                    card.appendChild(info);
+                    container.appendChild(card);
+                }
+            }
+
+            // 隨機定位捲軸（加上安全防護）
+            const cards = document.querySelectorAll('.reel-card');
+            if (cards.length > 0) {
+                const randomOffset = Math.floor(Math.random() * totalOriginal);
+                const targetIndex = totalOriginal + randomOffset;
+                
+                if (cards[targetIndex]) {
+                    container.scrollTop = cards[targetIndex].offsetTop;
+                } else {
+                    container.scrollTop = cards[0].offsetTop;
+                }
+            }
+
+            // 無限滾動的監聽與位置重置
+            let scrollTimeout;
+            container.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
+                    
+                    if (container.scrollTop < singleBlockHeight * 0.4) {
+                        container.style.scrollSnapType = 'none';
+                        container.scrollTop += singleBlockHeight;
+                        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+                    } 
+                    else if (container.scrollTop > singleBlockHeight * 2.3) {
+                        container.style.scrollSnapType = 'none';
+                        container.scrollTop -= singleBlockHeight;
+                        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+                    }
+                }, 100);
+            }, { passive: true });
+        }
+
+        async function loadProductDatabase() {
+            const response = await fetch(CSV_URL, { cache: "no-store" });
+            if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
+            const csvText = await response.text();
+            const products = rowsToProducts(parseCSV(csvText.replace(/^\uFEFF/, "")));
+            if (!products.length) throw new Error("CSV 中找不到有效商品。請確認欄位包含產品名稱與購買連結。");
+            return products;
+        }
+
+        window.onload = async function () {
+            const container = document.getElementById("reelContainer");
+            try {
+                const productDatabase = await loadProductDatabase();
+                initReels(productDatabase);
+            } catch (error) {
+                console.error("商品資料載入失敗：", error);
+                container.innerHTML = `<div style="padding: 20px; text-align: center; color: #fff;">${String(error.message || error)}</div>`;
+            }
+        };
+    </script>
+</body>
+</html>
