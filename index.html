@@ -102,7 +102,7 @@ color: #fff;
 transform: translateY(-2px);
 }
 
-/* 特殊功能宣傳按鈕樣式 */
+/* 🌟 特殊功能宣傳按鈕樣式 */
 .promo-action-btn {
 width: 100%;
 padding: 13px 18px;
@@ -125,7 +125,7 @@ transform: translateY(-2px);
 box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
 }
 
-/* 特殊功能說明彈出視窗 (Promo Modal) */
+/* 🌟 特殊功能說明彈出視窗 (Promo Modal) */
 .promo-modal-overlay {
 position: fixed;
 top: 0;
@@ -189,6 +189,7 @@ padding-left: 18px;
 margin-bottom: 4px;
 }
 
+/* 🌟 改為「了解並前往」的按鈕樣式 */
 .go-to-feature-btn {
 background: linear-gradient(135deg, #ff3b30, #ff9500);
 color: #fff;
@@ -402,7 +403,7 @@ cursor: pointer;
 transform: scale(1.08);
 }
 
-/* 左側滑出選單（Drawer）樣式 */
+/* 🌟 新增：左側滑出選單（Drawer）樣式 */
 .side-drawer-overlay {
 position: fixed;
 top: 0;
@@ -434,7 +435,6 @@ transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 display: flex;
 flex-direction: column;
 padding: 24px 20px;
-overflow-y: auto;
 }
 
 .side-drawer.active {
@@ -445,7 +445,7 @@ left: 0;
 display: flex;
 align-items: center;
 gap: 12px;
-margin-bottom: 20px;
+margin-bottom: 24px;
 padding-bottom: 16px;
 border-bottom: 1px solid #eee;
 }
@@ -461,78 +461,6 @@ object-fit: cover;
 font-size: 15px;
 font-weight: bold;
 color: #222;
-}
-
-/* 🌟 AI 智慧點歌主按鈕與 4 個隱藏展開按鈕容器 */
-.mood-jukebox-box {
-background: #f8f9fa;
-border: 1px solid #eaeaea;
-padding: 12px;
-border-radius: 14px;
-margin-bottom: 16px;
-}
-
-.mood-toggle-main-btn {
-width: 100%;
-padding: 11px 14px;
-background: linear-gradient(135deg, #ff3b30, #ff9500);
-border: none;
-color: #fff;
-font-size: 14px;
-font-weight: bold;
-text-align: center;
-border-radius: 10px;
-cursor: pointer;
-box-shadow: 0 3px 10px rgba(255, 59, 48, 0.3);
-transition: transform 0.2s ease;
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 6px;
-}
-
-.mood-toggle-main-btn:hover {
-transform: translateY(-1px);
-}
-
-/* 預設隱藏 4 個子按鈕容器，點擊後展開 */
-.mood-sub-buttons {
-display: none;
-flex-direction: column;
-gap: 8px;
-margin-top: 10px;
-animation: fadeIn 0.25s ease;
-}
-
-.mood-sub-buttons.active {
-display: flex;
-}
-
-@keyframes fadeIn {
-from { opacity: 0; transform: translateY(-5px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-.mood-btn {
-background: #ffffff;
-border: 1px solid #ddd;
-padding: 10px 14px;
-border-radius: 10px;
-font-size: 14px;
-font-weight: 600;
-color: #333;
-cursor: pointer;
-text-align: left;
-transition: all 0.2s ease;
-display: flex;
-align-items: center;
-gap: 8px;
-}
-
-.mood-btn:hover {
-background: #222;
-color: #fff;
-border-color: #222;
 }
 
 .drawer-btn-container {
@@ -580,7 +508,7 @@ color: #fff;
 </div>
 </div>
 
-<!-- 特殊功能說明彈出視窗 (Promo Modal) -->
+<!-- 🌟 特殊功能說明彈出視窗 (Promo Modal) -->
 <div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
 <div class="promo-modal-card" onclick="event.stopPropagation()">
 <h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
@@ -588,9 +516,9 @@ color: #fff;
 <b>這是一套別人沒有的智慧影音牆功能！您可以：</b>
 <ul>
 <li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端[cite: 1]。</li>
-<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！[cite: 1]</li>
-<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。[cite: 1]</li>
-<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。[cite: 1]</li>
+<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</li>
+<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</li>
+<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
 </ul>
 </div>
 <a href="https://myezlife.com/goldmelody_csv.html" class="go-to-feature-btn">了解並前往影音牆 ➔</a>
@@ -598,32 +526,16 @@ color: #fff;
 </div>
 
 <div class="app-frame">
-<!-- 左上角 Logo -->
+<!-- 左上角 Logo：改為點擊觸發 toggleDrawer() 展開側滑選單 -->
 <img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
 
-<!-- 左側滑出選單結構 -->
+<!-- 🌟 新義：左側滑出選單結構 -->
 <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 <div class="side-drawer" id="sideDrawer">
 <div class="drawer-header">
 <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
 <div class="drawer-title">功能選單</div>
 </div>
-
-<!-- 🌟 AI 智慧點歌主按鈕與 4 個隱藏展開按鈕 -->
-<div class="mood-jukebox-box">
-<button class="mood-toggle-main-btn" onclick="toggleMoodSubMenu()">
-<span>🤖 AI 智慧點歌</span>
-<span id="toggleArrow">▼</span>
-</button>
-
-<div class="mood-sub-buttons" id="moodSubMenu">
-<button class="mood-btn" onclick="filterByMood('all')">✨ 1、全部隨機</button>
-<button class="mood-btn" onclick="filterByMood('歌手')">🎤 2、男歌手/女歌手</button>
-<button class="mood-btn" onclick="filterByMood('愛情')">❤️ 3、愛情相關</button>
-<button class="mood-btn" onclick="filterByMood('生活')">🏡 4、生活相關</button>
-</div>
-</div>
-
 <div class="drawer-btn-container">
 <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
 <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
@@ -634,24 +546,14 @@ color: #fff;
 </div>
 </div>
 
-<!-- 影音捲動容器 -->
 <div class="reel-container" id="reelContainer"></div>
 </div>
 
 <script>
-let globalSongDatabase = []; // 儲存完整資料庫
-
+/* 🌟 新增：控制側滑選單開關的函式 */
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
   document.getElementById('drawerOverlay').classList.toggle('active');
-}
-
-/* 🌟 控制 AI 智慧點歌 4 個子按鈕的展開與收合 */
-function toggleMoodSubMenu() {
-  const subMenu = document.getElementById('moodSubMenu');
-  const arrow = document.getElementById('toggleArrow');
-  subMenu.classList.toggle('active');
-  arrow.textContent = subMenu.classList.contains('active') ? '▲' : '▼';
 }
 
 function enterFullScreen() {
@@ -680,6 +582,8 @@ splash.style.opacity = '0';
 setTimeout(() => {
 splash.style.display = 'none';
 }, 400);
+
+/* 已移除 requestFullscreen 系統全螢幕觸發，避免跳出上方提示 */
 }
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
@@ -815,25 +719,6 @@ if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄�
 return songs;
 }
 
-/* 🌟 AI 智慧點歌篩選與重組播放清單 */
-function filterByMood(keyword) {
-  toggleDrawer(); // 關閉側滑選單
-  
-  let targetSongs = globalSongDatabase;
-  if (keyword !== 'all') {
-    // 同時比對歌名或標籤分類中是否包含關鍵字
-    targetSongs = globalSongDatabase.filter(song => 
-      song.title.includes(keyword) || song.views.includes(keyword)
-    );
-    if (targetSongs.length === 0) {
-      alert(`目前沒有找到包含「${keyword}」的相關項目，將為您展示全部隨機精選！`);
-      targetSongs = globalSongDatabase;
-    }
-  }
-  
-  initReels(targetSongs);
-}
-
 function initReels(songDatabase) {
 const container = document.getElementById('reelContainer');
 container.innerHTML = '';
@@ -956,11 +841,11 @@ alert("此項目目前沒有設定播放影片或產品連結");
 window.onload = async function () {
 const container = document.getElementById("reelContainer");
 try {
-globalSongDatabase = await loadSongDatabase();
-initReels(globalSongDatabase);
+const songDatabase = await loadSongDatabase();
+initReels(songDatabase);
 } catch (error) {
-console.error("資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
+console.error("歌曲資料載入失敗：", error);
+container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
 }
 };
 </script>
