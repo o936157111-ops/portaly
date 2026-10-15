@@ -90,10 +90,10 @@ transition: transform 0.2s ease;
 transform: scale(1.08);
 }
 
-/* 右側功能按鈕群組：已往下移並改為直向排列，完美避開 YT 內建按鈕區 */
+/* 🌟 將右側功能按鈕群組往下移更多（頂端距離拉開至 95px 或更低），避免與歌名或 YT 內建按鈕重疊 */
 .top-right-group {
 position: absolute;
-top: max(68px, calc(env(safe-area-inset-top) + 52px));
+top: max(95px, calc(env(safe-area-inset-top) + 75px));
 right: 16px;
 display: flex;
 flex-direction: column;
@@ -416,17 +416,21 @@ border-radius: 12px;
 <img src="https://myezlife.com/eric-logo.gif" width="40" class="top-left-logo" alt="Logo">
 </a>
 
-<!-- 右側功能按鈕群組 -->
+<!-- 右側功能按鈕群組：已往下移，保持畫面乾淨整潔 -->
 <div class="top-right-group">
+<!-- 1. 隨機播放開關 -->
 <div class="top-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="隨機播放切換">
 <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
 </div>
+<!-- 2. 自動連續播放開關 -->
 <div class="top-icon-btn" id="autoplayBtn" onclick="toggleAutoplay()" title="自動連續播放下一首">
 <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1 9H9v-4H7v4H5v-2h2V8h2v4h2v2z"/></svg>
 </div>
+<!-- 3. 設定按鈕 -->
 <div class="top-icon-btn" onclick="openSettingsModal()" title="設定我的專屬歌單">
 <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
 </div>
+<!-- 4. 新增按鈕 -->
 <div class="top-icon-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
 <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
 </div>
@@ -438,7 +442,6 @@ border-radius: 12px;
 <h3>打造你的專屬影音牆</h3>
 <div class="template-guide-box">
 <b>📊 想要製作自己的播放清單？</b>
-<!-- 🌟 此處已替換為您正確的「建立副本」試算表連結 -->
 <a href="https://docs.google.com/spreadsheets/d/1wHgO9bjq21vu2OFQchkwARwCKU2g-2p7SbxuBQ__mlw/copy" target="_blank" class="template-link-btn">
 📋 點此複製 Google 試算表範本
 </a>
@@ -478,7 +481,6 @@ border-radius: 12px;
 </div>
 
 <script>
-// 🌟 預設預載的 CSV 資料來源網址
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
 function getActiveCsvUrl() {
