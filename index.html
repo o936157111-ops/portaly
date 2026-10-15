@@ -445,7 +445,7 @@ left: 0;
 display: flex;
 align-items: center;
 gap: 12px;
-margin-bottom: 20px;
+margin-bottom: 24px;
 padding-bottom: 16px;
 border-bottom: 1px solid #eee;
 }
@@ -461,77 +461,6 @@ object-fit: cover;
 font-size: 15px;
 font-weight: bold;
 color: #222;
-}
-
-/* 🌟 AI 智慧點歌主按鈕與 5 個獨立選項 */
-.mood-jukebox-box {
-background: #f8f9fa;
-border: 1px solid #eaeaea;
-padding: 12px;
-border-radius: 14px;
-margin-bottom: 16px;
-}
-
-.mood-toggle-main-btn {
-width: 100%;
-padding: 11px 14px;
-background: linear-gradient(135deg, #ff3b30, #ff9500);
-border: none;
-color: #fff;
-font-size: 14px;
-font-weight: bold;
-text-align: center;
-border-radius: 10px;
-cursor: pointer;
-box-shadow: 0 3px 10px rgba(255, 59, 48, 0.3);
-transition: transform 0.2s ease;
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 6px;
-}
-
-.mood-toggle-main-btn:hover {
-transform: translateY(-1px);
-}
-
-.mood-sub-buttons {
-display: none;
-flex-direction: column;
-gap: 8px;
-margin-top: 10px;
-animation: fadeIn 0.25s ease;
-}
-
-.mood-sub-buttons.active {
-display: flex;
-}
-
-@keyframes fadeIn {
-from { opacity: 0; transform: translateY(-5px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-.mood-btn {
-background: #ffffff;
-border: 1px solid #ddd;
-padding: 10px 14px;
-border-radius: 10px;
-font-size: 14px;
-font-weight: 600;
-color: #333;
-cursor: pointer;
-text-align: left;
-transition: all 0.2s ease;
-display: flex;
-align-items: center;
-gap: 8px;
-}
-
-.mood-btn:hover {
-background: #222;
-color: #fff;
-border-color: #222;
 }
 
 .drawer-btn-container {
@@ -607,23 +536,6 @@ color: #fff;
 <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
 <div class="drawer-title">功能選單</div>
 </div>
-
-<!-- 🌟 AI 智慧點歌隱藏按鈕與 5 個細分選項 -->
-<div class="mood-jukebox-box">
-<button class="mood-toggle-main-btn" onclick="toggleMoodSubMenu()">
-<span>🤖 AI 智慧點歌</span>
-<span id="toggleArrow">▼</span>
-</button>
-
-<div class="mood-sub-buttons" id="moodSubMenu">
-<button class="mood-btn" onclick="filterByMood('all')">✨ 1、全部隨機</button>
-<button class="mood-btn" onclick="filterByMood('male_singer')">🕺 2、男歌手</button>
-<button class="mood-btn" onclick="filterByMood('female_singer')">💃 3、女歌手</button>
-<button class="mood-btn" onclick="filterByMood('love')">❤️ 4、愛情相關</button>
-<button class="mood-btn" onclick="filterByMood('life')">🏡 5、生活相關</button>
-</div>
-</div>
-
 <div class="drawer-btn-container">
 <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
 <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
@@ -639,19 +551,9 @@ color: #fff;
 </div>
 
 <script>
-let globalSongDatabase = []; // 儲存完整資料庫
-
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
   document.getElementById('drawerOverlay').classList.toggle('active');
-}
-
-/* 🌟 控制 AI 智慧點歌子按鈕的展開與收合 */
-function toggleMoodSubMenu() {
-  const subMenu = document.getElementById('moodSubMenu');
-  const arrow = document.getElementById('toggleArrow');
-  subMenu.classList.toggle('active');
-  arrow.textContent = subMenu.classList.contains('active') ? '▲' : '▼';
 }
 
 function enterFullScreen() {
@@ -773,30 +675,9 @@ coverUrl = coverValue;
 coverClass = coverValue;
 }
 
-// 🚀 智慧自動分類引擎（載入時直接在背景執行，不需 API Key 也能完美歸類）
-let aiCategory = "life"; // 預設歸類為生活相關
-const t = title;
-const v = viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "";
-const combinedText = t + " " + v;
-
-// 女歌手關鍵字判斷
-if (/林憶蓮|鄧麗君|鳳飛飛|江蕙|張惠妹|梁靜茹|蔡依林|王菲|莫文蔚|孫燕姿|田馥甄|張靚穎|梁詠琪|楊丞琳|劉若英|陳綺貞|A-Lin|彭佳慧|李玟|許茹芸|范瑋琪|張韶涵|容祖兒|蔡健雅|陳淑樺|黃鶯鶯|蘇芮|潘越雲|辛曉琪|万芳|孟庭葦|女歌手/i.test(combinedText)) {
-  aiCategory = "female_singer";
-}
-// 男歌手關鍵字判斷
-else if (/張學友|周杰倫|劉德華|陳奕迅|伍佰|周華健|林俊傑|王力宏|陶喆|張信哲|童安格|齊秦|費玉清|李宗盛|羅大佑|張宇|張雨生|王傑|邰正宵|動力火車|五月天|蘇打綠|蕭敬騰|林宥嘉|李榮浩|薛之謙|周傳雄|許美靜|男歌手/i.test(combinedText)) {
-  aiCategory = "male_singer";
-}
-// 愛情相關關鍵字判斷
-else if (/愛|情|心|冷風|淚|想妳|想你|錯過|分手|相思|緣分|對唱|情歌|溫柔|深情|分手|誓言/i.test(combinedText)) {
-  aiCategory = "love";
-}
-// 其他的則歸類於生活相關 (life)
-
 return {
 title,
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
-aiCategory,
 isCustomCover: true,
 coverClass,
 coverUrl,
@@ -814,11 +695,17 @@ function recordUserClick(song) {
       existing.clicks = (existing.clicks || 1) + 1;
       existing.lastWatched = new Date().getTime();
     } else {
-      history.push({ title: song.title, clicks: 1, lastWatched: new Date().getTime() });
+      history.push({
+        title: song.title,
+        clicks: 1,
+        lastWatched: new Date().getTime()
+      });
     }
     if (history.length > 100) history.shift();
     localStorage.setItem('user_watch_history', JSON.stringify(history));
-  } catch (e) {}
+  } catch (e) {
+    console.error("記錄點擊失敗", e);
+  }
 }
 
 async function loadSongDatabase() {
@@ -826,24 +713,8 @@ const response = await fetch(CSV_URL, { cache: "no-store" });
 if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
 const csvText = await response.text();
 const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
-if (!songs.length) throw new Error("CSV 中找不到有效內容。");
+if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
 return songs;
-}
-
-/* 🌟 點擊分類按鈕時的智慧過濾 */
-function filterByMood(categoryKey) {
-  toggleDrawer(); // 關閉側滑選單
-  
-  let targetSongs = globalSongDatabase;
-  if (categoryKey !== 'all') {
-    targetSongs = globalSongDatabase.filter(song => song.aiCategory === categoryKey);
-    if (targetSongs.length === 0) {
-      alert("目前該分類暫無項目，將為您展示全部隨機精選！");
-      targetSongs = globalSongDatabase;
-    }
-  }
-  
-  initReels(targetSongs);
 }
 
 function initReels(songDatabase) {
@@ -968,8 +839,8 @@ alert("此項目目前沒有設定播放影片或產品連結");
 window.onload = async function () {
 const container = document.getElementById("reelContainer");
 try {
-globalSongDatabase = await loadSongDatabase();
-initReels(globalSongDatabase);
+const songDatabase = await loadSongDatabase();
+initReels(songDatabase);
 } catch (error) {
 console.error("資料載入失敗：", error);
 container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
