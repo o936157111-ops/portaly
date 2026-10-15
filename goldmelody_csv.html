@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title>好歌一直聽 | 隨機短影音牆</title>
+<title id="pageTitle">好歌一直聽 | 隨機短影音牆</title>
 <style>
 /* 基礎重置：確保手機版直接滿版全螢幕 */
 * {
@@ -90,21 +90,22 @@ transition: transform 0.2s ease;
 transform: scale(1.08);
 }
 
-.top-left-logo:active {
-transform: scale(0.95);
-}
-
-/* 🌟 右上角「新增 YT 歌單」按鈕與浮動輸入面板樣式 */
-.top-right-add-btn {
+/* 右側功能按鈕群組 */
+.top-right-group {
 position: absolute;
 top: max(16px, env(safe-area-inset-top));
 right: 16px;
+display: flex;
+gap: 8px;
+z-index: 9999;
+}
+
+.top-icon-btn {
 width: 44px;
 height: 44px;
 border-radius: 50%;
 border: 2px solid rgba(255, 255, 255, 0.8);
 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-z-index: 9999;
 background-color: rgba(0, 0, 0, 0.6);
 backdrop-filter: blur(4px);
 display: flex;
@@ -114,19 +115,19 @@ cursor: pointer;
 transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.top-right-add-btn:hover {
+.top-icon-btn:hover {
 transform: scale(1.08);
 background-color: rgba(255, 59, 48, 0.8);
 }
 
-.top-right-add-btn svg {
-width: 22px;
-height: 22px;
+.top-icon-btn svg {
+width: 20px;
+height: 20px;
 fill: #ffffff;
 }
 
-/* 浮動新增面板 */
-#addSongModal {
+/* 通用彈出式面板樣式 */
+.modal-overlay {
 position: absolute;
 top: 0;
 left: 0;
@@ -151,13 +152,31 @@ border-radius: 16px;
 box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 display: flex;
 flex-direction: column;
-gap: 16px;
+gap: 12px;
 }
 
 .modal-card h3 {
-margin: 0;
+margin: 0 0 2px 0;
 font-size: 18px;
 text-align: center;
+}
+
+.modal-card p {
+margin: 0;
+font-size: 12px;
+color: #aaa;
+line-height: 1.4;
+}
+
+/* 🌟 溫馨小提示專屬區塊樣式 */
+.tip-box {
+background: rgba(255, 255, 255, 0.05);
+border-left: 3px solid #ff3b30;
+padding: 8px 10px;
+border-radius: 4px;
+font-size: 11px;
+color: #ccc;
+line-height: 1.5;
 }
 
 .modal-card input {
@@ -167,7 +186,7 @@ border-radius: 8px;
 border: 1px solid #444;
 background: #2a2a2a;
 color: #fff;
-font-size: 14px;
+font-size: 13px;
 outline: none;
 }
 
@@ -178,6 +197,7 @@ border-color: #ff3b30;
 .modal-btns {
 display: flex;
 gap: 10px;
+margin-top: 4px;
 }
 
 .modal-btns button {
@@ -198,6 +218,17 @@ color: #fff;
 .btn-submit {
 background: #ff3b30;
 color: #fff;
+}
+
+.btn-secondary {
+background: #2196F3;
+color: #fff;
+font-size: 12px;
+padding: 6px;
+border-radius: 6px;
+border: none;
+cursor: pointer;
+text-align: center;
 }
 
 .reel-container {
@@ -259,17 +290,6 @@ z-index: 5;
 cursor: pointer;
 transition: opacity 0.5s ease;
 }
-
-/* 各專屬封面圖片對應設定 */
-.custom-cover-layer.cover-not-falling-you { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549550848_c03d08fe1a_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-not-you { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549181083_2c4e3a898f_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-be-your-mountain { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549502531_eb0574e77b_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-open-door { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549231861_1b96d1fb77_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-end-of-love { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549482870_24b4f389ed_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-worthy { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549218606_28d06dcf0b_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-miss-disaster { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://images.pexels.com/photos/4581380/pexels-photo-4581380.jpeg') center/cover no-repeat; }
-.custom-cover-layer.cover-let-go { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55548228317_3b99571f91_z.jpg') center/cover no-repeat; }
-.custom-cover-layer.cover-city-flower { background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%), url('https://live.staticflickr.com/65535/55549402588_d46db8d284_z.jpg') center/cover no-repeat; }
 
 .custom-cover-layer.fade-out {
 opacity: 0;
@@ -353,15 +373,41 @@ border-radius: 12px;
 <img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Logo">
 </a>
 
-<!-- 右上角新增 YouTube 影片按鈕 -->
-<div class="top-right-add-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
+<!-- 右上角功能按鈕群組 (設定 + 新增) -->
+<div class="top-right-group">
+<div class="top-icon-btn" onclick="openSettingsModal()" title="設定我的專屬歌單">
+<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+</div>
+<div class="top-icon-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
 <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
 </div>
+</div>
 
-<!-- 彈出式新增視窗 -->
-<div id="addSongModal">
+<!-- 1. 設定面板 Modal -->
+<div id="settingsModal" class="modal-overlay">
+<div class="modal-card">
+<h3>打造你的專屬影音牆</h3>
+<p>輸入你自己的 Google 試算表公開 CSV 連結，網頁就會立刻變成你的專屬網站！</p>
+<input type="text" id="customCsvInput" placeholder="貼上你的 Google 試算表 CSV 網址...">
+<button class="btn-secondary" onclick="loadDefaultCsvUrl()">還原為站長預設推薦清單</button>
+
+<!-- 🌟 溫馨小提示說明文字 -->
+<div class="tip-box">
+💡 <b>溫馨小提示</b>：自訂的試算表與新增的歌曲會安全地保存在您目前使用的這台裝置（瀏覽器）中。若換了手機或不同電腦，需重新設定。
+</div>
+
+<div class="modal-btns">
+<button class="btn-cancel" onclick="closeSettingsModal()">取消</button>
+<button class="btn-submit" onclick="saveCustomCsvUrl()">套用並重新整理</button>
+</div>
+</div>
+</div>
+
+<!-- 2. 新增歌曲 Modal -->
+<div id="addSongModal" class="modal-overlay">
 <div class="modal-card">
 <h3>新增 YouTube 歌曲</h3>
+<p>貼上你喜歡的 YouTube 影片網址，立刻排入你的播放清單頂端。</p>
 <input type="text" id="ytUrlInput" placeholder="請貼上 YouTube 影片網址...">
 <input type="text" id="ytTitleInput" placeholder="輸入歌曲名稱（選填）">
 <div class="modal-btns">
@@ -375,7 +421,15 @@ border-radius: 12px;
 </div>
 
 <script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+
+function getActiveCsvUrl() {
+  try {
+    return localStorage.getItem('user_custom_csv_url') || DEFAULT_CSV_URL;
+  } catch (e) {
+    return DEFAULT_CSV_URL;
+  }
+}
 
 function parseCSV(text) {
 const rows = [];
@@ -474,7 +528,6 @@ embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/
 }).filter(Boolean);
 }
 
-// 🌟 記錄使用者的點擊喜好與手動新增清單到 localStorage
 function recordUserClick(songTitle) {
   try {
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
@@ -483,20 +536,13 @@ function recordUserClick(songTitle) {
       existing.clicks = (existing.clicks || 1) + 1;
       existing.lastWatched = new Date().getTime();
     } else {
-      history.push({
-        title: songTitle,
-        clicks: 3, // 手動新增或點擊給予較高權重
-        lastWatched: new Date().getTime()
-      });
+      history.push({ title: songTitle, clicks: 3, lastWatched: new Date().getTime() });
     }
     if (history.length > 100) history.shift();
     localStorage.setItem('user_watch_history', JSON.stringify(history));
-  } catch (e) {
-    console.error("記錄點擊失敗", e);
-  }
+  } catch (e) {}
 }
 
-// 🌟 取得使用者額外自訂新增的歌曲清單
 function getCustomUserSongs() {
   try {
     return JSON.parse(localStorage.getItem('user_added_songs')) || [];
@@ -505,7 +551,34 @@ function getCustomUserSongs() {
   }
 }
 
-// 🌟 處理介面開啟與關閉
+function openSettingsModal() {
+  document.getElementById('customCsvInput').value = localStorage.getItem('user_custom_csv_url') || '';
+  document.getElementById('settingsModal').style.display = 'flex';
+}
+
+function closeSettingsModal() {
+  document.getElementById('settingsModal').style.display = 'none';
+}
+
+function loadDefaultCsvUrl() {
+  localStorage.removeItem('user_custom_csv_url');
+  alert("已還原為站長預設推薦清單！");
+  location.reload();
+}
+
+function saveCustomCsvUrl() {
+  const url = document.getElementById('customCsvInput').value.trim();
+  if (url) {
+    localStorage.setItem('user_custom_csv_url', url);
+    alert("設定成功！已切換為你的專屬試算表網址。");
+  } else {
+    localStorage.removeItem('user_custom_csv_url');
+    alert("已清除自訂設定，將使用預設清單。");
+  }
+  closeSettingsModal();
+  location.reload();
+}
+
 function openAddModal() {
   document.getElementById('addSongModal').style.display = 'flex';
 }
@@ -516,17 +589,14 @@ function closeAddModal() {
   document.getElementById('ytTitleInput').value = '';
 }
 
-// 🌟 執行新增 YouTube 網址邏輯
 function addNewYouTubeSong() {
   const urlVal = document.getElementById('ytUrlInput').value.trim();
   let titleVal = document.getElementById('ytTitleInput').value.trim();
-  
   const videoId = extractYouTubeId(urlVal);
   if (!videoId) {
     alert("請輸入有效的 YouTube 影片網址！");
     return;
   }
-  
   if (!titleVal) {
     titleVal = "自訂加入的精選好歌 (" + videoId + ")";
   }
@@ -540,29 +610,21 @@ function addNewYouTubeSong() {
     embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${titleVal.replace(/"/g, '&quot;')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
   };
 
-  // 1. 儲存至自訂清單 localStorage
   try {
     let customSongs = getCustomUserSongs();
-    customSongs.unshift(newSong); // 放到最前面
+    customSongs.unshift(newSong);
     localStorage.setItem('user_added_songs', JSON.stringify(customSongs));
-    
-    // 同時記錄點擊權重，讓它直接排在最頂端
     recordUserClick(newSong.title);
-  } catch (e) {
-    console.error("儲存自訂歌曲失敗", e);
-  }
+  } catch (e) {}
 
-  alert("新增成功！已將此歌曲排入您的專屬播放頂端。");
+  alert("新增成功！已將此歌曲排入你的專屬播放頂端。");
   closeAddModal();
-  location.reload(); // 重新整理頁面以載入最新清單
+  location.reload();
 }
 
-// 🌟 依照使用者的歷史點擊紀錄與自訂清單進行智慧排序
 function applyUserPreferenceSorting(songsArray) {
   try {
-    // 合併使用者自己手動新增的歌曲
     let customSongs = getCustomUserSongs();
-    // 濾除重複，將自訂歌曲與試算表歌曲結合
     songsArray = [...customSongs, ...songsArray];
 
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
@@ -578,21 +640,20 @@ function applyUserPreferenceSorting(songsArray) {
       let scoreB = scoreMap[b.title] || 0;
       return scoreB - scoreA;
     });
-  } catch (e) {
-    console.error("套用個人化排序失敗", e);
-  }
+  } catch (e) {}
   return songsArray;
 }
 
 async function loadSongDatabase() {
-const response = await fetch(CSV_URL, { cache: "no-store" });
-if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
-const csvText = await response.text();
-let songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
-
-// 🌟 套用個人化智慧排序（結合手動新增與瀏覽記錄）
-songs = applyUserPreferenceSorting(songs);
-return songs;
+  const activeUrl = getActiveCsvUrl();
+  const response = await fetch(activeUrl, { cache: "no-store" });
+  if (!response.ok) throw new Error("CSV 資料載入失敗（HTTP " + response.status + "）");
+  const csvText = await response.text();
+  let songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
+  if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認連結正確。");
+  
+  songs = applyUserPreferenceSorting(songs);
+  return songs;
 }
 
 function initReels(songDatabase) {
@@ -673,11 +734,9 @@ wrapper.innerHTML = card.dataset.embed;
 if (coverLayer) {
 coverLayer.classList.add('fade-out');
 }
-  
 if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
-
 } else {
 wrapper.innerHTML = '';
 if (coverLayer) {
@@ -699,7 +758,7 @@ const songDatabase = await loadSongDatabase();
 initReels(songDatabase);
 } catch (error) {
 console.error("歌曲資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
+container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="localStorage.removeItem('user_custom_csv_url'); location.reload();" style="margin-top:16px;padding:10px 18px;">還原預設並重新載入</button></div>`;
 }
 };
 </script>
