@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title>生活・簡居・生活 | 好歌一直聽・隨機影音牆</title>
+<title>生活・簡居・生活 | 數位名片型總入口</title>
 <style>
 /* 基礎重置：確保手機版直接滿版全螢幕 */
 * {
@@ -21,7 +21,7 @@ margin: 0;
 padding: 0;
 width: 100%;
 height: 100%;
-background-color: #000000;
+background-color: #ffffff;
 color: #111;
 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 overflow: hidden;
@@ -70,127 +70,36 @@ letter-spacing: 1px;
 cursor: pointer;
 }
 
-/* 特殊功能宣傳按鈕容器 */
-.promo-btn-container {
+/* 按鈕容器樣式 (擴充為 4 個按鈕) */
+.splash-btn-container {
 display: flex;
 flex-direction: column;
 gap: 12px;
 width: 100%;
-max-width: 280px;
+max-width: 260px;
 }
 
-.promo-action-btn {
+/* 按鈕樣式 */
+.splash-btn {
 width: 100%;
-padding: 14px 18px;
-background: linear-gradient(135deg, #ff3b30, #ff9500);
-border: none;
-color: #fff;
-font-size: 15px;
-font-weight: bold;
-text-align: center;
-border-radius: 14px;
-text-decoration: none;
-box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-cursor: pointer;
-}
-
-.promo-action-btn:hover {
-transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
-}
-
-.enter-main-btn {
-background: #111;
-color: #fff;
-border-radius: 14px;
 padding: 12px 18px;
+background: #f7f7f7;
+border: 1px solid #ddd;
+color: #222;
 font-size: 15px;
 font-weight: 600;
-border: none;
-cursor: pointer;
-box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-transition: background 0.2s ease;
-}
-
-.enter-main-btn:hover {
-background: #333;
-}
-
-/* 特殊功能說明彈出浮動視窗 (Promo Modal) */
-.promo-modal-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.65);
-backdrop-filter: blur(5px);
-z-index: 100000;
-display: none;
-justify-content: center;
-align-items: center;
-padding: 20px;
-}
-
-.promo-modal-card {
-background: #ffffff;
-color: #222;
-width: 100%;
-max-width: 360px;
-padding: 24px 20px;
-border-radius: 20px;
-box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-display: flex;
-flex-direction: column;
-gap: 14px;
-max-height: 90vh;
-overflow-y: auto;
-animation: scaleUp 0.25s ease;
-}
-
-@keyframes scaleUp {
-from { transform: scale(0.9); opacity: 0; }
-to { transform: scale(1); opacity: 1; }
-}
-
-.promo-modal-card h3 {
-margin: 0;
-font-size: 18px;
-color: #ff3b30;
 text-align: center;
-font-weight: 800;
-}
-
-.promo-feature-box {
-background: #f8f9fa;
-border: 1px solid #eaeaea;
-padding: 12px;
 border-radius: 12px;
-font-size: 13px;
-color: #444;
-line-height: 1.5;
+text-decoration: none;
+box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+transition: all 0.2s ease;
+cursor: pointer;
 }
 
-.promo-feature-box ul {
-margin: 6px 0 0 0;
-padding-left: 18px;
-}
-
-.promo-feature-box li {
-margin-bottom: 4px;
-}
-
-.close-promo-btn {
+.splash-btn:hover {
 background: #222;
 color: #fff;
-border: none;
-padding: 12px;
-border-radius: 12px;
-font-weight: bold;
-font-size: 14px;
-cursor: pointer;
-text-align: center;
+transform: translateY(-2px);
 }
 
 /* 電腦版或大螢幕時：置中顯示手機比例框體 */
@@ -199,15 +108,14 @@ body {
 display: flex;
 justify-content: center;
 align-items: center;
-background-color: #f0f2f5;
+background-color: #ffffff;
 position: static;
 }
 .app-frame {
 width: 100%;
 max-width: 430px;
-height: 100vh;
-height: 100dvh;
-max-height: 932px;
+height: 844px;
+max-height: 90vh;
 border-radius: 24px;
 overflow: hidden;
 box-shadow: 0 10px 30px rgba(0,0,0,0.15);
@@ -229,299 +137,8 @@ right: 0;
 bottom: 0;
 border-radius: 0;
 box-shadow: none;
-background-color: #000000;
+background-color: #ffffff;
 }
-}
-
-/* 左上角常駐 Logo 樣式 */
-.top-left-logo {
-position: absolute;
-top: max(16px, env(safe-area-inset-top));
-left: 16px;
-width: 40px;
-height: 40px;
-border-radius: 50%;
-border: 2px solid rgba(255, 255, 255, 0.8);
-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-z-index: 9999;
-object-fit: cover;
-background-color: #ff3b30;
-transition: transform 0.2s ease;
-cursor: pointer;
-}
-
-.top-left-logo:hover {
-transform: scale(1.08);
-}
-
-/* 右側功能按鈕群組（完美避開 YT 內建按鈕區） */
-.top-right-group {
-position: absolute;
-top: max(95px, calc(env(safe-area-inset-top) + 75px));
-right: 16px;
-display: flex;
-flex-direction: column;
-gap: 8px;
-z-index: 9999;
-}
-
-.top-icon-btn {
-width: 38px;
-height: 38px;
-border-radius: 50%;
-border: 1.5px solid rgba(255, 255, 255, 0.7);
-box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-background-color: rgba(0, 0, 0, 0.65);
-backdrop-filter: blur(6px);
-display: flex;
-justify-content: center;
-align-items: center;
-cursor: pointer;
-transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.top-icon-btn:hover {
-transform: scale(1.1);
-background-color: rgba(255, 59, 48, 0.9);
-}
-
-.top-icon-btn svg {
-width: 16px;
-height: 16px;
-fill: #ffffff;
-}
-
-.top-icon-btn.active {
-background-color: #ff3b30;
-border-color: #ffffff;
-}
-
-/* 左側滑出選單（Drawer）樣式 */
-.side-drawer-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.5);
-z-index: 10000;
-opacity: 0;
-visibility: hidden;
-transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.side-drawer-overlay.active {
-opacity: 1;
-visibility: visible;
-}
-
-.side-drawer {
-position: fixed;
-top: 0;
-left: -280px;
-width: 280px;
-height: 100%;
-background: #ffffff;
-z-index: 10001;
-box-shadow: 5px 0 25px rgba(0,0,0,0.15);
-transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-display: flex;
-flex-direction: column;
-padding: 24px 20px;
-}
-
-.side-drawer.active {
-left: 0;
-}
-
-.drawer-header {
-display: flex;
-align-items: center;
-gap: 12px;
-margin-bottom: 24px;
-padding-bottom: 16px;
-border-bottom: 1px solid #eee;
-}
-
-.drawer-header img {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-object-fit: cover;
-}
-
-.drawer-title {
-font-size: 15px;
-font-weight: bold;
-color: #222;
-}
-
-.drawer-btn-container {
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
-
-.drawer-btn {
-width: 100%;
-padding: 12px 18px;
-background: #f7f7f7;
-border: 1px solid #ddd;
-color: #222;
-font-size: 15px;
-font-weight: 600;
-text-align: center;
-border-radius: 12px;
-text-decoration: none;
-box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-transition: all 0.2s ease;
-}
-
-.drawer-btn:hover {
-background: #222;
-color: #fff;
-}
-
-/* 通用彈出式面板樣式 (設定與新增) */
-.modal-overlay {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.75);
-backdrop-filter: blur(6px);
-z-index: 10000;
-display: none;
-justify-content: center;
-align-items: center;
-padding: 20px;
-}
-
-.modal-card {
-background: #1e1e1e;
-color: #fff;
-width: 100%;
-max-width: 360px;
-padding: 20px;
-border-radius: 16px;
-box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-display: flex;
-flex-direction: column;
-gap: 12px;
-max-height: 90vh;
-overflow-y: auto;
-}
-
-.modal-card h3 {
-margin: 0 0 2px 0;
-font-size: 18px;
-text-align: center;
-}
-
-.modal-card p {
-margin: 0;
-font-size: 12px;
-color: #aaa;
-line-height: 1.4;
-}
-
-.template-guide-box {
-background: rgba(255, 255, 255, 0.06);
-border: 1px dashed rgba(255, 255, 255, 0.2);
-padding: 12px;
-border-radius: 8px;
-font-size: 12px;
-color: #ddd;
-line-height: 1.5;
-}
-
-.template-link-btn {
-display: inline-block;
-margin-top: 6px;
-margin-bottom: 4px;
-background: #34a853;
-color: #fff;
-padding: 6px 12px;
-border-radius: 6px;
-text-decoration: none;
-font-weight: bold;
-font-size: 12px;
-text-align: center;
-box-shadow: 0 2px 6px (52, 168, 83, 0.3);
-}
-
-.guide-steps {
-margin: 6px 0 0 0;
-padding-left: 18px;
-font-size: 11px;
-color: #bbb;
-}
-
-.guide-steps li {
-margin-bottom: 3px;
-}
-
-.tip-box {
-background: rgba(255, 255, 255, 0.05);
-border-left: 3px solid #ff3b30;
-padding: 8px 10px;
-border-radius: 4px;
-font-size: 11px;
-color: #ccc;
-line-height: 1.4;
-}
-
-.modal-card input {
-width: 100%;
-padding: 10px 12px;
-border-radius: 8px;
-border: 1px solid #444;
-background: #2a2a2a;
-color: #fff;
-font-size: 13px;
-outline: none;
-}
-
-.modal-card input:focus {
-border-color: #ff3b30;
-}
-
-.modal-btns {
-display: flex;
-gap: 10px;
-margin-top: 4px;
-}
-
-.modal-btns button {
-flex: 1;
-padding: 10px;
-border-radius: 8px;
-border: none;
-font-weight: bold;
-cursor: pointer;
-font-size: 14px;
-}
-
-.btn-cancel {
-background: #444;
-color: #fff;
-}
-
-.btn-submit {
-background: #ff3b30;
-color: #fff;
-}
-
-.btn-secondary {
-background: #2196F3;
-color: #fff;
-font-size: 12px;
-padding: 7px;
-border-radius: 6px;
-border: none;
-cursor: pointer;
-text-align: center;
 }
 
 .reel-container {
@@ -547,7 +164,7 @@ position: relative;
 display: flex;
 justify-content: center;
 align-items: center;
-background-color: #000000;
+background-color: #ffffff;
 overflow: hidden;
 }
 
@@ -576,7 +193,7 @@ top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
+background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%),
 url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
 z-index: 5;
 cursor: pointer;
@@ -606,6 +223,7 @@ cursor: pointer;
 width: 22px;
 height: 22px;
 fill: #ffffff;
+transform: translateX(2px);
 }
 
 @keyframes pulse {
@@ -619,8 +237,8 @@ position: absolute;
 bottom: 0;
 left: 0;
 right: 0;
-padding: 40px 16px calc(65px + env(safe-area-inset-bottom)) 16px;
-background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
+background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
 z-index: 10;
 display: flex;
 justify-content: space-between;
@@ -636,6 +254,9 @@ margin-right: 16px;
 
 .cover-play-btn-wrapper {
 pointer-events: auto;
+margin-top: 10px;
+display: flex;
+justify-content: flex-start;
 }
 
 .song-title {
@@ -655,6 +276,24 @@ display: inline-block;
 padding: 3px 10px;
 border-radius: 12px;
 }
+
+.top-left-logo {
+position: absolute;
+top: 16px;
+left: 16px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+border: 2px solid rgba(255, 255, 255, 0.8);
+box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+z-index: 9999;
+object-fit: cover;
+background-color: #fff;
+transition: transform 0.2s ease;
+}
+.top-left-logo:hover {
+transform: scale(1.08);
+}
 </style>
 </head>
 <body>
@@ -664,179 +303,45 @@ border-radius: 12px;
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
-<!-- 宣傳按鈕與進入按鈕 -->
-<div class="promo-btn-container">
-<button class="promo-action-btn" onclick="openPromoModal()">🔥 獨家功能：一鍵打造專屬影音牆</button>
-<button class="enter-main-btn" onclick="enterFullScreen()">進入首頁瀏覽</button>
-</div>
-</div>
-
-<!-- 特殊功能說明彈出視窗 (Promo Modal) -->
-<div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
-<div class="promo-modal-card" onclick="event.stopPropagation()">
-<h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
-<div class="promo-feature-box">
-<b>這是一套別人沒有的智慧影音牆功能！您可以：</b>
-<ul>
-<li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端[cite: 1]。</li>
-<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</li>
-<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</li>
-<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
-</ul>
-</div>
-<button class="close-promo-btn" onclick="closePromoModal()">了解並關閉</button>
+<div class="splash-btn-container">
+<a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
+<a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
+<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
+<a href="https://myezlife.com/goldmelody_csv.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
 </div>
 </div>
 
 <div class="app-frame">
-<!-- 左上角常駐 Logo（點擊開啟左側選單） -->
-<img src="https://myezlife.com/eric-logo.gif" width="40" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
-
-<!-- 右側完整功能按鈕群組 -->
-<div class="top-right-group">
-<div class="top-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="隨機播放切換">
-<svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
-</div>
-<div class="top-icon-btn" id="autoplayBtn" onclick="toggleAutoplay()" title="自動連續播放下一首">
-<svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1 9H9v-4H7v4H5v-2h2V8h2v4h2v2z"/></svg>
-</div>
-<div class="top-icon-btn" onclick="openSettingsModal()" title="設定我的專屬歌單">
-<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-</div>
-<div class="top-icon-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
-<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-</div>
-</div>
-
-<!-- 左側滑出選單結構 -->
-<div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-<div class="side-drawer" id="sideDrawer">
-<div class="drawer-header">
-<img src="https://myezlife.com/eric-logo.gif" alt="Logo">
-<div class="drawer-title">功能選單</div>
-</div>
-<div class="drawer-btn-container">
-<a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
-<a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
-<a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
-<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
-<a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
-</div>
-</div>
-
-<!-- 1. 設定面板 Modal -->
-<div id="settingsModal" class="modal-overlay">
-<div class="modal-card">
-<h3>打造你的專屬影音牆</h3>
-<div class="template-guide-box">
-<b>📊 想要製作自己的播放清單？</b>
-<a href="https://docs.google.com/spreadsheets/d/1wHgO9bjq21vu2OFQchkwARwCKU2g-2p7SbxuBQ__mlw/copy" target="_blank" class="template-link-btn">
-📋 點此複製 Google 試算表範本
-</a>
-<ol class="guide-steps">
-<li>點擊上方按鈕，將範本「建立副本」到你的 Google 雲端。</li>
-<li>填入你想放的歌名與 YouTube 影片網址。</li>
-<li>點選選單「檔案」➔「分享」➔「發布到網路」，選擇「逗號分隔值 (.csv)」並發布，複製該網址貼在下方。</li>
-</ol>
-</div>
-<input type="text" id="customCsvInput" placeholder="貼上你的 CSV 發布網址...">
-<button class="btn-secondary" onclick="loadDefaultCsvUrl()">還原為站長預設推薦清單</button>
-<div class="tip-box">
-💡 <b>溫馨小提示</b>：自訂的試算表與新增歌曲會安全地存於您當前的裝置瀏覽器中。
-</div>
-<div class="modal-btns">
-<button class="btn-cancel" onclick="closeSettingsModal()">取消</button>
-<button class="btn-submit" onclick="saveCustomCsvUrl()">套用並重新整理</button>
-</div>
-</div>
-</div>
-
-<!-- 2. 新增歌曲 Modal -->
-<div id="addSongModal" class="modal-overlay">
-<div class="modal-card">
-<h3>新增 YouTube 歌曲</h3>
-<p>貼上你喜歡的 YouTube 影片網址，立刻排入你的播放清單頂端。</p>
-<input type="text" id="ytUrlInput" placeholder="請貼上 YouTube 影片網址...">
-<input type="text" id="ytTitleInput" placeholder="輸入歌曲名稱（選填）">
-<div class="modal-btns">
-<button class="btn-cancel" onclick="closeAddModal()">取消</button>
-<button class="btn-submit" onclick="addNewYouTubeSong()">立即加入</button>
-</div>
-</div>
-</div>
-
+<a href="https://myezlife.com/index-1.html"><img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Home"></a>
 <div class="reel-container" id="reelContainer"></div>
 </div>
 
 <script>
-const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
-
 function enterFullScreen() {
-  const splash = document.getElementById('splash-screen');
-  splash.style.opacity = '0';
-  setTimeout(() => {
-    splash.style.display = 'none';
-  }, 400);
+closeSplash();
 }
 
-function openPromoModal() {
-  document.getElementById('promoModalOverlay').style.display = 'flex';
+function handleSplashNav(event, targetUrl) {
+if (event) {
+event.preventDefault();
+event.stopPropagation();
+}
+window.location.replace(targetUrl);
 }
 
-function closePromoModal() {
-  document.getElementById('promoModalOverlay').style.display = 'none';
+function closeSplash() {
+const splash = document.getElementById('splash-screen');
+splash.style.opacity = '0';
+setTimeout(() => {
+splash.style.display = 'none';
+}, 400);
+
+if (document.documentElement.requestFullscreen) {
+document.documentElement.requestFullscreen().catch(() => {});
+}
 }
 
-function toggleDrawer() {
-  document.getElementById('sideDrawer').classList.toggle('active');
-  document.getElementById('drawerOverlay').classList.toggle('active');
-}
-
-function getActiveCsvUrl() {
-  try {
-    return localStorage.getItem('user_custom_csv_url') || DEFAULT_CSV_URL;
-  } catch (e) {
-    return DEFAULT_CSV_URL;
-  }
-}
-
-function getPlayerSettings() {
-  try {
-    return {
-      shuffle: localStorage.getItem('player_shuffle') === 'true',
-      autoplay: localStorage.getItem('player_autoplay') === 'true'
-    };
-  } catch (e) {
-    return { shuffle: false, autoplay: false };
-  }
-}
-
-function toggleShuffle() {
-  let settings = getPlayerSettings();
-  settings.shuffle = !settings.shuffle;
-  localStorage.setItem('player_shuffle', settings.shuffle);
-  updatePlayerUI();
-  location.reload();
-}
-
-function toggleAutoplay() {
-  let settings = getPlayerSettings();
-  settings.autoplay = !settings.autoplay;
-  localStorage.setItem('player_autoplay', settings.autoplay);
-  updatePlayerUI();
-}
-
-function updatePlayerUI() {
-  let settings = getPlayerSettings();
-  const shuffleBtn = document.getElementById('shuffleBtn');
-  const autoplayBtn = document.getElementById('autoplayBtn');
-  
-  if (settings.shuffle) shuffleBtn.classList.add('active');
-  else shuffleBtn.classList.remove('active');
-
-  if (settings.autoplay) autoplayBtn.classList.add('active');
-  else autoplayBtn.classList.remove('active');
-}
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
 function parseCSV(text) {
 const rows = [];
@@ -902,17 +407,20 @@ const titleCol = findColumn(headers, ["歌曲名稱", "歌曲", "歌名", "title
 const viewsCol = findColumn(headers, ["熱門標籤", "views", "標籤", "分類", "描述"]);
 const coverCol = findColumn(headers, ["封面樣式", "封面圖片網址", "coverclass", "coverurl", "封面"]);
 const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片網址", "影片連結", "video", "videoid", "youtubeid", "embedcode", "連結", "網址"]);
+const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
 
-const dataRows = titleCol >= 0 && videoCol >= 0 ? rows.slice(1) : rows;
-const titleIndex = titleCol >= 0 && videoCol >= 0 ? titleCol : 0;
-const videoIndex = videoCol >= 0 && videoCol >= 0 ? videoCol : 3;
+const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
+const titleIndex = titleCol >= 0 ? titleCol : 0;
+const videoIndex = videoCol >= 0 ? videoCol : 3;
+const productIndex = productCol >= 0 ? productCol : 4;
 
 return dataRows.map(row => {
 const title = String(row[titleIndex] || "").trim();
 const videoValue = String(row[videoIndex] || "").trim();
 const videoId = extractYouTubeId(videoValue);
+const productUrl = productCol >= 0 ? String(row[productIndex] || "").trim() : "";
 
-if (!title || !videoId) return null;
+if (!title || (!videoId && !productUrl)) return null;
 
 const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
 let coverUrl = "";
@@ -926,163 +434,63 @@ coverClass = coverValue;
 
 return {
 title,
-views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 正在播放",
+views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
 isCustomCover: true,
-coverClass: coverClass,
-coverUrl: coverUrl,
-embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${title.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+coverClass,
+coverUrl,
+productUrl,
+embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
 };
 }).filter(Boolean);
 }
 
-function recordUserClick(songTitle) {
+// 🌟 【新增功能】記錄使用者點擊過的影片到 localStorage
+function recordUserClick(song) {
   try {
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
-    let existing = history.find(item => item.title === songTitle);
+    let existing = history.find(item => item.title === song.title);
     if (existing) {
       existing.clicks = (existing.clicks || 1) + 1;
       existing.lastWatched = new Date().getTime();
     } else {
-      history.push({ title: songTitle, clicks: 3, lastWatched: new Date().getTime() });
+      history.push({
+        title: song.title,
+        clicks: 1,
+        lastWatched: new Date().getTime()
+      });
     }
+    // 最多保留最近互動的 100 筆紀錄
     if (history.length > 100) history.shift();
     localStorage.setItem('user_watch_history', JSON.stringify(history));
-  } catch (e) {}
-}
-
-function getCustomUserSongs() {
-  try {
-    return JSON.parse(localStorage.getItem('user_added_songs')) || [];
   } catch (e) {
-    return [];
+    console.error("記錄點擊失敗", e);
   }
-}
-
-function openSettingsModal() {
-  document.getElementById('customCsvInput').value = localStorage.getItem('user_custom_csv_url') || '';
-  document.getElementById('settingsModal').style.display = 'flex';
-}
-
-function closeSettingsModal() {
-  document.getElementById('settingsModal').style.display = 'none';
-}
-
-function loadDefaultCsvUrl() {
-  localStorage.removeItem('user_custom_csv_url');
-  alert("已還原為站長預設推薦清單！");
-  location.reload();
-}
-
-function saveCustomCsvUrl() {
-  const url = document.getElementById('customCsvInput').value.trim();
-  if (url) {
-    localStorage.setItem('user_custom_csv_url', url);
-    alert("設定成功！已切換為你的專屬試算表網址。");
-  } else {
-    localStorage.removeItem('user_custom_csv_url');
-    alert("已清除自訂設定，將使用預設清單。");
-  }
-  closeSettingsModal();
-  location.reload();
-}
-
-function openAddModal() {
-  document.getElementById('addSongModal').style.display = 'flex';
-}
-
-function closeAddModal() {
-  document.getElementById('addSongModal').style.display = 'none';
-  document.getElementById('ytUrlInput').value = '';
-  document.getElementById('ytTitleInput').value = '';
-}
-
-function addNewYouTubeSong() {
-  const urlVal = document.getElementById('ytUrlInput').value.trim();
-  let titleVal = document.getElementById('ytTitleInput').value.trim();
-  const videoId = extractYouTubeId(urlVal);
-  if (!videoId) {
-    alert("請輸入有效的 YouTube 影片網址！");
-    return;
-  }
-  if (!titleVal) {
-    titleVal = "自訂加入的精選好歌 (" + videoId + ")";
-  }
-
-  const newSong = {
-    title: titleVal,
-    views: "🌟 自訂收藏",
-    isCustomCover: true,
-    coverClass: "",
-    coverUrl: "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
-    embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${titleVal.replace(/"/g, '&quot;')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
-  };
-
-  try {
-    let customSongs = getCustomUserSongs();
-    customSongs.unshift(newSong);
-    localStorage.setItem('user_added_songs', JSON.stringify(customSongs));
-    recordUserClick(newSong.title);
-  } catch (e) {}
-
-  alert("新增成功！已將此歌曲排入你的專屬播放頂端。");
-  closeAddModal();
-  location.reload();
-}
-
-function applyUserPreferenceSorting(songsArray) {
-  try {
-    let customSongs = getCustomUserSongs();
-    songsArray = [...customSongs, ...songsArray];
-
-    let settings = getPlayerSettings();
-    if (settings.shuffle) {
-      return songsArray.sort(() => Math.random() - 0.5);
-    }
-
-    let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
-    if (history.length === 0) return songsArray;
-
-    let scoreMap = {};
-    history.forEach(item => {
-      scoreMap[item.title] = item.clicks || 1;
-    });
-
-    songsArray.sort((a, b) => {
-      let scoreA = scoreMap[a.title] || 0;
-      let scoreB = scoreMap[b.title] || 0;
-      return scoreB - scoreA;
-    });
-  } catch (e) {}
-  return songsArray;
 }
 
 async function loadSongDatabase() {
-  const activeUrl = getActiveCsvUrl();
-  const response = await fetch(activeUrl, { cache: "no-store" });
-  if (!response.ok) throw new Error("CSV 資料載入失敗（HTTP " + response.status + "）");
-  const csvText = await response.text();
-  let songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
-  if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認連結正確。");
-  
-  songs = applyUserPreferenceSorting(songs);
-  return songs;
+const response = await fetch(CSV_URL, { cache: "no-store" });
+if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
+const csvText = await response.text();
+const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
+if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
+return songs;
 }
 
 function initReels(songDatabase) {
 const container = document.getElementById('reelContainer');
 container.innerHTML = '';
 
-const infiniteSongs = [...songDatabase, ...songDatabase];
+const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
+const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
 
-infiniteSongs.forEach((song, index) => {
+infiniteSongs.forEach((song) => {
 const card = document.createElement('div');
 card.className = 'reel-card';
-card.dataset.index = index;
 
 let coverHtml = '';
 if (song.isCustomCover) {
 const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
+coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
 card.dataset.hasCover = "true";
 }
 
@@ -1095,16 +503,16 @@ ${coverHtml}
 <div class="song-views">${song.views}</div>
 </div>
 ${song.isCustomCover ? `
-<a href="https://myezlife.com/index-1.html" target="_blank" class="cover-play-btn-wrapper" style="text-decoration: none;">
-<div class="cover-play-btn" title="回首頁">
-<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+<div class="cover-play-btn-wrapper" onclick="playCustomSong(this, ${JSON.stringify(song).replace(/"/g, '&quot;')})">
+<div class="cover-play-btn">
+<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 </div>
-</a>` : ''}
+</div>` : ''}
 </div>
 `;
 
 card.dataset.embed = song.embedCode;
-card.dataset.title = song.title;
+card.dataset.productUrl = song.productUrl;
 container.appendChild(card);
 });
 
@@ -1112,7 +520,9 @@ const cards = document.querySelectorAll('.reel-card');
 const totalOriginal = songDatabase.length;
 
 if (cards.length > 0) {
-container.scrollTop = 0;
+const randomOffset = Math.floor(Math.random() * totalOriginal);
+const targetIndex = totalOriginal + randomOffset;
+container.scrollTop = cards[targetIndex].offsetTop;
 }
 
 let scrollTimeout;
@@ -1121,12 +531,12 @@ clearTimeout(scrollTimeout);
 scrollTimeout = setTimeout(() => {
 const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
 
-if (container.scrollTop < singleBlockHeight * 0.2) {
+if (container.scrollTop < singleBlockHeight * 0.4) {
 container.style.scrollSnapType = 'none';
 container.scrollTop += singleBlockHeight;
 setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 }
-else if (container.scrollTop > singleBlockHeight * 1.5) {
+else if (container.scrollTop > singleBlockHeight * 2.3) {
 container.style.scrollSnapType = 'none';
 container.scrollTop -= singleBlockHeight;
 setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
@@ -1134,42 +544,24 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 }, 100);
 }, { passive: true });
 
-let autoplayTimer = null;
-function resetAutoplayTimer() {
-  if (autoplayTimer) clearTimeout(autoplayTimer);
-  let settings = getPlayerSettings();
-  if (!settings.autoplay) return;
-
-  autoplayTimer = setTimeout(() => {
-    try {
-      const cardHeight = cards[0].offsetHeight;
-      const nextScrollTop = container.scrollTop + cardHeight;
-      container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
-    } catch (e) {}
-  }, 180000); 
-}
-
 const observer = new IntersectionObserver((entries) => {
 entries.forEach(entry => {
 const card = entry.target;
 const wrapper = card.querySelector('.video-wrapper');
-const coverLayer = card.querySelector('.custom-cover-layer');
+const hasCover = card.dataset.hasCover === "true";
 
 if (entry.isIntersecting) {
+const coverLayer = card.querySelector('.custom-cover-layer');
+if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
+return;
+}
+
 if (!wrapper.hasChildNodes()) {
 wrapper.innerHTML = card.dataset.embed;
 }
-if (coverLayer) {
-coverLayer.classList.add('fade-out');
-}
-if (card.dataset.title) {
-recordUserClick(card.dataset.title);
-}
-resetAutoplayTimer();
 } else {
+if (!hasCover || (hasCover && card.querySelector('.custom-cover-layer')?.classList.contains('fade-out'))) {
 wrapper.innerHTML = '';
-if (coverLayer) {
-coverLayer.classList.remove('fade-out');
 }
 }
 });
@@ -1180,15 +572,38 @@ observer.observe(card);
 });
 }
 
+function playCustomSong(btnWrapper, songObj) {
+// 🌟 記錄使用者的點擊喜好
+recordUserClick(songObj);
+
+const card = btnWrapper.closest('.reel-card');
+const wrapper = card.querySelector('.video-wrapper');
+const coverLayer = card.querySelector('.custom-cover-layer');
+const embedCode = card.dataset.embed;
+const productUrl = card.dataset.productUrl;
+
+if (embedCode) {
+if (!wrapper.hasChildNodes()) {
+wrapper.innerHTML = embedCode;
+}
+if (coverLayer) {
+coverLayer.classList.add('fade-out');
+}
+} else if (productUrl) {
+window.open(productUrl, '_blank');
+} else {
+alert("此項目目前沒有設定播放影片或產品連結");
+}
+}
+
 window.onload = async function () {
-updatePlayerUI();
 const container = document.getElementById("reelContainer");
 try {
 const songDatabase = await loadSongDatabase();
 initReels(songDatabase);
 } catch (error) {
 console.error("歌曲資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="localStorage.removeItem('user_custom_csv_url'); location.reload();" style="margin-top:16px;padding:10px 18px;">還原預設並重新載入</button></div>`;
+container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
 }
 };
 </script>
