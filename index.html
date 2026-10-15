@@ -189,16 +189,24 @@ padding-left: 18px;
 margin-bottom: 4px;
 }
 
-.close-promo-btn {
-background: #222;
+/* 🌟 改為「了解並前往」的按鈕樣式 */
+.go-to-feature-btn {
+background: linear-gradient(135deg, #ff3b30, #ff9500);
 color: #fff;
 border: none;
-padding: 12px;
+padding: 13px;
 border-radius: 12px;
 font-weight: bold;
-font-size: 14px;
+font-size: 15px;
 cursor: pointer;
 text-align: center;
+text-decoration: none;
+box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+transition: transform 0.2s ease;
+}
+
+.go-to-feature-btn:hover {
+transform: translateY(-2px);
 }
 
 /* 電腦版或大螢幕時：置中顯示手機比例框體 */
@@ -408,12 +416,12 @@ transform: scale(1.08);
 <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
 <a href="https://myezlife.com/goldmelody_csv.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
 
-<!-- 🌟 在最下方加入的宣傳按鈕 -->
+<!-- 宣傳按鈕 -->
 <button class="promo-action-btn" onclick="openPromoModal()">🔥 一鍵打造專屬影音牆</button>
 </div>
 </div>
 
-<!-- 🌟 特殊功能說明彈出視窗 (Promo Modal) -->
+<!-- 🌟 特殊功能說明彈出視窗 (Promo Modal，按鈕改為前往 goldmelody_csv.html) -->
 <div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
 <div class="promo-modal-card" onclick="event.stopPropagation()">
 <h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
@@ -426,7 +434,7 @@ transform: scale(1.08);
 <li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
 </ul>
 </div>
-<button class="close-promo-btn" onclick="closePromoModal()">了解並關閉</button>
+<a href="https://myezlife.com/goldmelody_csv.html" class="go-to-feature-btn">了解並前往影音牆 ➔</a>
 </div>
 </div>
 
@@ -440,7 +448,6 @@ function enterFullScreen() {
 closeSplash();
 }
 
-// 🌟 開啟與關閉獨家功能說明 Modal
 function openPromoModal() {
   document.getElementById('promoModalOverlay').style.display = 'flex';
 }
