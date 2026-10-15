@@ -463,7 +463,7 @@ font-weight: bold;
 color: #222;
 }
 
-/* 🌟 AI 智慧點歌主按鈕與 4 個隱藏展開按鈕 */
+/* 🌟 AI 智慧點歌主按鈕與 5 個獨立選項 */
 .mood-jukebox-box {
 background: #f8f9fa;
 border: 1px solid #eaeaea;
@@ -586,10 +586,10 @@ color: #fff;
 <div class="promo-feature-box">
 <b>這是一套別人沒有的智慧影音牆功能！您可以：</b>
 <ul>
-<li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端[cite: 1]。</li>
-<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！[cite: 1]</li>
-<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。[cite: 1]</li>
-<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。[cite: 1]</li>
+<li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。</li>
+<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</li>
+<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</li>
+<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
 </ul>
 </div>
 <a href="https://myezlife.com/goldmelody_csv.html" class="go-to-feature-btn">了解並前往影音牆 ➔</a>
@@ -608,7 +608,7 @@ color: #fff;
 <div class="drawer-title">功能選單</div>
 </div>
 
-<!-- 🌟 AI 智慧點歌隱藏按鈕與 4 個選項 -->
+<!-- 🌟 AI 智慧點歌隱藏按鈕與 5 個細分選項 -->
 <div class="mood-jukebox-box">
 <button class="mood-toggle-main-btn" onclick="toggleMoodSubMenu()">
 <span>🤖 AI 智慧點歌</span>
@@ -617,9 +617,10 @@ color: #fff;
 
 <div class="mood-sub-buttons" id="moodSubMenu">
 <button class="mood-btn" onclick="filterByMood('all')">✨ 1、全部隨機</button>
-<button class="mood-btn" onclick="filterByMood('singer')">🎤 2、男歌手/女歌手</button>
-<button class="mood-btn" onclick="filterByMood('love')">❤️ 3、愛情相關</button>
-<button class="mood-btn" onclick="filterByMood('life')">🏡 4、生活相關</button>
+<button class="mood-btn" onclick="filterByMood('male_singer')">🕺 2、男歌手</button>
+<button class="mood-btn" onclick="filterByMood('female_singer')">💃 3、女歌手</button>
+<button class="mood-btn" onclick="filterByMood('love')">❤️ 4、愛情相關</button>
+<button class="mood-btn" onclick="filterByMood('life')">🏡 5、生活相關</button>
 </div>
 </div>
 
@@ -645,7 +646,7 @@ function toggleDrawer() {
   document.getElementById('drawerOverlay').classList.toggle('active');
 }
 
-/* 🌟 控制 AI 智慧點歌 4 個子按鈕的展開與收合 */
+/* 🌟 控制 AI 智慧點歌子按鈕的展開與收合 */
 function toggleMoodSubMenu() {
   const subMenu = document.getElementById('moodSubMenu');
   const arrow = document.getElementById('toggleArrow');
@@ -775,7 +776,7 @@ coverClass = coverValue;
 return {
 title,
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
-aiCategory: "other", // 預設分類，稍後由背景 AI 自動打標籤
+aiCategory: "other", // 預設分類，由背景 AI 自動打標籤
 isCustomCover: true,
 coverClass,
 coverUrl,
@@ -785,17 +786,17 @@ embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" 
 }).filter(Boolean);
 }
 
-/* 🌟 背景靜默式 AI 自動智慧分類（使用者完全不用手動設定，也看不到過程） */
+/* 🌟 背景靜默式 AI 自動智慧分類（細分男、女歌手、愛情、生活） */
 async function runBackgroundAiClassification() {
   if (globalSongDatabase.length === 0) return;
   
-  // 提取所有歌單標題供 AI 批次辨識
   const titles = globalSongDatabase.map((s, idx) => `${idx + 1}. ${s.title}`).join("\n");
   const apiKey = "您的_GEMINI_API_KEY"; // 請保留或填入您的金鑰
   
   const prompt = `請幫以下歌單中的每一首歌進行智慧分類，並嚴格只回傳一個 JSON 陣列（不要有額外文字）。
 分類選項只能是：
-- "singer" (屬於男歌手、女歌手或特定歌手演唱的歌曲)
+- "male_singer" (主要由男歌手演唱的歌曲)
+- "female_singer" (主要由女歌手演唱的歌曲)
 - "love" (屬於愛情、情歌、思念、對唱等相關主題)
 - "life" (屬於生活、心靈、心情、哲理、散文或人生相關主題)
 - "other" (其他)
@@ -804,7 +805,7 @@ async function runBackgroundAiClassification() {
 ${titles}
 
 回傳格式範例（純JSON陣列，對應順序）：
-[{"index":1, "category":"singer"},{"index":2, "category":"love"}]`;
+[{"index":1, "category":"male_singer"},{"index":2, "category":"female_singer"}]`;
 
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
@@ -818,7 +819,6 @@ ${titles}
     const cleanJsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
     const results = JSON.parse(cleanJsonStr);
 
-    // 將背景 AI 算出來的分類無聲無息地寫入資料庫
     results.forEach(item => {
       if (globalSongDatabase[item.index - 1]) {
         globalSongDatabase[item.index - 1].aiCategory = item.category;
@@ -827,10 +827,11 @@ ${titles}
     console.log("🤖 背景 AI 智慧分類完成！");
   } catch (e) {
     console.log("背景 AI 分類未啟用或連線略過，將使用備用關鍵字機制。", e);
-    // 備用防護：若沒有 API Key 或連線失敗，自動用簡單關鍵字默默對應
+    // 備用防護：若無 API Key 或連線失敗，自動用簡單關鍵字區分男女歌手
     globalSongDatabase.forEach(s => {
-      if (/男|女|歌手|張學友|林憶蓮|周杰倫|江蕙|鳳飛飛|鄧麗君/.test(s.title)) s.aiCategory = "singer";
-      else if (/愛|情|心|冷風|淚|想妳|緣/.test(s.title)) s.aiCategory = "love";
+      if (/林憶蓮|鄧麗君|鳳飛飛|江蕙|張惠妹|梁靜茹|蔡依林/.test(s.title)) s.aiCategory = "female_singer";
+      else if (/張學友|周杰倫|劉德華|陳奕迅|伍佰|周華健/.test(s.title)) s.aiCategory = "male_singer";
+      else if (/愛|情|心|冷風|淚|想妳/.test(s.title)) s.aiCategory = "love";
       else s.aiCategory = "life";
     });
   }
@@ -1001,7 +1002,7 @@ try {
 globalSongDatabase = await loadSongDatabase();
 initReels(globalSongDatabase);
 
-// 🚀 在背景悄悄啟動 AI 智慧分類運算（完全不干擾畫面，使用者無感但點擊時極準確）
+// 🚀 背景啟動 AI 分類
 runBackgroundAiClassification();
 } catch (error) {
 console.error("資料載入失敗：", error);
