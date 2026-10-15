@@ -434,6 +434,7 @@ transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 display: flex;
 flex-direction: column;
 padding: 24px 20px;
+overflow-y: auto;
 }
 
 .side-drawer.active {
@@ -444,7 +445,7 @@ left: 0;
 display: flex;
 align-items: center;
 gap: 12px;
-margin-bottom: 24px;
+margin-bottom: 20px;
 padding-bottom: 16px;
 border-bottom: 1px solid #eee;
 }
@@ -460,6 +461,51 @@ object-fit: cover;
 font-size: 15px;
 font-weight: bold;
 color: #222;
+}
+
+/* 🌟 AI 心情點歌機選單區塊 */
+.mood-jukebox-box {
+background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+border: 1px solid #dee2e6;
+padding: 14px;
+border-radius: 16px;
+margin-bottom: 20px;
+}
+
+.mood-title {
+font-size: 13px;
+font-weight: 800;
+color: #ff3b30;
+margin-bottom: 10px;
+display: flex;
+align-items: center;
+gap: 4px;
+}
+
+.mood-btn-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 8px;
+}
+
+.mood-btn {
+background: #ffffff;
+border: 1px solid #ced4da;
+padding: 8px 10px;
+border-radius: 10px;
+font-size: 13px;
+font-weight: 600;
+color: #333;
+cursor: pointer;
+text-align: center;
+transition: all 0.2s ease;
+}
+
+.mood-btn:hover {
+background: #ff3b30;
+color: #fff;
+border-color: #ff3b30;
+transform: translateY(-1px);
 }
 
 .drawer-btn-container {
@@ -507,7 +553,7 @@ color: #fff;
 </div>
 </div>
 
-<!-- 🌟 特殊功能說明彈出視窗 (Promo Modal) -->
+<!-- 特殊功能說明彈出視窗 (Promo Modal) -->
 <div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
 <div class="promo-modal-card" onclick="event.stopPropagation()">
 <h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
@@ -535,6 +581,18 @@ color: #fff;
 <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
 <div class="drawer-title">功能選單</div>
 </div>
+
+<!-- 🌟 AI 心情點歌機區塊 -->
+<div class="mood-jukebox-box">
+<div class="mood-title">🤖 AI 心情點歌機</div>
+<div class="mood-btn-grid">
+<button class="mood-btn" onclick="filterByMood('all')">✨ 全部隨機</button>
+<button class="mood-btn" onclick="filterByMood('放鬆')">☕ 想放鬆沉澱</button>
+<button class="mood-btn" onclick="filterByMood('懷舊')">📻 懷舊復古</button>
+<button class="mood-btn" onclick="filterByMood('輕快')">🚀 輕快提神</button>
+</div>
+</div>
+
 <div class="drawer-btn-container">
 <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
 <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
@@ -550,6 +608,8 @@ color: #fff;
 </div>
 
 <script>
+let globalSongDatabase = []; // 用來儲存從 CSV 載入的完整資料庫
+
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
   document.getElementById('drawerOverlay').classList.toggle('active');
@@ -716,6 +776,26 @@ if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄�
 return songs;
 }
 
+/* 🌟 AI 心情篩選與重組播放清單核心函式 */
+function filterByMood(moodKeyword) {
+  toggleDrawer(); // 關閉側滑選單
+  
+  let targetSongs = globalSongDatabase;
+  if (moodKeyword !== 'all') {
+    // 根據標題或標籤分類過濾符合心情的曲目
+    targetSongs = globalSongDatabase.filter(song => 
+      song.title.includes(moodKeyword) || song.views.includes(moodKeyword)
+    );
+    // 如果篩選不到特定結果，退回全部隨機以免畫面空白
+    if (targetSongs.length === 0) {
+      alert(`目前沒有找到包含「${moodKeyword}」的項目，將為您展示全部精選！`);
+      targetSongs = globalSongDatabase;
+    }
+  }
+  
+  initReels(targetSongs);
+}
+
 function initReels(songDatabase) {
 const container = document.getElementById('reelContainer');
 container.innerHTML = '';
@@ -838,8 +918,8 @@ alert("此項目目前沒有設定播放影片或產品連結");
 window.onload = async function () {
 const container = document.getElementById("reelContainer");
 try {
-const songDatabase = await loadSongDatabase();
-initReels(songDatabase);
+globalSongDatabase = await loadSongDatabase(); // 載入並快取完整資料庫
+initReels(globalSongDatabase);
 } catch (error) {
 console.error("資料載入失敗：", error);
 container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
