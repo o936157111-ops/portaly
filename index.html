@@ -102,7 +102,7 @@ color: #fff;
 transform: translateY(-2px);
 }
 
-/* 🌟 特殊功能宣傳按鈕樣式 */
+/* 特殊功能宣傳按鈕樣式 */
 .promo-action-btn {
 width: 100%;
 padding: 13px 18px;
@@ -125,7 +125,7 @@ transform: translateY(-2px);
 box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
 }
 
-/* 🌟 特殊功能說明彈出視窗 (Promo Modal) */
+/* 特殊功能說明彈出視窗 (Promo Modal) */
 .promo-modal-overlay {
 position: fixed;
 top: 0;
@@ -463,49 +463,76 @@ font-weight: bold;
 color: #222;
 }
 
-/* 🌟 AI 心情點歌機選單區塊 */
+/* 🌟 AI 智慧點歌主按鈕與 4 個隱藏展開按鈕容器 */
 .mood-jukebox-box {
-background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-border: 1px solid #dee2e6;
-padding: 14px;
-border-radius: 16px;
-margin-bottom: 20px;
+background: #f8f9fa;
+border: 1px solid #eaeaea;
+padding: 12px;
+border-radius: 14px;
+margin-bottom: 16px;
 }
 
-.mood-title {
-font-size: 13px;
-font-weight: 800;
-color: #ff3b30;
-margin-bottom: 10px;
+.mood-toggle-main-btn {
+width: 100%;
+padding: 11px 14px;
+background: linear-gradient(135deg, #ff3b30, #ff9500);
+border: none;
+color: #fff;
+font-size: 14px;
+font-weight: bold;
+text-align: center;
+border-radius: 10px;
+cursor: pointer;
+box-shadow: 0 3px 10px rgba(255, 59, 48, 0.3);
+transition: transform 0.2s ease;
 display: flex;
+justify-content: center;
 align-items: center;
-gap: 4px;
+gap: 6px;
 }
 
-.mood-btn-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
+.mood-toggle-main-btn:hover {
+transform: translateY(-1px);
+}
+
+/* 預設隱藏 4 個子按鈕容器，點擊後展開 */
+.mood-sub-buttons {
+display: none;
+flex-direction: column;
 gap: 8px;
+margin-top: 10px;
+animation: fadeIn 0.25s ease;
+}
+
+.mood-sub-buttons.active {
+display: flex;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(-5px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 .mood-btn {
 background: #ffffff;
-border: 1px solid #ced4da;
-padding: 8px 10px;
+border: 1px solid #ddd;
+padding: 10px 14px;
 border-radius: 10px;
-font-size: 13px;
+font-size: 14px;
 font-weight: 600;
 color: #333;
 cursor: pointer;
-text-align: center;
+text-align: left;
 transition: all 0.2s ease;
+display: flex;
+align-items: center;
+gap: 8px;
 }
 
 .mood-btn:hover {
-background: #ff3b30;
+background: #222;
 color: #fff;
-border-color: #ff3b30;
-transform: translateY(-1px);
+border-color: #222;
 }
 
 .drawer-btn-container {
@@ -582,14 +609,18 @@ color: #fff;
 <div class="drawer-title">功能選單</div>
 </div>
 
-<!-- 🌟 AI 心情點歌機區塊 -->
+<!-- 🌟 AI 智慧點歌主按鈕與 4 個隱藏展開按鈕 -->
 <div class="mood-jukebox-box">
-<div class="mood-title">🤖 AI 心情點歌機</div>
-<div class="mood-btn-grid">
-<button class="mood-btn" onclick="filterByMood('all')">✨ 全部隨機</button>
-<button class="mood-btn" onclick="filterByMood('放鬆')">☕ 想放鬆沉澱</button>
-<button class="mood-btn" onclick="filterByMood('懷舊')">📻 懷舊復古</button>
-<button class="mood-btn" onclick="filterByMood('輕快')">🚀 輕快提神</button>
+<button class="mood-toggle-main-btn" onclick="toggleMoodSubMenu()">
+<span>🤖 AI 智慧點歌</span>
+<span id="toggleArrow">▼</span>
+</button>
+
+<div class="mood-sub-buttons" id="moodSubMenu">
+<button class="mood-btn" onclick="filterByMood('all')">✨ 1、全部隨機</button>
+<button class="mood-btn" onclick="filterByMood('歌手')">🎤 2、男歌手/女歌手</button>
+<button class="mood-btn" onclick="filterByMood('愛情')">❤️ 3、愛情相關</button>
+<button class="mood-btn" onclick="filterByMood('生活')">🏡 4、生活相關</button>
 </div>
 </div>
 
@@ -608,11 +639,19 @@ color: #fff;
 </div>
 
 <script>
-let globalSongDatabase = []; // 用來儲存從 CSV 載入的完整資料庫
+let globalSongDatabase = []; // 儲存完整資料庫
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
   document.getElementById('drawerOverlay').classList.toggle('active');
+}
+
+/* 🌟 控制 AI 智慧點歌 4 個子按鈕的展開與收合 */
+function toggleMoodSubMenu() {
+  const subMenu = document.getElementById('moodSubMenu');
+  const arrow = document.getElementById('toggleArrow');
+  subMenu.classList.toggle('active');
+  arrow.textContent = subMenu.classList.contains('active') ? '▲' : '▼';
 }
 
 function enterFullScreen() {
@@ -776,19 +815,18 @@ if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄�
 return songs;
 }
 
-/* 🌟 AI 心情篩選與重組播放清單核心函式 */
-function filterByMood(moodKeyword) {
+/* 🌟 AI 智慧點歌篩選與重組播放清單 */
+function filterByMood(keyword) {
   toggleDrawer(); // 關閉側滑選單
   
   let targetSongs = globalSongDatabase;
-  if (moodKeyword !== 'all') {
-    // 根據標題或標籤分類過濾符合心情的曲目
+  if (keyword !== 'all') {
+    // 同時比對歌名或標籤分類中是否包含關鍵字
     targetSongs = globalSongDatabase.filter(song => 
-      song.title.includes(moodKeyword) || song.views.includes(moodKeyword)
+      song.title.includes(keyword) || song.views.includes(keyword)
     );
-    // 如果篩選不到特定結果，退回全部隨機以免畫面空白
     if (targetSongs.length === 0) {
-      alert(`目前沒有找到包含「${moodKeyword}」的項目，將為您展示全部精選！`);
+      alert(`目前沒有找到包含「${keyword}」的相關項目，將為您展示全部隨機精選！`);
       targetSongs = globalSongDatabase;
     }
   }
@@ -918,7 +956,7 @@ alert("此項目目前沒有設定播放影片或產品連結");
 window.onload = async function () {
 const container = document.getElementById("reelContainer");
 try {
-globalSongDatabase = await loadSongDatabase(); // 載入並快取完整資料庫
+globalSongDatabase = await loadSongDatabase();
 initReels(globalSongDatabase);
 } catch (error) {
 console.error("資料載入失敗：", error);
