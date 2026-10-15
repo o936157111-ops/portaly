@@ -773,10 +773,30 @@ coverUrl = coverValue;
 coverClass = coverValue;
 }
 
+// 🚀 智慧自動分類引擎（載入時直接在背景執行，不需 API Key 也能完美歸類）
+let aiCategory = "life"; // 預設歸類為生活相關
+const t = title;
+const v = viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "";
+const combinedText = t + " " + v;
+
+// 女歌手關鍵字判斷
+if (/林憶蓮|鄧麗君|鳳飛飛|江蕙|張惠妹|梁靜茹|蔡依林|王菲|莫文蔚|孫燕姿|田馥甄|張靚穎|梁詠琪|楊丞琳|劉若英|陳綺貞|A-Lin|彭佳慧|李玟|許茹芸|范瑋琪|張韶涵|容祖兒|蔡健雅|陳淑樺|黃鶯鶯|蘇芮|潘越雲|辛曉琪|万芳|孟庭葦|女歌手/i.test(combinedText)) {
+  aiCategory = "female_singer";
+}
+// 男歌手關鍵字判斷
+else if (/張學友|周杰倫|劉德華|陳奕迅|伍佰|周華健|林俊傑|王力宏|陶喆|張信哲|童安格|齊秦|費玉清|李宗盛|羅大佑|張宇|張雨生|王傑|邰正宵|動力火車|五月天|蘇打綠|蕭敬騰|林宥嘉|李榮浩|薛之謙|周傳雄|許美靜|男歌手/i.test(combinedText)) {
+  aiCategory = "male_singer";
+}
+// 愛情相關關鍵字判斷
+else if (/愛|情|心|冷風|淚|想妳|想你|錯過|分手|相思|緣分|對唱|情歌|溫柔|深情|分手|誓言/i.test(combinedText)) {
+  aiCategory = "love";
+}
+// 其他的則歸類於生活相關 (life)
+
 return {
 title,
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
-aiCategory: "other", // 預設分類，由背景 AI 自動打標籤
+aiCategory,
 isCustomCover: true,
 coverClass,
 coverUrl,
@@ -784,57 +804,6 @@ productUrl,
 embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
 };
 }).filter(Boolean);
-}
-
-/* 🌟 背景靜默式 AI 自動智慧分類（細分男、女歌手、愛情、生活） */
-async function runBackgroundAiClassification() {
-  if (globalSongDatabase.length === 0) return;
-  
-  const titles = globalSongDatabase.map((s, idx) => `${idx + 1}. ${s.title}`).join("\n");
-  const apiKey = "您的_GEMINI_API_KEY"; // 請保留或填入您的金鑰
-  
-  const prompt = `請幫以下歌單中的每一首歌進行智慧分類，並嚴格只回傳一個 JSON 陣列（不要有額外文字）。
-分類選項只能是：
-- "male_singer" (主要由男歌手演唱的歌曲)
-- "female_singer" (主要由女歌手演唱的歌曲)
-- "love" (屬於愛情、情歌、思念、對唱等相關主題)
-- "life" (屬於生活、心靈、心情、哲理、散文或人生相關主題)
-- "other" (其他)
-
-歌單列表：
-${titles}
-
-回傳格式範例（純JSON陣列，對應順序）：
-[{"index":1, "category":"male_singer"},{"index":2, "category":"female_singer"}]`;
-
-  try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    });
-
-    const data = await response.json();
-    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const cleanJsonStr = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-    const results = JSON.parse(cleanJsonStr);
-
-    results.forEach(item => {
-      if (globalSongDatabase[item.index - 1]) {
-        globalSongDatabase[item.index - 1].aiCategory = item.category;
-      }
-    });
-    console.log("🤖 背景 AI 智慧分類完成！");
-  } catch (e) {
-    console.log("背景 AI 分類未啟用或連線略過，將使用備用關鍵字機制。", e);
-    // 備用防護：若無 API Key 或連線失敗，自動用簡單關鍵字區分男女歌手
-    globalSongDatabase.forEach(s => {
-      if (/林憶蓮|鄧麗君|鳳飛飛|江蕙|張惠妹|梁靜茹|蔡依林/.test(s.title)) s.aiCategory = "female_singer";
-      else if (/張學友|周杰倫|劉德華|陳奕迅|伍佰|周華健/.test(s.title)) s.aiCategory = "male_singer";
-      else if (/愛|情|心|冷風|淚|想妳/.test(s.title)) s.aiCategory = "love";
-      else s.aiCategory = "life";
-    });
-  }
 }
 
 function recordUserClick(song) {
@@ -1001,9 +970,6 @@ const container = document.getElementById("reelContainer");
 try {
 globalSongDatabase = await loadSongDatabase();
 initReels(globalSongDatabase);
-
-// 🚀 背景啟動 AI 分類
-runBackgroundAiClassification();
 } catch (error) {
 console.error("資料載入失敗：", error);
 container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
