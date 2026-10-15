@@ -70,7 +70,7 @@ letter-spacing: 1px;
 cursor: pointer;
 }
 
-/* 按鈕容器樣式 (擴充為 4 個按鈕) */
+/* 按鈕容器樣式 */
 .splash-btn-container {
 display: flex;
 flex-direction: column;
@@ -100,6 +100,105 @@ cursor: pointer;
 background: #222;
 color: #fff;
 transform: translateY(-2px);
+}
+
+/* 🌟 特殊功能宣傳按鈕樣式 */
+.promo-action-btn {
+width: 100%;
+padding: 13px 18px;
+background: linear-gradient(135deg, #ff3b30, #ff9500);
+border: none;
+color: #fff;
+font-size: 15px;
+font-weight: bold;
+text-align: center;
+border-radius: 12px;
+text-decoration: none;
+box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+cursor: pointer;
+margin-bottom: 4px;
+}
+
+.promo-action-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
+}
+
+/* 🌟 特殊功能說明彈出視窗 (Promo Modal) */
+.promo-modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.65);
+backdrop-filter: blur(5px);
+z-index: 100000;
+display: none;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+
+.promo-modal-card {
+background: #ffffff;
+color: #222;
+width: 100%;
+max-width: 360px;
+padding: 24px 20px;
+border-radius: 20px;
+box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+display: flex;
+flex-direction: column;
+gap: 14px;
+max-height: 90vh;
+overflow-y: auto;
+animation: scaleUp 0.25s ease;
+}
+
+@keyframes scaleUp {
+from { transform: scale(0.9); opacity: 0; }
+to { transform: scale(1); opacity: 1; }
+}
+
+.promo-modal-card h3 {
+margin: 0;
+font-size: 18px;
+color: #ff3b30;
+text-align: center;
+font-weight: 800;
+}
+
+.promo-feature-box {
+background: #f8f9fa;
+border: 1px solid #eaeaea;
+padding: 12px;
+border-radius: 12px;
+font-size: 13px;
+color: #444;
+line-height: 1.5;
+}
+
+.promo-feature-box ul {
+margin: 6px 0 0 0;
+padding-left: 18px;
+}
+
+.promo-feature-box li {
+margin-bottom: 4px;
+}
+
+.close-promo-btn {
+background: #222;
+color: #fff;
+border: none;
+padding: 12px;
+border-radius: 12px;
+font-weight: bold;
+font-size: 14px;
+cursor: pointer;
+text-align: center;
 }
 
 /* 電腦版或大螢幕時：置中顯示手機比例框體 */
@@ -308,6 +407,26 @@ transform: scale(1.08);
 <a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
 <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
 <a href="https://myezlife.com/goldmelody_csv.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
+
+<!-- 🌟 在最下方加入的宣傳按鈕 -->
+<button class="promo-action-btn" onclick="openPromoModal()">🔥 一鍵打造專屬影音牆</button>
+</div>
+</div>
+
+<!-- 🌟 特殊功能說明彈出視窗 (Promo Modal) -->
+<div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
+<div class="promo-modal-card" onclick="event.stopPropagation()">
+<h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
+<div class="promo-feature-box">
+<b>這是一套別人沒有的智慧影音牆功能！您可以：</b>
+<ul>
+<li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端[cite: 1]。</li>
+<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</li>
+<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</li>
+<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
+</ul>
+</div>
+<button class="close-promo-btn" onclick="closePromoModal()">了解並關閉</button>
 </div>
 </div>
 
@@ -319,6 +438,15 @@ transform: scale(1.08);
 <script>
 function enterFullScreen() {
 closeSplash();
+}
+
+// 🌟 開啟與關閉獨家功能說明 Modal
+function openPromoModal() {
+  document.getElementById('promoModalOverlay').style.display = 'flex';
+}
+
+function closePromoModal() {
+  document.getElementById('promoModalOverlay').style.display = 'none';
 }
 
 function handleSplashNav(event, targetUrl) {
@@ -444,7 +572,6 @@ embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" 
 }).filter(Boolean);
 }
 
-// 🌟 【新增功能】記錄使用者點擊過的影片到 localStorage
 function recordUserClick(song) {
   try {
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
@@ -459,7 +586,6 @@ function recordUserClick(song) {
         lastWatched: new Date().getTime()
       });
     }
-    // 最多保留最近互動的 100 筆紀錄
     if (history.length > 100) history.shift();
     localStorage.setItem('user_watch_history', JSON.stringify(history));
   } catch (e) {
@@ -573,7 +699,6 @@ observer.observe(card);
 }
 
 function playCustomSong(btnWrapper, songObj) {
-// 🌟 記錄使用者的點擊喜好
 recordUserClick(songObj);
 
 const card = btnWrapper.closest('.reel-card');
