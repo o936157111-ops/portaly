@@ -70,36 +70,127 @@ letter-spacing: 1px;
 cursor: pointer;
 }
 
-/* 按鈕容器樣式 (擴充為 4 個按鈕) */
-.splash-btn-container {
+/* 🌟 特殊功能宣傳按鈕容器 */
+.promo-btn-container {
 display: flex;
 flex-direction: column;
 gap: 12px;
 width: 100%;
-max-width: 260px;
+max-width: 280px;
 }
 
-/* 按鈕樣式 */
-.splash-btn {
+.promo-action-btn {
 width: 100%;
-padding: 12px 18px;
-background: #f7f7f7;
-border: 1px solid #ddd;
-color: #222;
+padding: 14px 18px;
+background: linear-gradient(135deg, #ff3b30, #ff9500);
+border: none;
+color: #fff;
 font-size: 15px;
-font-weight: 600;
+font-weight: bold;
 text-align: center;
-border-radius: 12px;
+border-radius: 14px;
 text-decoration: none;
-box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-transition: all 0.2s ease;
+box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
 cursor: pointer;
 }
 
-.splash-btn:hover {
+.promo-action-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
+}
+
+.enter-main-btn {
+background: #111;
+color: #fff;
+border-radius: 14px;
+padding: 12px 18px;
+font-size: 15px;
+font-weight: 600;
+border: none;
+cursor: pointer;
+box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+transition: background 0.2s ease;
+}
+
+.enter-main-btn:hover {
+background: #333;
+}
+
+/* 🌟 特殊功能說明彈出浮動視窗 (Promo Modal) */
+.promo-modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.65);
+backdrop-filter: blur(5px);
+z-index: 100000;
+display: none;
+justify-content: center;
+align-items: center;
+padding: 20px;
+}
+
+.promo-modal-card {
+background: #ffffff;
+color: #222;
+width: 100%;
+max-width: 360px;
+padding: 24px 20px;
+border-radius: 20px;
+box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+display: flex;
+flex-direction: column;
+gap: 14px;
+max-height: 90vh;
+overflow-y: auto;
+animation: scaleUp 0.25s ease;
+}
+
+@keyframes scaleUp {
+from { transform: scale(0.9); opacity: 0; }
+to { transform: scale(1); opacity: 1; }
+}
+
+.promo-modal-card h3 {
+margin: 0;
+font-size: 18px;
+color: #ff3b30;
+text-align: center;
+font-weight: 800;
+}
+
+.promo-feature-box {
+background: #f8f9fa;
+border: 1px solid #eaeaea;
+padding: 12px;
+border-radius: 12px;
+font-size: 13px;
+color: #444;
+line-height: 1.5;
+}
+
+.promo-feature-box ul {
+margin: 6px 0 0 0;
+padding-left: 18px;
+}
+
+.promo-feature-box li {
+margin-bottom: 4px;
+}
+
+.close-promo-btn {
 background: #222;
 color: #fff;
-transform: translateY(-2px);
+border: none;
+padding: 12px;
+border-radius: 12px;
+font-weight: bold;
+font-size: 14px;
+cursor: pointer;
+text-align: center;
 }
 
 /* 電腦版或大螢幕時：置中顯示手機比例框體 */
@@ -390,21 +481,37 @@ color: #fff;
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
-<div class="splash-btn-container">
-<a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
-<a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
-<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
-<a href="https://myezlife.com/goldmelody_csv.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
+<!-- 🌟 移除舊 4 按鈕，改為獨家功能宣傳按鈕與進入首頁按鈕 -->
+<div class="promo-btn-container">
+<button class="promo-action-btn" onclick="openPromoModal()">🔥 獨家功能：一鍵打造專屬影音牆</button>
+<button class="enter-main-btn" onclick="enterFullScreen()">進入首頁瀏覽</button>
+</div>
+</div>
+
+<!-- 🌟 特殊功能說明彈出視窗 (Promo Modal) -->
+<div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
+<div class="promo-modal-card" onclick="event.stopPropagation()">
+<h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
+<div class="promo-feature-box">
+<b>這是一套別人沒有的智慧影音牆功能！您可以：</b>
+<ul>
+<li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。</li>
+<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</li>
+<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</li>
+<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
+</ul>
+</div>
+<button class="close-promo-btn" onclick="closePromoModal()">了解並關閉</button>
 </div>
 </div>
 
 <div class="app-frame">
-<!-- 🌟 點擊左上角 Logo 改為呼叫開啟左側滑出選單 -->
+<!-- 點擊左上角 Logo 開啟左側滑出選單 -->
 <img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
 <div class="reel-container" id="reelContainer"></div>
 </div>
 
-<!-- 🌟 左側滑出選單結構 -->
+<!-- 左側滑出選單結構 -->
 <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 <div class="side-drawer" id="sideDrawer">
 <div class="drawer-header">
@@ -412,11 +519,11 @@ color: #fff;
 <div class="drawer-title">功能選單</div>
 </div>
 <div class="drawer-btn-container">
-<a href="https://myezlife.com/index-1.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">生活‧簡居‧生活</a>
-<a href="https://myezlife.com/FileExplorer.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
-<a href="https://myezlife.com/index_news.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
-<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
-<a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
+<a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
+<a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
+<a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
+<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
+<a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
 </div>
 </div>
 
@@ -425,28 +532,29 @@ function enterFullScreen() {
 closeSplash();
 }
 
-// 🌟 控制左側選單開關的函式
-function toggleDrawer() {
-const drawer = document.getElementById('sideDrawer');
-const overlay = document.getElementById('drawerOverlay');
-drawer.classList.toggle('active');
-overlay.classList.toggle('active');
+// 開啟與關閉獨家功能說明 Modal
+function openPromoModal() {
+  document.getElementById('promoModalOverlay').style.display = 'flex';
 }
 
-function handleSplashNav(event, targetUrl) {
-if (event) {
-event.preventDefault();
-event.stopPropagation();
+function closePromoModal() {
+  document.getElementById('promoModalOverlay').style.display = 'none';
 }
-window.location.replace(targetUrl);
+
+// 控制左側選單開關的函式
+function toggleDrawer() {
+  const drawer = document.getElementById('sideDrawer');
+  const overlay = document.getElementById('drawerOverlay');
+  drawer.classList.toggle('active');
+  overlay.classList.toggle('active');
 }
 
 function closeSplash() {
-const splash = document.getElementById('splash-screen');
-splash.style.opacity = '0';
-setTimeout(() => {
-splash.style.display = 'none';
-}, 400);
+  const splash = document.getElementById('splash-screen');
+  splash.style.opacity = '0';
+  setTimeout(() => {
+    splash.style.display = 'none';
+  }, 400);
 }
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
