@@ -75,8 +75,8 @@ background-color: #000000;
 position: absolute;
 top: max(16px, env(safe-area-inset-top));
 left: 16px;
-width: 44px;
-height: 44px;
+width: 40px;
+height: 40px;
 border-radius: 50%;
 border: 2px solid rgba(255, 255, 255, 0.8);
 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -90,24 +90,25 @@ transition: transform 0.2s ease;
 transform: scale(1.08);
 }
 
-/* 右側功能按鈕群組 (設定、新增、自動連播、隨機播放) */
+/* 🌟 重新排版：將右側功能按鈕群組往下移並改為直向或精巧橫排，完美避開 YT 內建設定與音量按鈕區 */
 .top-right-group {
 position: absolute;
-top: max(16px, env(safe-area-inset-top));
+top: max(68px, calc(env(safe-area-inset-top) + 52px));
 right: 16px;
 display: flex;
-gap: 6px;
+flex-direction: column;
+gap: 8px;
 z-index: 9999;
 }
 
 .top-icon-btn {
-width: 40px;
-height: 40px;
+width: 38px;
+height: 38px;
 border-radius: 50%;
-border: 2px solid rgba(255, 255, 255, 0.8);
-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-background-color: rgba(0, 0, 0, 0.6);
-backdrop-filter: blur(4px);
+border: 1.5px solid rgba(255, 255, 255, 0.7);
+box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+background-color: rgba(0, 0, 0, 0.65);
+backdrop-filter: blur(6px);
 display: flex;
 justify-content: center;
 align-items: center;
@@ -116,13 +117,13 @@ transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .top-icon-btn:hover {
-transform: scale(1.08);
-background-color: rgba(255, 59, 48, 0.8);
+transform: scale(1.1);
+background-color: rgba(255, 59, 48, 0.9);
 }
 
 .top-icon-btn svg {
-width: 18px;
-height: 18px;
+width: 16px;
+height: 16px;
 fill: #ffffff;
 }
 
@@ -412,24 +413,24 @@ border-radius: 12px;
 <div class="app-frame">
 <!-- 左上角回首頁 Logo -->
 <a href="https://myezlife.com/index-1.html">
-<img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Logo">
+<img src="https://myezlife.com/eric-logo.gif" width="40" class="top-left-logo" alt="Logo">
 </a>
 
-<!-- 右上角功能按鈕群組 (設定、新增、自動連播、隨機播放) -->
+<!-- 🌟 右側功能按鈕群組：已往下移並改為直向排列，完美避開 YT 內建按鈕區 -->
 <div class="top-right-group">
-<!-- 隨機播放開關按鈕 -->
+<!-- 1. 隨機播放開關 -->
 <div class="top-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="隨機播放切換">
 <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
 </div>
-<!-- 連續自動播放開關按鈕 -->
+<!-- 2. 自動連續播放開關 -->
 <div class="top-icon-btn" id="autoplayBtn" onclick="toggleAutoplay()" title="自動連續播放下一首">
 <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1 9H9v-4H7v4H5v-2h2V8h2v4h2v2z"/></svg>
 </div>
-<!-- 設定按鈕 -->
+<!-- 3. 設定按鈕 -->
 <div class="top-icon-btn" onclick="openSettingsModal()" title="設定我的專屬歌單">
 <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
 </div>
-<!-- 新增按鈕 -->
+<!-- 4. 新增按鈕 -->
 <div class="top-icon-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
 <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
 </div>
@@ -490,7 +491,6 @@ function getActiveCsvUrl() {
   }
 }
 
-// 播放器狀態開關設定
 function getPlayerSettings() {
   try {
     return {
@@ -507,7 +507,7 @@ function toggleShuffle() {
   settings.shuffle = !settings.shuffle;
   localStorage.setItem('player_shuffle', settings.shuffle);
   updatePlayerUI();
-  location.reload(); // 重新整理以套用隨機排序
+  location.reload();
 }
 
 function toggleAutoplay() {
@@ -720,7 +720,6 @@ function addNewYouTubeSong() {
   location.reload();
 }
 
-// 排序與隨機播放邏輯
 function applyUserPreferenceSorting(songsArray) {
   try {
     let customSongs = getCustomUserSongs();
@@ -728,7 +727,6 @@ function applyUserPreferenceSorting(songsArray) {
 
     let settings = getPlayerSettings();
     if (settings.shuffle) {
-      // 如果開啟隨機播放，直接將整份清單隨機洗牌
       return songsArray.sort(() => Math.random() - 0.5);
     }
 
@@ -827,14 +825,12 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 }, 100);
 }, { passive: true });
 
-// 🌟 自動連續播放模擬：利用定時器或音樂長度估算，當前影片播放一段時間後自動滑向下一張卡片
 let autoplayTimer = null;
 function resetAutoplayTimer() {
   if (autoplayTimer) clearTimeout(autoplayTimer);
   let settings = getPlayerSettings();
   if (!settings.autoplay) return;
 
-  // 每一首短影音或歌曲預設播放約 3 分鐘 (180000ms) 或使用者滑動後重新計時
   autoplayTimer = setTimeout(() => {
     try {
       const cardHeight = cards[0].offsetHeight;
@@ -860,7 +856,7 @@ coverLayer.classList.add('fade-out');
 if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
-resetAutoplayTimer(); // 進入新影片時重設自動連播計時
+resetAutoplayTimer();
 } else {
 wrapper.innerHTML = '';
 if (coverLayer) {
