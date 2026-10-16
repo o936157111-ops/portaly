@@ -6,13 +6,12 @@ from datetime import datetime, timedelta, timezone
 from google import genai
 from google.genai.errors import ServerError
 
-def update_news_with_retry(client, model_name, contents, config=None, max_retries=5):
+def update_news_with_retry(client, model_name, contents, max_retries=5):
     for attempt in range(max_retries):
         try:
             response = client.models.generate_content(
                 model=model_name,
-                contents=contents,
-                config=config
+                contents=contents
             )
             return response
         except ServerError as e:
@@ -34,7 +33,7 @@ def update_news():
     tw_timezone = timezone(timedelta(hours=8))
     today_str = datetime.now(tw_timezone).strftime("%Y-%m-%d")
 
-    prompt = f"""請幫我搜尋並整理今天（{today_str}）網路上最新的重要焦點新聞，總共必須涵蓋以下 8 個類別：
+    prompt = f"""請幫我整理今天（{today_str}）最新的重要焦點新聞，總共必須涵蓋以下 8 個類別：
 1. 科技新聞 (tech)
 2. 娛樂新聞 (entertainment)
 3. 國家大事 (national)
@@ -45,9 +44,8 @@ def update_news():
 8. 體育新聞 (sports)
 
 【非常重要規定】
-1. 請務必使用即時搜尋功能，尋找今天或近期（最近24-48小時內）真實發生的重大新聞。
-2. 每一個類別底下都必須確實提供 4 則代表性新聞！總共會有 32 則新聞。
-3. 每一則新聞除了「source」、「category」、「title」、「summary」之外，還必須包含一個「analysis」物件，裡面詳細填寫三個欄位：
+1. 每一個類別底下都必須確實提供 4 則代表性新聞！總共會有 32 則新聞。
+2. 每一則新聞除了「source」、「category」、「title」、「summary」之外，還必須包含一個「analysis」物件，裡面詳細填寫三個欄位：
    - "context": 事件的核心脈絡或背景說明。
    - "trend": 該事件所帶動的未來產業發展趨勢。
    - "enterprises": 目前市場上相關的重要企業、供應鏈或發展方向（以具體實際的市場走向描述）。
@@ -76,24 +74,15 @@ def update_news():
 }}
 （註：請依上述結構，將 8 大類別、每類 4 則新聞完整產出，確保每一則新聞都有完整的 analysis 結構）"""
 
-    print("正在透過 Google 聯網搜尋取得最新即時新聞，並產出 8 大類別深度脈絡分析...")
-    
-    # 🌟 關鍵設定：透過 types.GenerateContentConfig 啟用 Google 搜尋工具
-    from google.genai import types
-    search_config = types.GenerateContentConfig(
-        tools=[{"google_search": {}}],
-        temperature=0.3, # 降低隨機性，讓搜尋與事實對齊更穩定
-    )
-
+    print("正在呼叫 Gemini API 取得完整 8 大類別（每類 4 則）新聞與深度脈絡分析...")
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-3.6-flash', # 建議使用支援聯網且穩定的模型版本
-        contents=prompt,
-        config=search_config
+        model_name='gemini-3.8-flash',
+        contents=prompt
     )
     
     raw_text = response.text.strip()
-    print("成功取得 AI 聯網回應內容")
+    print("成功取得 AI 回應內容")
 
     match = re.search(r'\{[\s\S]*\}', raw_text)
     if not match:
@@ -115,7 +104,7 @@ def update_news():
     with open("news.json", "w", encoding="utf-8") as f:
         json.dump(news_data, f, ensure_ascii=False, indent=4)
     
-    print(f"news.json 更新成功，已透過即時聯網完成 8 大類別更新，並寫入日期: {today_str}")
+    print(f"news.json 更新成功，已完整產出 8 大類別（附帶深度脈絡與趨勢分析），並強制寫入日期: {today_str}")
 
 if __name__ == "__main__":
     update_news()
