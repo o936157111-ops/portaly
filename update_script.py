@@ -87,7 +87,7 @@ def update_news():
 
     response = update_news_with_retry(
         client=client,
-        model_name='gemini-2.5-flash', # 建議使用支援聯網且穩定的模型版本
+        model_name='gemini-3.8-flash', # 建議使用支援聯網且穩定的模型版本
         contents=prompt,
         config=search_config
     )
