@@ -45,10 +45,10 @@ def update_news():
 
 【非常重要規定】
 1. 每一個類別底下都必須確實提供 4 則代表性新聞！總共會有 32 則新聞。
-2. 每一則新聞除了「source」、「category」、「title」、「summary」之外，還必須包含一個「analysis」物件，請以客觀、中立且專業的產業視角，詳細填寫三個欄位：
-   - "context": 事件的核心脈絡與國際/總體背景說明。
-   - "trend": 該事件所帶動的整體產業發展趨勢與技術演進。
-   - "enterprises": 對台灣相關產業供應鏈之影響、生態系發展方向與營運環境觀察（請維持中立客觀，聚焦於產業生態與總體趨勢，避免強烈立場）。
+2. 每一則新聞除了「source」、「category」、「title」、「summary」之外，還必須包含一個「analysis」物件，裡面詳細填寫三個欄位：
+   - "context": 事件的核心脈絡或背景說明。
+   - "trend": 該事件所帶動的未來產業發展趨勢。
+   - "enterprises": 目前市場上相關的重要企業、供應鏈或發展方向（以具體實際的市場走向描述）。
 
 請務必只輸出標準的 JSON 格式物件（以 {{ 開頭，以 }} 結尾），不要包含任何額外的解釋文字。結構必須嚴格包含：
 {{
@@ -65,7 +65,7 @@ def update_news():
           "analysis": {{
             "context": "事件核心脈絡背景...",
             "trend": "未來產業發展趨勢...",
-            "enterprises": "相關產業供應鏈與營運環境觀察..."
+            "enterprises": "相關企業與市場發展方向..."
           }}
         }}
       ]
@@ -74,7 +74,7 @@ def update_news():
 }}
 （註：請依上述結構，將 8 大類別、每類 4 則新聞完整產出，確保每一則新聞都有完整的 analysis 結構）"""
 
-    print("正在呼叫 Gemini API 取得完整 8 大類別（每類 4 則）新聞與客觀供應鏈深度分析...")
+    print("正在呼叫 Gemini API 取得完整 8 大類別（每類 4 則）新聞與深度脈絡分析...")
     response = update_news_with_retry(
         client=client,
         model_name='gemini-3.8-flash',
@@ -104,7 +104,7 @@ def update_news():
     with open("news.json", "w", encoding="utf-8") as f:
         json.dump(news_data, f, ensure_ascii=False, indent=4)
     
-    print(f"news.json 更新成功，已完整產出 8 大類別（附帶客觀供應鏈與產業觀察），並強制寫入日期: {today_str}")
+    print(f"news.json 更新成功，已完整產出 8 大類別（附帶深度脈絡與趨勢分析），並強制寫入日期: {today_str}")
 
 if __name__ == "__main__":
     update_news()
