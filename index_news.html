@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>全方位熱門焦點情報站</title>
 <style>
 :root {
@@ -29,6 +29,7 @@ body {
   color: var(--text-main);
   line-height: 1.6;
   padding: 16px;
+  touch-action: manipulation; /* 增進手機觸控反應 */
 }
 
 .container {
@@ -139,6 +140,14 @@ header p {
   font-weight: 600;
 }
 
+/* 提示手勢的微文字 */
+.swipe-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
 /* 新聞卡片 */
 .card {
   background: var(--card-bg);
@@ -147,6 +156,8 @@ header p {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   padding: 24px;
   margin-bottom: 20px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  user-select: none; /* 防止觸控拖拽選到文字 */
 }
 
 .card-header {
@@ -204,7 +215,7 @@ header p {
   border-left: 4px solid var(--primary-color);
 }
 
-/* 【新增】深度分析區塊樣式 */
+/* 深度分析區塊樣式 */
 .analysis-box {
   margin-top: 16px;
   background: var(--accent-bg);
@@ -323,6 +334,9 @@ header p {
   <!-- 類別切換頁籤 -->
   <div class="category-scroll-container" id="tabContainer"></div>
 
+  <!-- 提示文字 -->
+  <div class="swipe-hint">💡 提示：在手機上可「左右滑動」切換新聞</div>
+
   <!-- 分頁切換導航列 -->
   <div class="nav-pagination">
     <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">◀ 上一則</button>
@@ -345,6 +359,12 @@ let newsData = {
 let currentCategoryKey = ""; 
 let currentIndex = 0; 
 
+// 滑動手勢偵測變數
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
 window.addEventListener('DOMContentLoaded', async () => {
   try {
     const response = await fetch('news.json');
@@ -357,6 +377,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     initNewsApp();
+    setupSwipeListener();
   } catch (error) {
     document.getElementById('newsCardContainer').innerHTML = `
       <div class="error-msg">
@@ -402,14 +423,12 @@ function changePage(direction) {
   const currentCatData = newsData.categories[currentCategoryKey];
   if (!currentCatData || !currentCatData.articles) return;
 
-  currentIndex += direction;
+  const newIndex = currentIndex + direction;
 
-  if (currentIndex < 0) currentIndex = 0;
-  if (currentIndex >= currentCatData.articles.length) {
-    currentIndex = currentCatData.articles.length - 1;
+  if (newIndex >= 0 && newIndex < currentCatData.articles.length) {
+    currentIndex = newIndex;
+    renderCurrentView();
   }
-
-  renderCurrentView();
 }
 
 function renderCurrentView() {
@@ -429,7 +448,6 @@ function renderCurrentView() {
   const container = document.getElementById('newsCardContainer');
   const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(currentItem.title)}`;
 
-  // 生成深度解析 HTML 區塊（如果 news.json 包含 analysis 欄位）
   let analysisHtml = '';
   if (currentItem.analysis) {
     analysisHtml = `
@@ -461,7 +479,7 @@ function renderCurrentView() {
   }
 
   container.innerHTML = `
-    <div class="card">
+    <div class="card" id="swipeCard">
       <div class="card-header">
         <span class="media-badge">來源：${currentItem.source || '專業媒體'}</span>
         <span class="exclusive-badge">類別：${currentCatData.name}</span>
@@ -472,7 +490,6 @@ function renderCurrentView() {
       <div class="section-title">💡 內容摘要</div>
       <div class="content-box">${currentItem.summary || '暫無摘要'}</div>
 
-      <!-- 動態插入深度解析區塊 -->
       ${analysisHtml}
 
       <div class="summary-container">
@@ -503,6 +520,38 @@ function toggleSummary(btn) {
   } else {
     content.classList.add('show');
     btn.querySelector('span').textContent = '▼ 收合詳細焦點摘要與引文';
+  }
+}
+
+/* 🌟 設定觸控滑動切換新聞 (Swipe Gesture) */
+function setupSwipeListener() {
+  const container = document.getElementById('newsCardContainer');
+
+  container.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  container.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+  }, { passive: true });
+}
+
+function handleSwipe() {
+  const diffX = touchEndX - touchStartX;
+  const diffY = touchEndY - touchStartY;
+
+  // 門檻值：水平滑動距離 > 50px，且水平距離遠大於垂直距離（避免使用者只是上下捲動頁面時誤觸）
+  if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+    if (diffX < 0) {
+      // 向左滑動 ➔ 下一則
+      changePage(1);
+    } else {
+      // 向右滑動 ➔ 上一則
+      changePage(-1);
+    }
   }
 }
 </script>
