@@ -6,14 +6,14 @@
 <title>全方位熱門焦點情報站</title>
 <style>
 :root {
-  --primary-color: #2563eb;
-  --primary-dark: #1d4ed8;
+  --primary-color: #1e3a8a; /* 沉穩商務藍 */
+  --primary-dark: #1e293b;
   --bg-color: #f8fafc;
   --card-bg: #ffffff;
   --text-main: #1e293b;
   --text-secondary: #64748b;
   --border-color: #e2e8f0;
-  --accent-color: #0f766e; /* 深度解析視覺主色 */
+  --accent-color: #0f766e; /* 沉穩墨綠色系 */
   --accent-bg: #f0fdf4;
 }
 
@@ -98,7 +98,7 @@ header p {
   background: var(--primary-color);
   color: #ffffff;
   border-color: var(--primary-color);
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 2px 6px rgba(30, 58, 138, 0.2);
 }
 
 /* 導航按鈕 */
@@ -433,25 +433,25 @@ function renderCurrentView() {
   if (currentItem.analysis) {
     analysisHtml = `
       <div class="analysis-box">
-        <div class="analysis-title">📊 產業脈絡與趨勢深度解析</div>
+        <div class="analysis-title">📊 產業脈絡與供應鏈觀察</div>
         
         ${currentItem.analysis.context ? `
           <div class="analysis-item">
-            <div class="analysis-subtitle">📌 事件脈絡：</div>
+            <div class="analysis-subtitle">📌 事件背景脈絡：</div>
             <div>${currentItem.analysis.context}</div>
           </div>
         ` : ''}
 
         ${currentItem.analysis.trend ? `
           <div class="analysis-item">
-            <div class="analysis-subtitle">📈 產業趨勢：</div>
+            <div class="analysis-subtitle">📈 整體產業趨勢：</div>
             <div>${currentItem.analysis.trend}</div>
           </div>
         ` : ''}
 
         ${currentItem.analysis.enterprises ? `
           <div class="analysis-item">
-            <div class="analysis-subtitle">🏭 相關企業與發展方向：</div>
+            <div class="analysis-subtitle">🏭 供應鏈與營運環境觀察：</div>
             <div>${currentItem.analysis.enterprises}</div>
           </div>
         ` : ''}
