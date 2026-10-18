@@ -593,6 +593,20 @@ const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kS
 
 let ytPlayers = {}; 
 let activePlayerIndex = null;
+let hasUserInteracted = false;
+
+// 監聽第一次使用者互動（點擊畫面），徹底解鎖瀏覽器自動播放限制
+['click', 'touchstart', 'scroll'].forEach(evt => {
+  window.addEventListener(evt, () => {
+    if (!hasUserInteracted) {
+      hasUserInteracted = true;
+      // 嘗試喚醒當前播放器
+      if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
+        try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
+      }
+    }
+  }, { once: true, passive: true });
+});
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -1053,7 +1067,6 @@ function onPlayerStateChange(event, index) {
         const cardHeight = cards[0].offsetHeight;
         
         if (settings.shuffle && globalSongDatabase.length > 0) {
-          // 隨機抽選一張卡片，確保不會抽到剛好正在播的那張
           let randomCardIndex;
           do {
             randomCardIndex = Math.floor(Math.random() * cards.length);
@@ -1062,20 +1075,32 @@ function onPlayerStateChange(event, index) {
           const targetScrollTop = randomCardIndex * cardHeight;
           container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
 
-          // 額外保險：滾動後強制對目標播放器呼叫播放，確保隨機連續不斷歌
-          setTimeout(() => {
-            stopAllPlayersExceptActive(randomCardIndex);
-            activePlayerIndex = randomCardIndex;
-            if (ytPlayers[randomCardIndex] && typeof ytPlayers[randomCardIndex].playVideo === 'function') {
-              try {
-                ytPlayers[randomCardIndex].playVideo();
-              } catch (e) {}
-            }
-          }, 400);
+          // 雙重保險：多段時間延遲強制喚醒隨機選中的播放器
+          [300, 700, 1200].forEach(delay => {
+            setTimeout(() => {
+              stopAllPlayersExceptActive(randomCardIndex);
+              activePlayerIndex = randomCardIndex;
+              if (ytPlayers[randomCardIndex] && typeof ytPlayers[randomCardIndex].playVideo === 'function') {
+                try {
+                  ytPlayers[randomCardIndex].playVideo();
+                } catch (e) {}
+              }
+            }, delay);
+          });
 
         } else {
           const nextScrollTop = container.scrollTop + cardHeight;
           container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+          
+          // 循序播放的雙重保險
+          const nextIndex = index + 1;
+          [300, 700].forEach(delay => {
+            setTimeout(() => {
+              if (ytPlayers[nextIndex] && typeof ytPlayers[nextIndex].playVideo === 'function') {
+                try { ytPlayers[nextIndex].playVideo(); } catch (e) {}
+              }
+            }, delay);
+          });
         }
       }
     }
