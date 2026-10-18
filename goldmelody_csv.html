@@ -745,7 +745,14 @@ function recordUserClick(songTitle) {
 
 function getCustomUserSongs() {
   try {
-    return JSON.parse(localStorage.getItem('user_added_songs')) || [];
+    let songs = JSON.parse(localStorage.getItem('user_added_songs')) || [];
+    // 兼容舊資料格式：若舊資料只有 embedCode 而沒有 videoId，自動從 embedCode 提取
+    return songs.map(song => {
+      if (!song.videoId && song.embedCode) {
+        song.videoId = extractYouTubeId(song.embedCode);
+      }
+      return song;
+    }).filter(song => song.videoId);
   } catch (e) {
     return [];
   }
@@ -770,7 +777,7 @@ function saveCustomCsvUrl() {
   const url = document.getElementById('customCsvInput').value.trim();
   if (url) {
     localStorage.setItem('user_custom_csv_url', url);
-    alert("設定成功!已切換為你的專屬試算表網址。");
+    alert("設定成功！已切換為你的專屬試算表網址。");
   } else {
     localStorage.removeItem('user_custom_csv_url');
     alert("已清除自訂設定，將使用預設清單。");
@@ -981,7 +988,6 @@ observer.observe(card);
 });
 }
 
-// 監聽播放結束事件 (ENDED = 0)
 function onPlayerStateChange(event, index) {
   if (event.data === YT.PlayerState.ENDED) {
     let settings = getPlayerSettings();
@@ -991,13 +997,11 @@ function onPlayerStateChange(event, index) {
       if (cards.length > 0) {
         const cardHeight = cards[0].offsetHeight;
         
-        // 如果有開啟隨機播放，播完後隨機跳到清單中的任一卡片位置
         if (settings.shuffle && globalSongDatabase.length > 0) {
           const randomCardIndex = Math.floor(Math.random() * cards.length);
           const targetScrollTop = randomCardIndex * cardHeight;
           container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
         } else {
-          // 一般循序播放：往下滾動一首
           const nextScrollTop = container.scrollTop + cardHeight;
           container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
         }
