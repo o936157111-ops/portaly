@@ -281,7 +281,7 @@ text-decoration: none;
 font-weight: bold;
 font-size: 12px;
 text-align: center;
-box-shadow: 0 2px 6px rgba(52, 168, 83, 0.3);
+box-shadow: 0 2px 6px (52, 168, 83, 0.3);
 }
 
 .guide-steps {
@@ -396,11 +396,12 @@ justify-content: center;
 align-items: center;
 }
 
+/* 確保 iframe 充滿整個卡片且不干擾點擊 */
 .video-wrapper iframe {
 width: 100% !important;
 height: 100% !important;
 border: none;
-object-fit: cover;
+pointer-events: auto;
 }
 
 .custom-cover-layer {
@@ -489,6 +490,9 @@ padding: 3px 10px;
 border-radius: 12px;
 }
 </style>
+
+<!-- 引入 YouTube IFrame Player API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
@@ -525,7 +529,6 @@ border-radius: 12px;
 <a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
 <a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
 <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
-
 </div>
 </div>
 
@@ -575,6 +578,8 @@ border-radius: 12px;
 
 <script>
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+
+let ytPlayers = {}; // 用來追蹤 YouTube API 播放器實例
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -715,11 +720,11 @@ coverClass = coverValue;
 
 return {
 title,
+videoId: videoId,
 views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 正在播放",
 isCustomCover: true,
 coverClass: coverClass,
-coverUrl: coverUrl,
-embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${title.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+coverUrl: coverUrl
 };
 }).filter(Boolean);
 }
@@ -799,11 +804,11 @@ function addNewYouTubeSong() {
 
   const newSong = {
     title: titleVal,
+    videoId: videoId,
     views: "🌟 自訂收藏",
     isCustomCover: true,
     coverClass: "",
-    coverUrl: "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
-    embedCode: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" title="${titleVal.replace(/"/g, '&quot;')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+    coverUrl: "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg"
   };
 
   try {
@@ -857,7 +862,10 @@ async function loadSongDatabase() {
   return songs;
 }
 
+let globalSongDatabase = [];
+
 function initReels(songDatabase) {
+globalSongDatabase = songDatabase;
 const container = document.getElementById('reelContainer');
 container.innerHTML = '';
 
@@ -867,6 +875,7 @@ infiniteSongs.forEach((song, index) => {
 const card = document.createElement('div');
 card.className = 'reel-card';
 card.dataset.index = index;
+card.dataset.videoId = song.videoId;
 
 let coverHtml = '';
 if (song.isCustomCover) {
@@ -877,7 +886,7 @@ card.dataset.hasCover = "true";
 
 card.innerHTML = `
 ${coverHtml}
-<div class="video-wrapper"></div>
+<div class="video-wrapper"><div id="yt-player-${index}" style="width:100%;height:100%;"></div></div>
 <div class="overlay-info">
 <div class="song-text-group">
 <div class="song-title">${song.title}</div>
@@ -892,7 +901,6 @@ ${song.isCustomCover ? `
 </div>
 `;
 
-card.dataset.embed = song.embedCode;
 card.dataset.title = song.title;
 container.appendChild(card);
 });
@@ -923,40 +931,47 @@ setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
 }, 100);
 }, { passive: true });
 
-let autoplayTimer = null;
-function resetAutoplayTimer() {
-  if (autoplayTimer) clearTimeout(autoplayTimer);
-  let settings = getPlayerSettings();
-  if (!settings.autoplay) return;
-
-  autoplayTimer = setTimeout(() => {
-    try {
-      const cardHeight = cards[0].offsetHeight;
-      const nextScrollTop = container.scrollTop + cardHeight;
-      container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
-    } catch (e) {}
-  }, 180000); 
-}
-
 const observer = new IntersectionObserver((entries) => {
 entries.forEach(entry => {
 const card = entry.target;
-const wrapper = card.querySelector('.video-wrapper');
+const index = parseInt(card.dataset.index);
+const videoId = card.dataset.videoId;
 const coverLayer = card.querySelector('.custom-cover-layer');
 
 if (entry.isIntersecting) {
-if (!wrapper.hasChildNodes()) {
-wrapper.innerHTML = card.dataset.embed;
+// 進入畫面：建立或播放該影片
+if (!ytPlayers[index]) {
+ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
+videoId: videoId,
+playerVars: {
+'autoplay': 1,
+'playsinline': 1,
+'controls': 1,
+'rel': 0
+},
+events: {
+'onStateChange': (e) => onPlayerStateChange(e, index)
 }
+});
+} else {
+try {
+ytPlayers[index].playVideo();
+} catch(err) {}
+}
+
 if (coverLayer) {
 coverLayer.classList.add('fade-out');
 }
 if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
-resetAutoplayTimer();
 } else {
-wrapper.innerHTML = '';
+// 離開畫面：暫停影片
+if (ytPlayers[index]) {
+try {
+ytPlayers[index].pauseVideo();
+} catch(err) {}
+}
 if (coverLayer) {
 coverLayer.classList.remove('fade-out');
 }
@@ -969,12 +984,35 @@ observer.observe(card);
 });
 }
 
+// 監聽 YouTube 播放狀態：當一首歌播完 (ENDED = 0) 時自動滾動到下一首
+function onPlayerStateChange(event, index) {
+  if (event.data === YT.PlayerState.ENDED) {
+    let settings = getPlayerSettings();
+    if (settings.autoplay) {
+      const container = document.getElementById('reelContainer');
+      const cards = document.querySelectorAll('.reel-card');
+      if (cards.length > 0) {
+        const cardHeight = cards[0].offsetHeight;
+        const nextScrollTop = container.scrollTop + cardHeight;
+        container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+      }
+    }
+  }
+}
+
 window.onload = async function () {
 updatePlayerUI();
 const container = document.getElementById("reelContainer");
 try {
 const songDatabase = await loadSongDatabase();
+// 當 YouTube API 準備好後初始化
+if (window.YT && window.YT.Player) {
 initReels(songDatabase);
+} else {
+window.onYouTubeIframeAPIReady = function() {
+initReels(songDatabase);
+};
+}
 } catch (error) {
 console.error("歌曲資料載入失敗：", error);
 container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="localStorage.removeItem('user_custom_csv_url'); location.reload();" style="margin-top:16px;padding:10px 18px;">還原預設並重新載入</button></div>`;
