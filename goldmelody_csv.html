@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title id="pageTitle">好歌一直聽 | 影音牆</title>
+<title id="pageTitle">好歌一直聽 | 隨機短影音牆</title>
 <style>
 * {
 box-sizing: border-box;
@@ -357,6 +357,18 @@ cursor: pointer;
 text-align: center;
 }
 
+.btn-danger {
+background: #d93025;
+color: #fff;
+font-size: 12px;
+padding: 7px;
+border-radius: 6px;
+border: none;
+cursor: pointer;
+text-align: center;
+margin-top: 4px;
+}
+
 .reel-container {
 width: 100%;
 height: 100%;
@@ -548,6 +560,7 @@ border-radius: 12px;
 </div>
 <input type="text" id="customCsvInput" placeholder="貼上你的 CSV 發布網址...">
 <button class="btn-secondary" onclick="loadDefaultCsvUrl()">還原為站長預設推薦清單</button>
+<button class="btn-danger" onclick="clearCustomSongs()">🗑️ 清除所有手動新增的自訂歌曲</button>
 <div class="tip-box">
 💡 <b>溫馨小提示</b>：自訂的試算表與新增歌曲會安全地存於您當前的裝置瀏覽器中。
 </div>
@@ -774,6 +787,14 @@ function loadDefaultCsvUrl() {
   localStorage.removeItem('user_custom_csv_url');
   alert("已還原為站長預設推薦清單！");
   location.reload();
+}
+
+function clearCustomSongs() {
+  if (confirm("確定要清除所有手動新增的自訂歌曲嗎？")) {
+    localStorage.removeItem('user_added_songs');
+    alert("已成功清除所有手動新增的歌曲！");
+    location.reload();
+  }
 }
 
 function saveCustomCsvUrl() {
