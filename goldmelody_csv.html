@@ -129,6 +129,32 @@ background-color: #ff3b30;
 border-color: #ffffff;
 }
 
+/* 瀏覽器阻擋自動播放時的解鎖提示浮層 */
+.autoplay-unlock-banner {
+position: absolute;
+top: max(16px, env(safe-area-inset-top));
+left: 50%;
+transform: translateX(-50%);
+background: rgba(255, 59, 48, 0.95);
+color: #fff;
+padding: 8px 16px;
+border-radius: 20px;
+font-size: 13px;
+font-weight: bold;
+z-index: 10002;
+box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+display: none;
+cursor: pointer;
+animation: bounce 1.5s infinite;
+text-align: center;
+white-space: nowrap;
+}
+
+@keyframes bounce {
+0%, 100% { transform: translateX(-50%) translateY(0); }
+50% { transform: translateX(-50%) translateY(-4px); }
+}
+
 /* 左側滑出選單（Drawer）樣式 */
 .side-drawer-overlay {
 position: fixed;
@@ -508,6 +534,11 @@ border-radius: 12px;
 <body>
 
 <div class="app-frame">
+<!-- 瀏覽器阻擋自動播放時的解鎖提示按鈕 -->
+<div id="unlockBanner" class="autoplay-unlock-banner" onclick="forceUnlockPlay()">
+🔊 點此解鎖自動連播
+</div>
+
 <!-- 左上角 Logo（點擊開啟左側選單） -->
 <img src="https://myezlife.com/eric-logo.gif" width="40" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
 
@@ -593,20 +624,23 @@ const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kS
 
 let ytPlayers = {}; 
 let activePlayerIndex = null;
-let hasUserInteracted = false;
+let lastTargetIndex = null;
 
-// 監聽第一次使用者互動（點擊畫面），徹底解鎖瀏覽器自動播放限制
-['click', 'touchstart', 'scroll'].forEach(evt => {
-  window.addEventListener(evt, () => {
-    if (!hasUserInteracted) {
-      hasUserInteracted = true;
-      // 嘗試喚醒當前播放器
-      if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
-        try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
-      }
-    }
-  }, { once: true, passive: true });
-});
+// 使用者點擊解鎖提示按鈕時觸發
+function forceUnlockPlay() {
+  const banner = document.getElementById('unlockBanner');
+  if (banner) banner.style.display = 'none';
+
+  if (lastTargetIndex !== null && ytPlayers[lastTargetIndex]) {
+    try {
+      ytPlayers[lastTargetIndex].playVideo();
+    } catch(e) {}
+  } else if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
+    try {
+      ytPlayers[activePlayerIndex].playVideo();
+    } catch(e) {}
+  }
+}
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -1005,7 +1039,12 @@ events: {
   if (activePlayerIndex !== index) {
     try { e.target.pauseVideo(); } catch(err) {}
   } else {
-    try { e.target.playVideo(); } catch(err) {}
+    try { 
+      e.target.playVideo(); 
+    } catch(err) {
+      // 若被瀏覽器阻擋，顯示解鎖提示按鈕
+      document.getElementById('unlockBanner').style.display = 'block';
+    }
   }
 },
 'onStateChange': (e) => onPlayerStateChange(e, index)
@@ -1015,7 +1054,9 @@ events: {
 } else {
 try {
 ytPlayers[index].playVideo();
-} catch(err) {}
+} catch(err) {
+  document.getElementById('unlockBanner').style.display = 'block';
+}
 }
 
 if (coverLayer) {
@@ -1072,35 +1113,38 @@ function onPlayerStateChange(event, index) {
             randomCardIndex = Math.floor(Math.random() * cards.length);
           } while (randomCardIndex === index && cards.length > 1);
 
+          lastTargetIndex = randomCardIndex;
           const targetScrollTop = randomCardIndex * cardHeight;
           container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
 
-          // 雙重保險：多段時間延遲強制喚醒隨機選中的播放器
-          [300, 700, 1200].forEach(delay => {
-            setTimeout(() => {
-              stopAllPlayersExceptActive(randomCardIndex);
-              activePlayerIndex = randomCardIndex;
-              if (ytPlayers[randomCardIndex] && typeof ytPlayers[randomCardIndex].playVideo === 'function') {
-                try {
-                  ytPlayers[randomCardIndex].playVideo();
-                } catch (e) {}
+          // 嘗試強制播放，若被擋下則顯示解鎖按鈕
+          setTimeout(() => {
+            stopAllPlayersExceptActive(randomCardIndex);
+            activePlayerIndex = randomCardIndex;
+            if (ytPlayers[randomCardIndex] && typeof ytPlayers[randomCardIndex].playVideo === 'function') {
+              try {
+                ytPlayers[randomCardIndex].playVideo();
+              } catch (e) {
+                document.getElementById('unlockBanner').style.display = 'block';
               }
-            }, delay);
-          });
+            }
+          }, 500);
 
         } else {
           const nextScrollTop = container.scrollTop + cardHeight;
           container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
           
-          // 循序播放的雙重保險
           const nextIndex = index + 1;
-          [300, 700].forEach(delay => {
-            setTimeout(() => {
-              if (ytPlayers[nextIndex] && typeof ytPlayers[nextIndex].playVideo === 'function') {
-                try { ytPlayers[nextIndex].playVideo(); } catch (e) {}
+          lastTargetIndex = nextIndex;
+          setTimeout(() => {
+            if (ytPlayers[nextIndex] && typeof ytPlayers[nextIndex].playVideo === 'function') {
+              try { 
+                ytPlayers[nextIndex].playVideo(); 
+              } catch (e) {
+                document.getElementById('unlockBanner').style.display = 'block';
               }
-            }, delay);
-          });
+            }
+          }, 500);
         }
       }
     }
