@@ -1053,9 +1053,26 @@ function onPlayerStateChange(event, index) {
         const cardHeight = cards[0].offsetHeight;
         
         if (settings.shuffle && globalSongDatabase.length > 0) {
-          const randomCardIndex = Math.floor(Math.random() * cards.length);
+          // 隨機抽選一張卡片，確保不會抽到剛好正在播的那張
+          let randomCardIndex;
+          do {
+            randomCardIndex = Math.floor(Math.random() * cards.length);
+          } while (randomCardIndex === index && cards.length > 1);
+
           const targetScrollTop = randomCardIndex * cardHeight;
           container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+
+          // 額外保險：滾動後強制對目標播放器呼叫播放，確保隨機連續不斷歌
+          setTimeout(() => {
+            stopAllPlayersExceptActive(randomCardIndex);
+            activePlayerIndex = randomCardIndex;
+            if (ytPlayers[randomCardIndex] && typeof ytPlayers[randomCardIndex].playVideo === 'function') {
+              try {
+                ytPlayers[randomCardIndex].playVideo();
+              } catch (e) {}
+            }
+          }, 400);
+
         } else {
           const nextScrollTop = container.scrollTop + cardHeight;
           container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
