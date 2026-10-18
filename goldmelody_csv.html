@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title id="pageTitle">好歌一直聽 | 隨機短影音牆</title>
+<title id="pageTitle">好歌一直聽 | 影音牆</title>
 <style>
 * {
 box-sizing: border-box;
@@ -579,6 +579,7 @@ border-radius: 12px;
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
 let ytPlayers = {}; 
+let activePlayerIndex = null; // 追蹤目前正在播放的影片索引
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -746,7 +747,6 @@ function recordUserClick(songTitle) {
 function getCustomUserSongs() {
   try {
     let songs = JSON.parse(localStorage.getItem('user_added_songs')) || [];
-    // 兼容舊資料格式：若舊資料只有 embedCode 而沒有 videoId，自動從 embedCode 提取
     return songs.map(song => {
       if (!song.videoId && song.embedCode) {
         song.videoId = extractYouTubeId(song.embedCode);
@@ -921,6 +921,9 @@ container.scrollTop = 0;
 let scrollTimeout;
 container.addEventListener('scroll', () => {
 clearTimeout(scrollTimeout);
+// 滾動時，強制將「除了當前正在看的卡片以外」所有播放中的音樂全面暫停，解決多聲疊加問題
+stopAllPlayersExceptActive();
+
 scrollTimeout = setTimeout(() => {
 const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
 
@@ -945,6 +948,10 @@ const videoId = card.dataset.videoId;
 const coverLayer = card.querySelector('.custom-cover-layer');
 
 if (entry.isIntersecting) {
+// 進入畫面：先暫停其他所有播放器，確保只有這首在播
+stopAllPlayersExceptActive(index);
+activePlayerIndex = index;
+
 if (!ytPlayers[index]) {
 ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
 videoId: videoId,
@@ -955,6 +962,14 @@ playerVars: {
 'rel': 0
 },
 events: {
+'onReady': (e) => {
+  // 如果此時這個播放器已經不在畫面上了，建立好後立刻暫停
+  if (activePlayerIndex !== index) {
+    try { e.target.pauseVideo(); } catch(err) {}
+  } else {
+    try { e.target.playVideo(); } catch(err) {}
+  }
+},
 'onStateChange': (e) => onPlayerStateChange(e, index)
 }
 });
@@ -971,10 +986,14 @@ if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
 } else {
+// 離開畫面：立刻暫停
 if (ytPlayers[index]) {
 try {
 ytPlayers[index].pauseVideo();
 } catch(err) {}
+}
+if (activePlayerIndex === index) {
+activePlayerIndex = null;
 }
 if (coverLayer) {
 coverLayer.classList.remove('fade-out');
@@ -986,6 +1005,19 @@ coverLayer.classList.remove('fade-out');
 cards.forEach(card => {
 observer.observe(card);
 });
+}
+
+// 確保除了指定的 index 之外，其他所有的播放器都強制暫停
+function stopAllPlayersExceptActive(exceptIndex = -1) {
+  for (let idx in ytPlayers) {
+    if (parseInt(idx) !== exceptIndex) {
+      try {
+        if (ytPlayers[idx] && typeof ytPlayers[idx].pauseVideo === 'function') {
+          ytPlayers[idx].pauseVideo();
+        }
+      } catch (e) {}
+    }
+  }
 }
 
 function onPlayerStateChange(event, index) {
@@ -1024,9 +1056,4 @@ initReels(songDatabase);
 }
 } catch (error) {
 console.error("歌曲資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="localStorage.removeItem('user_custom_csv_url'); location.reload();" style="margin-top:16px;padding:10px 18px;">還原預設並重新載入</button></div>`;
-}
-};
-</script>
-</body>
-</html>
+container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center
