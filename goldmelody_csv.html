@@ -281,7 +281,7 @@ text-decoration: none;
 font-weight: bold;
 font-size: 12px;
 text-align: center;
-box-shadow: 0 2px 6px (52, 168, 83, 0.3);
+box-shadow: 0 2px 6px rgba(52, 168, 83, 0.3);
 }
 
 .guide-steps {
@@ -396,7 +396,6 @@ justify-content: center;
 align-items: center;
 }
 
-/* 確保 iframe 充滿整個卡片且不干擾點擊 */
 .video-wrapper iframe {
 width: 100% !important;
 height: 100% !important;
@@ -579,7 +578,7 @@ border-radius: 12px;
 <script>
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
-let ytPlayers = {}; // 用來追蹤 YouTube API 播放器實例
+let ytPlayers = {}; 
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -771,7 +770,7 @@ function saveCustomCsvUrl() {
   const url = document.getElementById('customCsvInput').value.trim();
   if (url) {
     localStorage.setItem('user_custom_csv_url', url);
-    alert("設定成功！已切換為你的專屬試算表網址。");
+    alert("設定成功!已切換為你的專屬試算表網址。");
   } else {
     localStorage.removeItem('user_custom_csv_url');
     alert("已清除自訂設定，將使用預設清單。");
@@ -939,7 +938,6 @@ const videoId = card.dataset.videoId;
 const coverLayer = card.querySelector('.custom-cover-layer');
 
 if (entry.isIntersecting) {
-// 進入畫面：建立或播放該影片
 if (!ytPlayers[index]) {
 ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
 videoId: videoId,
@@ -966,7 +964,6 @@ if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
 } else {
-// 離開畫面：暫停影片
 if (ytPlayers[index]) {
 try {
 ytPlayers[index].pauseVideo();
@@ -984,7 +981,7 @@ observer.observe(card);
 });
 }
 
-// 監聽 YouTube 播放狀態：當一首歌播完 (ENDED = 0) 時自動滾動到下一首
+// 監聽播放結束事件 (ENDED = 0)
 function onPlayerStateChange(event, index) {
   if (event.data === YT.PlayerState.ENDED) {
     let settings = getPlayerSettings();
@@ -993,8 +990,17 @@ function onPlayerStateChange(event, index) {
       const cards = document.querySelectorAll('.reel-card');
       if (cards.length > 0) {
         const cardHeight = cards[0].offsetHeight;
-        const nextScrollTop = container.scrollTop + cardHeight;
-        container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+        
+        // 如果有開啟隨機播放，播完後隨機跳到清單中的任一卡片位置
+        if (settings.shuffle && globalSongDatabase.length > 0) {
+          const randomCardIndex = Math.floor(Math.random() * cards.length);
+          const targetScrollTop = randomCardIndex * cardHeight;
+          container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+        } else {
+          // 一般循序播放：往下滾動一首
+          const nextScrollTop = container.scrollTop + cardHeight;
+          container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+        }
       }
     }
   }
@@ -1005,7 +1011,6 @@ updatePlayerUI();
 const container = document.getElementById("reelContainer");
 try {
 const songDatabase = await loadSongDatabase();
-// 當 YouTube API 準備好後初始化
 if (window.YT && window.YT.Player) {
 initReels(songDatabase);
 } else {
