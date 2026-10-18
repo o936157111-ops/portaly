@@ -626,19 +626,14 @@ let ytPlayers = {};
 let activePlayerIndex = null;
 let lastTargetIndex = null;
 
-// 使用者點擊解鎖提示按鈕時觸發
 function forceUnlockPlay() {
   const banner = document.getElementById('unlockBanner');
   if (banner) banner.style.display = 'none';
 
   if (lastTargetIndex !== null && ytPlayers[lastTargetIndex]) {
-    try {
-      ytPlayers[lastTargetIndex].playVideo();
-    } catch(e) {}
+    try { ytPlayers[lastTargetIndex].playVideo(); } catch(e) {}
   } else if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
-    try {
-      ytPlayers[activePlayerIndex].playVideo();
-    } catch(e) {}
+    try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
   }
 }
 
@@ -896,7 +891,7 @@ function addNewYouTubeSong() {
     recordUserClick(newSong.title);
   } catch (e) {}
 
-  alert("新增成功！已將此歌曲排入你的專屬播放頂端。");
+  alert("新增成功!已將此歌曲排入你的專屬播放頂端。");
   closeAddModal();
   location.reload();
 }
@@ -1042,7 +1037,6 @@ events: {
     try { 
       e.target.playVideo(); 
     } catch(err) {
-      // 若被瀏覽器阻擋，顯示解鎖提示按鈕
       document.getElementById('unlockBanner').style.display = 'block';
     }
   }
@@ -1115,9 +1109,11 @@ function onPlayerStateChange(event, index) {
 
           lastTargetIndex = randomCardIndex;
           const targetScrollTop = randomCardIndex * cardHeight;
-          container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+          
+          // 改為「瞬間跳轉（無滑動動畫）」，徹底解決滑動過久與延遲的問題
+          container.scrollTo({ top: targetScrollTop, behavior: 'auto' });
 
-          // 嘗試強制播放，若被擋下則顯示解鎖按鈕
+          // 瞬間就位後立刻強啟播放
           setTimeout(() => {
             stopAllPlayersExceptActive(randomCardIndex);
             activePlayerIndex = randomCardIndex;
@@ -1128,7 +1124,7 @@ function onPlayerStateChange(event, index) {
                 document.getElementById('unlockBanner').style.display = 'block';
               }
             }
-          }, 500);
+          }, 150);
 
         } else {
           const nextScrollTop = container.scrollTop + cardHeight;
@@ -1144,7 +1140,7 @@ function onPlayerStateChange(event, index) {
                 document.getElementById('unlockBanner').style.display = 'block';
               }
             }
-          }, 500);
+          }, 300);
         }
       }
     }
