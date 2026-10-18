@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title id="pageTitle">好歌一直聽 | 隨機短影音牆</title>
+<title id="pageTitle">好歌一直聽 | 影音牆</title>
 <style>
 * {
 box-sizing: border-box;
@@ -579,7 +579,7 @@ border-radius: 12px;
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
 let ytPlayers = {}; 
-let activePlayerIndex = null; // 追蹤目前正在播放的影片索引
+let activePlayerIndex = null;
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -621,15 +621,18 @@ function toggleAutoplay() {
 }
 
 function updatePlayerUI() {
-  let settings = getPlayerSettings();
-  const shuffleBtn = document.getElementById('shuffleBtn');
-  const autoplayBtn = document.getElementById('autoplayBtn');
-  
-  if (settings.shuffle) shuffleBtn.classList.add('active');
-  else shuffleBtn.classList.remove('active');
+  try {
+    let settings = getPlayerSettings();
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const autoplayBtn = document.getElementById('autoplayBtn');
+    if (!shuffleBtn || !autoplayBtn) return;
+    
+    if (settings.shuffle) shuffleBtn.classList.add('active');
+    else shuffleBtn.classList.remove('active');
 
-  if (settings.autoplay) autoplayBtn.classList.add('active');
-  else autoplayBtn.classList.remove('active');
+    if (settings.autoplay) autoplayBtn.classList.add('active');
+    else autoplayBtn.classList.remove('active');
+  } catch(e) {}
 }
 
 function parseCSV(text) {
@@ -752,7 +755,7 @@ function getCustomUserSongs() {
         song.videoId = extractYouTubeId(song.embedCode);
       }
       return song;
-    }).filter(song => song.videoId);
+    }).filter(song => song && song.videoId);
   } catch (e) {
     return [];
   }
@@ -873,6 +876,7 @@ let globalSongDatabase = [];
 function initReels(songDatabase) {
 globalSongDatabase = songDatabase;
 const container = document.getElementById('reelContainer');
+if (!container) return;
 container.innerHTML = '';
 
 const infiniteSongs = [...songDatabase, ...songDatabase];
@@ -921,10 +925,10 @@ container.scrollTop = 0;
 let scrollTimeout;
 container.addEventListener('scroll', () => {
 clearTimeout(scrollTimeout);
-// 滾動時，強制將「除了當前正在看的卡片以外」所有播放中的音樂全面暫停，解決多聲疊加問題
 stopAllPlayersExceptActive();
 
 scrollTimeout = setTimeout(() => {
+if (!cards[0]) return;
 const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
 
 if (container.scrollTop < singleBlockHeight * 0.2) {
@@ -948,11 +952,11 @@ const videoId = card.dataset.videoId;
 const coverLayer = card.querySelector('.custom-cover-layer');
 
 if (entry.isIntersecting) {
-// 進入畫面：先暫停其他所有播放器，確保只有這首在播
 stopAllPlayersExceptActive(index);
 activePlayerIndex = index;
 
 if (!ytPlayers[index]) {
+try {
 ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
 videoId: videoId,
 playerVars: {
@@ -963,7 +967,6 @@ playerVars: {
 },
 events: {
 'onReady': (e) => {
-  // 如果此時這個播放器已經不在畫面上了，建立好後立刻暫停
   if (activePlayerIndex !== index) {
     try { e.target.pauseVideo(); } catch(err) {}
   } else {
@@ -973,6 +976,7 @@ events: {
 'onStateChange': (e) => onPlayerStateChange(e, index)
 }
 });
+} catch(err) {}
 } else {
 try {
 ytPlayers[index].playVideo();
@@ -986,7 +990,6 @@ if (card.dataset.title) {
 recordUserClick(card.dataset.title);
 }
 } else {
-// 離開畫面：立刻暫停
 if (ytPlayers[index]) {
 try {
 ytPlayers[index].pauseVideo();
@@ -1007,7 +1010,6 @@ observer.observe(card);
 });
 }
 
-// 確保除了指定的 index 之外，其他所有的播放器都強制暫停
 function stopAllPlayersExceptActive(exceptIndex = -1) {
   for (let idx in ytPlayers) {
     if (parseInt(idx) !== exceptIndex) {
