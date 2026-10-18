@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title id="pageTitle">好歌一直聽 | 影音牆</title>
+<title id="pageTitle">好歌一直聽 | 隨機短影音牆</title>
 <style>
 * {
 box-sizing: border-box;
@@ -1056,4 +1056,9 @@ initReels(songDatabase);
 }
 } catch (error) {
 console.error("歌曲資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center
+container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="localStorage.removeItem('user_custom_csv_url'); location.reload();" style="margin-top:16px;padding:10px 18px;">還原預設並重新載入</button></div>`;
+}
+};
+</script>
+</body>
+</html>
