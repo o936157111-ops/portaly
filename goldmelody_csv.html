@@ -129,32 +129,6 @@ background-color: #ff3b30;
 border-color: #ffffff;
 }
 
-/* 瀏覽器阻擋自動播放時的解鎖提示浮層 */
-.autoplay-unlock-banner {
-position: absolute;
-top: max(16px, env(safe-area-inset-top));
-left: 50%;
-transform: translateX(-50%);
-background: rgba(255, 59, 48, 0.95);
-color: #fff;
-padding: 8px 16px;
-border-radius: 20px;
-font-size: 13px;
-font-weight: bold;
-z-index: 10002;
-box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-display: none;
-cursor: pointer;
-animation: bounce 1.5s infinite;
-text-align: center;
-white-space: nowrap;
-}
-
-@keyframes bounce {
-0%, 100% { transform: translateX(-50%) translateY(0); }
-50% { transform: translateX(-50%) translateY(-4px); }
-}
-
 /* 左側滑出選單（Drawer）樣式 */
 .side-drawer-overlay {
 position: fixed;
@@ -534,24 +508,13 @@ border-radius: 12px;
 <body>
 
 <div class="app-frame">
-<!-- 瀏覽器阻擋自動播放時的解鎖提示按鈕 -->
-<div id="unlockBanner" class="autoplay-unlock-banner" onclick="forceUnlockPlay()">
-🔊 點此解鎖自動連播
-</div>
-
 <!-- 左上角 Logo（點擊開啟左側選單） -->
 <img src="https://myezlife.com/eric-logo.gif" width="40" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
 
-<!-- 右側功能按鈕群組 -->
+<!-- 右側功能按鈕群組（僅保留設定與新增歌曲） -->
 <div class="top-right-group">
-<div class="top-icon-btn" id="shuffleBtn" onclick="toggleShuffle()" title="隨機播放切換">
-<svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
-</div>
-<div class="top-icon-btn" id="autoplayBtn" onclick="toggleAutoplay()" title="自動連續播放下一首">
-<svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1 9H9v-4H7v4H5v-2h2V8h2v4h2v2z"/></svg>
-</div>
 <div class="top-icon-btn" onclick="openSettingsModal()" title="設定我的專屬歌單">
-<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+<svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c-.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
 </div>
 <div class="top-icon-btn" onclick="openAddModal()" title="貼上 YT 網址新增歌曲">
 <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -624,18 +587,19 @@ const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kS
 
 let ytPlayers = {}; 
 let activePlayerIndex = null;
-let lastTargetIndex = null;
+let hasUserInteracted = false;
 
-function forceUnlockPlay() {
-  const banner = document.getElementById('unlockBanner');
-  if (banner) banner.style.display = 'none';
-
-  if (lastTargetIndex !== null && ytPlayers[lastTargetIndex]) {
-    try { ytPlayers[lastTargetIndex].playVideo(); } catch(e) {}
-  } else if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
-    try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
-  }
-}
+// 監聽第一次使用者互動（點擊畫面），徹底解鎖瀏覽器自動播放限制
+['click', 'touchstart', 'scroll'].forEach(evt => {
+  window.addEventListener(evt, () => {
+    if (!hasUserInteracted) {
+      hasUserInteracted = true;
+      if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
+        try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
+      }
+    }
+  }, { once: true, passive: true });
+});
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -648,47 +612,6 @@ function getActiveCsvUrl() {
   } catch (e) {
     return DEFAULT_CSV_URL;
   }
-}
-
-function getPlayerSettings() {
-  try {
-    return {
-      shuffle: localStorage.getItem('player_shuffle') === 'true',
-      autoplay: localStorage.getItem('player_autoplay') === 'true'
-    };
-  } catch (e) {
-    return { shuffle: false, autoplay: false };
-  }
-}
-
-function toggleShuffle() {
-  let settings = getPlayerSettings();
-  settings.shuffle = !settings.shuffle;
-  localStorage.setItem('player_shuffle', settings.shuffle);
-  updatePlayerUI();
-  location.reload();
-}
-
-function toggleAutoplay() {
-  let settings = getPlayerSettings();
-  settings.autoplay = !settings.autoplay;
-  localStorage.setItem('player_autoplay', settings.autoplay);
-  updatePlayerUI();
-}
-
-function updatePlayerUI() {
-  try {
-    let settings = getPlayerSettings();
-    const shuffleBtn = document.getElementById('shuffleBtn');
-    const autoplayBtn = document.getElementById('autoplayBtn');
-    if (!shuffleBtn || !autoplayBtn) return;
-    
-    if (settings.shuffle) shuffleBtn.classList.add('active');
-    else shuffleBtn.classList.remove('active');
-
-    if (settings.autoplay) autoplayBtn.classList.add('active');
-    else autoplayBtn.classList.remove('active');
-  } catch(e) {}
 }
 
 function parseCSV(text) {
@@ -891,7 +814,7 @@ function addNewYouTubeSong() {
     recordUserClick(newSong.title);
   } catch (e) {}
 
-  alert("新增成功!已將此歌曲排入你的專屬播放頂端。");
+  alert("新增成功！已將此歌曲排入你的專屬播放頂端。");
   closeAddModal();
   location.reload();
 }
@@ -900,11 +823,6 @@ function applyUserPreferenceSorting(songsArray) {
   try {
     let customSongs = getCustomUserSongs();
     songsArray = [...customSongs, ...songsArray];
-
-    let settings = getPlayerSettings();
-    if (settings.shuffle) {
-      return songsArray.sort(() => Math.random() - 0.5);
-    }
 
     let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
     if (history.length === 0) return songsArray;
@@ -1034,11 +952,7 @@ events: {
   if (activePlayerIndex !== index) {
     try { e.target.pauseVideo(); } catch(err) {}
   } else {
-    try { 
-      e.target.playVideo(); 
-    } catch(err) {
-      document.getElementById('unlockBanner').style.display = 'block';
-    }
+    try { e.target.playVideo(); } catch(err) {}
   }
 },
 'onStateChange': (e) => onPlayerStateChange(e, index)
@@ -1048,9 +962,7 @@ events: {
 } else {
 try {
 ytPlayers[index].playVideo();
-} catch(err) {
-  document.getElementById('unlockBanner').style.display = 'block';
-}
+} catch(err) {}
 }
 
 if (coverLayer) {
@@ -1094,76 +1006,29 @@ function stopAllPlayersExceptActive(exceptIndex = -1) {
 
 function onPlayerStateChange(event, index) {
   if (event.data === YT.PlayerState.ENDED) {
-    let settings = getPlayerSettings();
-    if (settings.autoplay) {
-      const container = document.getElementById('reelContainer');
-      const cards = document.querySelectorAll('.reel-card');
-      if (cards.length > 0) {
-        const cardHeight = cards[0].offsetHeight;
-        
-        if (settings.shuffle && globalSongDatabase.length > 0) {
-          let randomCardIndex;
-          do {
-            randomCardIndex = Math.floor(Math.random() * cards.length);
-          } while (randomCardIndex === index && cards.length > 1);
-
-          lastTargetIndex = randomCardIndex;
-          const targetScrollTop = randomCardIndex * cardHeight;
-          
-          // 改為「瞬間跳轉（無滑動動畫）」，徹底解決滑動過久與延遲的問題
-          container.scrollTo({ top: targetScrollTop, behavior: 'auto' });
-
-          // 瞬間就位後立刻強啟播放
-          setTimeout(() => {
-            stopAllPlayersExceptActive(randomCardIndex);
-            activePlayerIndex = randomCardIndex;
-            if (ytPlayers[randomCardIndex] && typeof ytPlayers[randomCardIndex].playVideo === 'function') {
-              try {
-                ytPlayers[randomCardIndex].playVideo();
-              } catch (e) {
-                document.getElementById('unlockBanner').style.display = 'block';
-              }
-            }
-          }, 150);
-
-        } else {
-          const nextScrollTop = container.scrollTop + cardHeight;
-          container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
-          
-          const nextIndex = index + 1;
-          lastTargetIndex = nextIndex;
-          setTimeout(() => {
-            if (ytPlayers[nextIndex] && typeof ytPlayers[nextIndex].playVideo === 'function') {
-              try { 
-                ytPlayers[nextIndex].playVideo(); 
-              } catch (e) {
-                document.getElementById('unlockBanner').style.display = 'block';
-              }
-            }
-          }, 300);
-        }
-      }
+    const container = document.getElementById('reelContainer');
+    const cards = document.querySelectorAll('.reel-card');
+    if (cards.length > 0) {
+      const cardHeight = cards[0].offsetHeight;
+      const nextIndex = index + 1;
+      const targetScrollTop = nextIndex * cardHeight;
+      container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
     }
   }
 }
 
-window.onload = async function () {
-updatePlayerUI();
-const container = document.getElementById("reelContainer");
-try {
-const songDatabase = await loadSongDatabase();
-if (window.YT && window.YT.Player) {
-initReels(songDatabase);
-} else {
-window.onYouTubeIframeAPIReady = function() {
-initReels(songDatabase);
-};
+async function onYouTubeIframeAPIReady() {
+  try {
+    const songs = await loadSongDatabase();
+    initReels(songs);
+  } catch (err) {
+    console.error(err);
+    const container = document.getElementById('reelContainer');
+    if (container) {
+      container.innerHTML = `<div style="color:#fff;display:flex;justify-content:center;align-items:center;height:100%;text-align:center;padding:20px;">載入歌單發生錯誤：${err.message}</div>`;
+    }
+  }
 }
-} catch (error) {
-console.error("歌曲資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">歌曲資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="localStorage.removeItem('user_custom_csv_url'); location.reload();" style="margin-top:16px;padding:10px 18px;">還原預設並重新載入</button></div>`;
-}
-};
 </script>
 </body>
 </html>
