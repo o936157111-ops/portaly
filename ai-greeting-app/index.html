@@ -37,6 +37,20 @@
       display: none; flex-direction: column; align-items: center; justify-content: center;
       z-index: 9999; text-align: center;
     }
+    /* 側滑選單樣式 */
+    .side-drawer-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5); z-index: 10000;
+      opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .side-drawer-overlay.active { opacity: 1; visibility: visible; }
+    .side-drawer {
+      position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+      background: #ffffff; z-index: 10001; box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+      transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex; flex-direction: column; padding: 24px 20px; overflow-y: auto;
+    }
+    .side-drawer.active { left: 0; }
   </style>
 </head>
 <body class="min-h-screen pb-12">
@@ -48,17 +62,38 @@
     <p class="text-sm text-slate-300">請檢查您的網路設定，連線後即可繼續製作！</p>
   </div>
 
+  <!-- 左上角 Logo / 選單觸發按鈕 -->
+  <img src="https://myezlife.com/eric-logo.gif" width="44" class="fixed top-3 left-3 rounded-full border-2 border-amber-500 shadow-md z-50 cursor-pointer bg-white transition hover:scale-105" alt="Menu" onclick="toggleDrawer()">
+
+  <!-- 左側滑出選單結構 -->
+  <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <div class="side-drawer" id="sideDrawer">
+    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+      <img src="https://myezlife.com/eric-logo.gif" class="w-10 h-10 rounded-full object-cover" alt="Logo">
+      <div class="font-bold text-slate-800 text-sm">功能選單</div>
+    </div>
+    <div class="flex flex-col gap-3">
+      <a href="https://myezlife.com/" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">首頁 (總入口)</a>
+      <a href="https://myezlife.com/ai-greeting-app/" class="w-full py-3 px-4 bg-amber-50 border border-amber-300 text-amber-900 font-bold text-sm rounded-xl transition text-center shadow-sm">🌻 製作早安問候圖</a>
+      <a href="https://myezlife.com/index-1.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">生活‧簡居‧生活</a>
+      <a href="https://myezlife.com/FileExplorer.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">檔案總管</a>
+      <a href="https://myezlife.com/index_news.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">新聞劃重點</a>
+      <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">AI好劇一直看</a>
+      <a href="https://myezlife.com/goldmelody_csv.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">好歌一直聽</a>
+    </div>
+  </div>
+
   <!-- 頂部導覽列 -->
-  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
-    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between pl-14">
       <div class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-sm">
           <i class="fa-solid fa-sun text-sm"></i>
         </div>
-        <h1 class="text-lg font-bold text-slate-800">早安問候圖製作</h1>
+        <h1 class="text-base font-bold text-slate-800">早安問候圖製作</h1>
       </div>
       <span class="text-xs px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full font-medium">
-        ✨ 永久免費使用
+        ✨ 永久免費
       </span>
     </div>
   </header>
@@ -137,13 +172,24 @@
         <i class="fa-solid fa-shuffle"></i> 換一張背景風景圖
       </button>
 
-      <!-- 💡 溫馨贊助與合規廣告橫幅預留區 (未來可在此放置 Google AdSense 碼) -->
-      <div class="bg-amber-50/80 border border-amber-200/60 rounded-xl p-3 text-center space-y-1">
+      <!-- 💡 Google AdSense 真實廣告與溫馨贊助區塊 -->
+      <div class="bg-amber-50/80 border border-amber-200/60 rounded-xl p-3 text-center space-y-2">
         <p class="text-[11px] text-amber-900 font-medium">💖 喜歡本免費工具嗎？</p>
         <p class="text-[10px] text-amber-700">本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！</p>
-        <!-- 預留 AdSense 廣告空間 -->
-        <div class="bg-white/60 border border-dashed border-amber-300 rounded-lg py-2 mt-2 text-[10px] text-slate-400">
-          [ 贊助商廣告空間 / Google AdSense 橫幅 ]
+        
+        <!-- 嵌入您的 Google AdSense 廣告代碼 -->
+        <div class="mt-2 min-h-[90px]">
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811"
+               crossorigin="anonymous"></script>
+          <!-- 早安圖頁面廣告 -->
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-5328509571221811"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
         </div>
       </div>
 
@@ -153,6 +199,12 @@
 
   <!-- JavaScript 邏輯控制 -->
   <script>
+    // --- 側滑選單控制 ---
+    function toggleDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('active');
+      document.getElementById('drawerOverlay').classList.toggle('active');
+    }
+
     // --- 網路狀態偵測 ---
     const offlineNotice = document.getElementById('offline-notice');
     function updateOnlineStatus() {
