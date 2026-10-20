@@ -237,20 +237,19 @@
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
       const topic = document.getElementById('styleSelect').value || 'flower';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入陽光溫馨主題背景中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在為您挑選全新風景圖中...';
       generateBtn.disabled = true;
 
-      // 使用 LoremFlickr 根據選擇的關鍵字（如花卉、晨光）抓取討喜背景
-      const randomSeed = Math.floor(Math.random() * 1000);
-      const bgUrl = `https://loremflickr.com/768/1024/${topic}?random=${randomSeed}`;
+      // 加入時間戳記 (Date.now()) 與隨機數，強制瀏覽器不准快取，每次都抓新圖
+      const uniqueId = Date.now();
+      const bgUrl = `https://loremflickr.com/768/1024/${topic}?lock=${uniqueId}`;
 
       let bgImg = null;
       try {
         bgImg = await loadImage(bgUrl);
       } catch (err) {
-        // 備用預設圖庫
         try {
-          bgImg = await loadImage(`https://picsum.photos/id/106/768/1024`);
+          bgImg = await loadImage(`https://picsum.photos/768/1024?random=${uniqueId}`);
         } catch (e) {
           bgImg = null;
         }
@@ -264,7 +263,7 @@
 
       ctx.filter = 'none';
 
-      // A. 畫背景照片 (自動調高飽和度與明亮度)
+      // A. 畫背景照片
       if (bgImg) {
         ctx.filter = 'brightness(1.05) contrast(1.05) saturate(1.25)';
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
