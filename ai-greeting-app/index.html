@@ -124,7 +124,7 @@
       </button>
     </div>
 
-    <!-- 結果與廣告解鎖區塊 (預設隱藏) -->
+    <!-- 結果與廣告解鎖區塊 -->
     <div id="resultCard" class="hidden bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="text-sm font-bold text-slate-700">🎨 生成結果預覽</h3>
@@ -188,7 +188,7 @@
       }
     });
 
-    // --- 2. 風格提示詞 ---
+    // --- 2. 風格提示詞對照 ---
     const stylePrompts = {
       "水彩溫馨": "dreamy warm watercolor painting style, soft ambient lighting, gentle mood, artistic",
       "寫實風景": "photorealistic landscape photography, beautiful morning lighting, 8k resolution, scenic view",
@@ -208,16 +208,16 @@
 
     let finalDataUrl = "";
 
-    // 載入圖片 (帶 5 秒 Timeout 保護)
+    // 載入圖片 (支援 CORS 驗證與 Timeout 保護)
     function loadImage(url) {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = "anonymous";
+        img.crossOrigin = "anonymous"; // 允許跨域 Canvas 導出
         
         const timer = setTimeout(() => {
           img.src = "";
           reject(new Error("Timeout"));
-        }, 5000);
+        }, 4500);
 
         img.onload = () => {
           clearTimeout(timer);
@@ -247,26 +247,26 @@
       const randomSeed = Math.floor(Math.random() * 1000000);
       const encodedPrompt = encodeURIComponent(promptText);
 
-      // 多重免費 AI Server 網址備援陣列
+      // 多重免費背景 API 備援清單 (包含 Pollinations AI 變體與 Picsum 完全無 CORS 限制的高清美圖)
       const candidateUrls = [
         `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`,
         `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&model=flux&nologo=true`,
-        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&model=turbo&nologo=true`
+        `https://picsum.photos/768/1024?random=${randomSeed}` // 完全無 CORS 限制且 100% 可用的高清自然景觀圖庫
       ];
 
       let bgImg = null;
 
-      // 依次嘗試伺服器通道，直到有一個成功拿到圖片為止
+      // 依序嘗試伺服器，抓到第一張成功的即停止
       for (let url of candidateUrls) {
         try {
           bgImg = await loadImage(url);
-          if (bgImg) break; // 成功取得圖片，跳出迴圈
+          if (bgImg) break;
         } catch (e) {
-          console.warn("當前 AI 伺服器忙碌，自動切換至下一個繪圖通道...");
+          console.warn("備援通道切換中...");
         }
       }
 
-      // 開始 Canvas 文字排版繪製
+      // 開始 Canvas 繪製
       const canvas = compositeCanvas;
       const ctx = canvas.getContext('2d');
       canvas.width = 768;
@@ -274,17 +274,9 @@
 
       if (bgImg) {
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-      } else {
-        // 萬一所有免費 Server 都忙碌，使用備用藝術莫蘭迪色彩背景
-        const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        bgGrad.addColorStop(0, '#4f46e5');
-        bgGrad.addColorStop(0.5, '#7c3aed');
-        bgGrad.addColorStop(1, '#db2777');
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // 上下漸層閱讀遮罩
+      // 上下漸層閱讀遮罩 (提升文字閱讀性)
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
       gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.1)');
@@ -293,7 +285,7 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 繪製頂部文字
+      // 繪製頂部問候對象
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.font = "bold 34px sans-serif";
@@ -323,10 +315,14 @@
       ctx.fillText(line, canvas.width / 2, y);
 
       // 產出圖片 Data URL
-      finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-      previewImage.src = finalDataUrl;
+      try {
+        finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        previewImage.src = finalDataUrl;
+      } catch (err) {
+        console.error("Canvas 導出受阻: ", err);
+      }
 
-      // 顯示結果
+      // 顯示預覽（預設加鎖）
       resultCard.classList.remove('hidden');
       previewImage.classList.add('blur-preview');
       lockOverlay.classList.remove('hidden');
