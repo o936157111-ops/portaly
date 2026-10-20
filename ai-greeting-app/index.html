@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日 AI 視覺問候圖</title>
+
+  <!-- PWA 專屬設定 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+
+  <!-- iOS Safari 專屬全螢幕 App 設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AI問候圖">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/869/869636.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 圖示 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .blur-preview {
+      filter: blur(8px);
+      transition: filter 0.5s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-12">
+
+  <!-- 頂部導覽列 -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">
+          <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+        </div>
+        <h1 class="text-lg font-bold text-slate-800">AI 每日問候圖</h1>
+      </div>
+      <span class="text-xs px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full font-medium">
+        ⚡ 今日免費: 1 次
+      </span>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
+
+    <!-- PWA 安裝按鈕區塊 (預設隱藏，偵測到可安裝時顯示) -->
+    <div id="pwaInstallCard" class="hidden bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-mobile-screen-button text-indigo-600 text-xl"></i>
+        <div>
+          <p class="text-xs font-bold text-indigo-900">安裝 App 到手機桌面</p>
+          <p class="text-[11px] text-indigo-600">每天一鍵打開，方便快速做圖</p>
+        </div>
+      </div>
+      <button id="installBtn" class="bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-lg font-medium shadow-sm hover:bg-indigo-700 active:scale-95 transition">
+        📲 安裝
+      </button>
+    </div>
+
+    <!-- 表單輸入區塊 -->
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+      <h2 class="text-sm font-bold text-slate-700 border-b border-slate-100 pb-2">
+        ✏️ 填寫今日問候資訊
+      </h2>
+
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
+        <input type="text" id="targetInput" placeholder="例如：李大哥、早安群組、親愛的家人" 
+               class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">今日天氣 / 氛圍</label>
+          <select id="weatherSelect" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="晴朗陽光">☀️ 晴朗陽光</option>
+            <option value="舒適微風">🌬️ 舒適微風</option>
+            <option value="細雨綿綿">🌧️ 細雨綿綿</option>
+            <option value="溫暖晨光">🌅 溫暖晨光</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">藝術風格</label>
+          <select id="styleSelect" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="水彩溫馨">水彩溫馨</option>
+            <option value="寫實風景">寫實風景</option>
+            <option value="國畫水墨">國畫水墨</option>
+            <option value="插畫手繪">插畫手繪</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">祝福或提醒內容</label>
+        <textarea id="wishInput" rows="2" placeholder="例如：記得多喝水，出門帶把傘，祝您今天順心好心情！" 
+                  class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+      </div>
+
+      <button id="generateBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-3 rounded-xl shadow-md active:scale-95 transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> 生成今日問候圖預覽
+      </button>
+    </div>
+
+    <!-- 結果與廣告解鎖區塊 (預設隱藏) -->
+    <div id="resultCard" class="hidden bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-slate-700">🎨 生成結果預覽</h3>
+        <span id="statusBadge" class="text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded">鎖定中</span>
+      </div>
+
+      <!-- 圖片容器 -->
+      <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[300px] flex items-center justify-center border border-slate-200">
+        <img id="previewImage" src="https://picsum.photos/600/800" alt="問候圖預覽" class="w-full h-auto blur-preview">
+        
+        <!-- 浮水印遮罩 overlay -->
+        <div id="lockOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+          <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+            <i class="fa-solid fa-lock text-2xl text-amber-300"></i>
+          </div>
+          <div>
+            <p class="font-bold text-base">觀看廣告解鎖 HD 高清美圖</p>
+            <p class="text-xs text-slate-200 mt-1">解鎖後可直接儲存並分享至 LINE 群組</p>
+          </div>
+          <button id="watchAdBtn" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-sm px-5 py-2.5 rounded-full shadow-lg active:scale-95 transition flex items-center gap-2">
+            <i class="fa-solid fa-play"></i> 觀看短廣告 (15秒) 解鎖
+          </button>
+        </div>
+      </div>
+
+      <!-- 解鎖後顯示的動作按鈕區 -->
+      <div id="unlockedActions" class="hidden grid grid-cols-2 gap-3 pt-2">
+        <button id="downloadBtn" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-emerald-700 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-download"></i> 下載高清圖
+        </button>
+        <button id="shareBtn" class="bg-sky-500 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-sky-600 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-share-nodes"></i> 分享至 LINE
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JavaScript 邏輯控制 -->
+  <script>
+    // --- 1. PWA 安裝邏輯 ---
+    let deferredPrompt;
+    const pwaInstallCard = document.getElementById('pwaInstallCard');
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      pwaInstallCard.classList.remove('hidden');
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          pwaInstallCard.classList.add('hidden');
+        }
+        deferredPrompt = null;
+      }
+    });
+
+    // --- 2. 介面互動與廣告解鎖模擬 ---
+    const generateBtn = document.getElementById('generateBtn');
+    const resultCard = document.getElementById('resultCard');
+    const previewImage = document.getElementById('previewImage');
+    const lockOverlay = document.getElementById('lockOverlay');
+    const watchAdBtn = document.getElementById('watchAdBtn');
+    const statusBadge = document.getElementById('statusBadge');
+    const unlockedActions = document.getElementById('unlockedActions');
+
+    // 點擊「生成預覽」
+    generateBtn.addEventListener('click', () => {
+      generateBtn.innerText = '✨ AI 正在調色繪製中...';
+      generateBtn.disabled = true;
+
+      // 模擬 API 生成時間 1.5 秒
+      setTimeout(() => {
+        resultCard.classList.remove('hidden');
+        previewImage.classList.add('blur-preview');
+        lockOverlay.classList.remove('hidden');
+        unlockedActions.classList.add('hidden');
+        statusBadge.innerText = '未解鎖';
+        statusBadge.className = 'text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded';
+
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成問候圖';
+        generateBtn.disabled = false;
+
+        // 平滑滾動到結果區
+        resultCard.scrollIntoView({ behavior: 'smooth' });
+      }, 1500);
+    });
+
+    // 點擊「觀看廣告解鎖」
+    watchAdBtn.addEventListener('click', () => {
+      watchAdBtn.innerText = '⏳ 廣告播放中 (請稍候)...';
+      watchAdBtn.disabled = true;
+
+      // 模擬播放廣告 3 秒
+      setTimeout(() => {
+        alert('🎉 感謝觀看！已成功解鎖今日高清問候圖');
+        
+        // 解鎖效果
+        previewImage.classList.remove('blur-preview');
+        lockOverlay.classList.add('hidden');
+        unlockedActions.classList.remove('hidden');
+        statusBadge.innerText = '已解鎖 HD';
+        statusBadge.className = 'text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded';
+
+        watchAdBtn.innerText = '觀看短廣告 (15秒) 解鎖';
+        watchAdBtn.disabled = false;
+      }, 3000);
+    });
+
+    // 分享按鈕
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({
+          title: '每日 AI 問候圖',
+          text: '這是我用 AI 生成的專屬問候圖，祝你有美好的明天！',
+          url: window.location.href,
+        }).catch(console.error);
+      } else {
+        alert('請長按圖片儲存後，直接發送至 LINE 群組！');
+      }
+    });
+  </script>
+</body>
+</html>
