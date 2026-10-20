@@ -45,17 +45,18 @@ justify-content: center;
 align-items: center;
 transition: opacity 0.4s ease;
 padding: 20px;
+overflow-y: auto;
 }
 
 .splash-logo {
-width: 80px;
-height: 80px;
+width: 70px;
+height: 70px;
 border-radius: 50%;
 object-fit: cover;
 cursor: pointer;
 box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 transition: transform 0.2s ease;
-margin-bottom: 12px;
+margin-bottom: 10px;
 }
 
 .splash-logo:hover {
@@ -63,8 +64,8 @@ transform: scale(1.05);
 }
 
 .splash-text {
-margin-bottom: 24px;
-font-size: 14px;
+margin-bottom: 16px;
+font-size: 13px;
 color: #555;
 letter-spacing: 1px;
 cursor: pointer;
@@ -74,7 +75,7 @@ cursor: pointer;
 .splash-btn-container {
 display: flex;
 flex-direction: column;
-gap: 12px;
+gap: 10px;
 width: 100%;
 max-width: 260px;
 }
@@ -82,11 +83,11 @@ max-width: 260px;
 /* 按鈕樣式 */
 .splash-btn {
 width: 100%;
-padding: 12px 18px;
+padding: 11px 16px;
 background: #f7f7f7;
 border: 1px solid #ddd;
 color: #222;
-font-size: 15px;
+font-size: 14px;
 font-weight: 600;
 text-align: center;
 border-radius: 12px;
@@ -105,11 +106,11 @@ transform: translateY(-2px);
 /* 特殊功能宣傳按鈕樣式 */
 .promo-action-btn {
 width: 100%;
-padding: 13px 18px;
+padding: 12px 16px;
 background: linear-gradient(135deg, #ff3b30, #ff9500);
 border: none;
 color: #fff;
-font-size: 15px;
+font-size: 14px;
 font-weight: bold;
 text-align: center;
 border-radius: 12px;
@@ -117,12 +118,33 @@ text-decoration: none;
 box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
 transition: transform 0.2s ease, box-shadow 0.2s ease;
 cursor: pointer;
-margin-bottom: 4px;
 }
 
 .promo-action-btn:hover {
 transform: translateY(-2px);
 box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
+}
+
+/* 🌟 早安圖專屬入口按鈕樣式 */
+.morning-action-btn {
+width: 100%;
+padding: 12px 16px;
+background: linear-gradient(135deg, #f59e0b, #10b981);
+border: none;
+color: #fff;
+font-size: 14px;
+font-weight: bold;
+text-align: center;
+border-radius: 12px;
+text-decoration: none;
+box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+cursor: pointer;
+}
+
+.morning-action-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
 }
 
 /* 特殊功能說明彈出視窗 (Promo Modal) */
@@ -498,6 +520,9 @@ color: #fff;
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
 <div class="splash-btn-container">
+<!-- 🌟 新增：早安圖製作工具按鈕 -->
+<a href="https://myezlife.com/ai-greeting-app/" class="morning-action-btn" onclick="handleSplashNav(event, this.href)">🌻 製作早安問候圖</a>
+
 <a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
 <a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
 <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
@@ -538,6 +563,7 @@ color: #fff;
 </div>
 <div class="drawer-btn-container">
 <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
+<a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作早安問候圖</a>
 <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
 <a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
 <a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
