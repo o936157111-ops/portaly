@@ -7,12 +7,12 @@
 
   <!-- PWA 專屬設定 -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#4f46e5">
+  <meta name="theme-color" content="#f59e0b">
 
   <!-- iOS Safari 專屬全螢幕 App 設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="AI問候圖">
+  <meta name="apple-mobile-web-app-title" content="早安問候圖">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/869/869636.png">
 
   <!-- Tailwind CSS CDN -->
@@ -22,7 +22,7 @@
 
   <style>
     body {
-      background-color: #f1f5f9;
+      background-color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     .blur-preview {
@@ -40,16 +40,16 @@
 <body class="min-h-screen pb-12">
 
   <!-- 頂部導覽列 -->
-  <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
     <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-white font-bold shadow-sm">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-rose-500 flex items-center justify-center text-white font-bold shadow-sm">
           <i class="fa-solid fa-sun text-sm"></i>
         </div>
-        <h1 class="text-lg font-bold text-slate-800">每日精選問候圖</h1>
+        <h1 class="text-lg font-bold text-slate-800">早安問候圖製作</h1>
       </div>
       <span class="text-xs px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full font-medium">
-        🌸 溫馨正能量
+        🌸 LINE 專用大景
       </span>
     </div>
   </header>
@@ -58,15 +58,15 @@
   <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
 
     <!-- PWA 安裝按鈕區塊 -->
-    <div id="pwaInstallCard" class="hidden bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
+    <div id="pwaInstallCard" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
       <div class="flex items-center gap-3">
-        <i class="fa-solid fa-mobile-screen-button text-indigo-600 text-xl"></i>
+        <i class="fa-solid fa-mobile-screen-button text-amber-600 text-xl"></i>
         <div>
-          <p class="text-xs font-bold text-indigo-900">安裝 App 到手機桌面</p>
-          <p class="text-[11px] text-indigo-600">每天一鍵打開，快速製作早安問候</p>
+          <p class="text-xs font-bold text-amber-900">安裝 App 到手機桌面</p>
+          <p class="text-[11px] text-amber-600">每天一鍵打開，快速製作精美問候</p>
         </div>
       </div>
-      <button id="installBtn" class="bg-indigo-600 text-white text-xs px-3 py-1.5 rounded-lg font-medium shadow-sm hover:bg-indigo-700 active:scale-95 transition">
+      <button id="installBtn" class="bg-amber-600 text-white text-xs px-3 py-1.5 rounded-lg font-medium shadow-sm hover:bg-amber-700 active:scale-95 transition">
         📲 安裝
       </button>
     </div>
@@ -74,24 +74,29 @@
     <!-- 表單輸入區塊 -->
     <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 space-y-4">
       <h2 class="text-sm font-bold text-slate-700 border-b border-slate-100 pb-2">
-        ✏️ 填寫今日問候資訊
+        ✏️ 填寫今日問候內容
       </h2>
 
-      <!-- 第一排：問候前綴與對象 -->
-      <div class="grid grid-cols-3 gap-2">
+      <!-- 第一排：問候前綴與自訂輸入 -->
+      <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">前綴</label>
-          <select id="prefixSelect" class="w-full text-sm px-2 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50">
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候前綴</label>
+          <select id="prefixSelect" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50">
             <option value="早安">早安</option>
             <option value="午安">午安</option>
             <option value="晚安">晚安</option>
-            <option value="平安喜樂">平安喜樂</option>
-            <option value="福氣滿滿">福氣滿滿</option>
+            <option value="日安">日安</option>
+            <option value="custom">✏️ 自訂前綴...</option>
           </select>
         </div>
-        <div class="col-span-2">
+        <div id="customPrefixContainer" class="hidden">
+          <label class="block text-xs font-medium text-slate-600 mb-1">自訂前綴字眼</label>
+          <input type="text" id="customPrefixInput" placeholder="例如：平安喜樂" 
+                 class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50">
+        </div>
+        <div id="targetContainer" class="col-span-1">
           <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
-          <input type="text" id="targetInput" placeholder="例如：李大哥、親愛的家人" value="親愛的好朋友" 
+          <input type="text" id="targetInput" placeholder="例如：好友、各位長輩" value="好朋友" 
                  class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50">
         </div>
       </div>
@@ -113,7 +118,7 @@
       
       <div class="photo-card">
         <div class="flex items-center justify-between mb-2 px-1">
-          <span class="text-xs font-bold text-slate-500 tracking-wider">✨ Daily Blessing Card</span>
+          <span class="text-xs font-bold text-slate-500 tracking-wider">✨ LINE Blessing Card</span>
           <span id="statusBadge" class="text-xs px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">鎖定中</span>
         </div>
 
@@ -152,6 +157,22 @@
 
   <!-- JavaScript 邏輯控制 -->
   <script>
+    // --- 0. 自訂前綴切換邏輯 ---
+    const prefixSelect = document.getElementById('prefixSelect');
+    const customPrefixContainer = document.getElementById('customPrefixContainer');
+    const targetContainer = document.getElementById('targetContainer');
+    const customPrefixInput = document.getElementById('customPrefixInput');
+
+    prefixSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'custom') {
+        customPrefixContainer.classList.remove('hidden');
+        targetContainer.className = "col-span-2"; // 讓下方排版對齊
+      } else {
+        customPrefixContainer.classList.add('hidden');
+        targetContainer.className = "col-span-1";
+      }
+    });
+
     // --- 1. PWA 安裝邏輯 ---
     let deferredPrompt;
     const pwaInstallCard = document.getElementById('pwaInstallCard');
@@ -185,7 +206,7 @@
     const unlockedActions = document.getElementById('unlockedActions');
 
     let finalDataUrl = "";
-    let lastRandomId = 0; // 記錄上一張圖片的ID，確保絕不重複
+    let lastRandomId = 0;
 
     function loadImage(url) {
       return new Promise((resolve, reject) => {
@@ -211,24 +232,25 @@
     }
 
     generateBtn.addEventListener('click', async () => {
-      const prefix = document.getElementById('prefixSelect').value;
+      let prefix = prefixSelect.value;
+      if (prefix === 'custom') {
+        prefix = customPrefixInput.value.trim() || '平安喜樂';
+      }
       const target = document.getElementById('targetInput').value.trim() || '好朋友';
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在切換全新美景中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在挑選日出大景與花草美景...';
       generateBtn.disabled = true;
 
-      // 🌸 嚴選高質感風景與花草圖片清單
-      const blessingImageIds = [10, 15, 42, 54, 82, 106, 119, 145, 152, 219, 249, 292, 319, 360, 429, 517, 621, 659, 729, 824, 915, 1043];
+      // 🌸 專門精選的 LINE 質感大景與花草晨曦圖片 ID 庫 (100% 亮麗、充滿正能量)
+      const lineMorningImageIds = [10, 54, 119, 145, 152, 249, 292, 319, 360, 429, 517, 621, 659, 729, 824, 915, 1025, 1043, 1047, 1059];
       
-      // 確保每次隨機抽到的 ID 跟上一張不同
       let randomId;
       do {
-        randomId = blessingImageIds[Math.floor(Math.random() * blessingImageIds.length)];
-      } while (randomId === lastRandomId && blessingImageIds.length > 1);
+        randomId = lineMorningImageIds[Math.floor(Math.random() * lineMorningImageIds.length)];
+      } while (randomId === lastRandomId && lineMorningImageIds.length > 1);
       lastRandomId = randomId;
 
-      // 關鍵：在網址後方強制加入毫秒時間戳記 (?t=...)，徹底破除瀏覽器快取！
       const timestamp = Date.now();
       const bgUrl = `https://picsum.photos/id/${randomId}/768/1024?t=${timestamp}`;
 
@@ -249,7 +271,7 @@
 
       ctx.filter = 'none';
 
-      // A. 智慧縮放與置中繪製背景
+      // A. 智慧縮放與置中繪製背景 (完美填滿直式畫面)
       if (bgImg) {
         const iw = bgImg.width;
         const ih = bgImg.height;
@@ -261,7 +283,8 @@
         const offsetX = (cw - renderW) / 2;
         const offsetY = (ch - renderH) / 2;
 
-        ctx.filter = 'brightness(1.1) contrast(1.05) saturate(1.3)';
+        // 拉高亮度與飽和度，展現熱鬧、朝氣的早安圖風格
+        ctx.filter = 'brightness(1.12) contrast(1.08) saturate(1.35)';
         ctx.drawImage(bgImg, offsetX, offsetY, renderW, renderH);
         ctx.filter = 'none';
       } else {
@@ -272,22 +295,22 @@
         ctx.fillRect(0, 0, cw, ch);
       }
 
-      // B. 溫馨暖色光暈遮罩
+      // B. 質感上下漸層光暈遮罩 (讓文字更清晰易讀，同時保有早安圖的高級感)
       const gradient = ctx.createLinearGradient(0, 0, 0, ch);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
       gradient.addColorStop(0.25, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+      gradient.addColorStop(0.68, 'rgba(0, 0, 0, 0.1)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, cw, ch);
 
-      // C. 繪製頂部問候語
+      // C. 繪製頂部問候語 (精緻發光字體)
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
-      ctx.font = "bold 38px sans-serif";
-      ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
-      ctx.shadowBlur = 14;
-      ctx.fillText(`🌻 ${prefix} · ${target}`, cw / 2, 100);
+      ctx.font = "bold 40px sans-serif";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
+      ctx.shadowBlur = 16;
+      ctx.fillText(`🌻 ${prefix} · ${target}`, cw / 2, 105);
 
       // D. 繪製祝福內文 (自動換行)
       ctx.font = "normal 42px serif";
@@ -358,7 +381,7 @@
       if (!finalDataUrl) return;
       const a = document.createElement('a');
       a.href = finalDataUrl;
-      a.download = `早安問候圖_${Date.now()}.jpg`;
+      a.download = `LINE早安圖_${Date.now()}.jpg`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -370,7 +393,7 @@
       try {
         const res = await fetch(finalDataUrl);
         const blob = await res.blob();
-        const file = new File([blob], 'Greeting.jpg', { type: 'image/jpeg' });
+        const file = new File([blob], 'Morning_Greeting.jpg', { type: 'image/jpeg' });
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
