@@ -26,8 +26,8 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     .blur-preview {
-      filter: blur(8px);
-      transition: filter 0.5s ease;
+      filter: blur(12px);
+      transition: filter 0.6s ease;
     }
   </style>
 </head>
@@ -43,7 +43,7 @@
         <h1 class="text-lg font-bold text-slate-800">AI 每日問候圖</h1>
       </div>
       <span class="text-xs px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full font-medium">
-        ⚡ 今日免費: 1 次
+        ⚡ 免費使用中
       </span>
     </div>
   </header>
@@ -100,12 +100,12 @@
 
       <div>
         <label class="block text-xs font-medium text-slate-600 mb-1">祝福或提醒內容</label>
-        <textarea id="wishInput" rows="2" placeholder="例如：記得多喝水，出門帶把傘，祝您今天順心好心情！" 
+        <textarea id="wishInput" rows="2" placeholder="例如：記得多喝水，祝您今天順心好心情！" 
                   class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
       </div>
 
       <button id="generateBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-3 rounded-xl shadow-md active:scale-95 transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-wand-magic-sparkles"></i> 生成今日問候圖預覽
+        <i class="fa-solid fa-wand-magic-sparkles"></i> 生成今日問候圖
       </button>
     </div>
 
@@ -117,10 +117,10 @@
       </div>
 
       <!-- 圖片容器 -->
-      <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[300px] flex items-center justify-center border border-slate-200">
-        <img id="previewImage" src="https://picsum.photos/600/800" alt="問候圖預覽" class="w-full h-auto blur-preview">
+      <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[350px] flex items-center justify-center border border-slate-200">
+        <img id="previewImage" src="" alt="問候圖預覽" class="w-full h-auto blur-preview">
         
-        <!-- 浮水印遮罩 overlay -->
+        <!-- 鎖定/廣告遮罩 -->
         <div id="lockOverlay" class="absolute inset-0 bg-black/40 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
           <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
             <i class="fa-solid fa-lock text-2xl text-amber-300"></i>
@@ -172,7 +172,15 @@
       }
     });
 
-    // --- 2. 介面互動與廣告解鎖模擬 ---
+    // --- 2. 風格提示詞轉換對照表 ---
+    const stylePrompts = {
+      "水彩溫馨": "dreamy warm watercolor painting style, soft ambient lighting, gentle mood, artistic",
+      "寫實風景": "photorealistic landscape photography, beautiful morning lighting, 8k resolution, crisp detail",
+      "國畫水墨": "traditional Chinese ink wash painting, elegant brush strokes, poetic atmosphere, misty aesthetic",
+      "插畫手繪": "cute storybook illustration style, charming hand-drawn details, vibrant pastel colors"
+    };
+
+    // --- 3. 真 AI 生圖與廣告解鎖邏輯 ---
     const generateBtn = document.getElementById('generateBtn');
     const resultCard = document.getElementById('resultCard');
     const previewImage = document.getElementById('previewImage');
@@ -181,41 +189,70 @@
     const statusBadge = document.getElementById('statusBadge');
     const unlockedActions = document.getElementById('unlockedActions');
 
-    // 點擊「生成預覽」
+    let currentGeneratedUrl = "";
+
     generateBtn.addEventListener('click', () => {
-      generateBtn.innerText = '✨ AI 正在調色繪製中...';
+      const weather = document.getElementById('weatherSelect').value;
+      const style = document.getElementById('styleSelect').value;
+
+      // 1. 組裝英文 Prompt (確保 AI 繪圖精準度)
+      const baseStyle = stylePrompts[style] || stylePrompts["水彩溫馨"];
+      const promptText = `${baseStyle}, morning ambiance with ${weather}, peaceful day greetings, cozy feeling, scenic backdrop, high quality`;
+      
+      // 2. 建立 Pollinations.ai 免費 AI 繪圖 URL
+      const randomSeed = Math.floor(Math.random() * 1000000);
+      const encodedPrompt = encodeURIComponent(promptText);
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`;
+
+      // UI 載入狀態
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI 正在為您繪製專屬問候圖...';
       generateBtn.disabled = true;
 
-      // 模擬 API 生成時間 1.5 秒
-      setTimeout(() => {
+      // 預載圖片
+      const tempImg = new Image();
+      tempImg.src = imageUrl;
+      
+      tempImg.onload = () => {
+        currentGeneratedUrl = imageUrl;
+        previewImage.src = imageUrl;
+
+        // 顯示結果卡片（預設為模糊與加鎖狀態）
         resultCard.classList.remove('hidden');
         previewImage.classList.add('blur-preview');
         lockOverlay.classList.remove('hidden');
         unlockedActions.classList.add('hidden');
-        statusBadge.innerText = '未解鎖';
+        
+        statusBadge.innerText = '鎖定中 (觀看廣告解鎖)';
         statusBadge.className = 'text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded';
 
-        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成問候圖';
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成另一張問候圖';
         generateBtn.disabled = false;
 
-        // 平滑滾動到結果區
+        // 平滑滾動至結果
         resultCard.scrollIntoView({ behavior: 'smooth' });
-      }, 1500);
+      };
+
+      tempImg.onerror = () => {
+        alert('AI 畫布忙碌中，請重新點擊生成按鈕試試！');
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成問候圖';
+        generateBtn.disabled = false;
+      };
     });
 
-    // 點擊「觀看廣告解鎖」
+    // 點擊觀看廣告解鎖 HD 高清圖
     watchAdBtn.addEventListener('click', () => {
-      watchAdBtn.innerText = '⏳ 廣告播放中 (請稍候)...';
+      watchAdBtn.innerText = '⏳ 廣告播放中 (請稍候 3 秒)...';
       watchAdBtn.disabled = true;
 
       // 模擬播放廣告 3 秒
       setTimeout(() => {
-        alert('🎉 感謝觀看！已成功解鎖今日高清問候圖');
+        alert('🎉 感謝觀看贊助商廣告！已為您解鎖無浮水印 HD 高清問候圖！');
         
-        // 解鎖效果
+        // 移除模糊效果、隱藏鎖定層、顯示下載/分享按鈕
         previewImage.classList.remove('blur-preview');
         lockOverlay.classList.add('hidden');
         unlockedActions.classList.remove('hidden');
+        
         statusBadge.innerText = '已解鎖 HD';
         statusBadge.className = 'text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded';
 
@@ -224,7 +261,25 @@
       }, 3000);
     });
 
-    // 分享按鈕
+    // 下載高清圖片按鈕
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+      if (!currentGeneratedUrl) return;
+      try {
+        const response = await fetch(currentGeneratedUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `AI問候圖_${Date.now()}.jpg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (err) {
+        window.open(currentGeneratedUrl, '_blank');
+      }
+    });
+
+    // 分享至 LINE 按鈕
     document.getElementById('shareBtn').addEventListener('click', () => {
       if (navigator.share) {
         navigator.share({
@@ -233,7 +288,7 @@
           url: window.location.href,
         }).catch(console.error);
       } else {
-        alert('請長按圖片儲存後，直接發送至 LINE 群組！');
+        alert('請長按圖片儲存後，即可直接發送至 LINE 群組！');
       }
     });
   </script>
