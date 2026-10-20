@@ -188,15 +188,7 @@
       }
     });
 
-    // --- 2. 風格提示詞對照 ---
-    const stylePrompts = {
-      "水彩溫馨": "dreamy warm watercolor painting style, soft ambient lighting, gentle mood, artistic",
-      "寫實風景": "photorealistic landscape photography, beautiful morning lighting, 8k resolution, scenic view",
-      "國畫水墨": "traditional Chinese ink wash painting, elegant brush strokes, poetic atmosphere, misty aesthetic",
-      "插畫手繪": "cute storybook illustration style, charming hand-drawn details, vibrant pastel colors"
-    };
-
-    // --- 3. 核心邏輯元件 ---
+    // --- 2. 核心邏輯元件 ---
     const generateBtn = document.getElementById('generateBtn');
     const resultCard = document.getElementById('resultCard');
     const previewImage = document.getElementById('previewImage');
@@ -208,16 +200,16 @@
 
     let finalDataUrl = "";
 
-    // 載入圖片 (支援 CORS 驗證與 Timeout 保護)
+    // 載入圖片 (帶有 CORS 認證)
     function loadImage(url) {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = "anonymous"; // 允許跨域 Canvas 導出
+        img.crossOrigin = "anonymous"; // 解鎖 Canvas 繪製授權
         
         const timer = setTimeout(() => {
           img.src = "";
           reject(new Error("Timeout"));
-        }, 4500);
+        }, 5000);
 
         img.onload = () => {
           clearTimeout(timer);
@@ -235,38 +227,23 @@
     generateBtn.addEventListener('click', async () => {
       const prefix = document.getElementById('prefixSelect').value;
       const target = document.getElementById('targetInput').value.trim() || '朋友';
-      const weather = document.getElementById('weatherSelect').value;
-      const style = document.getElementById('styleSelect').value;
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI 繪製背景與排版文字中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入高清畫布與排版中...';
       generateBtn.disabled = true;
 
-      const baseStyle = stylePrompts[style] || stylePrompts["水彩溫馨"];
-      const promptText = `${baseStyle}, peaceful ambiance with ${weather}, cozy feeling, high quality`;
-      const randomSeed = Math.floor(Math.random() * 1000000);
-      const encodedPrompt = encodeURIComponent(promptText);
-
-      // 多重免費背景 API 備援清單 (包含 Pollinations AI 變體與 Picsum 完全無 CORS 限制的高清美圖)
-      const candidateUrls = [
-        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`,
-        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&model=flux&nologo=true`,
-        `https://picsum.photos/768/1024?random=${randomSeed}` // 完全無 CORS 限制且 100% 可用的高清自然景觀圖庫
-      ];
+      // 直接採用 Picsum Photos（完全開放 CORS、免費且穩定的高清藝術圖片庫）
+      const randomSeed = Math.floor(Math.random() * 1000);
+      const bgUrl = `https://picsum.photos/768/1024?random=${randomSeed}`;
 
       let bgImg = null;
-
-      // 依序嘗試伺服器，抓到第一張成功的即停止
-      for (let url of candidateUrls) {
-        try {
-          bgImg = await loadImage(url);
-          if (bgImg) break;
-        } catch (e) {
-          console.warn("備援通道切換中...");
-        }
+      try {
+        bgImg = await loadImage(bgUrl);
+      } catch (err) {
+        console.warn("載入背景圖逾時，使用備用藝術色彩底色");
       }
 
-      // 開始 Canvas 繪製
+      // 開始 Canvas 文字排版繪製
       const canvas = compositeCanvas;
       const ctx = canvas.getContext('2d');
       canvas.width = 768;
@@ -274,14 +251,21 @@
 
       if (bgImg) {
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+      } else {
+        // 備用藝術漸層
+        const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        bgGrad.addColorStop(0, '#4f46e5');
+        bgGrad.addColorStop(1, '#a855f7');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // 上下漸層閱讀遮罩 (提升文字閱讀性)
+      // 上下漸層閱讀遮罩 (讓白色字更容易閱讀)
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.5)');
       gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.1)');
       gradient.addColorStop(0.65, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -318,8 +302,8 @@
       try {
         finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
         previewImage.src = finalDataUrl;
-      } catch (err) {
-        console.error("Canvas 導出受阻: ", err);
+      } catch (e) {
+        console.error("Canvas 導出錯誤:", e);
       }
 
       // 顯示預覽（預設加鎖）
