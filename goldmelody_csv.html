@@ -401,7 +401,6 @@ z-index: 1;
 display: flex;
 justify-content: center;
 align-items: center;
-pointer-events: none; /* 防止點擊干擾原生播放器控制 */
 }
 
 .video-wrapper iframe {
@@ -581,18 +580,17 @@ border-radius: 12px;
 <script>
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
-let masterPlayer = null; // 全域共用單一主播放器，解決手機卡頓與黑屏
+let ytPlayers = {}; 
 let activePlayerIndex = null;
-let globalSongDatabase = [];
 let hasUserInteracted = false;
 
-// 監聽第一次使用者互動，全面解鎖瀏覽器自動播放權限
+// 監聽第一次使用者互動，全面解鎖瀏覽器自動播放限制
 ['click', 'touchstart', 'scroll'].forEach(evt => {
   window.addEventListener(evt, () => {
     if (!hasUserInteracted) {
       hasUserInteracted = true;
-      if (masterPlayer && typeof masterPlayer.playVideo === 'function') {
-        try { masterPlayer.playVideo(); } catch(e) {}
+      if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
+        try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
       }
     }
   }, { once: true, passive: true });
@@ -850,6 +848,8 @@ async function loadSongDatabase() {
   return songs;
 }
 
+let globalSongDatabase = [];
+
 function initReels(songDatabase) {
   globalSongDatabase = songDatabase;
   const container = document.getElementById('reelContainer');
@@ -874,9 +874,7 @@ function initReels(songDatabase) {
 
     card.innerHTML = `
       ${coverHtml}
-      <div class="video-wrapper">
-        <div id="slot-${index}" style="width:100%;height:100%;"></div>
-      </div>
+      <div class="video-wrapper"><div id="yt-player-${index}" style="width:100%;height:100%;"></div></div>
       <div class="overlay-info">
         <div class="song-text-group">
           <div class="song-title">${song.title}</div>
@@ -900,10 +898,12 @@ function initReels(songDatabase) {
     container.scrollTop = 0;
   }
 
-  // 無縫循環滾動修正
+  // 無縫循環捲動
   let scrollTimeout;
   container.addEventListener('scroll', () => {
     clearTimeout(scrollTimeout);
+    stopAllPlayersExceptActive();
+
     scrollTimeout = setTimeout(() => {
       if (!cards[0]) return;
       const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
@@ -912,7 +912,8 @@ function initReels(songDatabase) {
         container.style.scrollSnapType = 'none';
         container.scrollTop += singleBlockHeight;
         setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-      } else if (container.scrollTop > singleBlockHeight * 1.5) {
+      }
+      else if (container.scrollTop > singleBlockHeight * 1.5) {
         container.style.scrollSnapType = 'none';
         container.scrollTop -= singleBlockHeight;
         setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
@@ -920,29 +921,44 @@ function initReels(songDatabase) {
     }, 100);
   }, { passive: true });
 
-  // 進入視野時自動播放與平順切換
+  // 進入視野時動態建立或播放對應的 YouTube Player
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const card = entry.target;
       const index = parseInt(card.dataset.index);
       const videoId = card.dataset.videoId;
       const coverLayer = card.querySelector('.custom-cover-layer');
-      const targetSlot = document.getElementById(`slot-${index}`);
 
       if (entry.isIntersecting) {
+        stopAllPlayersExceptActive(index);
         activePlayerIndex = index;
 
-        if (masterPlayer && targetSlot) {
-          // 將共用的播放器移動到當前可見的卡片容器內，並載入/播放影片
-          const iframe = masterPlayer.getIframe();
-          if (iframe && iframe.parentNode !== targetSlot) {
-            targetSlot.appendChild(iframe);
-          }
+        if (!ytPlayers[index]) {
           try {
-            masterPlayer.loadVideoById(videoId);
-          } catch(e) {
-            try { masterPlayer.cueVideoById(videoId); masterPlayer.playVideo(); } catch(err) {}
-          }
+            ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
+              videoId: videoId,
+              playerVars: {
+                'autoplay': 1,
+                'playsinline': 1,
+                'controls': 1,
+                'rel': 0
+              },
+              events: {
+                'onReady': (e) => {
+                  if (activePlayerIndex !== index) {
+                    try { e.target.pauseVideo(); } catch(err) {}
+                  } else {
+                    try { e.target.playVideo(); } catch(err) {}
+                  }
+                },
+                'onStateChange': (e) => onPlayerStateChange(e, index)
+              }
+            });
+          } catch(err) {}
+        } else {
+          try {
+            ytPlayers[index].playVideo();
+          } catch(err) {}
         }
 
         if (coverLayer) {
@@ -952,10 +968,12 @@ function initReels(songDatabase) {
           recordUserClick(card.dataset.title);
         }
       } else {
+        if (ytPlayers[index]) {
+          try {
+            ytPlayers[index].pauseVideo();
+          } catch(err) {}
+        }
         if (activePlayerIndex === index) {
-          if (masterPlayer) {
-            try { masterPlayer.pauseVideo(); } catch(e) {}
-          }
           activePlayerIndex = null;
         }
         if (coverLayer) {
@@ -968,45 +986,42 @@ function initReels(songDatabase) {
   cards.forEach(card => observer.observe(card));
 }
 
-// 初始化唯一的 YouTube Player 執行例
-function onYouTubeIframeAPIReady() {
-  loadSongDatabase().then(songs => {
-    initReels(songs);
-    
-    // 建立全域唯一的播放器掛載在第一張卡片上
-    if (songs.length > 0) {
-      masterPlayer = new YT.Player('slot-0', {
-        videoId: songs[0].videoId,
-        playerVars: {
-          'autoplay': 1,
-          'playsinline': 1,
-          'controls': 1,
-          'rel': 0
-        },
-        events: {
-          'onReady': (e) => {
-            try { e.target.playVideo(); } catch(err) {}
-          },
-          'onStateChange': (e) => {
-            if (e.data === YT.PlayerState.ENDED) {
-              const container = document.getElementById('reelContainer');
-              const cards = document.querySelectorAll('.reel-card');
-              if (cards.length > 0 && activePlayerIndex !== null) {
-                const nextIndex = activePlayerIndex + 1;
-                container.scrollTo({ top: nextIndex * cards[0].offsetHeight, behavior: 'smooth' });
-              }
-            }
-          }
+function stopAllPlayersExceptActive(exceptIndex = -1) {
+  for (let idx in ytPlayers) {
+    if (parseInt(idx) !== exceptIndex) {
+      try {
+        if (ytPlayers[idx] && typeof ytPlayers[idx].pauseVideo === 'function') {
+          ytPlayers[idx].pauseVideo();
         }
-      });
+      } catch (e) {}
     }
-  }).catch(err => {
+  }
+}
+
+function onPlayerStateChange(event, index) {
+  if (event.data === YT.PlayerState.ENDED) {
+    const container = document.getElementById('reelContainer');
+    const cards = document.querySelectorAll('.reel-card');
+    if (cards.length > 0) {
+      const cardHeight = cards[0].offsetHeight;
+      const nextIndex = index + 1;
+      const targetScrollTop = nextIndex * cardHeight;
+      container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+    }
+  }
+}
+
+async function onYouTubeIframeAPIReady() {
+  try {
+    const songs = await loadSongDatabase();
+    initReels(songs);
+  } catch (err) {
     console.error(err);
     const container = document.getElementById('reelContainer');
     if (container) {
       container.innerHTML = `<div style="color:#fff;display:flex;justify-content:center;align-items:center;height:100%;text-align:center;padding:20px;">載入歌單發生錯誤：${err.message}</div>`;
     }
-  });
+  }
 }
 </script>
 </body>
