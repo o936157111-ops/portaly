@@ -410,7 +410,7 @@ border: none;
 pointer-events: auto;
 }
 
-/* 手機版封面層預設開啟，點擊後淡出播放 */
+/* 手機版封面層預設開啟，點擊後淡出播放；電腦版直接隱藏 */
 .custom-cover-layer {
 position: absolute;
 top: 0;
@@ -426,7 +426,7 @@ transition: opacity 0.4s ease;
 
 @media (min-width: 768px) {
   .custom-cover-layer {
-    display: none !important; /* 電腦版維持自動播放，不顯示封面 */
+    display: none !important; /* 電腦版不顯示封面，維持自動播放 */
   }
 }
 
@@ -503,6 +503,9 @@ padding: 3px 10px;
 border-radius: 12px;
 }
 </style>
+
+<!-- 引入 YouTube IFrame Player API -->
+<script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
@@ -584,12 +587,13 @@ border-radius: 12px;
 <script>
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
+let ytPlayers = {};
 let activePlayerIndex = null;
-const isMobile = window.innerWidth < 768;
+const isMobile = window.innerWidth < 768; // 判斷是否為手機版
 
-// 強制確保從其他頁面返回時重新整理，防止快取殘留黑屏
+// 手機版返回時重新整理，防止快取黑屏
 window.addEventListener('pageshow', (event) => {
-  if (event.persisted) {
+  if (event.persisted && isMobile) {
     window.location.reload();
   }
 });
@@ -846,7 +850,10 @@ async function loadSongDatabase() {
   return songs;
 }
 
+let globalSongDatabase = [];
+
 function initReels(songDatabase) {
+  globalSongDatabase = songDatabase;
   const container = document.getElementById('reelContainer');
   if (!container) return;
   container.innerHTML = '';
@@ -861,9 +868,9 @@ function initReels(songDatabase) {
     card.dataset.title = song.title;
 
     let coverHtml = '';
-    if (song.isCustomCover) {
+    if (song.isCustomCover && isMobile) {
       const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-      // 手機版點擊封面直接隱藏並載入原生 iframe 播放
+      // 手機版專屬點擊封面播放
       coverHtml = `<div class="custom-cover-layer${extraClass}" onclick="handleMobilePlay(event, ${index})" ${song.coverUrl ? `style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}>
         <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);" class="cover-play-btn-wrapper">
           <div class="cover-play-btn" title="播放影片">
@@ -873,14 +880,9 @@ function initReels(songDatabase) {
       </div>`;
     }
 
-    // 電腦版直接給 iframe，手機版預設留空由點擊後動態填入 src
-    const iframeSrc = !isMobile ? `https://www.youtube.com/embed/${song.videoId}?autoplay=1&playsinline=1&controls=1&rel=0` : '';
-
     card.innerHTML = `
       ${coverHtml}
-      <div class="video-wrapper">
-        <iframe id="iframe-${index}" src="${iframeSrc}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      </div>
+      <div class="video-wrapper"><div id="yt-player-${index}" style="width:100%;height:100%;"></div></div>
       <div class="overlay-info">
         <div class="song-text-group">
           <div class="song-title">${song.title}</div>
@@ -904,11 +906,11 @@ function initReels(songDatabase) {
     container.scrollTop = 0;
   }
 
-  // 無縫循環捲動與離開畫面自動暫停（透過重設 iframe src）
+  // 無縫循環捲動
   let scrollTimeout;
   container.addEventListener('scroll', () => {
     clearTimeout(scrollTimeout);
-    pauseAllIframesExceptActive();
+    stopAllPlayersExceptActive();
 
     scrollTimeout = setTimeout(() => {
       if (!cards[0]) return;
@@ -927,29 +929,44 @@ function initReels(songDatabase) {
     }, 100);
   }, { passive: true });
 
-  // 觀察器：管理上下滑動時的播放與暫停
+  // 觀察器：電腦版走自動播放，手機版走點擊播放
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const card = entry.target;
       const index = parseInt(card.dataset.index);
       const videoId = card.dataset.videoId;
-      const iframe = document.getElementById(`iframe-${index}`);
 
       if (entry.isIntersecting) {
         activePlayerIndex = index;
-        pauseAllIframesExceptActive(index);
 
-        if (!isMobile && iframe && !iframe.src) {
-          iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&controls=1&rel=0`;
+        // 如果是電腦版，維持原本捲動自動建立並播放
+        if (!isMobile) {
+          stopAllPlayersExceptActive(index);
+          if (!ytPlayers[index]) {
+            try {
+              ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
+                videoId: videoId,
+                playerVars: { 'autoplay': 1, 'playsinline': 1, 'controls': 1, 'rel': 0 },
+                events: {
+                  'onReady': (e) => { try { e.target.playVideo(); } catch(err) {} },
+                  'onStateChange': (e) => onPlayerStateChange(e, index)
+                }
+              });
+            } catch(err) {}
+          } else {
+            try { ytPlayers[index].playVideo(); } catch(err) {}
+          }
         }
 
         if (card.dataset.title) {
           recordUserClick(card.dataset.title);
         }
       } else {
-        if (iframe && iframe.src) {
-          // 離開畫面時清空 src 停止播放，返回時也不會佔用資源
-          iframe.src = '';
+        if (ytPlayers[index]) {
+          try { ytPlayers[index].pauseVideo(); } catch(err) {}
+        }
+        if (activePlayerIndex === index) {
+          activePlayerIndex = null;
         }
       }
     });
@@ -958,19 +975,29 @@ function initReels(songDatabase) {
   cards.forEach(card => observer.observe(card));
 }
 
-// 手機版點擊封面：直接賦予 iframe src 讓原生播放器順暢啟動
+// 手機版點擊封面：動態建立播放器並播放
 function handleMobilePlay(event, index) {
   const card = document.querySelector(`.reel-card[data-index="${index}"]`);
   if (!card) return;
   const coverLayer = card.querySelector('.custom-cover-layer');
   const videoId = card.dataset.videoId;
-  const iframe = document.getElementById(`iframe-${index}`);
 
-  pauseAllIframesExceptActive(index);
+  stopAllPlayersExceptActive(index);
   activePlayerIndex = index;
 
-  if (iframe) {
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&controls=1&rel=0`;
+  if (!ytPlayers[index]) {
+    try {
+      ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
+        videoId: videoId,
+        playerVars: { 'autoplay': 1, 'playsinline': 1, 'controls': 1, 'rel': 0 },
+        events: {
+          'onReady': (e) => { try { e.target.playVideo(); } catch(err) {} },
+          'onStateChange': (e) => onPlayerStateChange(e, index)
+        }
+      });
+    } catch(err) {}
+  } else {
+    try { ytPlayers[index].playVideo(); } catch(err) {}
   }
 
   if (coverLayer) {
@@ -978,33 +1005,47 @@ function handleMobilePlay(event, index) {
   }
 }
 
-function pauseAllIframesExceptActive(exceptIndex = -1) {
-  const iframes = document.querySelectorAll('.reel-card iframe');
-  iframes.forEach((iframe, idx) => {
-    if (idx !== exceptIndex && iframe.src) {
-      iframe.src = ''; // 清空 src 停止背景聲音與影片
-      // 同時恢復對應卡片的封面顯示（針對手機版）
-      const card = iframe.closest('.reel-card');
-      if (card) {
-        const cover = card.querySelector('.custom-cover-layer');
-        if (cover) cover.classList.remove('fade-out');
-      }
+function stopAllPlayersExceptActive(exceptIndex = -1) {
+  for (let idx in ytPlayers) {
+    if (parseInt(idx) !== exceptIndex) {
+      try {
+        if (ytPlayers[idx] && typeof ytPlayers[idx].pauseVideo === 'function') {
+          ytPlayers[idx].pauseVideo();
+        }
+      } catch (e) {}
     }
-  });
+  }
 }
 
-// 初始化
-async function initPage() {
+function onPlayerStateChange(event, index) {
+  if (event.data === YT.PlayerState.ENDED) {
+    const container = document.getElementById('reelContainer');
+    const cards = document.querySelectorAll('.reel-card');
+    if (cards.length > 0) {
+      const cardHeight = cards[0].offsetHeight;
+      const nextIndex = index + 1;
+      const targetScrollTop = nextIndex * cardHeight;
+      container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+    }
+  }
+}
+
+async function onYouTubeIframeAPIReady() {
   try {
     const songs = await loadSongDatabase();
     initReels(songs);
 
+    // 如果是電腦版，網頁載入完成後自動初始化第一頁
     if (!isMobile && songs.length > 0) {
       activePlayerIndex = 0;
-      const firstIframe = document.getElementById('iframe-0');
-      if (firstIframe) {
-        firstIframe.src = `https://www.youtube.com/embed/${songs[0].videoId}?autoplay=1&playsinline=1&controls=1&rel=0`;
-      }
+      ytPlayers[0] = new YT.Player(`yt-player-0`, {
+        videoId: songs[0].videoId,
+        playerVars: { 'autoplay': 1, 'playsinline': 1, 'controls': 1, 'rel': 0 },
+        events: {
+          'onReady': (e) => { try { e.target.playVideo(); } catch(err) {} },
+          'onStateChange': (e) => onPlayerStateChange(e, 0)
+        }
+      });
     }
   } catch (err) {
     console.error(err);
@@ -1014,8 +1055,6 @@ async function initPage() {
     }
   }
 }
-
-initPage();
 </script>
 </body>
 </html>
