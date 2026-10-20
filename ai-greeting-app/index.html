@@ -26,7 +26,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     .blur-preview {
-      filter: blur(12px);
+      filter: blur(15px);
       transition: filter 0.6s ease;
     }
     .photo-card {
@@ -35,9 +35,24 @@
       border-radius: 20px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
     }
+    /* 網路離線提示樣式 */
+    #offline-notice {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); color: white;
+      display: none; flex-direction: column; items-center; justify-center;
+      z-index: 9999; text-align: center; backdrop-blur: sm;
+    }
   </style>
 </head>
 <body class="min-h-screen pb-12">
+
+  <!-- 離線遮罩 -->
+  <div id="offline-notice">
+    <i class="fa-solid fa-wifi-slash text-6xl mb-4 text-slate-400"></i>
+    <h2 class="text-xl font-bold mb-2">網路連線已中斷</h2>
+    <p class="text-sm text-slate-300">請檢查您的網路設定，</p>
+    <p class="text-sm text-slate-300">連線後即可繼續製作美麗問候圖！</p>
+  </div>
 
   <!-- 頂部導覽列 -->
   <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
@@ -56,20 +71,6 @@
 
   <!-- 主要內容區 -->
   <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
-
-    <!-- PWA 安裝按鈕區塊 -->
-    <div id="pwaInstallCard" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-mobile-screen-button text-amber-600 text-xl"></i>
-        <div>
-          <p class="text-xs font-bold text-amber-900">安裝 App 到手機桌面</p>
-          <p class="text-[11px] text-amber-600">每天一鍵打開，快速製作精美問候</p>
-        </div>
-      </div>
-      <button id="installBtn" class="bg-amber-600 text-white text-xs px-3 py-1.5 rounded-lg font-medium shadow-sm hover:bg-amber-700 active:scale-95 transition">
-        📲 安裝
-      </button>
-    </div>
 
     <!-- 表單輸入區塊 -->
     <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/80 space-y-4">
@@ -95,7 +96,7 @@
                  class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50">
         </div>
         <div id="targetContainer" class="col-span-1">
-          <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 /稱呼</label>
           <input type="text" id="targetInput" placeholder="例如：好友、各位長輩" value="好朋友" 
                  class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50">
         </div>
@@ -122,21 +123,22 @@
           <span id="statusBadge" class="text-xs px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">鎖定中</span>
         </div>
 
-        <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[360px] flex items-center justify-center">
+        <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[420px] flex items-center justify-center">
           <canvas id="compositeCanvas" class="hidden"></canvas>
           <img id="previewImage" src="" alt="問候圖預覽" class="w-full h-auto blur-preview">
           
           <!-- 鎖定/廣告遮罩 -->
-          <div id="lockOverlay" class="absolute inset-0 bg-slate-900/40 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
-            <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
-              <i class="fa-solid fa-lock text-2xl text-amber-300"></i>
+          <div id="lockOverlay" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center text-white space-y-4">
+            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md shadow-xl border border-white/30">
+              <i class="fa-solid fa-lock text-3xl text-amber-300"></i>
             </div>
             <div>
-              <p class="font-bold text-base">觀看廣告解鎖 HD 高清美圖</p>
-              <p class="text-xs text-slate-200 mt-1">解鎖後可直接儲存並分享至 LINE 群組</p>
+              <p class="font-bold text-lg">觀看贊助商廣告</p>
+              <p class="font-bold text-lg">立刻解鎖 HD 高清美圖</p>
+              <p class="text-xs text-slate-200 mt-2 mx-6">支持免費服務，解鎖後可直接儲存並分享至 LINE 群組！</p>
             </div>
-            <button id="watchAdBtn" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-sm px-5 py-2.5 rounded-full shadow-lg active:scale-95 transition flex items-center gap-2">
-              <i class="fa-solid fa-play"></i> 觀看短廣告 (15秒) 解鎖
+            <button id="watchAdBtn" class="bg-gradient-to-b from-amber-300 to-amber-500 hover:from-amber-400 hover:to-amber-600 text-slate-950 font-extrabold text-base px-7 py-3 rounded-full shadow-2xl active:scale-95 transition flex items-center gap-2.5 border-b-4 border-amber-700">
+              <i class="fa-solid fa-play text-lg"></i> 觀看短廣告解鎖 (HD)
             </button>
           </div>
         </div>
@@ -144,10 +146,10 @@
 
       <!-- 解鎖後動作按鈕區 -->
       <div id="unlockedActions" class="hidden grid grid-cols-2 gap-3 pt-1">
-        <button id="downloadBtn" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-emerald-700 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+        <button id="downloadBtn" class="bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-sm hover:bg-emerald-700 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
           <i class="fa-solid fa-download"></i> 下載高清圖
         </button>
-        <button id="shareBtn" class="bg-sky-500 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-sky-600 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+        <button id="shareBtn" class="bg-sky-500 text-white font-bold py-3 rounded-xl shadow-sm hover:bg-sky-600 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
           <i class="fa-solid fa-share-nodes"></i> 分享至 LINE
         </button>
       </div>
@@ -157,6 +159,19 @@
 
   <!-- JavaScript 邏輯控制 -->
   <script>
+    // --- 網路狀態偵測 ---
+    const offlineNotice = document.getElementById('offline-notice');
+    function updateOnlineStatus() {
+      if (navigator.onLine) {
+        offlineNotice.style.display = 'none';
+      } else {
+        offlineNotice.style.display = 'flex';
+      }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus(); // 初始化檢查
+
     // --- 0. 自訂前綴切換邏輯 ---
     const prefixSelect = document.getElementById('prefixSelect');
     const customPrefixContainer = document.getElementById('customPrefixContainer');
@@ -166,36 +181,14 @@
     prefixSelect.addEventListener('change', (e) => {
       if (e.target.value === 'custom') {
         customPrefixContainer.classList.remove('hidden');
-        targetContainer.className = "col-span-2"; // 讓下方排版對齊
+        targetContainer.className = "col-span-2";
       } else {
         customPrefixContainer.classList.add('hidden');
         targetContainer.className = "col-span-1";
       }
     });
 
-    // --- 1. PWA 安裝邏輯 ---
-    let deferredPrompt;
-    const pwaInstallCard = document.getElementById('pwaInstallCard');
-    const installBtn = document.getElementById('installBtn');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      pwaInstallCard.classList.remove('hidden');
-    });
-
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          pwaInstallCard.classList.add('hidden');
-        }
-        deferredPrompt = null;
-      }
-    });
-
-    // --- 2. 核心邏輯元件 ---
+    // --- 1. 核心邏輯元件 ---
     const generateBtn = document.getElementById('generateBtn');
     const resultCard = document.getElementById('resultCard');
     const previewImage = document.getElementById('previewImage');
@@ -212,26 +205,17 @@
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
-        
-        const timer = setTimeout(() => {
-          img.src = "";
-          reject(new Error("Timeout"));
-        }, 6000);
-
-        img.onload = () => {
-          clearTimeout(timer);
-          resolve(img);
-        };
-        img.onerror = () => {
-          clearTimeout(timer);
-          reject(new Error("Error"));
-        };
-
+        const timer = setTimeout(() => { img.src = ""; reject(new Error("Timeout")); }, 7000);
+        img.onload = () => { clearTimeout(timer); resolve(img); };
+        img.onerror = () => { clearTimeout(timer); reject(new Error("Error")); };
         img.src = url;
       });
     }
 
+    // --- 2. 生成圖片邏輯 ---
     generateBtn.addEventListener('click', async () => {
+      if (!navigator.onLine) { alert('請先連接網路才能生成圖片喔！'); return; }
+
       let prefix = prefixSelect.value;
       if (prefix === 'custom') {
         prefix = customPrefixInput.value.trim() || '平安喜樂';
@@ -242,7 +226,7 @@
       generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在挑選日出大景與花草美景...';
       generateBtn.disabled = true;
 
-      // 🌸 專門精選的 LINE 質感大景與花草晨曦圖片 ID 庫 (100% 亮麗、充滿正能量)
+      // LINE 質感大景與花草晨曦圖片 ID 庫
       const lineMorningImageIds = [10, 54, 119, 145, 152, 249, 292, 319, 360, 429, 517, 621, 659, 729, 824, 915, 1025, 1043, 1047, 1059];
       
       let randomId;
@@ -261,153 +245,163 @@
         bgImg = await loadImage(`https://picsum.photos/768/1024?random=${timestamp}`);
       }
 
-      // 開始 Canvas 繪製 (直式畫布)
+      // 開始 Canvas 繪製
       const canvas = compositeCanvas;
       const ctx = canvas.getContext('2d');
-      const cw = 768;
-      const ch = 1024;
-      canvas.width = cw;
-      canvas.height = ch;
+      const cw = 768; const ch = 1024;
+      canvas.width = cw; canvas.height = ch;
 
       ctx.filter = 'none';
 
-      // A. 智慧縮放與置中繪製背景 (完美填滿直式畫面)
+      // A. 背景繪製與美化
       if (bgImg) {
-        const iw = bgImg.width;
-        const ih = bgImg.height;
-        const ratio_w = cw / iw;
-        const ratio_h = ch / ih;
-        const renderRatio = Math.max(ratio_w, ratio_h);
-        const renderW = iw * renderRatio;
-        const renderH = ih * renderRatio;
-        const offsetX = (cw - renderW) / 2;
-        const offsetY = (ch - renderH) / 2;
-
-        // 拉高亮度與飽和度，展現熱鬧、朝氣的早安圖風格
+        const iw = bgImg.width; const ih = bgImg.height;
+        const renderRatio = Math.max(cw / iw, ch / ih);
+        const renderW = iw * renderRatio; const renderH = ih * renderRatio;
         ctx.filter = 'brightness(1.12) contrast(1.08) saturate(1.35)';
-        ctx.drawImage(bgImg, offsetX, offsetY, renderW, renderH);
+        ctx.drawImage(bgImg, (cw - renderW) / 2, (ch - renderH) / 2, renderW, renderH);
         ctx.filter = 'none';
       } else {
-        const bgGrad = ctx.createLinearGradient(0, 0, cw, ch);
-        bgGrad.addColorStop(0, '#f59e0b');
-        bgGrad.addColorStop(1, '#ec4899');
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, cw, ch);
+        ctx.fillStyle = '#f59e0b'; ctx.fillRect(0, 0, cw, ch);
       }
 
-      // B. 質感上下漸層光暈遮罩 (讓文字更清晰易讀，同時保有早安圖的高級感)
+      // B. 質感漸層遮罩
       const gradient = ctx.createLinearGradient(0, 0, 0, ch);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
-      gradient.addColorStop(0.25, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(0.68, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, cw, ch);
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.6)');
+      gradient.addColorStop(0.28, 'rgba(0, 0, 0, 0.15)');
+      gradient.addColorStop(0.68, 'rgba(0, 0, 0, 0.15)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.75)');
+      ctx.fillStyle = gradient; ctx.fillRect(0, 0, cw, ch);
 
-      // C. 繪製頂部問候語 (精緻發光字體)
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.font = "bold 40px sans-serif";
-      ctx.shadowColor = "rgba(0, 0, 0, 0.95)";
-      ctx.shadowBlur = 16;
-      ctx.fillText(`🌻 ${prefix} · ${target}`, cw / 2, 105);
+      // C. 繪製文字
+      ctx.fillStyle = "#ffffff"; ctx.textAlign = "center";
+      ctx.font = "bold 42px sans-serif";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.95)"; ctx.shadowBlur = 18;
+      ctx.fillText(`🌻 ${prefix} · ${target}`, cw / 2, 110);
 
-      // D. 繪製祝福內文 (自動換行)
-      ctx.font = "normal 42px serif";
-      const maxLineWidth = cw - 120;
-      const words = wish.split('');
-      let line = '';
-      let y = ch - 240;
-      const lineHeight = 58;
-
+      ctx.font = "normal 44px serif";
+      const words = wish.split(''); let line = ''; let y = ch - 240;
       for (let n = 0; n < words.length; n++) {
         let testLine = line + words[n];
-        let metrics = ctx.measureText(testLine);
-        if (metrics.width > maxLineWidth && n > 0) {
-          ctx.fillText(line, cw / 2, y);
-          line = words[n];
-          y += lineHeight;
-        } else {
-          line = testLine;
-        }
+        if (ctx.measureText(testLine).width > (cw - 120) && n > 0) {
+          ctx.fillText(line, cw / 2, y); line = words[n]; y += 60;
+        } else { line = testLine; }
       }
       ctx.fillText(line, cw / 2, y);
 
-      // 產出圖片 Data URL
+      // D. 產出圖片
       try {
-        finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        finalDataUrl = canvas.toDataURL('image/jpeg', 0.92);
         previewImage.src = finalDataUrl;
-      } catch (e) {
-        console.error("Canvas 導出錯誤:", e);
-      }
+      } catch (e) { console.error("Canvas 導出錯誤:", e); }
 
-      // 顯示預覽
+      // 顯示鎖定狀態
       resultCard.classList.remove('hidden');
       previewImage.classList.add('blur-preview');
       lockOverlay.classList.remove('hidden');
       unlockedActions.classList.add('hidden');
-      
       statusBadge.innerText = '鎖定中 (觀看廣告解鎖)';
       statusBadge.className = 'text-xs px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-sun"></i> 重新生成另一張早安問候圖';
+      generateBtn.innerHTML = '<i class="fa-solid fa-sun"></i> 重新生成另一張問候圖';
       generateBtn.disabled = false;
-
       resultCard.scrollIntoView({ behavior: 'smooth' });
     });
 
-    // 廣告解鎖
+    // --- 3. 🛡️ 真實廣告導入邏輯 (與 Android 原生殼對接) ---
     watchAdBtn.addEventListener('click', () => {
-      watchAdBtn.innerText = '⏳ 廣告播放中 (請稍候 3 秒)...';
+      // 網路檢查
+      if (!navigator.onLine) { alert('廣告載入失敗，請檢查網路連線！'); return; }
+
+      // 更改按鈕狀態防止重複點擊
+      watchAdBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在載入精彩廣告...';
       watchAdBtn.disabled = true;
 
-      setTimeout(() => {
-        alert('🎉 感謝觀看贊助商廣告！已解鎖含完整文字的高清問候圖！');
-        
-        previewImage.classList.remove('blur-preview');
-        lockOverlay.classList.add('hidden');
-        unlockedActions.classList.remove('hidden');
-        
-        statusBadge.innerText = '已解鎖 HD';
-        statusBadge.className = 'text-xs px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium';
-
-        watchAdBtn.innerText = '觀看短廣告 (15秒) 解鎖';
-        watchAdBtn.disabled = false;
-      }, 3000);
+      // ================================================================
+      // ✨ 關鍵步驟：發送訊號給 Android 原生殼
+      // 如果您的網頁是被 Android 的WebView包裝，且有設定名為 "AndroidAdInterface" 的 JavaScript 介面
+      // 這裡就會呼叫 Android 原生的播放廣告函式。
+      // ================================================================
+      try {
+        if (window.AndroidAdInterface && typeof window.AndroidAdInterface.showRewardedAd === 'function') {
+          // 真正的 Android 呼叫[cite: 2]
+          window.AndroidAdInterface.showRewardedAd();
+        } else {
+          // 備用邏輯：如果在一般瀏覽器打開，則模擬播放
+          console.log("未偵測到原生廣告介面，執行模擬播放。");
+          mockAdPlayback();
+        }
+      } catch (err) {
+        console.error("呼叫原生廣告發生錯誤:", err);
+        mockAdPlayback(); // 發生錯誤時也執行模擬，避免卡住
+      }
     });
+
+    // --- 4. 🎁 接收獎勵回調 (由 Android 原生殼反向呼叫 JS) ---
+    // 當 Android App 確認使用者看完廣告後，會透過網頁發送 window.onAdRewardReceived()
+    // 我們要在 JS 裡準備好這個函式來接收確認訊號。
+    // ⚠️ 註：為了防止全域衝突，將其設定為 global function[cite: 2]
+    window.onAdRewardReceived = function() {
+      // 驗證網路（防止作弊）
+      if (!navigator.onLine) return;
+
+      console.log("🎉 成功接收到原生廣告獎勵訊號！正在解鎖圖片...");
+      
+      // 1. 執行解鎖 UI 邏輯[cite: 2]
+      previewImage.classList.remove('blur-preview');
+      lockOverlay.classList.add('hidden');
+      unlockedActions.classList.remove('hidden');
+      
+      statusBadge.innerText = '已解鎖 HD';
+      statusBadge.className = 'text-xs px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium';
+
+      // 2. 復原按鈕狀態
+      watchAdBtn.innerHTML = '<i class="fa-solid fa-play"></i> 觀看短廣告解鎖 (HD)';
+      watchAdBtn.disabled = false;
+
+      // 可選：播放成功音效或動態效果
+    };
+
+    // --- 5. 廣告失敗回調 (由 Android 原生殼呼叫) ---
+    window.onAdFailedToLoad = function(errorMessage) {
+      console.log("❌ 原生廣告載入失敗:", errorMessage);
+      alert('暫時無法載入贊助商廣告，請稍後再試！');
+      watchAdBtn.innerHTML = '<i class="fa-solid fa-play"></i> 觀看短廣告解鎖 (HD)';
+      watchAdBtn.disabled = false;
+    };
+
+    // --- 模擬廣告播放 (用於一般瀏覽器測試) ---
+    function mockAdPlayback() {
+      // 模擬 4 秒載入與播放
+      setTimeout(() => {
+        if (confirm('【測試模式】模擬廣告播完了。是否發放獎勵解鎖圖片？')) {
+          window.onAdRewardReceived(); // 直接呼叫獎勵函式
+        } else {
+          // 模擬中途關閉
+          watchAdBtn.innerHTML = '<i class="fa-solid fa-play"></i> 觀看短廣告解鎖 (HD)';
+          watchAdBtn.disabled = false;
+        }
+      }, 4000);
+    }
 
     // 下載
     document.getElementById('downloadBtn').addEventListener('click', () => {
       if (!finalDataUrl) return;
-      const a = document.createElement('a');
-      a.href = finalDataUrl;
+      const a = document.createElement('a'); a.href = finalDataUrl;
       a.download = `LINE早安圖_${Date.now()}.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      document.body.appendChild(a); a.click(); a.remove();
     });
 
     // 分享
     document.getElementById('shareBtn').addEventListener('click', async () => {
       if (!finalDataUrl) return;
       try {
-        const res = await fetch(finalDataUrl);
-        const blob = await res.blob();
-        const file = new File([blob], 'Morning_Greeting.jpg', { type: 'image/jpeg' });
-
+        const res = await fetch(finalDataUrl); const blob = await res.blob();
+        const file = new File([blob], 'Greeting.jpg', { type: 'image/jpeg' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: '每日早安問候圖',
-            text: '這是我為您製作的專屬問候祝福！',
-          });
-        } else {
-          alert('您的瀏覽器不支援直接分享圖片，系統已自動為您開啟圖片，請長按圖片儲存並分享！');
-          window.open(finalDataUrl, '_blank');
-        }
-      } catch (err) {
-        alert('請長按圖片選擇「儲存圖片」，即可直接發送至 LINE 群組！');
-      }
+          await navigator.share({ files: [file], title: '每日早安圖', text: '送您專屬問候祝福！' });
+        } else { window.open(finalDataUrl, '_blank'); }
+      } catch (err) { alert('請長按圖片儲存並分享！'); }
     });
   </script>
 </body>
