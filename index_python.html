@@ -212,138 +212,11 @@ transition: transform 0.2s ease;
 .go-to-feature-btn:hover {
 transform: translateY(-2px);
 }
-
-/* 左上角常駐 Logo 按鈕與側邊選單 */
-.top-left-logo {
-position: absolute;
-top: 16px;
-left: 16px;
-width: 44px;
-height: 44px;
-border-radius: 50%;
-border: 2px solid rgba(0, 0, 0, 0.1);
-box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-z-index: 9999;
-object-fit: cover;
-background-color: #fff;
-cursor: pointer;
-transition: transform 0.2s ease;
-}
-.top-left-logo:hover {
-transform: scale(1.08);
-}
-
-.side-drawer-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.5);
-z-index: 10000;
-opacity: 0;
-visibility: hidden;
-transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.side-drawer-overlay.active {
-opacity: 1;
-visibility: visible;
-}
-
-.side-drawer {
-position: fixed;
-top: 0;
-left: -280px;
-width: 280px;
-height: 100%;
-background: #ffffff;
-z-index: 10001;
-box-shadow: 5px 0 25px rgba(0,0,0,0.15);
-transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-display: flex;
-flex-direction: column;
-padding: 24px 20px;
-overflow-y: auto;
-}
-
-.side-drawer.active {
-left: 0;
-}
-
-.drawer-header {
-display: flex;
-align-items: center;
-gap: 12px;
-margin-bottom: 24px;
-padding-bottom: 16px;
-border-bottom: 1px solid #eee;
-}
-
-.drawer-header img {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-object-fit: cover;
-}
-
-.drawer-title {
-font-size: 15px;
-font-weight: bold;
-color: #222;
-}
-
-.drawer-btn-container {
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
-
-.drawer-btn {
-width: 100%;
-padding: 12px 18px;
-background: #f7f7f7;
-border: 1px solid #ddd;
-color: #222;
-font-size: 15px;
-font-weight: 600;
-text-align: center;
-border-radius: 12px;
-text-decoration: none;
-box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-transition: all 0.2s ease;
-}
-
-.drawer-btn:hover {
-background: #222;
-color: #fff;
-}
 </style>
 </head>
 <body>
 
-<!-- 左上角 Logo -->
-<img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
-
-<!-- 左側滑出選單結構 -->
-<div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-<div class="side-drawer" id="sideDrawer">
-<div class="drawer-header">
-<img src="https://myezlife.com/eric-logo.gif" alt="Logo">
-<div class="drawer-title">功能選單</div>
-</div>
-<div class="drawer-btn-container">
-<a href="https://myezlife.com/" class="drawer-btn">首頁</a>
-<a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
-<a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
-<a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
-<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
-<a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
-<a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作早安問候圖</a>
-</div>
-</div>
-
-<!-- 首頁主體內容 -->
+<!-- 首頁主體內容（無左上角 Logo 與側邊選單） -->
 <div class="home-container">
 <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="home-logo" alt="Logo">
 <div class="home-title">生活・簡居・生活</div>
@@ -378,11 +251,6 @@ color: #fff;
 </div>
 
 <script>
-function toggleDrawer() {
-  document.getElementById('sideDrawer').classList.toggle('active');
-  document.getElementById('drawerOverlay').classList.toggle('active');
-}
-
 function openPromoModal() {
   document.getElementById('promoModalOverlay').style.display = 'flex';
 }
