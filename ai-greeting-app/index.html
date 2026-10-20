@@ -71,12 +71,26 @@
         ✏️ 填寫今日問候資訊
       </h2>
 
-      <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
-        <input type="text" id="targetInput" placeholder="例如：李大哥、早安群組、親愛的家人" value="親愛的朋友" 
-               class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      <!-- 第一排：問候前綴與對象 -->
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">前綴</label>
+          <select id="prefixSelect" class="w-full text-sm px-2 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="早安">早安</option>
+            <option value="午安">午安</option>
+            <option value="晚安">晚安</option>
+            <option value="日安">日安</option>
+            <option value="祝福">祝福</option>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
+          <input type="text" id="targetInput" placeholder="例如：李大哥、親愛的家人" value="親愛的朋友" 
+                 class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
       </div>
 
+      <!-- 第二排：天氣與風格 -->
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-xs font-medium text-slate-600 mb-1">今日天氣 / 氛圍</label>
@@ -98,6 +112,7 @@
         </div>
       </div>
 
+      <!-- 第三排：祝福內容 -->
       <div>
         <label class="block text-xs font-medium text-slate-600 mb-1">祝福或提醒內容</label>
         <textarea id="wishInput" rows="2" placeholder="例如：記得多喝水，祝您今天順心好心情！" 
@@ -197,14 +212,15 @@
     let finalDataUrl = "";
 
     generateBtn.addEventListener('click', () => {
-      const target = document.getElementById('targetInput').value.trim() || '親愛的朋友';
+      const prefix = document.getElementById('prefixSelect').value;
+      const target = document.getElementById('targetInput').value.trim() || '朋友';
       const weather = document.getElementById('weatherSelect').value;
       const style = document.getElementById('styleSelect').value;
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
 
       // 1. 組裝英文 Prompt
       const baseStyle = stylePrompts[style] || stylePrompts["水彩溫馨"];
-      const promptText = `${baseStyle}, morning ambiance with ${weather}, peaceful day greetings, cozy feeling, high quality`;
+      const promptText = `${baseStyle}, peaceful ambiance with ${weather}, day greetings, cozy feeling, high quality`;
       
       const randomSeed = Math.floor(Math.random() * 1000000);
       const encodedPrompt = encodeURIComponent(promptText);
@@ -216,11 +232,10 @@
 
       // 載入 AI 圖片並使用 Canvas 疊加文字
       const tempImg = new Image();
-      tempImg.crossOrigin = "anonymous"; // 支援跨域圖片下載與合成
+      tempImg.crossOrigin = "anonymous";
       tempImg.src = imageUrl;
 
       tempImg.onload = () => {
-        // --- Canvas 合成邏輯 ---
         const canvas = compositeCanvas;
         const ctx = canvas.getContext('2d');
         canvas.width = tempImg.width;
@@ -229,32 +244,30 @@
         // A. 畫上 AI 背景圖
         ctx.drawImage(tempImg, 0, 0);
 
-        // B. 加上暗色漸層遮罩 (讓文字讀取更清晰)
+        // B. 加上乾淨的上下漸層遮罩 (讓文字讀取更清晰)
         const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)');       // 頂部暗影
+        gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');      // 頂部暗影
         gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.1)');     // 中間通透
-        gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.2)');
+        gradient.addColorStop(0.65, 'rgba(0, 0, 0, 0.1)');
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0.65)');      // 底部暗影
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // C. 繪製頂部問候標題 (例如：親愛的李大哥，早安！)
+        // C. 繪製頂部自訂問候標題 (例如：✨ 早安 · 親愛的李大哥)
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        
-        // 頂部小字
-        ctx.font = "bold 32px sans-serif";
+        ctx.font = "bold 34px sans-serif";
         ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
-        ctx.shadowBlur = 8;
-        ctx.fillText(`✨ 早安 · ${target}`, canvas.width / 2, 90);
+        ctx.shadowBlur = 10;
+        ctx.fillText(`✨ ${prefix} · ${target}`, canvas.width / 2, 95);
 
-        // D. 繪製中間祝福內文 (支援換行)
-        ctx.font = "normal 38px serif";
+        // D. 繪製中間祝福內文 (自動換行)
+        ctx.font = "normal 40px serif";
         const maxLineWidth = canvas.width - 120;
         const words = wish.split('');
         let line = '';
-        let y = canvas.height - 220;
-        const lineHeight = 52;
+        let y = canvas.height - 240;
+        const lineHeight = 56;
 
         for (let n = 0; n < words.length; n++) {
           let testLine = line + words[n];
@@ -269,13 +282,7 @@
         }
         ctx.fillText(line, canvas.width / 2, y);
 
-        // E. 繪製底部日期與標註
-        const today = new Date().toISOString().split('T')[0];
-        ctx.font = "italic 24px sans-serif";
-        ctx.fillStyle = "#f3f4f6";
-        ctx.fillText(`📅 ${today} · ${weather}`, canvas.width / 2, canvas.height - 60);
-
-        // F. 轉出為 Data URL 圖片
+        // 轉出為 Data URL 圖片（拿掉底部的日期天氣，畫面更乾淨俐落）
         finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
         previewImage.src = finalDataUrl;
 
@@ -337,7 +344,6 @@
       if (!finalDataUrl) return;
       
       try {
-        // 將 Data URL 轉換為 Blob 檔案，以便以真正圖片形式發送
         const res = await fetch(finalDataUrl);
         const blob = await res.blob();
         const file = new File([blob], 'AI_Greeting.jpg', { type: 'image/jpeg' });
