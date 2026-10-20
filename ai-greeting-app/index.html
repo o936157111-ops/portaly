@@ -29,7 +29,6 @@
       filter: blur(12px);
       transition: filter 0.6s ease;
     }
-    /* 簡約現代卡片容器 */
     .photo-card {
       background: #ffffff;
       padding: 8px;
@@ -97,7 +96,7 @@
         </div>
       </div>
 
-      <!-- 第二排：天氣與風格 -->
+      <!-- 第二排：天氣與主題風格 -->
       <div class="grid grid-cols-2 gap-3">
         <div>
           <label class="block text-xs font-medium text-slate-600 mb-1">今日天氣 / 氛圍</label>
@@ -109,12 +108,12 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">藝術風格</label>
+          <label class="block text-xs font-medium text-slate-600 mb-1">背景主題</label>
           <select id="styleSelect" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-            <option value="溫暖陽光">☀️ 溫暖陽光</option>
-            <option value="鮮豔花草">🌸 鮮豔花草</option>
-            <option value="壯麗山海">⛰️ 壯麗山海</option>
-            <option value="柔和水彩">🎨 柔和水彩</option>
+            <option value="flower">🌸 溫馨花草</option>
+            <option value="sunrise">🌅 陽光晨曦</option>
+            <option value="nature">🌿 綠意大自然</option>
+            <option value="garden">🏡 美麗花園</option>
           </select>
         </div>
       </div>
@@ -134,14 +133,12 @@
     <!-- 結果與廣告解鎖區塊 -->
     <div id="resultCard" class="hidden space-y-3">
       
-      <!-- 滿版卡片容器 -->
       <div class="photo-card">
         <div class="flex items-center justify-between mb-2 px-1">
           <span class="text-xs font-bold text-slate-500 tracking-wider">✨ Daily AI Card</span>
           <span id="statusBadge" class="text-xs px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">鎖定中</span>
         </div>
 
-        <!-- 圖片與 Canvas 容器 -->
         <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[360px] flex items-center justify-center">
           <canvas id="compositeCanvas" class="hidden"></canvas>
           <img id="previewImage" src="" alt="問候圖預覽" class="w-full h-auto blur-preview">
@@ -162,7 +159,7 @@
         </div>
       </div>
 
-      <!-- 解鎖後顯示的動作按鈕區 -->
+      <!-- 解鎖後動作按鈕區 -->
       <div id="unlockedActions" class="hidden grid grid-cols-2 gap-3 pt-1">
         <button id="downloadBtn" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl shadow-sm hover:bg-emerald-700 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
           <i class="fa-solid fa-download"></i> 下載高清圖
@@ -219,7 +216,7 @@
         const timer = setTimeout(() => {
           img.src = "";
           reject(new Error("Timeout"));
-        }, 5000);
+        }, 6000);
 
         img.onload = () => {
           clearTimeout(timer);
@@ -238,22 +235,22 @@
       const prefix = document.getElementById('prefixSelect').value;
       const target = document.getElementById('targetInput').value.trim() || '朋友';
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
+      const topic = document.getElementById('styleSelect').value || 'flower';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入陽光高清畫布中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入陽光溫馨主題背景中...';
       generateBtn.disabled = true;
 
-      // 隨機抽選明亮景觀種子（精選充滿陽光、大地與明亮色彩的圖號庫）
-      const brightImageIds = [10, 11, 15, 16, 28, 29, 37, 48, 54, 57, 58, 64, 70, 76, 84, 106, 110, 116, 122, 142, 143, 160, 180, 190, 200, 219];
-      const randomImgId = brightImageIds[Math.floor(Math.random() * brightImageIds.length)];
-      const bgUrl = `https://picsum.photos/id/${randomImgId}/768/1024`;
+      // 使用 LoremFlickr 根據選擇的關鍵字（如花卉、晨光）抓取討喜背景
+      const randomSeed = Math.floor(Math.random() * 1000);
+      const bgUrl = `https://loremflickr.com/768/1024/${topic}?random=${randomSeed}`;
 
       let bgImg = null;
       try {
         bgImg = await loadImage(bgUrl);
       } catch (err) {
-        // 若指定 ID 載入失敗，則降級至隨機庫
+        // 備用預設圖庫
         try {
-          bgImg = await loadImage(`https://picsum.photos/768/1024?random=${Math.floor(Math.random()*1000)}`);
+          bgImg = await loadImage(`https://picsum.photos/id/106/768/1024`);
         } catch (e) {
           bgImg = null;
         }
@@ -265,16 +262,14 @@
       canvas.width = 768;
       canvas.height = 1024;
 
-      // 重設濾鏡狀態
       ctx.filter = 'none';
 
-      // A. 畫背景照片 (自動開啟美化濾鏡：微調亮度、對比與飽和度)
+      // A. 畫背景照片 (自動調高飽和度與明亮度)
       if (bgImg) {
-        ctx.filter = 'brightness(1.08) contrast(1.06) saturate(1.2)';
+        ctx.filter = 'brightness(1.05) contrast(1.05) saturate(1.25)';
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-        ctx.filter = 'none'; // 繪製完背景後重置濾鏡，確保文字不受影響
+        ctx.filter = 'none';
       } else {
-        // 陽光感漸層
         const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
         bgGrad.addColorStop(0, '#f59e0b');
         bgGrad.addColorStop(1, '#ec4899');
@@ -282,12 +277,12 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // B. 輕量化暗色遮罩 (僅在上方與下方邊緣保留微弱陰影，確保照片中間保持透亮)
+      // B. 柔和的上下閱讀遮罩
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.35)');
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
       gradient.addColorStop(0.2, 'rgba(0, 0, 0, 0.05)');
       gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.05)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.55)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
