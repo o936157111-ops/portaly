@@ -133,10 +133,7 @@
 
       <!-- 圖片與 Canvas 容器 -->
       <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[350px] flex items-center justify-center border border-slate-200">
-        <!-- 用於合成文字的隱藏 Canvas -->
         <canvas id="compositeCanvas" class="hidden"></canvas>
-        
-        <!-- 最終展示與預覽用 Image -->
         <img id="previewImage" src="" alt="問候圖預覽" class="w-full h-auto blur-preview">
         
         <!-- 鎖定/廣告遮罩 -->
@@ -191,15 +188,22 @@
       }
     });
 
-    // --- 2. 風格提示詞轉換對照表 ---
+    // --- 2. 風格提示詞與關鍵字庫 ---
     const stylePrompts = {
-      "水彩溫馨": "dreamy warm watercolor painting style, soft ambient lighting, gentle mood, artistic, clean soft background for text overlay",
-      "寫實風景": "photorealistic landscape photography, beautiful morning lighting, 8k resolution, crisp detail, scenic view",
+      "水彩溫馨": "dreamy warm watercolor painting style, soft ambient lighting, gentle mood, artistic",
+      "寫實風景": "photorealistic landscape photography, beautiful morning lighting, 8k resolution, scenic view",
       "國畫水墨": "traditional Chinese ink wash painting, elegant brush strokes, poetic atmosphere, misty aesthetic",
       "插畫手繪": "cute storybook illustration style, charming hand-drawn details, vibrant pastel colors"
     };
 
-    // --- 3. 真 AI 生圖與 Canvas 文字繪製 ---
+    const styleKeywords = {
+      "水彩溫馨": "watercolor,painting,nature",
+      "寫實風景": "landscape,nature,sunrise",
+      "國畫水墨": "mountain,mist,asian-art",
+      "插畫手繪": "illustration,art,cozy"
+    };
+
+    // --- 3. 元素與變數 ---
     const generateBtn = document.getElementById('generateBtn');
     const resultCard = document.getElementById('resultCard');
     const previewImage = document.getElementById('previewImage');
@@ -211,104 +215,138 @@
 
     let finalDataUrl = "";
 
-    generateBtn.addEventListener('click', () => {
+    // 圖片載入器 (帶有 Timeout 超時保護)
+    function loadImageWithTimeout(url, timeoutMs = 6000) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        
+        const timer = setTimeout(() => {
+          img.src = "";
+          reject(new Error("Timeout"));
+        }, timeoutMs);
+
+        img.onload = () => {
+          clearTimeout(timer);
+          resolve(img);
+        };
+        img.onerror = () => {
+          clearTimeout(timer);
+          reject(new Error("Load Error"));
+        };
+
+        img.src = url;
+      });
+    }
+
+    generateBtn.addEventListener('click', async () => {
       const prefix = document.getElementById('prefixSelect').value;
       const target = document.getElementById('targetInput').value.trim() || '朋友';
       const weather = document.getElementById('weatherSelect').value;
       const style = document.getElementById('styleSelect').value;
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
 
-      // 1. 組裝英文 Prompt
-      const baseStyle = stylePrompts[style] || stylePrompts["水彩溫馨"];
-      const promptText = `${baseStyle}, peaceful ambiance with ${weather}, day greetings, cozy feeling, high quality`;
-      
-      const randomSeed = Math.floor(Math.random() * 1000000);
-      const encodedPrompt = encodeURIComponent(promptText);
-      const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`;
-
-      // UI 載入狀態
       generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI 繪製背景與排版文字中...';
       generateBtn.disabled = true;
 
-      // 載入 AI 圖片並使用 Canvas 疊加文字
-      const tempImg = new Image();
-      tempImg.crossOrigin = "anonymous";
-      tempImg.src = imageUrl;
+      // 1. 建立 primary (Pollinations AI) 與 fallback (高清備援庫) 網址
+      const baseStyle = stylePrompts[style] || stylePrompts["水彩溫馨"];
+      const promptText = `${baseStyle}, peaceful ambiance with ${weather}, cozy feeling, high quality`;
+      const randomSeed = Math.floor(Math.random() * 1000000);
+      
+      const primaryUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`;
+      const fallbackUrl = `https://loremflickr.com/768/1024/${styleKeywords[style] || 'nature'}?random=${randomSeed}`;
 
-      tempImg.onload = () => {
-        const canvas = compositeCanvas;
-        const ctx = canvas.getContext('2d');
-        canvas.width = tempImg.width;
-        canvas.height = tempImg.height;
+      let bgImg;
 
-        // A. 畫上 AI 背景圖
-        ctx.drawImage(tempImg, 0, 0);
-
-        // B. 加上乾淨的上下漸層遮罩 (讓文字讀取更清晰)
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');      // 頂部暗影
-        gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.1)');     // 中間通透
-        gradient.addColorStop(0.65, 'rgba(0, 0, 0, 0.1)');
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.65)');      // 底部暗影
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // C. 繪製頂部自訂問候標題 (例如：✨ 早安 · 親愛的李大哥)
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.font = "bold 34px sans-serif";
-        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
-        ctx.shadowBlur = 10;
-        ctx.fillText(`✨ ${prefix} · ${target}`, canvas.width / 2, 95);
-
-        // D. 繪製中間祝福內文 (自動換行)
-        ctx.font = "normal 40px serif";
-        const maxLineWidth = canvas.width - 120;
-        const words = wish.split('');
-        let line = '';
-        let y = canvas.height - 240;
-        const lineHeight = 56;
-
-        for (let n = 0; n < words.length; n++) {
-          let testLine = line + words[n];
-          let metrics = ctx.measureText(testLine);
-          if (metrics.width > maxLineWidth && n > 0) {
-            ctx.fillText(line, canvas.width / 2, y);
-            line = words[n];
-            y += lineHeight;
-          } else {
-            line = testLine;
-          }
+      // 2. 嘗試先載入 AI 圖，若限流或超過 6 秒則自動切換至備援圖
+      try {
+        bgImg = await loadImageWithTimeout(primaryUrl, 6000);
+      } catch (err) {
+        console.warn("主 AI 服務忙碌中，自動啟動備援視覺庫通道");
+        try {
+          bgImg = await loadImageWithTimeout(fallbackUrl, 5000);
+        } catch (fbErr) {
+          // 極端備援：繪製質感漸層 Canvas
+          bgImg = null;
         }
-        ctx.fillText(line, canvas.width / 2, y);
+      }
 
-        // 轉出為 Data URL 圖片（拿掉底部的日期天氣，畫面更乾淨俐落）
-        finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        previewImage.src = finalDataUrl;
+      // 3. Canvas 合成文字邏輯
+      const canvas = compositeCanvas;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 768;
+      canvas.height = 1024;
 
-        // 顯示結果區域 (預設模糊與鎖定)
-        resultCard.classList.remove('hidden');
-        previewImage.classList.add('blur-preview');
-        lockOverlay.classList.remove('hidden');
-        unlockedActions.classList.add('hidden');
-        
-        statusBadge.innerText = '鎖定中 (觀看廣告解鎖)';
-        statusBadge.className = 'text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded';
+      if (bgImg) {
+        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+      } else {
+        // 全底備援：極簡莫蘭迪漸層
+        const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        bgGrad.addColorStop(0, '#6366f1');
+        bgGrad.addColorStop(1, '#a855f7');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
 
-        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成另一張問候圖';
-        generateBtn.disabled = false;
+      // 加上上下閱讀保護遮罩
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+      gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.1)');
+      gradient.addColorStop(0.65, 'rgba(0, 0, 0, 0.1)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        resultCard.scrollIntoView({ behavior: 'smooth' });
-      };
+      // 繪製頂部問候語
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.font = "bold 34px sans-serif";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+      ctx.shadowBlur = 10;
+      ctx.fillText(`✨ ${prefix} · ${target}`, canvas.width / 2, 95);
 
-      tempImg.onerror = () => {
-        alert('AI 畫布繪製逾時，請重新點擊生成！');
-        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成問候圖';
-        generateBtn.disabled = false;
-      };
+      // 繪製祝福文字 (自動換行)
+      ctx.font = "normal 40px serif";
+      const maxLineWidth = canvas.width - 120;
+      const words = wish.split('');
+      let line = '';
+      let y = canvas.height - 240;
+      const lineHeight = 56;
+
+      for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n];
+        let metrics = ctx.measureText(testLine);
+        if (metrics.width > maxLineWidth && n > 0) {
+          ctx.fillText(line, canvas.width / 2, y);
+          line = words[n];
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, canvas.width / 2, y);
+
+      // 產出圖片 Data URL
+      finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      previewImage.src = finalDataUrl;
+
+      // 顯示預覽（預設加鎖）
+      resultCard.classList.remove('hidden');
+      previewImage.classList.add('blur-preview');
+      lockOverlay.classList.remove('hidden');
+      unlockedActions.classList.add('hidden');
+      
+      statusBadge.innerText = '鎖定中 (觀看廣告解鎖)';
+      statusBadge.className = 'text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded';
+
+      generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 重新生成另一張問候圖';
+      generateBtn.disabled = false;
+
+      resultCard.scrollIntoView({ behavior: 'smooth' });
     });
 
-    // 點擊觀看廣告解鎖
+    // 廣告解鎖
     watchAdBtn.addEventListener('click', () => {
       watchAdBtn.innerText = '⏳ 廣告播放中 (請稍候 3 秒)...';
       watchAdBtn.disabled = true;
@@ -328,7 +366,7 @@
       }, 3000);
     });
 
-    // 下載含文字的高清圖片
+    // 下載
     document.getElementById('downloadBtn').addEventListener('click', () => {
       if (!finalDataUrl) return;
       const a = document.createElement('a');
@@ -339,10 +377,9 @@
       a.remove();
     });
 
-    // 分享至 LINE 按鈕
+    // 分享
     document.getElementById('shareBtn').addEventListener('click', async () => {
       if (!finalDataUrl) return;
-      
       try {
         const res = await fetch(finalDataUrl);
         const blob = await res.blob();
