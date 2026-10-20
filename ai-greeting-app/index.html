@@ -29,7 +29,7 @@
       filter: blur(12px);
       transition: filter 0.6s ease;
     }
-    /* 簡約現代卡片外框 (無多餘線條) */
+    /* 簡約現代卡片容器 */
     .photo-card {
       background: #ffffff;
       padding: 8px;
@@ -111,10 +111,10 @@
         <div>
           <label class="block text-xs font-medium text-slate-600 mb-1">藝術風格</label>
           <select id="styleSelect" class="w-full text-sm px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
-            <option value="水彩溫馨">水彩溫馨</option>
-            <option value="寫實風景">寫實風景</option>
-            <option value="國畫水墨">國畫水墨</option>
-            <option value="插畫手繪">插畫手繪</option>
+            <option value="溫暖陽光">☀️ 溫暖陽光</option>
+            <option value="鮮豔花草">🌸 鮮豔花草</option>
+            <option value="壯麗山海">⛰️ 壯麗山海</option>
+            <option value="柔和水彩">🎨 柔和水彩</option>
           </select>
         </div>
       </div>
@@ -131,7 +131,7 @@
       </button>
     </div>
 
-    <!-- 結果與廣告解鎖區塊 (無多餘框線) -->
+    <!-- 結果與廣告解鎖區塊 -->
     <div id="resultCard" class="hidden space-y-3">
       
       <!-- 滿版卡片容器 -->
@@ -141,13 +141,13 @@
           <span id="statusBadge" class="text-xs px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">鎖定中</span>
         </div>
 
-        <!-- 圖片與 Canvas 容器 (無邊框) -->
+        <!-- 圖片與 Canvas 容器 -->
         <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[360px] flex items-center justify-center">
           <canvas id="compositeCanvas" class="hidden"></canvas>
           <img id="previewImage" src="" alt="問候圖預覽" class="w-full h-auto blur-preview">
           
           <!-- 鎖定/廣告遮罩 -->
-          <div id="lockOverlay" class="absolute inset-0 bg-slate-900/50 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
+          <div id="lockOverlay" class="absolute inset-0 bg-slate-900/40 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center text-white space-y-3">
             <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
               <i class="fa-solid fa-lock text-2xl text-amber-300"></i>
             </div>
@@ -239,18 +239,24 @@
       const target = document.getElementById('targetInput').value.trim() || '朋友';
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入高清畫布與排版中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入陽光高清畫布中...';
       generateBtn.disabled = true;
 
-      // 抓取 Picsum 高清圖片
-      const randomSeed = Math.floor(Math.random() * 1000);
-      const bgUrl = `https://picsum.photos/768/1024?random=${randomSeed}`;
+      // 隨機抽選明亮景觀種子（精選充滿陽光、大地與明亮色彩的圖號庫）
+      const brightImageIds = [10, 11, 15, 16, 28, 29, 37, 48, 54, 57, 58, 64, 70, 76, 84, 106, 110, 116, 122, 142, 143, 160, 180, 190, 200, 219];
+      const randomImgId = brightImageIds[Math.floor(Math.random() * brightImageIds.length)];
+      const bgUrl = `https://picsum.photos/id/${randomImgId}/768/1024`;
 
       let bgImg = null;
       try {
         bgImg = await loadImage(bgUrl);
       } catch (err) {
-        console.warn("載入背景圖逾時，使用備用色彩底色");
+        // 若指定 ID 載入失敗，則降級至隨機庫
+        try {
+          bgImg = await loadImage(`https://picsum.photos/768/1024?random=${Math.floor(Math.random()*1000)}`);
+        } catch (e) {
+          bgImg = null;
+        }
       }
 
       // 開始 Canvas 繪製
@@ -259,23 +265,29 @@
       canvas.width = 768;
       canvas.height = 1024;
 
-      // A. 畫背景照片 (滿版無框)
+      // 重設濾鏡狀態
+      ctx.filter = 'none';
+
+      // A. 畫背景照片 (自動開啟美化濾鏡：微調亮度、對比與飽和度)
       if (bgImg) {
+        ctx.filter = 'brightness(1.08) contrast(1.06) saturate(1.2)';
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+        ctx.filter = 'none'; // 繪製完背景後重置濾鏡，確保文字不受影響
       } else {
+        // 陽光感漸層
         const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        bgGrad.addColorStop(0, '#4f46e5');
-        bgGrad.addColorStop(1, '#a855f7');
+        bgGrad.addColorStop(0, '#f59e0b');
+        bgGrad.addColorStop(1, '#ec4899');
         ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // B. 上下閱讀暗色漸層保護層 (確保文字清晰)
+      // B. 輕量化暗色遮罩 (僅在上方與下方邊緣保留微弱陰影，確保照片中間保持透亮)
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
-      gradient.addColorStop(0.25, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(0.65, 'rgba(0, 0, 0, 0.1)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.65)');
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.35)');
+      gradient.addColorStop(0.2, 'rgba(0, 0, 0, 0.05)');
+      gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.05)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.55)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -283,8 +295,8 @@
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.font = "bold 34px sans-serif";
-      ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
-      ctx.shadowBlur = 10;
+      ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+      ctx.shadowBlur = 12;
       ctx.fillText(`✨ ${prefix} · ${target}`, canvas.width / 2, 95);
 
       // D. 繪製祝福內文 (自動換行)
