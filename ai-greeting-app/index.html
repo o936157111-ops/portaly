@@ -237,53 +237,84 @@
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
       const topic = document.getElementById('styleSelect').value || 'flower';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 正在為您挑選全新風景圖中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 智慧構圖中，即將呈現完美大景...';
       generateBtn.disabled = true;
 
-      // 加入時間戳記 (Date.now()) 與隨機數，強制瀏覽器不准快取，每次都抓新圖
+      // 使用隨機數確保每次抓新圖
       const uniqueId = Date.now();
-      const bgUrl = `https://loremflickr.com/768/1024/${topic}?lock=${uniqueId}`;
+      const bgUrl = `https://loremflickr.com/1024/768/${topic}?random=${uniqueId}`;
 
       let bgImg = null;
       try {
         bgImg = await loadImage(bgUrl);
       } catch (err) {
+        // 備用圖庫 (使用一張比例較穩定的 Picsum 明亮圖)
         try {
-          bgImg = await loadImage(`https://picsum.photos/768/1024?random=${uniqueId}`);
+          bgImg = await loadImage(`https://picsum.photos/768/1024?id=106`);
         } catch (e) {
           bgImg = null;
         }
       }
 
-      // 開始 Canvas 繪製
+      // 開始 Canvas 繪製 (直式畫布)
       const canvas = compositeCanvas;
       const ctx = canvas.getContext('2d');
-      canvas.width = 768;
-      canvas.height = 1024;
+      const cw = 768; // 畫布寬
+      const ch = 1024; // 畫布高
+      canvas.width = cw;
+      canvas.height = ch;
 
       ctx.filter = 'none';
 
-      // A. 畫背景照片
+      // ==========================================
+      // ✨ 修正海象裁切問題的核心：智慧縮放與置中 (Smart Crop / Aspect Ratio Fit)
+      // ==========================================
       if (bgImg) {
+        // 1. 取得原始圖片尺寸
+        const iw = bgImg.width;
+        const ih = bgImg.height;
+
+        // 2. 計算比例
+        const ratio_w = cw / iw; // 畫布寬比圖片寬
+        const ratio_h = ch / ih; // 畫布高比圖片高
+        
+        // 3. 選擇較大的比例，確保圖片能完全填滿畫布 (Aspect Cover 邏輯)
+        const renderRatio = Math.max(ratio_w, ratio_h);
+
+        // 4. 計算縮放後圖片應有的尺寸
+        const renderW = iw * renderRatio;
+        const renderH = ih * renderRatio;
+
+        // 5. 計算置中位移 (以畫布中心點為準，將放大的圖片置中顯示)
+        const offsetX = (cw - renderW) / 2;
+        const offsetY = (ch - renderH) / 2;
+
+        // 6. 開啟背景自動美化濾鏡
         ctx.filter = 'brightness(1.05) contrast(1.05) saturate(1.25)';
-        ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+
+        // 7. 智慧繪製 (使用計算好的位移與尺寸)
+        // ctx.drawImage(img, dx, dy, dw, dh)
+        ctx.drawImage(bgImg, offsetX, offsetY, renderW, renderH);
+
+        // 重置濾鏡
         ctx.filter = 'none';
       } else {
-        const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        // 如果連備用圖都失敗，則畫漸層
+        const bgGrad = ctx.createLinearGradient(0, cw, ch, cw);
         bgGrad.addColorStop(0, '#f59e0b');
         bgGrad.addColorStop(1, '#ec4899');
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, cw, ch);
       }
 
       // B. 柔和的上下閱讀遮罩
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      const gradient = ctx.createLinearGradient(0, 0, 0, ch);
       gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
       gradient.addColorStop(0.2, 'rgba(0, 0, 0, 0.05)');
       gradient.addColorStop(0.7, 'rgba(0, 0, 0, 0.05)');
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, cw, ch);
 
       // C. 繪製頂部問候語
       ctx.fillStyle = "#ffffff";
@@ -291,28 +322,28 @@
       ctx.font = "bold 34px sans-serif";
       ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
       ctx.shadowBlur = 12;
-      ctx.fillText(`✨ ${prefix} · ${target}`, canvas.width / 2, 95);
+      ctx.fillText(`✨ ${prefix} · ${target}`, cw / 2, 95);
 
       // D. 繪製祝福內文 (自動換行)
       ctx.font = "normal 40px serif";
-      const maxLineWidth = canvas.width - 120;
+      const maxLineWidth = cw - 120;
       const words = wish.split('');
       let line = '';
-      let y = canvas.height - 240;
+      let y = ch - 240;
       const lineHeight = 56;
 
       for (let n = 0; n < words.length; n++) {
         let testLine = line + words[n];
         let metrics = ctx.measureText(testLine);
         if (metrics.width > maxLineWidth && n > 0) {
-          ctx.fillText(line, canvas.width / 2, y);
+          ctx.fillText(line, cw / 2, y);
           line = words[n];
           y += lineHeight;
         } else {
           line = testLine;
         }
       }
-      ctx.fillText(line, canvas.width / 2, y);
+      ctx.fillText(line, cw / 2, y);
 
       // 產出圖片 Data URL
       try {
