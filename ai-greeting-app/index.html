@@ -188,7 +188,7 @@
       }
     });
 
-    // --- 2. 風格提示詞與關鍵字庫 ---
+    // --- 2. 風格提示詞 ---
     const stylePrompts = {
       "水彩溫馨": "dreamy warm watercolor painting style, soft ambient lighting, gentle mood, artistic",
       "寫實風景": "photorealistic landscape photography, beautiful morning lighting, 8k resolution, scenic view",
@@ -196,14 +196,7 @@
       "插畫手繪": "cute storybook illustration style, charming hand-drawn details, vibrant pastel colors"
     };
 
-    const styleKeywords = {
-      "水彩溫馨": "watercolor,painting,nature",
-      "寫實風景": "landscape,nature,sunrise",
-      "國畫水墨": "mountain,mist,asian-art",
-      "插畫手繪": "illustration,art,cozy"
-    };
-
-    // --- 3. 元素與變數 ---
+    // --- 3. 核心邏輯元件 ---
     const generateBtn = document.getElementById('generateBtn');
     const resultCard = document.getElementById('resultCard');
     const previewImage = document.getElementById('previewImage');
@@ -215,8 +208,8 @@
 
     let finalDataUrl = "";
 
-    // 圖片載入器 (帶有 Timeout 超時保護)
-    function loadImageWithTimeout(url, timeoutMs = 6000) {
+    // 載入圖片 (帶 5 秒 Timeout 保護)
+    function loadImage(url) {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
@@ -224,7 +217,7 @@
         const timer = setTimeout(() => {
           img.src = "";
           reject(new Error("Timeout"));
-        }, timeoutMs);
+        }, 5000);
 
         img.onload = () => {
           clearTimeout(timer);
@@ -232,7 +225,7 @@
         };
         img.onerror = () => {
           clearTimeout(timer);
-          reject(new Error("Load Error"));
+          reject(new Error("Error"));
         };
 
         img.src = url;
@@ -249,30 +242,31 @@
       generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> AI 繪製背景與排版文字中...';
       generateBtn.disabled = true;
 
-      // 1. 建立 primary (Pollinations AI) 與 fallback (高清備援庫) 網址
       const baseStyle = stylePrompts[style] || stylePrompts["水彩溫馨"];
       const promptText = `${baseStyle}, peaceful ambiance with ${weather}, cozy feeling, high quality`;
       const randomSeed = Math.floor(Math.random() * 1000000);
-      
-      const primaryUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptText)}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`;
-      const fallbackUrl = `https://loremflickr.com/768/1024/${styleKeywords[style] || 'nature'}?random=${randomSeed}`;
+      const encodedPrompt = encodeURIComponent(promptText);
 
-      let bgImg;
+      // 多重免費 AI Server 網址備援陣列
+      const candidateUrls = [
+        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&enhance=true&nologo=true`,
+        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&model=flux&nologo=true`,
+        `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&seed=${randomSeed}&model=turbo&nologo=true`
+      ];
 
-      // 2. 嘗試先載入 AI 圖，若限流或超過 6 秒則自動切換至備援圖
-      try {
-        bgImg = await loadImageWithTimeout(primaryUrl, 6000);
-      } catch (err) {
-        console.warn("主 AI 服務忙碌中，自動啟動備援視覺庫通道");
+      let bgImg = null;
+
+      // 依次嘗試伺服器通道，直到有一個成功拿到圖片為止
+      for (let url of candidateUrls) {
         try {
-          bgImg = await loadImageWithTimeout(fallbackUrl, 5000);
-        } catch (fbErr) {
-          // 極端備援：繪製質感漸層 Canvas
-          bgImg = null;
+          bgImg = await loadImage(url);
+          if (bgImg) break; // 成功取得圖片，跳出迴圈
+        } catch (e) {
+          console.warn("當前 AI 伺服器忙碌，自動切換至下一個繪圖通道...");
         }
       }
 
-      // 3. Canvas 合成文字邏輯
+      // 開始 Canvas 文字排版繪製
       const canvas = compositeCanvas;
       const ctx = canvas.getContext('2d');
       canvas.width = 768;
@@ -281,15 +275,16 @@
       if (bgImg) {
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
       } else {
-        // 全底備援：極簡莫蘭迪漸層
+        // 萬一所有免費 Server 都忙碌，使用備用藝術莫蘭迪色彩背景
         const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        bgGrad.addColorStop(0, '#6366f1');
-        bgGrad.addColorStop(1, '#a855f7');
+        bgGrad.addColorStop(0, '#4f46e5');
+        bgGrad.addColorStop(0.5, '#7c3aed');
+        bgGrad.addColorStop(1, '#db2777');
         ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // 加上上下閱讀保護遮罩
+      // 上下漸層閱讀遮罩
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
       gradient.addColorStop(0.3, 'rgba(0, 0, 0, 0.1)');
@@ -298,7 +293,7 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 繪製頂部問候語
+      // 繪製頂部文字
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.font = "bold 34px sans-serif";
@@ -331,7 +326,7 @@
       finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
       previewImage.src = finalDataUrl;
 
-      // 顯示預覽（預設加鎖）
+      // 顯示結果
       resultCard.classList.remove('hidden');
       previewImage.classList.add('blur-preview');
       lockOverlay.classList.remove('hidden');
