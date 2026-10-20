@@ -410,6 +410,7 @@ border: none;
 pointer-events: auto;
 }
 
+/* 手機版封面層預設開啟，電腦版預設隱藏 */
 .custom-cover-layer {
 position: absolute;
 top: 0;
@@ -421,6 +422,12 @@ url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/c
 z-index: 5;
 cursor: pointer;
 transition: opacity 0.4s ease;
+}
+
+@media (min-width: 768px) {
+  .custom-cover-layer {
+    display: none !important; /* 電腦版直接隱藏封面，維持自動播放 */
+  }
 }
 
 .custom-cover-layer.fade-out {
@@ -582,19 +589,7 @@ const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kS
 
 let ytPlayers = {}; 
 let activePlayerIndex = null;
-let hasUserInteracted = false;
-
-// 監聽第一次使用者互動，全面解鎖瀏覽器自動播放限制
-['click', 'touchstart', 'scroll'].forEach(evt => {
-  window.addEventListener(evt, () => {
-    if (!hasUserInteracted) {
-      hasUserInteracted = true;
-      if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
-        try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
-      }
-    }
-  }, { once: true, passive: true });
-});
+const isMobile = window.innerWidth < 768; // 判斷是否為手機版
 
 function toggleDrawer() {
   document.getElementById('sideDrawer').classList.toggle('active');
@@ -868,8 +863,14 @@ function initReels(songDatabase) {
     let coverHtml = '';
     if (song.isCustomCover) {
       const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-      coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
-      card.dataset.hasCover = "true";
+      // 手機版點擊封面觸發載入與播放
+      coverHtml = `<div class="custom-cover-layer${extraClass}" onclick="handleCoverClick(event, ${index})" ${song.coverUrl ? `style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);" class="cover-play-btn-wrapper">
+          <div class="cover-play-btn" title="播放影片">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>`;
     }
 
     card.innerHTML = `
@@ -882,8 +883,8 @@ function initReels(songDatabase) {
         </div>
         ${song.isCustomCover ? `
         <a href="https://myezlife.com/index-1.html" target="_blank" class="cover-play-btn-wrapper" style="text-decoration: none;">
-          <div class="cover-play-btn" title="回首頁">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <div class="cover-play-btn" title="回首頁" style="background:#333; width:38px; height:38px;">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
           </div>
         </a>` : ''}
       </div>
@@ -921,69 +922,80 @@ function initReels(songDatabase) {
     }, 100);
   }, { passive: true });
 
-  // 進入視野時動態建立或播放對應的 YouTube Player
+  // 觀察器：電腦版維持原本自動播放，手機版依賴點擊封面觸發
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const card = entry.target;
       const index = parseInt(card.dataset.index);
       const videoId = card.dataset.videoId;
-      const coverLayer = card.querySelector('.custom-cover-layer');
 
       if (entry.isIntersecting) {
-        stopAllPlayersExceptActive(index);
         activePlayerIndex = index;
 
-        if (!ytPlayers[index]) {
-          try {
-            ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
-              videoId: videoId,
-              playerVars: {
-                'autoplay': 1,
-                'playsinline': 1,
-                'controls': 1,
-                'rel': 0
-              },
-              events: {
-                'onReady': (e) => {
-                  if (activePlayerIndex !== index) {
-                    try { e.target.pauseVideo(); } catch(err) {}
-                  } else {
-                    try { e.target.playVideo(); } catch(err) {}
-                  }
-                },
-                'onStateChange': (e) => onPlayerStateChange(e, index)
-              }
-            });
-          } catch(err) {}
-        } else {
-          try {
-            ytPlayers[index].playVideo();
-          } catch(err) {}
+        // 如果是電腦版，直接自動建立並播放
+        if (!isMobile) {
+          stopAllPlayersExceptActive(index);
+          if (!ytPlayers[index]) {
+            try {
+              ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
+                videoId: videoId,
+                playerVars: { 'autoplay': 1, 'playsinline': 1, 'controls': 1, 'rel': 0 },
+                events: {
+                  'onReady': (e) => { try { e.target.playVideo(); } catch(err) {} },
+                  'onStateChange': (e) => onPlayerStateChange(e, index)
+                }
+              });
+            } catch(err) {}
+          } else {
+            try { ytPlayers[index].playVideo(); } catch(err) {}
+          }
         }
 
-        if (coverLayer) {
-          coverLayer.classList.add('fade-out');
-        }
         if (card.dataset.title) {
           recordUserClick(card.dataset.title);
         }
       } else {
         if (ytPlayers[index]) {
-          try {
-            ytPlayers[index].pauseVideo();
-          } catch(err) {}
+          try { ytPlayers[index].pauseVideo(); } catch(err) {}
         }
         if (activePlayerIndex === index) {
           activePlayerIndex = null;
-        }
-        if (coverLayer) {
-          coverLayer.classList.remove('fade-out');
         }
       }
     });
   }, { threshold: 0.6 });
 
   cards.forEach(card => observer.observe(card));
+}
+
+// 手機版點擊封面時才動態載入播放器並播放
+function handleCoverClick(event, index) {
+  const card = document.querySelector(`.reel-card[data-index="${index}"]`);
+  if (!card) return;
+  const coverLayer = card.querySelector('.custom-cover-layer');
+  const videoId = card.dataset.videoId;
+
+  stopAllPlayersExceptActive(index);
+  activePlayerIndex = index;
+
+  if (!ytPlayers[index]) {
+    try {
+      ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
+        videoId: videoId,
+        playerVars: { 'autoplay': 1, 'playsinline': 1, 'controls': 1, 'rel': 0 },
+        events: {
+          'onReady': (e) => { try { e.target.playVideo(); } catch(err) {} },
+          'onStateChange': (e) => onPlayerStateChange(e, index)
+        }
+      });
+    } catch(err) {}
+  } else {
+    try { ytPlayers[index].playVideo(); } catch(err) {}
+  }
+
+  if (coverLayer) {
+    coverLayer.classList.add('fade-out');
+  }
 }
 
 function stopAllPlayersExceptActive(exceptIndex = -1) {
@@ -1015,6 +1027,19 @@ async function onYouTubeIframeAPIReady() {
   try {
     const songs = await loadSongDatabase();
     initReels(songs);
+
+    // 如果是電腦版，網頁載入完成後自動初始化第一頁
+    if (!isMobile && songs.length > 0) {
+      activePlayerIndex = 0;
+      ytPlayers[0] = new YT.Player(`yt-player-0`, {
+        videoId: songs[0].videoId,
+        playerVars: { 'autoplay': 1, 'playsinline': 1, 'controls': 1, 'rel': 0 },
+        events: {
+          'onReady': (e) => { try { e.target.playVideo(); } catch(err) {} },
+          'onStateChange': (e) => onPlayerStateChange(e, 0)
+        }
+      });
+    }
   } catch (err) {
     console.error(err);
     const container = document.getElementById('reelContainer');
