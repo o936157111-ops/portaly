@@ -49,7 +49,21 @@ height: 80px;
 border-radius: 50%;
 object-fit: cover;
 box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-margin-bottom: 12px;
+margin-bottom: 10px;
+cursor: pointer;
+transition: transform 0.2s ease;
+}
+
+.home-logo:hover {
+transform: scale(1.05);
+}
+
+.home-text {
+margin-bottom: 20px;
+font-size: 13px;
+color: #666;
+letter-spacing: 1px;
+cursor: pointer;
 }
 
 .home-title {
@@ -216,9 +230,10 @@ transform: translateY(-2px);
 </head>
 <body>
 
-<!-- 首頁主體內容（無左上角 Logo 與側邊選單） -->
+<!-- 首頁主體內容（保留中間大 Logo 點擊互動） -->
 <div class="home-container">
-<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="home-logo" alt="Logo">
+<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="home-logo" onclick="handleLogoClick()" alt="Logo">
+<div class="home-text" onclick="handleLogoClick()">點擊探索更多</div>
 <div class="home-title">生活・簡居・生活</div>
 
 <div class="home-btn-container">
@@ -251,6 +266,11 @@ transform: translateY(-2px);
 </div>
 
 <script>
+function handleLogoClick() {
+  // 點擊中間大 Logo 時的互動行為（可根據需求調整，目前預設開啟宣傳視窗或重新整理）
+  openPromoModal();
+}
+
 function openPromoModal() {
   document.getElementById('promoModalOverlay').style.display = 'flex';
 }
