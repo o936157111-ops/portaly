@@ -401,6 +401,7 @@ z-index: 1;
 display: flex;
 justify-content: center;
 align-items: center;
+pointer-events: none; /* 防止點擊干擾原生播放器控制 */
 }
 
 .video-wrapper iframe {
@@ -420,7 +421,7 @@ background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rg
 url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
 z-index: 5;
 cursor: pointer;
-transition: opacity 0.5s ease;
+transition: opacity 0.4s ease;
 }
 
 .custom-cover-layer.fade-out {
@@ -506,7 +507,7 @@ border-radius: 12px;
 <!-- 左上角 Logo（點擊開啟左側選單） -->
 <img src="https://myezlife.com/eric-logo.gif" width="40" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
 
-<!-- 右側功能按鈕群組（僅保留設定與新增歌曲） -->
+<!-- 右側功能按鈕群組 -->
 <div class="top-right-group">
 <div class="top-icon-btn" onclick="openSettingsModal()" title="設定我的專屬歌單">
 <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c-.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
@@ -580,17 +581,18 @@ border-radius: 12px;
 <script>
 const DEFAULT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
-let ytPlayers = {}; 
+let masterPlayer = null; // 全域共用單一主播放器，解決手機卡頓與黑屏
 let activePlayerIndex = null;
+let globalSongDatabase = [];
 let hasUserInteracted = false;
 
-// 監聽第一次使用者互動（點擊畫面），徹底解鎖瀏覽器自動播放限制
+// 監聽第一次使用者互動，全面解鎖瀏覽器自動播放權限
 ['click', 'touchstart', 'scroll'].forEach(evt => {
   window.addEventListener(evt, () => {
     if (!hasUserInteracted) {
       hasUserInteracted = true;
-      if (activePlayerIndex !== null && ytPlayers[activePlayerIndex]) {
-        try { ytPlayers[activePlayerIndex].playVideo(); } catch(e) {}
+      if (masterPlayer && typeof masterPlayer.playVideo === 'function') {
+        try { masterPlayer.playVideo(); } catch(e) {}
       }
     }
   }, { once: true, passive: true });
@@ -848,181 +850,163 @@ async function loadSongDatabase() {
   return songs;
 }
 
-let globalSongDatabase = [];
-
 function initReels(songDatabase) {
-globalSongDatabase = songDatabase;
-const container = document.getElementById('reelContainer');
-if (!container) return;
-container.innerHTML = '';
+  globalSongDatabase = songDatabase;
+  const container = document.getElementById('reelContainer');
+  if (!container) return;
+  container.innerHTML = '';
 
-const infiniteSongs = [...songDatabase, ...songDatabase];
+  const infiniteSongs = [...songDatabase, ...songDatabase];
 
-infiniteSongs.forEach((song, index) => {
-const card = document.createElement('div');
-card.className = 'reel-card';
-card.dataset.index = index;
-card.dataset.videoId = song.videoId;
+  infiniteSongs.forEach((song, index) => {
+    const card = document.createElement('div');
+    card.className = 'reel-card';
+    card.dataset.index = index;
+    card.dataset.videoId = song.videoId;
+    card.dataset.title = song.title;
 
-let coverHtml = '';
-if (song.isCustomCover) {
-const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
-card.dataset.hasCover = "true";
-}
+    let coverHtml = '';
+    if (song.isCustomCover) {
+      const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
+      coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
+      card.dataset.hasCover = "true";
+    }
 
-card.innerHTML = `
-${coverHtml}
-<div class="video-wrapper"><div id="yt-player-${index}" style="width:100%;height:100%;"></div></div>
-<div class="overlay-info">
-<div class="song-text-group">
-<div class="song-title">${song.title}</div>
-<div class="song-views">${song.views}</div>
-</div>
-${song.isCustomCover ? `
-<a href="https://myezlife.com/index-1.html" target="_blank" class="cover-play-btn-wrapper" style="text-decoration: none;">
-<div class="cover-play-btn" title="回首頁">
-<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-</div>
-</a>` : ''}
-</div>
-`;
+    card.innerHTML = `
+      ${coverHtml}
+      <div class="video-wrapper">
+        <div id="slot-${index}" style="width:100%;height:100%;"></div>
+      </div>
+      <div class="overlay-info">
+        <div class="song-text-group">
+          <div class="song-title">${song.title}</div>
+          <div class="song-views">${song.views}</div>
+        </div>
+        ${song.isCustomCover ? `
+        <a href="https://myezlife.com/index-1.html" target="_blank" class="cover-play-btn-wrapper" style="text-decoration: none;">
+          <div class="cover-play-btn" title="回首頁">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          </div>
+        </a>` : ''}
+      </div>
+    `;
+    container.appendChild(card);
+  });
 
-card.dataset.title = song.title;
-container.appendChild(card);
-});
+  const cards = document.querySelectorAll('.reel-card');
+  const totalOriginal = songDatabase.length;
 
-const cards = document.querySelectorAll('.reel-card');
-const totalOriginal = songDatabase.length;
-
-if (cards.length > 0) {
-container.scrollTop = 0;
-}
-
-let scrollTimeout;
-container.addEventListener('scroll', () => {
-clearTimeout(scrollTimeout);
-stopAllPlayersExceptActive();
-
-scrollTimeout = setTimeout(() => {
-if (!cards[0]) return;
-const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
-
-if (container.scrollTop < singleBlockHeight * 0.2) {
-container.style.scrollSnapType = 'none';
-container.scrollTop += singleBlockHeight;
-setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-}
-else if (container.scrollTop > singleBlockHeight * 1.5) {
-container.style.scrollSnapType = 'none';
-container.scrollTop -= singleBlockHeight;
-setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-}
-}, 100);
-}, { passive: true });
-
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(entry => {
-const card = entry.target;
-const index = parseInt(card.dataset.index);
-const videoId = card.dataset.videoId;
-const coverLayer = card.querySelector('.custom-cover-layer');
-
-if (entry.isIntersecting) {
-stopAllPlayersExceptActive(index);
-activePlayerIndex = index;
-
-if (!ytPlayers[index]) {
-try {
-ytPlayers[index] = new YT.Player(`yt-player-${index}`, {
-videoId: videoId,
-playerVars: {
-'autoplay': 1,
-'playsinline': 1,
-'controls': 1,
-'rel': 0
-},
-events: {
-'onReady': (e) => {
-  if (activePlayerIndex !== index) {
-    try { e.target.pauseVideo(); } catch(err) {}
-  } else {
-    try { e.target.playVideo(); } catch(err) {}
+  if (cards.length > 0) {
+    container.scrollTop = 0;
   }
-},
-'onStateChange': (e) => onPlayerStateChange(e, index)
-}
-});
-} catch(err) {}
-} else {
-try {
-ytPlayers[index].playVideo();
-} catch(err) {}
-}
 
-if (coverLayer) {
-coverLayer.classList.add('fade-out');
-}
-if (card.dataset.title) {
-recordUserClick(card.dataset.title);
-}
-} else {
-if (ytPlayers[index]) {
-try {
-ytPlayers[index].pauseVideo();
-} catch(err) {}
-}
-if (activePlayerIndex === index) {
-activePlayerIndex = null;
-}
-if (coverLayer) {
-coverLayer.classList.remove('fade-out');
-}
-}
-});
-}, { threshold: 0.6 });
+  // 無縫循環滾動修正
+  let scrollTimeout;
+  container.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      if (!cards[0]) return;
+      const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
 
-cards.forEach(card => {
-observer.observe(card);
-});
-}
+      if (container.scrollTop < singleBlockHeight * 0.2) {
+        container.style.scrollSnapType = 'none';
+        container.scrollTop += singleBlockHeight;
+        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+      } else if (container.scrollTop > singleBlockHeight * 1.5) {
+        container.style.scrollSnapType = 'none';
+        container.scrollTop -= singleBlockHeight;
+        setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+      }
+    }, 100);
+  }, { passive: true });
 
-function stopAllPlayersExceptActive(exceptIndex = -1) {
-  for (let idx in ytPlayers) {
-    if (parseInt(idx) !== exceptIndex) {
-      try {
-        if (ytPlayers[idx] && typeof ytPlayers[idx].pauseVideo === 'function') {
-          ytPlayers[idx].pauseVideo();
+  // 進入視野時自動播放與平順切換
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const card = entry.target;
+      const index = parseInt(card.dataset.index);
+      const videoId = card.dataset.videoId;
+      const coverLayer = card.querySelector('.custom-cover-layer');
+      const targetSlot = document.getElementById(`slot-${index}`);
+
+      if (entry.isIntersecting) {
+        activePlayerIndex = index;
+
+        if (masterPlayer && targetSlot) {
+          // 將共用的播放器移動到當前可見的卡片容器內，並載入/播放影片
+          const iframe = masterPlayer.getIframe();
+          if (iframe && iframe.parentNode !== targetSlot) {
+            targetSlot.appendChild(iframe);
+          }
+          try {
+            masterPlayer.loadVideoById(videoId);
+          } catch(e) {
+            try { masterPlayer.cueVideoById(videoId); masterPlayer.playVideo(); } catch(err) {}
+          }
         }
-      } catch (e) {}
-    }
-  }
+
+        if (coverLayer) {
+          coverLayer.classList.add('fade-out');
+        }
+        if (card.dataset.title) {
+          recordUserClick(card.dataset.title);
+        }
+      } else {
+        if (activePlayerIndex === index) {
+          if (masterPlayer) {
+            try { masterPlayer.pauseVideo(); } catch(e) {}
+          }
+          activePlayerIndex = null;
+        }
+        if (coverLayer) {
+          coverLayer.classList.remove('fade-out');
+        }
+      }
+    });
+  }, { threshold: 0.6 });
+
+  cards.forEach(card => observer.observe(card));
 }
 
-function onPlayerStateChange(event, index) {
-  if (event.data === YT.PlayerState.ENDED) {
-    const container = document.getElementById('reelContainer');
-    const cards = document.querySelectorAll('.reel-card');
-    if (cards.length > 0) {
-      const cardHeight = cards[0].offsetHeight;
-      const nextIndex = index + 1;
-      const targetScrollTop = nextIndex * cardHeight;
-      container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
-    }
-  }
-}
-
-async function onYouTubeIframeAPIReady() {
-  try {
-    const songs = await loadSongDatabase();
+// 初始化唯一的 YouTube Player 執行例
+function onYouTubeIframeAPIReady() {
+  loadSongDatabase().then(songs => {
     initReels(songs);
-  } catch (err) {
+    
+    // 建立全域唯一的播放器掛載在第一張卡片上
+    if (songs.length > 0) {
+      masterPlayer = new YT.Player('slot-0', {
+        videoId: songs[0].videoId,
+        playerVars: {
+          'autoplay': 1,
+          'playsinline': 1,
+          'controls': 1,
+          'rel': 0
+        },
+        events: {
+          'onReady': (e) => {
+            try { e.target.playVideo(); } catch(err) {}
+          },
+          'onStateChange': (e) => {
+            if (e.data === YT.PlayerState.ENDED) {
+              const container = document.getElementById('reelContainer');
+              const cards = document.querySelectorAll('.reel-card');
+              if (cards.length > 0 && activePlayerIndex !== null) {
+                const nextIndex = activePlayerIndex + 1;
+                container.scrollTo({ top: nextIndex * cards[0].offsetHeight, behavior: 'smooth' });
+              }
+            }
+          }
+        }
+      });
+    }
+  }).catch(err => {
     console.error(err);
     const container = document.getElementById('reelContainer');
     if (container) {
       container.innerHTML = `<div style="color:#fff;display:flex;justify-content:center;align-items:center;height:100%;text-align:center;padding:20px;">載入歌單發生錯誤：${err.message}</div>`;
     }
-  }
+  });
 }
 </script>
 </body>
