@@ -29,13 +29,12 @@
       filter: blur(12px);
       transition: filter 0.6s ease;
     }
-    /* 拍立得/相框質感效果 */
-    .photo-frame {
+    /* 簡約現代卡片外框 (無多餘線條) */
+    .photo-card {
       background: #ffffff;
-      padding: 12px 12px 16px 12px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(226, 232, 240, 0.8);
+      padding: 8px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
     }
   </style>
 </head>
@@ -132,18 +131,18 @@
       </button>
     </div>
 
-    <!-- 結果與廣告解鎖區塊 (相框視覺設計) -->
+    <!-- 結果與廣告解鎖區塊 (無多餘框線) -->
     <div id="resultCard" class="hidden space-y-3">
       
-      <!-- 相框本體 -->
-      <div class="photo-frame">
+      <!-- 滿版卡片容器 -->
+      <div class="photo-card">
         <div class="flex items-center justify-between mb-2 px-1">
-          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">✨ Daily AI Card</span>
-          <span id="statusBadge" class="text-xs px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">鎖定中</span>
+          <span class="text-xs font-bold text-slate-500 tracking-wider">✨ Daily AI Card</span>
+          <span id="statusBadge" class="text-xs px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full font-medium">鎖定中</span>
         </div>
 
-        <!-- 圖片與 Canvas 容器 -->
-        <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[360px] flex items-center justify-center border border-slate-100">
+        <!-- 圖片與 Canvas 容器 (無邊框) -->
+        <div class="relative rounded-xl overflow-hidden bg-slate-100 min-h-[360px] flex items-center justify-center">
           <canvas id="compositeCanvas" class="hidden"></canvas>
           <img id="previewImage" src="" alt="問候圖預覽" class="w-full h-auto blur-preview">
           
@@ -160,10 +159,6 @@
               <i class="fa-solid fa-play"></i> 觀看短廣告 (15秒) 解鎖
             </button>
           </div>
-        </div>
-
-        <div class="mt-3 text-center">
-          <p class="text-[11px] text-slate-400 font-medium">專屬精美問候卡 · 每日更新</p>
         </div>
       </div>
 
@@ -264,7 +259,7 @@
       canvas.width = 768;
       canvas.height = 1024;
 
-      // A. 畫背景照片
+      // A. 畫背景照片 (滿版無框)
       if (bgImg) {
         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
       } else {
@@ -275,7 +270,7 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
 
-      // B. 上下閱讀暗色漸層保護層
+      // B. 上下閱讀暗色漸層保護層 (確保文字清晰)
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
       gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
       gradient.addColorStop(0.25, 'rgba(0, 0, 0, 0.1)');
@@ -284,17 +279,7 @@
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // C. 【新增】藝術金線邊框 (印在導出的圖片上)
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
-
-      // 内圈細線
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-      ctx.lineWidth = 1;
-      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
-
-      // D. 繪製頂部問候語
+      // C. 繪製頂部問候語
       ctx.fillStyle = "#ffffff";
       ctx.textAlign = "center";
       ctx.font = "bold 34px sans-serif";
@@ -302,9 +287,9 @@
       ctx.shadowBlur = 10;
       ctx.fillText(`✨ ${prefix} · ${target}`, canvas.width / 2, 95);
 
-      // E. 繪製祝福內文 (自動換行)
+      // D. 繪製祝福內文 (自動換行)
       ctx.font = "normal 40px serif";
-      const maxLineWidth = canvas.width - 140;
+      const maxLineWidth = canvas.width - 120;
       const words = wish.split('');
       let line = '';
       let y = canvas.height - 240;
