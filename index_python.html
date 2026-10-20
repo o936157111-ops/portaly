@@ -520,7 +520,7 @@ color: #fff;
 <div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
 
 <div class="splash-btn-container">
-<!-- 🌟 新增：早安圖製作工具按鈕 -->
+<!-- 🌟 功能按鈕 -->
 <a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
 <a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
 <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
@@ -568,7 +568,6 @@ color: #fff;
 <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
 <a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
 <a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作早安問候圖</a>
-
 </div>
 </div>
 
@@ -599,7 +598,8 @@ if (event) {
 event.preventDefault();
 event.stopPropagation();
 }
-window.location.replace(targetUrl);
+// 已由 replace 改為 href，徹底解決手機第二次進入黑屏問題
+window.location.href = targetUrl;
 }
 
 function closeSplash() {
