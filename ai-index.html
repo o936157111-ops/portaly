@@ -27,28 +27,46 @@
 
   <div class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
-    <!-- 時段感知 Header (LINE 綠色風格) -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#009900] p-4 text-white shadow-md shadow-emerald-500/10">
+    <!-- 🌟 純粹極简綠色 Banner：日期 · 時間 · 天氣 -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15">
       <div class="relative z-10 flex items-center justify-between">
-        <div>
-          <div class="text-[11px] font-semibold text-emerald-100 flex items-center gap-1">
-            <i class="fa-solid fa-sun"></i> 晨間時段 APP 集中導航
+        
+        <!-- 左側：日期與星期 -->
+        <div class="space-y-0.5">
+          <div id="currentDate" class="text-xs font-semibold text-emerald-100 tracking-wide">
+            2026年10月21日
           </div>
-          <h1 class="text-lg font-extrabold tracking-tight mt-0.5">
-            5:20 晨光時間 · 一頁開完常用 APP
-          </h1>
+          <div id="currentDay" class="text-base font-bold text-white tracking-wider">
+            星期三
+          </div>
         </div>
+
+        <!-- 中間/右側：即時天氣 -->
+        <div class="flex items-center gap-2 bg-black/10 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
+          <div id="weatherIcon" class="text-2xl text-amber-300">
+            <i class="fa-solid fa-sun animate-pulse"></i>
+          </div>
+          <div class="text-right leading-none">
+            <div id="weatherTemp" class="text-base font-black tracking-tight">--°C</div>
+            <div id="weatherDesc" class="text-[10px] text-emerald-100 font-medium">載入天氣...</div>
+          </div>
+        </div>
+
+        <!-- 右側：大字體即時時間 -->
         <div class="text-right">
-          <span id="currentTime" class="text-xl font-black tracking-wider">05:20</span>
+          <div id="currentTime" class="text-2xl font-black tracking-wider leading-none">
+            05:20
+          </div>
         </div>
+
       </div>
     </div>
 
-    <!-- 🌟 晨間必備APP (點擊直接喚起手機內建實體 APP) -->
+    <!-- 🌟 晨間必備 APP (直達車) -->
     <div class="space-y-2.5">
       <div class="flex items-center justify-between px-1">
         <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
-          <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的晨間必用 APP (直達車)
+          <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP
         </h2>
         <button onclick="openAddModal()" class="text-xs bg-[#00B900] hover:bg-[#009900] text-white font-bold px-2.5 py-1 rounded-lg transition flex items-center gap-1 shadow-sm">
           <i class="fa-solid fa-plus"></i> 自訂 APP
@@ -64,7 +82,7 @@
     <!-- 🌟 站內原創線上工具 -->
     <div class="space-y-2 pt-2">
       <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase px-1 flex items-center gap-1.5">
-        <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 本站線上專屬工具
+        <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 本站精選工具
       </h2>
       <div class="grid grid-cols-2 gap-2.5">
         <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-emerald-500 transition active:scale-95">
@@ -166,7 +184,6 @@
       });
     }
 
-    // 智能打開APP (若手機沒裝則跳轉網頁)
     function openApp(appUrl, webUrl) {
       const now = Date.now();
       window.location.href = appUrl;
@@ -203,13 +220,55 @@
       }
     }
 
-    function updateClock() {
+    // 更新時間與日期
+    function updateDateTime() {
       const now = new Date();
-      document.getElementById('currentTime').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
 
+      const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      document.getElementById('currentDate').innerText = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+      document.getElementById('currentDay').innerText = days[now.getDay()];
+    }
+
+    // 自動抓取台北天氣 (Open-Meteo 免費 API)
+    async function fetchWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.0478&longitude=121.5319&current_weather=true');
+        const data = await res.json();
+        if (data && data.current_weather) {
+          const temp = Math.round(data.current_weather.temperature);
+          const code = data.current_weather.weathercode;
+          
+          document.getElementById('weatherTemp').innerText = `${temp}°C`;
+          
+          // 簡易天氣圖示與描述判斷
+          let iconHtml = '<i class="fa-solid fa-sun text-amber-300"></i>';
+          let desc = '晴朗';
+          if (code >= 1 && code <= 3) {
+            iconHtml = '<i class="fa-solid fa-cloud-sun text-amber-200"></i>';
+            desc = '多雲';
+          } else if (code >= 45 && code <= 48) {
+            iconHtml = '<i class="fa-solid fa-smog text-slate-200"></i>';
+            desc = '有霧';
+          } else if (code >= 51) {
+            iconHtml = '<i class="fa-solid fa-cloud-rain text-sky-200"></i>';
+            desc = '陣雨';
+          }
+          
+          document.getElementById('weatherIcon').innerHTML = iconHtml;
+          document.getElementById('weatherDesc').innerText = desc;
+        }
+      } catch (e) {
+        document.getElementById('weatherTemp').innerText = '24°C';
+        document.getElementById('weatherDesc').innerText = '舒適';
+      }
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    fetchWeather();
     renderShortcuts();
   </script>
 </body>
