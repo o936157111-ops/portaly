@@ -505,7 +505,7 @@
       </div>
     </div>
 
-    <!-- 6️⃣ 動態情境內容區塊 -->
+    <!-- 🌟 6️⃣ 動態情境內容區塊（已新增：🔥 一鍵打造專屬影音牆） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="dynamic">
       <div class="flex items-center justify-between px-1">
         <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
@@ -873,6 +873,22 @@
       const trafficCard = document.getElementById('trafficCard');
       const financeCard = document.getElementById('financeCard');
 
+      // 🔥 打造專屬影音牆核心工具 HTML 結構
+      const makeReelToolHtml = `
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/80 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-makereel">
+          <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-purple-600 text-white flex items-center justify-center text-xl shrink-0 shadow-md"><i class="fa-solid fa-fire"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900 flex items-center gap-1.5">
+                一鍵打造專屬影音牆 <span class="text-[10px] bg-rose-500 text-white px-1.5 py-0.2 rounded-full font-black">HOT</span>
+              </div>
+              <div class="text-xs text-purple-700 font-semibold">1秒複製試算表，隨時自由增減歌單</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+      `;
+
       if (hour >= 5 && hour < 9) {
         trafficCard.style.display = 'block';
         financeCard.style.display = 'block';
@@ -881,23 +897,13 @@
         title.innerText = '早安！開啟美好的一天';
         desc.innerText = '出門前掌握路況與台股動態，掌握致勝先機。';
 
-        grid.innerHTML = `
+        grid.innerHTML = makeReelToolHtml + `
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
-            <a href="https://myezlife.com/ai-greeting-app/" class="flex items-center gap-3.5 flex-1 pr-2">
+            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
               <div>
                 <div class="text-base font-bold text-slate-900">做早安圖</div>
                 <div class="text-xs text-slate-500 font-semibold">一鍵產生問候圖卡</div>
-              </div>
-            </a>
-            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-          </div>
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
-            <a href="https://myezlife.com/index_news.html" class="flex items-center gap-3.5 flex-1 pr-2">
-              <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
-              <div>
-                <div class="text-base font-bold text-slate-900">新聞劃重點</div>
-                <div class="text-xs text-slate-500 font-semibold">捷運閱讀時事重點</div>
               </div>
             </a>
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
@@ -911,23 +917,13 @@
         title.innerText = '專注當下，保持步調';
         desc.innerText = '台股盤中與即時路況隨時掌握，預祝投資與工作一切順利。';
 
-        grid.innerHTML = `
+        grid.innerHTML = makeReelToolHtml + `
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
-            <a href="https://myezlife.com/index_news.html" class="flex items-center gap-3.5 flex-1 pr-2">
+            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
               <div>
                 <div class="text-base font-bold text-slate-900">新聞劃重點</div>
                 <div class="text-xs text-slate-500 font-semibold">掌握最新時事趨勢</div>
-              </div>
-            </a>
-            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-          </div>
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-box">
-            <a href="https://myezlife.com/ai-greeting-app/" class="flex items-center gap-3.5 flex-1 pr-2">
-              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-              <div>
-                <div class="text-base font-bold text-slate-900">原創工具箱</div>
-                <div class="text-xs text-slate-500 font-semibold">生活好用數位助手</div>
               </div>
             </a>
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
@@ -941,23 +937,13 @@
         title.innerText = '今天辛苦了，好好休息';
         desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
 
-        grid.innerHTML = `
+        grid.innerHTML = makeReelToolHtml + `
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-music">
-            <a href="https://myezlife.com/goldmelody.html" class="flex items-center gap-3.5 flex-1 pr-2">
+            <a href="https://myezlife.com/goldmelody.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-music"></i></div>
               <div>
                 <div class="text-base font-bold text-slate-900">好歌一直聽</div>
                 <div class="text-xs text-slate-500 font-semibold">放鬆心靈美妙旋律</div>
-              </div>
-            </a>
-            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-          </div>
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
-            <a href="https://myezlife.com/ai-greeting-app/" class="flex items-center gap-3.5 flex-1 pr-2">
-              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-              <div>
-                <div class="text-base font-bold text-slate-900">做早安圖</div>
-                <div class="text-xs text-slate-500 font-semibold">預作明日問候圖卡</div>
               </div>
             </a>
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
