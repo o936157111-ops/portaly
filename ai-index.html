@@ -308,7 +308,7 @@
       </div>
     </div>
 
-    <!-- 2️⃣ 智慧情境提醒區塊（左側換成 eric-logo.gif 點擊可開啟側邊選單） -->
+    <!-- 2️⃣ 智慧情境提醒區塊 -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex items-center justify-between" data-id="context">
       <div class="flex items-center gap-3.5">
         <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-12 h-12 rounded-full border-2 border-emerald-500 object-cover cursor-pointer hover:scale-105 transition shrink-0 shadow-sm" onclick="toggleDrawer()" title="點擊開啟功能選單">
@@ -322,7 +322,7 @@
       </div>
     </div>
 
-    <!-- 🌟 3️⃣ 常用功能與工具入口（左側換成迎賓頁的經典旋轉大 Logo，點擊有互動效果） -->
+    <!-- 3️⃣ 常用功能與工具入口 -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2.5">
@@ -581,7 +581,6 @@
 
     // 常用功能左側大 Logo 點擊互動效果
     function triggerPortalAction() {
-      // 可自訂點擊大 Logo 時的動作，例如輕快提示或跳轉
       if (confirm("歡迎來到 myezlife 個人行動生活中樞！是否前往「好歌一直聽」欣賞影音牆？")) {
         window.open('https://myezlife.com/goldmelody_csv.html', '_blank');
       }
@@ -590,7 +589,7 @@
     // 初始化 Sortable.js 實現拖曳功能並透過 LocalStorage 自動記憶位置
     document.addEventListener('DOMContentLoaded', () => {
       
-      // 1. 主容器區塊排序與記憶
+      // 1. 主容器大區塊排序載入與記憶
       const mainContainer = document.getElementById('mainContainer');
       const savedMainOrder = localStorage.getItem('myezlife_main_order');
       if (savedMainOrder) {
@@ -608,7 +607,8 @@
         animation: 150,
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
-        onStore: function (evt) {
+        onEnd: function () {
+          // 當大區塊拖曳結束時，立即將當前順序存入 LocalStorage
           const order = this.toArray();
           localStorage.setItem('myezlife_main_order', JSON.stringify(order));
         }
@@ -649,7 +649,7 @@
         animation: 150,
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
-        onStore: function () {
+        onEnd: function () {
           const order = this.toArray();
           localStorage.setItem(storageKey, JSON.stringify(order));
         }
