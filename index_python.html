@@ -1,876 +1,1124 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>myezlife 個人行動生活中樞</title>
 
-<!-- 啟用手機全螢幕與沉浸式模式 -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
+  <!-- PWA 全螢幕 APP 靈魂設定 -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="myezlife">
+  <meta name="theme-color" content="#00B900">
 
-<title>生活・簡居・生活 | 總入口</title>
-<style>
-/* 基礎重置：確保手機版直接滿版全螢幕 */
-* {
-box-sizing: border-box;
-}
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- 引入 Sortable.js 實現拖曳排序功能 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 
-html, body {
-margin: 0;
-padding: 0;
-width: 100%;
-height: 100%;
-background-color: #ffffff;
-color: #111;
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-overflow: hidden;
-position: fixed;
-top: 0;
-left: 0;
-}
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* 拖曳時的視覺特效樣式 */
+    .sortable-ghost {
+      opacity: 0.4;
+      background: #cbd5e1 !important;
+    }
+    .sortable-drag {
+      background: #ffffff !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+    }
 
-/* 1. 輕量開場迎賓遮罩 (Splash Screen) */
-#splash-screen {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: #ffffff;
-z-index: 99999;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-transition: opacity 0.4s ease;
-padding: 20px;
-overflow-y: auto;
-}
+    /* 🌟 側邊滑出選單（Drawer）樣式 */
+    .side-drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .side-drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: #ffffff;
+      z-index: 10001;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+      transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      overflow-y: auto;
+    }
+    .side-drawer.active {
+      left: 0;
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .drawer-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .drawer-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #222;
+    }
+    .drawer-btn-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .drawer-btn {
+      width: 100%;
+      padding: 12px 18px;
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      color: #222;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .drawer-btn:hover {
+      background: #222;
+      color: #fff;
+    }
 
-.splash-logo {
-width: 110px;  /* 🌟 已放大至 110px，與下方按鈕比例更協調醒目 */
-height: 110px; /* 保持完美圓形 */
-border-radius: 50%;
-object-fit: cover;
-cursor: pointer;
-box-shadow: 0 6px 25px rgba(0,0,0,0.18);
-transition: transform 0.2s ease;
-margin-bottom: 14px;
-}
+    /* 🌟 獨家亮點彈窗樣式 (Modal) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 20000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      background: #ffffff;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
 
-.splash-logo:hover {
-transform: scale(1.05);
-}
-
-.splash-text {
-margin-bottom: 16px;
-font-size: 13px;
-color: #555;
-letter-spacing: 1px;
-cursor: pointer;
-}
-
-/* 按鈕容器樣式 */
-.splash-btn-container {
-display: flex;
-flex-direction: column;
-gap: 10px;
-width: 100%;
-max-width: 260px;
-}
-
-/* 按鈕樣式 */
-.splash-btn {
-width: 100%;
-padding: 11px 16px;
-background: #f7f7f7;
-border: 1px solid #ddd;
-color: #222;
-font-size: 14px;
-font-weight: 600;
-text-align: center;
-border-radius: 12px;
-text-decoration: none;
-box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-transition: all 0.2s ease;
-cursor: pointer;
-}
-
-.splash-btn:hover {
-background: #222;
-color: #fff;
-transform: translateY(-2px);
-}
-
-/* 特殊功能宣傳按鈕樣式 */
-.promo-action-btn {
-width: 100%;
-padding: 12px 16px;
-background: linear-gradient(135deg, #ff3b30, #ff9500);
-border: none;
-color: #fff;
-font-size: 14px;
-font-weight: bold;
-text-align: center;
-border-radius: 12px;
-text-decoration: none;
-box-shadow: 0 4px 15px rgba(255, 59, 48, 0.35);
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-cursor: pointer;
-}
-
-.promo-action-btn:hover {
-transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
-}
-
-/* 🌟 早安圖專屬入口按鈕樣式 */
-.morning-action-btn {
-width: 100%;
-padding: 12px 16px;
-background: linear-gradient(135deg, #f59e0b, #10b981);
-border: none;
-color: #fff;
-font-size: 14px;
-font-weight: bold;
-text-align: center;
-border-radius: 12px;
-text-decoration: none;
-box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-cursor: pointer;
-}
-
-.morning-action-btn:hover {
-transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
-}
-
-/* 特殊功能說明彈出視窗 (Promo Modal) */
-.promo-modal-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.65);
-backdrop-filter: blur(5px);
-z-index: 100000;
-display: none;
-justify-content: center;
-align-items: center;
-padding: 20px;
-}
-
-.promo-modal-card {
-background: #ffffff;
-color: #222;
-width: 100%;
-max-width: 360px;
-padding: 24px 20px;
-border-radius: 20px;
-box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-display: flex;
-flex-direction: column;
-gap: 14px;
-max-height: 90vh;
-overflow-y: auto;
-animation: scaleUp 0.25s ease;
-}
-
-@keyframes scaleUp {
-from { transform: scale(0.9); opacity: 0; }
-to { transform: scale(1); opacity: 1; }
-}
-
-.promo-modal-card h3 {
-margin: 0;
-font-size: 18px;
-color: #ff3b30;
-text-align: center;
-font-weight: 800;
-}
-
-.promo-feature-box {
-background: #f8f9fa;
-border: 1px solid #eaeaea;
-padding: 12px;
-border-radius: 12px;
-font-size: 13px;
-color: #444;
-line-height: 1.5;
-}
-
-.promo-feature-box ul {
-margin: 6px 0 0 0;
-padding-left: 18px;
-}
-
-.promo-feature-box li {
-margin-bottom: 4px;
-}
-
-.go-to-feature-btn {
-background: linear-gradient(135deg, #ff3b30, #ff9500);
-color: #fff;
-border: none;
-padding: 13px;
-border-radius: 12px;
-font-weight: bold;
-font-size: 15px;
-cursor: pointer;
-text-align: center;
-text-decoration: none;
-box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
-transition: transform 0.2s ease;
-}
-
-.go-to-feature-btn:hover {
-transform: translateY(-2px);
-}
-
-/* 電腦版或大螢幕時：置中顯示手機比例框體 */
-@media (min-width: 768px) {
-body {
-display: flex;
-justify-content: center;
-align-items: center;
-background-color: #ffffff;
-position: static;
-}
-.app-frame {
-width: 100%;
-max-width: 430px;
-height: 844px;
-max-height: 90vh;
-border-radius: 24px;
-overflow: hidden;
-box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-position: relative;
-background-color: #ffffff;
-}
-}
-
-/* 手機版：直接強制 100% 全螢幕覆蓋 */
-@media (max-width: 767px) {
-.app-frame {
-width: 100vw;
-height: 100vh;
-height: 100dvh;
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-border-radius: 0;
-box-shadow: none;
-background-color: #ffffff;
-}
-}
-
-.reel-container {
-width: 100%;
-height: 100%;
-overflow-y: scroll;
-scroll-snap-type: y mandatory;
--webkit-overflow-scrolling: touch;
-scrollbar-width: none;
-transform: translateZ(0);
-}
-
-.reel-container::-webkit-scrollbar {
-display: none;
-}
-
-.reel-card {
-width: 100%;
-height: 100%;
-scroll-snap-align: start;
-scroll-snap-stop: always;
-position: relative;
-display: flex;
-justify-content: center;
-align-items: center;
-background-color: #ffffff;
-overflow: hidden;
-}
-
-.video-wrapper {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: 1;
-display: flex;
-justify-content: center;
-align-items: center;
-}
-
-.video-wrapper iframe {
-width: 100% !important;
-height: 100% !important;
-border: none;
-object-fit: cover;
-}
-
-.custom-cover-layer {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%),
-url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
-z-index: 5;
-cursor: pointer;
-transition: opacity 0.5s ease;
-}
-
-.custom-cover-layer.fade-out {
-opacity: 0;
-pointer-events: none;
-}
-
-.cover-play-btn {
-width: 52px;
-height: 52px;
-background-color: #ff3b30;
-border-radius: 50%;
-display: flex;
-justify-content: center;
-align-items: center;
-box-shadow: 0 4px 20px rgba(255, 59, 48, 0.5);
-animation: pulse 2s infinite;
-flex-shrink: 0;
-cursor: pointer;
-}
-
-.cover-play-btn svg {
-width: 22px;
-height: 22px;
-fill: #ffffff;
-transform: translateX(2px);
-}
-
-@keyframes pulse {
-0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.6); }
-70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 59, 48, 0); }
-100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
-}
-
-.overlay-info {
-position: absolute;
-bottom: 0;
-left: 0;
-right: 0;
-padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
-background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
-z-index: 10;
-display: flex;
-justify-content: space-between;
-align-items: flex-end;
-pointer-events: none;
-}
-
-.song-text-group {
-pointer-events: auto;
-flex-grow: 1;
-margin-right: 16px;
-}
-
-.cover-play-btn-wrapper {
-pointer-events: auto;
-margin-top: 10px;
-display: flex;
-justify-content: flex-start;
-}
-
-.song-title {
-font-size: 16px;
-font-weight: bold;
-margin-bottom: 8px;
-color: #fff;
-text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-}
-
-.song-views {
-font-size: 12px;
-color: #fff;
-background: rgba(255, 255, 255, 0.2);
-backdrop-filter: blur(4px);
-display: inline-block;
-padding: 3px 10px;
-border-radius: 12px;
-}
-
-.top-left-logo {
-position: absolute;
-top: 16px;
-left: 16px;
-width: 44px;
-height: 44px;
-border-radius: 50%;
-border: 2px solid rgba(255, 255, 255, 0.8);
-box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-z-index: 9999;
-object-fit: cover;
-background-color: #fff;
-transition: transform 0.2s ease;
-cursor: pointer;
-}
-.top-left-logo:hover {
-transform: scale(1.08);
-}
-
-/* 左側滑出選單（Drawer）樣式 */
-.side-drawer-overlay {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.5);
-z-index: 10000;
-opacity: 0;
-visibility: hidden;
-transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.side-drawer-overlay.active {
-opacity: 1;
-visibility: visible;
-}
-
-.side-drawer {
-position: fixed;
-top: 0;
-left: -280px;
-width: 280px;
-height: 100%;
-background: #ffffff;
-z-index: 10001;
-box-shadow: 5px 0 25px rgba(0,0,0,0.15);
-transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-display: flex;
-flex-direction: column;
-padding: 24px 20px;
-overflow-y: auto;
-}
-
-.side-drawer.active {
-left: 0;
-}
-
-.drawer-header {
-display: flex;
-align-items: center;
-gap: 12px;
-margin-bottom: 24px;
-padding-bottom: 16px;
-border-bottom: 1px solid #eee;
-}
-
-.drawer-header img {
-width: 40px;
-height: 40px;
-border-radius: 50%;
-object-fit: cover;
-}
-
-.drawer-title {
-font-size: 15px;
-font-weight: bold;
-color: #222;
-}
-
-.drawer-btn-container {
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
-
-.drawer-btn {
-width: 100%;
-padding: 12px 18px;
-background: #f7f7f7;
-border: 1px solid #ddd;
-color: #222;
-font-size: 15px;
-font-weight: 600;
-text-align: center;
-border-radius: 12px;
-text-decoration: none;
-box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-transition: all 0.2s ease;
-}
-
-.drawer-btn:hover {
-background: #222;
-color: #fff;
-}
-</style>
+    /* 🌟 內嵌影音牆專用樣式 */
+    .embedded-reel-frame {
+      width: 100%;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      background-color: #000;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .reel-container {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .reel-container::-webkit-scrollbar {
+      display: none;
+    }
+    .reel-card {
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      overflow: hidden;
+    }
+    .video-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .video-wrapper iframe {
+      width: 100% !important;
+      height: 100% !important;
+      border: none;
+      object-fit: cover;
+    }
+    .custom-cover-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
+      url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
+      z-index: 5;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+    .custom-cover-layer.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cover-play-btn {
+      width: 48px;
+      height: 48px;
+      background-color: #ff3b30;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(255, 59, 48, 0.5);
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+    .cover-play-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #ffffff;
+      transform: translateX(2px);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.6); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(255, 59, 48, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+    }
+    .overlay-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+    .song-text-group {
+      pointer-events: auto;
+      flex-grow: 1;
+      margin-right: 12px;
+    }
+    .cover-play-btn-wrapper {
+      pointer-events: auto;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .song-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+    .song-views {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-900 min-h-screen pb-16 flex flex-col justify-between select-none">
 
-<!-- 1. 輕量開場迎賓遮罩 (Splash Screen) -->
-<div id="splash-screen">
-<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="splash-logo" onclick="enterFullScreen()" alt="Logo">
-<div class="splash-text" onclick="enterFullScreen()">點擊進入瀏覽</div>
+  <!-- 🌟 左側滑出選單結構 (Drawer) -->
+  <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
+      <div class="drawer-title">功能選單</div>
+    </div>
+    <div class="drawer-btn-container">
+      <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
+      <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
+      <a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
+      <a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
+      <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
+      <a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
+      <a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作早安問候圖</a>
+    </div>
+  </div>
 
-<div class="splash-btn-container">
-<!-- 🌟 功能按鈕 -->
-<a href="https://myezlife.com/FileExplorer.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">檔案總管</a>
-<a href="https://myezlife.com/index_news.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">新聞劃重點</a>
-<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="splash-btn" onclick="handleSplashNav(event, this.href)">AI好劇一直看</a>
-<a href="https://myezlife.com/goldmelody_csv.html" class="splash-btn" onclick="handleSplashNav(event, this.href)">好歌一直聽</a>
-<a href="https://myezlife.com/ai-greeting-app/" class="morning-action-btn" onclick="handleSplashNav(event, this.href)">🌻 製作早安問候圖</a>
+  <!-- 🌟 獨家亮點影音牆介紹彈窗 (Modal) -->
+  <div class="modal-overlay" id="reelModalOverlay" onclick="closeReelModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between mb-3 border-b pb-2">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5">
+          <span>🌟</span> 獨家亮點：一鍵打造個人影音牆
+        </h3>
+        <button onclick="toggleReelModal(false)" class="text-slate-400 hover:text-slate-700 text-lg p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed space-y-2 mb-4">
+        這是一套別人沒有的智慧影音牆功能！您可以：<br><br>
+        📋 <b>一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的Google 雲端。<br><br>
+        ☁️ <b>雲端CSV 即時同步</b>：在自己的Google 試算表自由增減喜愛的YouTube 歌單，網站即時對應更新！<br><br>
+        🎯 <b>智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。<br><br>
+        ➕ <b>隨手即時新增</b>：隨時在畫面上貼上喜歡的YouTube 網址，立刻排入頂端播放。
+      </p>
+      <div class="text-center pt-2">
+        <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="block w-full py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-sm rounded-xl shadow-md hover:opacity-95 transition text-center">
+          了解並前往影音牆 ➔
+        </a>
+      </div>
+    </div>
+  </div>
 
-<!-- 宣傳按鈕 -->
-<button class="promo-action-btn" onclick="openPromoModal()">🔥 一鍵打造專屬影音牆</button>
-</div>
-</div>
+  <!-- 🌟 全站主要容器（可自由拖曳排序大區塊） -->
+  <main id="mainContainer" class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
-<!-- 特殊功能說明彈出視窗 (Promo Modal) -->
-<div class="promo-modal-overlay" id="promoModalOverlay" onclick="closePromoModal()">
-<div class="promo-modal-card" onclick="event.stopPropagation()">
-<h3>🌟 獨家亮點：一鍵打造個人影音牆</h3>
-<div class="promo-feature-box">
-<b>這是一套別人沒有的智慧影音牆功能！您可以：</b>
-<ul>
-<li><b>📋 一鍵建立雲端副本</b>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。</li>
-<li><b>☁️ 雲端 CSV 即時同步</b>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</li>
-<li><b>🎯 智慧記憶與隨機</b>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</li>
-<li><b>➕ 隨手即時新增</b>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</li>
-</ul>
-</div>
-<a href="https://myezlife.com/goldmelody_csv.html" class="go-to-feature-btn">了解並前往影音牆 ➔</a>
-</div>
-</div>
+    <!-- 1️⃣ 頂部極簡綠色 Banner (左天氣 · 中日期時間 · 右星期) -->
+    <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
+      <div class="relative z-10 flex items-center justify-between">
+        
+        <!-- 左側：天氣圖示與氣溫 -->
+        <div class="flex items-center gap-2 bg-black/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+          <div id="weatherIcon" class="text-2xl text-amber-300">
+            <i class="fa-solid fa-sun animate-pulse"></i>
+          </div>
+          <div class="leading-none">
+            <div id="weatherTemp" class="text-base font-black tracking-tight">--°C</div>
+            <div id="weatherDesc" class="text-[10px] text-emerald-100 font-medium">載入中</div>
+          </div>
+        </div>
 
-<div class="app-frame">
-<!-- 左上角 Logo -->
-<img src="https://myezlife.com/eric-logo.gif" width="44" class="top-left-logo" alt="Menu" onclick="toggleDrawer()">
+        <!-- 中間：上方年月日，下方大字體時間 -->
+        <div class="text-center space-y-0.5">
+          <div id="currentDate" class="text-[11px] font-medium text-emerald-100 tracking-wide">
+            2026年10月21日
+          </div>
+          <div id="currentTime" class="text-2xl font-black tracking-wider leading-none">
+            05:20
+          </div>
+        </div>
 
-<!-- 左側滑出選單結構 -->
-<div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-<div class="side-drawer" id="sideDrawer">
-<div class="drawer-header">
-<img src="https://myezlife.com/eric-logo.gif" alt="Logo">
-<div class="drawer-title">功能選單</div>
-</div>
-<div class="drawer-btn-container">
-<a href="https://myezlife.com/" class="drawer-btn">首頁</a>
-<a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
-<a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
-<a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
-<a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
-<a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
-<a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作早安問候圖</a>
-</div>
-</div>
+        <!-- 右側：星期 -->
+        <div class="text-right">
+          <div id="currentDay" class="text-base font-bold text-white tracking-wider bg-black/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+            星期三
+          </div>
+        </div>
 
-<!-- 影音捲動容器（支援 Google Sheet 內的各種音樂、照片連結與多媒體內容） -->
-<div class="reel-container" id="reelContainer"></div>
-</div>
+      </div>
+    </div>
 
-<script>
-function toggleDrawer() {
-  document.getElementById('sideDrawer').classList.toggle('active');
-  document.getElementById('drawerOverlay').classList.toggle('active');
-}
+    <!-- 2️⃣ 智慧情境提醒區塊 -->
+    <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex items-center justify-between" data-id="context">
+      <div class="flex items-center gap-3.5">
+        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-12 h-12 rounded-full border-2 border-emerald-500 object-cover cursor-pointer hover:scale-105 transition shrink-0 shadow-sm" onclick="toggleDrawer()" title="點擊開啟功能選單">
+        <div>
+          <div id="contextTitle" class="text-sm font-bold text-slate-900">早安！開啟美好的一天</div>
+          <div id="contextDesc" class="text-xs text-slate-600 font-medium mt-0.5">即時路況與台股動態已為您備妥，掌握致勝先機。</div>
+        </div>
+      </div>
+      <div class="section-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg">
+        <i class="fa-solid fa-grip-vertical"></i>
+      </div>
+    </div>
 
-function enterFullScreen() {
-closeSplash();
-}
+    <!-- 3️⃣ 常用功能與工具入口（包含原有的檔案總管、好劇、好歌，以及您首頁截圖中的亮點按鈕） -->
+    <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2.5">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Portal Logo" class="w-9 h-9 rounded-full object-cover shadow cursor-pointer hover:scale-110 transition shrink-0" onclick="triggerPortalAction()" title="點擊歡迎光臨">
+          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
+            常用功能與工具入口
+          </span>
+        </div>
+        <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+          <i class="fa-solid fa-grip-vertical"></i>
+        </div>
+      </div>
 
-function openPromoModal() {
-  document.getElementById('promoModalOverlay').style.display = 'flex';
-}
+      <!-- 入口按鈕清單 -->
+      <div id="portalList" class="space-y-3" data-list-id="portalList">
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="portal-file">
+          <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-folder-open"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">檔案總管</div>
+              <div class="text-xs text-slate-500 font-semibold">管理與瀏覽個人檔案</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function closePromoModal() {
-  document.getElementById('promoModalOverlay').style.display = 'none';
-}
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="portal-drama">
+          <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-film"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">AI好劇一直看</div>
+              <div class="text-xs text-slate-500 font-semibold">精彩影集清單播放</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function handleSplashNav(event, targetUrl) {
-if (event) {
-event.preventDefault();
-event.stopPropagation();
-}
-window.location.href = targetUrl;
-}
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="portal-melody">
+          <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-music"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">好歌一直聽</div>
+              <div class="text-xs text-slate-500 font-semibold">雲端試算表影音牆</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function closeSplash() {
-const splash = document.getElementById('splash-screen');
-splash.style.opacity = '0';
-setTimeout(() => {
-splash.style.display = 'none';
-}, 400);
-}
+        <!-- 🌟 🔥 點擊後會彈出獨家亮點視窗的按鈕 -->
+        <div class="bg-gradient-to-r from-amber-500 to-rose-500 rounded-2xl p-3.5 flex items-center justify-between shadow-md cursor-pointer hover:opacity-95 transition" data-id="portal-makereel" onclick="toggleReelModal(true)">
+          <div class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-white/20 text-white flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fa-solid fa-fire"></i></div>
+            <div>
+              <div class="text-base font-bold text-white flex items-center gap-1.5">
+                🔥 一鍵打造專屬影音牆
+              </div>
+              <div class="text-xs text-white/90 font-semibold">點擊查看獨家亮點與一鍵建立副本說明</div>
+            </div>
+          </div>
+          <div class="btn-handle text-white/60 hover:text-white p-2 cursor-grab active:cursor-grabbing text-lg" onclick="event.stopPropagation()"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+      </div>
+    </div>
 
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+    <!-- 4️⃣ 專區一：即時交通與路況中心 -->
+    <div id="trafficCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="traffic">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
+          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-road text-emerald-600 text-base"></i> 即時交通與路況中心
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold">路況正常</span>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
 
-function parseCSV(text) {
-const rows = [];
-let row = [], cell = "", quoted = false;
-for (let i = 0; i < text.length; i++) {
-const ch = text[i];
-if (ch === '"') {
-if (quoted && text[i + 1] === '"') { cell += '"'; i++; }
-else quoted = !quoted;
-} else if (ch === ',' && !quoted) {
-row.push(cell); cell = "";
-} else if ((ch === '\n' || ch === '\r') && !quoted) {
-if (ch === '\r' && text[i + 1] === '\n') i++;
-row.push(cell); cell = "";
-if (row.some(v => v.trim() !== "")) rows.push(row);
-row = [];
-} else {
-cell += ch;
-}
-}
-if (cell.length || row.length) {
-row.push(cell);
-if (row.some(v => v.trim() !== "")) rows.push(row);
-}
-return rows;
-}
+      <!-- 交通按鈕清單 -->
+      <div id="trafficList" class="space-y-3" data-list-id="trafficList">
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-1968">
+          <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-car"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">國道即時路況</div>
+              <div class="text-xs text-slate-500 font-semibold">1968 高速公路局</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function normalizeHeader(value) {
-return String(value || "").trim().toLowerCase().replace(/[\s_\-（）()【】\[\]]/g, "");
-}
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-168">
+          <a href="https://168.thb.gov.tw" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-route"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">全台省道路況</div>
+              <div class="text-xs text-slate-500 font-semibold">168 即時路況網</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function findColumn(headers, aliases) {
-const normalized = headers.map(normalizeHeader);
-for (const alias of aliases) {
-const index = normalized.indexOf(normalizeHeader(alias));
-if (index >= 0) return index;
-}
-return -1;
-}
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-youbike">
+          <a href="https://youbike.com.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-person-biking"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">YouBike 站點車位</div>
+              <div class="text-xs text-slate-500 font-semibold">微笑單車即時查詢</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function extractYouTubeId(value) {
-const raw = String(value || "").trim();
-if (!raw) return "";
-if (/^[\w-]{11}$/.test(raw)) return raw;
-try {
-const url = new URL(raw);
-if (url.hostname.includes("youtu.be")) return url.pathname.split("/").filter(Boolean)[0] || "";
-if (url.hostname.includes("youtube.com")) {
-if (url.pathname === "/watch") return url.searchParams.get("v") || "";
-const parts = url.pathname.split("/").filter(Boolean);
-const marker = parts.findIndex(part => ["embed", "shorts", "live"].includes(part));
-if (marker >= 0) return parts[marker + 1] || "";
-}
-} catch (_) {}
-const match = raw.match(/(?:youtube\.com\/(?:embed\/|shorts\/|live\/|watch\?v=)|youtu\.be\/)([\w-]{11})/);
-return match ? match[1] : "";
-}
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-bus">
+          <a href="https://ebus.gov.taipei/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-bus"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">即時公車動態</div>
+              <div class="text-xs text-slate-500 font-semibold">公車到站時間查詢</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-function rowsToSongs(rows) {
-if (!rows.length) return [];
-const headers = rows[0];
-const titleCol = findColumn(headers, ["歌曲名稱", "歌曲", "歌名", "title", "song", "name"]);
-const viewsCol = findColumn(headers, ["熱門標籤", "views", "標籤", "分類", "描述"]);
-const coverCol = findColumn(headers, ["封面樣式", "封面圖片網址", "coverclass", "coverurl", "封面"]);
-const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片網址", "影片連結", "video", "videoid", "youtubeid", "embedcode", "連結", "網址"]);
-const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-tra">
+          <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-train-subway"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">台鐵時刻查詢</div>
+              <div class="text-xs text-slate-500 font-semibold">火車時刻與車次動態</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
-const titleIndex = titleCol >= 0 ? titleCol : 0;
-const videoIndex = videoCol >= 0 ? videoCol : 3;
-const productIndex = productCol >= 0 ? productCol : 4;
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-thsrc">
+          <a href="https://www.thsrc.com.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-gauge-high"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">高鐵時刻與營運</div>
+              <div class="text-xs text-slate-500 font-semibold">台灣高鐵官方網站</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+      </div>
+    </div>
 
-return dataRows.map(row => {
-const title = String(row[titleIndex] || "").trim();
-const videoValue = String(row[videoIndex] || "").trim();
-const videoId = extractYouTubeId(videoValue);
-const productUrl = productCol >= 0 ? String(row[productIndex] || "").trim() : "";
+    <!-- 5️⃣ 專區二：台股大盤與財經快報 -->
+    <div id="financeCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="finance">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></div>
+          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-rose-600 text-base"></i> 台股行情與財經快報
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div id="taiexBadge" class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1">
+            <i class="fa-solid fa-spinner animate-spin"></i> 載入中...
+          </div>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
 
-if (!title || (!videoId && !productUrl)) return null;
+      <!-- 財經按鈕清單 -->
+      <div id="financeList" class="space-y-3" data-list-id="financeList">
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-yahoo">
+          <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-chart-line"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">Yahoo 股市行情</div>
+              <div class="text-xs text-slate-500 font-semibold">大盤走勢與個股報價</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
 
-const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
-let coverUrl = "";
-let coverClass = "";
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-cnyes">
+          <a href="https://www.cnyes.com/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">鉅亨網財經新聞</div>
+              <div class="text-xs text-slate-500 font-semibold">即時財經要聞與分析</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+      </div>
+    </div>
 
-if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
-coverUrl = coverValue;
-} else {
-coverClass = coverValue;
-}
+    <!-- 🌟 6️⃣ 動態情境內容區塊（各時段維持 2 個推薦工具） -->
+    <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="dynamic">
+      <div class="flex items-center justify-between px-1">
+        <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-emerald-600 text-sm"></i> 當前推薦工具
+        </h2>
+        <div class="flex items-center gap-2">
+          <span id="timeBadge" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md font-bold">清晨甦醒</span>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
 
-return {
-title,
-views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
-isCustomCover: true,
-coverClass,
-coverUrl,
-productUrl,
-embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
-};
-}).filter(Boolean);
-}
+      <div id="dynamicContentGrid" class="space-y-3">
+        <!-- JavaScript 動態渲染 -->
+      </div>
+    </div>
 
-function recordUserClick(song) {
-  try {
-    let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
-    let existing = history.find(item => item.title === song.title);
-    if (existing) {
-      existing.clicks = (existing.clicks || 1) + 1;
-      existing.lastWatched = new Date().getTime();
-    } else {
-      history.push({
-        title: song.title,
-        clicks: 1,
-        lastWatched: new Date().getTime()
+    <!-- 7️⃣ 雲端影音牆速覽區塊 -->
+    <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="reelWidget">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-purple-500 animate-pulse"></div>
+          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-compact-disc text-purple-600 text-base"></i> 雲端影音牆速覽
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-md font-bold hover:bg-purple-200 transition">全螢幕觀看 ➔</a>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 內嵌影音播放捲動框 -->
+      <div class="embedded-reel-frame">
+        <div class="reel-container" id="reelContainer">
+          <!-- JavaScript 將自動載入 CSV 內容並在此渲染 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 8️⃣ Google AdSense 廣告區塊 -->
+    <div class="draggable-section bg-white border border-slate-200/90 rounded-2xl p-3 text-center space-y-2 shadow-sm" data-id="ads">
+      <div class="flex items-center justify-between px-1">
+        <p class="text-xs text-slate-400 font-medium">贊助商廣告</p>
+        <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+          <i class="fa-solid fa-grip-vertical"></i>
+        </div>
+      </div>
+      <div class="min-h-[90px] flex items-center justify-center bg-slate-50 rounded-xl overflow-hidden">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-xs text-slate-500 pt-8 font-medium">
+    <p>© myezlife.com · 個人行動生活中樞</p>
+  </footer>
+
+  <script>
+    let lastTimePeriod = '';
+
+    // 展開側邊選單函式
+    function toggleDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('active');
+      document.getElementById('drawerOverlay').classList.toggle('active');
+    }
+
+    // 🌟 控制獨家亮點彈窗開關函式
+    function toggleReelModal(show) {
+      const modal = document.getElementById('reelModalOverlay');
+      if (show) {
+        modal.classList.add('active');
+      } else {
+        modal.classList.remove('active');
+      }
+    }
+
+    function closeReelModal(event) {
+      if (event.target.id === 'reelModalOverlay') {
+        toggleReelModal(false);
+      }
+    }
+
+    // 常用功能左側大 Logo 點擊互動效果
+    function triggerPortalAction() {
+      if (confirm("歡迎來到 myezlife 個人行動生活中樞！是否前往「好歌一直聽」欣賞影音牆？")) {
+        window.open('https://myezlife.com/goldmelody_csv.html', '_blank');
+      }
+    }
+
+    // 初始化 Sortable.js 實現拖曳功能並透過 LocalStorage 自動記憶位置
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. 主容器大區塊排序載入與記憶
+      const mainContainer = document.getElementById('mainContainer');
+      const savedMainOrder = localStorage.getItem('myezlife_main_order');
+      if (savedMainOrder) {
+        try {
+          const orderIds = JSON.parse(savedMainOrder);
+          orderIds.forEach(id => {
+            const el = mainContainer.querySelector(`[data-id="${id}"]`);
+            if (el) mainContainer.appendChild(el);
+          });
+        } catch(e) {}
+      }
+
+      new Sortable(mainContainer, {
+        handle: '.section-handle',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        onEnd: function () {
+          const order = this.toArray();
+          localStorage.setItem('myezlife_main_order', JSON.stringify(order));
+        }
+      });
+
+      // 2. 各個子選單按鈕列表排序與記憶
+      initSortableList('portalList', 'myezlife_portal_order');
+      initSortableList('trafficList', 'myezlife_traffic_order');
+      initSortableList('financeList', 'myezlife_finance_order');
+
+      checkAndUpdateContext();
+      updateDateTime();
+      fetchWeather();
+      fetchStockMarket();
+      initReelWidget();
+
+      setInterval(checkAndUpdateContext, 10000);
+      setInterval(updateDateTime, 1000);
+    });
+
+    function initSortableList(listId, storageKey) {
+      const listEl = document.getElementById(listId);
+      if (!listEl) return;
+
+      const savedOrder = localStorage.getItem(storageKey);
+      if (savedOrder) {
+        try {
+          const orderIds = JSON.parse(savedOrder);
+          orderIds.forEach(id => {
+            const el = listEl.querySelector(`[data-id="${id}"]`);
+            if (el) listEl.appendChild(el);
+          });
+        } catch(e) {}
+      }
+
+      new Sortable(listEl, {
+        handle: '.btn-handle',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        onEnd: function () {
+          const order = this.toArray();
+          localStorage.setItem(storageKey, JSON.stringify(order));
+        }
       });
     }
-    if (history.length > 100) history.shift();
-    localStorage.setItem('user_watch_history', JSON.stringify(history));
-  } catch (e) {
-    console.error("記錄點擊失敗", e);
-  }
-}
 
-async function loadSongDatabase() {
-const response = await fetch(CSV_URL, { cache: "no-store" });
-if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
-const csvText = await response.text();
-const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
-if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
-return songs;
-}
+    // 🌟 內嵌影音牆專用載入與解析邏輯
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
-function initReels(songDatabase) {
-const container = document.getElementById('reelContainer');
-container.innerHTML = '';
+    function parseCSV(text) {
+      const rows = [];
+      let row = [], cell = "", quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (ch === '"') {
+          if (quoted && text[i + 1] === '"') { cell += '"'; i++; }
+          else quoted = !quoted;
+        } else if (ch === ',' && !quoted) {
+          row.push(cell); cell = "";
+        } else if ((ch === '\n' || ch === '\r') && !quoted) {
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+          row.push(cell); cell = "";
+          if (row.some(v => v.trim() !== "")) rows.push(row);
+          row = [];
+        } else {
+          cell += ch;
+        }
+      }
+      if (cell.length || row.length) {
+        row.push(cell);
+        if (row.some(v => v.trim() !== "")) rows.push(row);
+      }
+      return rows;
+    }
 
-const shuffledSongs = [...songDatabase].sort(() => 0.5 - Math.random());
-const infiniteSongs = [...shuffledSongs, ...shuffledSongs, ...shuffledSongs];
+    function normalizeHeader(value) {
+      return String(value || "").trim().toLowerCase().replace(/[\s_\-（）()【】\[\]]/g, "");
+    }
 
-infiniteSongs.forEach((song) => {
-const card = document.createElement('div');
-card.className = 'reel-card';
+    function findColumn(headers, aliases) {
+      const normalized = headers.map(normalizeHeader);
+      for (const alias of aliases) {
+        const index = normalized.indexOf(normalizeHeader(alias));
+        if (index >= 0) return index;
+      }
+      return -1;
+    }
 
-let coverHtml = '';
-if (song.isCustomCover) {
-const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
-card.dataset.hasCover = "true";
-}
+    function extractYouTubeId(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return "";
+      if (/^[\w-]{11}$/.test(raw)) return raw;
+      try {
+        const url = new URL(raw);
+        if (url.hostname.includes("youtu.be")) return url.pathname.split("/").filter(Boolean)[0] || "";
+        if (url.hostname.includes("youtube.com")) {
+          if (url.pathname === "/watch") return url.searchParams.get("v") || "";
+          const parts = url.pathname.split("/").filter(Boolean);
+          const marker = parts.findIndex(part => ["embed", "shorts", "live"].includes(part));
+          if (marker >= 0) return parts[marker + 1] || "";
+        }
+      } catch (_) {}
+      const match = raw.match(/(?:youtube\.com\/(?:embed\/|shorts\/|live\/|watch\?v=)|youtu\.be\/)([\w-]{11})/);
+      return match ? match[1] : "";
+    }
 
-card.innerHTML = `
-${coverHtml}
-<div class="video-wrapper"></div>
-<div class="overlay-info">
-<div class="song-text-group">
-<div class="song-title">${song.title}</div>
-<div class="song-views">${song.views}</div>
-</div>
-${song.isCustomCover ? `
-<div class="cover-play-btn-wrapper" onclick="playCustomSong(this, ${JSON.stringify(song).replace(/"/g, '&quot;')})">
-<div class="cover-play-btn">
-<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-</div>
-</div>` : ''}
-</div>
-`;
+    function rowsToSongs(rows) {
+      if (!rows.length) return [];
+      const headers = rows[0];
+      const titleCol = findColumn(headers, ["歌曲名稱", "歌曲", "歌名", "title", "song", "name"]);
+      const viewsCol = findColumn(headers, ["熱門標籤", "views", "標籤", "分類", "描述"]);
+      const coverCol = findColumn(headers, ["封面樣式", "封面圖片網址", "coverclass", "coverurl", "封面"]);
+      const videoCol = findColumn(headers, ["youtube網址", "youtube連結", "影片網址", "影片連結", "video", "videoid", "youtubeid", "embedcode", "連結", "網址"]);
+      const productCol = findColumn(headers, ["產品網址", "產品連結", "外部連結", "producturl", "link", "url"]);
 
-card.dataset.embed = song.embedCode;
-card.dataset.productUrl = song.productUrl;
-container.appendChild(card);
-});
+      const dataRows = (titleCol >= 0 && (videoCol >= 0 || productCol >= 0)) ? rows.slice(1) : rows;
+      const titleIndex = titleCol >= 0 ? titleCol : 0;
+      const videoIndex = videoCol >= 0 ? videoCol : 3;
+      const productIndex = productCol >= 0 ? productCol : 4;
 
-const cards = document.querySelectorAll('.reel-card');
-const totalOriginal = songDatabase.length;
+      return dataRows.map(row => {
+        const title = String(row[titleIndex] || "").trim();
+        const videoValue = String(row[videoIndex] || "").trim();
+        const videoId = extractYouTubeId(videoValue);
+        const productUrl = productCol >= 0 ? String(row[productIndex] || "").trim() : "";
 
-if (cards.length > 0) {
-const randomOffset = Math.floor(Math.random() * totalOriginal);
-const targetIndex = totalOriginal + randomOffset;
-container.scrollTop = cards[targetIndex].offsetTop;
-}
+        if (!title || (!videoId && !productUrl)) return null;
 
-let scrollTimeout;
-container.addEventListener('scroll', () => {
-clearTimeout(scrollTimeout);
-scrollTimeout = setTimeout(() => {
-const singleBlockHeight = cards[0].offsetHeight * totalOriginal;
+        const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
+        let coverUrl = "", coverClass = "";
 
-if (container.scrollTop < singleBlockHeight * 0.4) {
-container.style.scrollSnapType = 'none';
-container.scrollTop += singleBlockHeight;
-setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-}
-else if (container.scrollTop > singleBlockHeight * 2.3) {
-container.style.scrollSnapType = 'none';
-container.scrollTop -= singleBlockHeight;
-setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
-}
-}, 100);
-}, { passive: true });
+        if (coverValue.startsWith("http://") || coverValue.startsWith("https://")) {
+          coverUrl = coverValue;
+        } else {
+          coverClass = coverValue;
+        }
 
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(entry => {
-const card = entry.target;
-const wrapper = card.querySelector('.video-wrapper');
-const hasCover = card.dataset.hasCover === "true";
+        return {
+          title,
+          views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
+          isCustomCover: true,
+          coverClass,
+          coverUrl,
+          productUrl,
+          embedCode: videoId ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` : ""
+        };
+      }).filter(Boolean);
+    }
 
-if (entry.isIntersecting) {
-const coverLayer = card.querySelector('.custom-cover-layer');
-if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
-return;
-}
+    async function initReelWidget() {
+      const container = document.getElementById('reelContainer');
+      try {
+        const res = await fetch(CSV_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("CSV 載入失敗");
+        const text = await res.text();
+        const songs = rowsToSongs(parseCSV(text.replace(/^\uFEFF/, "")));
+        if (!songs.length) throw new Error("無有效歌曲資料");
 
-if (!wrapper.hasChildNodes()) {
-wrapper.innerHTML = card.dataset.embed;
-}
-} else {
-if (!hasCover || (hasCover && card.querySelector('.custom-cover-layer')?.classList.contains('fade-out'))) {
-wrapper.innerHTML = '';
-}
-}
-});
-}, { threshold: 0.6 });
+        const shuffled = [...songs].sort(() => 0.5 - Math.random());
+        const infinite = [...shuffled, ...shuffled, ...shuffled];
 
-cards.forEach(card => {
-observer.observe(card);
-});
-}
+        container.innerHTML = '';
+        infinite.forEach(song => {
+          const card = document.createElement('div');
+          card.className = 'reel-card';
+          let coverHtml = song.isCustomCover ? `<div class="custom-cover-layer${song.coverClass ? ' ' + song.coverClass : ''}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl}')"` : ""}></div>` : '';
 
-function playCustomSong(btnWrapper, songObj) {
-recordUserClick(songObj);
+          card.innerHTML = `
+            ${coverHtml}
+            <div class="video-wrapper"></div>
+            <div class="overlay-info">
+              <div class="song-text-group">
+                <div class="song-title">${song.title}</div>
+                <div class="song-views">${song.views}</div>
+              </div>
+              ${song.isCustomCover ? `
+              <div class="cover-play-btn-wrapper" onclick="playWidgetSong(this)">
+                <div class="cover-play-btn">
+                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+              </div>` : ''}
+            </div>
+          `;
+          card.dataset.embed = song.embedCode;
+          card.dataset.productUrl = song.productUrl;
+          container.appendChild(card);
+        });
 
-const card = btnWrapper.closest('.reel-card');
-const wrapper = card.querySelector('.video-wrapper');
-const coverLayer = card.querySelector('.custom-cover-layer');
-const embedCode = card.dataset.embed;
-const productUrl = card.dataset.productUrl;
+        const cards = container.querySelectorAll('.reel-card');
+        const total = songs.length;
+        if (cards.length) container.scrollTop = cards[total].offsetTop;
 
-if (embedCode) {
-if (!wrapper.hasChildNodes()) {
-wrapper.innerHTML = embedCode;
-}
-if (coverLayer) {
-coverLayer.classList.add('fade-out');
-}
-} else if (productUrl) {
-window.open(productUrl, '_blank');
-} else {
-alert("此項目目前沒有設定播放影片或產品連結");
-}
-}
+        let timeout;
+        container.addEventListener('scroll', () => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            const h = cards[0].offsetHeight * total;
+            if (container.scrollTop < h * 0.4) {
+              container.style.scrollSnapType = 'none';
+              container.scrollTop += h;
+              setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+            } else if (container.scrollTop > h * 2.3) {
+              container.style.scrollSnapType = 'none';
+              container.scrollTop -= h;
+              setTimeout(() => { container.style.scrollSnapType = 'y mandatory'; }, 50);
+            }
+          }, 100);
+        }, { passive: true });
 
-window.onload = async function () {
-const container = document.getElementById("reelContainer");
-try {
-const songDatabase = await loadSongDatabase();
-initReels(songDatabase);
-} catch (error) {
-console.error("資料載入失敗：", error);
-container.innerHTML = `<div style="color:#fff;padding:24px;text-align:center;">資料載入失敗<br><small>${String(error.message || error)}</small><br><button onclick="location.reload()" style="margin-top:16px;padding:10px 18px;">重新載入</button></div>`;
-}
-};
-</script>
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const card = entry.target;
+            const wrapper = card.querySelector('.video-wrapper');
+            const cover = card.querySelector('.custom-cover-layer');
+            if (entry.isIntersecting) {
+              if (cover && !cover.classList.contains('fade-out')) return;
+              if (!wrapper.hasChildNodes()) wrapper.innerHTML = card.dataset.embed;
+            } else {
+              if (!cover || cover.classList.contains('fade-out')) wrapper.innerHTML = '';
+            }
+          });
+        }, { threshold: 0.6 });
+
+        cards.forEach(c => observer.observe(c));
+
+      } catch (e) {
+        container.innerHTML = `<div style="color:#fff;padding:20px;text-align:center;font-size:13px;">影音牆載入失敗</div>`;
+      }
+    }
+
+    function playWidgetSong(btnWrapper) {
+      const card = btnWrapper.closest('.reel-card');
+      const wrapper = card.querySelector('.video-wrapper');
+      const cover = card.querySelector('.custom-cover-layer');
+      if (card.dataset.embed) {
+        if (!wrapper.hasChildNodes()) wrapper.innerHTML = card.dataset.embed;
+        if (cover) cover.classList.add('fade-out');
+      } else if (card.dataset.productUrl) {
+        window.open(card.dataset.productUrl, '_blank');
+      }
+    }
+
+    function checkAndUpdateContext() {
+      const hour = new Date().getHours();
+      let currentPeriod = '';
+      if (hour >= 5 && hour < 9) currentPeriod = 'morning';
+      else if (hour >= 9 && hour < 18) currentPeriod = 'day';
+      else currentPeriod = 'night';
+
+      if (currentPeriod !== lastTimePeriod) {
+        lastTimePeriod = currentPeriod;
+        applyTimeBasedContext(hour);
+      }
+    }
+
+    function applyTimeBasedContext(hour) {
+      const grid = document.getElementById('dynamicContentGrid');
+      const badge = document.getElementById('timeBadge');
+      const title = document.getElementById('contextTitle');
+      const desc = document.getElementById('contextDesc');
+      const trafficCard = document.getElementById('trafficCard');
+      const financeCard = document.getElementById('financeCard');
+
+      if (hour >= 5 && hour < 9) {
+        trafficCard.style.display = 'block';
+        financeCard.style.display = 'block';
+        badge.innerText = '清晨甦醒';
+        badge.className = 'text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md font-bold';
+        title.innerText = '早安！開啟美好的一天';
+        desc.innerText = '出門前掌握路況與台股動態，掌握致勝先機。';
+
+        grid.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
+            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div>
+                <div class="text-base font-bold text-slate-900">做早安圖</div>
+                <div class="text-xs text-slate-500 font-semibold">一鍵產生問候圖卡</div>
+              </div>
+            </a>
+            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
+            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
+              <div>
+                <div class="text-base font-bold text-slate-900">新聞劃重點</div>
+                <div class="text-xs text-slate-500 font-semibold">捷運閱讀時事重點</div>
+              </div>
+            </a>
+            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+          </div>
+        `;
+      } else if (hour >= 9 && hour < 18) {
+        trafficCard.style.display = 'block';
+        financeCard.style.display = 'block';
+        badge.innerText = '白天高效';
+        badge.className = 'text-xs bg-sky-100 text-sky-800 px-2.5 py-1 rounded-md font-bold';
+        title.innerText = '專注當下，保持步調';
+        desc.innerText = '台股盤中與即時路況隨時掌握，預祝投資與工作一切順利。';
+
+        grid.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
+            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
+              <div>
+                <div class="text-base font-bold text-slate-900">新聞劃重點</div>
+                <div class="text-xs text-slate-500 font-semibold">掌握最新時事趨勢</div>
+              </div>
+            </a>
+            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-box">
+            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div>
+                <div class="text-base font-bold text-slate-900">原創工具箱</div>
+                <div class="text-xs text-slate-500 font-semibold">生活好用數位助手</div>
+              </div>
+            </a>
+            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+          </div>
+        `;
+      } else {
+        trafficCard.style.display = 'none';
+        financeCard.style.display = 'none';
+        badge.innerText = '晚間放鬆';
+        badge.className = 'text-xs bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-md font-bold';
+        title.innerText = '今天辛苦了，好好休息';
+        desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
+
+        grid.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-music">
+            <a href="https://myezlife.com/goldmelody.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-music"></i></div>
+              <div>
+                <div class="text-base font-bold text-slate-900">好歌一直聽</div>
+                <div class="text-xs text-slate-500 font-semibold">放鬆心靈美妙旋律</div>
+              </div>
+            </a>
+            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
+            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div>
+                <div class="text-base font-bold text-slate-900">做早安圖</div>
+                <div class="text-xs text-slate-500 font-semibold">預作明日問候圖卡</div>
+              </div>
+            </a>
+            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+          </div>
+        `;
+      }
+    }
+
+    function updateDateTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+
+      const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      document.getElementById('currentDate').innerText = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+      document.getElementById('currentDay').innerText = days[now.getDay()];
+    }
+
+    async function fetchWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.0478&longitude=121.5319&current_weather=true');
+        const data = await res.json();
+        if (data && data.current_weather) {
+          const temp = Math.round(data.current_weather.temperature);
+          document.getElementById('weatherTemp').innerText = `${temp}°C`;
+          document.getElementById('weatherDesc').innerText = '晴朗';
+        }
+      } catch (e) {
+        document.getElementById('weatherTemp').innerText = '24°C';
+        document.getElementById('weatherDesc').innerText = '舒適';
+      }
+    }
+
+    async function fetchStockMarket() {
+      const badge = document.getElementById('taiexBadge');
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const currentTimeNum = hour * 100 + minute;
+      const isOpenMarket = (currentTimeNum >= 900 && currentTimeNum <= 1335);
+
+      if (!isOpenMarket) {
+        badge.className = 'text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1';
+        badge.innerHTML = `<i class="fa-solid fa-moon text-indigo-500"></i> 今日收盤`;
+        return;
+      }
+
+      try {
+        const res = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d');
+        const data = await res.json();
+        const meta = data.chart.result[0].meta;
+        const currentPrice = meta.regularMarketPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const previousClose = meta.chartPreviousClose || meta.previousClose;
+        const change = meta.regularMarketPrice - previousClose;
+        const changePercent = (change / previousClose) * 100;
+        
+        const isUp = change >= 0;
+        const colorClass = isUp ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+        const icon = isUp ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
+        const sign = isUp ? '+' : '';
+
+        badge.className = `text-xs px-2.5 py-1 rounded-lg font-black flex items-center gap-1 ${colorClass}`;
+        badge.innerHTML = `${icon} ${currentPrice} (${sign}${changePercent.toFixed(2)}%)`;
+      } catch (e) {
+        badge.className = 'text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1';
+        badge.innerHTML = `<i class="fa-solid fa-chart-line text-rose-500"></i> 即時看盤`;
+      }
+    }
+  </script>
 </body>
 </html>
