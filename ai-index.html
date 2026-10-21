@@ -42,10 +42,10 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
     }
 
-    /* 🌟 內嵌影音牆專用樣式（調整為適合區塊內捲動與點擊） */
+    /* 🌟 內嵌影音牆專用樣式 */
     .embedded-reel-frame {
       width: 100%;
-      height: 420px; /* 在首頁中以舒適的高度呈現 */
+      height: 420px;
       border-radius: 16px;
       overflow: hidden;
       position: relative;
@@ -174,7 +174,7 @@
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen pb-16 flex flex-col justify-between select-none">
 
-  <!-- 🌟 全站主要容器（可自由拖曳排序大區塊） -->
+  <!-- 🌟 全站主要容器（可自由拖曳排序大區塊，並自動記錄儲存狀態） -->
   <main id="mainContainer" class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
     <!-- 1️⃣ 頂部極簡綠色 Banner (左天氣 · 中日期時間 · 右星期) -->
@@ -228,7 +228,158 @@
       </div>
     </div>
 
-    <!-- 🌟 3️⃣ 新增專區：雲端影音牆速覽區塊（完美內嵌您原本首頁的功能） -->
+    <!-- 3️⃣ 專區一：即時交通與路況中心 -->
+    <div id="trafficCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="traffic">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
+          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-road text-emerald-600 text-base"></i> 即時交通與路況中心
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold">路況正常</span>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 交通按鈕清單 -->
+      <div id="trafficList" class="space-y-3" data-list-id="trafficList">
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-1968">
+          <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-car"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">國道即時路況</div>
+              <div class="text-xs text-slate-500 font-semibold">1968 高速公路局</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-168">
+          <a href="https://168.thb.gov.tw" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-route"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">全台省道路況</div>
+              <div class="text-xs text-slate-500 font-semibold">168 即時路況網</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-youbike">
+          <a href="https://youbike.com.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-person-biking"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">YouBike 站點車位</div>
+              <div class="text-xs text-slate-500 font-semibold">微笑單車即時查詢</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-bus">
+          <a href="https://ebus.gov.taipei/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-bus"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">即時公車動態</div>
+              <div class="text-xs text-slate-500 font-semibold">公車到站時間查詢</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-tra">
+          <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-train-subway"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">台鐵時刻查詢</div>
+              <div class="text-xs text-slate-500 font-semibold">火車時刻與車次動態</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-thsrc">
+          <a href="https://www.thsrc.com.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-gauge-high"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">高鐵時刻與營運</div>
+              <div class="text-xs text-slate-500 font-semibold">台灣高鐵官方網站</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4️⃣ 專區二：台股大盤與財經快報 -->
+    <div id="financeCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="finance">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></div>
+          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-rose-600 text-base"></i> 台股行情與財經快報
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div id="taiexBadge" class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1">
+            <i class="fa-solid fa-spinner animate-spin"></i> 載入中...
+          </div>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 財經按鈕清單 -->
+      <div id="financeList" class="space-y-3" data-list-id="financeList">
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-yahoo">
+          <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-chart-line"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">Yahoo 股市行情</div>
+              <div class="text-xs text-slate-500 font-semibold">大盤走勢與個股報價</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="btn-cnyes">
+          <a href="https://www.cnyes.com/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
+            <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
+            <div>
+              <div class="text-base font-bold text-slate-900">鉅亨網財經新聞</div>
+              <div class="text-xs text-slate-500 font-semibold">即時財經要聞與分析</div>
+            </div>
+          </a>
+          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5️⃣ 動態情境內容區塊 -->
+    <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="dynamic">
+      <div class="flex items-center justify-between px-1">
+        <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles text-emerald-600 text-sm"></i> 當前推薦工具
+        </h2>
+        <div class="flex items-center gap-2">
+          <span id="timeBadge" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md font-bold">清晨甦醒</span>
+          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
+        </div>
+      </div>
+
+      <div id="dynamicContentGrid" class="space-y-3">
+        <!-- JavaScript 動態渲染 -->
+      </div>
+    </div>
+
+    <!-- 🌟 6️⃣ 雲端影音牆速覽區塊（已成功移至廣告區上方！） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="reelWidget">
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2">
@@ -253,158 +404,7 @@
       </div>
     </div>
 
-    <!-- 4️⃣ 專區一：即時交通與路況中心 -->
-    <div id="trafficCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="traffic">
-      <div class="flex items-center justify-between px-1">
-        <div class="flex items-center gap-2">
-          <div class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></div>
-          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-road text-emerald-600 text-base"></i> 即時交通與路況中心
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold">路況正常</span>
-          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
-            <i class="fa-solid fa-grip-vertical"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 交通按鈕清單 -->
-      <div id="trafficList" class="space-y-3">
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-car"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">國道即時路況</div>
-              <div class="text-xs text-slate-500 font-semibold">1968 高速公路局</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://168.thb.gov.tw" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-route"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">全台省道路況</div>
-              <div class="text-xs text-slate-500 font-semibold">168 即時路況網</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://youbike.com.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-person-biking"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">YouBike 站點車位</div>
-              <div class="text-xs text-slate-500 font-semibold">微笑單車即時查詢</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://ebus.gov.taipei/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-bus"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">即時公車動態</div>
-              <div class="text-xs text-slate-500 font-semibold">公車到站時間查詢</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-train-subway"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">台鐵時刻查詢</div>
-              <div class="text-xs text-slate-500 font-semibold">火車時刻與車次動態</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://www.thsrc.com.tw/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-gauge-high"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">高鐵時刻與營運</div>
-              <div class="text-xs text-slate-500 font-semibold">台灣高鐵官方網站</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5️⃣ 專區二：台股大盤與財經快報 -->
-    <div id="financeCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="finance">
-      <div class="flex items-center justify-between px-1">
-        <div class="flex items-center gap-2">
-          <div class="w-3 h-3 rounded-full bg-rose-500 animate-pulse"></div>
-          <span class="text-sm font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-chart-line text-rose-600 text-base"></i> 台股行情與財經快報
-          </span>
-        </div>
-        <div class="flex items-center gap-2">
-          <div id="taiexBadge" class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1">
-            <i class="fa-solid fa-spinner animate-spin"></i> 載入中...
-          </div>
-          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
-            <i class="fa-solid fa-grip-vertical"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 財經按鈕清單 -->
-      <div id="financeList" class="space-y-3">
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-chart-line"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">Yahoo 股市行情</div>
-              <div class="text-xs text-slate-500 font-semibold">大盤走勢與個股報價</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <a href="https://www.cnyes.com/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
-            <div>
-              <div class="text-base font-bold text-slate-900">鉅亨網財經新聞</div>
-              <div class="text-xs text-slate-500 font-semibold">即時財經要聞與分析</div>
-            </div>
-          </a>
-          <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6️⃣ 動態情境內容區塊 -->
-    <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="dynamic">
-      <div class="flex items-center justify-between px-1">
-        <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
-          <i class="fa-solid fa-wand-magic-sparkles text-emerald-600 text-sm"></i> 當前推薦工具
-        </h2>
-        <div class="flex items-center gap-2">
-          <span id="timeBadge" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md font-bold">清晨甦醒</span>
-          <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
-            <i class="fa-solid fa-grip-vertical"></i>
-          </div>
-        </div>
-      </div>
-
-      <div id="dynamicContentGrid" class="space-y-3">
-        <!-- JavaScript 動態渲染 -->
-      </div>
-    </div>
-
-    <!-- 7️⃣ Google AdSense 廣告區塊 -->
+    <!-- 7️⃣ Google AdSense 廣告區塊（已移至影音牆下方） -->
     <div class="draggable-section bg-white border border-slate-200/90 rounded-2xl p-3 text-center space-y-2 shadow-sm" data-id="ads">
       <div class="flex items-center justify-between px-1">
         <p class="text-xs text-slate-400 font-medium">贊助商廣告</p>
@@ -428,38 +428,74 @@
   <script>
     let lastTimePeriod = '';
 
-    // 初始化 Sortable.js 實現拖曳功能
+    // 初始化 Sortable.js 實現拖曳功能並透過 LocalStorage 自動記憶位置
     document.addEventListener('DOMContentLoaded', () => {
-      new Sortable(document.getElementById('mainContainer'), {
+      
+      // 1. 主容器區塊排序與記憶
+      const mainContainer = document.getElementById('mainContainer');
+      const savedMainOrder = localStorage.getItem('myezlife_main_order');
+      if (savedMainOrder) {
+        try {
+          const orderIds = JSON.parse(savedMainOrder);
+          orderIds.forEach(id => {
+            const el = mainContainer.querySelector(`[data-id="${id}"]`);
+            if (el) mainContainer.appendChild(el);
+          });
+        } catch(e) {}
+      }
+
+      new Sortable(mainContainer, {
         handle: '.section-handle',
         animation: 150,
         ghostClass: 'sortable-ghost',
-        dragClass: 'sortable-drag'
+        dragClass: 'sortable-drag',
+        onStore: function (evt) {
+          const order = this.toArray();
+          localStorage.setItem('myezlife_main_order', JSON.stringify(order));
+        }
       });
 
-      new Sortable(document.getElementById('trafficList'), {
-        handle: '.btn-handle',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        dragClass: 'sortable-drag'
-      });
-
-      new Sortable(document.getElementById('financeList'), {
-        handle: '.btn-handle',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        dragClass: 'sortable-drag'
-      });
+      // 2. 交通按鈕排序與記憶
+      initSortableList('trafficList', 'myezlife_traffic_order');
+      // 3. 財經按鈕排序與記憶
+      initSortableList('financeList', 'myezlife_finance_order');
 
       checkAndUpdateContext();
       updateDateTime();
       fetchWeather();
       fetchStockMarket();
-      initReelWidget(); // 🌟 初始化內嵌影音牆
+      initReelWidget();
 
       setInterval(checkAndUpdateContext, 10000);
       setInterval(updateDateTime, 1000);
     });
+
+    function initSortableList(listId, storageKey) {
+      const listEl = document.getElementById(listId);
+      if (!listEl) return;
+
+      const savedOrder = localStorage.getItem(storageKey);
+      if (savedOrder) {
+        try {
+          const orderIds = JSON.parse(savedOrder);
+          orderIds.forEach(id => {
+            const el = listEl.querySelector(`[data-id="${id}"]`);
+            if (el) listEl.appendChild(el);
+          });
+        } catch(e) {}
+      }
+
+      new Sortable(listEl, {
+        handle: '.btn-handle',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        dragClass: 'sortable-drag',
+        onStore: function () {
+          const order = this.toArray();
+          localStorage.setItem(storageKey, JSON.stringify(order));
+        }
+      });
+    }
 
     // 🌟 內嵌影音牆專用載入與解析邏輯
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
@@ -607,7 +643,6 @@
         const total = songs.length;
         if (cards.length) container.scrollTop = cards[total].offsetTop;
 
-        // 捲動循環監聽
         let timeout;
         container.addEventListener('scroll', () => {
           clearTimeout(timeout);
@@ -625,7 +660,6 @@
           }, 100);
         }, { passive: true });
 
-        // 視圖進入載入影片
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             const card = entry.target;
@@ -692,7 +726,7 @@
         icon.className = 'w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0';
 
         grid.innerHTML = `
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
             <a href="https://myezlife.com/ai-greeting-app/" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
               <div>
@@ -702,7 +736,7 @@
             </a>
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
           </div>
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
             <a href="https://myezlife.com/index_news.html" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
               <div>
@@ -724,7 +758,7 @@
         icon.className = 'w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl shrink-0';
 
         grid.innerHTML = `
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
             <a href="https://myezlife.com/index_news.html" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-newspaper"></i></div>
               <div>
@@ -734,7 +768,7 @@
             </a>
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
           </div>
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-box">
             <a href="https://myezlife.com/ai-greeting-app/" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
               <div>
@@ -756,7 +790,7 @@
         icon.className = 'w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl shrink-0';
 
         grid.innerHTML = `
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-music">
             <a href="https://myezlife.com/goldmelody.html" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-music"></i></div>
               <div>
@@ -766,7 +800,7 @@
             </a>
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
           </div>
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
             <a href="https://myezlife.com/ai-greeting-app/" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
               <div>
