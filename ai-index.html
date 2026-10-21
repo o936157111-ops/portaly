@@ -62,14 +62,14 @@
       </div>
     </div>
 
-    <!-- 🌟 晨間必備 APP (直達車) -->
+    <!-- 🌟 常用 APP 儀表板清單 -->
     <div class="space-y-2.5">
       <div class="flex items-center justify-between px-1">
         <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
-          <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP
+          <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP 直達車
         </h2>
-        <button onclick="openAddModal()" class="text-xs bg-[#00B900] hover:bg-[#009900] text-white font-bold px-2.5 py-1 rounded-lg transition flex items-center gap-1 shadow-sm">
-          <i class="fa-solid fa-plus"></i> 自訂 APP
+        <button onclick="openAddModal()" class="text-xs bg-[#00B900] hover:bg-[#009900] text-white font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1 shadow-sm">
+          <i class="fa-solid fa-plus"></i> 新增 APP
         </button>
       </div>
 
@@ -119,49 +119,66 @@
 
   </div>
 
-  <!-- 🌟 新增 APP 彈跳視窗 Modal (內建快速選擇清單) -->
+  <!-- 🌟 新增 APP 彈跳視窗 (改成「點擊圖示直接加入」，完全不用查網址) -->
   <div id="addModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-xl">
       <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="font-bold text-slate-800 text-sm">自訂新增 APP 直達車</h3>
+        <h3 class="font-bold text-slate-800 text-sm">選擇要加入的常用 APP</h3>
         <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
       
-      <div class="space-y-3">
-        <!-- 快速選擇下拉選單 -->
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">⚡ 快速選擇常用 APP</label>
-          <select id="presetSelect" onchange="fillPresetApp()" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-            <option value="">-- 請選擇常見 APP (免手動輸入) --</option>
-            <option value="LINE|line://|https://line.me/tw/|fa-line|bg-[#00B900]|true">LINE</option>
-            <option value="WhatsApp|whatsapp://|https://web.whatsapp.com/|fa-whatsapp|bg-[#25D366]|true">WhatsApp</option>
-            <option value="Duolingo|duolingo://|https://www.duolingo.com/|fa-language|bg-emerald-500|false">Duolingo (多鄰國)</option>
-            <option value="YouTube|youtube://|https://www.youtube.com/|fa-youtube|bg-rose-600|true">YouTube</option>
-            <option value="Facebook|fb://|https://www.facebook.com/|fa-facebook|bg-blue-600|true">Facebook (FB)</option>
-            <option value="Instagram|instagram://|https://www.instagram.com/|fa-instagram|bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600|true">Instagram (IG)</option>
-            <option value="Google 地圖|com.google.android.apps.maps://|https://maps.google.com/|fa-map-location-dot|bg-emerald-600|false">Google 地圖</option>
-            <option value="Gmail|googlegmail://|https://mail.google.com/|fa-envelope|bg-rose-500|false">Gmail</option>
-            <option value="Spotify|spotify://|https://open.spotify.com/|fa-spotify|bg-green-500|true">Spotify 音樂</option>
-          </select>
-        </div>
+      <p class="text-xs text-slate-500">點擊下方任一 APP 圖示，即可直接加入您的晨間儀表板：</p>
 
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">APP 名稱</label>
-          <input type="text" id="shortcutName" placeholder="例如：Instagram" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">喚起連結 (Deep Link)</label>
-          <input type="text" id="shortcutUrl" placeholder="例如：instagram://" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">備用網址 (Fallback Web)</label>
-          <input type="text" id="shortcutFallback" placeholder="例如：https://www.instagram.com" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
-        </div>
+      <!-- 預設常用 APP 快速點選清單 -->
+      <div class="grid grid-cols-3 gap-2 py-1 max-h-60 overflow-y-auto">
+        <button onclick="addPresetApp('LINE', 'line://', 'https://line.me/tw/', 'fa-line', 'bg-[#00B900]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-[#00B900] text-white flex items-center justify-center text-base"><i class="fa-brands fa-line"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">LINE</span>
+        </button>
+
+        <button onclick="addPresetApp('WhatsApp', 'whatsapp://', 'https://web.whatsapp.com/', 'fa-whatsapp', 'bg-[#25D366]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center text-base"><i class="fa-brands fa-whatsapp"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">WhatsApp</span>
+        </button>
+
+        <button onclick="addPresetApp('Duolingo', 'duolingo://', 'https://www.duolingo.com/', 'fa-language', 'bg-emerald-500', false)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-base"><i class="fa-solid fa-language"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">多鄰國</span>
+        </button>
+
+        <button onclick="addPresetApp('YouTube', 'youtube://', 'https://www.youtube.com/', 'fa-youtube', 'bg-rose-600', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center text-base"><i class="fa-brands fa-youtube"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">YouTube</span>
+        </button>
+
+        <button onclick="addPresetApp('Facebook', 'fb://', 'https://www.facebook.com/', 'fa-facebook', 'bg-blue-600', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-base"><i class="fa-brands fa-facebook"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">Facebook</span>
+        </button>
+
+        <button onclick="addPresetApp('Instagram', 'instagram://', 'https://www.instagram.com/', 'fa-instagram', 'bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-base"><i class="fa-brands fa-instagram"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">Instagram</span>
+        </button>
+
+        <button onclick="addPresetApp('Google 地圖', 'com.google.android.apps.maps://', 'https://maps.google.com/', 'fa-map-location-dot', 'bg-emerald-600', false)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-base"><i class="fa-solid fa-map-location-dot"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">Google地圖</span>
+        </button>
+
+        <button onclick="addPresetApp('Gmail', 'googlegmail://', 'https://mail.google.com/', 'fa-envelope', 'bg-rose-500', false)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center text-base"><i class="fa-solid fa-envelope"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">Gmail</span>
+        </button>
+
+        <button onclick="addPresetApp('Spotify', 'spotify://', 'https://open.spotify.com/', 'fa-spotify', 'bg-green-500', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+          <div class="w-8 h-8 rounded-lg bg-green-500 text-white flex items-center justify-center text-base"><i class="fa-brands fa-spotify"></i></div>
+          <span class="text-[11px] font-bold text-slate-700">Spotify</span>
+        </button>
       </div>
 
-      <div class="flex gap-2 pt-2">
-        <button onclick="closeAddModal()" class="flex-1 bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl text-xs">取消</button>
-        <button onclick="saveNewShortcut()" class="flex-1 bg-[#00B900] hover:bg-[#009900] text-white font-bold py-2.5 rounded-xl text-xs shadow-sm">確認新增</button>
+      <div class="pt-2">
+        <button onclick="closeAddModal()" class="w-full bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl text-xs">關閉視窗</button>
       </div>
     </div>
   </div>
@@ -192,7 +209,7 @@
         div.className = 'relative group bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center gap-1.5 hover:border-emerald-400 transition';
         
         div.innerHTML = `
-          <button onclick="deleteShortcut(${index})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm" title="刪除">
+          <button onclick="deleteShortcut(${index})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm" title="移除">
             <i class="fa-solid fa-xmark"></i>
           </button>
           
@@ -218,41 +235,24 @@
     }
 
     function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-    function closeAddModal() { 
-      document.getElementById('addModal').classList.add('hidden');
-      document.getElementById('shortcutName').value = '';
-      document.getElementById('shortcutUrl').value = '';
-      document.getElementById('shortcutFallback').value = '';
-      document.getElementById('presetSelect').value = '';
-    }
+    function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
 
-    // 選擇預設下拉選單時自動填入
-    function fillPresetApp() {
-      const select = document.getElementById('presetSelect');
-      const val = select.value;
-      if (!val) return;
-      const parts = val.split('|');
-      document.getElementById('shortcutName').value = parts[0];
-      document.getElementById('shortcutUrl').value = parts[1];
-      document.getElementById('shortcutFallback').value = parts[2];
-      window.tempIcon = parts[3];
-      window.tempBg = parts[4];
-      window.tempBrand = parts[5] === 'true';
-    }
-
-    function saveNewShortcut() {
-      const name = document.getElementById('shortcutName').value.trim();
-      let url = document.getElementById('shortcutUrl').value.trim();
-      let fallback = document.getElementById('shortcutFallback').value.trim();
-      if (!name || !url) { alert('請填寫完整名稱與連結！'); return; }
+    // 點擊圖示直接新增，零門檻免查網址！
+    function addPresetApp(name, url, fallback, icon, bg, brand) {
+      // 檢查是否已經存在
+      const exists = userShortcuts.some(s => s.name === name);
+      if (exists) {
+        alert(`「${name}」已經在您的儀表板上囉！`);
+        return;
+      }
 
       userShortcuts.push({ 
         name: name, 
         url: url, 
-        fallback: fallback || url, 
-        icon: window.tempIcon || 'fa-globe', 
-        bg: window.tempBg || 'bg-emerald-600',
-        brand: window.tempBrand || false
+        fallback: fallback, 
+        icon: icon, 
+        bg: bg, 
+        brand: brand 
       });
       localStorage.setItem('my_morning_apps', JSON.stringify(userShortcuts));
       renderShortcuts();
