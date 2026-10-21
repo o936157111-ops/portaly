@@ -21,7 +21,6 @@
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* 編輯模式下的輕微晃動特效，增加操作感 */
     .editing .shortcut-card {
       animation: shake 0.5s infinite ease-in-out;
     }
@@ -79,7 +78,6 @@
           <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
             <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP
           </h2>
-          <!-- 編輯模式切換按鈕 -->
           <button onclick="toggleEditMode()" id="editBtn" class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium transition hover:bg-slate-300">
             編輯
           </button>
@@ -151,7 +149,7 @@
           <span class="text-[11px] font-bold text-slate-700">LINE</span>
         </button>
 
-        <button onclick="addPresetApp('WhatsApp', 'whatsapp://', 'https://web.whatsapp.com/', 'fa-whatsapp', 'bg-[#25D366]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
+        <button onclick="addPresetApp('WhatsApp', 'whatsapp://send', 'https://web.whatsapp.com/', 'fa-whatsapp', 'bg-[#25D366]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
           <div class="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center text-base"><i class="fa-brands fa-whatsapp"></i></div>
           <span class="text-[11px] font-bold text-slate-700">WhatsApp</span>
         </button>
@@ -206,7 +204,7 @@
     let defaultShortcuts = [
       { name: 'Duolingo', url: 'duolingo://', fallback: 'https://www.duolingo.com/', icon: 'fa-language', bg: 'bg-emerald-500' },
       { name: 'LINE', url: 'line://', fallback: 'https://line.me/tw/', icon: 'fa-line', brand: true, bg: 'bg-[#00B900]' },
-      { name: 'WhatsApp', url: 'whatsapp://', fallback: 'https://web.whatsapp.com/', icon: 'fa-whatsapp', brand: true, bg: 'bg-[#25D366]' },
+      { name: 'WhatsApp', url: 'whatsapp://send', fallback: 'https://web.whatsapp.com/', icon: 'fa-whatsapp', brand: true, bg: 'bg-[#25D366]' },
       { name: 'YouTube', url: 'youtube://', fallback: 'https://www.youtube.com/', icon: 'fa-youtube', brand: true, bg: 'bg-rose-600' },
       { name: 'FB', url: 'fb://', fallback: 'https://www.facebook.com/', icon: 'fa-facebook', brand: true, bg: 'bg-blue-600' },
       { name: 'IG', url: 'instagram://', fallback: 'https://www.instagram.com/', icon: 'fa-instagram', brand: true, bg: 'bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600' }
@@ -215,7 +213,6 @@
     let userShortcuts = JSON.parse(localStorage.getItem('my_morning_apps')) || defaultShortcuts;
     let isEditing = false;
 
-    // 渲染捷徑 (支援編輯模式開關控制 X 按鈕)
     function renderShortcuts() {
       const grid = document.getElementById('shortcutGrid');
       grid.innerHTML = '';
@@ -235,7 +232,6 @@
         div.className = 'shortcut-card relative bg-white p-3 rounded-2xl border border-slate-200/85 shadow-sm flex flex-col items-center justify-center gap-1.5 hover:border-emerald-400 transition';
         
         div.innerHTML = `
-          <!-- 刪除按鈕：只有在點擊「編輯」後才會出現，平時絕對不會誤觸 -->
           <button onclick="deleteShortcut(${index})" class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-rose-500 text-white rounded-full text-xs flex items-center justify-center shadow-md transition ${isEditing ? 'block' : 'hidden'}" title="移除">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -251,22 +247,25 @@
       });
     }
 
-    // 切換編輯模式
     function toggleEditMode() {
       isEditing = !isEditing;
       renderShortcuts();
     }
 
-    // 點擊直接開啟手機實體 APP (Deep Link)
+    // 🌟 智慧判斷裝置：手機優先喚起實體 APP，電腦則自動導向網頁版
     function openApp(appUrl, webUrl) {
-      if (isEditing) return; // 編輯狀態下點擊不開啟APP
-      const now = Date.now();
-      window.location.href = appUrl;
-      setTimeout(() => {
-        if (Date.now() - now < 2000) {
-          window.location.href = webUrl;
-        }
-      }, 1000);
+      if (isEditing) return;
+
+      // 判斷是否為行動裝置 (手機 / 平板)
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        // 手機端：直接發動 Deep Link 喚起實體 APP
+        window.location.href = appUrl;
+      } else {
+        // 電腦端：直接開啟您習慣使用的網頁版
+        window.open(webUrl, '_blank');
+      }
     }
 
     function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
