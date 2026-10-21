@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>myezlife 晨間行動儀表板</title>
+  <title>myezlife 個人行動生活中樞</title>
 
   <!-- PWA 全螢幕 APP 靈魂設定 -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -77,41 +77,62 @@
       </div>
       <div>
         <div id="contextTitle" class="text-xs font-bold text-slate-800">早安！開啟美好的一天</div>
-        <div id="contextDesc" class="text-[11px] text-slate-500 mt-0.5">出門前掌握路況、公車與台股即時脈動，掌握致勝先機。</div>
+        <div id="contextDesc" class="text-[11px] text-slate-500 mt-0.5">即時路況與台股動態已為您備妥，掌握致勝先機。</div>
       </div>
     </div>
 
-    <!-- 🌟 晨間全方位通勤與財經快報 (路況、大眾運輸、台股行情) -->
+    <!-- 🚗 專區一：即時交通與路況中心 -->
     <div id="trafficCard" class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
           <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-            <i class="fa-solid fa-chart-line text-emerald-600"></i> 通勤路況與台股即時快報
+            <i class="fa-solid fa-road text-emerald-600"></i> 即時交通與路況中心
           </span>
         </div>
-        <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold">市場動態正常</span>
+        <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold">路況正常</span>
       </div>
 
-      <!-- 通勤與股市快捷按鈕 -->
       <div class="grid grid-cols-2 gap-2">
-        <a href="https://tw.stock.yahoo.com/" target="_blank" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold">
-          <i class="fa-solid fa-chart-candlestick text-rose-600"></i> Yahoo 股市行情
-        </a>
-        <a href="https://www.cnyes.com/" target="_blank" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold">
-          <i class="fa-solid fa-newspaper text-sky-600"></i> 鉅亨網財經新聞
-        </a>
-        <a href="https://1968.freeway.gov.tw/" target="_blank" class="bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+        <a href="https://1968.freeway.gov.tw/" target="_blank" class="bg-slate-50 hover:bg-sky-50 hover:text-sky-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-car text-sky-600"></i> 國道即時路況 (1968)
         </a>
-        <a href="https://youbike.com.tw/" target="_blank" class="bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+        <a href="https://168.thb.gov.tw" target="_blank" class="bg-slate-50 hover:bg-amber-50 hover:text-amber-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-route text-amber-600"></i> 全台省道路況 (168)
+        </a>
+        <a href="https://youbike.com.tw/" target="_blank" class="bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-person-biking text-emerald-600"></i> YouBike 站點車位
         </a>
-        <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+        <a href="https://ebus.gov.taipei/" target="_blank" class="bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-bus text-indigo-600"></i> 即時公車動態
+        </a>
+        <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-train-subway text-emerald-600"></i> 台鐵時刻查詢
         </a>
-        <a href="https://www.thsrc.com.tw/" target="_blank" class="bg-slate-50 hover:bg-slate-100 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+        <a href="https://www.thsrc.com.tw/" target="_blank" class="bg-slate-50 hover:bg-orange-50 hover:text-orange-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-gauge-high text-orange-500"></i> 高鐵時刻與營運
+        </a>
+      </div>
+    </div>
+
+    <!-- 📈 專區二：台股行情與財經快報 (獨立分流) -->
+    <div id="financeCard" class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></div>
+          <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-line text-rose-600"></i> 台股行情與財經快報
+          </span>
+        </div>
+        <span class="text-[10px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded-md font-bold">盤勢關注</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <a href="https://tw.stock.yahoo.com/" target="_blank" class="bg-slate-50 hover:bg-rose-50 hover:text-rose-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-chart-candlestick text-rose-600"></i> Yahoo 股市行情
+        </a>
+        <a href="https://www.cnyes.com/" target="_blank" class="bg-slate-50 hover:bg-sky-50 hover:text-sky-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-newspaper text-sky-600"></i> 鉅亨網財經新聞
         </a>
       </div>
     </div>
@@ -144,7 +165,7 @@
   </div>
 
   <footer class="text-center text-[11px] text-slate-400 pt-6">
-    <p>© myezlife.com · 晨間行動儀表板</p>
+    <p>© myezlife.com · 個人行動生活中樞</p>
   </footer>
 
   <script>
@@ -156,14 +177,16 @@
       const desc = document.getElementById('contextDesc');
       const icon = document.getElementById('contextIcon');
       const trafficCard = document.getElementById('trafficCard');
+      const financeCard = document.getElementById('financeCard');
 
       if (hour >= 5 && hour < 9) {
         // 🌅 晨間模式
         trafficCard.style.display = 'block';
+        financeCard.style.display = 'block';
         badge.innerText = '清晨甦醒';
         badge.className = 'text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md font-bold';
         title.innerText = '早安！開啟美好的一天';
-        desc.innerText = '出門前掌握路況、雙鐵與台股行情，掌握致勝先機。';
+        desc.innerText = '出門前掌握路況與台股動態，掌握致勝先機。';
         icon.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
         icon.className = 'w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0';
 
@@ -186,10 +209,11 @@
       } else if (hour >= 9 && hour < 18) {
         // ☀️ 白天模式
         trafficCard.style.display = 'block';
+        financeCard.style.display = 'block';
         badge.innerText = '白天高效';
         badge.className = 'text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-md font-bold';
         title.innerText = '專注當下，保持步調';
-        desc.innerText = '台股盤中與財經動態隨時掌握，預祝投資與工作一切順利。';
+        desc.innerText = '台股盤中與即時路況隨時掌握，預祝投資與工作一切順利。';
         icon.innerHTML = '<i class="fa-solid fa-briefcase"></i>';
         icon.className = 'w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0';
 
@@ -210,8 +234,9 @@
           </a>
         `;
       } else {
-        // 🌙 晚間模式 (隱藏交通快報)
+        // 🌙 晚間模式 (隱藏交通與股市快報，讓畫面乾淨專注於放鬆)
         trafficCard.style.display = 'none';
+        financeCard.style.display = 'none';
         badge.innerText = '晚間放鬆';
         badge.className = 'text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold';
         title.innerText = '今天辛苦了，好好休息';
