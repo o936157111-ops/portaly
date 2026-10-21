@@ -77,29 +77,35 @@
       </div>
       <div>
         <div id="contextTitle" class="text-xs font-bold text-slate-800">早安！開啟美好的一天</div>
-        <div id="contextDesc" class="text-[11px] text-slate-500 mt-0.5">出門前先掌握路況與雙鐵動態，開車騎車請注意安全。</div>
+        <div id="contextDesc" class="text-[11px] text-slate-500 mt-0.5">出門前掌握路況、公車、YouBike與雙鐵，通勤一路順暢。</div>
       </div>
     </div>
 
-    <!-- 🌟 晨間全方位通勤快報 (國道路況 + 公路 168 即時路況 + 雙鐵) -->
+    <!-- 🌟 晨間全方位通勤快報 (開車、騎車、YouBike、公車、雙鐵一次滿足) -->
     <div id="trafficCard" class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
           <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
           <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-            <i class="fa-solid fa-road text-emerald-600"></i> 今日通勤路況與雙鐵快報
+            <i class="fa-solid fa-compass text-emerald-600"></i> 全方位通勤與路況快報
           </span>
         </div>
-        <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold">路況大致順暢</span>
+        <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold">出行順心</span>
       </div>
 
-      <!-- 四個實用快捷按鈕：國道 1968 / 公路局 168 路況 / 台鐵 / 高鐵 -->
+      <!-- 六大通勤快捷按鈕 (3列 x 2行 或 2列 x 3行) -->
       <div class="grid grid-cols-2 gap-2">
         <a href="https://1968.freeway.gov.tw/" target="_blank" class="bg-slate-50 hover:bg-sky-50 hover:text-sky-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-car text-sky-600"></i> 國道即時路況 (1968)
         </a>
         <a href="https://168.thb.gov.tw" target="_blank" class="bg-slate-50 hover:bg-amber-50 hover:text-amber-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-route text-amber-600"></i> 全台省道路況 (168)
+        </a>
+        <a href="https://youbike.com.tw/" target="_blank" class="bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-person-biking text-emerald-600"></i> YouBike 站點車位
+        </a>
+        <a href="https://ebus.gov.taipei/" target="_blank" class="bg-slate-50 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-bus text-indigo-600"></i> 即時公車動態
         </a>
         <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-train-subway text-emerald-600"></i> 台鐵時刻查詢
@@ -157,7 +163,7 @@
         badge.innerText = '清晨甦醒';
         badge.className = 'text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md font-bold';
         title.innerText = '早安！開啟美好的一天';
-        desc.innerText = '出門前先掌握國道與省道路況、雙鐵動態，開車騎車請注意安全。';
+        desc.innerText = '出門前掌握路況、公車、YouBike與雙鐵，通勤一路順暢。';
         icon.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
         icon.className = 'w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0';
 
