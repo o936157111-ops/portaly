@@ -2,39 +2,38 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的晨間行動儀表板</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>myezlife 晨間行動儀表板</title>
 
-  <!-- Tailwind CSS CDN -->
+  <!-- 🌟 PWA 靈魂設定：讓手機完全隱藏瀏覽器網址列與外框，偽裝成真實 APP -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="myezlife">
+  <meta name="theme-color" content="#00B900">
+
+  <!-- Tailwind CSS & FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome 圖示 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      user-select: none; /* 讓手機按壓時更像原生 APP，不出現文字選取框 */
+      -webkit-tap-highlight-color: transparent;
     }
     .fade-in {
       animation: fadeIn 0.4s ease-out forwards;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-    .editing .shortcut-card {
-      animation: shake 0.5s infinite ease-in-out;
-    }
-    @keyframes shake {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(-1deg); }
-      75% { transform: rotate(1deg); }
-      100% { transform: rotate(0deg); }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-12 flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-10 flex flex-col justify-between select-none">
 
-  <div class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
+  <div class="max-w-md mx-auto w-full px-4 pt-4 space-y-4 fade-in">
 
     <!-- 🌟 極簡綠色 Banner：左天氣 · 中(上日下時) · 右星期 -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15">
@@ -71,58 +70,34 @@
       </div>
     </div>
 
-    <!-- 🌟 常用 APP 儀表板清單 -->
-    <div class="space-y-2.5">
-      <div class="flex items-center justify-between px-1">
-        <div class="flex items-center gap-2">
-          <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
-            <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP
-          </h2>
-          <button onclick="toggleEditMode()" id="editBtn" class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium transition hover:bg-slate-300">
-            編輯
-          </button>
-        </div>
-        <button onclick="openAddModal()" class="text-xs bg-[#00B900] hover:bg-[#009900] text-white font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1 shadow-sm">
-          <i class="fa-solid fa-plus"></i> 新增 APP
-        </button>
+    <!-- 🌟 智慧情境提醒區塊（根據時段自動變換） -->
+    <div id="timeContextCard" class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm flex items-center gap-3">
+      <div id="contextIcon" class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0">
+        <i class="fa-solid fa-sun"></i>
       </div>
-
-      <!-- 捷徑網格清單 -->
-      <div id="shortcutGrid" class="grid grid-cols-3 gap-2.5">
-        <!-- JavaScript 動態渲染 -->
+      <div>
+        <div id="contextTitle" class="text-xs font-bold text-slate-800">早安！晨間時光</div>
+        <div id="contextDesc" class="text-[11px] text-slate-500 mt-0.5">氣溫適中，出門前別忘了帶件薄外套。</div>
       </div>
     </div>
 
-    <!-- 🌟 站內原創線上工具 -->
-    <div class="space-y-2 pt-2">
-      <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase px-1 flex items-center gap-1.5">
-        <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 本站精選工具
-      </h2>
-      <div class="grid grid-cols-2 gap-2.5">
-        <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-emerald-500 transition active:scale-95">
-          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-800">做早安圖</div>
-            <div class="text-[10px] text-slate-400">原創背景直出</div>
-          </div>
-        </a>
+    <!-- 🌟 動態情境內容區塊（早中晚自動切換顯示最需要的工具） -->
+    <div class="space-y-2 pt-1">
+      <div class="flex items-center justify-between px-1">
+        <h2 id="sectionTitle" class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
+          <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 當前推薦工具
+        </h2>
+        <span id="timeBadge" class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md font-bold">晨間模式</span>
+      </div>
 
-        <a href="https://myezlife.com/index_news.html" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-sky-400 transition active:scale-95">
-          <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-base">
-            <i class="fa-solid fa-newspaper"></i>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-800">新聞劃重點</div>
-            <div class="text-[10px] text-slate-400">捷運閱讀時事</div>
-          </div>
-        </a>
+      <!-- 核心動態導覽網格 -->
+      <div id="dynamicContentGrid" class="grid grid-cols-2 gap-2.5">
+        <!-- JavaScript 將根據早中晚自動渲染不同內容 -->
       </div>
     </div>
 
     <!-- 💡 Google AdSense 廣告區塊 -->
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-3 text-center space-y-1.5 shadow-sm mt-3">
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-3 text-center space-y-1.5 shadow-sm mt-2">
       <p class="text-[10px] text-slate-400 font-medium">贊助商廣告</p>
       <div class="min-h-[90px] flex items-center justify-center bg-slate-50 rounded-xl overflow-hidden">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
@@ -133,172 +108,99 @@
 
   </div>
 
-  <!-- 🌟 新增 APP 彈跳視窗 -->
-  <div id="addModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-xl">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="font-bold text-slate-800 text-sm">選擇要加入的常用 APP</h3>
-        <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-      </div>
-      
-      <p class="text-xs text-slate-500">點擊下方任一 APP 圖示，即可直接加入您的晨間儀表板：</p>
-
-      <div class="grid grid-cols-3 gap-2 py-1 max-h-60 overflow-y-auto">
-        <button onclick="addPresetApp('LINE', 'line://', 'https://line.me/tw/', 'fa-line', 'bg-[#00B900]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-[#00B900] text-white flex items-center justify-center text-base"><i class="fa-brands fa-line"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">LINE</span>
-        </button>
-
-        <button onclick="addPresetApp('WhatsApp', 'whatsapp://send', 'https://web.whatsapp.com/', 'fa-whatsapp', 'bg-[#25D366]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center text-base"><i class="fa-brands fa-whatsapp"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">WhatsApp</span>
-        </button>
-
-        <button onclick="addPresetApp('Duolingo', 'duolingo://', 'https://www.duolingo.com/', 'fa-language', 'bg-emerald-500', false)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-base"><i class="fa-solid fa-language"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">多鄰國</span>
-        </button>
-
-        <button onclick="addPresetApp('YouTube', 'youtube://', 'https://www.youtube.com/', 'fa-youtube', 'bg-rose-600', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center text-base"><i class="fa-brands fa-youtube"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">YouTube</span>
-        </button>
-
-        <button onclick="addPresetApp('Facebook', 'fb://', 'https://www.facebook.com/', 'fa-facebook', 'bg-blue-600', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-base"><i class="fa-brands fa-facebook"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">Facebook</span>
-        </button>
-
-        <button onclick="addPresetApp('Instagram', 'instagram://', 'https://www.instagram.com/', 'fa-instagram', 'bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white flex items-center justify-center text-base"><i class="fa-brands fa-instagram"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">Instagram</span>
-        </button>
-
-        <button onclick="addPresetApp('Google 地圖', 'com.google.android.apps.maps://', 'https://maps.google.com/', 'fa-map-location-dot', 'bg-emerald-600', false)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-base"><i class="fa-solid fa-map-location-dot"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">Google地圖</span>
-        </button>
-
-        <button onclick="addPresetApp('Gmail', 'googlegmail://', 'https://mail.google.com/', 'fa-envelope', 'bg-rose-500', false)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center text-base"><i class="fa-solid fa-envelope"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">Gmail</span>
-        </button>
-
-        <button onclick="addPresetApp('Spotify', 'spotify://', 'https://open.spotify.com/', 'fa-spotify', 'bg-green-500', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
-          <div class="w-8 h-8 rounded-lg bg-green-500 text-white flex items-center justify-center text-base"><i class="fa-brands fa-spotify"></i></div>
-          <span class="text-[11px] font-bold text-slate-700">Spotify</span>
-        </button>
-      </div>
-
-      <div class="pt-2">
-        <button onclick="closeAddModal()" class="w-full bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl text-xs">關閉視窗</button>
-      </div>
-    </div>
-  </div>
-
   <footer class="text-center text-[11px] text-slate-400 pt-6">
     <p>© myezlife.com · 晨間行動儀表板</p>
   </footer>
 
   <script>
-    let defaultShortcuts = [
-      { name: 'Duolingo', url: 'duolingo://', fallback: 'https://www.duolingo.com/', icon: 'fa-language', bg: 'bg-emerald-500' },
-      { name: 'LINE', url: 'line://', fallback: 'https://line.me/tw/', icon: 'fa-line', brand: true, bg: 'bg-[#00B900]' },
-      { name: 'WhatsApp', url: 'whatsapp://send', fallback: 'https://web.whatsapp.com/', icon: 'fa-whatsapp', brand: true, bg: 'bg-[#25D366]' },
-      { name: 'YouTube', url: 'youtube://', fallback: 'https://www.youtube.com/', icon: 'fa-youtube', brand: true, bg: 'bg-rose-600' },
-      { name: 'FB', url: 'fb://', fallback: 'https://www.facebook.com/', icon: 'fa-facebook', brand: true, bg: 'bg-blue-600' },
-      { name: 'IG', url: 'instagram://', fallback: 'https://www.instagram.com/', icon: 'fa-instagram', brand: true, bg: 'bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600' }
-    ];
+    // 🌟 早中晚自動切換邏輯 (Time-Based Context Switcher)
+    function applyTimeBasedContext() {
+      const hour = new Date().getHours();
+      const grid = document.getElementById('dynamicContentGrid');
+      const badge = document.getElementById('timeBadge');
+      const title = document.getElementById('contextTitle');
+      const desc = document.getElementById('contextDesc');
+      const icon = document.getElementById('contextIcon');
 
-    let userShortcuts = JSON.parse(localStorage.getItem('my_morning_apps')) || defaultShortcuts;
-    let isEditing = false;
+      if (hour >= 5 && hour < 9) {
+        // 🌅 晨間模式 (05:00 - 09:00)
+        badge.innerText = '清晨甦醒';
+        badge.className = 'text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md font-bold';
+        title.innerText = '早安！開啟美好的一天';
+        desc.innerText = '記得先喝一杯溫開水，準備好心情報告今日新聞。';
+        icon.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
+        icon.className = 'w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0';
 
-    function renderShortcuts() {
-      const grid = document.getElementById('shortcutGrid');
-      grid.innerHTML = '';
-
-      if (isEditing) {
-        document.body.classList.add('editing');
-        document.getElementById('editBtn').innerText = '完成';
-        document.getElementById('editBtn').className = "text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-md font-medium transition";
-      } else {
-        document.body.classList.remove('editing');
-        document.getElementById('editBtn').innerText = '編輯';
-        document.getElementById('editBtn').className = "text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium transition hover:bg-slate-300";
-      }
-
-      userShortcuts.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'shortcut-card relative bg-white p-3 rounded-2xl border border-slate-200/85 shadow-sm flex flex-col items-center justify-center gap-1.5 hover:border-emerald-400 transition';
-        
-        div.innerHTML = `
-          <button onclick="deleteShortcut(${index})" class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-rose-500 text-white rounded-full text-xs flex items-center justify-center shadow-md transition ${isEditing ? 'block' : 'hidden'}" title="移除">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          
-          <button onclick="openApp('${item.url}', '${item.fallback || item.url}')" class="flex flex-col items-center justify-center gap-1.5 w-full text-decoration-none text-inherit">
-            <div class="w-11 h-11 rounded-2xl ${item.bg || 'bg-emerald-500'} text-white flex items-center justify-center text-xl shadow-sm">
-              <i class="${item.brand ? 'fa-brands' : 'fa-solid'} ${item.icon || 'fa-mobile-screen'}"></i>
+        grid.innerHTML = `
+          <a href="https://myezlife.com/ai-greeting-app/" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-emerald-500 transition active:scale-95">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-base"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">做早安圖</div>
+              <div class="text-[10px] text-slate-400">一鍵產生問候</div>
             </div>
-            <span class="text-xs font-bold text-slate-800 truncate max-w-full">${item.name}</span>
-          </button>
+          </a>
+          <a href="https://myezlife.com/index_news.html" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-sky-400 transition active:scale-95">
+            <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-base"><i class="fa-solid fa-newspaper"></i></div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">新聞劃重點</div>
+              <div class="text-[10px] text-slate-400">捷運閱讀時事</div>
+            </div>
+          </a>
         `;
-        grid.appendChild(div);
-      });
-    }
+      } else if (hour >= 9 && hour < 18) {
+        // ☀️ 白天模式 (09:00 - 18:00)
+        badge.innerText = '白天高效';
+        badge.className = 'text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-md font-bold';
+        title.innerText = '專注當下，保持步調';
+        desc.innerText = '今日農民曆宜出行、納財，預祝工作與生活順利。';
+        icon.innerHTML = '<i class="fa-solid fa-briefcase"></i>';
+        icon.className = 'w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0';
 
-    function toggleEditMode() {
-      isEditing = !isEditing;
-      renderShortcuts();
-    }
-
-    // 🌟 智慧判斷裝置：手機優先喚起實體 APP，電腦則自動導向網頁版
-    function openApp(appUrl, webUrl) {
-      if (isEditing) return;
-
-      // 判斷是否為行動裝置 (手機 / 平板)
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-      if (isMobile) {
-        // 手機端：直接發動 Deep Link 喚起實體 APP
-        window.location.href = appUrl;
+        grid.innerHTML = `
+          <a href="https://myezlife.com/index_news.html" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-sky-400 transition active:scale-95">
+            <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-base"><i class="fa-solid fa-newspaper"></i></div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">新聞劃重點</div>
+              <div class="text-[10px] text-slate-400">掌握最新趨勢</div>
+            </div>
+          </a>
+          <a href="https://myezlife.com/ai-greeting-app/" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-emerald-500 transition active:scale-95">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-base"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">原創工具箱</div>
+              <div class="text-[10px] text-slate-400">生活好用助手</div>
+            </div>
+          </a>
+        `;
       } else {
-        // 電腦端：直接開啟您習慣使用的網頁版
-        window.open(webUrl, '_blank');
+        // 🌙 晚間模式 (18:00 - 05:00)
+        badge.innerText = '晚間放鬆';
+        badge.className = 'text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold';
+        title.innerText = '今天辛苦了，好好休息';
+        desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
+        icon.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        icon.className = 'w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0';
+
+        grid.innerHTML = `
+          <a href="https://myezlife.com/goldmelody.html" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-purple-400 transition active:scale-95">
+            <div class="w-9 h-9 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-base"><i class="fa-solid fa-music"></i></div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">好歌一直聽</div>
+              <div class="text-[10px] text-slate-400">放鬆心靈旋律</div>
+            </div>
+          </a>
+          <a href="https://myezlife.com/ai-greeting-app/" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-emerald-500 transition active:scale-95">
+            <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-base"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div>
+              <div class="text-xs font-bold text-slate-800">做早安圖</div>
+              <div class="text-[10px] text-slate-400">預作明日圖卡</div>
+            </div>
+          </a>
+        `;
       }
     }
 
-    function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-    function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
-
-    function addPresetApp(name, url, fallback, icon, bg, brand) {
-      const exists = userShortcuts.some(s => s.name === name);
-      if (exists) {
-        alert(`「${name}」已經在您的儀表板上囉！`);
-        return;
-      }
-
-      userShortcuts.push({ 
-        name: name, 
-        url: url, 
-        fallback: fallback, 
-        icon: icon, 
-        bg: bg, 
-        brand: brand 
-      });
-      localStorage.setItem('my_morning_apps', JSON.stringify(userShortcuts));
-      renderShortcuts();
-      closeAddModal();
-    }
-
-    function deleteShortcut(index) {
-      if (confirm('確定要移除這個 APP 嗎？')) {
-        userShortcuts.splice(index, 1);
-        localStorage.setItem('my_morning_apps', JSON.stringify(userShortcuts));
-        renderShortcuts();
-      }
-    }
-
+    // 時間與氣象更新
     function updateDateTime() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -316,25 +218,8 @@
         const data = await res.json();
         if (data && data.current_weather) {
           const temp = Math.round(data.current_weather.temperature);
-          const code = data.current_weather.weathercode;
-          
           document.getElementById('weatherTemp').innerText = `${temp}°C`;
-          
-          let iconHtml = '<i class="fa-solid fa-sun text-amber-300"></i>';
-          let desc = '晴朗';
-          if (code >= 1 && code <= 3) {
-            iconHtml = '<i class="fa-solid fa-cloud-sun text-amber-200"></i>';
-            desc = '多雲';
-          } else if (code >= 45 && code <= 48) {
-            iconHtml = '<i class="fa-solid fa-smog text-slate-200"></i>';
-            desc = '有霧';
-          } else if (code >= 51) {
-            iconHtml = '<i class="fa-solid fa-cloud-rain text-sky-200"></i>';
-            desc = '陣雨';
-          }
-          
-          document.getElementById('weatherIcon').innerHTML = iconHtml;
-          document.getElementById('weatherDesc').innerText = desc;
+          document.getElementById('weatherDesc').innerText = '晴朗';
         }
       } catch (e) {
         document.getElementById('weatherTemp').innerText = '24°C';
@@ -345,7 +230,7 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
     fetchWeather();
-    renderShortcuts();
+    applyTimeBasedContext();
   </script>
 </body>
 </html>
