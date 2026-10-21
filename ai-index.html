@@ -27,7 +27,7 @@
 
   <div class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
-    <!-- 🌟 調整順序後的極簡綠色 Banner：左天氣 · 中(上日下時) · 右星期 -->
+    <!-- 🌟 極簡綠色 Banner：左天氣 · 中(上日下時) · 右星期 -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15">
       <div class="relative z-10 flex items-center justify-between">
         
@@ -119,23 +119,46 @@
 
   </div>
 
-  <!-- 新增 APP 彈跳視窗 Modal -->
+  <!-- 🌟 新增 APP 彈跳視窗 Modal (內建快速選擇清單) -->
   <div id="addModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-xl">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-slate-800 text-sm">自訂新增 APP 直達車</h3>
         <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
       </div>
+      
       <div class="space-y-3">
+        <!-- 快速選擇下拉選單 -->
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">⚡ 快速選擇常用 APP</label>
+          <select id="presetSelect" onchange="fillPresetApp()" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+            <option value="">-- 請選擇常見 APP (免手動輸入) --</option>
+            <option value="LINE|line://|https://line.me/tw/|fa-line|bg-[#00B900]|true">LINE</option>
+            <option value="WhatsApp|whatsapp://|https://web.whatsapp.com/|fa-whatsapp|bg-[#25D366]|true">WhatsApp</option>
+            <option value="Duolingo|duolingo://|https://www.duolingo.com/|fa-language|bg-emerald-500|false">Duolingo (多鄰國)</option>
+            <option value="YouTube|youtube://|https://www.youtube.com/|fa-youtube|bg-rose-600|true">YouTube</option>
+            <option value="Facebook|fb://|https://www.facebook.com/|fa-facebook|bg-blue-600|true">Facebook (FB)</option>
+            <option value="Instagram|instagram://|https://www.instagram.com/|fa-instagram|bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600|true">Instagram (IG)</option>
+            <option value="Google 地圖|com.google.android.apps.maps://|https://maps.google.com/|fa-map-location-dot|bg-emerald-600|false">Google 地圖</option>
+            <option value="Gmail|googlegmail://|https://mail.google.com/|fa-envelope|bg-rose-500|false">Gmail</option>
+            <option value="Spotify|spotify://|https://open.spotify.com/|fa-spotify|bg-green-500|true">Spotify 音樂</option>
+          </select>
+        </div>
+
         <div>
           <label class="block text-xs font-medium text-slate-600 mb-1">APP 名稱</label>
           <input type="text" id="shortcutName" placeholder="例如：Instagram" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">喚起連結或網址</label>
-          <input type="text" id="shortcutUrl" placeholder="例如：instagram:// 或 https://..." class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+          <label class="block text-xs font-medium text-slate-600 mb-1">喚起連結 (Deep Link)</label>
+          <input type="text" id="shortcutUrl" placeholder="例如：instagram://" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">備用網址 (Fallback Web)</label>
+          <input type="text" id="shortcutFallback" placeholder="例如：https://www.instagram.com" class="w-full text-sm px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50">
         </div>
       </div>
+
       <div class="flex gap-2 pt-2">
         <button onclick="closeAddModal()" class="flex-1 bg-slate-100 text-slate-600 font-bold py-2.5 rounded-xl text-xs">取消</button>
         <button onclick="saveNewShortcut()" class="flex-1 bg-[#00B900] hover:bg-[#009900] text-white font-bold py-2.5 rounded-xl text-xs shadow-sm">確認新增</button>
@@ -148,7 +171,7 @@
   </footer>
 
   <script>
-    // 預設帶有 Deep Link (直達手機 APP) 的清單
+    // 預設捷徑清單
     let defaultShortcuts = [
       { name: 'Duolingo', url: 'duolingo://', fallback: 'https://www.duolingo.com/', icon: 'fa-language', bg: 'bg-emerald-500' },
       { name: 'LINE', url: 'line://', fallback: 'https://line.me/tw/', icon: 'fa-line', brand: true, bg: 'bg-[#00B900]' },
@@ -199,14 +222,38 @@
       document.getElementById('addModal').classList.add('hidden');
       document.getElementById('shortcutName').value = '';
       document.getElementById('shortcutUrl').value = '';
+      document.getElementById('shortcutFallback').value = '';
+      document.getElementById('presetSelect').value = '';
+    }
+
+    // 選擇預設下拉選單時自動填入
+    function fillPresetApp() {
+      const select = document.getElementById('presetSelect');
+      const val = select.value;
+      if (!val) return;
+      const parts = val.split('|');
+      document.getElementById('shortcutName').value = parts[0];
+      document.getElementById('shortcutUrl').value = parts[1];
+      document.getElementById('shortcutFallback').value = parts[2];
+      window.tempIcon = parts[3];
+      window.tempBg = parts[4];
+      window.tempBrand = parts[5] === 'true';
     }
 
     function saveNewShortcut() {
       const name = document.getElementById('shortcutName').value.trim();
       let url = document.getElementById('shortcutUrl').value.trim();
+      let fallback = document.getElementById('shortcutFallback').value.trim();
       if (!name || !url) { alert('請填寫完整名稱與連結！'); return; }
 
-      userShortcuts.push({ name: name, url: url, icon: 'fa-globe', bg: 'bg-emerald-600' });
+      userShortcuts.push({ 
+        name: name, 
+        url: url, 
+        fallback: fallback || url, 
+        icon: window.tempIcon || 'fa-globe', 
+        bg: window.tempBg || 'bg-emerald-600',
+        brand: window.tempBrand || false
+      });
       localStorage.setItem('my_morning_apps', JSON.stringify(userShortcuts));
       renderShortcuts();
       closeAddModal();
@@ -220,7 +267,6 @@
       }
     }
 
-    // 更新時間與日期
     function updateDateTime() {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -232,7 +278,6 @@
       document.getElementById('currentDay').innerText = days[now.getDay()];
     }
 
-    // 自動抓取台北天氣 (Open-Meteo 免費 API)
     async function fetchWeather() {
       try {
         const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.0478&longitude=121.5319&current_weather=true');
