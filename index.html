@@ -385,7 +385,7 @@
       </div>
     </div>
 
-    <!-- 3️⃣ 常用功能與工具入口（包含原有的檔案總管、好劇、好歌，以及您首頁截圖中的亮點按鈕） -->
+    <!-- 3️⃣ 常用功能與工具入口（保留檔案總管、好劇、好歌，已移除重複的一鍵打造影音牆） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2.5">
@@ -432,20 +432,6 @@
             </div>
           </a>
           <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
-        </div>
-
-        <!-- 🌟 🔥 點擊後會彈出獨家亮點視窗的按鈕 -->
-        <div class="bg-gradient-to-r from-amber-500 to-rose-500 rounded-2xl p-3.5 flex items-center justify-between shadow-md cursor-pointer hover:opacity-95 transition" data-id="portal-makereel" onclick="toggleReelModal(true)">
-          <div class="flex items-center gap-3.5 flex-1 pr-2">
-            <div class="w-11 h-11 rounded-xl bg-white/20 text-white flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fa-solid fa-fire"></i></div>
-            <div>
-              <div class="text-base font-bold text-white flex items-center gap-1.5">
-                🔥 一鍵打造專屬影音牆
-              </div>
-              <div class="text-xs text-white/90 font-semibold">點擊查看獨家亮點與一鍵建立副本說明</div>
-            </div>
-          </div>
-          <div class="btn-handle text-white/60 hover:text-white p-2 cursor-grab active:cursor-grabbing text-lg" onclick="event.stopPropagation()"><i class="fa-solid fa-grip-vertical"></i></div>
         </div>
       </div>
     </div>
@@ -582,7 +568,7 @@
       </div>
     </div>
 
-    <!-- 🌟 6️⃣ 動態情境內容區塊（各時段維持 2 個推薦工具） -->
+    <!-- 🌟 6️⃣ 動態情境內容區塊（晚間放鬆時段自動以「🔥 一鍵打造專屬影音牆」取代原本的好歌一直聽，點擊會彈出獨家亮點彈窗） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="dynamic">
       <div class="flex items-center justify-between px-1">
         <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
@@ -1033,16 +1019,19 @@
         title.innerText = '今天辛苦了，好好休息';
         desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
 
+        // 🌟 晚間放鬆時段：以「🔥 一鍵打造專屬影音牆」取代原本的好歌一直聽，點擊會彈出獨家亮點視窗
         grid.innerHTML = `
-          <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-music">
-            <a href="https://myezlife.com/goldmelody.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
-              <div class="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-music"></i></div>
+          <div class="bg-gradient-to-r from-amber-500 to-rose-500 rounded-2xl p-3.5 flex items-center justify-between shadow-md cursor-pointer hover:opacity-95 transition" data-id="tool-makereel" onclick="toggleReelModal(true)">
+            <div class="flex items-center gap-3.5 flex-1 pr-2">
+              <div class="w-11 h-11 rounded-xl bg-white/20 text-white flex items-center justify-center text-xl shrink-0 shadow-inner"><i class="fa-solid fa-fire"></i></div>
               <div>
-                <div class="text-base font-bold text-slate-900">好歌一直聽</div>
-                <div class="text-xs text-slate-500 font-semibold">放鬆心靈美妙旋律</div>
+                <div class="text-base font-bold text-white flex items-center gap-1.5">
+                  🔥 一鍵打造專屬影音牆
+                </div>
+                <div class="text-xs text-white/90 font-semibold">點擊查看獨家亮點與一鍵建立副本說明</div>
               </div>
-            </a>
-            <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-lg"><i class="fa-solid fa-grip-vertical"></i></div>
+            </div>
+            <div class="btn-handle text-white/60 hover:text-white p-2 cursor-grab active:cursor-grabbing text-lg" onclick="event.stopPropagation()"><i class="fa-solid fa-grip-vertical"></i></div>
           </div>
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
             <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
