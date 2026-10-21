@@ -35,34 +35,34 @@
 
   <div class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
-    <!-- 🌟 極簡綠色 Banner：左天氣 · 中(上日下時) · 右星期 -->
+    <!-- 🌟 完全還原您原本最滿意的極簡綠色 Banner (左天氣 · 中日期時間 · 右星期) -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15">
       <div class="relative z-10 flex items-center justify-between">
         
         <!-- 左側：天氣圖示與氣溫 -->
-        <div class="flex items-center gap-2.5 bg-black/15 backdrop-blur-sm px-3.5 py-2.5 rounded-xl border border-white/15">
-          <div id="weatherIcon" class="text-3xl text-amber-300">
+        <div class="flex items-center gap-2 bg-black/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+          <div id="weatherIcon" class="text-2xl text-amber-300">
             <i class="fa-solid fa-sun animate-pulse"></i>
           </div>
-          <div class="leading-tight">
-            <div id="weatherTemp" class="text-lg font-black tracking-tight">--°C</div>
-            <div id="weatherDesc" class="text-xs text-emerald-100 font-semibold">載入中</div>
+          <div class="leading-none">
+            <div id="weatherTemp" class="text-base font-black tracking-tight">--°C</div>
+            <div id="weatherDesc" class="text-[10px] text-emerald-100 font-medium">載入中</div>
           </div>
         </div>
 
         <!-- 中間：上方年月日，下方大字體時間 -->
-        <div class="text-center space-y-1">
-          <div id="currentDate" class="text-xs font-bold text-emerald-100 tracking-wide">
+        <div class="text-center space-y-0.5">
+          <div id="currentDate" class="text-[11px] font-medium text-emerald-100 tracking-wide">
             2026年10月21日
           </div>
-          <div id="currentTime" class="text-3xl font-black tracking-wider leading-none">
+          <div id="currentTime" class="text-2xl font-black tracking-wider leading-none">
             05:20
           </div>
         </div>
 
         <!-- 右側：星期 -->
         <div class="text-right">
-          <div id="currentDay" class="text-lg font-black text-white tracking-wider bg-black/15 backdrop-blur-sm px-3.5 py-2.5 rounded-xl border border-white/15">
+          <div id="currentDay" class="text-base font-bold text-white tracking-wider bg-black/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
             星期三
           </div>
         </div>
@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <!-- 🚗 專區一：即時交通與路況中心 (改為單欄超大按鈕) -->
+    <!-- 🚗 專區一：即時交通與路況中心 (單欄超大好按按鈕) -->
     <div id="trafficCard" class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3">
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2">
@@ -121,7 +121,7 @@
       </div>
     </div>
 
-    <!-- 📈 專區二：台股大盤與財經快報 (改為單欄超大按鈕) -->
+    <!-- 📈 專區二：台股大盤與財經快報 (單欄超大好按按鈕) -->
     <div id="financeCard" class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3">
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2">
@@ -147,7 +147,7 @@
       </div>
     </div>
 
-    <!-- 🌟 動態情境內容區塊（早中晚自動切換，同步改為單欄大按鈕） -->
+    <!-- 🌟 動態情境內容區塊（單欄超大好按按鈕） -->
     <div class="space-y-3 pt-1">
       <div class="flex items-center justify-between px-1">
         <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
@@ -260,4 +260,100 @@
         title.innerText = '今天辛苦了，好好休息';
         desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
         icon.innerHTML = '<i class="fa-solid fa-moon"></i>';
-        icon.className = 'w-12 h-12 rounded-xl bg
+        icon.className = 'w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl shrink-0';
+
+        grid.innerHTML = `
+          <a href="https://myezlife.com/goldmelody.html" class="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-sm w-full transition flex items-center justify-between hover:border-purple-400">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-lg"><i class="fa-solid fa-music"></i></div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">好歌一直聽</div>
+                <div class="text-xs text-slate-500 font-medium">放鬆心靈旋律</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+          </a>
+          <a href="https://myezlife.com/ai-greeting-app/" class="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-sm w-full transition flex items-center justify-between hover:border-emerald-500">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div>
+                <div class="text-sm font-bold text-slate-900">做早安圖</div>
+                <div class="text-xs text-slate-500 font-medium">預作明日圖卡</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+          </a>
+        `;
+      }
+    }
+
+    function updateDateTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+
+      const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+      document.getElementById('currentDate').innerText = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+      document.getElementById('currentDay').innerText = days[now.getDay()];
+    }
+
+    async function fetchWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.0478&longitude=121.5319&current_weather=true');
+        const data = await res.json();
+        if (data && data.current_weather) {
+          const temp = Math.round(data.current_weather.temperature);
+          document.getElementById('weatherTemp').innerText = `${temp}°C`;
+          document.getElementById('weatherDesc').innerText = '晴朗';
+        }
+      } catch (e) {
+        document.getElementById('weatherTemp').innerText = '24°C';
+        document.getElementById('weatherDesc').innerText = '舒適';
+      }
+    }
+
+    async function fetchStockMarket() {
+      const badge = document.getElementById('taiexBadge');
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const currentTimeNum = hour * 100 + minute;
+      const isOpenMarket = (currentTimeNum >= 900 && currentTimeNum <= 1335);
+
+      if (!isOpenMarket) {
+        badge.className = 'text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-lg font-bold flex items-center gap-1.5';
+        badge.innerHTML = `<i class="fa-solid fa-moon text-indigo-500"></i> 今日收盤 · 點擊看盤後`;
+        return;
+      }
+
+      try {
+        const res = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5ETWII?interval=1d');
+        const data = await res.json();
+        const meta = data.chart.result[0].meta;
+        const currentPrice = meta.regularMarketPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const previousClose = meta.chartPreviousClose || meta.previousClose;
+        const change = meta.regularMarketPrice - previousClose;
+        const changePercent = (change / previousClose) * 100;
+        
+        const isUp = change >= 0;
+        const colorClass = isUp ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+        const icon = isUp ? '<i class="fa-solid fa-arrow-trend-up"></i>' : '<i class="fa-solid fa-arrow-trend-down"></i>';
+        const sign = isUp ? '+' : '';
+
+        badge.className = `text-xs px-3 py-1 rounded-lg font-black flex items-center gap-1.5 ${colorClass}`;
+        badge.innerHTML = `${icon} 大盤 ${currentPrice} (${sign}${change.toFixed(2)}, ${sign}${changePercent.toFixed(2)}%)`;
+      } catch (e) {
+        badge.className = 'text-xs bg-slate-100 text-slate-700 px-3 py-1 rounded-lg font-bold flex items-center gap-1.5';
+        badge.innerHTML = `<i class="fa-solid fa-chart-line text-rose-500"></i> 點擊下方即時看盤`;
+      }
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    fetchWeather();
+    fetchStockMarket();
+    applyTimeBasedContext();
+  </script>
+</body>
+</html>
