@@ -42,6 +42,84 @@
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
     }
 
+    /* 🌟 側邊滑出選單（Drawer）樣式 */
+    .side-drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .side-drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: #ffffff;
+      z-index: 10001;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+      transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      overflow-y: auto;
+    }
+    .side-drawer.active {
+      left: 0;
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .drawer-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .drawer-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #222;
+    }
+    .drawer-btn-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .drawer-btn {
+      width: 100%;
+      padding: 12px 18px;
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      color: #222;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .drawer-btn:hover {
+      background: #222;
+      color: #fff;
+    }
+
     /* 🌟 內嵌影音牆專用樣式 */
     .embedded-reel-frame {
       width: 100%;
@@ -174,6 +252,24 @@
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen pb-16 flex flex-col justify-between select-none">
 
+  <!-- 🌟 左側滑出選單結構 (Drawer) -->
+  <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
+      <div class="drawer-title">功能選單</div>
+    </div>
+    <div class="drawer-btn-container">
+      <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
+      <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
+      <a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
+      <a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
+      <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
+      <a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
+      <a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作早安問候圖</a>
+    </div>
+  </div>
+
   <!-- 🌟 全站主要容器（可自由拖曳排序大區塊） -->
   <main id="mainContainer" class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
@@ -212,12 +308,10 @@
       </div>
     </div>
 
-    <!-- 2️⃣ 智慧情境提醒區塊 -->
+    <!-- 2️⃣ 智慧情境提醒區塊（左側換成 eric-logo.gif 點擊可開啟側邊選單） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex items-center justify-between" data-id="context">
       <div class="flex items-center gap-3.5">
-        <div id="contextIcon" class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0">
-          <i class="fa-solid fa-mug-hot"></i>
-        </div>
+        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-12 h-12 rounded-full border-2 border-emerald-500 object-cover cursor-pointer hover:scale-105 transition shrink-0 shadow-sm" onclick="toggleDrawer()" title="點擊開啟功能選單">
         <div>
           <div id="contextTitle" class="text-sm font-bold text-slate-900">早安！開啟美好的一天</div>
           <div id="contextDesc" class="text-xs text-slate-600 font-medium mt-0.5">即時路況與台股動態已為您備妥，掌握致勝先機。</div>
@@ -228,13 +322,13 @@
       </div>
     </div>
 
-    <!-- 🌟 3️⃣ 常用功能與工具入口（已移除重複的新聞與問候圖按鈕） -->
+    <!-- 🌟 3️⃣ 常用功能與工具入口（左側換成迎賓頁的經典旋轉大 Logo，點擊有互動效果） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
       <div class="flex items-center justify-between px-1">
-        <div class="flex items-center gap-2">
-          <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+        <div class="flex items-center gap-2.5">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Portal Logo" class="w-9 h-9 rounded-full object-cover shadow cursor-pointer hover:scale-110 transition shrink-0" onclick="triggerPortalAction()" title="點擊歡迎光臨">
           <span class="text-sm font-black text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-compass text-blue-600 text-base"></i> 常用功能與工具入口
+            常用功能與工具入口
           </span>
         </div>
         <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-base">
@@ -242,7 +336,7 @@
         </div>
       </div>
 
-      <!-- 入口按鈕清單（精簡版） -->
+      <!-- 入口按鈕清單 -->
       <div id="portalList" class="space-y-3" data-list-id="portalList">
         <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="portal-file">
           <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
@@ -478,6 +572,20 @@
 
   <script>
     let lastTimePeriod = '';
+
+    // 展開側邊選單函式
+    function toggleDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('active');
+      document.getElementById('drawerOverlay').classList.toggle('active');
+    }
+
+    // 常用功能左側大 Logo 點擊互動效果
+    function triggerPortalAction() {
+      // 可自訂點擊大 Logo 時的動作，例如輕快提示或跳轉
+      if (confirm("歡迎來到 myezlife 個人行動生活中樞！是否前往「好歌一直聽」欣賞影音牆？")) {
+        window.open('https://myezlife.com/goldmelody_csv.html', '_blank');
+      }
+    }
 
     // 初始化 Sortable.js 實現拖曳功能並透過 LocalStorage 自動記憶位置
     document.addEventListener('DOMContentLoaded', () => {
@@ -762,7 +870,6 @@
       const badge = document.getElementById('timeBadge');
       const title = document.getElementById('contextTitle');
       const desc = document.getElementById('contextDesc');
-      const icon = document.getElementById('contextIcon');
       const trafficCard = document.getElementById('trafficCard');
       const financeCard = document.getElementById('financeCard');
 
@@ -773,8 +880,6 @@
         badge.className = 'text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md font-bold';
         title.innerText = '早安！開啟美好的一天';
         desc.innerText = '出門前掌握路況與台股動態，掌握致勝先機。';
-        icon.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
-        icon.className = 'w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0';
 
         grid.innerHTML = `
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-greeting">
@@ -805,8 +910,6 @@
         badge.className = 'text-xs bg-sky-100 text-sky-800 px-2.5 py-1 rounded-md font-bold';
         title.innerText = '專注當下，保持步調';
         desc.innerText = '台股盤中與即時路況隨時掌握，預祝投資與工作一切順利。';
-        icon.innerHTML = '<i class="fa-solid fa-briefcase"></i>';
-        icon.className = 'w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl shrink-0';
 
         grid.innerHTML = `
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-news">
@@ -837,8 +940,6 @@
         badge.className = 'text-xs bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-md font-bold';
         title.innerText = '今天辛苦了，好好休息';
         desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
-        icon.innerHTML = '<i class="fa-solid fa-moon"></i>';
-        icon.className = 'w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl shrink-0';
 
         grid.innerHTML = `
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="tool-music">
