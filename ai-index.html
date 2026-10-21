@@ -27,35 +27,35 @@
 
   <div class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
 
-    <!-- 🌟 純粹極简綠色 Banner：日期 · 時間 · 天氣 -->
+    <!-- 🌟 調整順序後的極簡綠色 Banner：左天氣 · 中(上日下時) · 右星期 -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15">
       <div class="relative z-10 flex items-center justify-between">
         
-        <!-- 左側：日期與星期 -->
-        <div class="space-y-0.5">
-          <div id="currentDate" class="text-xs font-semibold text-emerald-100 tracking-wide">
-            2026年10月21日
-          </div>
-          <div id="currentDay" class="text-base font-bold text-white tracking-wider">
-            星期三
-          </div>
-        </div>
-
-        <!-- 中間/右側：即時天氣 -->
-        <div class="flex items-center gap-2 bg-black/10 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
+        <!-- 左側：天氣圖示與氣溫 -->
+        <div class="flex items-center gap-2 bg-black/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
           <div id="weatherIcon" class="text-2xl text-amber-300">
             <i class="fa-solid fa-sun animate-pulse"></i>
           </div>
-          <div class="text-right leading-none">
+          <div class="leading-none">
             <div id="weatherTemp" class="text-base font-black tracking-tight">--°C</div>
-            <div id="weatherDesc" class="text-[10px] text-emerald-100 font-medium">載入天氣...</div>
+            <div id="weatherDesc" class="text-[10px] text-emerald-100 font-medium">載入中</div>
           </div>
         </div>
 
-        <!-- 右側：大字體即時時間 -->
-        <div class="text-right">
+        <!-- 中間：上方年月日，下方大字體時間 -->
+        <div class="text-center space-y-0.5">
+          <div id="currentDate" class="text-[11px] font-medium text-emerald-100 tracking-wide">
+            2026年10月21日
+          </div>
           <div id="currentTime" class="text-2xl font-black tracking-wider leading-none">
             05:20
+          </div>
+        </div>
+
+        <!-- 右側：星期 -->
+        <div class="text-right">
+          <div id="currentDay" class="text-base font-bold text-white tracking-wider bg-black/10 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
+            星期三
           </div>
         </div>
 
@@ -243,7 +243,6 @@
           
           document.getElementById('weatherTemp').innerText = `${temp}°C`;
           
-          // 簡易天氣圖示與描述判斷
           let iconHtml = '<i class="fa-solid fa-sun text-amber-300"></i>';
           let desc = '晴朗';
           if (code >= 1 && code <= 3) {
