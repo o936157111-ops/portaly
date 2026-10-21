@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日早安問候圖產生器</title>
+
+  <!-- PWA 專屬設定 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f59e0b">
+
+  <!-- iOS Safari 專屬全螢幕 App 設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="早安問候圖">
+  <link rel="apple-touch-icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 圖示 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      background-color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    /* 淡入動畫 */
+    .fade-in {
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .photo-card {
+      background: #ffffff;
+      padding: 8px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+    #offline-notice {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85); color: white;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; text-align: center;
+    }
+    /* 側滑選單樣式 */
+    .side-drawer-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5); z-index: 10000;
+      opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .side-drawer-overlay.active { opacity: 1; visibility: visible; }
+    .side-drawer {
+      position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+      background: #ffffff; z-index: 10001; box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+      transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex; flex-direction: column; padding: 24px 20px; overflow-y: auto;
+    }
+    .side-drawer.active { left: 0; }
+  </style>
+</head>
+<body class="min-h-screen pb-12">
+
+  <!-- 離線遮罩 -->
+  <div id="offline-notice">
+    <i class="fa-solid fa-wifi-slash text-6xl mb-4 text-slate-400"></i>
+    <h2 class="text-xl font-bold mb-2">網路連線已中斷</h2>
+    <p class="text-sm text-slate-300">請檢查您的網路設定，連線後即可繼續製作！</p>
+  </div>
+
+  <!-- 側滑選單結構 -->
+  <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <div class="side-drawer" id="sideDrawer">
+    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="w-10 h-10 rounded-full object-cover" alt="Logo">
+      <div class="font-bold text-slate-800 text-sm">功能選單</div>
+    </div>
+    <div class="flex flex-col gap-3">
+      <a href="https://myezlife.com/" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">首頁</a>     
+      <a href="https://myezlife.com/index-1.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">生活‧簡居‧生活</a>
+      <a href="https://myezlife.com/FileExplorer.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">檔案總管</a>
+      <a href="https://myezlife.com/index_news.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">新聞劃重點</a>
+      <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">AI好劇一直看</a>
+      <a href="https://myezlife.com/goldmelody_csv.html" class="w-full py-3 px-4 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-xl transition text-center shadow-sm">好歌一直聽</a>
+      <a href="https://myezlife.com/ai-greeting-app/" class="w-full py-3 px-4 bg-amber-50 border border-amber-300 text-amber-900 font-bold text-sm rounded-xl transition text-center shadow-sm">🌻 製作早安問候圖</a>
+    </div>
+  </div>
+
+  <!-- 頂部導覽列 -->
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="w-9 h-9 rounded-full border-2 border-amber-400 shadow-sm object-cover cursor-pointer transition hover:scale-105 active:scale-95" alt="Menu" onclick="toggleDrawer()">
+        <div>
+          <h1 class="text-base font-bold text-slate-800 leading-tight">AI 早安問候圖產生器</h1>
+          <p class="text-[10px] text-slate-500">原創攝影作品 · 一鍵快速生成</p>
+        </div>
+      </div>
+      <span class="text-xs px-3 py-1 bg-gradient-to-r from-amber-500 to-rose-500 text-white rounded-full font-medium shadow-sm">
+        ✨ 永久免費
+      </span>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="max-w-md mx-auto px-4 mt-4 space-y-4 fade-in">
+
+    <!-- 🌟 新增：Hero 品牌迎賓視覺區塊 -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-amber-400 to-rose-400 p-5 text-white shadow-lg shadow-amber-500/10">
+      <div class="relative z-10">
+        <div class="flex items-center gap-2 text-amber-100 text-xs font-semibold mb-1">
+          <i class="fa-solid fa-sun text-amber-200 animate-spin-slow"></i> 溫馨傳遞 · 每日祝福
+        </div>
+        <h2 class="text-xl font-extrabold tracking-tight mb-1 drop-shadow-sm">
+          用一張圖，獻上溫暖問候
+        </h2>
+        <p class="text-xs text-amber-50/90 leading-relaxed">
+          結合優質原創攝影作品，輕鬆打造專屬於您的獨一無二晨光祝福。
+        </p>
+      </div>
+      <!-- 裝飾背景圖案 -->
+      <i class="fa-solid fa-heart absolute -right-3 -bottom-4 text-white/10 text-8xl pointer-events-none"></i>
+    </div>
+
+    <!-- 表單輸入區塊 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-amber-500"></i> 填寫今日問候內容
+        </h2>
+        <span class="text-[11px] text-slate-400">客製化祝福語</span>
+      </div>
+
+      <!-- 第一排：問候前綴與對象 -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候前綴</label>
+          <select id="prefixSelect" class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50/80 font-medium text-slate-700">
+            <option value="早安">☀️ 早安</option>
+            <option value="午安">☕ 午安</option>
+            <option value="晚安">🌙 晚安</option>
+            <option value="日安">🌸 日安</option>
+            <option value="custom">✏️ 自訂前綴...</option>
+          </select>
+        </div>
+        <div id="customPrefixContainer" class="hidden">
+          <label class="block text-xs font-medium text-slate-600 mb-1">自訂前綴字眼</label>
+          <input type="text" id="customPrefixInput" placeholder="例如：平安喜樂" 
+                 class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50/80">
+        </div>
+        <div id="targetContainer" class="col-span-1">
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
+          <input type="text" id="targetInput" placeholder="例如：好友、各位長輩" value="好朋友" 
+                 class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50/80 text-slate-700 font-medium">
+        </div>
+      </div>
+
+      <!-- 第二排：祝福內容 -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">祝福或提醒內容</label>
+        <textarea id="wishInput" rows="2" placeholder="例如：迎著晨光，祝福您今天順心愉快、笑口常開！" 
+                  class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-slate-50/80 text-slate-700 leading-relaxed">迎著晨光，祝福您今天順心愉快，事事如意！</textarea>
+      </div>
+
+      <!-- 快速帶入推薦語句鍵 -->
+      <div>
+        <div class="text-[11px] font-medium text-slate-400 mb-1.5 flex items-center gap-1">
+          <i class="fa-solid fa-lightbulb text-amber-400"></i> 快速靈感推薦：
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="setWish('願美好的晨光帶給您一整天的好心情與好運！')" class="text-[11px] bg-slate-100 hover:bg-amber-100 text-slate-600 hover:text-amber-800 px-2.5 py-1 rounded-lg border border-slate-200/60 transition">好心情</button>
+          <button type="button" onclick="setWish('心寬路就廣，願您今日平安順遂、喜樂安康！')" class="text-[11px] bg-slate-100 hover:bg-amber-100 text-slate-600 hover:text-amber-800 px-2.5 py-1 rounded-lg border border-slate-200/60 transition">平安喜樂</button>
+          <button type="button" onclick="setWish('記得多喝水、保持好心情，開啟美好的一天！')" class="text-[11px] bg-slate-100 hover:bg-amber-100 text-slate-600 hover:text-amber-800 px-2.5 py-1 rounded-lg border border-slate-200/60 transition">溫馨關懷</button>
+        </div>
+      </div>
+
+      <button id="generateBtn" class="w-full bg-gradient-to-r from-amber-500 via-amber-600 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-bold py-3.5 rounded-xl shadow-md shadow-amber-500/20 active:scale-95 transition flex items-center justify-center gap-2 text-base">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖
+      </button>
+    </div>
+
+    <!-- 結果與直接下載/分享區塊 -->
+    <div id="resultCard" class="hidden space-y-3">
+      
+      <div class="photo-card">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <span class="text-xs font-bold text-slate-600 tracking-wider flex items-center gap-1">
+            <i class="fa-solid fa-camera-retro text-amber-500"></i> 製作完成 (原創攝影作品背景)
+          </span>
+          <span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">免費直出</span>
+        </div>
+
+        <div class="relative rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
+          <canvas id="compositeCanvas" class="hidden"></canvas>
+          <img id="previewImage" src="" alt="早安圖預覽" class="w-full h-auto rounded-lg shadow-inner">
+        </div>
+      </div>
+
+      <!-- 直接操作按鈕區 -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <button id="downloadBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-download"></i> 下載高清圖
+        </button>
+        <button id="shareBtn" class="bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-share-nodes"></i> 分享至 LINE
+        </button>
+      </div>
+
+      <button id="regenerateBtn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+        <i class="fa-solid fa-shuffle"></i> 換一張個人攝影作品背景
+      </button>
+
+      <!-- 💡 Google AdSense 真實廣告區塊 -->
+      <div class="bg-amber-50/80 border border-amber-200/60 rounded-xl p-3 text-center space-y-2">
+        <p class="text-[11px] text-amber-900 font-medium">💖 喜歡本免費工具嗎？</p>
+        <p class="text-[10px] text-amber-700">本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！</p>
+        
+        <div class="mt-2 min-h-[90px]">
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JavaScript 邏輯控制 -->
+  <script>
+    const PHOTO_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQsZUzBGC3yckE-bjsFevIa5DRvm2CDq9KKRkNNjypiZ0y9Wo4p2Z-9SNq5yK2xCbkBsJhmFSS5vJhl/pub?gid=0&single=true&output=csv";
+
+    let customPhotoUrls = [];
+    let lastPhotoIndex = -1;
+
+    // 靈感推薦快速帶入
+    function setWish(text) {
+      document.getElementById('wishInput').value = text;
+    }
+
+    // 解析 CSV 文字檔
+    function parseCSV(text) {
+      const lines = text.split(/\r\n|\n/);
+      const urls = [];
+      lines.forEach(line => {
+        const matches = line.match(/https?:\/\/[^\s,"]+/g);
+        if (matches) {
+          matches.forEach(url => {
+            const cleanUrl = url.replace(/["']/g, "").trim();
+            if (cleanUrl.match(/\.(jpeg|jpg|png|webp)/i) || cleanUrl.includes("flickr.com") || cleanUrl.includes("photos")) {
+              urls.push(cleanUrl);
+            }
+          });
+        }
+      });
+      return urls;
+    }
+
+    // 從 Google 試算表載入圖片網址
+    async function fetchPhotoUrls() {
+      try {
+        const response = await fetch(PHOTO_CSV_URL, { cache: "no-store" });
+        if (response.ok) {
+          const text = await response.text();
+          const fetchedUrls = parseCSV(text);
+          if (fetchedUrls.length > 0) {
+            customPhotoUrls = fetchedUrls;
+          }
+        }
+      } catch (err) {
+        console.warn("無法動態載入 CSV，使用預設圖庫備援：", err);
+      }
+    }
+
+    // --- 側滑選單控制 ---
+    function toggleDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('active');
+      document.getElementById('drawerOverlay').classList.toggle('active');
+    }
+
+    // --- 網路狀態偵測 ---
+    const offlineNotice = document.getElementById('offline-notice');
+    function updateOnlineStatus() {
+      if (navigator.onLine) {
+        offlineNotice.style.display = 'none';
+      } else {
+        offlineNotice.style.display = 'flex';
+      }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
+
+    // --- 自訂前綴切換邏輯 ---
+    const prefixSelect = document.getElementById('prefixSelect');
+    const customPrefixContainer = document.getElementById('customPrefixContainer');
+    const targetContainer = document.getElementById('targetContainer');
+    const customPrefixInput = document.getElementById('customPrefixInput');
+
+    prefixSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'custom') {
+        customPrefixContainer.classList.remove('hidden');
+        targetContainer.className = "col-span-2";
+      } else {
+        customPrefixContainer.classList.add('hidden');
+        targetContainer.className = "col-span-1";
+      }
+    });
+
+    // --- 核心邏輯元件 ---
+    const generateBtn = document.getElementById('generateBtn');
+    const regenerateBtn = document.getElementById('regenerateBtn');
+    const resultCard = document.getElementById('resultCard');
+    const previewImage = document.getElementById('previewImage');
+    const compositeCanvas = document.getElementById('compositeCanvas');
+
+    let finalDataUrl = "";
+
+    function loadImage(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        const timer = setTimeout(() => { img.src = ""; reject(new Error("Timeout")); }, 8000);
+        img.onload = () => { clearTimeout(timer); resolve(img); };
+        img.onerror = () => { clearTimeout(timer); reject(new Error("Error")); };
+        img.src = url;
+      });
+    }
+
+    async function makeCard() {
+      if (!navigator.onLine) { alert('請先連接網路才能生成圖片喔！'); return; }
+
+      let prefix = prefixSelect.value;
+      if (prefix === 'custom') {
+        prefix = customPrefixInput.value.trim() || '平安喜樂';
+      }
+      const target = document.getElementById('targetInput').value.trim() || '好朋友';
+      const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
+
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入個人攝影作品背景中...';
+      generateBtn.disabled = true;
+
+      if (customPhotoUrls.length === 0) {
+        await fetchPhotoUrls();
+      }
+
+      let bgUrl = "";
+      if (customPhotoUrls.length > 0) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * customPhotoUrls.length);
+        } while (randomIndex === lastPhotoIndex && customPhotoUrls.length > 1);
+        lastPhotoIndex = randomIndex;
+        bgUrl = customPhotoUrls[randomIndex];
+      } else {
+        bgUrl = `https://picsum.photos/768/1024?t=${Date.now()}`;
+      }
+
+      let bgImg = null;
+      try {
+        bgImg = await loadImage(bgUrl);
+      } catch (err) {
+        console.warn("載入圖片失敗，帶入備援背景", err);
+        try {
+          bgImg = await loadImage(`https://picsum.photos/768/1024?random=${Date.now()}`);
+        } catch (_) {}
+      }
+
+      const canvas = compositeCanvas;
+      const ctx = canvas.getContext('2d');
+      const cw = 768; const ch = 1024;
+      canvas.width = cw; canvas.height = ch;
+
+      ctx.filter = 'none';
+
+      if (bgImg) {
+        const iw = bgImg.width; const ih = bgImg.height;
+        const renderRatio = Math.max(cw / iw, ch / ih);
+        const renderW = iw * renderRatio; const renderH = ih * renderRatio;
+        ctx.filter = 'brightness(1.1) contrast(1.05) saturate(1.2)';
+        ctx.drawImage(bgImg, (cw - renderW) / 2, (ch - renderH) / 2, renderW, renderH);
+        ctx.filter = 'none';
+      } else {
+        ctx.fillStyle = '#f59e0b'; ctx.fillRect(0, 0, cw, ch);
+      }
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, ch);
+      gradient.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
+      gradient.addColorStop(0.28, 'rgba(0, 0, 0, 0.15)');
+      gradient.addColorStop(0.68, 'rgba(0, 0, 0, 0.15)');
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)');
+      ctx.fillStyle = gradient; ctx.fillRect(0, 0, cw, ch);
+
+      ctx.fillStyle = "#ffffff"; ctx.textAlign = "center";
+      ctx.font = "bold 42px sans-serif";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.95)"; ctx.shadowBlur = 18;
+      ctx.fillText(`🌻 ${prefix} · ${target}`, cw / 2, 110);
+
+      ctx.font = "normal 44px serif";
+      const words = wish.split(''); let line = ''; let y = ch - 240;
+      for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n];
+        if (ctx.measureText(testLine).width > (cw - 120) && n > 0) {
+          ctx.fillText(line, cw / 2, y); line = words[n]; y += 60;
+        } else { line = testLine; }
+      }
+      ctx.fillText(line, cw / 2, y);
+
+      try {
+        finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        previewImage.src = finalDataUrl;
+      } catch (e) { console.error("Canvas 導出錯誤:", e); }
+
+      resultCard.classList.remove('hidden');
+      generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
+      generateBtn.disabled = false;
+      resultCard.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    generateBtn.addEventListener('click', makeCard);
+    regenerateBtn.addEventListener('click', makeCard);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchPhotoUrls();
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      if (!finalDataUrl) return;
+      const a = document.createElement('a'); a.href = finalDataUrl;
+      a.download = `LINE早安圖_${Date.now()}.jpg`;
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      if (!finalDataUrl) return;
+      try {
+        const res = await fetch(finalDataUrl); const blob = await res.blob();
+        const file = new File([blob], 'Greeting.jpg', { type: 'image/jpeg' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: '每日早安圖', text: '送您專屬問候祝福！' });
+        } else { window.open(finalDataUrl, '_blank'); }
+      } catch (err) { alert('請長按圖片儲存並分享！'); }
+    });
+  </script>
+</body>
+</html>
