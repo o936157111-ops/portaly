@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <!-- 🌟 晨間全方位通勤快報 (開車、騎車、YouBike、公車、雙鐵一次滿足) -->
+    <!-- 🌟 晨間全方位通勤快報 (修正右上角標籤為即時路況指標) -->
     <div id="trafficCard" class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-sm space-y-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -90,10 +90,11 @@
             <i class="fa-solid fa-compass text-emerald-600"></i> 全方位通勤與路況快報
           </span>
         </div>
-        <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold">出行順心</span>
+        <!-- 修正為專業的路況動態狀態標籤 -->
+        <span id="trafficBadgeStatus" class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold">路況正常 · 點擊查詢</span>
       </div>
 
-      <!-- 六大通勤快捷按鈕 (3列 x 2行 或 2列 x 3行) -->
+      <!-- 六大通勤快捷按鈕 -->
       <div class="grid grid-cols-2 gap-2">
         <a href="https://1968.freeway.gov.tw/" target="_blank" class="bg-slate-50 hover:bg-sky-50 hover:text-sky-700 border border-slate-200/80 rounded-xl p-2.5 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
           <i class="fa-solid fa-car text-sky-600"></i> 國道即時路況 (1968)
@@ -210,7 +211,7 @@
           </a>
         `;
       } else {
-        // 🌙 晚間模式 (隱藏交通快報，呈現純放鬆)
+        // 🌙 晚間模式 (隱藏交通快報)
         trafficCard.style.display = 'none';
         badge.innerText = '晚間放鬆';
         badge.className = 'text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold';
