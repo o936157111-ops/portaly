@@ -385,7 +385,7 @@
       </div>
     </div>
 
-    <!-- 3️⃣ 常用功能與工具入口（保留檔案總管、好劇、好歌，已移除重複的一鍵打造影音牆） -->
+    <!-- 3️⃣ 常用功能與工具入口 -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-2.5">
@@ -568,7 +568,7 @@
       </div>
     </div>
 
-    <!-- 🌟 6️⃣ 動態情境內容區塊（晚間放鬆時段自動以「🔥 一鍵打造專屬影音牆」取代原本的好歌一直聽，點擊會彈出獨家亮點彈窗） -->
+    <!-- 🌟 6️⃣ 動態情境內容區塊（支援內部按鈕拖曳排序與 LocalStorage 記憶） -->
     <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="dynamic">
       <div class="flex items-center justify-between px-1">
         <h2 id="sectionTitle" class="text-xs font-bold text-slate-500 tracking-wider uppercase flex items-center gap-2">
@@ -582,7 +582,7 @@
         </div>
       </div>
 
-      <div id="dynamicContentGrid" class="space-y-3">
+      <div id="dynamicContentGrid" class="space-y-3" data-list-id="dynamicContentGrid">
         <!-- JavaScript 動態渲染 -->
       </div>
     </div>
@@ -660,7 +660,7 @@
 
     // 常用功能左側大 Logo 點擊互動效果
     function triggerPortalAction() {
-      if (confirm("歡迎來到 myezlife 個人行動生活中樞！是否前往「好歌一直聽」欣賞影音牆？")) {
+      if (confirm("歡迎來到 myezlife 個人行動生活中樞！是否前往專屬影音牆？")) {
         window.open('https://myezlife.com/goldmelody_csv.html', '_blank');
       }
     }
@@ -1019,7 +1019,6 @@
         title.innerText = '今天辛苦了，好好休息';
         desc.innerText = '放慢腳步，聽首好歌或看部好劇，享受屬於自己的時間。';
 
-        // 🌟 晚間放鬆時段：以「🔥 一鍵打造專屬影音牆」取代原本的好歌一直聽，點擊會彈出獨家亮點視窗
         grid.innerHTML = `
           <div class="bg-gradient-to-r from-amber-500 to-rose-500 rounded-2xl p-3.5 flex items-center justify-between shadow-md cursor-pointer hover:opacity-95 transition" data-id="tool-makereel" onclick="toggleReelModal(true)">
             <div class="flex items-center gap-3.5 flex-1 pr-2">
@@ -1045,6 +1044,9 @@
           </div>
         `;
       }
+
+      // 🌟 關鍵修正：每次動態渲染完後，重新綁定 Sortable 並套用記憶順序
+      initSortableList('dynamicContentGrid', 'myezlife_dynamic_order');
     }
 
     function updateDateTime() {
