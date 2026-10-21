@@ -81,20 +81,27 @@
       </div>
     </div>
 
-    <!-- 🌟 晨間限定：即時交通動態快報模組 (僅在清晨/白天時段特別強調) -->
-    <div id="trafficCard" class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
-        <div>
-          <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-            <i class="fa-solid fa-train-subway text-slate-500"></i> 今日晨間交通快報
-          </div>
-          <div id="trafficStatusText" class="text-[11px] text-slate-500 mt-0.5">全台大眾運輸與主要幹道營運正常</div>
+    <!-- 🌟 晨間限定：雙鐵即時交通快報模組 (台鐵 + 高鐵) -->
+    <div id="trafficCard" class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm space-y-2.5">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
+          <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-train text-emerald-600"></i> 今日雙鐵即時快報
+          </span>
         </div>
+        <span class="text-[10px] text-slate-400">營運正常</span>
       </div>
-      <a href="https://tip.railway.gov.tw/tip-web/tip/tip001/tip112/gobytime" target="_blank" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2.5 py-1 rounded-lg font-bold transition">
-        查台鐵時刻
-      </a>
+
+      <!-- 快捷按鈕列：台鐵 / 高鐵 / 即時路況 -->
+      <div class="grid grid-cols-2 gap-2 pt-0.5">
+        <a href="https://tip.railway.gov.tw/tip-web/tip/tip001/tip112/gobytime" target="_blank" class="bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200/80 rounded-xl p-2 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-train-subway text-emerald-600"></i> 台鐵時刻查詢
+        </a>
+        <a href="https://www.thsrc.com.tw/" target="_blank" class="bg-slate-50 hover:bg-orange-50 hover:text-orange-700 border border-slate-200/80 rounded-xl p-2 text-center transition flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700">
+          <i class="fa-solid fa-gauge-high text-orange-500"></i> 高鐵營運與時刻
+        </a>
+      </div>
     </div>
 
     <!-- 🌟 動態情境內容區塊（早中晚自動切換） -->
@@ -140,11 +147,11 @@
 
       if (hour >= 5 && hour < 9) {
         // 🌅 晨間模式
-        trafficCard.style.display = 'flex'; // 顯示交通動態
+        trafficCard.style.display = 'block';
         badge.innerText = '清晨甦醒';
         badge.className = 'text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md font-bold';
         title.innerText = '早安！開啟美好的一天';
-        desc.innerText = '記得先喝一杯溫開水，準備好心情報告今日新聞與交通路況。';
+        desc.innerText = '出門前先看一眼氣象與雙鐵動態，掌握通勤好心情。';
         icon.innerHTML = '<i class="fa-solid fa-mug-hot"></i>';
         icon.className = 'w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0';
 
@@ -166,11 +173,11 @@
         `;
       } else if (hour >= 9 && hour < 18) {
         // ☀️ 白天模式
-        trafficCard.style.display = 'flex';
+        trafficCard.style.display = 'block';
         badge.innerText = '白天高效';
         badge.className = 'text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-md font-bold';
         title.innerText = '專注當下，保持步調';
-        desc.innerText = '今日農民曆宜出行、納財，預祝工作與生活順利。';
+        desc.innerText = '今日農民曆宜出行、納財，預祝工作與行程一切順利。';
         icon.innerHTML = '<i class="fa-solid fa-briefcase"></i>';
         icon.className = 'w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0';
 
@@ -191,7 +198,7 @@
           </a>
         `;
       } else {
-        // 🌙 晚間模式 (隱藏交通卡，換成純放鬆情境)
+        // 🌙 晚間模式 (隱藏雙鐵卡，切換為純放鬆)
         trafficCard.style.display = 'none';
         badge.innerText = '晚間放鬆';
         badge.className = 'text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-bold';
