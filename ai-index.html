@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的晨間行動入口</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 圖示 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .fade-in {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-10 flex flex-col justify-between" id="appBody">
+
+  <div class="max-w-md mx-auto w-full px-4 pt-5 space-y-4 fade-in">
+
+    <!-- 時段感知 Banner -->
+    <div id="heroBanner" class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 to-rose-500 p-4 text-white shadow-md shadow-amber-500/10">
+      <div class="relative z-10 flex items-center justify-between">
+        <div>
+          <div id="subGreeting" class="text-[11px] font-semibold text-amber-100 flex items-center gap-1">
+            <i class="fa-solid fa-sun"></i> 早晨專屬捷徑
+          </div>
+          <h1 id="greeting" class="text-lg font-extrabold tracking-tight mt-0.5">
+            5:20 晨光時間 · 順手開啟
+          </h1>
+        </div>
+        <div class="text-right">
+          <span id="currentTime" class="text-xl font-black tracking-wider">05:20</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🌟 第一優先區：晨間三大核心 (大按鈕直覺點擊) -->
+    <div class="space-y-2">
+      <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase px-1 flex items-center gap-1.5">
+        <i class="fa-solid fa-star text-amber-500"></i> 晨間必用三核心
+      </h2>
+      <div class="grid grid-cols-3 gap-2.5">
+        
+        <!-- 1. Duolingo -->
+        <a href="https://www.duolingo.com/" target="_blank" class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-500 hover:bg-emerald-50/30 transition active:scale-95 group">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-sm group-hover:scale-105 transition">
+            <i class="fa-solid fa-language"></i>
+          </div>
+          <span class="text-xs font-bold text-slate-800">Duolingo</span>
+        </a>
+
+        <!-- 2. LINE -->
+        <a href="https://line.me/tw/" target="_blank" class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-500 hover:bg-emerald-50/30 transition active:scale-95 group">
+          <div class="w-11 h-11 rounded-2xl bg-[#00B900] text-white flex items-center justify-center text-2xl shadow-sm group-hover:scale-105 transition">
+            <i class="fa-brands fa-line"></i>
+          </div>
+          <span class="text-xs font-bold text-slate-800">LINE</span>
+        </a>
+
+        <!-- 3. WhatsApp -->
+        <a href="https://web.whatsapp.com/" target="_blank" class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center gap-2 hover:border-emerald-500 hover:bg-emerald-50/30 transition active:scale-95 group">
+          <div class="w-11 h-11 rounded-2xl bg-[#25D366] text-white flex items-center justify-center text-xl shadow-sm group-hover:scale-105 transition">
+            <i class="fa-brands fa-whatsapp"></i>
+          </div>
+          <span class="text-xs font-bold text-slate-800">WhatsApp</span>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 🌟 第二區：創作問候與晨間新聞 -->
+    <div class="space-y-2 pt-1">
+      <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase px-1 flex items-center gap-1.5">
+        <i class="fa-solid fa-mug-hot text-amber-500"></i> 晨間資訊與問候工具
+      </h2>
+      <div class="grid grid-cols-2 gap-2.5">
+        
+        <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-amber-400 transition active:scale-95">
+          <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-base">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-800">做早安圖</div>
+            <div class="text-[10px] text-slate-400">原創背景直出</div>
+          </div>
+        </a>
+
+        <a href="https://www.youtube.com/" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-rose-400 transition active:scale-95">
+          <div class="w-9 h-9 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-base">
+            <i class="fa-brands fa-youtube"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-800">YT 新聞/影音</div>
+            <div class="text-[10px] text-slate-400">早餐與通勤伴隨</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 🌟 第三區：通勤與交通輔助 -->
+    <div class="space-y-2 pt-1">
+      <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase px-1 flex items-center gap-1.5">
+        <i class="fa-solid fa-bus text-amber-500"></i> 通勤輔助
+      </h2>
+      <div class="grid grid-cols-2 gap-2.5">
+        
+        <a href="https://myezlife.com/index_news.html" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-sky-400 transition active:scale-95">
+          <div class="w-9 h-9 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-base">
+            <i class="fa-solid fa-newspaper"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-800">新聞劃重點</div>
+            <div class="text-[10px] text-slate-400">捷運閱讀時事</div>
+          </div>
+        </a>
+
+        <a href="https://pda.5284.gov.tw/" target="_blank" class="bg-white p-3 rounded-xl border border-slate-200/80 shadow-sm flex items-center gap-3 hover:border-emerald-400 transition active:scale-95">
+          <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">
+            <i class="fa-solid fa-bus-simple"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-800">等公車資訊</div>
+            <div class="text-[10px] text-slate-400">南港展覽館轉乘</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 💡 Google AdSense 廣告區塊 -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-3 text-center space-y-1.5 shadow-sm mt-3">
+      <p class="text-[10px] text-slate-400 font-medium">贊助商廣告</p>
+      <div class="min-h-[90px] flex items-center justify-center bg-slate-50 rounded-xl overflow-hidden">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="text-center text-[11px] text-slate-400 pt-6">
+    <p>© myezlife.com · 專屬晨間行動入口</p>
+  </footer>
+
+  <script>
+    // 即時更新時鐘
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
