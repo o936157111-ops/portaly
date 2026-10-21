@@ -21,6 +21,16 @@
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    /* 編輯模式下的輕微晃動特效，增加操作感 */
+    .editing .shortcut-card {
+      animation: shake 0.5s infinite ease-in-out;
+    }
+    @keyframes shake {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(-1deg); }
+      75% { transform: rotate(1deg); }
+      100% { transform: rotate(0deg); }
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen pb-12 flex flex-col justify-between">
@@ -65,9 +75,15 @@
     <!-- 🌟 常用 APP 儀表板清單 -->
     <div class="space-y-2.5">
       <div class="flex items-center justify-between px-1">
-        <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
-          <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP 直達車
-        </h2>
+        <div class="flex items-center gap-2">
+          <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
+            <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> 我的常用 APP
+          </h2>
+          <!-- 編輯模式切換按鈕 -->
+          <button onclick="toggleEditMode()" id="editBtn" class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium transition hover:bg-slate-300">
+            編輯
+          </button>
+        </div>
         <button onclick="openAddModal()" class="text-xs bg-[#00B900] hover:bg-[#009900] text-white font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1 shadow-sm">
           <i class="fa-solid fa-plus"></i> 新增 APP
         </button>
@@ -119,7 +135,7 @@
 
   </div>
 
-  <!-- 🌟 新增 APP 彈跳視窗 (改成「點擊圖示直接加入」，完全不用查網址) -->
+  <!-- 🌟 新增 APP 彈跳視窗 -->
   <div id="addModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-xl">
       <div class="flex items-center justify-between border-b pb-3">
@@ -129,7 +145,6 @@
       
       <p class="text-xs text-slate-500">點擊下方任一 APP 圖示，即可直接加入您的晨間儀表板：</p>
 
-      <!-- 預設常用 APP 快速點選清單 -->
       <div class="grid grid-cols-3 gap-2 py-1 max-h-60 overflow-y-auto">
         <button onclick="addPresetApp('LINE', 'line://', 'https://line.me/tw/', 'fa-line', 'bg-[#00B900]', true)" class="p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 flex flex-col items-center gap-1 transition">
           <div class="w-8 h-8 rounded-lg bg-[#00B900] text-white flex items-center justify-center text-base"><i class="fa-brands fa-line"></i></div>
@@ -188,7 +203,6 @@
   </footer>
 
   <script>
-    // 預設捷徑清單
     let defaultShortcuts = [
       { name: 'Duolingo', url: 'duolingo://', fallback: 'https://www.duolingo.com/', icon: 'fa-language', bg: 'bg-emerald-500' },
       { name: 'LINE', url: 'line://', fallback: 'https://line.me/tw/', icon: 'fa-line', brand: true, bg: 'bg-[#00B900]' },
@@ -199,17 +213,30 @@
     ];
 
     let userShortcuts = JSON.parse(localStorage.getItem('my_morning_apps')) || defaultShortcuts;
+    let isEditing = false;
 
+    // 渲染捷徑 (支援編輯模式開關控制 X 按鈕)
     function renderShortcuts() {
       const grid = document.getElementById('shortcutGrid');
       grid.innerHTML = '';
 
+      if (isEditing) {
+        document.body.classList.add('editing');
+        document.getElementById('editBtn').innerText = '完成';
+        document.getElementById('editBtn').className = "text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-md font-medium transition";
+      } else {
+        document.body.classList.remove('editing');
+        document.getElementById('editBtn').innerText = '編輯';
+        document.getElementById('editBtn').className = "text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md font-medium transition hover:bg-slate-300";
+      }
+
       userShortcuts.forEach((item, index) => {
         const div = document.createElement('div');
-        div.className = 'relative group bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col items-center justify-center gap-1.5 hover:border-emerald-400 transition';
+        div.className = 'shortcut-card relative bg-white p-3 rounded-2xl border border-slate-200/85 shadow-sm flex flex-col items-center justify-center gap-1.5 hover:border-emerald-400 transition';
         
         div.innerHTML = `
-          <button onclick="deleteShortcut(${index})" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-rose-500 text-white rounded-full text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow-sm" title="移除">
+          <!-- 刪除按鈕：只有在點擊「編輯」後才會出現，平時絕對不會誤觸 -->
+          <button onclick="deleteShortcut(${index})" class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-rose-500 text-white rounded-full text-xs flex items-center justify-center shadow-md transition ${isEditing ? 'block' : 'hidden'}" title="移除">
             <i class="fa-solid fa-xmark"></i>
           </button>
           
@@ -224,7 +251,15 @@
       });
     }
 
+    // 切換編輯模式
+    function toggleEditMode() {
+      isEditing = !isEditing;
+      renderShortcuts();
+    }
+
+    // 點擊直接開啟手機實體 APP (Deep Link)
     function openApp(appUrl, webUrl) {
+      if (isEditing) return; // 編輯狀態下點擊不開啟APP
       const now = Date.now();
       window.location.href = appUrl;
       setTimeout(() => {
@@ -237,9 +272,7 @@
     function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
     function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
 
-    // 點擊圖示直接新增，零門檻免查網址！
     function addPresetApp(name, url, fallback, icon, bg, brand) {
-      // 檢查是否已經存在
       const exists = userShortcuts.some(s => s.name === name);
       if (exists) {
         alert(`「${name}」已經在您的儀表板上囉！`);
