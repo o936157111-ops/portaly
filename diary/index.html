@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 解決 Google 彈出登入視窗被瀏覽器阻擋的關鍵安全性標頭 -->
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
   <title>myezlife Diary - 隨筆花園日記</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -106,7 +108,7 @@
     window.onload = function() {
       document.getElementById('current-date-display').innerText = `📅 ${todayStr}`;
       selectMood('🌿', '平靜');
-      loadDiaries(); // 先從本機讀取
+      loadDiaries();
       
       if (typeof gapi !== 'undefined') {
         gapi.load('client', initializeGapiClient);
@@ -132,7 +134,6 @@
             document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
             document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
             
-            // 授權成功後，自動檢查並建立專屬資料夾，然後同步下載雲端日記
             await getOrCreateFolderId();
             await fetchDiariesFromDrive();
           },
@@ -164,7 +165,6 @@
       });
     }
 
-    // 取得或建立雲端專屬資料夾 ID
     async function getOrCreateFolderId() {
       if (folderId) return folderId;
       try {
@@ -197,7 +197,6 @@
       return folderId;
     }
 
-    // 儲存日記
     async function saveDiary() {
       const text = document.getElementById('diary-input').value.trim();
       if (!text) {
@@ -213,7 +212,6 @@
         updatedAt: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
       };
 
-      // 1. 存入本機
       const diaries = getStoredDiaries();
       diaries[todayStr] = diaryData;
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
@@ -221,7 +219,6 @@
       document.getElementById('diary-input').value = '';
       loadDiaries();
 
-      // 2. 上傳至雲端專屬資料夾
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
       } else {
@@ -235,7 +232,6 @@
       return { ...localDiaries, ...cloudDiaries };
     }
 
-    // 從專屬資料夾下載所有日記
     async function fetchDiariesFromDrive() {
       try {
         const fId = await getOrCreateFolderId();
@@ -266,7 +262,6 @@
       }
     }
 
-    // 上傳至指定專屬資料夾（已修正父資料夾繫結）
     async function uploadToGoogleDrive(date, diaryData) {
       try {
         const fId = await getOrCreateFolderId();
@@ -303,6 +298,8 @@
 
         if (response.ok) {
           alert('日記已成功儲存並同步至 Google 雲端專屬資料夾！');
+        } else {
+          console.error('上傳失敗:', await response.text());
         }
       } catch (error) {
         console.error('同步至 Google 雲端發生錯誤:', error);
