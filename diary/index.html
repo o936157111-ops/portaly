@@ -139,8 +139,10 @@
       <!-- 左側：Logo 圖片點擊開啓側邊選單 + 標題 -->
       <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
         <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-9 h-9 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
-        <h1 class="text-base font-bold tracking-wide">
-          myezlife <span class="text-emerald-600 font-semibold ml-1">心情隨筆</span>
+        <!-- 標題改為兩行呈現 -->
+        <h1 class="text-base font-bold tracking-wide leading-tight flex flex-col">
+          <span>myezlife</span>
+          <span class="text-emerald-600 font-semibold">心情隨筆</span>
         </h1>
       </div>
       
