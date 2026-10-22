@@ -344,140 +344,95 @@
       document.getElementById('storage-estimate').innerText = `可再寫約 ${daysLeft} 天`;
     }
 
-    // 🌐 仿照白皮書專業排版的離線 HTML 匯出
+    // 🌐 完美安全的離線 HTML 匯出（採用複製當前結構並移除編輯互動區塊）
     function exportDiariesHTML() {
       const diaries = getStoredDiaries();
-      const dates = Object.keys(diaries).sort().reverse();
-      if (dates.length === 0) {
+      if (Object.keys(diaries).length === 0) {
         alert('目前沒有歷史日記可以備份喔！');
         return;
       }
 
-      let cardsHtml = dates.map(date => {
-        const item = diaries[date];
-        let todoHtml = '';
-        if (item.todos && item.todos.length > 0) {
-          todoHtml = `
-            <div style="margin-top:16px; padding:12px; background-color:#1c1917; border-radius:12px; font-size:15px; border:1px solid #292524;">
-              <strong style="color:#fbbf24; display:block; margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> 今日待辦與提醒：</strong>
-              <ul style="list-style:none; padding:0; margin:0;">
-                ${item.todos.map(t => `<li style="margin-bottom:6px; color:${t.done ? '#78716c' : '#e7e5e4'}; text-decoration:${t.done ? 'line-through' : 'none'};">${t.done ? '✓' : '•'} ${escapeHtml(t.text)}</li>`).join('')}
-              </ul>
-            </div>
-          `;
-        }
+      // 複製一份當前網頁的 DOM
+      const cloneDoc = document.cloneNode(true);
+      
+      // 移除不需要出現在離線備份中的互動區塊（如：今日輸入框、新增按鈕、模態視窗、雲端同步按鈕）
+      const mainSection = cloneDoc.querySelector('main > section:first-child');
+      if (mainSection) mainSection.remove();
+      
+      const syncBtn = cloneDoc.querySelector('#sync-btn');
+      if (syncBtn) syncBtn.remove();
+      
+      const infoModal = cloneDoc.querySelector('#info-modal');
+      if (infoModal) infoModal.remove();
 
-        return `
-          <div class="chapter-card bg-stone-950 rounded-xl shadow-sm border border-stone-800 overflow-hidden">
-            <button onclick="toggleAccordion('${date}')" class="w-full px-6 py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">${item.mood}</span>
-                <div>
-                  <span class="font-bold text-stone-100 text-lg">${item.date}</span>
-                  <span class="bg-amber-950 text-amber-300 text-xs px-2.5 py-0.5 rounded-md font-semibold ml-2 border border-amber-800/50">${item.moodLabel}</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="text-xs text-stone-500">${item.updatedAt || ''}</span>
-                <i id="icon-${date}" class="fa-solid fa-chevron-down text-stone-400 rotate-icon text-lg"></i>
-              </div>
-            </button>
-            <div id="content-${date}" class="accordion-content">
-              <div class="p-6 border-t border-stone-800 text-stone-300 space-y-4 text-base leading-relaxed">
-                <p style="white-space:pre-wrap; margin:0;">${escapeHtml(item.content)}</p>
-                ${todoHtml}
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      // 將搜尋框改造成白皮書樣式的上方搜尋與全部展開按鈕列
+      const searchContainer = cloneDoc.querySelector('#search-input').parentElement.parentElement;
+      searchContainer.className = "flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 bg-stone-950 p-4 rounded-xl shadow-sm border border-stone-800";
+      searchContainer.innerHTML = `
+        <div class="relative w-full sm:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"></i>
+          <input type="text" id="searchInput" onkeyup="filterChapters()" placeholder="搜尋日記關鍵字..." 
+                 class="w-full pl-9 pr-4 py-2 text-sm bg-stone-900 border border-stone-800 text-stone-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+        <div class="flex gap-3 w-full sm:w-auto justify-end">
+          <button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">
+            <i class="fa-solid fa-folder-open mr-1.5"></i>全部展開
+          </button>
+          <button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">
+            <i class="fa-solid fa-folder-closed mr-1.5"></i>全部收合
+          </button>
+        </div>
+      `;
 
-      const fullHtml = `<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>myezlife 歷史日記與筆記離線白皮書 (${todayStr})</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0, 1, 0, 1); }
-    .accordion-content.expanded { max-height: 5000px; transition: max-height 0.5s ease-in-out; }
-    .rotate-icon { transition: transform 0.3s ease; }
-    .rotate-icon.active { transform: rotate(180deg); }
-  </style>
-</head>
-<body class="bg-stone-900 text-stone-100 min-h-screen font-sans leading-relaxed">
-  <header class="bg-gradient-to-r from-stone-950 via-stone-900 to-stone-950 text-white py-10 px-4 shadow-lg border-b-4 border-amber-500">
-    <div class="max-w-3xl mx-auto text-center">
-      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>
-      <p class="text-amber-400 font-medium text-sm md:text-base">── 記錄每一天的平靜、感動與生活點滴</p>
-      <div class="mt-3 text-xs text-stone-400">匯出日期：${todayStr}</div>
-    </div>
-  </header>
-
-  <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-stone-950 p-4 rounded-xl shadow-sm border border-stone-800">
-      <div class="relative w-full sm:w-80">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"></i>
-        <input type="text" id="searchInput" onkeyup="filterChapters()" placeholder="搜尋日記關鍵字..." 
-               class="w-full pl-9 pr-4 py-2 text-sm bg-stone-900 border border-stone-800 text-stone-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
-      </div>
-      <div class="flex gap-3 w-full sm:w-auto justify-end">
-        <button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">
-          <i class="fa-solid fa-folder-open mr-1.5"></i>全部展開
-        </button>
-        <button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">
-          <i class="fa-solid fa-folder-closed mr-1.5"></i>全部收合
-        </button>
-      </div>
-    </div>
-
-    <div class="space-y-4" id="chapterContainer">
-      ${cardsHtml}
-    </div>
-  </main>
-
-  <footer class="bg-stone-950 text-stone-500 text-center py-6 border-t border-stone-800 mt-12 text-sm">
-    <p>© myezlife Diary - 100% 本地優先與雲端自主備份</p>
-  </footer>
-
-  <script>
-    function toggleAccordion(dateKey) {
-      const content = document.getElementById(\`content-\${dateKey}\`);
-      const icon = document.getElementById(\`icon-\${dateKey}\`);
-      if (content && icon) {
-        content.classList.toggle('expanded');
-        icon.classList.toggle('active');
+      // 替換標題為白皮書風格
+      const headerTitle = cloneDoc.querySelector('header h1');
+      if (headerTitle) {
+        headerTitle.innerHTML = '🌱 myezlife 離線心情隨筆與筆記白皮書 <span class="text-amber-400 text-sm font-normal">── 匯出日期：' + todayStr + '</span>';
       }
-    }
-    function toggleAll(expand) {
-      const contents = document.querySelectorAll('.accordion-content');
-      const icons = document.querySelectorAll('.rotate-icon');
-      contents.forEach(c => {
-        if (expand) c.classList.add('expanded');
-        else c.classList.remove('expanded');
-      });
-      icons.forEach(i => {
-        if (expand) i.classList.add('active');
-        else i.classList.remove('active');
-      });
-    }
-    function filterChapters() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.querySelectorAll('.chapter-card');
-      cards.forEach(card => {
-        const text = card.innerText.toLowerCase();
-        if (text.includes(input)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
+
+      // 確保歷史清單中的刪除按鈕在離線版中移除（唯讀瀏覽）
+      const deleteBtns = cloneDoc.querySelectorAll('#diary-list button');
+      deleteBtns.forEach(btn => btn.remove());
+
+      // 加入白皮書專用全域控制 Script
+      const scriptEl = cloneDoc.createElement('script');
+      scriptEl.textContent = `
+        function toggleAccordion(dateKey) {
+          const content = document.getElementById('content-' + dateKey);
+          const icon = document.getElementById('icon-' + dateKey);
+          if (content && icon) {
+            content.classList.toggle('expanded');
+            icon.classList.toggle('active');
+          }
         }
-      });
-    }
-  </script>
-</body>
-</html>`;
+        function toggleAll(expand) {
+          const contents = document.querySelectorAll('.accordion-content');
+          const icons = document.querySelectorAll('.rotate-icon');
+          contents.forEach(c => {
+            if (expand) c.classList.add('expanded');
+            else c.classList.remove('expanded');
+          });
+          icons.forEach(i => {
+            if (expand) i.classList.add('active');
+            else i.classList.remove('active');
+          });
+        }
+        function filterChapters() {
+          const input = document.getElementById('searchInput').value.toLowerCase();
+          const cards = document.querySelectorAll('.chapter-card');
+          cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            if (text.includes(input)) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        }
+      `;
+      cloneDoc.body.appendChild(scriptEl);
+
+      const fullHtml = '<!DOCTYPE html>\n' + cloneDoc.documentElement.outerHTML;
 
       const dataStr = "data:text/html;charset=utf-8," + encodeURIComponent(fullHtml);
       const downloadAnchor = document.createElement('a');
@@ -835,7 +790,7 @@
         btnTextEl.innerText = '📝 寫下今日隨筆並同步雲端';
       }
 
-      const searchQuery = document.getElementById('search-input') ? document.getElementById('search-input'].value.toLowerCase().trim() : '';
+      const searchQuery = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase().trim() : '';
       
       let dates = Object.keys(diaries).sort().reverse();
 
@@ -863,7 +818,6 @@
         return;
       }
 
-      // 在 App 內的歷史清單也同步套用折疊卡片風格
       listContainer.innerHTML = dates.map(date => {
         const item = diaries[date];
         
@@ -885,7 +839,7 @@
         }
 
         return `
-          chapter-card bg-stone-950 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md overflow-hidden">
+          <div class="chapter-card bg-stone-950 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md overflow-hidden">
             <button onclick="toggleAccordion('${date}')" class="w-full px-5 py-4 md:px-6 md:py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500">
               <div class="flex items-center gap-3">
                 <span class="text-2xl md:text-3xl">${item.mood}</span>
@@ -909,7 +863,7 @@
               </div>
             </div>
           </div>
-        `.replace('chapter-card', '<div class="chapter-card');
+        `;
       }).join('');
     }
 
