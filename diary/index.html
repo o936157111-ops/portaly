@@ -35,7 +35,8 @@
         <div class="text-sm md:text-base font-bold text-stone-300 bg-stone-900 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border border-stone-800" id="current-date-display">
           📅 載入日期中...
         </div>
-        <span class="text-xs md:text-sm text-stone-400">記錄此刻的平靜與心境</span>
+        <!-- 防呆提示標籤 -->
+        <span id="cloud-status-tip" class="text-xs md:text-sm text-amber-400/80 bg-amber-950/40 px-3 py-1 rounded-lg border border-amber-800/30">💡 建議先連動雲端，確保日記自動備份</span>
       </div>
 
       <!-- 心情選擇器 -->
@@ -109,15 +110,20 @@
       selectMood('🌿', '平靜');
       loadDiaries();
       
-      // 檢查是否已有暫存 Token，若有直接標記已連動並嘗試抓取雲端資料
       if (accessToken) {
-        document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
-        document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+        setCloudConnectedUI();
         initDriveAfterAuth();
       }
 
-      // 初始化 GIS
       gisLoaded();
+    }
+
+    function setCloudConnectedUI() {
+      document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
+      document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+      const tip = document.getElementById('cloud-status-tip');
+      tip.innerText = '✨ 雲端備份防護已啟動';
+      tip.className = 'text-xs md:text-sm text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-lg border border-emerald-800/30';
     }
 
     function gisLoaded() {
@@ -132,12 +138,17 @@
               return;
             }
             accessToken = resp.access_token;
-            localStorage.setItem('myezlife_access_token', accessToken); // 記住 Token 避免重複彈窗
+            localStorage.setItem('myezlife_access_token', accessToken);
             
-            document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
-            document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
-            
+            setCloudConnectedUI();
             await initDriveAfterAuth();
+
+            // 如果使用者剛剛是「先寫日記才點連動」，授權後自動幫他把今天的日記補上傳雲端！
+            if (pendingDiaryData) {
+              await uploadToGoogleDrive(todayStr, pendingDiaryData);
+              pendingDiaryData = null;
+              alert('已成功完成 Google 雲端連動，並將您的日記同步上傳！');
+            }
           },
         });
       }
@@ -148,7 +159,6 @@
         gisLoaded();
       }
       if (tokenClient) {
-        // 強制跳出帳戶選擇對話框，避開部分瀏覽器的快取與 COOP 阻擋
         tokenClient.requestAccessToken({ prompt: 'select_account' });
       } else {
         alert('Google 登入元件載入中，請稍候 2 秒再點一次！');
@@ -181,12 +191,11 @@
         });
         
         if (searchRes.status === 401) {
-          // Token 過期或失效
           localStorage.removeItem('myezlife_access_token');
           accessToken = null;
           document.getElementById('sync-btn-text').innerText = '連動 Google 雲端';
           document.getElementById('sync-btn').classList.remove('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
-          alert('Google 授權已過期，請重新點擊「連動 Google 雲端」！');
+          alert('Google 授權已過期，請重新連動！');
           return null;
         }
 
@@ -215,6 +224,8 @@
       return folderId;
     }
 
+    let pendingDiaryData = null; // 用來暫存未授權時想上傳的日記
+
     async function saveDiary() {
       const text = document.getElementById('diary-input').value.trim();
       if (!text) {
@@ -230,6 +241,7 @@
         updatedAt: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
       };
 
+      // 1. 永遠先存本地確保安全
       const diaries = getStoredDiaries();
       diaries[todayStr] = diaryData;
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
@@ -237,10 +249,17 @@
       document.getElementById('diary-input').value = '';
       loadDiaries();
 
+      // 2. 檢查是否已連動 Google 雲端
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
       } else {
-        alert('日記已存於本地。請點擊右上角「連動 Google 雲端」進行雲端同步！');
+        // [防呆機制] 如果沒連動，自動幫使用者暫存，並主動跳出授權視窗！
+        pendingDiaryData = diaryData;
+        if (confirm('您目前尚未連動 Google 雲端！是否要立即進行連動，讓這篇日記自動備份到雲端？')) {
+          handleAuthClick();
+        } else {
+          alert('日記已安全存於本機。記得之後點擊右上角「連動 Google 雲端」進行備份喔！');
+        }
       }
     }
 
@@ -282,10 +301,7 @@
     async function uploadToGoogleDrive(date, diaryData) {
       try {
         const fId = await getOrCreateFolderId();
-        if (!fId) {
-          alert('無法取得雲端資料夾，請重新點擊「連動 Google 雲端」！');
-          return;
-        }
+        if (!fId) return;
 
         const queryRes = await fetch(`https://www.googleapis.com/drive/v3/files?q='${fId}' in parents and name='${date}.json' and trashed=false`, {
           headers: new Headers({ 'Authorization': 'Bearer ' + accessToken })
@@ -326,12 +342,8 @@
         });
 
         if (uploadRes.ok) {
-          // 成功寫入雲端！
-        } else {
-          const errText = await uploadRes.text();
-          console.error('檔案內容寫入失敗:', errText);
+          console.log('雲端同步成功');
         }
-
       } catch (error) {
         console.error('同步至 Google 雲端發生錯誤:', error);
       }
