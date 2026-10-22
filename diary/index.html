@@ -11,7 +11,7 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
-<body class="bg-stone-900 text-stone-100 min-h-screen font-sans antialiased text-base md:text-lg">
+<body class="bg-stone-900 text-stone-100 min-h-screen font-sans antialiased text-base md:text-lg relative">
 
   <!-- 頂部導覽列 -->
   <header class="bg-stone-950 text-stone-100 border-b border-stone-800 sticky top-0 z-10 shadow-md">
@@ -20,10 +20,17 @@
         <span class="text-2xl md:text-3xl">🌱</span>
         <h1 class="text-xl md:text-2xl font-bold tracking-wide">myezlife <span class="text-amber-400 text-sm md:text-base font-normal">心情隨筆</span></h1>
       </div>
-      <!-- 雲端同步按鈕 -->
-      <button id="sync-btn" onclick="handleAuthClick()" class="w-full sm:w-auto text-xs md:text-sm bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-400/40 py-2 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-cloud-arrow-up"></i> <span id="sync-btn-text">連動 Google 雲端</span>
-      </button>
+      
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <!-- 說明與備份按鈕 -->
+        <button onclick="openInfoModal()" class="text-xs md:text-sm bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 py-2 px-3 rounded-xl font-medium transition flex items-center gap-1.5" title="資料安全與備份說明">
+          <i class="fa-solid fa-circle-info text-amber-400"></i> <span>說明與備份</span>
+        </button>
+        <!-- 雲端同步按鈕 -->
+        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs md:text-sm bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-400/40 py-2 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up"></i> <span id="sync-btn-text">連動 Google 雲端</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -71,7 +78,7 @@
         <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3 md:p-4 border-2 border-stone-800 rounded-2xl focus:outline-none focus:ring-4 focus:ring-amber-500/20 focus:border-amber-500 text-stone-100 text-base md:text-lg leading-relaxed placeholder-stone-600 resize-none bg-stone-900"></textarea>
       </div>
 
-      <!-- 儲存按鈕（動態文字 ID） -->
+      <!-- 儲存按鈕 -->
       <button id="save-btn" onclick="saveDiary()" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-3 md:py-4 rounded-2xl transition duration-200 shadow-md text-lg md:text-xl flex items-center justify-center gap-2 md:gap-3">
         <i class="fa-solid fa-pen-nib"></i> <span id="save-btn-text">寫下今日隨筆並同步雲端</span>
       </button>
@@ -101,6 +108,76 @@
 
   </main>
 
+  <!-- ℹ️ 說明與備份 Modal (跳出視窗) -->
+  <div id="info-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-stone-950 border border-stone-800 rounded-3xl p-6 md:p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 text-stone-200 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b border-stone-800 pb-4">
+        <h3 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved"></i> 隱私安全與資料儲存說明
+        </h3>
+        <button onclick="closeInfoModal()" class="text-stone-400 hover:text-stone-100 text-xl p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- 說明內文 -->
+      <div class="space-y-4 text-sm md:text-base leading-relaxed text-stone-300">
+        <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800">
+          <h4 class="font-bold text-stone-100 mb-1 flex items-center gap-2">
+            <span>🔒</span> 100% 個人自主隱私（零伺服器）
+          </h4>
+          <p class="text-stone-400 text-xs md:text-sm">
+            本應用程式**沒有任何中央伺服器**。您的日記不會儲存在任何第三方數據庫中，完全僅存於您的裝置本機或您的個人 Google 雲端硬碟 (`myezlife_diaries` 資料夾) 中，安全無虞。
+          </p>
+        </div>
+
+        <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800">
+          <h4 class="font-bold text-stone-100 mb-1 flex items-center gap-2">
+            <span>☁️</span> 為什麼建議連動 Google 雲端？
+          </h4>
+          <p class="text-stone-400 text-xs md:text-sm">
+            連動後，日記會自動同步至您個人的 Google 雲端專屬資料夾。即使更換手機、電腦或清除瀏覽器紀錄，歷史隨筆依然完整留存不遺失。
+          </p>
+        </div>
+
+        <!-- 容量統計 -->
+        <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800 space-y-2">
+          <h4 class="font-bold text-stone-100 flex items-center gap-2">
+            <span>💾</span> 本機裝置容量狀態 (LocalStorage)
+          </h4>
+          <div class="flex justify-between text-xs md:text-sm text-stone-400">
+            <span>已使用空間：<strong id="storage-used" class="text-amber-400">0 KB</strong> / 約 5 MB</span>
+            <span id="storage-estimate" class="text-stone-400">可寫約 1000 天</span>
+          </div>
+          <div class="w-full bg-stone-950 rounded-full h-2 overflow-hidden border border-stone-800">
+            <div id="storage-bar" class="bg-amber-500 h-2 rounded-full" style="width: 1%"></div>
+          </div>
+        </div>
+
+        <!-- 手動匯出下載 -->
+        <div class="space-y-3 pt-2">
+          <h4 class="font-bold text-stone-100 flex items-center gap-2">
+            <span>📥</span> 自主備份下載 (另存在本機裝置)
+          </h4>
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="exportDiariesJSON()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-2 transition">
+              <i class="fa-solid fa-file-code text-amber-400"></i> 下載 JSON 備份檔
+            </button>
+            <button onclick="exportDiariesTXT()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-2 transition">
+              <i class="fa-solid fa-file-lines text-emerald-400"></i> 下載純文字 TXT 檔
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="closeInfoModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-bold py-3 rounded-xl transition">
+          我知道了
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const CLIENT_ID = '733896891104-14rpscprtqc0n1jdsdg5h5pva2k7e9kt.apps.googleusercontent.com';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
@@ -123,6 +200,73 @@
       }
 
       gisLoaded();
+    }
+
+    function openInfoModal() {
+      updateStorageUsage();
+      document.getElementById('info-modal').classList.remove('hidden');
+    }
+
+    function closeInfoModal() {
+      document.getElementById('info-modal').classList.add('hidden');
+    }
+
+    // 計算本機 LocalStorage 用量
+    function updateStorageUsage() {
+      const diariesData = localStorage.getItem('myezlife_diaries') || '{}';
+      const bytes = new Blob([diariesData]).size;
+      const kb = (bytes / 1024).toFixed(1);
+      const maxKb = 5120; // 5MB
+      const percentage = Math.min(100, Math.max(1, ((kb / maxKb) * 100).toFixed(1)));
+
+      document.getElementById('storage-used').innerText = `${kb} KB`;
+      document.getElementById('storage-bar').style.width = `${percentage}%`;
+
+      const remainingKb = maxKb - kb;
+      const daysLeft = Math.floor(remainingKb / 4); // 假設一篇平均 4KB
+      document.getElementById('storage-estimate').innerText = `可再寫約 ${daysLeft} 天`;
+    }
+
+    // 下載 JSON 備份檔
+    function exportDiariesJSON() {
+      const diaries = getStoredDiaries();
+      if (Object.keys(diaries).length === 0) {
+        alert('目前沒有歷史日記可以備份喔！');
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(diaries, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `myezlife_diaries_backup_${todayStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    // 下載 TXT 純文字檔
+    function exportDiariesTXT() {
+      const diaries = getStoredDiaries();
+      const dates = Object.keys(diaries).sort().reverse();
+      if (dates.length === 0) {
+        alert('目前沒有歷史日記可以備份喔！');
+        return;
+      }
+      
+      let txtContent = `myezlife 心情日記歷史備份 (${todayStr})\n========================================\n\n`;
+      dates.forEach(date => {
+        const item = diaries[date];
+        txtContent += `【${item.date}】 心情：${item.mood} ${item.moodLabel} (記錄時間: ${item.updatedAt || ''})\n`;
+        txtContent += `----------------------------------------\n`;
+        txtContent += `${item.content}\n\n========================================\n\n`;
+      });
+
+      const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(txtContent);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `myezlife_diaries_${todayStr}.txt`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
     }
 
     function setCloudConnectedUI() {
@@ -265,7 +409,7 @@
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
       
       document.getElementById('diary-input').value = '';
-      loadDiaries(); // 更新畫面與按鈕文字
+      loadDiaries();
 
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
@@ -382,7 +526,7 @@
         delete diaries[date];
         localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
         
-        loadDiaries(); // 刪除後會自動判斷今天是否還有日記，並動態切換按鈕文字！
+        loadDiaries();
 
         if (accessToken) {
           try {
@@ -411,7 +555,6 @@
     function loadDiaries() {
       const diaries = getStoredDiaries();
       
-      // 🌟 [動態切換按鈕文字] 檢查今天是否已經寫過日記
       const btnTextEl = document.getElementById('save-btn-text');
       if (diaries[todayStr]) {
         btnTextEl.innerText = '✍️ 追加至今日日記並同步雲端';
