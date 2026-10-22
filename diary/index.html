@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 解決 Google 彈出登入視窗被瀏覽器阻擋的關鍵安全性標頭 -->
   <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
   <title>myezlife Diary - 隨筆花園日記</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- 引入 Google Identity Services (GIS) SDK -->
+  <!-- 引入 Google 登入與 API SDK -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
@@ -98,7 +97,7 @@
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
     let tokenClient;
-    let accessToken = null;
+    let accessToken = localStorage.getItem('myezlife_access_token') || null;
     let selectedMood = { emoji: '🌿', label: '平靜' };
     const todayStr = new Date().toISOString().split('T')[0];
     let cloudDiaries = {}; 
@@ -110,15 +109,15 @@
       selectMood('🌿', '平靜');
       loadDiaries();
       
-      if (typeof gapi !== 'undefined') {
-        gapi.load('client', initializeGapiClient);
+      // 檢查是否已有暫存 Token，若有直接標記已連動並嘗試抓取雲端資料
+      if (accessToken) {
+        document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
+        document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+        initDriveAfterAuth();
       }
-    }
 
-    async function initializeGapiClient() {
-      await gapi.client.init({
-        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-      });
+      // 初始化 GIS
+      gisLoaded();
     }
 
     function gisLoaded() {
@@ -133,11 +132,12 @@
               return;
             }
             accessToken = resp.access_token;
+            localStorage.setItem('myezlife_access_token', accessToken); // 記住 Token 避免重複彈窗
+            
             document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
             document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
             
-            await getOrCreateFolderId();
-            await fetchDiariesFromDrive();
+            await initDriveAfterAuth();
           },
         });
       }
@@ -148,10 +148,16 @@
         gisLoaded();
       }
       if (tokenClient) {
-        tokenClient.requestAccessToken({ prompt: 'consent' });
+        // 強制跳出帳戶選擇對話框，避開部分瀏覽器的快取與 COOP 阻擋
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
       } else {
-        alert('Google 登入元件尚未載入完成，請稍候再試一次！');
+        alert('Google 登入元件載入中，請稍候 2 秒再點一次！');
       }
+    }
+
+    async function initDriveAfterAuth() {
+      await getOrCreateFolderId();
+      await fetchDiariesFromDrive();
     }
 
     function selectMood(emoji, label) {
@@ -173,6 +179,17 @@
         const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`, {
           headers: new Headers({ 'Authorization': 'Bearer ' + accessToken })
         });
+        
+        if (searchRes.status === 401) {
+          // Token 過期或失效
+          localStorage.removeItem('myezlife_access_token');
+          accessToken = null;
+          document.getElementById('sync-btn-text').innerText = '連動 Google 雲端';
+          document.getElementById('sync-btn').classList.remove('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+          alert('Google 授權已過期，請重新點擊「連動 Google 雲端」！');
+          return null;
+        }
+
         const searchResult = await searchRes.json();
 
         if (searchResult.files && searchResult.files.length > 0) {
@@ -223,7 +240,7 @@
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
       } else {
-        alert('日記已存於本地。請點擊右上角「連動 Google 雲端」進行同步！');
+        alert('日記已存於本地。請點擊右上角「連動 Google 雲端」進行雲端同步！');
       }
     }
 
@@ -256,7 +273,6 @@
             }
           }
           loadDiaries();
-          alert('已成功從雲端專屬資料夾同步歷史日記！');
         }
       } catch (error) {
         console.error('從雲端讀取日記失敗:', error);
@@ -267,7 +283,7 @@
       try {
         const fId = await getOrCreateFolderId();
         if (!fId) {
-          alert('無法取得雲端資料夾 ID，請重新連動！');
+          alert('無法取得雲端資料夾，請重新點擊「連動 Google 雲端」！');
           return;
         }
 
@@ -310,16 +326,14 @@
         });
 
         if (uploadRes.ok) {
-          alert('日記已成功儲存至 Google 雲端 myezlife_diaries 資料夾！');
+          // 成功寫入雲端！
         } else {
           const errText = await uploadRes.text();
           console.error('檔案內容寫入失敗:', errText);
-          alert('同步失敗，詳情請看 Console');
         }
 
       } catch (error) {
         console.error('同步至 Google 雲端發生錯誤:', error);
-        alert('同步發生錯誤，請看 Console 主控台');
       }
     }
 
