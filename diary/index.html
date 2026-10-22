@@ -110,7 +110,9 @@
       loadDiaries();
       
       // 初始化 Google API
-      gapi.load('client', initializeGapiClient);
+      if (typeof gapi !== 'undefined') {
+        gapi.load('client', initializeGapiClient);
+      }
     }
 
     async function initializeGapiClient() {
@@ -122,20 +124,22 @@
 
     // 初始化 Google Identity Services 登入授權
     function gisLoaded() {
-      tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: (resp) => {
-          if (resp.error !== undefined) {
-            throw (resp);
-          }
-          accessToken = resp.access_token;
-          document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
-          document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
-          alert('Google 雲端帳號連動成功！');
-        },
-      });
-      gisInited = true;
+      if (typeof google !== 'undefined' && google.accounts) {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: (resp) => {
+            if (resp.error !== undefined) {
+              throw (resp);
+            }
+            accessToken = resp.access_token;
+            document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
+            document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+            alert('Google 雲端帳號連動成功！');
+          },
+        });
+        gisInited = true;
+      }
     }
 
     // 觸發登入
@@ -143,7 +147,11 @@
       if (!tokenClient) {
         gisLoaded();
       }
-      tokenClient.requestAccessToken({ prompt: 'consent' });
+      if (tokenClient) {
+        tokenClient.requestAccessToken({ prompt: 'consent' });
+      } else {
+        alert('Google 登入元件尚未載入完成，請稍候再試一次！');
+      }
     }
 
     function selectMood(emoji, label) {
@@ -182,7 +190,7 @@
 
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
       document.getElementById('diary-input').value = '';
-        loadDiaries();
+      loadDiaries();
 
       // 如果已連動 Google，順便上傳到雲端
       if (accessToken) {
