@@ -77,13 +77,21 @@
       </button>
     </section>
 
-    <!-- 歷史日記列表 -->
-    <section>
-      <div class="flex items-center justify-between mb-3 md:mb-4 px-2">
+    <!-- 歷史日記列表與搜尋區 -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-2">
         <h2 class="text-lg md:text-xl font-bold text-stone-200 flex items-center gap-2">
           <span>🌸</span> 歷史隨筆紀錄
         </h2>
         <span id="diary-count" class="text-xs md:text-sm font-medium text-stone-400">共 0 篇</span>
+      </div>
+
+      <!-- 🔍 關鍵字搜尋框 -->
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-stone-500">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容或心情..." class="w-full pl-11 pr-4 py-3 bg-stone-950 border border-stone-800 rounded-2xl text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 text-sm md:text-base">
       </div>
 
       <div id="diary-list" class="space-y-3 md:space-y-4">
@@ -143,7 +151,6 @@
             setCloudConnectedUI();
             await initDriveAfterAuth();
 
-            // 如果使用者剛剛是「先寫日記才點連動」，授權後自動幫他把今天的日記補上傳雲端！
             if (pendingDiaryData) {
               await uploadToGoogleDrive(todayStr, pendingDiaryData);
               pendingDiaryData = null;
@@ -224,7 +231,7 @@
       return folderId;
     }
 
-    let pendingDiaryData = null; // 用來暫存未授權時想上傳的日記
+    let pendingDiaryData = null;
 
     async function saveDiary() {
       const text = document.getElementById('diary-input').value.trim();
@@ -241,7 +248,6 @@
         updatedAt: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
       };
 
-      // 1. 永遠先存本地確保安全
       const diaries = getStoredDiaries();
       diaries[todayStr] = diaryData;
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
@@ -249,11 +255,9 @@
       document.getElementById('diary-input').value = '';
       loadDiaries();
 
-      // 2. 檢查是否已連動 Google 雲端
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
       } else {
-        // [防呆機制] 如果沒連動，自動幫使用者暫存，並主動跳出授權視窗！
         pendingDiaryData = diaryData;
         if (confirm('您目前尚未連動 Google 雲端！是否要立即進行連動，讓這篇日記自動備份到雲端？')) {
           handleAuthClick();
@@ -361,16 +365,28 @@
 
     function loadDiaries() {
       const diaries = getStoredDiaries();
-      const listContainer = document.getElementById('diary-list');
-      const dates = Object.keys(diaries).sort().reverse();
+      const searchQuery = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase().trim() : '';
+      
+      let dates = Object.keys(diaries).sort().reverse();
+
+      // 關鍵字過濾篩選
+      if (searchQuery) {
+        dates = dates.filter(date => {
+          const item = diaries[date];
+          return date.includes(searchQuery) || 
+                 item.content.toLowerCase().includes(searchQuery) || 
+                 item.moodLabel.toLowerCase().includes(searchQuery);
+        });
+      }
 
       document.getElementById('diary-count').innerText = `共 ${dates.length} 篇`;
+      const listContainer = document.getElementById('diary-list');
 
       if (dates.length === 0) {
         listContainer.innerHTML = `
           <div class="text-center py-10 md:py-12 bg-stone-950 rounded-2xl md:rounded-3xl border-2 border-dashed border-stone-800">
             <span class="text-3xl md:text-4xl block mb-3">🍃</span>
-            <p class="text-sm md:text-base text-stone-400 font-medium">目前還沒有紀錄，寫下第一篇日記吧！</p>
+            <p class="text-sm md:text-base text-stone-400 font-medium">沒有找到符合的日記紀錄</p>
           </div>
         `;
         return;
