@@ -181,6 +181,19 @@
           </p>
         </div>
 
+        <!-- 🤖 AI 雲端設定小幫手快捷區塊 -->
+        <div class="bg-amber-950/40 p-4 rounded-2xl border border-amber-800/40 space-y-2">
+          <h4 class="font-bold text-amber-300 flex items-center gap-2 text-sm md:text-base">
+            <span>🤖</span> 需要 AI 帶領您設定 Google 雲端連動嗎？
+          </h4>
+          <p class="text-stone-400 text-xs md:text-sm">
+            點擊下方按鈕，系統會自動複製教學話術並開啟 Gemini，讓 AI 一步步帶您申請專屬雲端憑證：
+          </p>
+          <button onclick="askAITeaching()" class="w-full bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-500/50 py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> 一鍵複製話術並開啟 Gemini 教學
+          </button>
+        </div>
+
         <!-- 容量統計 -->
         <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800 space-y-2">
           <h4 class="font-bold text-stone-100 flex items-center gap-2">
@@ -201,13 +214,13 @@
             <span>📥</span> 自主備份下載 (另存在本機裝置)
           </h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <button onclick="exportDiariesHTML()" class="bg-stone-900 hover:bg-stone-800 border border-amber-500/50 text-amber-300 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition">
+            <button onclick="exportDiariesHTML()" class="bg-stone-900 hover:bg-stone-800 border border-amber-500/50 text-amber-300 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
               <i class="fa-solid fa-globe text-amber-400"></i> 下載離線 HTML 檔
             </button>
-            <button onclick="exportDiariesJSON()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition">
+            <button onclick="exportDiariesJSON()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
               <i class="fa-solid fa-file-code text-amber-400"></i> 下載 JSON 備份檔
             </button>
-            <button onclick="exportDiariesTXT()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition">
+            <button onclick="exportDiariesTXT()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
               <i class="fa-solid fa-file-lines text-emerald-400"></i> 下載純文字 TXT 檔
             </button>
           </div>
@@ -215,7 +228,7 @@
       </div>
 
       <div class="pt-2">
-        <button onclick="closeInfoModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-bold py-3 rounded-xl transition">
+        <button onclick="closeInfoModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-bold py-3 rounded-xl transition cursor-pointer">
           我知道了
         </button>
       </div>
@@ -246,6 +259,19 @@
       }
 
       gisLoaded();
+    }
+
+    // 🤖 一鍵複製話術並開啟 Gemini 教學
+    function askAITeaching() {
+      const promptText = "我正在使用一套名為 myezlife 的零伺服器心情日記網頁，想要連動我自己的 Google 雲端硬碟來自動備份日記。請問我該如何一步步在 Google Cloud Console 申請專屬的 OAuth 2.0 憑證與設定重新導向網址（Redirect URI），才能順利完成連動？請用最簡單、像朋友對話一樣的方式一步一步教我！";
+      
+      navigator.clipboard.writeText(promptText).then(() => {
+        alert("✨ 已成功複製設定教學話術到剪貼簿！\n\n即將為您開啟 Gemini，請在對話框按下 Ctrl+V (或 Cmd+V) 貼上即可開始教學！");
+        window.open("https://gemini.google.com/app", "_blank");
+      }).catch(err => {
+        console.error('複製失敗:', err);
+        alert("複製到剪貼簿失敗，請手動複製話術。");
+      });
     }
 
     function toggleAccordion(dateKey) {
@@ -313,7 +339,7 @@
             <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
             <span class="${todo.done ? 'line-through text-stone-500' : 'text-stone-200'} truncate">${escapeHtml(todo.text)}</span>
           </label>
-          <button onclick="deleteTodo(${idx})" class="text-stone-600 hover:text-rose-400 text-xs p-1 transition">
+          <button onclick="deleteTodo(${idx})" class="text-stone-600 hover:text-rose-400 text-xs p-1 transition cursor-pointer">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </li>
@@ -344,7 +370,7 @@
       document.getElementById('storage-estimate').innerText = '可再寫約 ' + daysLeft + ' 天';
     }
 
-    // 🌐 完美內嵌資料的離線 HTML 匯出（直接把所有日記打包進獨立檔案，開檔即看！）
+    // 🌐 完美內嵌所有日記資料的離線 HTML 白皮書匯出
     function exportDiariesHTML() {
       const diaries = getStoredDiaries();
       const dates = Object.keys(diaries).sort().reverse();
@@ -422,10 +448,10 @@
 '               class="w-full pl-9 pr-4 py-2 text-sm bg-stone-900 border border-stone-800 text-stone-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">\n' +
 '      </div>\n' +
 '      <div class="flex gap-3 w-full sm:w-auto justify-end">\n' +
-'        <button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">\n' +
+'        <button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700 cursor-pointer">\n' +
 '          <i class="fa-solid fa-folder-open mr-1.5"></i>全部展開\n' +
 '        </button>\n' +
-'        <button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">\n' +
+'        <button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700 cursor-pointer">\n' +
 '          <i class="fa-solid fa-folder-closed mr-1.5"></i>全部收合\n' +
 '        </button>\n' +
 '      </div>\n' +
@@ -874,7 +900,7 @@
         }
 
         return '<div class="chapter-card bg-stone-950 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md overflow-hidden">' +
-          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-5 py-4 md:px-6 md:py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500">' +
+          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-5 py-4 md:px-6 md:py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500 cursor-pointer">' +
             '<div class="flex items-center gap-3">' +
               '<span class="text-2xl md:text-3xl">' + item.mood + '</span>' +
               '<div>' +
@@ -885,7 +911,7 @@
             '<div class="flex items-center gap-3">' +
               '<span class="text-xs md:text-sm text-stone-500">' + (item.updatedAt || '') + '</span>' +
               '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-stone-400 rotate-icon text-lg"></i>' +
-              '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-stone-500 hover:text-rose-400 p-2 transition ml-1" title="刪除">' +
+              '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-stone-500 hover:text-rose-400 p-2 transition ml-1 cursor-pointer" title="刪除">' +
                 '<i class="fa-regular fa-trash-can"></i>' +
               '</span>' +
             '</div>' +
