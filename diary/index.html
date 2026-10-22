@@ -16,6 +16,15 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
+
+    /* 👓 長輩友善「超大字體」模式 */
+    body.large-text-mode {
+      font-size: 115%;
+    }
+    body.large-text-mode .text-base { font-size: 1.25rem !important; }
+    body.large-text-mode .text-sm { font-size: 1.1rem !important; }
+    body.large-text-mode .text-xs { font-size: 0.95rem !important; }
+
     .accordion-content {
       max-height: 0;
       overflow: hidden;
@@ -52,8 +61,8 @@
     .side-drawer {
       position: fixed;
       top: 0;
-      left: -280px;
-      width: 280px;
+      left: -320px;
+      width: 300px;
       height: 100%;
       background: #ffffff;
       z-index: 10001;
@@ -71,20 +80,20 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       padding-bottom: 16px;
       border-bottom: 1px solid #eee;
     }
     .drawer-header img {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       object-fit: cover;
     }
     .drawer-title {
-      font-size: 15px;
+      font-size: 18px;
       font-weight: bold;
-      color: #222;
+      color: #111;
     }
     .drawer-btn-container {
       display: flex;
@@ -93,20 +102,20 @@
     }
     .drawer-btn {
       width: 100%;
-      padding: 12px 18px;
-      background: #f7f7f7;
-      border: 1px solid #ddd;
-      color: #222;
-      font-size: 15px;
-      font-weight: 600;
+      padding: 14px 18px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      font-size: 16px;
+      font-weight: 700;
       text-align: center;
-      border-radius: 12px;
+      border-radius: 14px;
       text-decoration: none;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
       transition: all 0.2s ease;
     }
     .drawer-btn:hover {
-      background: #222;
+      background: #0f172a;
       color: #fff;
     }
   </style>
@@ -121,213 +130,237 @@
       <div class="drawer-title">功能選單</div>
     </div>
     <div class="drawer-btn-container">
+      <button onclick="toggleFontSize()" class="drawer-btn bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-text-height"></i> <span id="fontToggleLabel">切換為超大字模式</span>
+      </button>
       <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
-      <a href="https://myezlife.com/diary/" class="drawer-btn" style="color: #008800; font-weight: bold;">🌱 心情隨筆與待辦日記</a>
+      <a href="https://myezlife.com/diary/" class="drawer-btn text-emerald-700 font-bold">🌱 心情隨筆與待辦日記</a>
       <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
       <a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
       <a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
       <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
       <a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
-      <a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作問候圖</a>
+      <a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn text-amber-600 font-bold">🌻 製作問候圖</a>
     </div>
   </div>
 
-  <!-- 頂部導覽列（與主站首頁一致，左側使用 Logo 點擊開啓側邊選單） -->
+  <!-- 頂部導覽列（寬螢幕支援 max-w-6xl 寬度放大） -->
   <header class="bg-white text-slate-900 border-b border-slate-200/90 sticky top-0 z-10 shadow-sm">
-    <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center gap-3">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
       
-      <!-- 左側：Logo 圖片點擊開啓側邊選單 + 標題 -->
+      <!-- 左側：Logo + 標題 -->
       <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
-        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-9 h-9 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
-        <!-- 標題改為兩行呈現 -->
-        <h1 class="text-base font-bold tracking-wide leading-tight flex flex-col">
+        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
+        <h1 class="text-lg font-bold tracking-wide leading-tight flex flex-col">
           <span>myezlife</span>
-          <span class="text-emerald-600 font-semibold">心情隨筆</span>
+          <span class="text-emerald-600 font-semibold text-sm">心情隨筆日記</span>
         </h1>
       </div>
       
-      <!-- 右側功能按鈕 -->
+      <!-- 右側功能按鈕區 -->
       <div class="flex items-center gap-2">
+        <!-- 大字體開關按鈕 -->
+        <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-2.5 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1">
+          <i class="fa-solid fa-text-height text-emerald-600"></i>
+          <span id="fontToggleTopLabel" class="hidden sm:inline">字體大小</span>
+        </button>
+
         <!-- 說明與備份按鈕 -->
-        <button onclick="openInfoModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 py-1.5 px-3 rounded-xl font-medium transition flex items-center gap-1 cursor-pointer" title="資料安全與備份說明">
+        <button onclick="openInfoModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 py-1.5 px-3 rounded-xl font-bold transition flex items-center gap-1 cursor-pointer">
           <i class="fa-solid fa-circle-info text-emerald-600"></i> <span>說明</span>
         </button>
+
         <!-- 雲端同步按鈕 -->
-        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-1.5 px-3 rounded-xl font-medium transition flex items-center justify-center gap-1.5 cursor-pointer">
+        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> <span id="sync-btn-text">雲端同步</span>
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-md mx-auto w-full px-4 pt-5 space-y-4">
+  <!-- 💻📱 全站主要內容區域：手機單欄，電腦版（md以上）自動響應為雙欄 -->
+  <main class="max-w-6xl mx-auto w-full px-4 pt-5">
 
-    <!-- 💡 本機專屬今日提醒摘要 -->
-    <section id="home-today-reminder" class="hidden">
-      <div class="bg-white border border-emerald-500/40 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
-        <div class="flex items-center gap-3 overflow-hidden">
-          <span class="text-2xl">💡</span>
-          <div class="truncate">
-            <h3 class="text-xs font-bold text-emerald-700">今日待辦與提醒摘要</h3>
-            <p id="home-reminder-text" class="text-xs text-slate-700 truncate">載入中...</p>
-          </div>
-        </div>
-        <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold shrink-0">本機專屬</span>
-      </div>
-    </section>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-    <!-- 今日心情與待辦卡片 -->
-    <section class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <div class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200" id="current-date-display">
-          📅 載入日期中...
-        </div>
-        <span id="cloud-status-tip" class="text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-medium">💡 建議先連動雲端，確保日記自動備份</span>
-      </div>
-
-      <!-- 心情選擇器 -->
-      <div>
-        <label class="block text-xs font-bold text-slate-700 mb-2">今天的心情如何？請點選代表圖示：</label>
-        <div class="grid grid-cols-5 gap-2" id="mood-selector">
-          <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
-            <span class="text-2xl">🌻</span>
-            <span class="text-[11px] font-medium text-slate-700">晴朗</span>
-          </button>
-          <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
-            <span class="text-2xl">🌷</span>
-            <span class="text-[11px] font-medium text-slate-700">溫馨</span>
-          </button>
-          <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
-            <span class="text-2xl">🌿</span>
-            <span class="text-[11px] font-medium text-slate-700">平靜</span>
-          </button>
-          <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
-            <span class="text-2xl">🌧️</span>
-            <span class="text-[11px] font-medium text-slate-700">沉思</span>
-          </button>
-          <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
-            <span class="text-2xl">🥀</span>
-            <span class="text-[11px] font-medium text-slate-700">疲憊</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 文字輸入框 -->
-      <div>
-        <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900 text-sm leading-relaxed placeholder-slate-400 resize-none bg-slate-50"></textarea>
-      </div>
-
-      <!-- 📌 今日待辦提醒與隨手筆記區 -->
-      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
-        <label class="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-          <i class="fa-solid fa-list-check text-emerald-600"></i> 今日待辦事項與提醒 (Notes)
-        </label>
+      <!-- 👈 左側欄：今日心情與寫作編輯區 -->
+      <div class="space-y-4">
         
-        <div class="flex gap-2">
-          <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400">
-          <button onclick="addTodo()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
-            + 新增
+        <!-- 今日心情與待辦卡片 -->
+        <section class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div class="text-sm font-extrabold text-slate-800 bg-slate-100 px-3.5 py-1.5 rounded-xl border border-slate-200" id="current-date-display">
+              📅 載入日期中...
+            </div>
+            <span id="cloud-status-tip" class="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold">💡 建議先連動雲端，確保日記自動備份</span>
+          </div>
+
+          <!-- 心情選擇器 -->
+          <div>
+            <label class="block text-sm font-extrabold text-slate-800 mb-2.5">今天的心情如何？請點選代表圖示：</label>
+            <div class="grid grid-cols-5 gap-2" id="mood-selector">
+              <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
+                <span class="text-3xl">🌻</span>
+                <span class="text-xs font-bold text-slate-700">晴朗</span>
+              </button>
+              <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
+                <span class="text-3xl">🌷</span>
+                <span class="text-xs font-bold text-slate-700">溫馨</span>
+              </button>
+              <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
+                <span class="text-3xl">🌿</span>
+                <span class="text-xs font-bold text-slate-700">平靜</span>
+              </button>
+              <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
+                <span class="text-3xl">🌧️</span>
+                <span class="text-xs font-bold text-slate-700">沉思</span>
+              </button>
+              <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
+                <span class="text-3xl">🥀</span>
+                <span class="text-xs font-bold text-slate-700">疲憊</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 文字輸入框 -->
+          <div>
+            <textarea id="diary-input" rows="5" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900 text-base leading-relaxed placeholder-slate-400 resize-none bg-slate-50 font-medium"></textarea>
+          </div>
+
+          <!-- 📌 今日待辦提醒與隨手筆記區 -->
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+            <label class="block text-sm font-extrabold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-emerald-600 text-base"></i> 今日待辦事項與提醒 (Notes)
+            </label>
+            
+            <div class="flex gap-2">
+              <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400 font-medium">
+              <button onclick="addTodo()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-black transition cursor-pointer shrink-0">
+                + 新增
+              </button>
+            </div>
+
+            <ul id="todo-list" class="space-y-2 text-xs max-h-48 overflow-y-auto">
+              <!-- 待辦項目由 JS 動態繪製 -->
+            </ul>
+          </div>
+
+          <!-- 儲存按鈕 -->
+          <button id="save-btn" onclick="saveDiary()" class="w-full bg-gradient-to-r from-[#00B900] to-[#008800] hover:opacity-95 text-white font-black py-3.5 rounded-xl transition shadow-sm text-base flex items-center justify-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-pen-nib"></i> <span id="save-btn-text">寫下今日隨筆並同步雲端</span>
           </button>
-        </div>
+        </section>
 
-        <ul id="todo-list" class="space-y-1.5 text-xs max-h-36 overflow-y-auto">
-          <!-- 待辦項目將由 JS 動態繪製 -->
-        </ul>
       </div>
 
-      <!-- 儲存按鈕 -->
-      <button id="save-btn" onclick="saveDiary()" class="w-full bg-gradient-to-r from-[#00B900] to-[#008800] hover:opacity-95 text-white font-bold py-3 rounded-xl transition shadow-sm text-sm flex items-center justify-center gap-2 cursor-pointer">
-        <i class="fa-solid fa-pen-nib"></i> <span id="save-btn-text">寫下今日隨筆並同步雲端</span>
-      </button>
-    </section>
+      <!-- 👉 右側欄：提醒摘要與歷史隨筆紀錄 -->
+      <div class="space-y-4">
 
-    <!-- 歷史日記列表與搜尋區 -->
-    <section class="space-y-3">
-      <div class="flex items-center justify-between px-1">
-        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-          <span>🌸</span> 歷史隨筆紀錄
-        </h2>
-        <div class="flex items-center gap-2">
-          <span id="diary-count" class="text-xs font-medium text-slate-500">共 0 篇</span>
-          <button onclick="toggleAllApp(true)" class="px-2 py-1 text-[11px] font-medium bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">展開</button>
-          <button onclick="toggleAllApp(false)" class="px-2 py-1 text-[11px] font-medium bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">收合</button>
-        </div>
+        <!-- 💡 本機專屬今日提醒摘要卡片 -->
+        <section id="home-today-reminder" class="hidden">
+          <div class="bg-stone-950 border border-amber-500/40 rounded-2xl p-4 shadow-md flex items-center justify-between gap-3 text-stone-100">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <span class="text-3xl">💡</span>
+              <div class="truncate">
+                <h3 class="text-xs font-bold text-amber-400">今日待辦與提醒摘要</h3>
+                <p id="home-reminder-text" class="text-sm font-bold text-stone-100 truncate">載入中...</p>
+              </div>
+            </div>
+            <span class="text-xs bg-amber-500 text-stone-950 px-2.5 py-1 rounded-lg font-black shrink-0">本機專屬</span>
+          </div>
+        </section>
+
+        <!-- 歷史日記列表與搜尋區 -->
+        <section class="space-y-3">
+          <div class="flex items-center justify-between px-1">
+            <h2 class="text-base font-black text-slate-900 flex items-center gap-2">
+              <span>🌸</span> 歷史隨筆紀錄
+            </h2>
+            <div class="flex items-center gap-2">
+              <span id="diary-count" class="text-xs font-bold text-slate-500">共 0 篇</span>
+              <button onclick="toggleAllApp(true)" class="px-2.5 py-1 text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">展開</button>
+              <button onclick="toggleAllApp(false)" class="px-2.5 py-1 text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">收合</button>
+            </div>
+          </div>
+
+          <!-- 🔍 關鍵字搜尋框 -->
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </span>
+            <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容、心情或待辦..." class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-sm font-medium shadow-sm">
+          </div>
+
+          <div id="diary-list" class="space-y-3">
+            <!-- 內容由 JS 產生 -->
+          </div>
+        </section>
+
       </div>
 
-      <!-- 🔍 關鍵字搜尋框 -->
-      <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-          <i class="fa-solid fa-magnifying-glass text-xs"></i>
-        </span>
-        <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容或心情..." class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-xs">
-      </div>
-
-      <div id="diary-list" class="space-y-3">
-        <!-- 內容由 JS 產生 -->
-      </div>
-    </section>
+    </div>
 
   </main>
 
   <!-- ℹ️ 說明與備份 Modal (跳出視窗) -->
   <div id="info-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 max-w-md w-full max-h-[90vh] overflow-y-auto space-y-4 text-slate-800 shadow-xl relative">
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto space-y-4 text-slate-800 shadow-xl relative">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900 flex items-center gap-1.5">
+        <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
           <i class="fa-solid fa-shield-halved text-emerald-600"></i> 隱私安全與資料儲存說明
         </h3>
-        <button onclick="closeInfoModal()" class="text-slate-400 hover:text-slate-700 text-lg p-1 cursor-pointer">
+        <button onclick="closeInfoModal()" class="text-slate-400 hover:text-slate-700 text-xl p-1 cursor-pointer">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <!-- 說明內文 -->
-      <div class="space-y-3 text-xs leading-relaxed text-slate-600">
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-          <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1">
+      <div class="space-y-3.5 text-xs md:text-sm leading-relaxed text-slate-600 font-medium">
+        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <h4 class="font-extrabold text-slate-900 mb-1 flex items-center gap-1.5 text-sm">
             <span>🔒</span> 100% 個人自主隱私（零伺服器）
           </h4>
           <p>本應用程式沒有中央伺服器，您的日記僅存於您的裝置本機或您的個人 Google 雲端硬碟 (`myezlife_diaries` 資料夾) 中。</p>
         </div>
 
         <!-- 🤖 AI 雲端設定小幫手快捷區塊 -->
-        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 space-y-2">
-          <h4 class="font-bold text-emerald-900 flex items-center gap-1">
+        <div class="bg-emerald-50 p-3.5 rounded-xl border border-emerald-200 space-y-2">
+          <h4 class="font-extrabold text-emerald-950 flex items-center gap-1.5 text-sm">
             <span>🤖</span> 需要 AI 帶領您設定 Google 雲端連動嗎？
           </h4>
-          <p class="text-emerald-700">點擊下方按鈕，系統會自動複製教學話術並開啟 Gemini，讓 AI 一步步帶您申請憑證：</p>
-          <button onclick="askAITeaching()" class="w-full bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-sm">
+          <p class="text-emerald-800">點擊下方按鈕，系統會自動複製教學話術並開啟 Gemini，讓 AI 一步步帶您申請憑證：</p>
+          <button onclick="askAITeaching()" class="w-full bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 py-2.5 px-3.5 rounded-xl font-black flex items-center justify-center gap-2 transition cursor-pointer shadow-sm text-xs">
             <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 一鍵複製話術並開啟 Gemini 教學
           </button>
         </div>
 
         <!-- 容量統計 -->
-        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
-          <h4 class="font-bold text-slate-900 flex items-center gap-1">
+        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+          <h4 class="font-extrabold text-slate-900 flex items-center gap-1.5 text-sm">
             <span>💾</span> 本機裝置容量狀態 (LocalStorage)
           </h4>
-          <div class="flex justify-between text-slate-500">
-            <span>已使用空間：<strong id="storage-used" class="text-emerald-600">0 KB</strong> / 約 5 MB</span>
-            <span id="storage-estimate">可寫約 1000 天</span>
+          <div class="flex justify-between text-slate-600">
+            <span>已使用空間：<strong id="storage-used" class="text-emerald-700 font-black">0 KB</strong> / 約 5 MB</span>
+            <span id="storage-estimate" class="font-bold">可寫約 1000 天</span>
           </div>
-          <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-            <div id="storage-bar" class="bg-emerald-600 h-1.5 rounded-full" style="width: 1%"></div>
+          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <div id="storage-bar" class="bg-emerald-600 h-2 rounded-full" style="width: 1%"></div>
           </div>
         </div>
 
         <!-- 手動匯出下載 -->
         <div class="space-y-2 pt-1">
-          <h4 class="font-bold text-slate-900 flex items-center gap-1">
+          <h4 class="font-extrabold text-slate-900 flex items-center gap-1.5 text-sm">
             <span>📥</span> 自主備份下載
           </h4>
           <div class="grid grid-cols-1 gap-2">
-            <button onclick="exportDiariesHTML()" class="bg-slate-50 hover:bg-slate-100 border border-emerald-500/50 text-emerald-700 py-2 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <button onclick="exportDiariesHTML()" class="bg-slate-50 hover:bg-slate-100 border border-emerald-500/50 text-emerald-800 py-2.5 px-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition cursor-pointer text-xs">
               <i class="fa-solid fa-globe text-emerald-600"></i> 下載離線 HTML 白皮書
             </button>
-            <button onclick="exportDiariesJSON()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 py-2 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <button onclick="exportDiariesJSON()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 py-2.5 px-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition cursor-pointer text-xs">
               <i class="fa-solid fa-file-code text-amber-500"></i> 下載 JSON 備份檔
             </button>
-            <button onclick="exportDiariesTXT()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 py-2 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <button onclick="exportDiariesTXT()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 py-2.5 px-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition cursor-pointer text-xs">
               <i class="fa-solid fa-file-lines text-sky-500"></i> 下載純文字 TXT 檔
             </button>
           </div>
@@ -335,14 +368,14 @@
       </div>
 
       <div class="pt-2">
-        <button onclick="closeInfoModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl transition cursor-pointer text-xs">
+        <button onclick="closeInfoModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3 rounded-xl transition cursor-pointer text-sm">
           我知道了
         </button>
       </div>
     </div>
   </div>
 
-  <footer class="text-center text-xs text-slate-500 pt-8 font-medium">
+  <footer class="text-center text-xs text-slate-600 pt-10 font-bold">
     <p>© myezlife.com · 隨筆心情日記</p>
   </footer>
 
@@ -358,13 +391,37 @@
     let folderId = null;
     let currentTodos = [];
 
-    // 展開側邊選單函式
+    // 展開側邊選單
     function toggleDrawer() {
       document.getElementById('sideDrawer').classList.toggle('active');
       document.getElementById('drawerOverlay').classList.toggle('active');
     }
 
+    // 👓 大字體切換機制
+    function toggleFontSize() {
+      const isLarge = document.body.classList.toggle('large-text-mode');
+      localStorage.setItem('myezlife_large_font', isLarge ? 'true' : 'false');
+      updateFontToggleUI(isLarge);
+    }
+
+    function updateFontToggleUI(isLarge) {
+      const label = document.getElementById('fontToggleLabel');
+      const topLabel = document.getElementById('fontToggleTopLabel');
+      if (isLarge) {
+        if (label) label.innerText = '切換為標準字體';
+        if (topLabel) topLabel.innerText = '字體：超大 (點擊還原)';
+      } else {
+        if (label) label.innerText = '切換為超大字模式';
+        if (topLabel) topLabel.innerText = '字體：標準 (點擊放大)';
+      }
+    }
+
     window.onload = function() {
+      if (localStorage.getItem('myezlife_large_font') === 'true') {
+        document.body.classList.add('large-text-mode');
+        updateFontToggleUI(true);
+      }
+
       document.getElementById('current-date-display').innerText = `📅 ${todayStr}`;
       selectMood('🌿', '平靜');
       loadTodayTodos();
@@ -457,16 +514,16 @@
     function renderTodos() {
       const container = document.getElementById('todo-list');
       if (currentTodos.length === 0) {
-        container.innerHTML = `<li class="text-slate-400 italic text-[11px] py-1">目前沒有待辦事項</li>`;
+        container.innerHTML = `<li class="text-slate-400 italic text-xs py-1">目前沒有待辦事項</li>`;
         return;
       }
       container.innerHTML = currentTodos.map((todo, idx) => `
-        <li class="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200">
-          <label class="flex items-center gap-2 cursor-pointer flex-1 overflow-hidden">
-            <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-3.5 h-3.5 accent-emerald-600 rounded cursor-pointer">
-            <span class="${todo.done ? 'line-through text-slate-400' : 'text-slate-800'} truncate text-xs">${escapeHtml(todo.text)}</span>
+        <li class="flex items-center justify-between gap-2 bg-white px-3.5 py-2.5 rounded-xl border border-slate-200">
+          <label class="flex items-center gap-2.5 cursor-pointer flex-1 overflow-hidden">
+            <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
+            <span class="${todo.done ? 'line-through text-slate-400' : 'text-slate-900'} truncate text-sm font-medium">${escapeHtml(todo.text)}</span>
           </label>
-          <button onclick="deleteTodo(${idx})" class="text-slate-400 hover:text-rose-600 text-xs p-1 transition cursor-pointer">
+          <button onclick="deleteTodo(${idx})" class="text-slate-400 hover:text-rose-600 text-sm p-1 transition cursor-pointer">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </li>
@@ -510,11 +567,11 @@
         let todoBlock = '';
         if (item.todos && item.todos.length > 0) {
           todoBlock = 
-            '<div style="margin-top:12px; padding:10px; background-color:#f8fafc; border-radius:10px; font-size:13px; border:1px solid #e2e8f0;">' +
+            '<div style="margin-top:12px; padding:12px; background-color:#f8fafc; border-radius:12px; font-size:14px; border:1px solid #e2e8f0;">' +
               '<strong style="color:#059669; display:block; margin-bottom:6px;"><i class="fa-solid fa-list-check"></i> 今日待辦與提醒：</strong>' +
               '<ul style="list-style:none; padding:0; margin:0;">' +
                 item.todos.map(function(t) {
-                  return '<li style="margin-bottom:4px; color:' + (t.done ? '#94a3b8' : '#334155') + '; text-decoration:' + (t.done ? 'line-through' : 'none') + ';">' + (t.done ? '✓' : '•') + ' ' + escapeHtml(t.text) + '</li>';
+                  return '<li style="margin-bottom:4px; color:' + (t.done ? '#94a3b8' : '#1e293b') + '; text-decoration:' + (t.done ? 'line-through' : 'none') + ';">' + (t.done ? '✓' : '•') + ' ' + escapeHtml(t.text) + '</li>';
                 }).join('') +
               '</ul>' +
             '</div>';
@@ -523,19 +580,19 @@
         return '<div class="chapter-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-3">' +
           '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3.5 flex justify-between items-center bg-white hover:bg-slate-50 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
             '<div class="flex items-center gap-2.5">' +
-              '<span class="text-xl">' + item.mood + '</span>' +
+              '<span class="text-2xl">' + item.mood + '</span>' +
               '<div>' +
-                '<span class="font-bold text-slate-900 text-sm">' + item.date + '</span>' +
-                '<span class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
+                '<span class="font-bold text-slate-900 text-sm md:text-base">' + item.date + '</span>' +
+                '<span class="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
               '</div>' +
             '</div>' +
             '<div class="flex items-center gap-2.5">' +
-              '<span class="text-[11px] text-slate-400">' + (item.updatedAt || '') + '</span>' +
+              '<span class="text-xs text-slate-400">' + (item.updatedAt || '') + '</span>' +
               '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-slate-400 rotate-icon text-sm"></i>' +
             '</div>' +
           '</button>' +
           '<div id="content-' + date + '" class="accordion-content">' +
-            '<div class="p-4 border-t border-slate-100 text-slate-700 space-y-3 text-xs leading-relaxed">' +
+            '<div class="p-4 border-t border-slate-100 text-slate-700 space-y-3 text-sm leading-relaxed">' +
               '<p style="white-space:pre-wrap; margin:0;">' + escapeHtml(item.content) + '</p>' +
               todoBlock +
             '</div>' +
@@ -558,15 +615,15 @@
 '    .rotate-icon.active { transform: rotate(180deg); }\n' +
 '  </style>\n' +
 '</head>\n' +
-'<body class="bg-slate-100 text-slate-950 min-h-screen font-sans antialiased text-xs">\n' +
+'<body class="bg-slate-100 text-slate-950 min-h-screen font-sans antialiased text-sm">\n' +
 '  <header class="bg-gradient-to-r from-[#00B900] to-[#008800] text-white py-8 px-4 shadow-md">\n' +
-'    <div class="max-w-md mx-auto text-center">\n' +
-'      <h1 class="text-lg font-bold tracking-tight mb-1">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>\n' +
-'      <p class="text-emerald-100 font-medium text-xs">── 記錄每一天的平靜、感動與生活點滴</p>\n' +
-'      <div class="mt-2 text-[10px] text-emerald-100/80">匯出日期：' + todayStr + '</div>\n' +
+'    <div class="max-w-2xl mx-auto text-center">\n' +
+'      <h1 class="text-xl font-bold tracking-tight mb-1">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>\n' +
+'      <p class="text-emerald-100 font-medium text-sm">── 記錄每一天的平靜、感動與生活點滴</p>\n' +
+'      <div class="mt-2 text-xs text-emerald-100/80">匯出日期：' + todayStr + '</div>\n' +
 '    </div>\n' +
 '  </header>\n' +
-'  <main class="max-w-md mx-auto px-4 py-6 space-y-4">\n' +
+'  <main class="max-w-2xl mx-auto px-4 py-6 space-y-4">\n' +
 '    <div class="space-y-3" id="chapterContainer">\n' +
 '      ' + cardsHtml + '\n' +
 '    </div>\n' +
@@ -643,10 +700,10 @@
     function setCloudConnectedUI() {
       document.getElementById('sync-btn-text').innerText = '已連動雲端';
       const btn = document.getElementById('sync-btn');
-      btn.className = 'text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-1.5 px-3 rounded-xl font-medium transition flex items-center justify-center gap-1.5 cursor-pointer';
+      btn.className = 'text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer';
       const tip = document.getElementById('cloud-status-tip');
       tip.innerText = '✨ 雲端備份防護已啟動';
-      tip.className = 'text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-medium';
+      tip.className = 'text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold';
     }
 
     function gisLoaded() {
@@ -696,10 +753,10 @@
       selectedMood = { emoji: emoji, label: label };
       document.querySelectorAll('.mood-btn').forEach(function(btn) {
         if (btn.getAttribute('data-mood') === emoji) {
-          btn.classList.add('border-emerald-500', 'bg-emerald-50', 'ring-1', 'ring-emerald-500/50');
+          btn.classList.add('border-emerald-500', 'bg-emerald-50', 'ring-2', 'ring-emerald-500/50');
           btn.classList.remove('border-slate-200', 'bg-slate-50');
         } else {
-          btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'ring-1', 'ring-emerald-500/50');
+          btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'ring-2', 'ring-emerald-500/50');
           btn.classList.add('border-slate-200', 'bg-slate-50');
         }
       });
@@ -965,7 +1022,7 @@
         listContainer.innerHTML = 
           '<div class="text-center py-8 bg-white rounded-2xl border border-slate-200">' +
             '<span class="text-3xl block mb-2">🍃</span>' +
-            '<p class="text-xs text-slate-500 font-medium">目前還沒有紀錄，寫下第一篇日記吧！</p>' +
+            '<p class="text-sm text-slate-500 font-bold">目前還沒有紀錄，寫下第一篇日記吧！</p>' +
           '</div>';
         return;
       }
@@ -976,9 +1033,9 @@
         let todoBlock = '';
         if (item.todos && item.todos.length > 0) {
           todoBlock = 
-            '<div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5">' +
-              '<span class="text-[11px] font-bold text-emerald-700 block mb-1">💡 待辦與提醒：</span>' +
-              '<ul class="space-y-1 text-xs text-slate-700">' +
+            '<div class="mt-3 pt-3 border-t border-slate-100 space-y-2">' +
+              '<span class="text-xs font-extrabold text-emerald-800 block mb-1">💡 待辦與提醒：</span>' +
+              '<ul class="space-y-1.5 text-xs md:text-sm text-slate-800 font-medium">' +
                 item.todos.map(function(t) {
                   return '<li class="flex items-center gap-2 ' + (t.done ? 'line-through text-slate-400' : '') + '">' +
                            '<span>' + (t.done ? '✓' : '•') + '</span>' +
@@ -990,16 +1047,16 @@
         }
 
         return '<div class="chapter-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">' +
-          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3.5 flex justify-between items-center bg-white hover:bg-slate-55 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
-            '<div class="flex items-center gap-2.5">' +
+          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3.5 flex justify-between items-center bg-white hover:bg-slate-50 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
+            '<div class="flex items-center gap-3">' +
               '<span class="text-2xl">' + item.mood + '</span>' +
               '<div>' +
-                '<span class="font-bold text-slate-900 text-xs md:text-sm">' + item.date + '</span>' +
-                '<span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
+                '<span class="font-extrabold text-slate-900 text-sm md:text-base">' + item.date + '</span>' +
+                '<span class="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
               '</div>' +
             '</div>' +
             '<div class="flex items-center gap-2.5">' +
-              '<span class="text-[11px] text-slate-400">' + (item.updatedAt || '') + '</span>' +
+              '<span class="text-xs text-slate-400 font-semibold">' + (item.updatedAt || '') + '</span>' +
               '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-slate-400 rotate-icon text-xs"></i>' +
               '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-slate-400 hover:text-rose-600 p-1.5 transition ml-0.5 cursor-pointer" title="刪除">' +
                 '<i class="fa-regular fa-trash-can"></i>' +
@@ -1007,7 +1064,7 @@
             '</div>' +
           '</button>' +
           '<div id="content-' + date + '" class="accordion-content">' +
-            '<div class="p-4 border-t border-slate-100 text-slate-700 space-y-3 text-xs leading-relaxed">' +
+            '<div class="p-4 border-t border-slate-100 text-slate-800 space-y-3 text-sm md:text-base leading-relaxed font-normal">' +
               '<p style="white-space:pre-wrap; margin:0;">' + escapeHtml(item.content) + '</p>' +
               todoBlock +
             '</div>' +
