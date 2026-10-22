@@ -350,10 +350,17 @@
   </div>
 
   <!-- 💻📱 全站主要容器：採適中舒適的「單欄置中」佈局 (max-w-xl) -->
-  <main class="max-w-xl mx-auto w-full px-4 pt-5 fade-in">
+  <main class="max-w-xl mx-auto w-full px-4 pt-3 fade-in">
     
-    <!-- 頁首右上方：字體大小切換開關 -->
-    <div class="flex justify-end mb-3">
+    <!-- 頁首最頂端：左側簡易首頁連結（附指定圖形） + 右側字體大小切換開關 -->
+    <div class="flex justify-between items-center mb-3">
+      <!-- 左側：簡易首頁連結 -->
+      <a href="https://myezlife.com/index-2.html" class="flex items-center gap-2 bg-white border border-slate-300 shadow-sm px-3 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition text-xs">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-5 h-5 rounded-full object-cover">
+        <span>簡易首頁</span>
+      </a>
+
+      <!-- 右側：字體大小切換開關 -->
       <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-3 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
         <i class="fa-solid fa-text-height text-emerald-600"></i>
         <span id="fontToggleTopLabel">字體大小：標準 (點擊放大)</span>
@@ -379,38 +386,36 @@
         </div>
       </div>
 
-      <!-- 1️⃣ 頂部極簡綠色 Banner (天氣 · 日期時間 · 星期) - 已優化左右邊界與防擠壓佈局 -->
-      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-3.5 sm:p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
-        <div class="relative z-10 flex items-center justify-between gap-1 sm:gap-2">
-          
-          <!-- 左側：天氣圖示與氣溫（縮小內距、善用左側空間） -->
-          <div class="flex items-center gap-2 bg-black/15 backdrop-blur-sm px-2.5 sm:px-3.5 py-2 rounded-xl border border-white/10 shrink-0">
-            <div id="weatherIcon" class="text-2xl sm:text-3xl text-amber-300">
+      <!-- 1️⃣ 頂部極簡綠色 Banner (天氣 · 日期時間 · 星期) -->
+      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
+        <div class="relative z-10 flex items-center justify-between">
+          <!-- 左側：天氣圖示與氣溫 -->
+          <div class="flex items-center gap-2.5 bg-black/15 backdrop-blur-sm px-3.5 py-2 rounded-xl border border-white/10">
+            <div id="weatherIcon" class="text-3xl text-amber-300">
               <i class="fa-solid fa-sun animate-pulse"></i>
             </div>
             <div class="leading-tight">
-              <div id="weatherTemp" class="text-base sm:text-lg font-black tracking-tight">--°C</div>
-              <div id="weatherDesc" class="text-[11px] sm:text-xs text-emerald-100 font-bold">載入中</div>
+              <div id="weatherTemp" class="text-lg font-black tracking-tight">--°C</div>
+              <div id="weatherDesc" class="text-xs text-emerald-100 font-bold">載入中</div>
             </div>
           </div>
 
-          <!-- 中間：年月日與大時間（設定 whitespace-nowrap 防止日期被擠到二列） -->
-          <div class="text-center space-y-0.5 px-1 whitespace-nowrap">
-            <div id="currentDate" class="text-[11px] sm:text-xs font-semibold text-emerald-100 tracking-wide">
+          <!-- 中間：年月日與大時間 -->
+          <div class="text-center space-y-0.5">
+            <div id="currentDate" class="text-xs font-semibold text-emerald-100 tracking-wide">
               2026年10月21日
             </div>
-            <div id="currentTime" class="text-2xl sm:text-3xl font-black tracking-wider leading-none">
+            <div id="currentTime" class="text-3xl font-black tracking-wider leading-none">
               05:20
             </div>
           </div>
 
-          <!-- 右側：星期（縮小內距、善用右側空間） -->
-          <div class="text-right shrink-0">
-            <div id="currentDay" class="text-sm sm:text-base font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-white/10">
+          <!-- 右側：星期 -->
+          <div class="text-right">
+            <div id="currentDay" class="text-base font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-3.5 py-2.5 rounded-xl border border-white/10">
               星期三
             </div>
           </div>
-
         </div>
       </div>
 
