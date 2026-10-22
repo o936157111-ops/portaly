@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>每日問候圖產生器</title>
+  <title>每日早安問候圖產生器</title>
 
   <!-- PWA 專屬設定 -->
   <link rel="manifest" href="manifest.json">
@@ -107,7 +107,7 @@
   <!-- 主要內容區 -->
   <main class="max-w-md mx-auto px-4 mt-4 space-y-4 fade-in">
 
-    <!-- 🌟 已調整：改為沉穩高雅的墨綠色系 Banner 迎賓視覺區塊 -->
+    <!-- 迎賓視覺區塊 -->
     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-emerald-900 to-slate-900 p-5 text-white shadow-md">
       <div class="relative z-10">
         <div class="flex items-center gap-2 text-emerald-300 text-xs font-semibold mb-1">
@@ -117,10 +117,9 @@
           用一張圖，獻上溫暖問候
         </h2>
         <p class="text-xs text-slate-300 leading-relaxed">
-          結合優質原創攝影作品，輕鬆打造專屬於您的獨一無二晨光祝福。
+          結合優質原創攝影作品或自訂圖片，輕鬆打造專屬於您的獨一無二晨光祝福。
         </p>
       </div>
-      <!-- 裝飾背景圖案 -->
       <i class="fa-solid fa-heart absolute -right-3 -bottom-4 text-white/5 text-8xl pointer-events-none"></i>
     </div>
 
@@ -131,6 +130,27 @@
           <i class="fa-solid fa-pen-to-square text-emerald-700"></i> 填寫今日問候內容
         </h2>
         <span class="text-[11px] text-slate-400">客製化祝福語</span>
+      </div>
+
+      <!-- 🌟 新增：背景圖片來源選擇區 -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">背景圖片來源</label>
+        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
+          <button type="button" id="sourceSystemBtn" onclick="switchImageSource('system')" class="py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm">
+            <i class="fa-solid fa-images text-emerald-600 mr-1"></i> 精選攝影圖庫
+          </button>
+          <button type="button" id="sourceCustomBtn" onclick="switchImageSource('custom')" class="py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800">
+            <i class="fa-solid fa-link text-sky-600 mr-1"></i> 自訂圖片網址
+          </button>
+        </div>
+      </div>
+
+      <!-- 🌟 新增：自訂圖片網址輸入框（預設隱藏） -->
+      <div id="customImageUrlContainer" class="hidden">
+        <label class="block text-xs font-medium text-slate-600 mb-1">貼上圖片網址 (URL)</label>
+        <input type="url" id="customImageUrlInput" placeholder="請貼上以 https:// 開頭的圖片網址..." 
+               class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700">
+        <p class="text-[10px] text-slate-400 mt-1">💡 提示：可使用網路相簿、雲端圖片或 Flickr 圖片之直接連結。</p>
       </div>
 
       <!-- 第一排：問候前綴與對象 -->
@@ -176,19 +196,18 @@
         </div>
       </div>
 
-      <!-- 🌟 已調整：改為沉穩有質感的深色按鈕 -->
+      <!-- 生成按鈕 -->
       <button id="generateBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-base">
         <i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖
       </button>
     </div>
 
-    <!-- 結果與直接下載/分享區塊 -->
+    <!-- 結果與下載/分享區塊 -->
     <div id="resultCard" class="hidden space-y-3">
-      
       <div class="photo-card">
         <div class="flex items-center justify-between mb-2 px-1">
           <span class="text-xs font-bold text-slate-600 tracking-wider flex items-center gap-1">
-            <i class="fa-solid fa-camera-retro text-emerald-700"></i> 製作完成 (原創攝影作品背景)
+            <i class="fa-solid fa-camera-retro text-emerald-700"></i> 製作完成 (合成效果)
           </span>
           <span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">免費直出</span>
         </div>
@@ -199,7 +218,7 @@
         </div>
       </div>
 
-      <!-- 直接操作按鈕區 -->
+      <!-- 操作按鈕區 -->
       <div class="grid grid-cols-2 gap-3 pt-1">
         <button id="downloadBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
           <i class="fa-solid fa-download"></i> 下載高清圖
@@ -210,10 +229,10 @@
       </div>
 
       <button id="regenerateBtn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
-        <i class="fa-solid fa-shuffle"></i> 換一張個人攝影作品背景
+        <i class="fa-solid fa-shuffle"></i> 重新產生 / 換一張背景
       </button>
 
-      <!-- 💡 Google AdSense 真實廣告區塊 -->
+      <!-- Google AdSense 廣告區 -->
       <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-center space-y-2">
         <p class="text-[11px] text-slate-700 font-medium">💖 喜歡本免費工具嗎？</p>
         <p class="text-[10px] text-slate-500">本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！</p>
@@ -224,7 +243,6 @@
           <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
       </div>
-
     </div>
 
   </main>
@@ -235,6 +253,25 @@
 
     let customPhotoUrls = [];
     let lastPhotoIndex = -1;
+    let currentImageSource = 'system'; // 'system' 或 'custom'
+
+    // 切換圖片來源 (精選攝影 vs 自訂網址)
+    function switchImageSource(source) {
+      currentImageSource = source;
+      const btnSystem = document.getElementById('sourceSystemBtn');
+      const btnCustom = document.getElementById('sourceCustomBtn');
+      const container = document.getElementById('customImageUrlContainer');
+
+      if (source === 'system') {
+        btnSystem.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
+        btnCustom.className = 'py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
+        container.classList.add('hidden');
+      } else {
+        btnCustom.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
+        btnSystem.className = 'py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
+        container.classList.remove('hidden');
+      }
+    }
 
     // 靈感推薦快速帶入
     function setWish(text) {
@@ -275,13 +312,13 @@
       }
     }
 
-    // --- 側滑選單控制 ---
+    // 側滑選單控制
     function toggleDrawer() {
       document.getElementById('sideDrawer').classList.toggle('active');
       document.getElementById('drawerOverlay').classList.toggle('active');
     }
 
-    // --- 網路狀態偵測 ---
+    // 網路狀態偵測
     const offlineNotice = document.getElementById('offline-notice');
     function updateOnlineStatus() {
       if (navigator.onLine) {
@@ -294,7 +331,7 @@
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
 
-    // --- 自訂前綴切換邏輯 ---
+    // 自訂前綴切換邏輯
     const prefixSelect = document.getElementById('prefixSelect');
     const customPrefixContainer = document.getElementById('customPrefixContainer');
     const targetContainer = document.getElementById('targetContainer');
@@ -310,7 +347,7 @@
       }
     });
 
-    // --- 核心邏輯元件 ---
+    // 核心邏輯元件
     const generateBtn = document.getElementById('generateBtn');
     const regenerateBtn = document.getElementById('regenerateBtn');
     const resultCard = document.getElementById('resultCard');
@@ -323,7 +360,7 @@
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.crossOrigin = "anonymous";
-        const timer = setTimeout(() => { img.src = ""; reject(new Error("Timeout")); }, 8000);
+        const timer = setTimeout(() => { img.src = ""; reject(new Error("Timeout")); }, 10000);
         img.onload = () => { clearTimeout(timer); resolve(img); };
         img.onerror = () => { clearTimeout(timer); reject(new Error("Error")); };
         img.src = url;
@@ -340,33 +377,53 @@
       const target = document.getElementById('targetInput').value.trim() || '好朋友';
       const wish = document.getElementById('wishInput').value.trim() || '祝您今天順心愉快！';
 
-      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入個人攝影作品背景中...';
+      generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入與合成圖片中...';
       generateBtn.disabled = true;
 
-      if (customPhotoUrls.length === 0) {
-        await fetchPhotoUrls();
-      }
-
       let bgUrl = "";
-      if (customPhotoUrls.length > 0) {
-        let randomIndex;
-        do {
-          randomIndex = Math.floor(Math.random() * customPhotoUrls.length);
-        } while (randomIndex === lastPhotoIndex && customPhotoUrls.length > 1);
-        lastPhotoIndex = randomIndex;
-        bgUrl = customPhotoUrls[randomIndex];
+
+      // 判斷使用精選圖庫還是自訂網址
+      if (currentImageSource === 'custom') {
+        const customUrl = document.getElementById('customImageUrlInput').value.trim();
+        if (!customUrl) {
+          alert('請先輸入自訂圖片網址！');
+          generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
+          generateBtn.disabled = false;
+          return;
+        }
+        bgUrl = customUrl;
       } else {
-        bgUrl = `https://picsum.photos/768/1024?t=${Date.now()}`;
+        if (customPhotoUrls.length === 0) {
+          await fetchPhotoUrls();
+        }
+
+        if (customPhotoUrls.length > 0) {
+          let randomIndex;
+          do {
+            randomIndex = Math.floor(Math.random() * customPhotoUrls.length);
+          } while (randomIndex === lastPhotoIndex && customPhotoUrls.length > 1);
+          lastPhotoIndex = randomIndex;
+          bgUrl = customPhotoUrls[randomIndex];
+        } else {
+          bgUrl = `https://picsum.photos/768/1024?t=${Date.now()}`;
+        }
       }
 
       let bgImg = null;
       try {
         bgImg = await loadImage(bgUrl);
       } catch (err) {
-        console.warn("載入圖片失敗，帶入備援背景", err);
-        try {
-          bgImg = await loadImage(`https://picsum.photos/768/1024?random=${Date.now()}`);
-        } catch (_) {}
+        console.warn("載入指定圖片失敗，嘗試備援處理", err);
+        if (currentImageSource === 'custom') {
+          alert('無法讀取該自訂圖片網址，請確認網址是否正確，或是否受跨域政策阻擋。');
+          generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
+          generateBtn.disabled = false;
+          return;
+        } else {
+          try {
+            bgImg = await loadImage(`https://picsum.photos/768/1024?random=${Date.now()}`);
+          } catch (_) {}
+        }
       }
 
       const canvas = compositeCanvas;
@@ -387,6 +444,7 @@
         ctx.fillStyle = '#334155'; ctx.fillRect(0, 0, cw, ch);
       }
 
+      // 暗角漸層遮罩
       const gradient = ctx.createLinearGradient(0, 0, 0, ch);
       gradient.addColorStop(0, 'rgba(0, 0, 0, 0.55)');
       gradient.addColorStop(0.28, 'rgba(0, 0, 0, 0.15)');
@@ -394,6 +452,7 @@
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0.7)');
       ctx.fillStyle = gradient; ctx.fillRect(0, 0, cw, ch);
 
+      // 文字繪製
       ctx.fillStyle = "#ffffff"; ctx.textAlign = "center";
       ctx.font = "bold 42px sans-serif";
       ctx.shadowColor = "rgba(0, 0, 0, 0.95)"; ctx.shadowBlur = 18;
