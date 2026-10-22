@@ -187,7 +187,7 @@
       <div class="space-y-4">
         
         <!-- 今日心情與待辦卡片 -->
-        <section class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm space-y-4">
+        <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm space-y-4">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div class="text-sm font-extrabold text-slate-800 bg-slate-100 px-3.5 py-1.5 rounded-xl border border-slate-200" id="current-date-display">
               📅 載入日期中...
@@ -198,25 +198,25 @@
           <!-- 心情選擇器 -->
           <div>
             <label class="block text-sm font-extrabold text-slate-800 mb-2.5">今天的心情如何？請點選代表圖示：</label>
-            <div class="grid grid-cols-5 gap-2" id="mood-selector">
-              <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
-                <span class="text-3xl">🌻</span>
+            <div class="grid grid-cols-5 gap-1.5 sm:gap-2" id="mood-selector">
+              <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
+                <span class="text-2xl sm:text-3xl">🌻</span>
                 <span class="text-xs font-bold text-slate-700">晴朗</span>
               </button>
-              <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
-                <span class="text-3xl">🌷</span>
+              <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
+                <span class="text-2xl sm:text-3xl">🌷</span>
                 <span class="text-xs font-bold text-slate-700">溫馨</span>
               </button>
-              <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
-                <span class="text-3xl">🌿</span>
+              <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
+                <span class="text-2xl sm:text-3xl">🌿</span>
                 <span class="text-xs font-bold text-slate-700">平靜</span>
               </button>
-              <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
-                <span class="text-3xl">🌧️</span>
+              <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
+                <span class="text-2xl sm:text-3xl">🌧️</span>
                 <span class="text-xs font-bold text-slate-700">沉思</span>
               </button>
-              <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
-                <span class="text-3xl">🥀</span>
+              <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
+                <span class="text-2xl sm:text-3xl">🥀</span>
                 <span class="text-xs font-bold text-slate-700">疲憊</span>
               </button>
             </div>
@@ -227,20 +227,20 @@
             <textarea id="diary-input" rows="5" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900 text-base leading-relaxed placeholder-slate-400 resize-none bg-slate-50 font-medium"></textarea>
           </div>
 
-          <!-- 📌 今日待辦提醒與隨手筆記區 -->
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+          <!-- 📌 今日待辦提醒與隨手筆記區 (已優化手機版：輸入框與按鈕分開排版，避免被擠壓) -->
+          <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-3">
             <label class="block text-sm font-extrabold text-slate-900 flex items-center gap-2">
               <i class="fa-solid fa-list-check text-emerald-600 text-base"></i> 今日待辦事項與提醒 (Notes)
             </label>
             
-            <div class="flex gap-2">
-              <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400 font-medium">
-              <button onclick="addTodo()" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-black transition cursor-pointer shrink-0">
-                + 新增
+            <div class="flex flex-col sm:flex-row gap-2">
+              <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="w-full sm:flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400 font-medium shadow-sm">
+              <button onclick="addTodo()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-black transition cursor-pointer shrink-0 flex items-center justify-center gap-1 shadow-sm">
+                <i class="fa-solid fa-plus text-xs"></i> 新增事項
               </button>
             </div>
 
-            <ul id="todo-list" class="space-y-2 text-xs max-h-48 overflow-y-auto">
+            <ul id="todo-list" class="space-y-2 text-xs max-h-48 overflow-y-auto pt-1">
               <!-- 待辦項目由 JS 動態繪製 -->
             </ul>
           </div>
@@ -923,7 +923,8 @@
             method: 'POST',
             headers: new Headers({
               'Authorization': 'Bearer ' + accessToken,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'parents': [fId]
             }),
             body: JSON.stringify({
               name: date + '.json',
