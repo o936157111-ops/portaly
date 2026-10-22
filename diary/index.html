@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>myezlife Diary - 隨筆花園日記</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-stone-100 text-stone-900 min-h-screen font-sans antialiased text-lg">
+
+  <!-- 頂部導覽列 -->
+  <header class="bg-stone-900 text-stone-100 border-b border-stone-800 sticky top-0 z-10 shadow-md">
+    <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <span class="text-3xl">🌱</span>
+        <h1 class="text-2xl font-bold tracking-wide">myezlife <span class="text-amber-400 text-base font-normal">可選擇存放使用裝置或連線Google雲端</span></h1>
+      </div>
+      <!-- 雲端同步按鈕 -->
+      <button id="sync-btn" onclick="initGoogleAuth()" class="text-sm bg-stone-800 hover:bg-stone-700 text-amber-300 border border-amber-400/40 py-2 px-4 rounded-xl font-medium transition flex items-center gap-2">
+        <i class="fa-solid fa-cloud-arrow-up"></i> <span id="sync-btn-text">連動 Google 雲端</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- 今日心情輸入卡片 -->
+    <section class="bg-white rounded-3xl p-8 shadow-md border border-stone-300">
+      <div class="flex justify-between items-center mb-6">
+        <div class="text-base font-bold text-stone-700 bg-stone-100 px-4 py-2 rounded-xl" id="current-date-display">
+          📅 載入日期中...
+        </div>
+        <span class="text-sm text-stone-500">記錄今天的平靜與美好</span>
+      </div>
+
+      <!-- 心情選擇器 -->
+      <div class="mb-6">
+        <label class="block text-sm font-bold text-stone-700 mb-3">今天的心情如何？請點選代表圖示：</label>
+        <div class="grid grid-cols-5 gap-3" id="mood-selector">
+          <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-3 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:bg-amber-50 flex flex-col items-center gap-1 transition" data-mood="🌻">
+            <span class="text-3xl">🌻</span>
+            <span class="text-sm font-medium text-stone-700">晴朗</span>
+          </button>
+          <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-3 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:bg-rose-50 flex flex-col items-center gap-1 transition" data-mood="🌷">
+            <span class="text-3xl">🌷</span>
+            <span class="text-sm font-medium text-stone-700">溫馨</span>
+          </button>
+          <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-3 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:bg-emerald-50 flex flex-col items-center gap-1 transition" data-mood="🌿">
+            <span class="text-3xl">🌿</span>
+            <span class="text-sm font-medium text-stone-700">平靜</span>
+          </button>
+          <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-3 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:bg-blue-50 flex flex-col items-center gap-1 transition" data-mood="🌧️">
+            <span class="text-3xl">🌧️</span>
+            <span class="text-sm font-medium text-stone-700">沉思</span>
+          </button>
+          <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-3 rounded-2xl border-2 border-stone-200 bg-stone-50 hover:bg-purple-50 flex flex-col items-center gap-1 transition" data-mood="🥀">
+            <span class="text-3xl">🥀</span>
+            <span class="text-sm font-medium text-stone-700">疲憊</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 文字輸入框 (字體放大到 text-lg) -->
+      <div class="mb-6">
+        <textarea id="diary-input" rows="5" placeholder="請在此寫下您今天的心情或想說的話..." class="w-full p-4 border-2 border-stone-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-amber-500/30 focus:border-amber-600 text-stone-900 text-lg leading-relaxed placeholder-stone-400 resize-none bg-stone-50/50"></textarea>
+      </div>
+
+      <!-- 儲存按鈕 (加大) -->
+      <button onclick="saveDiary()" class="w-full bg-stone-800 hover:bg-stone-900 text-amber-300 font-bold py-4 rounded-2xl transition duration-200 shadow-md text-xl flex items-center justify-center gap-3">
+        <i class="fa-solid fa-pen-nib"></i> 儲存今天的日記
+      </button>
+    </section>
+
+    <!-- 歷史日記列表 -->
+    <section>
+      <div class="flex items-center justify-between mb-4 px-2">
+        <h2 class="text-xl font-bold text-stone-800 flex items-center gap-2">
+          <span>🌸</span> 歷史隨筆紀錄
+        </h2>
+        <span id="diary-count" class="text-sm font-medium text-stone-500">共 0 篇</span>
+      </div>
+
+      <div id="diary-list" class="space-y-4">
+        <!-- 內容由 JS 產生 -->
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let selectedMood = { emoji: '🌿', label: '平靜' };
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    window.onload = function() {
+      document.getElementById('current-date-display').innerText = `📅 ${todayStr}`;
+      selectMood('🌿', '平靜');
+      loadDiaries();
+    };
+
+    function selectMood(emoji, label) {
+      selectedMood = { emoji, label };
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        if (btn.getAttribute('data-mood') === emoji) {
+          btn.classList.add('border-stone-800', 'bg-stone-100', 'ring-4', 'ring-stone-300');
+          btn.classList.remove('border-stone-200', 'bg-stone-50');
+        } else {
+          btn.classList.remove('border-stone-800', 'bg-stone-100', 'ring-4', 'ring-stone-300');
+          btn.classList.add('border-stone-200', 'bg-stone-50');
+        }
+      });
+    }
+
+    function getStoredDiaries() {
+      const data = localStorage.getItem('myezlife_diaries');
+      return data ? JSON.parse(data) : {};
+    }
+
+    function saveDiary() {
+      const text = document.getElementById('diary-input').value.trim();
+      if (!text) {
+        alert('請先輸入一些日記內容喔！');
+        return;
+      }
+
+      const diaries = getStoredDiaries();
+      diaries[todayStr] = {
+        date: todayStr,
+        mood: selectedMood.emoji,
+        moodLabel: selectedMood.label,
+        content: text,
+        updatedAt: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
+      document.getElementById('diary-input').value = '';
+      loadDiaries();
+      alert('日記已成功儲存！');
+    }
+
+    function deleteDiary(date) {
+      if (confirm(`確定要刪除 ${date} 的日記嗎？`)) {
+        const diaries = getStoredDiaries();
+        delete diaries[date];
+        localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
+        loadDiaries();
+      }
+    }
+
+    function loadDiaries() {
+      const diaries = getStoredDiaries();
+      const listContainer = document.getElementById('diary-list');
+      const dates = Object.keys(diaries).sort().reverse();
+
+      document.getElementById('diary-count').innerText = `共 ${dates.length} 篇`;
+
+      if (dates.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-12 bg-white rounded-3xl border-2 border-dashed border-stone-300">
+            <span class="text-4xl block mb-3">🍃</span>
+            <p class="text-base text-stone-500 font-medium">目前還沒有紀錄，寫下第一篇日記吧！</p>
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = dates.map(date => {
+        const item = diaries[date];
+        return `
+          <div class="bg-white p-6 rounded-3xl border border-stone-300 shadow-sm">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">${item.mood}</span>
+                <div>
+                  <span class="font-bold text-stone-900 text-lg">${item.date}</span>
+                  <span class="text-sm font-semibold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-lg ml-2">${item.moodLabel}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm text-stone-400">${item.updatedAt || ''}</span>
+                <button onclick="deleteDiary('${item.date}')" class="text-stone-400 hover:text-rose-600 text-base p-2 transition" title="刪除">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-stone-800 text-lg leading-relaxed whitespace-pre-wrap pl-12">${escapeHtml(item.content)}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function initGoogleAuth() {
+      alert('【準備進入第二階段】接下來將為您設定 Google 雲端連線，請參考下方的步驟說明！');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
