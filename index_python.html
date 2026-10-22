@@ -379,40 +379,42 @@
         </div>
       </div>
 
-      <!-- 1️⃣ 頂部極簡綠色 Banner (天氣 · 日期時間 · 星期) -->
-      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
-        <div class="relative z-10 flex items-center justify-between">
-          <!-- 左側：天氣圖示與氣溫 -->
-          <div class="flex items-center gap-2.5 bg-black/15 backdrop-blur-sm px-3.5 py-2 rounded-xl border border-white/10">
-            <div id="weatherIcon" class="text-3xl text-amber-300">
+      <!-- 1️⃣ 頂部極簡綠色 Banner (天氣 · 日期時間 · 星期) - 已優化左右邊界與防擠壓佈局 -->
+      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-3.5 sm:p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
+        <div class="relative z-10 flex items-center justify-between gap-1 sm:gap-2">
+          
+          <!-- 左側：天氣圖示與氣溫（縮小內距、善用左側空間） -->
+          <div class="flex items-center gap-2 bg-black/15 backdrop-blur-sm px-2.5 sm:px-3.5 py-2 rounded-xl border border-white/10 shrink-0">
+            <div id="weatherIcon" class="text-2xl sm:text-3xl text-amber-300">
               <i class="fa-solid fa-sun animate-pulse"></i>
             </div>
             <div class="leading-tight">
-              <div id="weatherTemp" class="text-lg font-black tracking-tight">--°C</div>
-              <div id="weatherDesc" class="text-xs text-emerald-100 font-bold">載入中</div>
+              <div id="weatherTemp" class="text-base sm:text-lg font-black tracking-tight">--°C</div>
+              <div id="weatherDesc" class="text-[11px] sm:text-xs text-emerald-100 font-bold">載入中</div>
             </div>
           </div>
 
-          <!-- 中間：年月日與大時間 -->
-          <div class="text-center space-y-0.5">
-            <div id="currentDate" class="text-xs font-semibold text-emerald-100 tracking-wide">
+          <!-- 中間：年月日與大時間（設定 whitespace-nowrap 防止日期被擠到二列） -->
+          <div class="text-center space-y-0.5 px-1 whitespace-nowrap">
+            <div id="currentDate" class="text-[11px] sm:text-xs font-semibold text-emerald-100 tracking-wide">
               2026年10月21日
             </div>
-            <div id="currentTime" class="text-3xl font-black tracking-wider leading-none">
+            <div id="currentTime" class="text-2xl sm:text-3xl font-black tracking-wider leading-none">
               05:20
             </div>
           </div>
 
-          <!-- 右側：星期 -->
-          <div class="text-right">
-            <div id="currentDay" class="text-base font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-3.5 py-2.5 rounded-xl border border-white/10">
+          <!-- 右側：星期（縮小內距、善用右側空間） -->
+          <div class="text-right shrink-0">
+            <div id="currentDay" class="text-sm sm:text-base font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-2.5 sm:px-3.5 py-2.5 rounded-xl border border-white/10">
               星期三
             </div>
           </div>
+
         </div>
       </div>
 
-      <!-- 2️⃣ 智慧情境提醒區塊 (已將 LOGO 調整為精緻適中的 w-10 h-10 尺寸) -->
+      <!-- 2️⃣ 智慧情境提醒區塊 -->
       <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex items-center justify-between" data-id="context">
         <div class="flex items-center gap-3.5">
           <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover cursor-pointer hover:scale-105 transition shrink-0 shadow-sm" onclick="toggleDrawer()" title="點擊開啟功能選單">
@@ -446,7 +448,7 @@
         </a>
       </div>
 
-      <!-- 3️⃣ 常用功能與工具入口 (預設已採用適中的 w-10 h-10 尺寸) -->
+      <!-- 3️⃣ 常用功能與工具入口 -->
       <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2.5">
