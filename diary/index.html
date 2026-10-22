@@ -36,9 +36,9 @@
 
   <main class="max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6 md:space-y-8">
 
-    <!-- 今日心情輸入卡片 -->
-    <section class="bg-stone-950 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-lg border border-stone-800">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 md:mb-6">
+    <!-- 今日心情與待辦卡片 -->
+    <section class="bg-stone-950 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-lg border border-stone-800 space-y-5">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <div class="text-sm md:text-base font-bold text-stone-300 bg-stone-900 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border border-stone-800" id="current-date-display">
           📅 載入日期中...
         </div>
@@ -47,7 +47,7 @@
       </div>
 
       <!-- 心情選擇器 -->
-      <div class="mb-5 md:mb-6">
+      <div>
         <label class="block text-xs md:text-sm font-bold text-stone-300 mb-2 md:mb-3">今天的心情如何？請點選代表圖示：</label>
         <div class="grid grid-cols-5 gap-2 md:gap-3" id="mood-selector">
           <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2 md:py-3 rounded-xl md:rounded-2xl border-2 border-stone-800 bg-stone-900 hover:bg-stone-800 flex flex-col items-center gap-1 transition" data-mood="🌻">
@@ -74,8 +74,26 @@
       </div>
 
       <!-- 文字輸入框 -->
-      <div class="mb-5 md:mb-6">
+      <div>
         <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3 md:p-4 border-2 border-stone-800 rounded-2xl focus:outline-none focus:ring-4 focus:ring-amber-500/20 focus:border-amber-500 text-stone-100 text-base md:text-lg leading-relaxed placeholder-stone-600 resize-none bg-stone-900"></textarea>
+      </div>
+
+      <!-- 📌 今日待辦提醒與隨手筆記區 -->
+      <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800 space-y-3">
+        <label class="block text-xs md:text-sm font-bold text-amber-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-list-check"></i> 💡 今日待辦事項與提醒 (Notes)
+        </label>
+        
+        <div class="flex gap-2">
+          <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：記得買牛奶、下午3點開會)..." class="flex-1 px-3 py-2 bg-stone-950 border border-stone-800 rounded-xl text-sm text-stone-100 focus:outline-none focus:border-amber-500 placeholder-stone-600">
+          <button onclick="addTodo()" class="bg-stone-800 hover:bg-stone-700 text-amber-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold border border-stone-700 transition">
+            + 新增
+          </button>
+        </div>
+
+        <ul id="todo-list" class="space-y-2 text-sm max-h-40 overflow-y-auto">
+          <!-- 待辦項目將由 JS 動態繪製 -->
+        </ul>
       </div>
 
       <!-- 儲存按鈕 -->
@@ -159,11 +177,14 @@
           <h4 class="font-bold text-stone-100 flex items-center gap-2">
             <span>📥</span> 自主備份下載 (另存在本機裝置)
           </h4>
-          <div class="grid grid-cols-2 gap-3">
-            <button onclick="exportDiariesJSON()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-2 transition">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button onclick="exportDiariesHTML()" class="bg-stone-900 hover:bg-stone-800 border border-amber-500/50 text-amber-300 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition">
+              <i class="fa-solid fa-globe text-amber-400"></i> 下載離線 HTML 檔
+            </button>
+            <button onclick="exportDiariesJSON()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition">
               <i class="fa-solid fa-file-code text-amber-400"></i> 下載 JSON 備份檔
             </button>
-            <button onclick="exportDiariesTXT()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-2 transition">
+            <button onclick="exportDiariesTXT()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition">
               <i class="fa-solid fa-file-lines text-emerald-400"></i> 下載純文字 TXT 檔
             </button>
           </div>
@@ -188,10 +209,12 @@
     const todayStr = new Date().toISOString().split('T')[0];
     const FOLDER_NAME = 'myezlife_diaries';
     let folderId = null;
+    let currentTodos = [];
 
     window.onload = function() {
       document.getElementById('current-date-display').innerText = `📅 ${todayStr}`;
       selectMood('🌿', '平靜');
+      loadTodayTodos();
       loadDiaries();
       
       if (accessToken) {
@@ -200,6 +223,57 @@
       }
 
       gisLoaded();
+    }
+
+    // 載入今天的待辦事項
+    function loadTodayTodos() {
+      const diaries = getStoredDiaries();
+      if (diaries[todayStr] && diaries[todayStr].todos) {
+        currentTodos = diaries[todayStr].todos;
+      } else {
+        currentTodos = [];
+      }
+      renderTodos();
+    }
+
+    function addTodo() {
+      const input = document.getElementById('todo-input');
+      const text = input.value.trim();
+      if (!text) return;
+      currentTodos.push({ text: text, done: false });
+      input.value = '';
+      renderTodos();
+    }
+
+    function toggleTodo(index) {
+      if (currentTodos[index]) {
+        currentTodos[index].done = !currentTodos[index].done;
+        renderTodos();
+      }
+    }
+
+    function deleteTodo(index) {
+      currentTodos.splice(index, 1);
+      renderTodos();
+    }
+
+    function renderTodos() {
+      const container = document.getElementById('todo-list');
+      if (currentTodos.length === 0) {
+        container.innerHTML = `<li class="text-stone-600 italic text-xs py-1">目前沒有待辦事項</li>`;
+        return;
+      }
+      container.innerHTML = currentTodos.map((todo, idx) => `
+        <li class="flex items-center justify-between gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800/80">
+          <label class="flex items-center gap-2 cursor-pointer flex-1 overflow-hidden">
+            <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
+            <span class="${todo.done ? 'line-through text-stone-500' : 'text-stone-200'} truncate">${escapeHtml(todo.text)}</span>
+          </label>
+          <button onclick="deleteTodo(${idx})" class="text-stone-600 hover:text-rose-400 text-xs p-1 transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </li>
+      `).join('');
     }
 
     function openInfoModal() {
@@ -211,23 +285,85 @@
       document.getElementById('info-modal').classList.add('hidden');
     }
 
-    // 計算本機 LocalStorage 用量
     function updateStorageUsage() {
       const diariesData = localStorage.getItem('myezlife_diaries') || '{}';
       const bytes = new Blob([diariesData]).size;
       const kb = (bytes / 1024).toFixed(1);
-      const maxKb = 5120; // 5MB
+      const maxKb = 5120;
       const percentage = Math.min(100, Math.max(1, ((kb / maxKb) * 100).toFixed(1)));
 
       document.getElementById('storage-used').innerText = `${kb} KB`;
       document.getElementById('storage-bar').style.width = `${percentage}%`;
 
       const remainingKb = maxKb - kb;
-      const daysLeft = Math.floor(remainingKb / 4); // 假設一篇平均 4KB
+      const daysLeft = Math.floor(remainingKb / 4);
       document.getElementById('storage-estimate').innerText = `可再寫約 ${daysLeft} 天`;
     }
 
-    // 下載 JSON 備份檔
+    // 🌐 匯出精美離線 HTML 檔
+    function exportDiariesHTML() {
+      const diaries = getStoredDiaries();
+      const dates = Object.keys(diaries).sort().reverse();
+      if (dates.length === 0) {
+        alert('目前沒有歷史日記可以備份喔！');
+        return;
+      }
+
+      let cardsHtml = dates.map(date => {
+        const item = diaries[date];
+        let todoHtml = '';
+        if (item.todos && item.todos.length > 0) {
+          todoHtml = `
+            <div style="margin-top:12px; padding:10px; background-color:#1c1917; border-radius:12px; font-size:14px;">
+              <strong style="color:#fbbf24; display:block; margin-bottom:6px;">💡 待辦與提醒：</strong>
+              <ul style="list-style:none; padding:0; margin:0;">
+                ${item.todos.map(t => `<li style="margin-bottom:4px; color:${t.done ? '#78716c' : '#e7e5e4'}; text-decoration:${t.done ? 'line-through' : 'none'};">${t.done ? '✓' : '•'} ${escapeHtml(t.text)}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+        }
+
+        return `
+          <div style="background-color:#0c0a09; padding:20px; margin-bottom:16px; border-radius:16px; border:1px solid #292524;">
+            <div style="display:flex; justify-between; align-items:center; margin-bottom:10px;">
+              <div>
+                <span style="font-size:24px; margin-right:8px;">${item.mood}</span>
+                <strong style="font-size:18px; color:#f5f5f4;">${item.date}</strong>
+                <span style="background-color:#451a03; color:#fcd34d; font-size:12px; padding:2px 8px; border-radius:6px; margin-left:8px;">${item.moodLabel}</span>
+              </div>
+              <span style="font-size:12px; color:#78716c;">${item.updatedAt || ''}</span>
+            </div>
+            <p style="color:#d6d3d1; white-space:pre-wrap; font-size:16px; line-height:1.6; margin:0;">${escapeHtml(item.content)}</p>
+            ${todoHtml}
+          </div>
+        `;
+      }).join('');
+
+      const fullHtml = `<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>myezlife 歷史日記離線閱讀包 (${todayStr})</title>
+  <style>
+    body { background-color: #1c1917; color: #f5f5f4; font-family: system-ui, sans-serif; max-width: 768px; margin: 0 auto; padding: 20px; }
+    h1 { text-align: center; color: #fbbf24; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <h1>🌱 myezlife 離線隨筆閱讀包</h1>
+  <div>${cardsHtml}</div>
+</body>
+</html>`;
+
+      const dataStr = "data:text/html;charset=utf-8," + encodeURIComponent(fullHtml);
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `myezlife_diaries_offline_${todayStr}.html`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
     function exportDiariesJSON() {
       const diaries = getStoredDiaries();
       if (Object.keys(diaries).length === 0) {
@@ -243,7 +379,6 @@
       downloadAnchor.remove();
     }
 
-    // 下載 TXT 純文字檔
     function exportDiariesTXT() {
       const diaries = getStoredDiaries();
       const dates = Object.keys(diaries).sort().reverse();
@@ -257,7 +392,14 @@
         const item = diaries[date];
         txtContent += `【${item.date}】 心情：${item.mood} ${item.moodLabel} (記錄時間: ${item.updatedAt || ''})\n`;
         txtContent += `----------------------------------------\n`;
-        txtContent += `${item.content}\n\n========================================\n\n`;
+        txtContent += `${item.content}\n`;
+        if (item.todos && item.todos.length > 0) {
+          txtContent += `\n[待辦與提醒]\n`;
+          item.todos.forEach(t => {
+            txtContent += ` ${t.done ? '[x]' : '[ ]'} ${t.text}\n`;
+          });
+        }
+        txtContent += `\n========================================\n\n`;
       });
 
       const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(txtContent);
@@ -378,8 +520,8 @@
 
     async function saveDiary() {
       const newText = document.getElementById('diary-input').value.trim();
-      if (!newText) {
-        alert('請先輸入一些日記內容喔！');
+      if (!newText && currentTodos.length === 0) {
+        alert('請輸入日記內容或新增待辦事項喔！');
         return;
       }
 
@@ -392,9 +534,9 @@
 
       if (diaries[todayStr]) {
         const existing = diaries[todayStr];
-        finalContent = `${existing.content}\n\n[${currentTime}] ${newText}`;
+        finalContent = newText ? (existing.content ? `${existing.content}\n\n[${currentTime}] ${newText}` : `[${currentTime}] ${newText}`) : existing.content;
       } else {
-        finalContent = `[${currentTime}] ${newText}`;
+        finalContent = newText ? `[${currentTime}] ${newText}` : '';
       }
 
       const diaryData = {
@@ -402,6 +544,7 @@
         mood: finalMood,
         moodLabel: finalMoodLabel,
         content: finalContent,
+        todos: currentTodos,
         updatedAt: currentTime
       };
 
@@ -418,7 +561,7 @@
         if (confirm('您目前尚未連動 Google 雲端！是否要立即進行連動，讓這篇日記自動備份到雲端？')) {
           handleAuthClick();
         } else {
-          alert('日記已安全存於本機。記得之後點擊右上角「連動 Google 雲端」進行備份喔！');
+          alert('紀錄已安全存於本機。記得之後點擊右上角「連動 Google 雲端」進行備份喔！');
         }
       }
     }
@@ -462,6 +605,7 @@
           });
 
           localStorage.setItem('myezlife_diaries', JSON.stringify(localDiaries));
+          loadTodayTodos();
           loadDiaries();
         }
       } catch (error) {
@@ -521,11 +665,16 @@
     }
 
     async function deleteDiary(date) {
-      if (confirm(`確定要刪除 ${date} 的日記嗎？這將會同時從本機與 Google 雲端移除！`)) {
+      if (confirm(`確定要刪除 ${date} 的日記與待辦紀錄嗎？這將會同時從本機與 Google 雲端移除！`)) {
         const diaries = getStoredDiaries();
         delete diaries[date];
         localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
         
+        if (date === todayStr) {
+          currentTodos = [];
+          renderTodos();
+        }
+
         loadDiaries();
 
         if (accessToken) {
@@ -569,9 +718,11 @@
       if (searchQuery) {
         dates = dates.filter(date => {
           const item = diaries[date];
+          const hasTodoMatch = item.todos && item.todos.some(t => t.text.toLowerCase().includes(searchQuery));
           return date.includes(searchQuery) || 
                  item.content.toLowerCase().includes(searchQuery) || 
-                 item.moodLabel.toLowerCase().includes(searchQuery);
+                 item.moodLabel.toLowerCase().includes(searchQuery) ||
+                 hasTodoMatch;
         });
       }
 
@@ -590,6 +741,24 @@
 
       listContainer.innerHTML = dates.map(date => {
         const item = diaries[date];
+        
+        let todoBlock = '';
+        if (item.todos && item.todos.length > 0) {
+          todoBlock = `
+            <div class="mt-3 pt-3 border-t border-stone-800/80 pl-9 md:pl-12">
+              <span class="text-xs font-bold text-amber-400/90 block mb-1.5">💡 待辦與提醒：</span>
+              <ul class="space-y-1 text-xs md:text-sm text-stone-300">
+                ${item.todos.map(t => `
+                  <li class="flex items-center gap-2 ${t.done ? 'line-through text-stone-500' : ''}">
+                    <span>${t.done ? '✓' : '•'}</span>
+                    <span>${escapeHtml(t.text)}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `;
+        }
+
         return `
           <div class="bg-stone-950 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md">
             <div class="flex justify-between items-start mb-3">
@@ -608,6 +777,7 @@
               </div>
             </div>
             <p class="text-stone-300 text-base md:text-lg leading-relaxed whitespace-pre-wrap pl-9 md:pl-12">${escapeHtml(item.content)}</p>
+            ${todoBlock}
           </div>
         `;
       }).join('');
