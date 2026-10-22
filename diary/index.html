@@ -344,90 +344,132 @@
       document.getElementById('storage-estimate').innerText = '可再寫約 ' + daysLeft + ' 天';
     }
 
-    // 🌐 安全穩定的離線 HTML 匯出（採用複製當前網頁 DOM 結構並轉為獨立唯讀檔案）
+    // 🌐 完美內嵌資料的離線 HTML 匯出（直接把所有日記打包進獨立檔案，開檔即看！）
     function exportDiariesHTML() {
       const diaries = getStoredDiaries();
-      if (Object.keys(diaries).length === 0) {
+      const dates = Object.keys(diaries).sort().reverse();
+      if (dates.length === 0) {
         alert('目前沒有歷史日記可以備份喔！');
         return;
       }
 
-      // 複製一份當前網頁的 DOM
-      const cloneDoc = document.cloneNode(true);
-      
-      // 移除不需要出現在離線備份中的互動區塊
-      const mainSection = cloneDoc.querySelector('main > section:first-child');
-      if (mainSection) mainSection.remove();
-      
-      const syncBtn = cloneDoc.querySelector('#sync-btn');
-      if (syncBtn) syncBtn.remove();
-      
-      const infoModal = cloneDoc.querySelector('#info-modal');
-      if (infoModal) infoModal.remove();
+      let cardsHtml = dates.map(function(date) {
+        const item = diaries[date];
+        let todoBlock = '';
+        if (item.todos && item.todos.length > 0) {
+          todoBlock = 
+            '<div style="margin-top:16px; padding:12px; background-color:#1c1917; border-radius:12px; font-size:15px; border:1px solid #292524;">' +
+              '<strong style="color:#fbbf24; display:block; margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> 今日待辦與提醒：</strong>' +
+              '<ul style="list-style:none; padding:0; margin:0;">' +
+                item.todos.map(function(t) {
+                  return '<li style="margin-bottom:6px; color:' + (t.done ? '#78716c' : '#e7e5e4') + '; text-decoration:' + (t.done ? 'line-through' : 'none') + ';">' + (t.done ? '✓' : '•') + ' ' + escapeHtml(t.text) + '</li>';
+                }).join('') +
+              '</ul>' +
+            '</div>';
+        }
 
-      // 將搜尋列改造成白皮書風格
-      const searchContainer = cloneDoc.querySelector('#search-input').parentElement.parentElement;
-      searchContainer.className = "flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 bg-stone-950 p-4 rounded-xl shadow-sm border border-stone-800";
-      searchContainer.innerHTML = 
-        '<div class="relative w-full sm:w-80">' +
-          '<i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"></i>' +
-          '<input type="text" id="searchInput" onkeyup="filterChapters()" placeholder="搜尋日記關鍵字..." ' +
-                 'class="w-full pl-9 pr-4 py-2 text-sm bg-stone-900 border border-stone-800 text-stone-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">' +
-        '</div>' +
-        '<div class="flex gap-3 w-full sm:w-auto justify-end">' +
-          '<button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">' +
-            '<i class="fa-solid fa-folder-open mr-1.5"></i>全部展開' +
+        return '<div class="chapter-card bg-stone-950 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md overflow-hidden mb-4">' +
+          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-5 py-4 md:px-6 md:py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500 cursor-pointer">' +
+            '<div class="flex items-center gap-3">' +
+              '<span class="text-2xl md:text-3xl">' + item.mood + '</span>' +
+              '<div>' +
+                '<span class="font-bold text-stone-100 text-base md:text-lg">' + item.date + '</span>' +
+                '<span class="text-xs md:text-sm font-semibold text-amber-300 bg-amber-950/60 border border-amber-800/40 px-2 py-0.5 rounded-lg ml-2">' + item.moodLabel + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="flex items-center gap-3">' +
+              '<span class="text-xs md:text-sm text-stone-500">' + (item.updatedAt || '') + '</span>' +
+              '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-stone-400 rotate-icon text-lg"></i>' +
+            '</div>' +
           '</button>' +
-          '<button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">' +
-            '<i class="fa-solid fa-folder-closed mr-1.5"></i>全部收合' +
-          '</button>' +
+          '<div id="content-' + date + '" class="accordion-content">' +
+            '<div class="p-5 md:p-6 border-t border-stone-800 text-stone-300 space-y-4 text-base md:text-lg leading-relaxed">' +
+              '<p style="white-space:pre-wrap; margin:0;">' + escapeHtml(item.content) + '</p>' +
+              todoBlock +
+            '</div>' +
+          '</div>' +
         '</div>';
+      }).join('');
 
-      // 替換標題為白皮書風格
-      const headerTitle = cloneDoc.querySelector('header h1');
-      if (headerTitle) {
-        headerTitle.innerHTML = '🌱 myezlife 離線心情隨筆與筆記白皮書 <span class="text-amber-400 text-sm font-normal">── 匯出日期：' + todayStr + '</span>';
-      }
-
-      // 移除歷史清單中的刪除按鈕（離線版為純瀏覽）
-      const deleteBtns = cloneDoc.querySelectorAll('#diary-list button');
-      deleteBtns.forEach(function(btn) { btn.remove(); });
-
-      // 加入白皮書專用控制 Script
-      const scriptEl = cloneDoc.createElement('script');
-      scriptEl.textContent = 
-        'function toggleAccordion(dateKey) {' +
-          'const content = document.getElementById("content-" + dateKey);' +
-          'const icon = document.getElementById("icon-" + dateKey);' +
-          'if (content && icon) {' +
-            'content.classList.toggle("expanded");' +
-            'icon.classList.toggle("active");' +
-          '}' +
-        '}' +
-        'function toggleAll(expand) {' +
-          'const contents = document.querySelectorAll(".accordion-content");' +
-          'const icons = document.querySelectorAll(".rotate-icon");' +
-          'contents.forEach(function(c) {' +
-            'if (expand) c.classList.add("expanded");' +
-            'else c.classList.remove("expanded");' +
-          '});' +
-          'icons.forEach(function(i) {' +
-            'if (expand) i.classList.add("active");' +
-            'else i.classList.remove("active");' +
-          '});' +
-        '}' +
-        'function filterChapters() {' +
-          'const input = document.getElementById("searchInput").value.toLowerCase();' +
-          'const cards = document.querySelectorAll(".chapter-card");' +
-          'cards.forEach(function(card) {' +
-            'const text = card.innerText.toLowerCase();' +
-            'if (text.includes(input)) card.style.display = "block";' +
-            'else card.style.display = "none";' +
-          '});' +
-        '}';
-      cloneDoc.body.appendChild(scriptEl);
-
-      const fullHtml = '<!DOCTYPE html>\n' + cloneDoc.documentElement.outerHTML;
+      const fullHtml = '<!DOCTYPE html>\n' +
+'<html lang="zh-TW">\n' +
+'<head>\n' +
+'  <meta charset="UTF-8">\n' +
+'  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+'  <title>myezlife 歷史日記與筆記白皮書 (' + todayStr + ')</title>\n' +
+'  <script src="https://cdn.tailwindcss.com"><\/script>\n' +
+'  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">\n' +
+'  <style>\n' +
+'    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0, 1, 0, 1); }\n' +
+'    .accordion-content.expanded { max-height: 5000px; transition: max-height 0.5s ease-in-out; }\n' +
+'    .rotate-icon { transition: transform 0.3s ease; }\n' +
+'    .rotate-icon.active { transform: rotate(180deg); }\n' +
+'  </style>\n' +
+'</head>\n' +
+'<body class="bg-stone-900 text-stone-100 min-h-screen font-sans antialiased text-base md:text-lg">\n' +
+'  <header class="bg-gradient-to-r from-stone-950 via-stone-900 to-stone-950 text-white py-10 px-4 shadow-lg border-b-4 border-amber-500">\n' +
+'    <div class="max-w-3xl mx-auto text-center">\n' +
+'      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>\n' +
+'      <p class="text-amber-400 font-medium text-sm md:text-base">── 記錄每一天的平靜、感動與生活點滴</p>\n' +
+'      <div class="mt-3 text-xs text-stone-400">匯出日期：' + todayStr + '</div>\n' +
+'    </div>\n' +
+'  </header>\n' +
+'  <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">\n' +
+'    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-stone-950 p-4 rounded-xl shadow-sm border border-stone-800">\n' +
+'      <div class="relative w-full sm:w-80">\n' +
+'        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"></i>\n' +
+'        <input type="text" id="searchInput" onkeyup="filterChapters()" placeholder="搜尋日記關鍵字..." \n' +
+'               class="w-full pl-9 pr-4 py-2 text-sm bg-stone-900 border border-stone-800 text-stone-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">\n' +
+'      </div>\n' +
+'      <div class="flex gap-3 w-full sm:w-auto justify-end">\n' +
+'        <button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">\n' +
+'          <i class="fa-solid fa-folder-open mr-1.5"></i>全部展開\n' +
+'        </button>\n' +
+'        <button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700">\n' +
+'          <i class="fa-solid fa-folder-closed mr-1.5"></i>全部收合\n' +
+'        </button>\n' +
+'      </div>\n' +
+'    </div>\n' +
+'    <div class="space-y-4" id="chapterContainer">\n' +
+'      ' + cardsHtml + '\n' +
+'    </div>\n' +
+'  </main>\n' +
+'  <footer class="bg-stone-950 text-stone-500 text-center py-6 border-t border-stone-800 mt-12 text-sm">\n' +
+'    <p>© myezlife Diary - 100% 本地優先與雲端自主備份</p>\n' +
+'  </footer>\n' +
+'  <script>\n' +
+'    function toggleAccordion(dateKey) {\n' +
+'      const content = document.getElementById("content-" + dateKey);\n' +
+'      const icon = document.getElementById("icon-" + dateKey);\n' +
+'      if (content && icon) {\n' +
+'        content.classList.toggle("expanded");\n' +
+'        icon.classList.toggle("active");\n' +
+'      }\n' +
+'    }\n' +
+'    function toggleAll(expand) {\n' +
+'      const contents = document.querySelectorAll(".accordion-content");\n' +
+'      const icons = document.querySelectorAll(".rotate-icon");\n' +
+'      contents.forEach(function(c) {\n' +
+'        if (expand) c.classList.add("expanded");\n' +
+'        else c.classList.remove("expanded");\n' +
+'      });\n' +
+'      icons.forEach(function(i) {\n' +
+'        if (expand) i.classList.add("active");\n' +
+'        else i.classList.remove("active");\n' +
+'      });\n' +
+'    }\n' +
+'    function filterChapters() {\n' +
+'      const input = document.getElementById("searchInput").value.toLowerCase();\n' +
+'      const cards = document.querySelectorAll(".chapter-card");\n' +
+'      cards.forEach(function(card) {\n' +
+'        const text = card.innerText.toLowerCase();\n' +
+'        if (text.includes(input)) card.style.display = "block";\n' +
+'        else card.style.display = "none";\n' +
+'      });\n' +
+'    }\n' +
+'  <\/script>\n' +
+'</body>\n' +
+'</html>';
 
       const dataStr = "data:text/html;charset=utf-8," + encodeURIComponent(fullHtml);
       const downloadAnchor = document.createElement('a');
