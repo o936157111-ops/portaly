@@ -1036,20 +1036,22 @@
         }
 
         return '<div class="chapter-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">' +
-          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3.5 flex justify-between items-center bg-white hover:bg-slate-50 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
-            '<div class="flex items-center gap-3">' +
-              '<span class="text-2xl">' + item.mood + '</span>' +
-              '<div>' +
-                '<span class="font-extrabold text-slate-900 text-sm md:text-base">' + item.date + '</span>' +
-                '<span class="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
-              '</div>' +
-            '</div>' +
+          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3 flex flex-col gap-1.5 bg-white hover:bg-slate-50 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
+            '<!-- 上列：心情圖示 + 日期 + 心情標籤 -->' +
             '<div class="flex items-center gap-2.5">' +
-              '<span class="text-xs text-slate-400 font-semibold">' + (item.updatedAt || '') + '</span>' +
-              '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-slate-400 rotate-icon text-xs"></i>' +
-              '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-slate-400 hover:text-rose-600 p-1.5 transition ml-0.5 cursor-pointer" title="刪除">' +
-                '<i class="fa-regular fa-trash-can"></i>' +
-              '</span>' +
+              '<span class="text-2xl shrink-0">' + item.mood + '</span>' +
+              '<span class="font-extrabold text-slate-900 text-sm md:text-base">' + item.date + '</span>' +
+              '<span class="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">' + item.moodLabel + '</span>' +
+            '</div>' +
+            '<!-- 下列：時間 + 刪除按鈕 + 展開箭頭 -->' +
+            '<div class="flex items-center justify-between text-xs text-slate-400 pl-9 font-semibold">' +
+              '<span>最後更新：' + (item.updatedAt || '未定') + '</span>' +
+              '<div class="flex items-center gap-3">' +
+                '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-slate-400 hover:text-rose-600 p-1 transition cursor-pointer flex items-center gap-1" title="刪除">' +
+                  '<i class="fa-regular fa-trash-can"></i> 刪除' +
+                '</span>' +
+                '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-slate-400 rotate-icon text-xs"></i>' +
+              '</div>' +
             '</div>' +
           '</button>' +
           '<div id="content-' + date + '" class="accordion-content">' +
