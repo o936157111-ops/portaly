@@ -92,7 +92,7 @@
   </main>
 
   <script>
-    // 從您的 JSON 憑證中帶入的 Client ID
+    // 從您的 JSON 憑證中帶入的 Client ID[cite: 9]
     const CLIENT_ID = '733896891104-14rpscprtqc0n1jdsdg5h5pva2k7e9kt.apps.googleusercontent.com';
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
@@ -133,7 +133,6 @@
           document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
           document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
           alert('Google 雲端帳號連動成功！');
-          fetchDiariesFromDrive();
         },
       });
       gisInited = true;
@@ -147,8 +146,6 @@
       tokenClient.requestAccessToken({ prompt: 'consent' });
     }
 
-    let selectedMood = { emoji: '🌿', label: '平靜' };
-    // ...其餘邏輯與本機儲存相同
     function selectMood(emoji, label) {
       selectedMood = { emoji, label };
       document.querySelectorAll('.mood-btn').forEach(btn => {
@@ -185,7 +182,7 @@
 
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
       document.getElementById('diary-input').value = '';
-      loadDiaries();
+        loadDiaries();
 
       // 如果已連動 Google，順便上傳到雲端
       if (accessToken) {
@@ -246,7 +243,7 @@
       }).join('');
     }
 
-    // 簡易上傳至 Google Drive 的實作函數
+    // 上傳至 Google Drive 的實作函數
     async function uploadToGoogleDrive(date, diaryData) {
       try {
         const metadata = {
@@ -272,10 +269,6 @@
       } catch (error) {
         console.error('同步至 Google 雲端發生錯誤:', error);
       }
-    }
-
-    async function fetchDiariesFromDrive() {
-      // 這裡可擴充從 Drive 撈取歷史日記的邏輯
     }
 
     function escapeHtml(str) {
