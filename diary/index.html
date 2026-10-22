@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
   <title>myezlife Diary - 隨筆心情日記</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,6 +11,11 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://apis.google.com/js/api.js" async defer></script>
   <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
     .accordion-content {
       max-height: 0;
       overflow: hidden;
@@ -26,144 +31,236 @@
     .rotate-icon.active {
       transform: rotate(180deg);
     }
+
+    /* 🌟 側邊滑出選單（Drawer）樣式 */
+    .side-drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .side-drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: #ffffff;
+      z-index: 10001;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+      transition: left 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 20px;
+      overflow-y: auto;
+    }
+    .side-drawer.active {
+      left: 0;
+    }
+    .drawer-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .drawer-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .drawer-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #222;
+    }
+    .drawer-btn-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .drawer-btn {
+      width: 100%;
+      padding: 12px 18px;
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      color: #222;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+    .drawer-btn:hover {
+      background: #222;
+      color: #fff;
+    }
   </style>
 </head>
-<body class="bg-stone-900 text-stone-100 min-h-screen font-sans antialiased text-base md:text-lg relative">
+<body class="bg-slate-100 text-slate-900 min-h-screen pb-16 flex flex-col justify-between select-none">
 
-  <!-- 頂部導覽列 -->
-  <header class="bg-stone-950 text-stone-100 border-b border-stone-800 sticky top-0 z-10 shadow-md">
-    <div class="max-w-3xl mx-auto px-4 md:px-6 py-3 md:py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-      <div class="flex items-center space-x-3">
-        <a href="https://www.myezlife.com" class="text-2xl md:text-3xl hover:opacity-85 transition" title="返回主站首頁">🌱</a>
-        <h1 class="text-xl md:text-2xl font-bold tracking-wide">
-          <a href="/" class="hover:text-amber-400 transition">myezlife</a> 
-          <span class="text-amber-400 text-sm md:text-base font-normal">心情隨筆</span>
+  <!-- 🌟 左側滑出選單結構 (Drawer) -->
+  <div class="side-drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+  <div class="side-drawer" id="sideDrawer">
+    <div class="drawer-header">
+      <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
+      <div class="drawer-title">功能選單</div>
+    </div>
+    <div class="drawer-btn-container">
+      <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
+      <a href="https://myezlife.com/diary/" class="drawer-btn" style="color: #008800; font-weight: bold;">🌱 心情隨筆與待辦日記</a>
+      <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
+      <a href="https://myezlife.com/FileExplorer.html" class="drawer-btn">檔案總管</a>
+      <a href="https://myezlife.com/index_news.html" class="drawer-btn">新聞劃重點</a>
+      <a href="https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" class="drawer-btn">AI好劇一直看</a>
+      <a href="https://myezlife.com/goldmelody_csv.html" class="drawer-btn">好歌一直聽</a>
+      <a href="https://myezlife.com/ai-greeting-app/" class="drawer-btn" style="color: #d97706; font-weight: bold;">🌻 製作問候圖</a>
+    </div>
+  </div>
+
+  <!-- 頂部導覽列（與主站首頁一致，左側使用 Logo 點擊開啓側邊選單） -->
+  <header class="bg-white text-slate-900 border-b border-slate-200/90 sticky top-0 z-10 shadow-sm">
+    <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center gap-3">
+      
+      <!-- 左側：Logo 圖片點擊開啓側邊選單 + 標題 -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
+        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-9 h-9 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
+        <h1 class="text-base font-bold tracking-wide">
+          myezlife <span class="text-emerald-600 font-semibold ml-1">心情隨筆</span>
         </h1>
       </div>
       
-      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-        <!-- 返回主站按鈕 -->
-        <a href="/" class="text-xs md:text-sm bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 py-2 px-3 rounded-xl font-medium transition flex items-center gap-1.5" title="返回主站首頁">
-          <i class="fa-solid fa-house text-amber-400"></i> <span>返回主站</span>
-        </a>
+      <!-- 右側功能按鈕 -->
+      <div class="flex items-center gap-2">
         <!-- 說明與備份按鈕 -->
-        <button onclick="openInfoModal()" class="text-xs md:text-sm bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 py-2 px-3 rounded-xl font-medium transition flex items-center gap-1.5 cursor-pointer" title="資料安全與備份說明">
-          <i class="fa-solid fa-circle-info text-amber-400"></i> <span>說明與備份</span>
+        <button onclick="openInfoModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 py-1.5 px-3 rounded-xl font-medium transition flex items-center gap-1 cursor-pointer" title="資料安全與備份說明">
+          <i class="fa-solid fa-circle-info text-emerald-600"></i> <span>說明</span>
         </button>
         <!-- 雲端同步按鈕 -->
-        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs md:text-sm bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-400/40 py-2 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 cursor-pointer">
-          <i class="fa-solid fa-cloud-arrow-up"></i> <span id="sync-btn-text">連動 Google 雲端</span>
+        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-1.5 px-3 rounded-xl font-medium transition flex items-center justify-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> <span id="sync-btn-text">雲端同步</span>
         </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6 md:space-y-8">
+  <main class="max-w-md mx-auto w-full px-4 pt-5 space-y-4">
 
-    <!-- 💡 個人專屬今日提醒摘要（僅本機有資料時顯示，其他人造訪看不到） -->
+    <!-- 💡 本機專屬今日提醒摘要 -->
     <section id="home-today-reminder" class="hidden">
-      <div class="bg-stone-950 border border-amber-500/40 rounded-2xl p-4 shadow-md flex items-center justify-between gap-3">
+      <div class="bg-white border border-emerald-500/40 rounded-2xl p-4 shadow-sm flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 overflow-hidden">
           <span class="text-2xl">💡</span>
           <div class="truncate">
-            <h3 class="text-xs font-bold text-amber-400">今日待辦與提醒摘要</h3>
-            <p id="home-reminder-text" class="text-sm text-stone-200 truncate">載入中...</p>
+            <h3 class="text-xs font-bold text-emerald-700">今日待辦與提醒摘要</h3>
+            <p id="home-reminder-text" class="text-xs text-slate-700 truncate">載入中...</p>
           </div>
         </div>
-        <span class="text-xs bg-amber-600/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg shrink-0">本機專屬</span>
+        <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold shrink-0">本機專屬</span>
       </div>
     </section>
 
     <!-- 今日心情與待辦卡片 -->
-    <section class="bg-stone-950 rounded-2xl md:rounded-3xl p-5 md:p-8 shadow-lg border border-stone-800 space-y-5">
+    <section class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-        <div class="text-sm md:text-base font-bold text-stone-300 bg-stone-900 px-3 md:px-4 py-1.5 md:py-2 rounded-xl border border-stone-800" id="current-date-display">
+        <div class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200" id="current-date-display">
           📅 載入日期中...
         </div>
-        <!-- 防呆提示標籤 -->
-        <span id="cloud-status-tip" class="text-xs md:text-sm text-amber-400/80 bg-amber-950/40 px-3 py-1 rounded-lg border border-amber-800/30">💡 建議先連動雲端，確保日記自動備份</span>
+        <span id="cloud-status-tip" class="text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-medium">💡 建議先連動雲端，確保日記自動備份</span>
       </div>
 
       <!-- 心情選擇器 -->
       <div>
-        <label class="block text-xs md:text-sm font-bold text-stone-300 mb-2 md:mb-3">今天的心情如何？請點選代表圖示：</label>
-        <div class="grid grid-cols-5 gap-2 md:gap-3" id="mood-selector">
-          <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2 md:py-3 rounded-xl md:rounded-2xl border-2 border-stone-800 bg-stone-900 hover:bg-stone-800 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
-            <span class="text-2xl md:text-3xl">🌻</span>
-            <span class="text-xs md:text-sm font-medium text-stone-300">晴朗</span>
+        <label class="block text-xs font-bold text-slate-700 mb-2">今天的心情如何？請點選代表圖示：</label>
+        <div class="grid grid-cols-5 gap-2" id="mood-selector">
+          <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
+            <span class="text-2xl">🌻</span>
+            <span class="text-[11px] font-medium text-slate-700">晴朗</span>
           </button>
-          <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-2 md:py-3 rounded-xl md:rounded-2xl border-2 border-stone-800 bg-stone-900 hover:bg-stone-800 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
-            <span class="text-2xl md:text-3xl">🌷</span>
-            <span class="text-xs md:text-sm font-medium text-stone-300">溫馨</span>
+          <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
+            <span class="text-2xl">🌷</span>
+            <span class="text-[11px] font-medium text-slate-700">溫馨</span>
           </button>
-          <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-2 md:py-3 rounded-xl md:rounded-2xl border-2 border-stone-800 bg-stone-900 hover:bg-stone-800 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
-            <span class="text-2xl md:text-3xl">🌿</span>
-            <span class="text-xs md:text-sm font-medium text-stone-300">平靜</span>
+          <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
+            <span class="text-2xl">🌿</span>
+            <span class="text-[11px] font-medium text-slate-700">平靜</span>
           </button>
-          <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-2 md:py-3 rounded-xl md:rounded-2xl border-2 border-stone-800 bg-stone-900 hover:bg-stone-800 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
-            <span class="text-2xl md:text-3xl">🌧️</span>
-            <span class="text-xs md:text-sm font-medium text-stone-300">沉思</span>
+          <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
+            <span class="text-2xl">🌧️</span>
+            <span class="text-[11px] font-medium text-slate-700">沉思</span>
           </button>
-          <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-2 md:py-3 rounded-xl md:rounded-2xl border-2 border-stone-800 bg-stone-900 hover:bg-stone-800 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
-            <span class="text-2xl md:text-3xl">🥀</span>
-            <span class="text-xs md:text-sm font-medium text-stone-300">疲憊</span>
+          <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
+            <span class="text-2xl">🥀</span>
+            <span class="text-[11px] font-medium text-slate-700">疲憊</span>
           </button>
         </div>
       </div>
 
       <!-- 文字輸入框 -->
       <div>
-        <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3 md:p-4 border-2 border-stone-800 rounded-2xl focus:outline-none focus:ring-4 focus:ring-amber-500/20 focus:border-amber-500 text-stone-100 text-base md:text-lg leading-relaxed placeholder-stone-600 resize-none bg-stone-900"></textarea>
+        <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900 text-sm leading-relaxed placeholder-slate-400 resize-none bg-slate-50"></textarea>
       </div>
 
       <!-- 📌 今日待辦提醒與隨手筆記區 -->
-      <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800 space-y-3">
-        <label class="block text-xs md:text-sm font-bold text-amber-300 flex items-center gap-1.5">
-          <i class="fa-solid fa-list-check"></i> 💡 今日待辦事項與提醒 (Notes)
+      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+        <label class="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+          <i class="fa-solid fa-list-check text-emerald-600"></i> 今日待辦事項與提醒 (Notes)
         </label>
         
         <div class="flex gap-2">
-          <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：記得買牛奶、下午3點開會)..." class="flex-1 px-3 py-2 bg-stone-950 border border-stone-800 rounded-xl text-sm text-stone-100 focus:outline-none focus:border-amber-500 placeholder-stone-600">
-          <button onclick="addTodo()" class="bg-stone-800 hover:bg-stone-700 text-amber-300 px-4 py-2 rounded-xl text-xs md:text-sm font-bold border border-stone-700 transition cursor-pointer">
+          <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400">
+          <button onclick="addTodo()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
             + 新增
           </button>
         </div>
 
-        <ul id="todo-list" class="space-y-2 text-sm max-h-40 overflow-y-auto">
+        <ul id="todo-list" class="space-y-1.5 text-xs max-h-36 overflow-y-auto">
           <!-- 待辦項目將由 JS 動態繪製 -->
         </ul>
       </div>
 
       <!-- 儲存按鈕 -->
-      <button id="save-btn" onclick="saveDiary()" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-3 md:py-4 rounded-2xl transition duration-200 shadow-md text-lg md:text-xl flex items-center justify-center gap-2 md:gap-3 cursor-pointer">
+      <button id="save-btn" onclick="saveDiary()" class="w-full bg-gradient-to-r from-[#00B900] to-[#008800] hover:opacity-95 text-white font-bold py-3 rounded-xl transition shadow-sm text-sm flex items-center justify-center gap-2 cursor-pointer">
         <i class="fa-solid fa-pen-nib"></i> <span id="save-btn-text">寫下今日隨筆並同步雲端</span>
       </button>
     </section>
 
     <!-- 歷史日記列表與搜尋區 -->
-    <section class="space-y-4">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-2">
-        <h2 class="text-lg md:text-xl font-bold text-stone-200 flex items-center gap-2">
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
           <span>🌸</span> 歷史隨筆紀錄
         </h2>
-        <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-          <span id="diary-count" class="text-xs md:text-sm font-medium text-stone-400">共 0 篇</span>
-          <div class="flex gap-2">
-            <button onclick="toggleAllApp(true)" class="px-3 py-1.5 text-xs font-medium bg-stone-800 text-amber-300 hover:bg-stone-700 rounded-lg transition border border-stone-700 cursor-pointer">全部展開</button>
-            <button onclick="toggleAllApp(false)" class="px-3 py-1.5 text-xs font-medium bg-stone-800 text-stone-300 hover:bg-stone-700 rounded-lg transition border border-stone-700 cursor-pointer">全部收合</button>
-          </div>
+        <div class="flex items-center gap-2">
+          <span id="diary-count" class="text-xs font-medium text-slate-500">共 0 篇</span>
+          <button onclick="toggleAllApp(true)" class="px-2 py-1 text-[11px] font-medium bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">展開</button>
+          <button onclick="toggleAllApp(false)" class="px-2 py-1 text-[11px] font-medium bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">收合</button>
         </div>
       </div>
 
       <!-- 🔍 關鍵字搜尋框 -->
       <div class="relative">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-stone-500">
-          <i class="fa-solid fa-magnifying-glass"></i>
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
         </span>
-        <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容或心情..." class="w-full pl-11 pr-4 py-3 bg-stone-950 border border-stone-800 rounded-2xl text-stone-100 placeholder-stone-600 focus:outline-none focus:border-amber-500 text-sm md:text-base">
+        <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容或心情..." class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-xs">
       </div>
 
-      <div id="diary-list" class="space-y-3 md:space-y-4">
+      <div id="diary-list" class="space-y-3">
         <!-- 內容由 JS 產生 -->
       </div>
     </section>
@@ -171,90 +268,81 @@
   </main>
 
   <!-- ℹ️ 說明與備份 Modal (跳出視窗) -->
-  <div id="info-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-stone-950 border border-stone-800 rounded-3xl p-6 md:p-8 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-6 text-stone-200 shadow-2xl relative">
-      <div class="flex justify-between items-center border-b border-stone-800 pb-4">
-        <h3 class="text-xl font-bold text-amber-400 flex items-center gap-2">
-          <i class="fa-solid fa-shield-halved"></i> 隱私安全與資料儲存說明
+  <div id="info-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 max-w-md w-full max-h-[90vh] overflow-y-auto space-y-4 text-slate-800 shadow-xl relative">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-shield-halved text-emerald-600"></i> 隱私安全與資料儲存說明
         </h3>
-        <button onclick="closeInfoModal()" class="text-stone-400 hover:text-stone-100 text-xl p-1 cursor-pointer">
+        <button onclick="closeInfoModal()" class="text-slate-400 hover:text-slate-700 text-lg p-1 cursor-pointer">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <!-- 說明內文 -->
-      <div class="space-y-4 text-sm md:text-base leading-relaxed text-stone-300">
-        <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800">
-          <h4 class="font-bold text-stone-100 mb-1 flex items-center gap-2">
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+          <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1">
             <span>🔒</span> 100% 個人自主隱私（零伺服器）
           </h4>
-          <p class="text-stone-400 text-xs md:text-sm">
-            本應用程式**沒有任何中央伺服器**。您的日記不會儲存在任何第三方數據庫中，完全僅存於您的裝置本機或您的個人 Google 雲端硬碟 (`myezlife_diaries` 資料夾) 中，安全無虞。
-          </p>
-        </div>
-
-        <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800">
-          <h4 class="font-bold text-stone-100 mb-1 flex items-center gap-2">
-            <span>☁️</span> 為什麼建議連動 Google 雲端？
-          </h4>
-          <p class="text-stone-400 text-xs md:text-sm">
-            連動後，日記會自動同步至您個人的 Google 雲端專屬資料夾。即使更換手機、電腦或清除瀏覽器紀錄，歷史隨筆依然完整留存不遺失。
-          </p>
+          <p>本應用程式沒有中央伺服器，您的日記僅存於您的裝置本機或您的個人 Google 雲端硬碟 (`myezlife_diaries` 資料夾) 中。</p>
         </div>
 
         <!-- 🤖 AI 雲端設定小幫手快捷區塊 -->
-        <div class="bg-amber-950/40 p-4 rounded-2xl border border-amber-800/40 space-y-2">
-          <h4 class="font-bold text-amber-300 flex items-center gap-2 text-sm md:text-base">
+        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 space-y-2">
+          <h4 class="font-bold text-emerald-900 flex items-center gap-1">
             <span>🤖</span> 需要 AI 帶領您設定 Google 雲端連動嗎？
           </h4>
-          <p class="text-stone-400 text-xs md:text-sm">
-            點擊下方按鈕，系統會自動複製教學話術並開啟 Gemini，讓 AI 一步步帶您申請專屬雲端憑證：
-          </p>
-          <button onclick="askAITeaching()" class="w-full bg-stone-900 hover:bg-stone-800 text-amber-300 border border-amber-500/50 py-2.5 px-4 rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer">
-            <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> 一鍵複製話術並開啟 Gemini 教學
+          <p class="text-emerald-700">點擊下方按鈕，系統會自動複製教學話術並開啟 Gemini，讓 AI 一步步帶您申請憑證：</p>
+          <button onclick="askAITeaching()" class="w-full bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-1.5 transition cursor-pointer shadow-sm">
+            <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 一鍵複製話術並開啟 Gemini 教學
           </button>
         </div>
 
         <!-- 容量統計 -->
-        <div class="bg-stone-900 p-4 rounded-2xl border border-stone-800 space-y-2">
-          <h4 class="font-bold text-stone-100 flex items-center gap-2">
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
+          <h4 class="font-bold text-slate-900 flex items-center gap-1">
             <span>💾</span> 本機裝置容量狀態 (LocalStorage)
           </h4>
-          <div class="flex justify-between text-xs md:text-sm text-stone-400">
-            <span>已使用空間：<strong id="storage-used" class="text-amber-400">0 KB</strong> / 約 5 MB</span>
-            <span id="storage-estimate" class="text-stone-400">可寫約 1000 天</span>
+          <div class="flex justify-between text-slate-500">
+            <span>已使用空間：<strong id="storage-used" class="text-emerald-600">0 KB</strong> / 約 5 MB</span>
+            <span id="storage-estimate">可寫約 1000 天</span>
           </div>
-          <div class="w-full bg-stone-950 rounded-full h-2 overflow-hidden border border-stone-800">
-            <div id="storage-bar" class="bg-amber-500 h-2 rounded-full" style="width: 1%"></div>
+          <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+            <div id="storage-bar" class="bg-emerald-600 h-1.5 rounded-full" style="width: 1%"></div>
           </div>
         </div>
 
         <!-- 手動匯出下載 -->
-        <div class="space-y-3 pt-2">
-          <h4 class="font-bold text-stone-100 flex items-center gap-2">
-            <span>📥</span> 自主備份下載 (另存在本機裝置)
+        <div class="space-y-2 pt-1">
+          <h4 class="font-bold text-slate-900 flex items-center gap-1">
+            <span>📥</span> 自主備份下載
           </h4>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <button onclick="exportDiariesHTML()" class="bg-stone-900 hover:bg-stone-800 border border-amber-500/50 text-amber-300 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
-              <i class="fa-solid fa-globe text-amber-400"></i> 下載離線 HTML 檔
+          <div class="grid grid-cols-1 gap-2">
+            <button onclick="exportDiariesHTML()" class="bg-slate-50 hover:bg-slate-100 border border-emerald-500/50 text-emerald-700 py-2 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+              <i class="fa-solid fa-globe text-emerald-600"></i> 下載離線 HTML 白皮書
             </button>
-            <button onclick="exportDiariesJSON()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
-              <i class="fa-solid fa-file-code text-amber-400"></i> 下載 JSON 備份檔
+            <button onclick="exportDiariesJSON()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 py-2 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+              <i class="fa-solid fa-file-code text-amber-500"></i> 下載 JSON 備份檔
             </button>
-            <button onclick="exportDiariesTXT()" class="bg-stone-900 hover:bg-stone-800 border border-stone-700 text-stone-200 py-2.5 px-3 rounded-xl text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
-              <i class="fa-solid fa-file-lines text-emerald-400"></i> 下載純文字 TXT 檔
+            <button onclick="exportDiariesTXT()" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 py-2 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 transition cursor-pointer">
+              <i class="fa-solid fa-file-lines text-sky-500"></i> 下載純文字 TXT 檔
             </button>
           </div>
         </div>
       </div>
 
       <div class="pt-2">
-        <button onclick="closeInfoModal()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-100 font-bold py-3 rounded-xl transition cursor-pointer">
+        <button onclick="closeInfoModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl transition cursor-pointer text-xs">
           我知道了
         </button>
       </div>
     </div>
   </div>
+
+  <footer class="text-center text-xs text-slate-500 pt-8 font-medium">
+    <p>© myezlife.com · 隨筆心情日記</p>
+  </footer>
 
   <script>
     const CLIENT_ID = '733896891104-14rpscprtqc0n1jdsdg5h5pva2k7e9kt.apps.googleusercontent.com';
@@ -267,6 +355,12 @@
     const FOLDER_NAME = 'myezlife_diaries';
     let folderId = null;
     let currentTodos = [];
+
+    // 展開側邊選單函式
+    function toggleDrawer() {
+      document.getElementById('sideDrawer').classList.toggle('active');
+      document.getElementById('drawerOverlay').classList.toggle('active');
+    }
 
     window.onload = function() {
       document.getElementById('current-date-display').innerText = `📅 ${todayStr}`;
@@ -283,7 +377,6 @@
       gisLoaded();
     }
 
-    // 💡 檢查並顯示本機專屬今日提醒摘要
     function checkHomeReminder() {
       const diaries = getStoredDiaries();
       if (diaries[todayStr] && diaries[todayStr].todos && diaries[todayStr].todos.length > 0) {
@@ -294,7 +387,6 @@
       }
     }
 
-    // 🤖 一鍵複製話術並開啟 Gemini 教學
     function askAITeaching() {
       const promptText = "我正在使用一套名為 myezlife 的零伺服器心情日記網頁，想要連動我自己的 Google 雲端硬碟來自動備份日記。請問我該如何一步步在 Google Cloud Console 申請專屬的 OAuth 2.0 憑證與設定重新導向網址（Redirect URI），才能順利完成連動？請用最簡單、像朋友對話一樣的方式一步一步教我！";
       
@@ -363,16 +455,16 @@
     function renderTodos() {
       const container = document.getElementById('todo-list');
       if (currentTodos.length === 0) {
-        container.innerHTML = `<li class="text-stone-600 italic text-xs py-1">目前沒有待辦事項</li>`;
+        container.innerHTML = `<li class="text-slate-400 italic text-[11px] py-1">目前沒有待辦事項</li>`;
         return;
       }
       container.innerHTML = currentTodos.map((todo, idx) => `
-        <li class="flex items-center justify-between gap-2 bg-stone-950 px-3 py-2 rounded-xl border border-stone-800/80">
+        <li class="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200">
           <label class="flex items-center gap-2 cursor-pointer flex-1 overflow-hidden">
-            <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
-            <span class="${todo.done ? 'line-through text-stone-500' : 'text-stone-200'} truncate">${escapeHtml(todo.text)}</span>
+            <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${idx})" class="w-3.5 h-3.5 accent-emerald-600 rounded cursor-pointer">
+            <span class="${todo.done ? 'line-through text-slate-400' : 'text-slate-800'} truncate text-xs">${escapeHtml(todo.text)}</span>
           </label>
-          <button onclick="deleteTodo(${idx})" class="text-stone-600 hover:text-rose-400 text-xs p-1 transition cursor-pointer">
+          <button onclick="deleteTodo(${idx})" class="text-slate-400 hover:text-rose-600 text-xs p-1 transition cursor-pointer">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </li>
@@ -403,7 +495,6 @@
       document.getElementById('storage-estimate').innerText = '可再寫約 ' + daysLeft + ' 天';
     }
 
-    // 🌐 完美內嵌所有日記資料的離線 HTML 白皮書匯出
     function exportDiariesHTML() {
       const diaries = getStoredDiaries();
       const dates = Object.keys(diaries).sort().reverse();
@@ -417,32 +508,32 @@
         let todoBlock = '';
         if (item.todos && item.todos.length > 0) {
           todoBlock = 
-            '<div style="margin-top:16px; padding:12px; background-color:#1c1917; border-radius:12px; font-size:15px; border:1px solid #292524;">' +
-              '<strong style="color:#fbbf24; display:block; margin-bottom:8px;"><i class="fa-solid fa-list-check"></i> 今日待辦與提醒：</strong>' +
+            '<div style="margin-top:12px; padding:10px; background-color:#f8fafc; border-radius:10px; font-size:13px; border:1px solid #e2e8f0;">' +
+              '<strong style="color:#059669; display:block; margin-bottom:6px;"><i class="fa-solid fa-list-check"></i> 今日待辦與提醒：</strong>' +
               '<ul style="list-style:none; padding:0; margin:0;">' +
                 item.todos.map(function(t) {
-                  return '<li style="margin-bottom:6px; color:' + (t.done ? '#78716c' : '#e7e5e4') + '; text-decoration:' + (t.done ? 'line-through' : 'none') + ';">' + (t.done ? '✓' : '•') + ' ' + escapeHtml(t.text) + '</li>';
+                  return '<li style="margin-bottom:4px; color:' + (t.done ? '#94a3b8' : '#334155') + '; text-decoration:' + (t.done ? 'line-through' : 'none') + ';">' + (t.done ? '✓' : '•') + ' ' + escapeHtml(t.text) + '</li>';
                 }).join('') +
               '</ul>' +
             '</div>';
         }
 
-        return '<div class="chapter-card bg-stone-950 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md overflow-hidden mb-4">' +
-          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-5 py-4 md:px-6 md:py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500 cursor-pointer">' +
-            '<div class="flex items-center gap-3">' +
-              '<span class="text-2xl md:text-3xl">' + item.mood + '</span>' +
+        return '<div class="chapter-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-3">' +
+          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3.5 flex justify-between items-center bg-white hover:bg-slate-50 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
+            '<div class="flex items-center gap-2.5">' +
+              '<span class="text-xl">' + item.mood + '</span>' +
               '<div>' +
-                '<span class="font-bold text-stone-100 text-base md:text-lg">' + item.date + '</span>' +
-                '<span class="text-xs md:text-sm font-semibold text-amber-300 bg-amber-950/60 border border-amber-800/40 px-2 py-0.5 rounded-lg ml-2">' + item.moodLabel + '</span>' +
+                '<span class="font-bold text-slate-900 text-sm">' + item.date + '</span>' +
+                '<span class="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
               '</div>' +
             '</div>' +
-            '<div class="flex items-center gap-3">' +
-              '<span class="text-xs md:text-sm text-stone-500">' + (item.updatedAt || '') + '</span>' +
-              '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-stone-400 rotate-icon text-lg"></i>' +
+            '<div class="flex items-center gap-2.5">' +
+              '<span class="text-[11px] text-slate-400">' + (item.updatedAt || '') + '</span>' +
+              '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-slate-400 rotate-icon text-sm"></i>' +
             '</div>' +
           '</button>' +
           '<div id="content-' + date + '" class="accordion-content">' +
-            '<div class="p-5 md:p-6 border-t border-stone-800 text-stone-300 space-y-4 text-base md:text-lg leading-relaxed">' +
+            '<div class="p-4 border-t border-slate-100 text-slate-700 space-y-3 text-xs leading-relaxed">' +
               '<p style="white-space:pre-wrap; margin:0;">' + escapeHtml(item.content) + '</p>' +
               todoBlock +
             '</div>' +
@@ -465,37 +556,19 @@
 '    .rotate-icon.active { transform: rotate(180deg); }\n' +
 '  </style>\n' +
 '</head>\n' +
-'<body class="bg-stone-900 text-stone-100 min-h-screen font-sans antialiased text-base md:text-lg">\n' +
-'  <header class="bg-gradient-to-r from-stone-950 via-stone-900 to-stone-950 text-white py-10 px-4 shadow-lg border-b-4 border-amber-500">\n' +
-'    <div class="max-w-3xl mx-auto text-center">\n' +
-'      <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>\n' +
-'      <p class="text-amber-400 font-medium text-sm md:text-base">── 記錄每一天的平靜、感動與生活點滴</p>\n' +
-'      <div class="mt-3 text-xs text-stone-400">匯出日期：' + todayStr + '</div>\n' +
+'<body class="bg-slate-100 text-slate-950 min-h-screen font-sans antialiased text-xs">\n' +
+'  <header class="bg-gradient-to-r from-[#00B900] to-[#008800] text-white py-8 px-4 shadow-md">\n' +
+'    <div class="max-w-md mx-auto text-center">\n' +
+'      <h1 class="text-lg font-bold tracking-tight mb-1">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>\n' +
+'      <p class="text-emerald-100 font-medium text-xs">── 記錄每一天的平靜、感動與生活點滴</p>\n' +
+'      <div class="mt-2 text-[10px] text-emerald-100/80">匯出日期：' + todayStr + '</div>\n' +
 '    </div>\n' +
 '  </header>\n' +
-'  <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">\n' +
-'    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-stone-950 p-4 rounded-xl shadow-sm border border-stone-800">\n' +
-'      <div class="relative w-full sm:w-80">\n' +
-'        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-500"></i>\n' +
-'        <input type="text" id="searchInput" onkeyup="filterChapters()" placeholder="搜尋日記關鍵字..." \n' +
-'               class="w-full pl-9 pr-4 py-2 text-sm bg-stone-900 border border-stone-800 text-stone-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">\n' +
-'      </div>\n' +
-'      <div class="flex gap-3 w-full sm:w-auto justify-end">\n' +
-'        <button onclick="toggleAll(true)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-amber-300 hover:bg-stone-800 rounded-lg transition border border-stone-700 cursor-pointer">\n' +
-'          <i class="fa-solid fa-folder-open mr-1.5"></i>全部展開\n' +
-'        </button>\n' +
-'        <button onclick="toggleAll(false)" class="px-4 py-2 text-sm font-medium bg-stone-900 text-stone-300 hover:bg-stone-800 rounded-lg transition border border-stone-700 cursor-pointer">\n' +
-'          <i class="fa-solid fa-folder-closed mr-1.5"></i>全部收合\n' +
-'        </button>\n' +
-'      </div>\n' +
-'    </div>\n' +
-'    <div class="space-y-4" id="chapterContainer">\n' +
+'  <main class="max-w-md mx-auto px-4 py-6 space-y-4">\n' +
+'    <div class="space-y-3" id="chapterContainer">\n' +
 '      ' + cardsHtml + '\n' +
 '    </div>\n' +
 '  </main>\n' +
-'  <footer class="bg-stone-950 text-stone-500 text-center py-6 border-t border-stone-800 mt-12 text-sm">\n' +
-'    <p>© myezlife Diary - 100% 本地優先與雲端自主備份</p>\n' +
-'  </footer>\n' +
 '  <script>\n' +
 '    function toggleAccordion(dateKey) {\n' +
 '      const content = document.getElementById("content-" + dateKey);\n' +
@@ -504,27 +577,6 @@
 '        content.classList.toggle("expanded");\n' +
 '        icon.classList.toggle("active");\n' +
 '      }\n' +
-'    }\n' +
-'    function toggleAll(expand) {\n' +
-'      const contents = document.querySelectorAll(".accordion-content");\n' +
-'      const icons = document.querySelectorAll(".rotate-icon");\n' +
-'      contents.forEach(function(c) {\n' +
-'        if (expand) c.classList.add("expanded");\n' +
-'        else c.classList.remove("expanded");\n' +
-'      });\n' +
-'      icons.forEach(function(i) {\n' +
-'        if (expand) i.classList.add("active");\n' +
-'        else i.classList.remove("active");\n' +
-'      });\n' +
-'    }\n' +
-'    function filterChapters() {\n' +
-'      const input = document.getElementById("searchInput").value.toLowerCase();\n' +
-'      const cards = document.querySelectorAll(".chapter-card");\n' +
-'      cards.forEach(function(card) {\n' +
-'        const text = card.innerText.toLowerCase();\n' +
-'        if (text.includes(input)) card.style.display = "block";\n' +
-'        else card.style.display = "none";\n' +
-'      });\n' +
 '    }\n' +
 '  <\/script>\n' +
 '</body>\n' +
@@ -587,11 +639,12 @@
     }
 
     function setCloudConnectedUI() {
-      document.getElementById('sync-btn-text').innerText = '已連動 Google 雲端';
-      document.getElementById('sync-btn').classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+      document.getElementById('sync-btn-text').innerText = '已連動雲端';
+      const btn = document.getElementById('sync-btn');
+      btn.className = 'text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-1.5 px-3 rounded-xl font-medium transition flex items-center justify-center gap-1.5 cursor-pointer';
       const tip = document.getElementById('cloud-status-tip');
       tip.innerText = '✨ 雲端備份防護已啟動';
-      tip.className = 'text-xs md:text-sm text-emerald-400 bg-emerald-950/40 px-3 py-1 rounded-lg border border-emerald-800/30';
+      tip.className = 'text-[11px] text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-medium';
     }
 
     function gisLoaded() {
@@ -641,11 +694,11 @@
       selectedMood = { emoji: emoji, label: label };
       document.querySelectorAll('.mood-btn').forEach(function(btn) {
         if (btn.getAttribute('data-mood') === emoji) {
-          btn.classList.add('border-amber-400', 'bg-stone-800', 'ring-2', 'ring-amber-400/50');
-          btn.classList.remove('border-stone-800', 'bg-stone-900');
+          btn.classList.add('border-emerald-500', 'bg-emerald-50', 'ring-1', 'ring-emerald-500/50');
+          btn.classList.remove('border-slate-200', 'bg-slate-50');
         } else {
-          btn.classList.remove('border-amber-400', 'bg-stone-800', 'ring-2', 'ring-amber-400/50');
-          btn.classList.add('border-stone-800', 'bg-stone-900');
+          btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'ring-1', 'ring-emerald-500/50');
+          btn.classList.add('border-slate-200', 'bg-slate-50');
         }
       });
     }
@@ -660,8 +713,7 @@
         if (searchRes.status === 401) {
           localStorage.removeItem('myezlife_access_token');
           accessToken = null;
-          document.getElementById('sync-btn-text').innerText = '連動 Google 雲端';
-          document.getElementById('sync-btn').classList.remove('bg-emerald-950', 'border-emerald-500', 'text-emerald-300');
+          document.getElementById('sync-btn-text').innerText = '雲端同步';
           alert('Google 授權已過期，請重新連動！');
           return null;
         }
@@ -737,7 +789,7 @@
         if (confirm('您目前尚未連動 Google 雲端！是否要立即進行連動，讓這篇日記自動備份到雲端？')) {
           handleAuthClick();
         } else {
-          alert('紀錄已安全存於本機。記得之後點擊右上角「連動 Google 雲端」進行備份喔！');
+          alert('紀錄已安全存於本機。記得之後點擊右上角「雲端同步」進行備份喔！');
         }
       }
     }
@@ -909,9 +961,9 @@
 
       if (dates.length === 0) {
         listContainer.innerHTML = 
-          '<div class="text-center py-10 md:py-12 bg-stone-950 rounded-2xl md:rounded-3xl border-2 border-dashed border-stone-800">' +
-            '<span class="text-3xl md:text-4xl block mb-3">🍃</span>' +
-            '<p class="text-sm md:text-base text-stone-400 font-medium">目前還沒有紀錄，寫下第一篇日記吧！</p>' +
+          '<div class="text-center py-8 bg-white rounded-2xl border border-slate-200">' +
+            '<span class="text-3xl block mb-2">🍃</span>' +
+            '<p class="text-xs text-slate-500 font-medium">目前還沒有紀錄，寫下第一篇日記吧！</p>' +
           '</div>';
         return;
       }
@@ -922,11 +974,11 @@
         let todoBlock = '';
         if (item.todos && item.todos.length > 0) {
           todoBlock = 
-            '<div class="mt-4 pt-4 border-t border-stone-800 space-y-2">' +
-              '<span class="text-xs font-bold text-amber-400 block mb-1">💡 待辦與提醒：</span>' +
-              '<ul class="space-y-1.5 text-sm text-stone-300">' +
+            '<div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5">' +
+              '<span class="text-[11px] font-bold text-emerald-700 block mb-1">💡 待辦與提醒：</span>' +
+              '<ul class="space-y-1 text-xs text-slate-700">' +
                 item.todos.map(function(t) {
-                  return '<li class="flex items-center gap-2 ' + (t.done ? 'line-through text-stone-500' : '') + '">' +
+                  return '<li class="flex items-center gap-2 ' + (t.done ? 'line-through text-slate-400' : '') + '">' +
                            '<span>' + (t.done ? '✓' : '•') + '</span>' +
                            '<span>' + escapeHtml(t.text) + '</span>' +
                          '</li>';
@@ -935,25 +987,25 @@
             '</div>';
         }
 
-        return '<div class="chapter-card bg-stone-950 rounded-2xl md:rounded-3xl border border-stone-800 shadow-md overflow-hidden">' +
-          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-5 py-4 md:px-6 md:py-5 flex justify-between items-center bg-stone-950 hover:bg-stone-900 transition-colors text-left border-l-4 border-amber-500 cursor-pointer">' +
-            '<div class="flex items-center gap-3">' +
-              '<span class="text-2xl md:text-3xl">' + item.mood + '</span>' +
+        return '<div class="chapter-card bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">' +
+          '<button onclick="toggleAccordion(\'' + date + '\')" class="w-full px-4 py-3.5 flex justify-between items-center bg-white hover:bg-slate-55 transition-colors text-left border-l-4 border-emerald-500 cursor-pointer">' +
+            '<div class="flex items-center gap-2.5">' +
+              '<span class="text-2xl">' + item.mood + '</span>' +
               '<div>' +
-                '<span class="font-bold text-stone-100 text-base md:text-lg">' + item.date + '</span>' +
-                '<span class="text-xs md:text-sm font-semibold text-amber-300 bg-amber-950/60 border border-amber-800/40 px-2 py-0.5 rounded-lg ml-2">' + item.moodLabel + '</span>' +
+                '<span class="font-bold text-slate-900 text-xs md:text-sm">' + item.date + '</span>' +
+                '<span class="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md ml-2">' + item.moodLabel + '</span>' +
               '</div>' +
             '</div>' +
-            '<div class="flex items-center gap-3">' +
-              '<span class="text-xs md:text-sm text-stone-500">' + (item.updatedAt || '') + '</span>' +
-              '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-stone-400 rotate-icon text-lg"></i>' +
-              '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-stone-500 hover:text-rose-400 p-2 transition ml-1 cursor-pointer" title="刪除">' +
+            '<div class="flex items-center gap-2.5">' +
+              '<span class="text-[11px] text-slate-400">' + (item.updatedAt || '') + '</span>' +
+              '<i id="icon-' + date + '" class="fa-solid fa-chevron-down text-slate-400 rotate-icon text-xs"></i>' +
+              '<span onclick="event.stopPropagation(); deleteDiary(\'' + date + '\')" class="text-slate-400 hover:text-rose-600 p-1.5 transition ml-0.5 cursor-pointer" title="刪除">' +
                 '<i class="fa-regular fa-trash-can"></i>' +
               '</span>' +
             '</div>' +
           '</button>' +
           '<div id="content-' + date + '" class="accordion-content">' +
-            '<div class="p-5 md:p-6 border-t border-stone-800 text-stone-300 space-y-4 text-base md:text-lg leading-relaxed">' +
+            '<div class="p-4 border-t border-slate-100 text-slate-700 space-y-3 text-xs leading-relaxed">' +
               '<p style="white-space:pre-wrap; margin:0;">' + escapeHtml(item.content) + '</p>' +
               todoBlock +
             '</div>' +
