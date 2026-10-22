@@ -68,12 +68,12 @@
 
       <!-- 文字輸入框 -->
       <div class="mb-5 md:mb-6">
-        <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話..." class="w-full p-3 md:p-4 border-2 border-stone-800 rounded-2xl focus:outline-none focus:ring-4 focus:ring-amber-500/20 focus:border-amber-500 text-stone-100 text-base md:text-lg leading-relaxed placeholder-stone-600 resize-none bg-stone-900"></textarea>
+        <textarea id="diary-input" rows="4" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3 md:p-4 border-2 border-stone-800 rounded-2xl focus:outline-none focus:ring-4 focus:ring-amber-500/20 focus:border-amber-500 text-stone-100 text-base md:text-lg leading-relaxed placeholder-stone-600 resize-none bg-stone-900"></textarea>
       </div>
 
       <!-- 儲存按鈕 -->
       <button onclick="saveDiary()" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-3 md:py-4 rounded-2xl transition duration-200 shadow-md text-lg md:text-xl flex items-center justify-center gap-2 md:gap-3">
-        <i class="fa-solid fa-pen-nib"></i> 儲存並同步至 Google 雲端
+        <i class="fa-solid fa-pen-nib"></i> 追加至今日日記並同步雲端
       </button>
     </section>
 
@@ -109,7 +109,6 @@
     let accessToken = localStorage.getItem('myezlife_access_token') || null;
     let selectedMood = { emoji: '🌿', label: '平靜' };
     const todayStr = new Date().toISOString().split('T')[0];
-    let cloudDiaries = {}; 
     const FOLDER_NAME = 'myezlife_diaries';
     let folderId = null;
 
@@ -234,27 +233,45 @@
     let pendingDiaryData = null;
 
     async function saveDiary() {
-      const text = document.getElementById('diary-input').value.trim();
-      if (!text) {
+      const newText = document.getElementById('diary-input').value.trim();
+      if (!newText) {
         alert('請先輸入一些日記內容喔！');
         return;
       }
 
+      const currentTime = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+      const diaries = getStoredDiaries();
+      
+      let finalContent = newText;
+      let finalMood = selectedMood.emoji;
+      let finalMoodLabel = selectedMood.label;
+
+      // 檢查今天是否已經寫過日記，如果是，則將新內容與舊內容進行追加合併！
+      if (diaries[todayStr]) {
+        const existing = diaries[todayStr];
+        // 串接格式：保留原本內容，並在下方加上時間標記與新輸入的內容
+        finalContent = `${existing.content}\n\n[${currentTime}] ${newText}`;
+        // 心情以最新點選的為主，或保留原本的（這裡採用更新為最新點選的心情與標籤）
+      } else {
+        finalContent = `[${currentTime}] ${newText}`;
+      }
+
       const diaryData = {
         date: todayStr,
-        mood: selectedMood.emoji,
-        moodLabel: selectedMood.label,
-        content: text,
-        updatedAt: new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' })
+        mood: finalMood,
+        moodLabel: finalMoodLabel,
+        content: finalContent,
+        updatedAt: currentTime
       };
 
-      const diaries = getStoredDiaries();
+      // 1. 存入本機
       diaries[todayStr] = diaryData;
       localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
       
       document.getElementById('diary-input').value = '';
-      loadDiaries();
+      loadDiaries(); // 立即重新渲染畫面
 
+      // 2. 同步至 Google 雲端
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
       } else {
@@ -269,8 +286,7 @@
 
     function getStoredDiaries() {
       const localData = localStorage.getItem('myezlife_diaries');
-      const localDiaries = localData ? JSON.parse(localData) : {};
-      return { ...localDiaries, ...cloudDiaries };
+      return localData ? JSON.parse(localData) : {};
     }
 
     async function fetchDiariesFromDrive() {
@@ -285,16 +301,27 @@
         const result = await response.json();
         
         if (result.files && result.files.length > 0) {
-          cloudDiaries = {};
+          const localDiaries = getStoredDiaries();
+          
           for (let file of result.files) {
             const fileContentRes = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, {
               headers: new Headers({ 'Authorization': 'Bearer ' + accessToken })
             });
             const diaryJson = await fileContentRes.json();
             if (diaryJson && diaryJson.date) {
-              cloudDiaries[diaryJson.date] = diaryJson;
+              // 雙向合併：如果雲端檔案存在，比對或直接納入
+              if (!localDiaries[diaryJson.date]) {
+                localDiaries[diaryJson.date] = diaryJson;
+              } else {
+                // 如果雲端的內容較長或有更新，也可以選擇以雲端為主或保留最完整者
+                if (diaryJson.content.length >= localDiaries[diaryJson.date].content.length) {
+                  localDiaries[diaryJson.date] = diaryJson;
+                }
+              }
             }
           }
+
+          localStorage.setItem('myezlife_diaries', JSON.stringify(localDiaries));
           loadDiaries();
         }
       } catch (error) {
@@ -346,7 +373,7 @@
         });
 
         if (uploadRes.ok) {
-          console.log('雲端同步成功');
+          console.log('雲端追加同步成功');
         }
       } catch (error) {
         console.error('同步至 Google 雲端發生錯誤:', error);
@@ -357,7 +384,6 @@
       if (confirm(`確定要刪除 ${date} 的日記嗎？`)) {
         const diaries = getStoredDiaries();
         delete diaries[date];
-        delete cloudDiaries[date];
         localStorage.setItem('myezlife_diaries', JSON.stringify(diaries));
         loadDiaries();
       }
@@ -369,7 +395,6 @@
       
       let dates = Object.keys(diaries).sort().reverse();
 
-      // 關鍵字過濾篩選
       if (searchQuery) {
         dates = dates.filter(date => {
           const item = diaries[date];
@@ -386,7 +411,7 @@
         listContainer.innerHTML = `
           <div class="text-center py-10 md:py-12 bg-stone-950 rounded-2xl md:rounded-3xl border-2 border-dashed border-stone-800">
             <span class="text-3xl md:text-4xl block mb-3">🍃</span>
-            <p class="text-sm md:text-base text-stone-400 font-medium">沒有找到符合的日記紀錄</p>
+            <p class="text-sm md:text-base text-stone-400 font-medium">目前還沒有紀錄，寫下第一篇日記吧！</p>
           </div>
         `;
         return;
