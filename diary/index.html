@@ -144,41 +144,34 @@
     </div>
   </div>
 
-  <!-- 頂部導覽列（已優化手機版上下分層排版，電腦版維持單行） -->
+  <!-- 頂部導覽列（電腦版維持同一行，寬度適中） -->
   <header class="bg-white text-slate-900 border-b border-slate-200/90 sticky top-0 z-10 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-2.5 sm:py-3 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2.5 sm:gap-3">
+    <div class="max-w-xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
       
-      <!-- 第一行：左側 Logo + 標題 -->
-      <div class="flex items-center justify-between sm:justify-start">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
-          <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
-          <h1 class="text-lg font-bold tracking-wide leading-tight flex flex-col">
-            <span>myezlife</span>
-            <span class="text-emerald-600 font-semibold text-sm">心情隨筆日記</span>
-          </h1>
-        </div>
-
-        <!-- 手機版專屬右側選單按鈕（點擊開啓 Drawer） -->
-        <button onclick="toggleDrawer()" class="sm:hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 py-2 px-3 rounded-xl font-bold flex items-center gap-1.5">
-          <i class="fa-solid fa-bars text-emerald-600"></i> 選單
-        </button>
+      <!-- 左側：Logo + 標題 -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
+        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
+        <h1 class="text-lg font-bold tracking-wide leading-tight flex flex-col">
+          <span>myezlife</span>
+          <span class="text-emerald-600 font-semibold text-sm">心情隨筆日記</span>
+        </h1>
       </div>
       
-      <!-- 右側功能按鈕區（手機版自動換到第二行並平分排版） -->
-      <div class="flex items-center justify-between sm:justify-end gap-2 border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100">
+      <!-- 右側功能按鈕區 -->
+      <div class="flex items-center gap-2">
         <!-- 大字體開關按鈕 -->
-        <button onclick="toggleFontSize()" class="flex-1 sm:flex-initial text-xs bg-white border border-slate-300 shadow-sm px-3 py-2 sm:py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center justify-center gap-1.5">
+        <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-2.5 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1">
           <i class="fa-solid fa-text-height text-emerald-600"></i>
-          <span id="fontToggleTopLabel">字體大小</span>
+          <span id="fontToggleTopLabel" class="hidden sm:inline">字體大小</span>
         </button>
 
         <!-- 說明與備份按鈕 -->
-        <button onclick="openInfoModal()" class="flex-1 sm:flex-initial text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 py-2 sm:py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+        <button onclick="openInfoModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 py-1.5 px-3 rounded-xl font-bold transition flex items-center gap-1 cursor-pointer">
           <i class="fa-solid fa-circle-info text-emerald-600"></i> <span>說明</span>
         </button>
 
         <!-- 雲端同步按鈕 -->
-        <button id="sync-btn" onclick="handleAuthClick()" class="flex-1 sm:flex-initial text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-2 sm:py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
           <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> <span id="sync-btn-text">雲端同步</span>
         </button>
       </div>
@@ -186,127 +179,113 @@
     </div>
   </header>
 
-  <!-- 💻📱 全站主要內容區域：手機單欄，電腦版（md以上）自動響應為雙欄 -->
-  <main class="max-w-6xl mx-auto w-full px-4 pt-5">
+  <!-- 💻📱 全站主要內容區域：統一採舒適適中的單欄置中佈局 (max-w-xl) -->
+  <main class="max-w-xl mx-auto w-full px-4 pt-5 space-y-4">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-
-      <!-- 👈 左側欄：今日心情與寫作編輯區 -->
-      <div class="space-y-4">
-        
-        <!-- 今日心情與待辦卡片 -->
-        <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm space-y-4">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-            <div class="text-sm font-extrabold text-slate-800 bg-slate-100 px-3.5 py-1.5 rounded-xl border border-slate-200" id="current-date-display">
-              📅 載入日期中...
-            </div>
-            <span id="cloud-status-tip" class="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold">💡 建議先連動雲端，確保日記自動備份</span>
+    <!-- 💡 本機專屬今日提醒摘要卡片 -->
+    <section id="home-today-reminder" class="hidden">
+      <div class="bg-stone-950 border border-amber-500/40 rounded-2xl p-4 shadow-md flex items-center justify-between gap-3 text-stone-100">
+        <div class="flex items-center gap-3 overflow-hidden">
+          <span class="text-3xl">💡</span>
+          <div class="truncate">
+            <h3 class="text-xs font-bold text-amber-400">今日待辦與提醒摘要</h3>
+            <p id="home-reminder-text" class="text-sm font-bold text-stone-100 truncate">載入中...</p>
           </div>
+        </div>
+        <span class="text-xs bg-amber-500 text-stone-950 px-2.5 py-1 rounded-lg font-black shrink-0">本機專屬</span>
+      </div>
+    </section>
 
-          <!-- 心情選擇器 -->
-          <div>
-            <label class="block text-sm font-extrabold text-slate-800 mb-2.5">今天的心情如何？請點選代表圖示：</label>
-            <div class="grid grid-cols-5 gap-1.5 sm:gap-2" id="mood-selector">
-              <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
-                <span class="text-2xl sm:text-3xl">🌻</span>
-                <span class="text-xs font-bold text-slate-700">晴朗</span>
-              </button>
-              <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
-                <span class="text-2xl sm:text-3xl">🌷</span>
-                <span class="text-xs font-bold text-slate-700">溫馨</span>
-              </button>
-              <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
-                <span class="text-2xl sm:text-3xl">🌿</span>
-                <span class="text-xs font-bold text-slate-700">平靜</span>
-              </button>
-              <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
-                <span class="text-2xl sm:text-3xl">🌧️</span>
-                <span class="text-xs font-bold text-slate-700">沉思</span>
-              </button>
-              <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
-                <span class="text-2xl sm:text-3xl">🥀</span>
-                <span class="text-xs font-bold text-slate-700">疲憊</span>
-              </button>
-            </div>
-          </div>
+    <!-- 今日心情與待辦卡片 -->
+    <section class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div class="text-sm font-extrabold text-slate-800 bg-slate-100 px-3.5 py-1.5 rounded-xl border border-slate-200" id="current-date-display">
+          📅 載入日期中...
+        </div>
+        <span id="cloud-status-tip" class="text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold">💡 建議先連動雲端，確保日記自動備份</span>
+      </div>
 
-          <!-- 文字輸入框 -->
-          <div>
-            <textarea id="diary-input" rows="5" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900 text-base leading-relaxed placeholder-slate-400 resize-none bg-slate-50 font-medium"></textarea>
-          </div>
-
-          <!-- 📌 今日待辦提醒與隨手筆記區 -->
-          <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-3">
-            <label class="block text-sm font-extrabold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-list-check text-emerald-600 text-base"></i> 今日待辦事項與提醒 (Notes)
-            </label>
-            
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="w-full sm:flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400 font-medium shadow-sm">
-              <button onclick="addTodo()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-black transition cursor-pointer shrink-0 flex items-center justify-center gap-1 shadow-sm">
-                <i class="fa-solid fa-plus text-xs"></i> 新增事項
-              </button>
-            </div>
-
-            <ul id="todo-list" class="space-y-2 text-xs max-h-48 overflow-y-auto pt-1">
-              <!-- 待辦項目由 JS 動態繪製 -->
-            </ul>
-          </div>
-
-          <!-- 儲存按鈕 -->
-          <button id="save-btn" onclick="saveDiary()" class="w-full bg-gradient-to-r from-[#00B900] to-[#008800] hover:opacity-95 text-white font-black py-3.5 rounded-xl transition shadow-sm text-base flex items-center justify-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-pen-nib"></i> <span id="save-btn-text">寫下今日隨筆並同步雲端</span>
+      <!-- 心情選擇器 -->
+      <div>
+        <label class="block text-sm font-extrabold text-slate-800 mb-2.5">今天的心情如何？請點選代表圖示：</label>
+        <div class="grid grid-cols-5 gap-1.5 sm:gap-2" id="mood-selector">
+          <button type="button" onclick="selectMood('🌻', '晴朗')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌻">
+            <span class="text-2xl sm:text-3xl">🌻</span>
+            <span class="text-xs font-bold text-slate-700">晴朗</span>
           </button>
-        </section>
-
+          <button type="button" onclick="selectMood('🌷', '溫馨')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌷">
+            <span class="text-2xl sm:text-3xl">🌷</span>
+            <span class="text-xs font-bold text-slate-700">溫馨</span>
+          </button>
+          <button type="button" onclick="selectMood('🌿', '平靜')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌿">
+            <span class="text-2xl sm:text-3xl">🌿</span>
+            <span class="text-xs font-bold text-slate-700">平靜</span>
+          </button>
+          <button type="button" onclick="selectMood('🌧️', '沉思')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🌧️">
+            <span class="text-2xl sm:text-3xl">🌧️</span>
+            <span class="text-xs font-bold text-slate-700">沉思</span>
+          </button>
+          <button type="button" onclick="selectMood('🥀', '疲憊')" class="mood-btn py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 flex flex-col items-center gap-1 transition cursor-pointer" data-mood="🥀">
+            <span class="text-2xl sm:text-3xl">🥀</span>
+            <span class="text-xs font-bold text-slate-700">疲憊</span>
+          </button>
+        </div>
       </div>
 
-      <!-- 👉 右側欄：提醒摘要與歷史隨筆紀錄 -->
-      <div class="space-y-4">
-
-        <!-- 💡 本機專屬今日提醒摘要卡片 -->
-        <section id="home-today-reminder" class="hidden">
-          <div class="bg-stone-950 border border-amber-500/40 rounded-2xl p-4 shadow-md flex items-center justify-between gap-3 text-stone-100">
-            <div class="flex items-center gap-3 overflow-hidden">
-              <span class="text-3xl">💡</span>
-              <div class="truncate">
-                <h3 class="text-xs font-bold text-amber-400">今日待辦與提醒摘要</h3>
-                <p id="home-reminder-text" class="text-sm font-bold text-stone-100 truncate">載入中...</p>
-              </div>
-            </div>
-            <span class="text-xs bg-amber-500 text-stone-950 px-2.5 py-1 rounded-lg font-black shrink-0">本機專屬</span>
-          </div>
-        </section>
-
-        <!-- 歷史日記列表與搜尋區 -->
-        <section class="space-y-3">
-          <div class="flex items-center justify-between px-1">
-            <h2 class="text-base font-black text-slate-900 flex items-center gap-2">
-              <span>🌸</span> 歷史隨筆紀錄
-            </h2>
-            <div class="flex items-center gap-2">
-              <span id="diary-count" class="text-xs font-bold text-slate-500">共 0 篇</span>
-              <button onclick="toggleAllApp(true)" class="px-2.5 py-1 text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">展開</button>
-              <button onclick="toggleAllApp(false)" class="px-2.5 py-1 text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">收合</button>
-            </div>
-          </div>
-
-          <!-- 🔍 關鍵字搜尋框 -->
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-              <i class="fa-solid fa-magnifying-glass text-sm"></i>
-            </span>
-            <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容、心情或待辦..." class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-sm font-medium shadow-sm">
-          </div>
-
-          <div id="diary-list" class="space-y-3">
-            <!-- 內容由 JS 產生 -->
-          </div>
-        </section>
-
+      <!-- 文字輸入框 -->
+      <div>
+        <textarea id="diary-input" rows="5" placeholder="請在此寫下您今天的心情或想說的話（可多次寫入，內容會自動串接完整呈現）..." class="w-full p-3.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900 text-base leading-relaxed placeholder-slate-400 resize-none bg-slate-50 font-medium"></textarea>
       </div>
 
-    </div>
+      <!-- 📌 今日待辦提醒與隨手筆記區 -->
+      <div class="bg-slate-50 p-3.5 sm:p-4 rounded-2xl border border-slate-200 space-y-3">
+        <label class="block text-sm font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-emerald-600 text-base"></i> 今日待辦事項與提醒 (Notes)
+        </label>
+        
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="todo-input" placeholder="新增待辦事項 (例如：買牛奶)..." class="w-full sm:flex-1 px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-emerald-500 placeholder-slate-400 font-medium shadow-sm">
+          <button onclick="addTodo()" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-black transition cursor-pointer shrink-0 flex items-center justify-center gap-1 shadow-sm">
+            <i class="fa-solid fa-plus text-xs"></i> 新增事項
+          </button>
+        </div>
+
+        <ul id="todo-list" class="space-y-2 text-xs max-h-48 overflow-y-auto pt-1">
+          <!-- 待辦項目由 JS 動態繪製 -->
+        </ul>
+      </div>
+
+      <!-- 儲存按鈕 -->
+      <button id="save-btn" onclick="saveDiary()" class="w-full bg-gradient-to-r from-[#00B900] to-[#008800] hover:opacity-95 text-white font-black py-3.5 rounded-xl transition shadow-sm text-base flex items-center justify-center gap-2 cursor-pointer">
+        <i class="fa-solid fa-pen-nib"></i> <span id="save-btn-text">寫下今日隨筆並同步雲端</span>
+      </button>
+    </section>
+
+    <!-- 歷史日記列表與搜尋區 -->
+    <section class="space-y-3 pt-2">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-base font-black text-slate-900 flex items-center gap-2">
+          <span>🌸</span> 歷史隨筆紀錄
+        </h2>
+        <div class="flex items-center gap-2">
+          <span id="diary-count" class="text-xs font-bold text-slate-500">共 0 篇</span>
+          <button onclick="toggleAllApp(true)" class="px-2.5 py-1 text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">展開</button>
+          <button onclick="toggleAllApp(false)" class="px-2.5 py-1 text-xs font-bold bg-white text-slate-700 hover:bg-slate-200 rounded-lg transition border border-slate-200 cursor-pointer">收合</button>
+        </div>
+      </div>
+
+      <!-- 🔍 關鍵字搜尋框 -->
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </span>
+        <input type="text" id="search-input" oninput="loadDiaries()" placeholder="搜尋過往日記內容、心情或待辦..." class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-500 text-sm font-medium shadow-sm">
+      </div>
+
+      <div id="diary-list" class="space-y-3">
+        <!-- 內容由 JS 產生 -->
+      </div>
+    </section>
 
   </main>
 
@@ -625,13 +604,13 @@
 '</head>\n' +
 '<body class="bg-slate-100 text-slate-950 min-h-screen font-sans antialiased text-sm">\n' +
 '  <header class="bg-gradient-to-r from-[#00B900] to-[#008800] text-white py-8 px-4 shadow-md">\n' +
-'    <div class="max-w-2xl mx-auto text-center">\n' +
+'    <div class="max-w-xl mx-auto text-center">\n' +
 '      <h1 class="text-xl font-bold tracking-tight mb-1">🌱 myezlife 離線心情隨筆與筆記白皮書</h1>\n' +
 '      <p class="text-emerald-100 font-medium text-sm">── 記錄每一天的平靜、感動與生活點滴</p>\n' +
 '      <div class="mt-2 text-xs text-emerald-100/80">匯出日期：' + todayStr + '</div>\n' +
 '    </div>\n' +
 '  </header>\n' +
-'  <main class="max-w-2xl mx-auto px-4 py-6 space-y-4">\n' +
+'  <main class="max-w-xl mx-auto px-4 py-6 space-y-4">\n' +
 '    <div class="space-y-3" id="chapterContainer">\n' +
 '      ' + cardsHtml + '\n' +
 '    </div>\n' +
@@ -708,7 +687,7 @@
     function setCloudConnectedUI() {
       document.getElementById('sync-btn-text').innerText = '已連動雲端';
       const btn = document.getElementById('sync-btn');
-      btn.className = 'flex-1 sm:flex-initial text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-2 sm:py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer';
+      btn.className = 'text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer';
       const tip = document.getElementById('cloud-status-tip');
       tip.innerText = '✨ 雲端備份防護已啟動';
       tip.className = 'text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold';
