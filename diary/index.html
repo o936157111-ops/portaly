@@ -168,7 +168,6 @@
     async function getOrCreateFolderId() {
       if (folderId) return folderId;
       try {
-        // 搜尋是否有 myezlife_diaries 資料夾
         const searchRes = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`, {
           headers: new Headers({ 'Authorization': 'Bearer ' + accessToken })
         });
@@ -177,7 +176,6 @@
         if (searchResult.files && searchResult.files.length > 0) {
           folderId = searchResult.files[0].id;
         } else {
-          // 若沒有則建立一個
           const metadata = {
             name: FOLDER_NAME,
             mimeType: 'application/vnd.google-apps.folder'
@@ -223,7 +221,7 @@
       document.getElementById('diary-input').value = '';
       loadDiaries();
 
-      // 2. 上傳至雲端
+      // 2. 上傳至雲端專屬資料夾
       if (accessToken) {
         await uploadToGoogleDrive(todayStr, diaryData);
       } else {
@@ -243,7 +241,6 @@
         const fId = await getOrCreateFolderId();
         if (!fId) return;
 
-        // 搜尋該資料夾底下的所有 json 檔案
         const response = await fetch(`https://www.googleapis.com/drive/v3/files?q='${fId}' in parents and mimeType='application/json' and trashed=false`, {
           method: 'GET',
           headers: new Headers({ 'Authorization': 'Bearer ' + accessToken })
@@ -262,19 +259,18 @@
             }
           }
           loadDiaries();
-          alert('已成功從雲端同步所有歷史日記！');
+          alert('已成功從雲端專屬資料夾同步所有歷史日記！');
         }
       } catch (error) {
         console.error('從雲端讀取日記失敗:', error);
       }
     }
 
-    // 上傳至指定專屬資料夾
+    // 上傳至指定專屬資料夾（已修正父資料夾繫結）
     async function uploadToGoogleDrive(date, diaryData) {
       try {
         const fId = await getOrCreateFolderId();
         
-        // 檢查該資料夾內是否已有當天的檔案
         const queryRes = await fetch(`https://www.googleapis.com/drive/v3/files?q='${fId}' in parents and name='${date}.json' and trashed=false`, {
           headers: new Headers({ 'Authorization': 'Bearer ' + accessToken })
         });
@@ -290,7 +286,7 @@
         form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
         form.append('file', new Blob([fileContent], { type: 'application/json' }));
 
-        let url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+        let url = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true`;
         let method = 'POST';
 
         if (queryResult.files && queryResult.files.length > 0) {
@@ -306,7 +302,7 @@
         });
 
         if (response.ok) {
-          alert('日記已成功儲存並同步至 Google 雲端！');
+          alert('日記已成功儲存並同步至 Google 雲端專屬資料夾！');
         }
       } catch (error) {
         console.error('同步至 Google 雲端發生錯誤:', error);
