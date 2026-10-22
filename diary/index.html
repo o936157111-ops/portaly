@@ -144,34 +144,36 @@
     </div>
   </div>
 
-  <!-- 頂部導覽列（電腦版維持同一行，寬度適中） -->
+  <!-- 頂部導覽列：採用與主首頁一致的白色圓角卡片底色與上下分列設計 -->
   <header class="bg-white text-slate-900 border-b border-slate-200/90 sticky top-0 z-10 shadow-sm">
-    <div class="max-w-xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+    <div class="max-w-xl mx-auto px-4 py-3 flex flex-col gap-2.5">
       
-      <!-- 左側：Logo + 標題 -->
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
-        <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
-        <h1 class="text-lg font-bold tracking-wide leading-tight flex flex-col">
-          <span>myezlife</span>
-          <span class="text-emerald-600 font-semibold text-sm">心情隨筆日記</span>
-        </h1>
-      </div>
-      
-      <!-- 右側功能按鈕區 -->
-      <div class="flex items-center gap-2">
-        <!-- 大字體開關按鈕 -->
-        <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-2.5 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1">
-          <i class="fa-solid fa-text-height text-emerald-600"></i>
-          <span id="fontToggleTopLabel" class="hidden sm:inline">字體大小</span>
-        </button>
+      <!-- 上列：LOGO + 標題 + 字體大小切換按鈕 -->
+      <div class="flex justify-between items-center">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="toggleDrawer()" title="點擊開啟功能選單">
+          <img src="https://myezlife.com/eric-logo.gif" alt="Menu" class="w-10 h-10 rounded-full border-2 border-emerald-500 object-cover shadow-sm hover:scale-105 transition shrink-0">
+          <h1 class="text-lg font-bold tracking-wide leading-tight flex flex-col">
+            <span>myezlife</span>
+            <span class="text-emerald-600 font-semibold text-sm">心情隨筆日記</span>
+          </h1>
+        </div>
 
+        <!-- 字體大小按鈕 -->
+        <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-3 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-text-height text-emerald-600"></i>
+          <span id="fontToggleTopLabel">字體大小</span>
+        </button>
+      </div>
+
+      <!-- 下列：說明按鈕 + 雲端同步按鈕（並排延展） -->
+      <div class="grid grid-cols-2 gap-2">
         <!-- 說明與備份按鈕 -->
-        <button onclick="openInfoModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 py-1.5 px-3 rounded-xl font-bold transition flex items-center gap-1 cursor-pointer">
-          <i class="fa-solid fa-circle-info text-emerald-600"></i> <span>說明</span>
+        <button onclick="openInfoModal()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 py-2 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
+          <i class="fa-solid fa-circle-info text-emerald-600"></i> <span>說明與備份</span>
         </button>
 
         <!-- 雲端同步按鈕 -->
-        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+        <button id="sync-btn" onclick="handleAuthClick()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-emerald-500/50 py-2 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
           <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> <span id="sync-btn-text">雲端同步</span>
         </button>
       </div>
@@ -687,7 +689,7 @@
     function setCloudConnectedUI() {
       document.getElementById('sync-btn-text').innerText = '已連動雲端';
       const btn = document.getElementById('sync-btn');
-      btn.className = 'text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-1.5 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer';
+      btn.className = 'text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-500 py-2 px-3 rounded-xl font-bold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-sm';
       const tip = document.getElementById('cloud-status-tip');
       tip.innerText = '✨ 雲端備份防護已啟動';
       tip.className = 'text-xs text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-bold';
