@@ -40,7 +40,7 @@
             z-index: 1;
         }
 
-        /* 設定精靈容器：無論電腦或手機，皆限制最大寬度 (max-w-md mx-auto)，避免電腦版過寬 */
+        /* 設定精靈容器：限制 max-w-md 居中 */
         #wizard-container {
             position: fixed;
             inset: 0;
@@ -129,7 +129,7 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 前幾頁：完整信任宣言與互動精靈 (限制 max-w-md 居中) ================= -->
+    <!-- ================= 前幾頁：完整信任宣言與互動精靈 ================= -->
     <div id="wizard-container" class="max-w-md mx-auto w-full">
         
         <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
@@ -289,32 +289,21 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（按鈕全區塊可點，無多餘前往按鈕） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已移除頂部虛擬狀態列） ================= -->
     <div id="desktop-container" class="hidden">
         
-        <!-- 頂部時間狀態列 -->
-        <header class="flex justify-between items-center text-xs font-bold px-6 pt-3 drop-shadow-md z-20">
-            <span id="real-time">15:57</span>
-            <div class="flex items-center gap-1.5 text-[10px]">
-                <i class="fa-solid fa-signal"></i>
-                <i class="fa-solid fa-wifi"></i>
-                <span>92%</span>
-                <i class="fa-solid fa-battery-full text-xs"></i>
-            </div>
-        </header>
-
         <!-- 3 頁滑動內容區 -->
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
                 <!-- 【第 1 頁】：大時鐘主頁 + 動態生成的複選 Widgets -->
-                <div class="swiper-page flex flex-col justify-start pt-4 items-center text-center space-y-3">
+                <div class="swiper-page flex flex-col justify-start pt-6 items-center text-center space-y-3">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-5xl font-bold tracking-tight">15:57:56</div>
                         <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五 (晨間上班模式)</div>
                     </div>
 
-                    <!-- 動態渲染容器：依據使用者在步驟二勾選的項目生成 Widget (整個按鈕可點，無冗餘前往按鈕) -->
+                    <!-- 動態渲染容器 -->
                     <div id="dynamic-widgets-container" class="w-full space-y-3 pb-4">
                         <!-- 動態填入 -->
                     </div>
@@ -417,7 +406,6 @@
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
             
-            document.getElementById('real-time').innerText = `${h}:${m}`;
             const bigClock = document.getElementById('big-clock');
             if (bigClock) bigClock.innerText = `${h}:${m}:${s}`;
         }
@@ -463,7 +451,7 @@
             }
         });
 
-        // 點擊完成，依據複選項目動態生成桌面 Widgets (無冗餘前往按鈕)
+        // 點擊完成，依據複選項目動態生成桌面 Widgets
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
@@ -474,7 +462,7 @@
             const container = document.getElementById('dynamic-widgets-container');
             container.innerHTML = ''; // 清空重建
 
-            // 交通對應資料 (去除了右側前往按鈕，整個區塊為純粹直連)
+            // 交通對應資料
             const trafficData = {
                 't-1968': { name: '國道即時路況 (1968 高公局)', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car' },
                 't-168': { name: '全台省道路況 (168 即時路況網)', url: 'https://168.thb.gov.tw', icon: 'fa-route' },
@@ -509,7 +497,7 @@
                 container.innerHTML += trafficHtml;
             }
 
-            // 台股財經快報 (無冗餘前往按鈕)
+            // 台股財經快報
             if (selectedValues.includes('f-yahoo') || selectedValues.includes('f-cnyes')) {
                 let financeHtml = `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
@@ -529,15 +517,15 @@
                 container.innerHTML += financeHtml;
             }
 
-            // 新聞劃重點 (精準對應 https://myezlife.com/index_news.html，無冗餘按鈕)
+            // 新聞劃重點 (說明文字已改為「焦點新聞每日自動彙整」，並直連 https://myezlife.com/index_news.html)
             if (selectedValues.includes('news-summary')) {
                 container.innerHTML += `
                     <a href="https://myezlife.com/index_news.html" target="_blank" class="glass-widget block p-3.5 text-slate-900 text-left space-y-1.5 hover:bg-white/30 transition">
                         <div class="flex justify-between items-center font-bold text-xs">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日重點新聞劃重點</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日新聞劃重點</span>
                             <span class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded">主站直連</span>
                         </div>
-                        <p class="text-[11px] text-slate-700 leading-snug">點擊快速前往捷運通勤時事重點與 AI 摘要速覽。</p>
+                        <p class="text-[11px] text-slate-700 leading-snug">焦點新聞每日自動彙整</p>
                     </a>
                 `;
             }
