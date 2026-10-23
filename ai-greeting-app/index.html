@@ -35,7 +35,7 @@
     }
     .photo-card {
       background: #ffffff;
-      padding: 12px;
+      padding: 10px;
       border-radius: 20px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
     }
@@ -88,9 +88,9 @@
     </div>
   </div>
 
-  <!-- 頂部導覽列（已加寬至 max-w-5xl） -->
+  <!-- 頂部導覽列（統一採用 max-w-xl 確保上下寬度完全一致） -->
   <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
+    <div class="max-w-xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="w-9 h-9 rounded-full border-2 border-emerald-600 shadow-sm object-cover cursor-pointer transition hover:scale-105 active:scale-95" alt="Menu" onclick="toggleDrawer()">
         <div>
@@ -104,162 +104,145 @@
     </div>
   </header>
 
-  <!-- 主要內容區（已加寬至 max-w-5xl，並改為電腦版舒適的雙欄結構） -->
-  <main class="max-w-5xl mx-auto px-4 mt-6 space-y-6 fade-in">
+  <!-- 主要內容區（統一使用 max-w-xl 單欄置中，確保所有區塊上下寬度完美對齊） -->
+  <main class="max-w-xl mx-auto px-4 mt-5 space-y-4 fade-in">
 
     <!-- 迎賓視覺區塊 -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-emerald-900 to-slate-900 p-6 md:p-8 text-white shadow-md">
-      <div class="relative z-10 max-w-2xl">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-emerald-900 to-slate-900 p-5 text-white shadow-md">
+      <div class="relative z-10">
         <div class="flex items-center gap-2 text-emerald-300 text-xs font-semibold mb-1">
           <i class="fa-solid fa-sun text-emerald-300"></i> 溫馨傳遞 · 每日祝福
         </div>
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2 drop-shadow-sm">
+        <h2 class="text-xl font-extrabold tracking-tight mb-1 drop-shadow-sm">
           用一張圖，獻上溫暖問候
         </h2>
-        <p class="text-xs md:text-sm text-slate-300 leading-relaxed">
+        <p class="text-xs text-slate-300 leading-relaxed">
           結合優質原創攝影作品或自訂圖片網址，輕鬆打造專屬於您的獨一無二晨光祝福。
         </p>
       </div>
-      <i class="fa-solid fa-heart absolute -right-3 -bottom-4 text-white/5 text-9xl pointer-events-none"></i>
+      <i class="fa-solid fa-heart absolute -right-3 -bottom-4 text-white/5 text-8xl pointer-events-none"></i>
     </div>
 
-    <!-- 🌟 電腦版左右雙欄核心配置 (左側表單，右側即時預覽與操作) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <!-- 表單輸入區塊 -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-emerald-700"></i> 填寫今日問候內容
+        </h2>
+        <span class="text-[11px] text-slate-400">客製化祝福語</span>
+      </div>
 
-      <!-- 左側：填寫表單區塊 (佔 7 欄) -->
-      <div class="lg:col-span-7 bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-5">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-pen-to-square text-emerald-700"></i> 填寫今日問候內容
-          </h2>
-          <span class="text-[11px] text-slate-400">客製化祝福語</span>
+      <!-- 背景圖片來源選擇區 -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">背景圖片來源</label>
+        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
+          <button type="button" id="sourceSystemBtn" onclick="switchImageSource('system')" class="py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm">
+            <i class="fa-solid fa-images text-emerald-600 mr-1"></i> 精選攝影圖庫
+          </button>
+          <button type="button" id="sourceCustomBtn" onclick="switchImageSource('custom')" class="py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800">
+            <i class="fa-solid fa-link text-sky-600 mr-1"></i> 自訂圖片網址
+          </button>
         </div>
+      </div>
 
-        <!-- 背景圖片來源選擇區 -->
+      <!-- 自訂圖片網址輸入框（預設隱藏） -->
+      <div id="customImageUrlContainer" class="hidden">
+        <label class="block text-xs font-medium text-slate-600 mb-1">貼上圖片網址 (URL)</label>
+        <input type="url" id="customImageUrlInput" placeholder="請貼上以 https:// 開頭的圖片網址..." 
+               class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700">
+        <p class="text-[10px] text-slate-400 mt-1">💡 提示：可使用網路相簿、雲端圖片或線上圖庫之直接連結。</p>
+      </div>
+
+      <!-- 問候前綴與對象 -->
+      <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">背景圖片來源</label>
-          <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
-            <button type="button" id="sourceSystemBtn" onclick="switchImageSource('system')" class="py-2.5 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm">
-              <i class="fa-solid fa-images text-emerald-600 mr-1"></i> 精選攝影圖庫
-            </button>
-            <button type="button" id="sourceCustomBtn" onclick="switchImageSource('custom')" class="py-2.5 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800">
-              <i class="fa-solid fa-link text-sky-600 mr-1"></i> 自訂圖片網址
-            </button>
-          </div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候前綴</label>
+          <select id="prefixSelect" class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 font-medium text-slate-700">
+            <option value="早安">☀️ 早安</option>
+            <option value="午安">☕ 午安</option>
+            <option value="晚安">🌙 晚安</option>
+            <option value="日安">🌸 日安</option>
+            <option value="custom">✏️ 自訂前綴...</option>
+          </select>
+        </div>
+        <div id="customPrefixContainer" class="hidden">
+          <label class="block text-xs font-medium text-slate-600 mb-1">自訂前綴字眼</label>
+          <input type="text" id="customPrefixInput" placeholder="例如：平安喜樂" 
+                 class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80">
+        </div>
+        <div id="targetContainer" class="col-span-1">
+          <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
+          <input type="text" id="targetInput" placeholder="例如：好友、各位長輩" value="好朋友" 
+                 class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700 font-medium">
+        </div>
+      </div>
+
+      <!-- 祝福內容 -->
+      <div>
+        <label class="block text-xs font-medium text-slate-600 mb-1">祝福或提醒內容</label>
+        <textarea id="wishInput" rows="2" placeholder="例如：迎著晨光，祝福您今天順心愉快、笑口常開！" 
+                  class="w-full text-sm px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700 leading-relaxed">迎著晨光，祝福您今天順心愉快，事事如意！</textarea>
+      </div>
+
+      <!-- 快速帶入推薦語句鍵 -->
+      <div>
+        <div class="text-[11px] font-medium text-slate-400 mb-1.5 flex items-center gap-1">
+          <i class="fa-solid fa-lightbulb text-slate-500"></i> 快速靈感推薦：
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="setWish('願美好的晨光帶給您一整天的好心情與好運！')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200/60 transition">好心情</button>
+          <button type="button" onclick="setWish('心寬路就廣，願您今日平安順遂、喜樂安康！')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200/60 transition">平安喜樂</button>
+          <button type="button" onclick="setWish('記得多喝水、保持好心情，開啟美好的一天！')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200/60 transition">溫馨關懷</button>
+        </div>
+      </div>
+
+      <!-- 生成按鈕 -->
+      <button id="generateBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-base">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖
+      </button>
+    </div>
+
+    <!-- 結果與下載/分享區塊 -->
+    <div id="resultCard" class="hidden space-y-3">
+      <div class="photo-card">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <span class="text-xs font-bold text-slate-600 tracking-wider flex items-center gap-1">
+            <i class="fa-solid fa-camera-retro text-emerald-700"></i> 製作完成 (合成效果)
+          </span>
+          <span class="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">免費直出</span>
         </div>
 
-        <!-- 自訂圖片網址輸入框（預設隱藏） -->
-        <div id="customImageUrlContainer" class="hidden">
-          <label class="block text-xs font-medium text-slate-600 mb-1">貼上圖片網址 (URL)</label>
-          <input type="url" id="customImageUrlInput" placeholder="請貼上以 https:// 開頭的圖片網址..." 
-                 class="w-full text-sm px-3.5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700">
-          <p class="text-[10px] text-slate-400 mt-1">💡 提示：可使用網路相簿、雲端圖片或線上圖庫之直接連結。</p>
+        <div class="relative rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
+          <canvas id="compositeCanvas" class="hidden"></canvas>
+          <img id="previewImage" src="" alt="早安圖預覽" class="w-full h-auto rounded-lg shadow-inner">
         </div>
+      </div>
 
-        <!-- 問候前綴與對象 -->
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-slate-600 mb-1">問候前綴</label>
-            <select id="prefixSelect" class="w-full text-sm px-3.5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 font-medium text-slate-700">
-              <option value="早安">☀️ 早安</option>
-              <option value="午安">☕ 午安</option>
-              <option value="晚安">🌙 晚安</option>
-              <option value="日安">🌸 日安</option>
-              <option value="custom">✏️ 自訂前綴...</option>
-            </select>
-          </div>
-          <div id="customPrefixContainer" class="hidden">
-            <label class="block text-xs font-medium text-slate-600 mb-1">自訂前綴字眼</label>
-            <input type="text" id="customPrefixInput" placeholder="例如：平安喜樂" 
-                   class="w-full text-sm px-3.5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80">
-          </div>
-          <div id="targetContainer" class="col-span-1">
-            <label class="block text-xs font-medium text-slate-600 mb-1">問候對象 / 稱呼</label>
-            <input type="text" id="targetInput" placeholder="例如：好友、各位長輩" value="好朋友" 
-                   class="w-full text-sm px-3.5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700 font-medium">
-          </div>
-        </div>
-
-        <!-- 祝福內容 -->
-        <div>
-          <label class="block text-xs font-medium text-slate-600 mb-1">祝福或提醒內容</label>
-          <textarea id="wishInput" rows="3" placeholder="例如：迎著晨光，祝福您今天順心愉快、笑口常開！" 
-                    class="w-full text-sm px-3.5 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-700 bg-slate-50/80 text-slate-700 leading-relaxed">迎著晨光，祝福您今天順心愉快，事事如意！</textarea>
-        </div>
-
-        <!-- 快速帶入推薦語句鍵 -->
-        <div>
-          <div class="text-[11px] font-medium text-slate-400 mb-1.5 flex items-center gap-1">
-            <i class="fa-solid fa-lightbulb text-slate-500"></i> 快速靈感推薦：
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="setWish('願美好的晨光帶給您一整天的好心情與好運！')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200/60 transition">好心情</button>
-            <button type="button" onclick="setWish('心寬路就廣，願您今日平安順遂、喜樂安康！')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200/60 transition">平安喜樂</button>
-            <button type="button" onclick="setWish('記得多喝水、保持好心情，開啟美好的一天！')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200/60 transition">溫馨關懷</button>
-          </div>
-        </div>
-
-        <!-- 生成按鈕 -->
-        <button id="generateBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-base">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖
+      <!-- 操作按鈕區 -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <button id="downloadBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-download"></i> 下載高清圖
+        </button>
+        <button id="shareBtn" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-share-nodes"></i> 分享至 LINE
         </button>
       </div>
 
-      <!-- 右側：結果與預覽下載區塊 (佔 5 欄) -->
-      <div class="lg:col-span-5 space-y-4">
-        <div id="resultCard" class="hidden space-y-4">
-          <div class="photo-card">
-            <div class="flex items-center justify-between mb-2 px-1">
-              <span class="text-xs font-bold text-slate-600 tracking-wider flex items-center gap-1">
-                <i class="fa-solid fa-camera-retro text-emerald-700"></i> 製作完成 (合成效果)
-              </span>
-              <span class="text-xs px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">免費直出</span>
-            </div>
+      <button id="regenerateBtn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition text-sm flex items-center justify-center gap-2">
+        <i class="fa-solid fa-shuffle"></i> 重新產生 / 換一張背景
+      </button>
+    </div>
 
-            <div class="relative rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center max-w-xs mx-auto">
-              <canvas id="compositeCanvas" class="hidden"></canvas>
-              <img id="previewImage" src="" alt="早安圖預覽" class="w-full h-auto rounded-lg shadow-inner">
-            </div>
-          </div>
-
-          <!-- 操作按鈕區 -->
-          <div class="grid grid-cols-2 gap-3">
-            <button id="downloadBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
-              <i class="fa-solid fa-download"></i> 下載高清圖
-            </button>
-            <button id="shareBtn" class="bg-slate-700 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-sm active:scale-95 transition flex items-center justify-center gap-2 text-sm">
-              <i class="fa-solid fa-share-nodes"></i> 分享至 LINE
-            </button>
-          </div>
-
-          <button id="regenerateBtn" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
-            <i class="fa-solid fa-shuffle"></i> 重新產生 / 換一張背景
-          </button>
-        </div>
-
-        <!-- 尚未生成時的提示佔位框 -->
-        <div id="placeholderCard" class="bg-white rounded-2xl p-8 border border-slate-200/80 text-center space-y-3 shadow-sm">
-          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 text-2xl">
-            <i class="fa-solid fa-image"></i>
-          </div>
-          <h3 class="text-sm font-bold text-slate-700">尚未產生問候圖</h3>
-          <p class="text-xs text-slate-400 leading-relaxed">請在左側填寫問候內容並點擊「一鍵生成」，您的精美問候圖就會即時顯示在這裡！</p>
-        </div>
-
-        <!-- Google AdSense 廣告區塊 -->
-        <div class="bg-white border border-slate-200/80 rounded-2xl p-4 text-center space-y-2 shadow-sm">
-          <p class="text-xs text-slate-700 font-medium">💖 喜歡本免費工具嗎？</p>
-          <p class="text-[11px] text-slate-500">本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！</p>
-          
-          <div class="mt-2 min-h-[90px]">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-          </div>
-        </div>
-
+    <!-- Google AdSense 廣告區塊 -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 text-center space-y-2 shadow-sm">
+      <p class="text-xs text-slate-700 font-medium">💖 喜歡本免費工具嗎？</p>
+      <p class="text-[11px] text-slate-500">本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！</p>
+      
+      <div class="mt-2 min-h-[90px]">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </div>
-
     </div>
 
   </main>
@@ -279,12 +262,12 @@
       const container = document.getElementById('customImageUrlContainer');
 
       if (source === 'system') {
-        btnSystem.className = 'py-2.5 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
-        btnCustom.className = 'py-2.5 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
+        btnSystem.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
+        btnCustom.className = 'py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
         container.classList.add('hidden');
       } else {
-        btnCustom.className = 'py-2.5 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
-        btnSystem.className = 'py-2.5 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
+        btnCustom.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
+        btnSystem.className = 'py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
         container.classList.remove('hidden');
       }
     }
@@ -360,7 +343,6 @@
     const generateBtn = document.getElementById('generateBtn');
     const regenerateBtn = document.getElementById('regenerateBtn');
     const resultCard = document.getElementById('resultCard');
-    const placeholderCard = document.getElementById('placeholderCard');
     const previewImage = document.getElementById('previewImage');
     const compositeCanvas = document.getElementById('compositeCanvas');
 
@@ -480,10 +462,10 @@
         previewImage.src = finalDataUrl;
       } catch (e) { console.error("Canvas 導出錯誤:", e); }
 
-      placeholderCard.classList.add('hidden');
       resultCard.classList.remove('hidden');
       generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
       generateBtn.disabled = false;
+      resultCard.scrollIntoView({ behavior: 'smooth' });
     }
 
     generateBtn.addEventListener('click', makeCard);
