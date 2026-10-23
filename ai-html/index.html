@@ -302,7 +302,7 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已移除所有區塊右側文字籤與底部按鈕列） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已包含可打勾待辦與便籤輸入框，無右側文字籤） ================= -->
     <div id="desktop-container" class="hidden">
         
         <!-- 3 頁滑動內容區 -->
@@ -453,7 +453,7 @@
             }
         });
 
-        // 點擊完成，依據複選項目動態生成桌面 Widgets (已無任何右側文字籤)
+        // 點擊完成，依據複選項目動態生成桌面 Widgets
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
@@ -534,7 +534,7 @@
                 `;
             }
 
-            // 4. 互動待辦事項與隨手便籤
+            // 4. 互動待辦事項與隨手便籤（已確保文字輸入方塊完整保留）
             if (selectedValues.includes('todo-list')) {
                 const t1 = document.getElementById('todo-1').value || '待辦事項 1';
                 const t2 = document.getElementById('todo-2').value || '待辦事項 2';
