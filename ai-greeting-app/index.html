@@ -132,14 +132,16 @@
         <span class="text-[11px] text-slate-400">客製化祝福語</span>
       </div>
 
-      <!-- 背景圖片來源選擇區 -->
-      <div>
-        <label class="block text-xs font-medium text-slate-600 mb-1">背景圖片來源</label>
-        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
-          <button type="button" id="sourceSystemBtn" onclick="switchImageSource('system')" class="py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm">
-            <i class="fa-solid fa-images text-emerald-600 mr-1"></i> 精選攝影圖庫
+      <!-- 🌟 加上外框與底色的背景圖片來源選擇區 -->
+      <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 space-y-2 shadow-inner">
+        <label class="block text-xs font-bold text-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-image text-emerald-600"></i> 背景圖片來源
+        </label>
+        <div class="grid grid-cols-2 gap-2 bg-white p-1 rounded-xl border border-slate-200/60 shadow-sm">
+          <button type="button" id="sourceSystemBtn" onclick="switchImageSource('system')" class="py-2.5 text-xs font-bold rounded-lg transition bg-slate-800 text-white shadow-sm">
+            <i class="fa-solid fa-images mr-1"></i> 精選攝影圖庫
           </button>
-          <button type="button" id="sourceCustomBtn" onclick="switchImageSource('custom')" class="py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800">
+          <button type="button" id="sourceCustomBtn" onclick="switchImageSource('custom')" class="py-2.5 text-xs font-bold rounded-lg transition text-slate-600 hover:text-slate-900">
             <i class="fa-solid fa-link text-sky-600 mr-1"></i> 自訂圖片網址
           </button>
         </div>
@@ -233,7 +235,7 @@
       </button>
     </div>
 
-    <!-- 重新排版的贊助與隨機「深入了解」專區 -->
+    <!-- 贊助與隨機「深入了解」專區 -->
     <div class="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-sm">
       
       <!-- 標題與分兩列置中的誠懇說明 -->
@@ -306,12 +308,12 @@
       const container = document.getElementById('customImageUrlContainer');
 
       if (source === 'system') {
-        btnSystem.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
-        btnCustom.className = 'py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
+        btnSystem.className = 'py-2.5 text-xs font-bold rounded-lg transition bg-slate-800 text-white shadow-sm';
+        btnCustom.className = 'py-2.5 text-xs font-bold rounded-lg transition text-slate-600 hover:text-slate-900';
         container.classList.add('hidden');
       } else {
-        btnCustom.className = 'py-2 text-xs font-bold rounded-lg transition bg-white text-slate-800 shadow-sm';
-        btnSystem.className = 'py-2 text-xs font-bold rounded-lg transition text-slate-500 hover:text-slate-800';
+        btnCustom.className = 'py-2.5 text-xs font-bold rounded-lg transition bg-slate-800 text-white shadow-sm';
+        btnSystem.className = 'py-2.5 text-xs font-bold rounded-lg transition text-slate-600 hover:text-slate-900';
         container.classList.remove('hidden');
       }
     }
