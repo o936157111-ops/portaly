@@ -26,14 +26,14 @@
       -webkit-tap-highlight-color: transparent;
     }
     
-    /* 👓 長輩友善「超大字體」樣式類別 */
+    /* 👓 長輩友善「放大字體」樣式類別（微調放小一點點，避免按鈕與卡片跑版） */
     body.large-text-mode {
-      font-size: 115%;
+      font-size: 108%;
     }
-    body.large-text-mode .text-base { font-size: 1.25rem !important; }
-    body.large-text-mode .text-sm { font-size: 1.1rem !important; }
-    body.large-text-mode .text-xs { font-size: 0.95rem !important; }
-    body.large-text-mode .text-[11px] { font-size: 0.85rem !important; }
+    body.large-text-mode .text-base { font-size: 1.125rem !important; }
+    body.large-text-mode .text-sm { font-size: 1.025rem !important; }
+    body.large-text-mode .text-xs { font-size: 0.875rem !important; }
+    body.large-text-mode .text-[11px] { font-size: 0.8rem !important; }
 
     .fade-in {
       animation: fadeIn 0.4s ease-out forwards;
@@ -310,7 +310,7 @@
     </div>
     <div class="drawer-btn-container">
       <button onclick="toggleFontSize()" class="drawer-btn bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100 flex items-center justify-center gap-2">
-        <i class="fa-solid fa-text-height"></i> <span id="fontToggleLabel">切換為超大字模式</span>
+        <i class="fa-solid fa-text-height"></i> <span id="fontToggleLabel">字體大小：標準</span>
       </button>
       <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
       <a href="https://myezlife.com/diary/index.html" class="drawer-btn text-emerald-700 font-bold">🌱 心情隨筆與待辦日記</a>
@@ -363,7 +363,7 @@
       <!-- 右側：字體大小切換開關 -->
       <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-3 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
         <i class="fa-solid fa-text-height text-emerald-600"></i>
-        <span id="fontToggleTopLabel">字體大小：標準 (點擊放大)</span>
+        <span id="fontToggleTopLabel">字體大小：標準</span>
       </button>
     </div>
 
@@ -736,11 +736,11 @@
       const label = document.getElementById('fontToggleLabel');
       const topLabel = document.getElementById('fontToggleTopLabel');
       if (isLarge) {
-        if (label) label.innerText = '切換為標準字體';
-        if (topLabel) topLabel.innerText = '字體大小：超大 (點擊還原)';
+        if (label) label.innerText = '字體大小：放大';
+        if (topLabel) topLabel.innerText = '字體大小：放大';
       } else {
-        if (label) label.innerText = '切換為超大字模式';
-        if (topLabel) topLabel.innerText = '字體大小：標準 (點擊放大)';
+        if (label) label.innerText = '字體大小：標準';
+        if (topLabel) topLabel.innerText = '字體大小：標準';
       }
     }
 
