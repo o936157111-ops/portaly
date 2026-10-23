@@ -25,15 +25,6 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-    
-    /* 👓 長輩友善「超大字體」樣式類別 */
-    body.large-text-mode {
-      font-size: 115%;
-    }
-    body.large-text-mode .text-base { font-size: 1.25rem !important; }
-    body.large-text-mode .text-sm { font-size: 1.1rem !important; }
-    body.large-text-mode .text-xs { font-size: 0.95rem !important; }
-    body.large-text-mode .text-[11px] { font-size: 0.85rem !important; }
 
     .fade-in {
       animation: fadeIn 0.4s ease-out forwards;
@@ -309,9 +300,6 @@
       <div class="drawer-title">功能選單</div>
     </div>
     <div class="drawer-btn-container">
-      <button onclick="toggleFontSize()" class="drawer-btn bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100 flex items-center justify-center gap-2">
-        <i class="fa-solid fa-text-height"></i> <span id="fontToggleLabel">切換為超大字模式</span>
-      </button>
       <a href="https://myezlife.com/" class="drawer-btn">首頁</a>
       <a href="https://myezlife.com/diary/index.html" class="drawer-btn text-emerald-700 font-bold">🌱 心情隨筆與待辦日記</a>
       <a href="https://myezlife.com/index-1.html" class="drawer-btn">生活‧簡居‧生活</a>
@@ -352,19 +340,13 @@
   <!-- 💻📱 全站主要容器：採適中舒適的「單欄置中」佈局 (max-w-xl) -->
   <main class="max-w-xl mx-auto w-full px-4 pt-3 fade-in">
     
-    <!-- 頁首最頂端：左側簡易首頁連結（附指定圖形） + 右側字體大小切換開關 -->
+    <!-- 頁首最頂端：左側簡易首頁連結（附指定圖形），已移除右側字體切換開關 -->
     <div class="flex justify-between items-center mb-3">
-      <!-- 左側：簡易首頁連結 -->
-      <a href="https://myezlife.com/index-2.html" class="flex items-center gap-2 bg-white border border-slate-300 shadow-sm px-3 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition text-xs">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-5 h-5 rounded-full object-cover">
+      <!-- 左側：簡易首頁連結 (字體放大至 text-base) -->
+      <a href="https://myezlife.com/index-2.html" class="flex items-center gap-2 bg-white border border-slate-300 shadow-sm px-3.5 py-2 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition text-base">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-6 h-6 rounded-full object-cover">
         <span>簡易首頁</span>
       </a>
-
-      <!-- 右側：字體大小切換開關 -->
-      <button onclick="toggleFontSize()" class="text-xs bg-white border border-slate-300 shadow-sm px-3 py-1.5 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 cursor-pointer">
-        <i class="fa-solid fa-text-height text-emerald-600"></i>
-        <span id="fontToggleTopLabel">字體大小：標準 (點擊放大)</span>
-      </button>
     </div>
 
     <!-- 🎯 單欄主內容容器（支援拖曳排序） -->
@@ -386,17 +368,17 @@
         </div>
       </div>
 
-      <!-- 1️⃣ 頂部極簡綠色 Banner (天氣 · 日期時間 · 星期) -->
-      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
-        <div class="relative z-10 flex items-center justify-between">
+      <!-- 1️⃣ 頂部極簡綠色 Banner (內距縮減為 px-1 py-3) -->
+      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] px-1 py-3 text-white shadow-md shadow-emerald-500/15" data-id="banner">
+        <div class="relative z-10 flex items-center justify-between px-2">
           <!-- 左側：天氣圖示與氣溫 -->
-          <div class="flex items-center gap-2.5 bg-black/15 backdrop-blur-sm px-3.5 py-2 rounded-xl border border-white/10">
-            <div id="weatherIcon" class="text-3xl text-amber-300">
+          <div class="flex items-center gap-2 bg-black/15 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/10">
+            <div id="weatherIcon" class="text-2xl text-amber-300">
               <i class="fa-solid fa-sun animate-pulse"></i>
             </div>
             <div class="leading-tight">
-              <div id="weatherTemp" class="text-lg font-black tracking-tight">--°C</div>
-              <div id="weatherDesc" class="text-xs text-emerald-100 font-bold">載入中</div>
+              <div id="weatherTemp" class="text-base font-black tracking-tight">--°C</div>
+              <div id="weatherDesc" class="text-[11px] text-emerald-100 font-bold">載入中</div>
             </div>
           </div>
 
@@ -405,14 +387,14 @@
             <div id="currentDate" class="text-xs font-semibold text-emerald-100 tracking-wide">
               2026年10月21日
             </div>
-            <div id="currentTime" class="text-3xl font-black tracking-wider leading-none">
+            <div id="currentTime" class="text-2xl font-black tracking-wider leading-none">
               05:20
             </div>
           </div>
 
           <!-- 右側：星期 -->
           <div class="text-right">
-            <div id="currentDay" class="text-base font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-3.5 py-2.5 rounded-xl border border-white/10">
+            <div id="currentDay" class="text-sm font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-3 py-2 rounded-xl border border-white/10">
               星期三
             </div>
           </div>
@@ -439,8 +421,8 @@
           <div class="flex items-center gap-2.5">
             <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl shrink-0">🌱</div>
             <div>
-              <div class="text-base font-black text-slate-900">心情隨筆與待辦日記</div>
-              <div class="text-xs text-slate-500 font-semibold">100% 本機優先與雲端自動備份</div>
+              <div class="text-lg font-black text-slate-900">心情隨筆與待辦日記</div>
+              <div class="text-sm text-slate-500 font-semibold">100% 本機優先與雲端自動備份</div>
             </div>
           </div>
           <div class="section-handle text-slate-300 hover:text-slate-600 p-1 cursor-grab active:cursor-grabbing text-lg">
@@ -448,7 +430,7 @@
           </div>
         </div>
         
-        <a href="https://myezlife.com/diary/index.html" class="block w-full py-3.5 px-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 border border-emerald-200 rounded-xl text-emerald-950 font-extrabold text-sm text-center transition shadow-sm flex items-center justify-center gap-2">
+        <a href="https://myezlife.com/diary/index.html" class="block w-full py-3.5 px-4 bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 border border-emerald-200 rounded-xl text-emerald-950 font-extrabold text-base text-center transition shadow-sm flex items-center justify-center gap-2">
           <i class="fa-solid fa-pen-nib text-emerald-600"></i> 進入心情隨筆與待辦紀錄 ➔
         </a>
       </div>
@@ -633,13 +615,13 @@
         </div>
       </div>
 
-      <!-- 5️⃣ 專區二：台股大盤與財經快報 -->
+      <!-- 5️⃣ 專區二：台股財經快報 (標題已更改並放大至 text-lg) -->
       <div id="financeCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="finance">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
             <div class="w-3.5 h-3.5 rounded-full bg-rose-500 animate-pulse"></div>
-            <span class="text-base font-black text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-chart-line text-rose-600 text-lg"></i> 台股行情與財經快報
+            <span class="text-lg font-black text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-rose-600 text-lg"></i> 台股財經快報
             </span>
           </div>
           <div class="flex items-center gap-2">
@@ -760,36 +742,11 @@
       }
     }
 
-    // 👓 大字體切換機制
-    function toggleFontSize() {
-      const isLarge = document.body.classList.toggle('large-text-mode');
-      localStorage.setItem('myezlife_large_font', isLarge ? 'true' : 'false');
-      updateFontToggleUI(isLarge);
-    }
-
-    function updateFontToggleUI(isLarge) {
-      const label = document.getElementById('fontToggleLabel');
-      const topLabel = document.getElementById('fontToggleTopLabel');
-      if (isLarge) {
-        if (label) label.innerText = '切換為標準字體';
-        if (topLabel) topLabel.innerText = '字體大小：超大 (點擊還原)';
-      } else {
-        if (label) label.innerText = '切換為超大字模式';
-        if (topLabel) topLabel.innerText = '字體大小：標準 (點擊放大)';
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
-      // 讀取字體大小偏好
-      if (localStorage.getItem('myezlife_large_font') === 'true') {
-        document.body.classList.add('large-text-mode');
-        updateFontToggleUI(true);
-      }
-
       checkHomeReminder();
       initRandomRecommendation();
 
-      // 初始化主欄位 Sortable 拖曳
+      // 初始化主欄位 Sortable 拖曳 (加入 3 秒防誤觸長按機制)
       initColumnSortable('mainColumn', 'myezlife_main_order');
 
       initSortableList('portalList', 'myezlife_portal_order');
@@ -879,6 +836,8 @@
       new Sortable(colEl, {
         handle: '.section-handle',
         animation: 150,
+        delay: 3000,              // 🛡️ 手機觸控按住 3 秒後才進入拖曳模式
+        delayOnTouchOnly: true,   // 僅限觸控裝置啟用延遲，滑鼠操作維持正常
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
         onEnd: function () {
@@ -924,6 +883,8 @@
       new Sortable(listEl, {
         handle: '.btn-handle',
         animation: 150,
+        delay: 3000,
+        delayOnTouchOnly: true,
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
         onEnd: function () {
