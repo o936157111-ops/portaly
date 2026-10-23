@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>myezlife Launcher</title>
+    <title>myezlife OS | 個人化手機佈景主題</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,30 +21,51 @@
             background-color: #0f172a;
         }
 
-        /* 擬真桌面背景照片（可透過 JS 上傳更換） */
-        #wallpaper-bg {
+        /* 沉浸式專屬主題桌布背景 (自成一個精美佈景主題) */
+        #theme-wallpaper {
             position: fixed;
             inset: 0;
             background-size: cover;
             background-position: center;
-            /* 預設載入類似影片中的景觀照片 */
             background-image: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop');
             z-index: 0;
             transition: background-image 0.3s ease;
         }
 
-        /* 暗色遮罩讓白字更清晰 */
         .wallpaper-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.25);
             z-index: 1;
+        }
+
+        /* 前幾頁設定精靈容器 (擁有清晰好讀的卡片底色，絕不簡化) */
+        #wizard-container {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: #0f172a;
+            overflow-y: auto;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* 最後產生的擬真桌面容器 (多頁滑動) */
+        #desktop-container {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         /* 滑動分頁容器 */
         .swiper-container {
             display: flex;
-            width: 300%; /* 3 個分頁 */
+            width: 300%;
             height: 100%;
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
@@ -53,28 +74,20 @@
             width: 33.333%;
             height: 100%;
             padding: 16px;
-            padding-top: calc(env(safe-area-inset-top) + 20px);
-            padding-bottom: calc(env(safe-area-inset-bottom) + 90px);
+            padding-top: calc(env(safe-area-inset-top) + 24px);
+            padding-bottom: calc(env(safe-area-inset-bottom) + 85px);
             overflow-y: auto;
             flex-shrink: 0;
         }
 
-        /* 擬真毛玻璃 Widget */
+        /* 精緻毛玻璃 Widget */
         .glass-widget {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.22);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.35);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border-radius: 24px;
-        }
-
-        .glass-card-dark {
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
         }
 
         .app-label {
@@ -87,7 +100,6 @@
 
         .hidden { display: none !important; }
 
-        /* 滑動分頁指示點 */
         .dots-indicator span {
             width: 6px;
             height: 6px;
@@ -105,61 +117,84 @@
 </head>
 <body>
 
-    <!-- 桌布背景 -->
-    <div id="wallpaper-bg"></div>
+    <!-- 佈景主題桌布背景 -->
+    <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- 前三步：引導精靈與宣言（覆蓋在桌面上） -->
-    <div id="wizard-overlay" class="fixed inset-0 z-50 bg-slate-900/95 p-5 overflow-y-auto max-w-md mx-auto flex flex-col justify-between">
-        <!-- PAGE 0: 信任宣言 -->
+    <!-- ================= 前幾頁：完整保留的設定精靈與信任宣言 ================= -->
+    <div id="wizard-container" class="max-w-md mx-auto">
+        
+        <!-- PAGE 0: 完整信任宣言落地頁 -->
         <section id="page-landing" class="space-y-5 my-auto">
             <div class="text-center">
-                <div class="inline-block p-3 bg-blue-600 text-white rounded-2xl shadow-lg mb-2">
-                    <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
+                <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
+                    <i class="fa-solid fa-compass-drafting text-2xl"></i>
                 </div>
-                <h1 class="text-2xl font-bold">myezlife OS</h1>
-                <p class="text-slate-400 text-xs mt-1">自訂你的微型手機桌面（多頁 Widget 佈景）</p>
+                <h1 class="text-2xl font-bold tracking-tight text-white">myezlife.com</h1>
+                <p class="text-slate-300 mt-1 text-xs">打造完全聽你指揮、懂你節奏的「個人手機微型主題」</p>
             </div>
 
-            <div class="bg-slate-800/90 border border-slate-700 p-4 rounded-2xl space-y-3 text-xs">
-                <h3 class="font-bold text-blue-400 flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved"></i> 100% 本機端、零個資追蹤
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-3xl shadow-md text-xs leading-relaxed">
+                <h2 class="font-bold mb-1 flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全</h2>
+                這不是一個強迫綁定的巨型 App。它就像為手機新增一個清爽的**生活佈景主題**——完全不影響手機原本功能，隨時開、隨時用，不用了隨手刪除。
+            </div>
+
+            <!-- 完整 Q&A 宣言 -->
+            <div class="bg-slate-800/95 border border-slate-700 p-4 rounded-3xl space-y-3 text-xs shadow-lg">
+                <h3 class="font-bold text-white border-b border-slate-700 pb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
                 </h3>
-                <p class="text-slate-300 leading-relaxed">
-                    這是一個專屬的手機 PWA 微型桌面。你可以放上自己的桌面背景照片，組合公車動態、載具條碼與習慣 Widget。所有設定皆安全存在您自己的手機瀏覽器中。
-                </p>
+                <div>
+                    <strong class="text-slate-200">Q: 需要辦帳號或填個資嗎？</strong>
+                    <p class="text-slate-300 pl-3">完全不用！零個資追蹤，所有設定僅存於您自己的手機本機。</p>
+                </div>
+                <div>
+                    <strong class="text-slate-200">Q: 之後不想用了怎麼辦？</strong>
+                    <p class="text-slate-300 pl-3">直接像刪除普通捷徑一樣移除，不留任何痕跡。</p>
+                </div>
             </div>
 
-            <button onclick="goToStep(1)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 rounded-xl shadow-md text-sm">
-                開始設定我的擬真桌面 ➔
+            <button onclick="goToWizardStep(1)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 px-6 rounded-2xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+                <span>我了解了，開始打造我的佈景主題</span>
+                <i class="fa-solid fa-arrow-right"></i>
             </button>
         </section>
 
-        <!-- PAGE 1: 選擇偏好 -->
+        <!-- PAGE 1: 選擇偏好與自訂背景 -->
         <section id="page-wizard" class="hidden space-y-5 my-auto">
-            <h2 class="text-lg font-bold">設定你的擬真桌面首頁</h2>
-            
-            <div class="space-y-3 text-xs">
-                <label class="block text-slate-300">選擇公車即時動態站牌：</label>
-                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
-                    <span class="font-bold text-amber-400">🚌 汐止/南港線 (藍21, 藍22, 藍23)</span>
-                </div>
-
-                <label class="block text-slate-300 mt-4">更換自己的桌面背景照片：</label>
-                <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-400 bg-slate-800 p-2 rounded-xl border border-slate-700">
+            <div>
+                <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">個性化設定</div>
+                <h2 class="text-lg font-bold text-white mb-2">自訂你的佈景主題與桌面工具</h2>
+                <p class="text-xs text-slate-300">打造專屬於你的多頁 Widget 手機桌面。</p>
             </div>
 
-            <button onclick="enterDesktop()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 rounded-xl shadow-md text-sm">
-                完成！進入我的手機桌面 ✨
-            </button>
+            <div class="space-y-4 text-xs bg-slate-800/90 border border-slate-700 p-4 rounded-3xl">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1.5">🖼️ 更換你的桌面背景照片：</label>
+                    <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-700">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1.5">🚌 通勤公車動態設定：</label>
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-amber-400 font-bold">
+                        已預設：汐止/南港線 (藍21, 藍22, 藍23)
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-2">
+                <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言</button>
+                <button onclick="finishWizardToDesktop()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-xl shadow-md text-xs transition">
+                    完成設定，進入專屬桌面 ✨
+                </button>
+            </div>
         </section>
     </div>
 
-    <!-- 最終狀態：擬真多頁滑動桌面（主體） -->
-    <main id="desktop-main" class="relative z-10 w-full h-full flex flex-col justify-between hidden">
+    <!-- ================= 最後成果：多頁滑動擬真手機桌面 ================= -->
+    <div id="desktop-container" class="hidden max-w-md mx-auto">
         
-        <!-- 頂部時間與狀態列 -->
-        <header class="flex justify-between items-center text-xs font-bold px-5 pt-3 drop-shadow-md">
+        <!-- 頂部時間狀態列 -->
+        <header class="flex justify-between items-center text-xs font-bold px-6 pt-3 drop-shadow-md z-20">
             <span id="real-time">15:57</span>
             <div class="flex items-center gap-1.5 text-[10px]">
                 <i class="fa-solid fa-signal"></i>
@@ -173,37 +208,37 @@
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
-                <!-- 【第 1 頁】：大時鐘與簡單主頁（影片 00:00 樣式） -->
-                <div class="swiper-page flex flex-col justify-start pt-12 items-center text-center">
+                <!-- 【第 1 頁】：大時鐘主頁 -->
+                <div class="swiper-page flex flex-col justify-start pt-16 items-center text-center">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-6xl font-bold tracking-tight">15:57:56</div>
-                        <div id="big-date" class="text-sm font-semibold mt-2 opacity-90">10月23日, 週五</div>
+                        <div id="big-date" class="text-sm font-semibold mt-2 opacity-95">10月23日, 週五</div>
                     </div>
                 </div>
 
-                <!-- 【第 2 頁】：書籍卡片 + 最佳化 + App 圖示（影片 00:01~00:02 樣式） -->
+                <!-- 【第 2 頁】：最佳化 + 書籍 Widget + 常用 App -->
                 <div class="swiper-page space-y-4">
-                    <!-- 記憶體最佳化 Widget -->
-                    <div class="glass-widget p-3 flex justify-between items-center">
+                    <!-- 記憶體最佳化卡片 -->
+                    <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
                         <div class="flex items-center gap-2">
-                            <span class="p-2 bg-blue-500 text-white rounded-xl text-xs"><i class="fa-solid fa-broom"></i></span>
-                            <span class="text-xs font-bold text-slate-900">最佳化</span>
+                            <span class="p-2 bg-blue-600 text-white rounded-xl text-xs"><i class="fa-solid fa-broom"></i></span>
+                            <span class="text-xs font-bold">最佳化</span>
                         </div>
-                        <div class="text-[10px] text-slate-800 font-semibold bg-white/40 px-2 py-1 rounded-lg">
+                        <div class="text-[10px] font-semibold bg-white/40 px-2 py-1 rounded-lg">
                             119.2 GB / 128 GB
                         </div>
                     </div>
 
-                    <!-- 書籍輪播 Widget -->
-                    <div class="glass-widget p-4 space-y-2">
-                        <div class="flex justify-between items-center text-xs text-slate-900 font-bold">
+                    <!-- 書籍 Widget -->
+                    <div class="glass-widget p-4 space-y-2 text-slate-900">
+                        <div class="flex justify-between items-center text-xs font-bold">
                             <span>📖 你的書籍</span>
                             <i class="fa-solid fa-chevron-right text-[10px]"></i>
                         </div>
                         <div class="grid grid-cols-3 gap-2 pt-1">
-                            <div class="bg-emerald-700 text-white p-2 rounded-lg text-[10px] h-20 flex items-end font-bold shadow-sm">我想創富</div>
-                            <div class="bg-indigo-700 text-white p-2 rounded-lg text-[10px] h-20 flex items-end font-bold shadow-sm">新電子</div>
-                            <div class="bg-rose-800 text-white p-2 rounded-lg text-[10px] h-20 flex items-end font-bold shadow-sm">BODY</div>
+                            <div class="bg-emerald-700 text-white p-2 rounded-xl text-[10px] h-20 flex items-end font-bold shadow-sm">我想創富</div>
+                            <div class="bg-indigo-700 text-white p-2 rounded-xl text-[10px] h-20 flex items-end font-bold shadow-sm">新電子</div>
+                            <div class="bg-rose-800 text-white p-2 rounded-xl text-[10px] h-20 flex items-end font-bold shadow-sm">BODY</div>
                         </div>
                     </div>
 
@@ -228,15 +263,15 @@
                     </div>
                 </div>
 
-                <!-- 【第 3 頁】：發票載具 + 即時公車動態 Widget（影片 00:03~00:05 樣式） -->
+                <!-- 【第 3 頁】：發票條碼 + 公車動態 Widget -->
                 <div class="swiper-page space-y-4">
-                    <!-- 發票條碼 Widget -->
+                    <!-- 發票條碼 -->
                     <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
                         <span class="text-xs font-bold">發票存摺 手機條碼</span>
                         <span class="text-xs font-mono font-bold bg-white/50 px-2 py-0.5 rounded">/T.40NNQ</span>
                     </div>
 
-                    <!-- 公車即時動態 Widget -->
+                    <!-- 公車動態卡片 -->
                     <div class="glass-widget p-4 text-slate-900 space-y-3">
                         <div class="flex justify-between items-center border-b border-black/10 pb-2">
                             <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-bus text-blue-600"></i> 上班通勤公車</span>
@@ -245,21 +280,15 @@
 
                         <div class="space-y-2 text-xs">
                             <div class="flex justify-between items-center bg-white/40 p-2 rounded-xl">
-                                <div>
-                                    <span class="font-bold text-blue-800">藍21</span> <span class="text-[11px] text-slate-700">往汐止后街</span>
-                                </div>
+                                <div><span class="font-bold text-blue-900">藍21</span> <span class="text-[11px] text-slate-700">往汐止后街</span></div>
                                 <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg">6 分</span>
                             </div>
                             <div class="flex justify-between items-center bg-white/40 p-2 rounded-xl">
-                                <div>
-                                    <span class="font-bold text-blue-800">藍22</span> <span class="text-[11px] text-slate-700">往汐止</span>
-                                </div>
+                                <div><span class="font-bold text-blue-900">藍22</span> <span class="text-[11px] text-slate-700">往汐止</span></div>
                                 <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg">5 分</span>
                             </div>
                             <div class="flex justify-between items-center bg-white/40 p-2 rounded-xl">
-                                <div>
-                                    <span class="font-bold text-blue-800">藍23</span> <span class="text-[11px] text-slate-700">往汐止</span>
-                                </div>
+                                <div><span class="font-bold text-blue-900">藍23</span> <span class="text-[11px] text-slate-700">往汐止</span></div>
                                 <span class="bg-rose-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg">2 分</span>
                             </div>
                         </div>
@@ -269,43 +298,32 @@
             </div>
         </div>
 
-        <!-- 底部 Indicator 與 Dock 欄 -->
-        <div class="fixed bottom-0 left-0 right-0 z-20 pb-4 pt-2">
-            <!-- 分頁點指示器 -->
+        <!-- 底部 Indicator 與全透明 Dock 欄 -->
+        <div class="pb-4 pt-2 z-20">
             <div class="dots-indicator text-center mb-3">
                 <span id="dot-0" class="active"></span>
                 <span id="dot-1" class="ml-1"></span>
                 <span id="dot-2" class="ml-1"></span>
             </div>
 
-            <!-- 透明 Dock 欄 (影片底部固定欄) -->
             <footer class="px-6">
                 <div class="grid grid-cols-5 gap-3 text-center">
-                    <div class="flex justify-center" onclick="openPage(0)">
-                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-lg">💬</div>
-                    </div>
-                    <div class="flex justify-center" onclick="openPage(1)">
-                        <div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-xl shadow-lg">🟢</div>
-                    </div>
-                    <div class="flex justify-center" onclick="openPage(2)">
-                        <div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-xl shadow-lg">📷</div>
-                    </div>
-                    <div class="flex justify-center" onclick="resetWizard()">
-                        <div class="w-12 h-12 bg-slate-700 rounded-2xl flex items-center justify-center text-xl shadow-lg">⚙️</div>
-                    </div>
-                    <div class="flex justify-center" onclick="alert('點擊選單')">
-                        <div class="w-12 h-12 bg-black/40 border border-white/30 rounded-2xl flex items-center justify-center text-xl shadow-lg">⣿</div>
-                    </div>
+                    <div class="flex justify-center" onclick="openPage(0)"><div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-lg">💬</div></div>
+                    <div class="flex justify-center" onclick="openPage(1)"><div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-xl shadow-lg">🟢</div></div>
+                    <div class="flex justify-center" onclick="openPage(2)"><div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-xl shadow-lg">📷</div></div>
+                    <!-- 齒輪：隨時返回前幾頁設定精靈 -->
+                    <div class="flex justify-center" onclick="backToWizard()"><div class="w-12 h-12 bg-slate-700 rounded-2xl flex items-center justify-center text-xl shadow-lg">⚙️</div></div>
+                    <div class="flex justify-center" onclick="alert('選單')"><div class="w-12 h-12 bg-black/40 border border-white/30 rounded-2xl flex items-center justify-center text-xl shadow-lg">⣿</div></div>
                 </div>
             </footer>
         </div>
 
     </main>
 
+    <!-- JavaScript 邏輯控制 -->
     <script>
         let currentPage = 0;
 
-        // 時間即時更新（含秒數）
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -319,36 +337,42 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        function goToStep(step) {
+        function goToWizardStep(step) {
             document.getElementById('page-landing').classList.add('hidden');
             document.getElementById('page-wizard').classList.remove('hidden');
         }
 
-        // 上傳自訂桌布照片
+        function backToLanding() {
+            document.getElementById('page-wizard').classList.add('hidden');
+            document.getElementById('page-landing').classList.remove('hidden');
+        }
+
+        // 上傳自訂背景桌布
         document.getElementById('wallpaper-upload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    document.getElementById('wallpaper-bg').style.backgroundImage = `url('${evt.target.result}')`;
+                    document.getElementById('theme-wallpaper').style.backgroundImage = `url('${evt.target.result}')`;
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // 進入桌面
-        function enterDesktop() {
-            document.getElementById('wizard-overlay').classList.add('hidden');
-            document.getElementById('desktop-main').classList.remove('hidden');
+        // 點擊完成，隱藏精靈，顯示帶有桌布的多頁滑動桌面
+        function finishWizardToDesktop() {
+            document.getElementById('wizard-container').classList.add('hidden');
+            document.getElementById('desktop-container').classList.remove('hidden');
         }
 
-        function resetWizard() {
-            document.getElementById('desktop-main').classList.add('hidden');
-            document.getElementById('wizard-overlay').classList.remove('hidden');
+        // 點擊齒輪返回設定精靈
+        function backToWizard() {
+            document.getElementById('desktop-container').classList.add('hidden');
+            document.getElementById('wizard-container').classList.remove('hidden');
             document.getElementById('page-wizard').classList.remove('hidden');
         }
 
-        // 切換分頁邏輯
+        // 切換分頁
         function openPage(index) {
             currentPage = index;
             const swiper = document.getElementById('swiper');
@@ -356,15 +380,12 @@
 
             for (let i = 0; i < 3; i++) {
                 const dot = document.getElementById(`dot-${i}`);
-                if (i === index) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
+                if (i === index) dot.classList.add('active');
+                else dot.classList.remove('active');
             }
         }
 
-        // 支援左右手勢滑動分頁 (Swipe)
+        // 手勢左右滑動
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -374,17 +395,9 @@
 
         document.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
+            if (touchEndX < touchStartX - 50 && currentPage < 2) openPage(currentPage + 1);
+            if (touchEndX > touchStartX + 50 && currentPage > 0) openPage(currentPage - 1);
         });
-
-        function handleSwipe() {
-            if (touchEndX < touchStartX - 50 && currentPage < 2) {
-                openPage(currentPage + 1); // 向左滑，下一頁
-            }
-            if (touchEndX > touchStartX + 50 && currentPage > 0) {
-                openPage(currentPage - 1); // 向右滑，上一頁
-            }
-        }
     </script>
 </body>
 </html>
