@@ -67,38 +67,78 @@
     <!-- 主容器 -->
     <div class="w-full">
 
-        <!-- ================= PAGE 0: 信任與宣言落地頁 ================= -->
-        <section id="page-landing" class="space-y-6 pt-6">
-            <div class="text-center my-4">
-                <div class="inline-block p-3 bg-blue-600 text-white rounded-2xl shadow-lg mb-3">
+        <!-- ================= PAGE 0: 完整信任與宣言落地頁 ================= -->
+        <section id="page-landing" class="space-y-6 pt-4 pb-6">
+            
+            <!-- Header Section -->
+            <header class="text-center my-4">
+                <div class="inline-block p-3 bg-slate-900 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
                     <i class="fa-solid fa-compass-drafting text-2xl"></i>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white">myezlife.com</h1>
-                <p class="text-slate-300 mt-1 text-xs">客製化你的「個人手機擬真微型桌面」</p>
-            </div>
+                <p class="text-slate-300 mt-1 text-xs md:text-sm">打造完全聽你指揮、懂你節奏的「個人手機微型主題」</p>
+            </header>
 
-            <div class="glass-widget p-5 rounded-3xl shadow-md space-y-3">
-                <h2 class="text-base font-bold flex items-center gap-2 text-blue-300">
-                    <i class="fa-solid fa-mobile-screen-button"></i> 專屬桌面，由你決定
+            <!-- Banner Card -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-3xl shadow-md">
+                <h2 class="text-base font-bold mb-1.5 flex items-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全
                 </h2>
-                <p class="text-xs text-slate-200 leading-relaxed">
-                    只需回答 2 個簡單問題，系統將自動為你組裝一個包含透明 Widget、常用 App 圖示與快捷 Dock 的專屬微型桌面主題。
+                <p class="text-blue-100 text-xs leading-relaxed">
+                    這不是一個會占空間、強迫綁定的巨型 App。它就像為手機新增一個簡約清爽的**生活佈景主題**——完全不影響你手機原本的任何功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
                 </p>
             </div>
 
-            <div class="bg-black/20 border border-white/10 p-5 rounded-3xl space-y-3 text-xs">
-                <div class="font-bold text-slate-200 flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-blue-400"></i> 安心宣告
+            <!-- Transparency & Trust Q&A (完整恢復) -->
+            <div class="glass-widget p-5 rounded-3xl space-y-4 text-xs">
+                <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
+                </h3>
+
+                <!-- Q1 -->
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-question text-slate-400 text-[10px]"></i> 這東西跑在哪裡？需要辦帳號嗎？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        完全不用！這是我建立的免費前端架構。你不需要申請任何開發者帳號，也不用填寫名字或 Email。你就像是借用廚房為自己煮一碗專屬的麵，不需要懂怎麼蓋廚房。
+                    </p>
                 </div>
-                <ul class="space-y-2 text-slate-300 pl-2">
-                    <li>• <strong>零個資：</strong> 所有選擇設定全數存於手機本機。</li>
-                    <li>• <strong>超輕量：</strong> 單一網頁檔案，像換佈景一樣簡單。</li>
-                    <li>• <strong>隨時刪：</strong> 不佔空間，直接刪除捷徑即可不留痕跡。</li>
-                </ul>
+
+                <!-- Q2 -->
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> 會不會收集我的個人隱私資料？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        零個資、零追蹤。所有你選擇的習慣、筆記與偏好，預設全部安全地存在你<strong>自己的手機瀏覽器（LocalStorage）</strong>裡，伺服器完全讀不到。
+                    </p>
+                </div>
+
+                <!-- Q3 -->
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-gift text-slate-400 text-[10px]"></i> 這世界上真的有免費的午餐嗎？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        老實說，架設網站也有主機成本。但因為這是我自己每天也在用的工具，所以順便做出來跟大家分享。我不需要你的信用卡，覺得好用順手點點頁面上的小廣告或贊助就能幫忙貼補；不點也沒關係，安心用最重要！
+                    </p>
+                </div>
+
+                <!-- Q4 -->
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can text-slate-400 text-[10px]"></i> 如果以後不想用了怎麼辦？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        直接把手機桌面上的這個捷徑圖示像刪普通 App 一樣刪掉就好。拍拍屁股走人，完全不留負擔。
+                    </p>
+                </div>
             </div>
 
+            <!-- Action Button -->
             <button onclick="goToWizard()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 px-6 rounded-2xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-sm">
-                <span>開始打造我的專屬桌面</span>
+                <span>我了解了，開始打造我的專屬桌面</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </section>
@@ -137,7 +177,7 @@
                 </div>
 
                 <div class="flex justify-between items-center">
-                    <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回</button>
+                    <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言說明</button>
                     <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-white/10 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">下一步</button>
                 </div>
             </div>
@@ -377,11 +417,11 @@
 
             box.innerHTML = `
                 <div class="flex justify-between border-b border-white/10 pb-1.5">
-                    <span class="text-slate-400">主題節奏：</span>
+                    <span class="text-slate-300">主題節奏：</span>
                     <span class="font-bold text-blue-300">${stateText}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-slate-400">核心小幫手：</span>
+                    <span class="text-slate-300">核心小幫手：</span>
                     <span class="font-bold text-blue-300">${toolText}</span>
                 </div>
             `;
