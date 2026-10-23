@@ -22,7 +22,7 @@
             background-color: #0f172a;
         }
 
-        /* 沉浸式專屬主題桌布背景 */
+        /* 沉浸式專屬主題桌布背景 (對齊 theme.html 系列風格) */
         #theme-wallpaper {
             position: fixed;
             inset: 0;
@@ -36,11 +36,11 @@
         .wallpaper-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 1;
         }
 
-        /* 設定精靈容器：限制 max-w-md 居中 */
+        /* 設定精靈容器 */
         #wizard-container {
             position: fixed;
             inset: 0;
@@ -53,7 +53,7 @@
             justify-content: space-between;
         }
 
-        /* 全螢幕桌面容器：限制 max-w-md 讓電腦版也能呈現完美的手機擬真比例 */
+        /* 手機擬真桌面容器 */
         #desktop-container {
             position: fixed;
             inset: 0;
@@ -70,7 +70,7 @@
             box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
-        /* 滑動分頁容器 */
+        /* 3 頁滑動容器 */
         .swiper-container {
             display: flex;
             width: 300%;
@@ -88,22 +88,52 @@
             flex-shrink: 0;
         }
 
-        /* 精緻毛玻璃 Widget */
+        /* 質感毛玻璃 Widget / 資料夾外框 */
         .glass-widget {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border-radius: 24px;
         }
 
+        /* 仿 iOS 應用程式/資料夾外觀 */
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .app-icon:active {
+            transform: scale(0.92);
+        }
+        .app-box {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
         .app-label {
             color: #ffffff;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
             font-size: 11px;
             font-weight: 500;
             margin-top: 4px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 72px;
         }
 
         .hidden { display: none !important; }
@@ -115,6 +145,7 @@
             background: rgba(255, 255, 255, 0.4);
             display: inline-block;
             transition: all 0.2s;
+            cursor: pointer;
         }
         .dots-indicator span.active {
             width: 16px;
@@ -129,10 +160,10 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 互動精靈與信任宣言容器 ================= -->
+    <!-- ================= 互動精靈與安心坦白宣言容器 ================= -->
     <div id="wizard-container" class="max-w-md mx-auto w-full">
         
-        <!-- PAGE 0: 完整安心坦白宣言落地頁（源自 theme.html） -->
+        <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
         <section id="page-landing" class="space-y-5 my-auto pb-4">
             <div class="text-center my-2">
                 <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
@@ -211,7 +242,7 @@
                     <div class="text-xl">🌅</div>
                     <div>
                         <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
-                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經、新聞劃重點與互動待辦清單。</p>
+                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經、新聞與互動待辦清單。</p>
                     </div>
                 </div>
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
@@ -296,33 +327,48 @@
             <div class="flex justify-between items-center pt-2">
                 <button onclick="goToStep(1)" class="text-xs text-slate-300 hover:text-white py-2 px-3">上一步</button>
                 <button onclick="finishWizardToDesktop()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-xl shadow-md text-xs transition">
-                    完成設定，生成專屬外掛儀表板 ✨
+                    完成設定，生成專屬手機桌面 ✨
                 </button>
             </div>
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（無右側文字籤、底部僅 3 個圓點） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（App 模樣與 Widget 資料夾，不超過 3 個點） ================= -->
     <div id="desktop-container" class="hidden">
         
-        <!-- 3 頁滑動內容區 -->
+        <!-- 最多 3 頁滑動容器（第 1 頁放不下會自動流向第 2 頁） -->
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
-                <!-- 【第 1 頁】：大時鐘主頁 + 動態生成的複選 Widgets -->
-                <div class="swiper-page flex flex-col justify-start pt-6 items-center text-center space-y-3">
-                    <div class="drop-shadow-lg">
+                <!-- 【第 1 頁】：大時鐘 + 主力 App 與資料夾 -->
+                <div class="swiper-page flex flex-col justify-start pt-6 items-center space-y-4">
+                    <div class="text-center drop-shadow-lg">
                         <div id="big-clock" class="text-5xl font-bold tracking-tight">15:57:56</div>
-                        <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五</div>
+                        <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五 (個人化主題模式)</div>
                     </div>
 
-                    <!-- 動態渲染容器（已移除所有右側文字籤） -->
-                    <div id="dynamic-widgets-container" class="w-full space-y-3 pb-4">
-                        <!-- 動態填入 -->
+                    <!-- 桌面 App 網格與 Widget 資料夾容器 (第 1 頁) -->
+                    <div id="page-1-grid" class="w-full grid grid-cols-4 gap-4 px-2">
+                        <!-- 動態塞入勾選的 App / 資料夾 -->
                     </div>
                 </div>
 
-                <!-- 【第 2 頁】：常用書籍與快捷 App 區塊 -->
+                <!-- 【第 2 頁】：若第 1 頁裝不下或其餘自訂模組（如待辦便籤、其他捷徑） -->
+                <div class="swiper-page space-y-4">
+                    <div class="text-xs font-bold tracking-wider text-white/80 px-1">工具與隨手便籤區</div>
+                    
+                    <!-- 桌面 App 網格與 Widget 資料夾容器 (第 2 頁) -->
+                    <div id="page-2-grid" class="w-full grid grid-cols-4 gap-4 px-2">
+                        <!-- 裝載更多 App -->
+                    </div>
+
+                    <!-- 待辦清單與便籤卡片專屬放置區（確保不超過 3 個點範圍內） -->
+                    <div id="page-2-widgets" class="w-full space-y-3 pt-2">
+                        <!-- 動態填入待辦/便籤卡片 -->
+                    </div>
+                </div>
+
+                <!-- 【第 3 頁】：常用書籍、發票條碼與其他工具 -->
                 <div class="swiper-page space-y-4">
                     <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
                         <div class="flex items-center gap-2">
@@ -346,47 +392,16 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-4 gap-4 text-center pt-2">
-                        <div class="flex flex-col items-center">
-                            <div class="w-13 h-13 bg-rose-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">📕</div>
-                            <span class="app-label">日誌</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-13 h-13 bg-amber-600 rounded-2xl flex items-center justify-center text-2xl shadow-lg">⚾</div>
-                            <span class="app-label">棒球</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-13 h-13 bg-emerald-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">📞</div>
-                            <span class="app-label">電話</span>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-13 h-13 bg-sky-400 rounded-2xl flex items-center justify-center text-2xl shadow-lg">💳</div>
-                            <span class="app-label">LINE Pay</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 【第 3 頁】：發票條碼與其他工具 -->
-                <div class="swiper-page space-y-4">
                     <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
                         <span class="text-xs font-bold">發票存摺 手機條碼</span>
                         <span class="text-xs font-mono font-bold bg-white/50 px-2 py-0.5 rounded">/T.40NNQ</span>
-                    </div>
-
-                    <div class="glass-widget p-4 text-slate-900 space-y-3">
-                        <div class="flex justify-between items-center border-b border-black/10 pb-2">
-                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-compass text-blue-600"></i> 其他捷徑工具</span>
-                        </div>
-                        <p class="text-[11px] text-slate-700 leading-relaxed">
-                            您可以隨時滑動頁面檢視不同小工具，完全沉浸在專屬的佈景主題中。
-                        </p>
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <!-- 底部僅保留精緻滑動分頁圓點（絕不超過三個點） -->
+        <!-- 底部固定 3 個點分頁導覽（嚴格不超過三個點） -->
         <div class="fixed bottom-0 left-0 right-0 z-20 pb-4 pt-2 bg-gradient-to-t from-black/20 to-transparent">
             <div class="dots-indicator text-center">
                 <span id="dot-0" class="active" onclick="openPage(0)"></span>
@@ -453,7 +468,7 @@
             }
         });
 
-        // 點擊完成，依據複選項目動態生成桌面 Widgets
+        // 點擊完成，依據複選項目動態生成桌面 App 模樣與 Widget 資料夾
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
@@ -461,92 +476,101 @@
             const checkboxes = document.querySelectorAll('input[name="widgets"]:checked');
             const selectedValues = Array.from(checkboxes).map(cb => cb.value);
 
-            const container = document.getElementById('dynamic-widgets-container');
-            container.innerHTML = ''; // 清空重建
+            const page1Grid = document.getElementById('page-1-grid');
+            const page2Grid = document.getElementById('page-2-grid');
+            const page2Widgets = document.getElementById('page-2-widgets');
+            
+            page1Grid.innerHTML = '';
+            page2Grid.innerHTML = '';
+            page2Widgets.innerHTML = '';
 
-            // 1. 交通對應資料
+            let appCount = 0;
+
+            // 1. 交通選項資料
             const trafficData = {
-                't-1968': { name: '國道即時路況 (1968 高公局)', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car' },
-                't-168': { name: '全台省道路況 (168 即時路況網)', url: 'https://168.thb.gov.tw', icon: 'fa-route' },
-                't-youbike': { name: 'YouBike 站點車位即時查詢', url: 'https://youbike.com.tw/', icon: 'fa-person-biking' },
-                't-ebus': { name: '即時公車動態 (公車到站時間查詢)', url: 'https://ebus.gov.taipei/', icon: 'fa-bus' },
-                't-tra': { name: '台鐵時刻查詢與車次動態', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train-subway' },
-                't-thsrc': { name: '台灣高鐵時刻與營運資訊', url: 'https://www.thsrc.com.tw/', icon: 'fa-gauge-high' }
+                't-1968': { name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car', bg: 'bg-blue-600' },
+                't-168': { name: '省道 168', url: 'https://168.thb.gov.tw', icon: 'fa-route', bg: 'bg-indigo-600' },
+                't-youbike': { name: 'YouBike', url: 'https://youbike.com.tw/', icon: 'fa-person-biking', bg: 'bg-emerald-600' },
+                't-ebus': { name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus', bg: 'bg-sky-600' },
+                't-tra': { name: '台鐵動態', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train-subway', bg: 'bg-amber-600' },
+                't-thsrc': { name: '台灣高鐵', url: 'https://www.thsrc.com.tw/', icon: 'fa-gauge-high', bg: 'bg-orange-600' }
             };
 
             const selectedTraffic = selectedValues.filter(v => v.startsWith('t-'));
             if (selectedTraffic.length > 0) {
-                let trafficHtml = `
-                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="border-b border-black/10 pb-1.5">
-                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-road text-blue-600"></i> 即時交通與通勤路況</span>
-                        </div>
-                        <div class="space-y-1.5 text-xs">
-                `;
-                selectedTraffic.forEach(key => {
+                // 如果勾選多個交通項目，打包成一個「Widget 資料夾」模樣；若單個則直接顯示為 App
+                if (selectedTraffic.length > 1) {
+                    let folderHtml = `
+                        <div class="app-icon" onclick="alert('開啟交通 Widget 資料夾：包含 ${selectedTraffic.length} 項通勤捷徑')">
+                            <div class="app-box bg-slate-800/80 border border-white/30 grid grid-cols-2 gap-1 p-1">
+                    `;
+                    selectedTraffic.slice(0, 4).forEach(key => {
+                        const item = trafficData[key];
+                        folderHtml += `<div class="${item.bg} rounded-md flex items-center justify-center text-[10px] text-white"><i class="fa-solid ${item.icon}"></i></div>`;
+                    });
+                    folderHtml += `</div><span class="app-label">交通資料夾</span></div>`;
+                    
+                    if (appCount < 8) { page1Grid.innerHTML += folderHtml; appCount++; }
+                    else { page2Grid.innerHTML += folderHtml; }
+                } else {
+                    const key = selectedTraffic[0];
                     const item = trafficData[key];
-                    if (item) {
-                        trafficHtml += `
-                            <a href="${item.url}" target="_blank" class="flex items-center gap-2.5 bg-white/50 hover:bg-white p-2 rounded-xl transition">
-                                <i class="fa-solid ${item.icon} text-slate-700"></i>
-                                <span class="font-bold text-slate-900">${item.name}</span>
-                            </a>
-                        `;
-                    }
-                });
-                trafficHtml += `</div></div>`;
-                container.innerHTML += trafficHtml;
+                    let appHtml = `
+                        <a href="${item.url}" target="_blank" class="app-icon">
+                            <div class="app-box ${item.bg} text-white"><i class="fa-solid ${item.icon}"></i></div>
+                            <span class="app-label">${item.name}</span>
+                        </a>
+                    `;
+                    if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
+                    else { page2Grid.innerHTML += appHtml; }
+                }
             }
 
             // 2. 台股財經快報
-            if (selectedValues.includes('f-yahoo') || selectedValues.includes('f-cnyes')) {
-                let financeHtml = `
-                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
-                        <div class="border-b border-black/10 pb-1.5">
-                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-600"></i> 台股財經快報</span>
-                        </div>
-                        <div class="space-y-1.5 text-xs pt-1">
+            if (selectedValues.includes('f-yahoo')) {
+                let appHtml = `
+                    <a href="https://tw.stock.yahoo.com/" target="_blank" class="app-icon">
+                        <div class="app-box bg-emerald-500 text-white"><i class="fa-solid fa-chart-line"></i></div>
+                        <span class="app-label">Yahoo股市</span>
+                    </a>
                 `;
-                if (selectedValues.includes('f-yahoo')) {
-                    financeHtml += `<a href="https://tw.stock.yahoo.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📈 Yahoo 股市行情與大盤走勢</a>`;
-                }
-                if (selectedValues.includes('f-cnyes')) {
-                    financeHtml += `<a href="https://www.cnyes.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📰 鉅亨網財經新聞與要聞分析</a>`;
-                }
-                financeHtml += `</div></div>`;
-                container.innerHTML += financeHtml;
+                if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
+                else { page2Grid.innerHTML += appHtml; }
+            }
+            if (selectedValues.includes('f-cnyes')) {
+                let appHtml = `
+                    <a href="https://www.cnyes.com/" target="_blank" class="app-icon">
+                        <div class="app-box bg-teal-600 text-white"><i class="fa-solid fa-newspaper"></i></div>
+                        <span class="app-label">鉅亨網</span>
+                    </a>
+                `;
+                if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
+                else { page2Grid.innerHTML += appHtml; }
             }
 
             // 3. 新聞劃重點
             if (selectedValues.includes('news-summary')) {
-                container.innerHTML += `
-                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="border-b border-black/10 pb-1.5">
-                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日新聞劃重點</span>
-                        </div>
-                        <div class="space-y-1.5 text-xs">
-                            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex items-center gap-2.5 bg-white/50 hover:bg-white p-2 rounded-xl transition">
-                                <i class="fa-solid fa-bolt text-amber-600"></i>
-                                <span class="font-bold text-slate-900">焦點新聞每日自動彙整</span>
-                            </a>
-                        </div>
-                    </div>
+                let appHtml = `
+                    <a href="https://myezlife.com/index_news.html" target="_blank" class="app-icon">
+                        <div class="app-box bg-amber-500 text-white"><i class="fa-solid fa-bolt"></i></div>
+                        <span class="app-label">焦點新聞</span>
+                    </a>
                 `;
+                if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
+                else { page2Grid.innerHTML += appHtml; }
             }
 
-            // 4. 互動待辦事項與隨手便籤
+            // 4. 互動待辦事項與隨手便籤（放置於第 2 頁專屬 Widget 區塊）
             if (selectedValues.includes('todo-list')) {
                 const t1 = document.getElementById('todo-1').value || '待辦事項 1';
                 const t2 = document.getElementById('todo-2').value || '待辦事項 2';
                 const t3 = document.getElementById('todo-3').value || '待辦事項 3';
 
-                container.innerHTML += `
+                page2Widgets.innerHTML += `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="font-bold text-xs border-b border-black/10 pb-1.5">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤</span>
+                        <div class="font-bold text-xs border-b border-black/10 pb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤
                         </div>
-                        
-                        <!-- 可打勾的待辦清單 -->
                         <div class="space-y-1.5 text-xs pt-0.5">
                             <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
                                 <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
@@ -561,8 +585,6 @@
                                 <span class="font-bold text-slate-900">${t3}</span>
                             </label>
                         </div>
-
-                        <!-- 隨手輸入便籤區域 -->
                         <div class="pt-1">
                             <textarea placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-white/50 text-slate-900 placeholder-slate-500 text-xs p-2.5 rounded-xl border border-white/40 focus:outline-none focus:bg-white transition" rows="2"></textarea>
                         </div>
