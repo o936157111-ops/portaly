@@ -83,7 +83,7 @@
             height: 100%;
             padding: 16px;
             padding-top: calc(env(safe-area-inset-top) + 20px);
-            padding-bottom: calc(env(safe-area-inset-bottom) + 95px);
+            padding-bottom: calc(env(safe-area-inset-bottom) + 50px);
             overflow-y: auto;
             flex-shrink: 0;
         }
@@ -211,7 +211,7 @@
                     <div class="text-xl">🌅</div>
                     <div>
                         <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
-                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經、新聞劃重點與待辦清單。</p>
+                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經、新聞劃重點與互動待辦清單。</p>
                     </div>
                 </div>
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
@@ -236,7 +236,7 @@
             </div>
         </section>
 
-        <!-- PAGE 2: 晨間專屬大分類複選（含自訂 3 個待辦項目輸入框）與背景設定 -->
+        <!-- PAGE 2: 晨間專屬大分類複選（含自訂 3 個待辦項目與便籤）與背景設定 -->
         <section id="page-wizard-2" class="hidden space-y-4 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2：晨間細項複選與背景</div>
             <h2 class="text-sm font-bold text-white mb-1">勾選您早晨上班最想關注的實用模組（皆可自由複選）</h2>
@@ -273,11 +273,11 @@
                     </div>
                 </div>
 
-                <!-- 4. 待辦事項與護眼便籤複選（支援自訂 3 個待辦項目） -->
+                <!-- 4. 互動待辦事項與隨手便籤複選（支援自訂 3 個待辦項目與便籤輸入） -->
                 <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2.5">
                     <label class="flex items-center gap-2 cursor-pointer font-bold text-white">
                         <input type="checkbox" name="widgets" value="todo-list" checked class="rounded text-blue-600"> 
-                        <span><i class="fa-solid fa-pen-nib text-purple-400"></i> 自訂今日件待辦事項</span>
+                        <span><i class="fa-solid fa-pen-nib text-purple-400"></i> 互動待辦清單與隨手便籤</span>
                     </label>
                     <div class="pl-5 space-y-1.5">
                         <input type="text" id="todo-1" value="完成專案架構確認與 PWA 測試" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
@@ -302,14 +302,14 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面 ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已移除底部 5 個按鈕區間，支援打勾與便籤輸入） ================= -->
     <div id="desktop-container" class="hidden">
         
         <!-- 3 頁滑動內容區 -->
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
-                <!-- 【第 1 頁】：大時鐘主頁 + 動態生成的複選 Widgets (新聞劃重點改為與交通/財經完全一致的按鈕外觀) -->
+                <!-- 【第 1 頁】：大時鐘主頁 + 動態生成的複選 Widgets -->
                 <div class="swiper-page flex flex-col justify-start pt-6 items-center text-center space-y-3">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-5xl font-bold tracking-tight">15:57:56</div>
@@ -378,7 +378,7 @@
                             <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-compass text-blue-600"></i> 其他捷徑工具</span>
                         </div>
                         <p class="text-[11px] text-slate-700 leading-relaxed">
-                            您可以隨時點擊下方齒輪按鈕重新配置此儀表板，或點擊右側選單返回原生手機主畫面。
+                            您可以隨時滑動頁面檢視不同小工具，完全沉浸在專屬的佈景主題中。
                         </p>
                     </div>
                 </div>
@@ -386,24 +386,13 @@
             </div>
         </div>
 
-        <!-- 底部 Dock 欄 -->
-        <div class="fixed bottom-0 left-0 right-0 z-20 pb-6 pt-2 bg-gradient-to-t from-black/30 to-transparent">
-            <div class="dots-indicator text-center mb-2">
+        <!-- 底部僅保留精緻滑動分頁圓點（已完整去除下方 5 個按鈕區間） -->
+        <div class="fixed bottom-0 left-0 right-0 z-20 pb-4 pt-2 bg-gradient-to-t from-black/20 to-transparent">
+            <div class="dots-indicator text-center">
                 <span id="dot-0" class="active"></span>
                 <span id="dot-1" class="ml-1"></span>
                 <span id="dot-2" class="ml-1"></span>
             </div>
-
-            <footer class="px-6">
-                <div class="grid grid-cols-5 gap-3 text-center max-w-md mx-auto">
-                    <div class="flex justify-center" onclick="openPage(0)"><div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-lg">💬</div></div>
-                    <div class="flex justify-center" onclick="openPage(1)"><div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-xl shadow-lg">🟢</div></div>
-                    <div class="flex justify-center" onclick="openPage(2)"><div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-xl shadow-lg">📷</div></div>
-                    <!-- 齒輪：隨時返回精靈設定 -->
-                    <div class="flex justify-center" onclick="backToWizard()"><div class="w-12 h-12 bg-slate-700 rounded-2xl flex items-center justify-center text-xl shadow-lg" title="重新設定">⚙️</div></div>
-                    <div class="flex justify-center" onclick="alert('返回原生手機')"><div class="w-12 h-12 bg-black/40 border border-white/30 rounded-2xl flex items-center justify-center text-xl shadow-lg">⣿</div></div>
-                </div>
-            </footer>
         </div>
 
     </main>
@@ -530,7 +519,7 @@
                 container.innerHTML += financeHtml;
             }
 
-            // 3. 新聞劃重點（修正為與其他模組完全一致的按鈕外觀風格，說明文字為「焦點新聞每日自動彙整」）
+            // 3. 新聞劃重點
             if (selectedValues.includes('news-summary')) {
                 container.innerHTML += `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
@@ -548,25 +537,53 @@
                 `;
             }
 
-            // 4. 今日待辦事項與護眼便籤（使用在精靈中自訂輸入的 3 個項目）
+            // 4. 互動待辦事項與隨手便籤（支援即時打勾互動與便籤輸入框）
             if (selectedValues.includes('todo-list')) {
                 const t1 = document.getElementById('todo-1').value || '待辦事項 1';
                 const t2 = document.getElementById('todo-2').value || '待辦事項 2';
                 const t3 = document.getElementById('todo-3').value || '待辦事項 3';
 
                 container.innerHTML += `
-                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
+                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
                         <div class="flex justify-between items-center font-bold text-xs border-b border-black/10 pb-1.5">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 今日待辦與護眼便籤</span>
-                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded">自訂 3 事</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤</span>
+                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded">可打勾互動</span>
                         </div>
-                        <div class="text-[11px] text-slate-800 space-y-1 pt-1">
-                            <div>☑ ${t1}</div>
-                            <div>☐ ${t2}</div>
-                            <div>☐ ${t3}</div>
+                        
+                        <!-- 可打勾的待辦清單 -->
+                        <div class="space-y-1.5 text-xs pt-0.5">
+                            <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
+                                <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
+                                <span class="font-bold text-slate-900">${t1}</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
+                                <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
+                                <span class="font-bold text-slate-900">${t2}</span>
+                            </label>
+                            <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
+                                <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
+                                <span class="font-bold text-slate-900">${t3}</span>
+                            </label>
+                        </div>
+
+                        <!-- 隨手輸入便籤區域 -->
+                        <div class="pt-1">
+                            <textarea placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-white/50 text-slate-900 placeholder-slate-500 text-xs p-2.5 rounded-xl border border-white/40 focus:outline-none focus:bg-white transition" rows="2"></textarea>
                         </div>
                     </div>
                 `;
+            }
+        }
+
+        // 待辦打勾切換刪除線特效
+        function toggleTodo(checkbox) {
+            const span = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                span.style.textDecoration = 'line-through';
+                span.style.opacity = '0.6';
+            } else {
+                span.style.textDecoration = 'none';
+                span.style.opacity = '1';
             }
         }
 
