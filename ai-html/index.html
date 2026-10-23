@@ -11,27 +11,39 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
+        
+        /* 預設狀態（前三步）：保持清晰的深色背景，確保所有文字與資訊看得清清楚楚 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            /* 背景全透明，讓手機原生日後桌布透上來 */
-            background: transparent;
+            background-color: #0f172a;
             color: #ffffff;
             user-select: none;
             min-height: 100vh;
             margin: 0;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
+        /* 最終桌面狀態（第四步）：背景轉為全透明，讓手機桌布透上來 */
+        body.transparent-mode {
+            background: transparent !important;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
         /* 毛玻璃透明 Widget 效果 */
         .glass-widget {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+        }
+
+        /* 當進入透明桌面模式後的 Widget 變得更透明清爽 */
+        body.transparent-mode .glass-widget {
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .glass-folder {
@@ -41,7 +53,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        /* 底部 Dock 欄：全透明、無外框，直接透視手機桌布 */
+        /* 底部 Dock 欄：全透明、無外框 */
         .transparent-dock {
             background: transparent;
             backdrop-filter: none;
@@ -58,17 +70,17 @@
         .animate-scaleUp { animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
     </style>
 </head>
-<body id="app-body" class="w-full h-screen p-4 overflow-x-hidden">
+<body id="app-body" class="w-full h-screen max-w-lg mx-auto">
 
-    <!-- 主容器 (全螢幕展開) -->
-    <div class="w-full h-full flex flex-col justify-between max-w-lg mx-auto">
+    <!-- 主容器 -->
+    <div class="w-full h-full flex flex-col justify-between">
 
-        <!-- ================= PAGE 0: 完整信任與宣言落地頁 ================= -->
+        <!-- ================= PAGE 0: 完整信任與宣言落地頁 (有清晰底色) ================= -->
         <section id="page-landing" class="space-y-6 pt-2 pb-6 overflow-y-auto flex-1">
             
             <!-- Header Section -->
             <header class="text-center my-4">
-                <div class="inline-block p-3 bg-slate-900/80 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
+                <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
                     <i class="fa-solid fa-compass-drafting text-2xl"></i>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white">myezlife.com</h1>
@@ -76,18 +88,18 @@
             </header>
 
             <!-- Banner Card -->
-            <div class="bg-gradient-to-r from-blue-600/90 to-indigo-600/90 text-white p-5 rounded-3xl shadow-md backdrop-blur-md">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-3xl shadow-md">
                 <h2 class="text-base font-bold mb-1.5 flex items-center gap-2">
                     <i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全
                 </h2>
                 <p class="text-blue-100 text-xs leading-relaxed">
-                    這不是一個會占空間、強迫綁定的巨型 App。它就像為手機新增一個全透明、清爽的**生活佈景主題**——完全不影響你手機原本的任何功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
+                    這不是一個會占空間、強迫綁定的巨型 App。它就像為手機新增一個清爽的**生活佈景主題**——完全不影響你手機原本的任何功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
                 </p>
             </div>
 
             <!-- Transparency & Trust Q&A -->
-            <div class="glass-widget p-5 rounded-3xl space-y-4 text-xs">
-                <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2.5 flex items-center gap-2">
+            <div class="bg-slate-800/90 border border-slate-700 p-5 rounded-3xl space-y-4 text-xs shadow-lg">
+                <h3 class="text-sm font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
                 </h3>
 
@@ -135,8 +147,8 @@
             </button>
         </section>
 
-        <!-- ================= PAGE 1~3: 互動選擇題精靈 ================= -->
-        <section id="page-wizard" class="glass-widget p-6 rounded-3xl shadow-lg hidden space-y-6 my-auto">
+        <!-- ================= PAGE 1~3: 互動選擇題精靈 (有清晰底色) ================= -->
+        <section id="page-wizard" class="bg-slate-800/95 border border-slate-700 p-6 rounded-3xl shadow-xl hidden space-y-6 my-auto">
             
             <!-- 步驟一：選擇當下狀態 -->
             <div id="wizard-step-1" class="wizard-step">
@@ -145,21 +157,21 @@
                 <p class="text-xs text-slate-300 mb-5">跟著此時此刻的心情與身分走。</p>
                 
                 <div class="space-y-3 mb-6">
-                    <div class="option-card border border-white/20 bg-black/25 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('morning', this)">
+                    <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('morning', this)">
                         <div class="text-xl">🌅</div>
                         <div>
                             <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
                             <p class="text-[11px] text-slate-300">關注天氣、台股與今日待辦。</p>
                         </div>
                     </div>
-                    <div class="option-card border border-white/20 bg-black/25 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
+                    <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
                         <div class="text-xl">💻</div>
                         <div>
                             <h3 class="font-bold text-white text-xs">白日專注 / 正在工作中</h3>
                             <p class="text-[11px] text-slate-300">處理事務、通勤與高效導航。</p>
                         </div>
                     </div>
-                    <div class="option-card border border-white/20 bg-black/25 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('night', this)">
+                    <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('night', this)">
                         <div class="text-xl">🌙</div>
                         <div>
                             <h3 class="font-bold text-white text-xs">夜間放鬆 / 沉澱休息</h3>
@@ -170,7 +182,7 @@
 
                 <div class="flex justify-between items-center">
                     <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回說明</button>
-                    <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-white/10 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">下一步</button>
+                    <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-slate-700 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">下一步</button>
                 </div>
             </div>
 
@@ -181,21 +193,21 @@
                 <p class="text-xs text-slate-300 mb-5">讓桌面首頁直接呈現這項核心工具。</p>
                 
                 <div class="space-y-3 mb-6">
-                    <div class="option-card-2 border border-white/20 bg-black/25 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectTool('transit', this)">
+                    <div class="option-card-2 border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectTool('transit', this)">
                         <div class="text-xl">🚌</div>
                         <div>
                             <h3 class="font-bold text-white text-xs">交通與外出工具卡</h3>
                             <p class="text-[11px] text-slate-300">公車即時動態與路線查詢。</p>
                         </div>
                     </div>
-                    <div class="option-card-2 border border-white/20 bg-black/25 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectTool('diary', this)">
+                    <div class="option-card-2 border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectTool('diary', this)">
                         <div class="text-xl">✍️</div>
                         <div>
                             <h3 class="font-bold text-white text-xs">心情便籤與隨筆 Widget</h3>
                             <p class="text-[11px] text-slate-300">桌面直接打字便籤與靈感記錄。</p>
                         </div>
                     </div>
-                    <div class="option-card-2 border border-white/20 bg-black/25 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectTool('media', this)">
+                    <div class="option-card-2 border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectTool('media', this)">
                         <div class="text-xl">🎵</div>
                         <div>
                             <h3 class="font-bold text-white text-xs">雲端音樂與放鬆唱片機</h3>
@@ -206,7 +218,7 @@
 
                 <div class="flex justify-between items-center">
                     <button onclick="goToStep(1)" class="text-xs text-slate-300 hover:text-white py-2 px-3">上一步</button>
-                    <button id="next-btn-2" disabled onclick="generatePreview()" class="bg-white/10 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">生成個人桌面</button>
+                    <button id="next-btn-2" disabled onclick="generatePreview()" class="bg-slate-700 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">生成個人桌面</button>
                 </div>
             </div>
 
@@ -214,9 +226,9 @@
             <div id="wizard-step-3" class="wizard-step hidden">
                 <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">組裝完成</div>
                 <h2 class="text-lg font-bold text-white mb-2">✨ 你的專屬 myezlife 桌面已完成！</h2>
-                <p class="text-xs text-slate-300 mb-4">釘選到手機主畫面後，點開即是這個透明擬真桌面。</p>
+                <p class="text-xs text-slate-300 mb-4">釘選到手機主畫面後，點開即是全透明的擬真桌面。</p>
                 
-                <div id="preview-box" class="bg-black/40 border border-white/20 rounded-2xl p-3 mb-5 text-[11px] space-y-2">
+                <div id="preview-box" class="bg-slate-900 border border-slate-700 rounded-2xl p-3 mb-5 text-[11px] space-y-2">
                     <!-- 動態填入預覽內容 -->
                 </div>
 
@@ -232,13 +244,13 @@
 
         </section>
 
-        <!-- ================= PAGE 4: 全透明擬真 OS 桌面 ================= -->
+        <!-- ================= PAGE 4: 全透明擬真 OS 桌面 (背景全透明) ================= -->
         <section id="page-dashboard" class="space-y-4 hidden flex-1 flex flex-col justify-between pt-1">
             
             <!-- 上半部：頂部狀態 + 透明 Widget 區 -->
             <div class="space-y-4">
                 <!-- 擬真頂部時間與手機狀態欄 -->
-                <header class="flex justify-between items-center text-xs font-semibold px-2 opacity-90">
+                <header class="flex justify-between items-center text-xs font-semibold px-2 opacity-90 drop-shadow-md">
                     <span id="real-time">09:41</span>
                     <div class="flex items-center gap-1.5 text-[10px]">
                         <i class="fa-solid fa-signal"></i>
@@ -269,17 +281,17 @@
                 <footer id="dashboard-dock" class="transparent-dock px-2 pt-2">
                     <div class="grid grid-cols-4 gap-3 text-center">
                         <div class="flex justify-center cursor-pointer active:scale-90 transition" onclick="openApp('通話捷徑')">
-                            <div class="w-12 h-12 bg-emerald-500/90 rounded-2xl flex items-center justify-center text-xl shadow-lg">📞</div>
+                            <div class="w-12 h-12 bg-emerald-500/90 rounded-2xl flex items-center justify-center text-xl shadow-xl">📞</div>
                         </div>
                         <div class="flex justify-center cursor-pointer active:scale-90 transition" onclick="openApp('訊息靈感')">
-                            <div class="w-12 h-12 bg-blue-500/90 rounded-2xl flex items-center justify-center text-xl shadow-lg">💬</div>
+                            <div class="w-12 h-12 bg-blue-500/90 rounded-2xl flex items-center justify-center text-xl shadow-xl">💬</div>
                         </div>
                         <div class="flex justify-center cursor-pointer active:scale-90 transition" onclick="openApp('瀏覽器')">
-                            <div class="w-12 h-12 bg-indigo-500/90 rounded-2xl flex items-center justify-center text-xl shadow-lg">🌐</div>
+                            <div class="w-12 h-12 bg-indigo-500/90 rounded-2xl flex items-center justify-center text-xl shadow-xl">🌐</div>
                         </div>
                         <!-- 設定齒輪：點擊返回重選 -->
                         <div class="flex justify-center cursor-pointer active:scale-90 transition" onclick="resetToWizard()">
-                            <div class="w-12 h-12 glass-folder border border-white/30 rounded-2xl flex items-center justify-center text-xl shadow-lg">⚙️</div>
+                            <div class="w-12 h-12 glass-folder border border-white/30 rounded-2xl flex items-center justify-center text-xl shadow-xl">⚙️</div>
                         </div>
                     </div>
                 </footer>
@@ -291,7 +303,7 @@
 
     <!-- ================= 加入手機桌面引導 Modal 視窗 ================= -->
     <div id="install-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 hidden z-50">
-        <div class="glass-widget w-full max-w-sm rounded-3xl p-5 relative shadow-2xl animate-scaleUp text-slate-100">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-sm rounded-3xl p-5 relative shadow-2xl animate-scaleUp text-slate-100">
             <button onclick="closeInstallModal()" class="absolute top-3.5 right-4 text-slate-400 hover:text-white text-lg">&times;</button>
             
             <div class="text-2xl mb-1.5 text-center">📱</div>
@@ -299,13 +311,13 @@
             <p class="text-[11px] text-slate-300 text-center mb-4">只需 3 秒鐘，它就會變成你桌面上隨點隨開的透明捷徑！</p>
 
             <!-- Device Tabs -->
-            <div class="flex bg-black/40 p-1 rounded-xl mb-3 text-[11px] font-medium">
+            <div class="flex bg-slate-800 p-1 rounded-xl mb-3 text-[11px] font-medium">
                 <button id="tab-ios" onclick="switchTab('ios')" class="flex-1 py-1.5 rounded-lg bg-blue-600 text-white shadow-xs transition">🍎 iPhone (iOS)</button>
                 <button id="tab-android" onclick="switchTab('android')" class="flex-1 py-1.5 rounded-lg text-slate-400 transition">🤖 Android</button>
             </div>
 
             <!-- iOS 步驟 -->
-            <div id="guide-ios" class="space-y-1.5 text-[11px] text-slate-200 leading-relaxed bg-black/30 p-3.5 rounded-xl mb-4">
+            <div id="guide-ios" class="space-y-1.5 text-[11px] text-slate-200 leading-relaxed bg-slate-800/80 p-3.5 rounded-xl mb-4">
                 <ol class="list-decimal pl-4 space-y-1">
                     <li>使用 <strong>Safari 瀏覽器</strong> 打開本網頁。</li>
                     <li>點擊下方工具列的 <strong>「分享」按鈕</strong>（⎋）。</li>
@@ -315,7 +327,7 @@
             </div>
 
             <!-- Android 步驟 -->
-            <div id="guide-android" class="space-y-1.5 text-[11px] text-slate-200 leading-relaxed bg-black/30 p-3.5 rounded-xl mb-4 hidden">
+            <div id="guide-android" class="space-y-1.5 text-[11px] text-slate-200 leading-relaxed bg-slate-800/80 p-3.5 rounded-xl mb-4 hidden">
                 <ol class="list-decimal pl-4 space-y-1">
                     <li>使用 <strong>Chrome 瀏覽器</strong> 打開本網頁。</li>
                     <li>點擊右上角的 <strong>「選單」按鈕</strong>（三個點 ⋮）。</li>
@@ -332,7 +344,7 @@
 
     <!-- 模擬點開「資料夾」的彈出面板 -->
     <div id="folder-modal" class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-6 hidden z-50" onclick="closeFolder()">
-        <div class="glass-widget w-full p-6 rounded-3xl animate-scaleUp text-center space-y-4" onclick="event.stopPropagation()">
+        <div class="bg-slate-900 border border-slate-700 w-full p-6 rounded-3xl animate-scaleUp text-center space-y-4 shadow-2xl" onclick="event.stopPropagation()">
             <h3 class="text-sm font-bold text-slate-200 mb-2">📁 工具捷徑箱</h3>
             <div class="grid grid-cols-3 gap-4">
                 <div class="flex flex-col items-center gap-1 cursor-pointer" onclick="openApp('好歌牆')">
@@ -389,7 +401,7 @@
 
             const nextBtn = document.getElementById('next-btn-1');
             nextBtn.removeAttribute('disabled');
-            nextBtn.classList.remove('bg-white/10', 'text-slate-400', 'cursor-not-allowed');
+            nextBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
             nextBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
         }
 
@@ -402,7 +414,7 @@
 
             const nextBtn = document.getElementById('next-btn-2');
             nextBtn.removeAttribute('disabled');
-            nextBtn.classList.remove('bg-white/10', 'text-slate-400', 'cursor-not-allowed');
+            nextBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
             nextBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
         }
 
@@ -413,11 +425,11 @@
             let toolText = userChoices.tool === 'transit' ? '🚌 交通即時卡' : (userChoices.tool === 'diary' ? '✍️ 心情便籤 Widget' : '🎵 音樂牆 Widget');
 
             box.innerHTML = `
-                <div class="flex justify-between border-b border-white/10 pb-1.5">
+                <div class="flex justify-between border-b border-slate-700 pb-1.5">
                     <span class="text-slate-300">主題節奏：</span>
                     <span class="font-bold text-blue-300">${stateText}</span>
                 </div>
-                <div class="flex justify-between">
+                <div class="flex justify-between pt-1">
                     <span class="text-slate-300">核心小幫手：</span>
                     <span class="font-bold text-blue-300">${toolText}</span>
                 </div>
@@ -432,11 +444,14 @@
             document.getElementById('install-modal').classList.add('hidden');
         }
 
-        // 進入全透明桌面
+        // 進入全透明桌面模式
         function finishAndEnterDashboard() {
             closeInstallModal();
             document.getElementById('page-wizard').classList.add('hidden');
             document.getElementById('page-dashboard').classList.remove('hidden');
+
+            // 關鍵：將 body 切換為透明模式，讓手機桌布透上來！
+            document.getElementById('app-body').classList.add('transparent-mode');
 
             // 1. 動態生成頂部 Widget
             const heroWidget = document.getElementById('dynamic-hero-widget');
@@ -528,6 +543,8 @@
         }
 
         function resetToWizard() {
+            // 重新切回精靈時，恢復背景底色，方便閱讀設定
+            document.getElementById('app-body').classList.remove('transparent-mode');
             document.getElementById('page-dashboard').classList.add('hidden');
             document.getElementById('page-wizard').classList.remove('hidden');
             goToStep(1);
