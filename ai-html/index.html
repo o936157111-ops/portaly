@@ -129,10 +129,10 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 前幾頁：完整安心坦白宣言與互動精靈 ================= -->
+    <!-- ================= 互動精靈與信任宣言容器 ================= -->
     <div id="wizard-container" class="max-w-md mx-auto w-full">
         
-        <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
+        <!-- PAGE 0: 完整安心坦白宣言落地頁（源自 theme.html） -->
         <section id="page-landing" class="space-y-5 my-auto pb-4">
             <div class="text-center my-2">
                 <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
@@ -151,7 +151,7 @@
                 </p>
             </div>
 
-            <!-- 完整 Q&A 信任宣言 -->
+            <!-- Q&A 信任宣言 -->
             <div class="bg-slate-800/95 border border-slate-700 p-5 rounded-3xl space-y-4 text-xs shadow-lg">
                 <h3 class="text-sm font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
@@ -236,16 +236,16 @@
             </div>
         </section>
 
-        <!-- PAGE 2: 晨間專屬大分類複選（含自訂 3 個待辦項目與便籤）與背景設定 -->
+        <!-- PAGE 2: 細項複選與背景設定 -->
         <section id="page-wizard-2" class="hidden space-y-4 my-auto">
-            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2：晨間細項複選與背景</div>
-            <h2 class="text-sm font-bold text-white mb-1">勾選您早晨上班最想關注的實用模組（皆可自由複選）</h2>
-            <p class="text-[11px] text-slate-300 mb-2">打造專屬於您的上班早晨資訊總合：</p>
+            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2：細項複選與背景</div>
+            <h2 class="text-sm font-bold text-white mb-1">勾選您最想關注的實用模組（皆可自由複選）</h2>
+            <p class="text-[11px] text-slate-300 mb-2">打造專屬於您的資訊總合：</p>
 
             <div class="space-y-3 text-xs max-h-64 overflow-y-auto pr-1">
                 <!-- 1. 交通區塊細項複選 -->
                 <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2">
-                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-road text-blue-400"></i> 🚌 即時交通與通勤路況（主站 6 大連結）</strong>
+                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-road text-blue-400"></i> 🚌 即時交通與通勤路況</strong>
                     <div class="pl-3 space-y-1.5 text-[11px] text-slate-300">
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-1968" checked class="rounded text-blue-600"> <span>🚗 國道即時路況 (1968 高公局)</span></label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-168" class="rounded text-blue-600"> <span>🛣️ 全台省道路況 (168 即時路況網)</span></label>
@@ -258,7 +258,7 @@
 
                 <!-- 2. 台股財經快報複選 -->
                 <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2">
-                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-400"></i> 📈 台股財經快報（可複選）</strong>
+                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-400"></i> 📈 台股財經快報</strong>
                     <div class="pl-3 space-y-1.5 text-[11px] text-slate-300">
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="f-yahoo" checked class="rounded text-blue-600"> <span>Yahoo 股市行情（大盤指數與個股報價）</span></label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="f-cnyes" checked class="rounded text-blue-600"> <span>鉅亨網財經新聞（即時要聞與分析）</span></label>
@@ -273,7 +273,7 @@
                     </div>
                 </div>
 
-                <!-- 4. 互動待辦事項與隨手便籤複選（支援自訂 3 個待辦項目與便籤輸入） -->
+                <!-- 4. 互動待辦事項與隨手便籤複選 -->
                 <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2.5">
                     <label class="flex items-center gap-2 cursor-pointer font-bold text-white">
                         <input type="checkbox" name="widgets" value="todo-list" checked class="rounded text-blue-600"> 
@@ -302,7 +302,7 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（含打勾待辦、便籤、無右側文字籤、底部僅留分頁圓點） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（無右側文字籤、底部僅 3 個圓點） ================= -->
     <div id="desktop-container" class="hidden">
         
         <!-- 3 頁滑動內容區 -->
@@ -313,10 +313,10 @@
                 <div class="swiper-page flex flex-col justify-start pt-6 items-center text-center space-y-3">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-5xl font-bold tracking-tight">15:57:56</div>
-                        <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五 (晨間上班模式)</div>
+                        <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五 (個人化主題模式)</div>
                     </div>
 
-                    <!-- 動態渲染容器 -->
+                    <!-- 動態渲染容器（已移除所有右側文字籤） -->
                     <div id="dynamic-widgets-container" class="w-full space-y-3 pb-4">
                         <!-- 動態填入 -->
                     </div>
@@ -386,16 +386,16 @@
             </div>
         </div>
 
-        <!-- 底部僅保留精緻滑動分頁圓點 -->
+        <!-- 底部僅保留精緻滑動分頁圓點（絕不超過三個點） -->
         <div class="fixed bottom-0 left-0 right-0 z-20 pb-4 pt-2 bg-gradient-to-t from-black/20 to-transparent">
             <div class="dots-indicator text-center">
-                <span id="dot-0" class="active"></span>
-                <span id="dot-1" class="ml-1"></span>
-                <span id="dot-2" class="ml-1"></span>
+                <span id="dot-0" class="active" onclick="openPage(0)"></span>
+                <span id="dot-1" class="ml-1" onclick="openPage(1)"></span>
+                <span id="dot-2" class="ml-1" onclick="openPage(2)"></span>
             </div>
         </div>
 
-    </main>
+    </div>
 
     <!-- JavaScript 邏輯控制 -->
     <script>
@@ -543,7 +543,7 @@
                 container.innerHTML += `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
                         <div class="font-bold text-xs border-b border-black/10 pb-1.5">
-                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤</span>
                         </div>
                         
                         <!-- 可打勾的待辦清單 -->
