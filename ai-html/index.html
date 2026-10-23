@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myezlife | 專屬手機生活佈景主題產生器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .hidden { display: none !important; }
+        @keyframes scaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-scaleUp { animation: scaleUp 0.2s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 md:p-8 max-w-2xl mx-auto">
+
+    <!-- 容器主體 -->
+    <div class="w-full">
+        
+        <!-- Header Section -->
+        <header class="text-center my-6">
+            <div class="inline-block p-3 bg-slate-900 text-white rounded-2xl shadow-lg mb-3">
+                <i class="fa-solid fa-compass-drafting text-2xl"></i>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">myezlife.com</h1>
+            <p class="text-slate-500 mt-1 text-sm md:text-base">打造完全聽你指揮、懂你節奏的「個人手機微型主題」</p>
+        </header>
+
+        <!-- ================= PAGE 0: 信任與宣言落地頁 ================= -->
+        <section id="page-landing" class="space-y-6">
+            <!-- Banner Card -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-3xl shadow-md">
+                <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全[cite: 5]
+                </h2>
+                <p class="text-blue-100 text-sm leading-relaxed">
+                    這不是一個會占空間、強迫綁定的巨型 App。它就像為手機新增一個簡約清爽的**生活佈景主題**——完全不影響你手機原本的任何功能，隨時開、隨時用，不用了隨手刪除，不留痕跡[cite: 5]。
+                </p>
+            </div>
+
+            <!-- Transparency & Trust Q&A -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm space-y-5">
+                <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-blue-500"></i> 使用前的安心坦白宣言[cite: 5]
+                </h3>
+
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-900 text-sm md:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-slate-400 text-xs"></i> 這東西跑在哪裡？需要辦帳號嗎？[cite: 5]
+                    </h4>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed pl-5">
+                        完全不用！這是我在 GitHub 上建立的免費開源架構。你不需要申請任何開發者帳號，也不用填寫名字或 Email。你就像是借用我的廚房來為自己煮一碗專屬的麵，不需要懂怎麼蓋廚房[cite: 5]。
+                    </p>
+                </div>
+
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-900 text-sm md:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-slate-400 text-xs"></i> 會不會收集我的個人隱私資料？[cite: 5]
+                    </h4>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed pl-5">
+                        零個資、零追蹤。所有你選擇的習慣、待辦事項與心情隨筆，預設全部安全地存在你**自己的手機瀏覽器（LocalStorage）**裡。若未來需要跨裝置同步，也是直接連回你**自己的 Google 雲端**，金鑰永遠在你手上[cite: 5]。
+                    </p>
+                </div>
+
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-900 text-sm md:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-gift text-slate-400 text-xs"></i> 這世界上真的有免費的午餐嗎？[cite: 5]
+                    </h4>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed pl-5">
+                        老實說，架設網站、寫程式都有成本。但因為這是我自己每天也在用的工具，所以順便做出來跟大家分享。我不需要你的信用卡，如果你覺得好用，順手點點頁面上的小廣告或贊助連結，就能幫我貼補柴米油鹽；不點也沒關係，安心用、開心用最重要[cite: 5]！
+                    </p>
+                </div>
+
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-900 text-sm md:text-base flex items-center gap-2">
+                        <i class="fa-solid fa-trash-can text-slate-400 text-xs"></i> 如果以後不想用了怎麼辦？[cite: 5]
+                    </h4>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed pl-5">
+                        直接把手機桌面上的這個捷徑圖示像刪普通 App 一樣刪掉就好。拍拍屁股走人，完全不留負擔，也不會影響手機原本的運作[cite: 5]。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="pt-2">
+                <button onclick="goToWizard()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 px-6 rounded-2xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 text-base">
+                    <span>我了解了，開始打造我的專屬主題</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 1~3: 互動選擇題精靈 ================= -->
+        <section id="page-wizard" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200/80 shadow-sm hidden space-y-6">
+            
+            <!-- 步驟一：選擇當下狀態 -->
+            <div id="wizard-step-1" class="wizard-step">
+                <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">步驟 1 / 2</div>
+                <h2 class="text-xl font-bold text-slate-900 mb-2">您現在正處於什麼樣的節奏？</h2>
+                <p class="text-sm text-slate-500 mb-6">不用看時鐘，跟著您此時此刻的心情與身分走。</p>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="option-card border-2 border-slate-200 rounded-2xl p-4 cursor-pointer transition hover:border-blue-500 hover:bg-blue-50/50 flex items-center gap-4" onclick="selectState('morning', this)">
+                        <div class="text-2xl">🌅</div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">晨間甦醒 / 準備啟動</h3>
+                            <p class="text-xs text-slate-500">新的一天開始，關注天氣、台股與今日待辦。</p>
+                        </div>
+                    </div>
+                    <div class="option-card border-2 border-slate-200 rounded-2xl p-4 cursor-pointer transition hover:border-blue-500 hover:bg-blue-50/50 flex items-center gap-4" onclick="selectState('work', this)">
+                        <div class="text-2xl">💻</div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">白日專注 / 正在工作中</h3>
+                            <p class="text-xs text-slate-500">處理事務、通勤查詢、高效資訊導航。</p>
+                        </div>
+                    </div>
+                    <div class="option-card border-2 border-slate-200 rounded-2xl p-4 cursor-pointer transition hover:border-blue-500 hover:bg-blue-50/50 flex items-center gap-4" onclick="selectState('night', this)">
+                        <div class="text-2xl">🌙</div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">夜間放鬆 / 沉澱休息</h3>
+                            <p class="text-xs text-slate-500">卸下忙碌，聽首好歌、寫心情隨筆與放空。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <button onclick="backToLanding()" class="text-sm text-slate-500 hover:text-slate-800 font-medium py-2 px-4">返回說明頁</button>
+                    <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-slate-300 text-white font-medium py-3 px-6 rounded-xl transition cursor-not-allowed">下一步</button>
+                </div>
+            </div>
+
+            <!-- 步驟二：選擇最需要的快捷工具 -->
+            <div id="wizard-step-2" class="wizard-step hidden">
+                <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">步驟 2 / 2</div>
+                <h2 class="text-xl font-bold text-slate-900 mb-2">您希望這個桌面最常優先看見什麼？</h2>
+                <p class="text-sm text-slate-500 mb-6">挑選一項您最常使用或當下最需要的核心小幫手。</p>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="option-card-2 border-2 border-slate-200 rounded-2xl p-4 cursor-pointer transition hover:border-blue-500 hover:bg-blue-50/50 flex items-center gap-4" onclick="selectTool('transit', this)">
+                        <div class="text-2xl">🚌</div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">交通與外出工具</h3>
+                            <p class="text-xs text-slate-500">公車動態、路況捷徑、在地導航。</p>
+                        </div>
+                    </div>
+                    <div class="option-card-2 border-2 border-slate-200 rounded-2xl p-4 cursor-pointer transition hover:border-blue-500 hover:bg-blue-50/50 flex items-center gap-4" onclick="selectTool('diary', this)">
+                        <div class="text-2xl">✍️</div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">心情與隨筆日記</h3>
+                            <p class="text-xs text-slate-500">快速記錄靈感、製作溫馨問候圖。</p>
+                        </div>
+                    </div>
+                    <div class="option-card-2 border-2 border-slate-200 rounded-2xl p-4 cursor-pointer transition hover:border-blue-500 hover:bg-blue-50/50 flex items-center gap-4" onclick="selectTool('media', this)">
+                        <div class="text-2xl">🎵</div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">雲端影音與好歌牆</h3>
+                            <p class="text-xs text-slate-500">隨點隨聽的私房音樂與放鬆短片。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <button onclick="goToStep(1)" class="text-sm text-slate-500 hover:text-slate-800 font-medium py-2 px-4">上一步</button>
+                    <button id="next-btn-2" disabled onclick="generatePreview()" class="bg-slate-300 text-white font-medium py-3 px-6 rounded-xl transition cursor-not-allowed">產生專屬佈景</button>
+                </div>
+            </div>
+
+            <!-- 步驟三：生成結果預覽 -->
+            <div id="wizard-step-3" class="wizard-step hidden">
+                <div class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">完成預覽</div>
+                <h2 class="text-xl font-bold text-slate-900 mb-2">✨ 您的專屬手機佈景主題已完成！</h2>
+                <p class="text-sm text-slate-500 mb-4">這就像為手機換上新主題一樣。您可以直接將它加入手機桌面，隨時隨地輕觸使用。</p>
+                
+                <div class="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 mb-6">
+                    <div class="text-xs font-semibold text-slate-400 mb-3">預覽：今日專屬桌面捷徑排版</div>
+                    <div id="preview-grid" class="grid grid-cols-3 gap-3 text-center">
+                        <!-- 動態填入 -->
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="openInstallModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3.5 px-6 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-mobile-screen"></i> <span>加入手機桌面 📱</span>
+                    </button>
+                    <button onclick="goToStep(1)" class="w-full bg-transparent text-slate-500 hover:bg-slate-100 font-medium py-3 px-6 rounded-xl transition text-sm">
+                        重新選擇設定
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center my-6 text-xs text-slate-400 border-t border-slate-200/60 pt-4">
+        <p>© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
+    </footer>
+
+    <!-- ================= 加入手機桌面引導 Modal 視窗 ================= -->
+    <div id="install-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-xl animate-scaleUp">
+            <button onclick="closeInstallModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            
+            <div class="text-3xl mb-2 text-center">📱</div>
+            <h3 class="text-lg font-bold text-slate-900 text-center mb-1">把我的 myezlife 佈景主題釘選到桌面上</h3>
+            <p class="text-xs text-slate-500 text-center mb-5">只需 3 秒鐘，它就會像原生 App 一樣安靜地待在您的手機桌面上，隨點隨開！</p>
+
+            <!-- Device Tabs -->
+            <div class="flex bg-slate-100 p-1 rounded-xl mb-4 text-xs font-semibold">
+                <button id="tab-ios" onclick="switchTab('ios')" class="flex-1 py-2 rounded-lg bg-white text-blue-600 shadow-sm transition">🍎 iPhone (iOS)</button>
+                <button id="tab-android" onclick="switchTab('android')" class="flex-1 py-2 rounded-lg text-slate-500 transition">🤖 Android (安卓)</button>
+            </div>
+
+            <!-- iOS 步驟 -->
+            <div id="guide-ios" class="space-y-2 text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl mb-5">
+                <ol class="list-decimal pl-4 space-y-1.5">
+                    <li>使用手機內建的 <strong>Safari 瀏覽器</strong> 打開本網頁。</li>
+                    <li>點擊下方工具列的 <strong>「分享」按鈕</strong>（正方形帶有往上箭頭圖示 ⎋）。</li>
+                    <li>在選單中向下滑動，點選 <strong>「加入主畫面」</strong>。</li>
+                    <li>右上角點擊 <strong>「新增」</strong>，大功告成！桌面就會出現專屬圖示。</li>
+                </ol>
+            </div>
+
+            <!-- Android 步驟 -->
+            <div id="guide-android" class="space-y-2 text-xs text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl mb-5 hidden">
+                <ol class="list-decimal pl-4 space-y-1.5">
+                    <li>使用手機內建的 <strong>Chrome 瀏覽器</strong> 打開本網頁。</li>
+                    <li>點擊右上角的 <strong>「選單」按鈕</strong>（三個點 ⋮）。</li>
+                    <li>在選單中點選 <strong>「加到主畫面」</strong> 或 <strong>「安裝應用程式」</strong>。</li>
+                    <li>點擊確認安裝，這個專屬佈景主題就會直接變成桌面捷徑！</li>
+                </ol>
+            </div>
+
+            <button onclick="closeInstallModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition text-sm">
+                我知道了，開始享受新佈景！
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript 互動邏輯控制 -->
+    <script>
+        let userChoices = {
+            state: null,
+            tool: null
+        };
+
+        function goToWizard() {
+            document.getElementById('page-landing').classList.add('hidden');
+            document.getElementById('page-wizard').classList.remove('hidden');
+        }
+
+        function backToLanding() {
+            document.getElementById('page-wizard').classList.add('hidden');
+            document.getElementById('page-landing').classList.remove('hidden');
+        }
+
+        function goToStep(stepNum) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`wizard-step-${stepNum}`).classList.remove('hidden');
+        }
+
+        function selectState(stateVal, element) {
+            document.querySelectorAll('#wizard-step-1 .option-card').forEach(card => {
+                card.classList.remove('border-blue-500', 'bg-blue-50/50');
+            });
+            element.classList.add('border-blue-500', 'bg-blue-50/50');
+            userChoices.state = stateVal;
+
+            const nextBtn = document.getElementById('next-btn-1');
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('bg-slate-300', 'cursor-not-allowed');
+            nextBtn.classList.add('bg-blue-600', 'hover:bg-blue-700', 'shadow-md');
+        }
+
+        function selectTool(toolVal, element) {
+            document.querySelectorAll('#wizard-step-2 .option-card-2').forEach(card => {
+                card.classList.remove('border-blue-500', 'bg-blue-50/50');
+            });
+            element.classList.add('border-blue-500', 'bg-blue-50/50');
+            userChoices.tool = toolVal;
+
+            const nextBtn = document.getElementById('next-btn-2');
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('bg-slate-300', 'cursor-not-allowed');
+            nextBtn.classList.add('bg-blue-600', 'hover:bg-blue-700', 'shadow-md');
+        }
+
+        function generatePreview() {
+            goToStep(3);
+            const grid = document.getElementById('preview-grid');
+            let html = `
+                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 text-xs font-medium"><span class="text-xl block mb-1">🌤️</span>天氣氣象</div>
+                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 text-xs font-medium"><span class="text-xl block mb-1">📈</span>台股財經</div>
+            `;
+
+            if (userChoices.tool === 'transit') {
+                html += `<div class="bg-blue-50 p-3 rounded-xl shadow-xs border-2 border-blue-500 text-xs font-medium text-blue-900"><span class="text-xl block mb-1">🚌</span>公車查詢</div>`;
+            } else if (userChoices.tool === 'diary') {
+                html += `<div class="bg-blue-50 p-3 rounded-xl shadow-xs border-2 border-blue-500 text-xs font-medium text-blue-900"><span class="text-xl block mb-1">✍️</span>心情隨筆</div>`;
+            } else {
+                html += `<div class="bg-blue-50 p-3 rounded-xl shadow-xs border-2 border-blue-500 text-xs font-medium text-blue-900"><span class="text-xl block mb-1">🎵</span>影音好歌</div>`;
+            }
+
+            html += `
+                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 text-xs font-medium"><span class="text-xl block mb-1">📰</span>重點新聞</div>
+                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 text-xs font-medium"><span class="text-xl block mb-1">⚙️</span>設定主題</div>
+                <div class="bg-white p-3 rounded-xl shadow-xs border border-slate-100 text-xs font-medium"><span class="text-xl block mb-1">☕</span>輕鬆一下</div>
+            `;
+            grid.innerHTML = html;
+        }
+
+        function openInstallModal() {
+            document.getElementById('install-modal').classList.remove('hidden');
+        }
+
+        function closeInstallModal() {
+            document.getElementById('install-modal').classList.add('hidden');
+        }
+
+        function switchTab(os) {
+            const iosTab = document.getElementById('tab-ios');
+            const androidTab = document.getElementById('tab-android');
+            const iosGuide = document.getElementById('guide-ios');
+            const androidGuide = document.getElementById('guide-android');
+
+            if (os === 'ios') {
+                iosTab.className = "flex-1 py-2 rounded-lg bg-white text-blue-600 shadow-sm transition";
+                androidTab.className = "flex-1 py-2 rounded-lg text-slate-500 transition";
+                iosGuide.classList.remove('hidden');
+                androidGuide.classList.add('hidden');
+            } else {
+                androidTab.className = "flex-1 py-2 rounded-lg bg-white text-blue-600 shadow-sm transition";
+                iosTab.className = "flex-1 py-2 rounded-lg text-slate-500 transition";
+                androidGuide.classList.remove('hidden');
+                iosGuide.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

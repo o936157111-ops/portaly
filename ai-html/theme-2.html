@@ -1,0 +1,129 @@
+<!-- 加入手機桌面引導 Modal 視窗 -->
+<div id="install-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeInstallModal()">&times;</span>
+        <div style="font-size: 2rem; margin-bottom: 10px;">📱</div>
+        <h3>把我的 myezlife 佈景主題釘選到桌面上</h3>
+        <p class="desc">只需 3 秒鐘，它就會像原生 App 一樣安靜地待在您的手機桌面上，隨點隨開！</p>
+
+        <div class="device-tabs">
+            <button class="tab-btn active" onclick="switchTab('ios', this)">🍎 iPhone (iOS)</button>
+            <button class="tab-btn" onclick="switchTab('android', this)">🤖 Android (安卓)</button>
+        </div>
+
+        <!-- iOS 步驟 -->
+        <div id="guide-ios" class="guide-box">
+            <ol>
+                <li>使用手機內建的 <strong>Safari 瀏覽器</strong> 打開本網頁。</li>
+                <li>點擊下方工具列的 <strong>「分享」按鈕</strong>（正方形帶有往上箭頭圖示 ⎋）。</li>
+                <li>在選單中向下滑動，點選 <strong>「加入主畫面」</strong>。</li>
+                <li>右上角點擊 <strong>「新增」</strong>，大功告成！桌面就會出現專屬圖示。</li>
+            </ol>
+        </div>
+
+        <!-- Android 步驟 -->
+        <div id="guide-android" class="guide-box hidden">
+            <ol>
+                <li>使用手機內建的 <strong>Chrome 瀏覽器</strong> 打開本網頁。</li>
+                <li>點擊右上角的 <strong>「選單」按鈕</strong>（三個點 ⋮）。</li>
+                <li>在選單中點選 <strong>「加到主畫面」</strong> 或 <strong>「安裝應用程式」</strong>。</li>
+                <li>點擊確認安裝，這個專屬佈景主題就會直接變成桌面捷徑！</li>
+            </ol>
+        </div>
+
+        <button class="btn" style="width: 100%; margin-top: 15px;" onclick="closeInstallModal()">我知道了，開始享受新佈景！</button>
+    </div>
+</div>
+
+<style>
+    /* Modal 彈跳視窗樣式 */
+    .modal {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .modal-content {
+        background: white;
+        width: 100%;
+        max-width: 420px;
+        border-radius: 16px;
+        padding: 25px;
+        box-sizing: border-box;
+        position: relative;
+        text-align: left;
+        animation: scaleUp 0.2s ease;
+    }
+    @keyframes scaleUp {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .close-btn {
+        position: absolute;
+        top: 15px; right: 20px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #94a3b8;
+    }
+    .device-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+        background: #f1f5f9;
+        padding: 4px;
+        border-radius: 8px;
+    }
+    .tab-btn {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+    .tab-btn.active {
+        background: white;
+        color: #0ea5e9;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .guide-box ol {
+        margin: 0;
+        padding-left: 20px;
+        font-size: 0.9rem;
+        color: #334155;
+        line-height: 1.6;
+    }
+    .guide-box li {
+        margin-bottom: 8px;
+    }
+</style>
+
+<script>
+    // 綁定觸發按鈕與切換分頁的 JS 函數
+    function openInstallModal() {
+        document.getElementById('install-modal').classList.remove('hidden');
+    }
+    function closeInstallModal() {
+        document.getElementById('install-modal').classList.add('hidden');
+    }
+    function switchTab(os, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (os === 'ios') {
+            document.getElementById('guide-ios').classList.remove('hidden');
+            document.getElementById('guide-android').classList.add('hidden');
+        } else {
+            document.getElementById('guide-android').classList.remove('hidden');
+            document.getElementById('guide-ios').classList.add('hidden');
+        }
+    }
+</script>
