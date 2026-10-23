@@ -39,7 +39,7 @@
             z-index: 1;
         }
 
-        /* 前幾頁設定精靈與宣言容器 (完整保留) */
+        /* 前幾頁設定精靈與宣言容器 */
         #wizard-container {
             position: fixed;
             inset: 0;
@@ -121,43 +121,68 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 前幾頁：完整保留的信任宣言與互動精靈 ================= -->
+    <!-- ================= 前幾頁：完整保留當初討論的信任宣言與互動精靈 ================= -->
     <div id="wizard-container" class="max-w-md mx-auto">
         
         <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
-        <section id="page-landing" class="space-y-5 my-auto">
-            <div class="text-center">
+        <section id="page-landing" class="space-y-5 my-auto pb-4">
+            <div class="text-center my-2">
                 <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
                     <i class="fa-solid fa-compass-drafting text-2xl"></i>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight text-white">myezlife.com</h1>
-                <p class="text-slate-300 mt-1 text-xs">打造完全聽你指揮、懂你節奏的「個人手機微型主題」</p>
+                <p class="text-slate-300 mt-1 text-xs md:text-sm">打造完全聽你指揮、懂你節奏的「個人手機微型主題」</p>
             </div>
 
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-3xl shadow-md text-xs leading-relaxed">
-                <h2 class="font-bold mb-1.5 flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全</h2>
-                這不是一個強迫綁定的巨型 App。它就像為手機新增一個清爽的**生活佈景主題**——完全不影響手機原本功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-3xl shadow-md">
+                <h2 class="text-base font-bold mb-1.5 flex items-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全
+                </h2>
+                <p class="text-blue-100 text-xs leading-relaxed">
+                    這不是一個會占空間、強迫綁定的巨型 App。它就像為手機新增一個簡約清爽的<strong>生活佈景主題</strong>——完全不影響你手機原本的任何功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
+                </p>
             </div>
 
-            <!-- 完整 Q&A 信任宣言 -->
-            <div class="bg-slate-800/95 border border-slate-700 p-4 rounded-3xl space-y-3 text-xs shadow-lg">
-                <h3 class="font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
+            <!-- 完整 Q&A 信任宣言 (完整還原) -->
+            <div class="bg-slate-800/95 border border-slate-700 p-5 rounded-3xl space-y-4 text-xs shadow-lg">
+                <h3 class="text-sm font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
                 </h3>
 
                 <div class="space-y-1">
-                    <strong class="text-slate-200">Q: 這東西跑在哪裡？需要辦帳號嗎？</strong>
-                    <p class="text-slate-300 pl-4">完全不用！免申請帳號、免填 Email，純前端架構直接運行。</p>
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-question text-slate-400 text-[10px]"></i> 這東西跑在哪裡？需要辦帳號嗎？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        完全不用！這是我在 GitHub 上建立的免費開源架構。你不需要申請任何開發者帳號，也不用填寫名字或 Email。你就像是借用我的廚房來為自己煮一碗專屬的麵，不需要懂怎麼蓋廚房。
+                    </p>
                 </div>
 
                 <div class="space-y-1">
-                    <strong class="text-slate-200">Q: 會不會收集我的個人隱私資料？</strong>
-                    <p class="text-slate-300 pl-4">零個資、零追蹤。所有選定偏好均安全存於您自己的手機本機。</p>
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> 會不會收集我的個人隱私資料？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        零個資、零追蹤。所有你選擇的習慣、待辦事項與心情隨筆，預設全部安全地存在你<strong>自己的手機瀏覽器（LocalStorage）</strong>裡。
+                    </p>
                 </div>
 
                 <div class="space-y-1">
-                    <strong class="text-slate-200">Q: 如果以後不想用了怎麼辦？</strong>
-                    <p class="text-slate-300 pl-4">直接將手機桌面上的捷徑像刪 App 一樣刪除即可，不留任何痕跡。</p>
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-gift text-slate-400 text-[10px]"></i> 這世界上真的有免費的午餐嗎？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        老實說，架設網站、寫程式都有成本。但因為這是我自己每天也在用的工具，所以順便做出來跟大家分享。我不需要你的信用卡，如果你覺得好用，順手點點頁面上的小廣告或贊助連結就能幫忙貼補；不點也沒關係，安心用、開心用最重要！
+                    </p>
+                </div>
+
+                <div class="space-y-1">
+                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can text-slate-400 text-[10px]"></i> 如果以後不想用了怎麼辦？
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed pl-4">
+                        直接把手機桌面上的這個捷徑圖示像刪普通 App 一樣刪掉就好。拍拍屁股走人，完全不留負擔，也不會影響手機原本的運作。
+                    </p>
                 </div>
             </div>
 
@@ -171,34 +196,34 @@
         <section id="page-wizard-1" class="hidden space-y-5 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 1 / 2</div>
             <h2 class="text-lg font-bold text-white mb-2">您現在正處於什麼樣的節奏？</h2>
-            <p class="text-xs text-slate-300 mb-4">跟著此時此刻的心情與身分走。</p>
+            <p class="text-xs text-slate-300 mb-4">不用看時鐘，跟著您此時此刻的心情與身分走。</p>
             
             <div class="space-y-3 text-xs">
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('morning', this)">
                     <div class="text-xl">🌅</div>
                     <div>
                         <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
-                        <p class="text-[11px] text-slate-300">關注天氣、台股與今日待辦。</p>
+                        <p class="text-[11px] text-slate-300">新的一天開始，關注天氣與今日待辦。</p>
                     </div>
                 </div>
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
                     <div class="text-xl">💻</div>
                     <div>
                         <h3 class="font-bold text-white text-xs">白日專注 / 正在工作中</h3>
-                        <p class="text-[11px] text-slate-300">處理事務、通勤與高效導航。</p>
+                        <p class="text-[11px] text-slate-300">處理事務、通勤查詢、高效資訊導航。</p>
                     </div>
                 </div>
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('night', this)">
                     <div class="text-xl">🌙</div>
                     <div>
                         <h3 class="font-bold text-white text-xs">夜間放鬆 / 沉澱休息</h3>
-                        <p class="text-[11px] text-slate-300">聽首好歌、寫心情隨筆與放空。</p>
+                        <p class="text-[11px] text-slate-300">卸下忙碌，聽首好歌、寫心情隨筆與放空。</p>
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-between items-center pt-3">
-                <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言</button>
+                <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言說明</button>
                 <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-slate-700 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">下一步</button>
             </div>
         </section>
@@ -217,7 +242,7 @@
                 <div>
                     <label class="block text-slate-300 font-semibold mb-1">🚌 公車動態站牌設定：</label>
                     <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-amber-400 font-bold">
-                        已預設：通勤線 (藍21, 藍22, 藍23)
+                        已預設：汐止/南港線 (藍21, 藍22, 藍23)
                     </div>
                 </div>
             </div>
@@ -259,7 +284,6 @@
 
                 <!-- 【第 2 頁】：最佳化 + 書籍 Widget + 常用 App -->
                 <div class="swiper-page space-y-4">
-                    <!-- 記憶體最佳化卡片 -->
                     <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
                         <div class="flex items-center gap-2">
                             <span class="p-2 bg-blue-600 text-white rounded-xl text-xs"><i class="fa-solid fa-broom"></i></span>
@@ -270,7 +294,6 @@
                         </div>
                     </div>
 
-                    <!-- 書籍 Widget -->
                     <div class="glass-widget p-4 space-y-2 text-slate-900">
                         <div class="flex justify-between items-center text-xs font-bold">
                             <span>📖 你的書籍</span>
@@ -283,7 +306,6 @@
                         </div>
                     </div>
 
-                    <!-- App 網格 -->
                     <div class="grid grid-cols-4 gap-4 text-center pt-2">
                         <div class="flex flex-col items-center">
                             <div class="w-13 h-13 bg-rose-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">📕</div>
@@ -306,13 +328,11 @@
 
                 <!-- 【第 3 頁】：發票條碼 + 公車動態 Widget -->
                 <div class="swiper-page space-y-4">
-                    <!-- 發票條碼 -->
                     <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
                         <span class="text-xs font-bold">發票存摺 手機條碼</span>
                         <span class="text-xs font-mono font-bold bg-white/50 px-2 py-0.5 rounded">/T.40NNQ</span>
                     </div>
 
-                    <!-- 公車動態卡片 -->
                     <div class="glass-widget p-4 text-slate-900 space-y-3">
                         <div class="flex justify-between items-center border-b border-black/10 pb-2">
                             <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-bus text-blue-600"></i> 上班通勤公車</span>
