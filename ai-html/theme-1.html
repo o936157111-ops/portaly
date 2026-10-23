@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myezlife - 個人化手機佈景主題精靈</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --primary: #0ea5e9;
+            --primary-hover: #0284c7;
+            --border: #e2e8f0;
+            --radius: 16px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .wizard-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .step-indicator {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        p.desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .option-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fff;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: #f0f9ff;
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+
+        .option-icon {
+            font-size: 1.5rem;
+        }
+
+        .option-content h3 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+            color: #1e293b;
+        }
+
+        .option-content p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 最終生成頁面樣式 */
+        .result-preview {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px dashed var(--border);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .app-icon-card {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .app-icon-card span {
+            display: block;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wizard-container">
+    <!-- 步驟一：選擇當下狀態 -->
+    <div id="step-1" class="wizard-step">
+        <div class="step-indicator">步驟 1 / 3</div>
+        <h2>您現在正處於什麼樣的節奏？</h2>
+        <p class="desc">不用看時鐘，跟著您此時此刻的心情與身分走。</p>
+        
+        <div class="options-group">
+            <div class="option-card" onclick="selectOption(1, 'morning', this)">
+                <div class="option-icon">🌅</div>
+                <div class="option-content">
+                    <h3>晨間甦醒 / 準備啟動</h3>
+                    <p>新的一天開始，關注天氣、台股與今日待辦。</p>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOption(1, 'work', this)">
+                <div class="option-icon">💻</div>
+                <div class="option-content">
+                    <h3>白日專注 / 正在工作中</h3>
+                    <p>處理事務、通勤查詢、高效資訊導航。</p>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOption(1, 'night', this)">
+                <div class="option-icon">🌙</div>
+                <div class="option-content">
+                    <h3>夜間放鬆 / 沉澱休息</h3>
+                    <p>卸下忙碌，聽首好歌、寫心情隨筆與放空。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-container" style="justify-content: flex-end;">
+            <button class="btn" id="next-1" disabled onclick="nextStep(2)">下一步</button>
+        </div>
+    </div>
+
+    <!-- 步驟二：選擇最需要的快捷工具 -->
+    <div id="step-2" class="wizard-step hidden">
+        <div class="step-indicator">步驟 2 / 3</div>
+        <h2>您希望這個桌面最常優先看見什麼？</h2>
+        <p class="desc">挑選一項您最常使用或當下最需要的核心小幫手。</p>
+        
+        <div class="options-group">
+            <div class="option-card" onclick="selectOption(2, 'transit', this)">
+                <div class="option-icon">🚌</div>
+                <div class="option-content">
+                    <h3>交通與外出工具</h3>
+                    <p>公車動態、路況捷徑、在地導航。</p>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOption(2, 'diary', this)">
+                <div class="option-icon">✍️</div>
+                <div class="option-content">
+                    <h3>心情與隨筆日記</h3>
+                    <p>快速記錄靈感、製作溫馨問候圖。</p>
+                </div>
+            </div>
+            <div class="option-card" onclick="selectOption(2, 'media', this)">
+                <div class="option-icon">🎵</div>
+                <div class="option-content">
+                    <h3>雲端影音與好歌牆</h3>
+                    <p>隨點隨聽的私房音樂與放鬆短片。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-secondary" onclick="prevStep(1)">上一步</button>
+            <button class="btn" id="next-2" disabled onclick="nextStep(3)">產生專屬佈景</button>
+        </div>
+    </div>
+
+    <!-- 步驟三：生成結果預覽 -->
+    <div id="step-3" class="wizard-step hidden">
+        <div class="step-indicator">步驟 3 / 3</div>
+        <h2>✨ 您的專屬手機佈景主題已完成！</h2>
+        <p class="desc">這就像為手機換上新主題一樣。您可以直接將它加入手機桌面，隨時隨地輕觸使用。</p>
+        
+        <div class="result-preview">
+            <div style="font-size: 0.9rem; font-weight: 600; color: #64748b; margin-bottom: 5px;">預覽：今日專屬桌面捷徑</div>
+            <div class="app-grid" id="preview-grid">
+                <!-- 動態填入 -->
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-secondary" onclick="prevStep(2)">上一步</button>
+            <button class="btn" onclick="alert('恭喜！您可以點選瀏覽器選單的「加入主畫面」，將此佈景永久留在您的手機桌面上囉！')">加入手機桌面 📱</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let userChoices = {
+        state: null,
+        tool: null
+    };
+
+    function selectOption(step, value, element) {
+        // 移除同組其他卡片的選中狀態
+        const cards = element.parentElement.querySelectorAll('.option-card');
+        cards.forEach(c => c.classList.remove('selected'));
+        
+        // 選中當前卡片
+        element.classList.add('selected');
+
+        if (step === 1) {
+            userChoices.state = value;
+            document.getElementById('next-1').removeAttribute('disabled');
+        } else if (step === 2) {
+            userChoices.tool = value;
+            document.getElementById('next-2').removeAttribute('disabled');
+        }
+    }
+
+    function nextStep(step) {
+        document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`step-${step}`).classList.remove('hidden');
+
+        if (step === 3) {
+            renderPreview();
+        }
+    }
+
+    function prevStep(step) {
+        document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`step-${step}`).classList.remove('hidden');
+    }
+
+    function renderPreview() {
+        const grid = document.getElementById('preview-grid');
+        let html = `
+            <div class="app-icon-card"><span>🌤️</span>天氣氣象</div>
+            <div class="app-icon-card"><span>📈</span>台股財經</div>
+        `;
+
+        if (userChoices.tool === 'transit') {
+            html += `<div class="app-icon-card" style="border: 2px solid #0ea5e9;"><span>🚌</span>公車查詢</div>`;
+        } else if (userChoices.tool === 'diary') {
+            html += `<div class="app-icon-card" style="border: 2px solid #0ea5e9;"><span>✍️</span>心情隨筆</div>`;
+        } else {
+            html += `<div class="app-icon-card" style="border: 2px solid #0ea5e9;"><span>🎵</span>影音好歌</div>`;
+        }
+
+        html += `
+            <div class="app-icon-card"><span>📰</span>重點新聞</div>
+            <div class="app-icon-card"><span>⚙️</span>設定主題</div>
+            <div class="app-icon-card"><span>☕</span>輕鬆一下</div>
+        `;
+        grid.innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
