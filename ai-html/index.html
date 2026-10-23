@@ -1,630 +1,413 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>myezlife OS | 個人化手機佈景主題</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            color: #ffffff;
-            user-select: none;
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            background-color: #0f172a;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myezlife OS | 個人化數位生活儀表板</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --bg-color: #fcfbf9;
+  --card-bg: #ffffff;
+  --text-main: #2c2c2c;
+  --text-secondary: #666666;
+  --accent-color: #8b5cf6; /* 沉穩的文藝紫羅蘭 */
+  --accent-light: #f3e8ff;
+  --border-color: #e5e7eb;
+  --font-serif: "Noto Serif TC", "Songti TC", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
 
-        /* 沉浸式專屬主題桌布背景 (對齊 theme.html 系列風格) */
-        #theme-wallpaper {
-            position: fixed;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            background-image: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop');
-            z-index: 0;
-            transition: background-image 0.5s ease;
-        }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-        .wallpaper-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-        }
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  line-height: 1.8;
+  padding: 20px;
+}
 
-        /* 設定精靈容器 */
-        #wizard-container {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            background-color: #0f172a;
-            overflow-y: auto;
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+/* 完美對齊 theme.html 的 900px 標準寬版 */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
 
-        /* 手機擬真桌面容器 */
-        #desktop-container {
-            position: fixed;
-            inset: 0;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 100vw;
-            height: 100vh;
-            max-width: 440px;
-            margin: 0 auto;
-            left: 0;
-            right: 0;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
-        }
+/* 頂部橫幅 (對齊 theme.html) */
+header {
+  text-align: center;
+  padding: 50px 20px;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  border-radius: 16px;
+  margin-bottom: 30px;
+  border: 1px solid #ddd6fe;
+}
 
-        /* 3 頁滑動容器 */
-        .swiper-container {
-            display: flex;
-            width: 300%;
-            height: 100%;
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-        }
+header h1 {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: #1e1b4b;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
 
-        .swiper-page {
-            width: 33.333%;
-            height: 100%;
-            padding: 16px;
-            padding-top: calc(env(safe-area-inset-top) + 20px);
-            padding-bottom: calc(env(safe-area-inset-bottom) + 50px);
-            overflow-y: auto;
-            flex-shrink: 0;
-        }
+header p {
+  font-size: 1.05rem;
+  color: #5b21b6;
+  max-width: 600px;
+  margin: 0 auto;
+}
 
-        /* 質感毛玻璃 Widget / 資料夾外框 */
-        .glass-widget {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border-radius: 24px;
-        }
+/* 卡片設計 (對齊 theme.html) */
+.card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  transition: transform 0.2s;
+}
 
-        /* 仿 iOS 應用程式/資料夾外觀 */
-        .app-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .app-icon:active {
-            transform: scale(0.92);
-        }
-        .app-box {
-            width: 58px;
-            height: 58px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-        .app-label {
-            color: #ffffff;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-            font-size: 11px;
-            font-weight: 500;
-            margin-top: 4px;
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 72px;
-        }
+.card-tag {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent-color);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
 
-        .hidden { display: none !important; }
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
 
-        .dots-indicator span {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            display: inline-block;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .dots-indicator span.active {
-            width: 16px;
-            border-radius: 10px;
-            background: #ffffff;
-        }
-    </style>
+.card-text {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 16px;
+  white-space: pre-line;
+}
+
+/* 仿 iOS 應用程式/資料夾網格 */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.app-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+.app-icon:hover {
+  transform: translateY(-3px);
+}
+
+.app-box {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+}
+
+.app-label {
+  color: var(--text-main);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 8px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+/* 底部導覽與版權 */
+footer {
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border-color);
+}
+
+footer a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+.hidden { display: none !important; }
+</style>
 </head>
 <body>
 
-    <!-- 佈景主題桌布背景 -->
-    <div id="theme-wallpaper"></div>
-    <div class="wallpaper-overlay"></div>
+  <div class="container">
+    
+    <!-- ================= 階段一：安心坦白宣言與互動精靈 (寬版 900px) ================= -->
+    <div id="wizard-container">
+      <header>
+        <h1>✨ myezlife.com 數位生活主題空間</h1>
+        <p>打造完全聽你指揮、懂你節奏的個人化微型儀表板</p>
+      </header>
 
-    <!-- ================= 互動精靈與安心坦白宣言容器 ================= -->
-    <div id="wizard-container" class="max-w-md mx-auto w-full">
-        
-        <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
-        <section id="page-landing" class="space-y-5 my-auto pb-4">
-            <div class="text-center my-2">
-                <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
-                    <i class="fa-solid fa-compass-drafting text-2xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold tracking-tight text-white">myezlife.com</h1>
-                <p class="text-slate-300 mt-1 text-xs md:text-sm">打造完全聽你指揮、懂你節奏的「個人手機微型主題」</p>
-            </div>
+      <div class="card">
+        <span class="card-tag">使用前的安心坦白宣言</span>
+        <h2 class="card-title">就像給電腦與手機換個新佈景一樣安全、輕量</h2>
+        <p class="card-text">
+          這不是一個會占空間、強迫綁定的巨型 App。它就像為瀏覽器或桌面新增一個簡約清爽的<strong>生活佈景主題</strong>——完全不影響你原本的任何功能，隨時開、隨時用，不用了隨手關閉，不留痕跡。
+        </p>
 
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 rounded-3xl shadow-md">
-                <h2 class="text-base font-bold mb-1.5 flex items-center gap-2">
-                    <i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全
-                </h2>
-                <p class="text-blue-100 text-xs leading-relaxed">
-                    這不是一個會占空間、強迫綁定的巨型 App。它就像為手機新增一個簡約清爽的<strong>生活佈景主題</strong>——完全不影響你手機原本的任何功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
-                </p>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 20px;">
+          <div style="background: #fafaf9; padding: 16px; border-radius: 10px; border: 1px solid var(--border-color);">
+            <strong style="color: #1e1b4b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-circle-question text-purple-600"></i> 需要辦帳號嗎？</strong>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">完全不用！免申請帳號、免填 Email，純前端架構直接運行。</p>
+          </div>
+          <div style="background: #fafaf9; padding: 16px; border-radius: 10px; border: 1px solid var(--border-color);">
+            <strong style="color: #1e1b4b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-lock text-purple-600"></i> 隱私資料去哪了？</strong>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">零個資、零追蹤。所有喜好與隨筆皆安全存於您自己的本機瀏覽器中。</p>
+          </div>
+          <div style="background: #fafaf9; padding: 16px; border-radius: 10px; border: 1px solid var(--border-color);">
+            <strong style="color: #1e1b4b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-gift text-purple-600"></i> 真的完全免費嗎？</strong>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">免費開源。覺得好用點點頁面廣告或贊助即可，安心使用最重要！</p>
+          </div>
+          <div style="background: #fafaf9; padding: 16px; border-radius: 10px; border: 1px solid var(--border-color);">
+            <strong style="color: #1e1b4b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-trash-can text-purple-600"></i> 不想用了怎麼辦？</strong>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">直接將捷徑刪除即可，完全不留痕跡，不影響任何原有運作。</p>
+          </div>
+        </div>
 
-            <!-- Q&A 信任宣言 -->
-            <div class="bg-slate-800/95 border border-slate-700 p-5 rounded-3xl space-y-4 text-xs shadow-lg">
-                <h3 class="text-sm font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
-                </h3>
-
-                <div class="space-y-1">
-                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-question text-slate-400 text-[10px]"></i> 這東西跑在哪裡？需要辦帳號嗎？
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed pl-4">
-                        完全不用！免申請帳號、免填 Email，純前端架構直接運行，就像借用廚房煮麵一樣輕鬆。
-                    </p>
-                </div>
-
-                <div class="space-y-1">
-                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> 會不會收集我的個人隱私資料？
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed pl-4">
-                        零個資、零追蹤。所有選定偏好均安全存於您自己的手機本機瀏覽器（LocalStorage）中。
-                    </p>
-                </div>
-
-                <div class="space-y-1">
-                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-gift text-slate-400 text-[10px]"></i> 這世界上真的有免費的午餐嗎？
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed pl-4">
-                        架設網站有主機成本，但因為這是我自己每天也在用的工具。覺得好用順手點點頁面上的小廣告或贊助即可；不點也沒關係，安心用最重要！
-                    </p>
-                </div>
-
-                <div class="space-y-1">
-                    <h4 class="font-semibold text-slate-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-trash-can text-slate-400 text-[10px]"></i> 如果以後不想用了怎麼辦？
-                    </h4>
-                    <p class="text-slate-300 leading-relaxed pl-4">
-                        直接將手機桌面上的捷徑像刪 App 一樣刪除即可，完全不留痕跡，也不影響手機原本運作。
-                    </p>
-                </div>
-            </div>
-
-            <button onclick="goToStep(1)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 px-6 rounded-2xl shadow-lg transition text-sm flex items-center justify-center gap-2">
-                <span>我了解了，開始打造我的專屬主題</span>
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </section>
-
-        <!-- PAGE 1: 選擇當下節奏 -->
-        <section id="page-wizard-1" class="hidden space-y-5 my-auto">
-            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 1 / 2：選擇生活節奏</div>
-            <h2 class="text-lg font-bold text-white mb-2">您現在正處於什麼樣的節奏？</h2>
-            <p class="text-xs text-slate-300 mb-4">選擇後將為您配置對應的交通、台股財經、新聞與待辦事項選項：</p>
-            
-            <div class="space-y-3 text-xs">
-                <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('morning', this)">
-                    <div class="text-xl">🌅</div>
-                    <div>
-                        <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
-                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經、新聞與互動待辦清單。</p>
-                    </div>
-                </div>
-                <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
-                    <div class="text-xl">💻</div>
-                    <div>
-                        <h3 class="font-bold text-white text-xs">白日專注 / 正在工作中</h3>
-                        <p class="text-[11px] text-slate-300">高效工作導航、行事曆與常用工具管理。</p>
-                    </div>
-                </div>
-                <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('night', this)">
-                    <div class="text-xl">🌙</div>
-                    <div>
-                        <h3 class="font-bold text-white text-xs">夜間放鬆 / 沉澱休息</h3>
-                        <p class="text-[11px] text-slate-300">卸下忙碌，心靈隨筆、閱讀與放空音樂牆。</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex justify-between items-center pt-3">
-                <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言說明</button>
-                <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-slate-700 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">下一步</button>
-            </div>
-        </section>
-
-        <!-- PAGE 2: 細項複選與背景設定 -->
-        <section id="page-wizard-2" class="hidden space-y-4 my-auto">
-            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2：細項複選與背景</div>
-            <h2 class="text-sm font-bold text-white mb-1">勾選您最想關注的實用模組（皆可自由複選）</h2>
-            <p class="text-[11px] text-slate-300 mb-2">打造專屬於您的資訊總合：</p>
-
-            <div class="space-y-3 text-xs max-h-64 overflow-y-auto pr-1">
-                <!-- 1. 交通區塊細項複選 -->
-                <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2">
-                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-road text-blue-400"></i> 🚌 即時交通與通勤路況</strong>
-                    <div class="pl-3 space-y-1.5 text-[11px] text-slate-300">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-1968" checked class="rounded text-blue-600"> <span>🚗 國道即時路況 (1968 高公局)</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-168" class="rounded text-blue-600"> <span>🛣️ 全台省道路況 (168 即時路況網)</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-youbike" class="rounded text-blue-600"> <span>🚲 YouBike 站點車位即時查詢</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-ebus" checked class="rounded text-blue-600"> <span>🚌 即時公車動態（公車到站查詢）</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-tra" class="rounded text-blue-600"> <span>🚆 台鐵時刻查詢與車次動態</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="t-thsrc" class="rounded text-blue-600"> <span>🚄 高鐵時刻與營運資訊</span></label>
-                    </div>
-                </div>
-
-                <!-- 2. 台股財經快報複選 -->
-                <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2">
-                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-400"></i> 📈 台股財經快報</strong>
-                    <div class="pl-3 space-y-1.5 text-[11px] text-slate-300">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="f-yahoo" checked class="rounded text-blue-600"> <span>Yahoo 股市行情（大盤指數與個股報價）</span></label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="f-cnyes" checked class="rounded text-blue-600"> <span>鉅亨網財經新聞（即時要聞與分析）</span></label>
-                    </div>
-                </div>
-
-                <!-- 3. 新聞劃重點複選 -->
-                <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2">
-                    <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-400"></i> 📰 今日新聞劃重點</strong>
-                    <div class="pl-3 space-y-1.5 text-[11px] text-slate-300">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="news-summary" checked class="rounded text-blue-600"> <span>焦點新聞每日自動彙整</span></label>
-                    </div>
-                </div>
-
-                <!-- 4. 互動待辦事項與隨手便籤複選 -->
-                <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2.5">
-                    <label class="flex items-center gap-2 cursor-pointer font-bold text-white">
-                        <input type="checkbox" name="widgets" value="todo-list" checked class="rounded text-blue-600"> 
-                        <span><i class="fa-solid fa-pen-nib text-purple-400"></i> 互動待辦清單與隨手便籤</span>
-                    </label>
-                    <div class="pl-5 space-y-1.5">
-                        <input type="text" id="todo-1" value="完成專案架構確認與 PWA 測試" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
-                        <input type="text" id="todo-2" value="下午 3 點跨部門線上會議" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
-                        <input type="text" id="todo-3" value="記得預約週末家庭聚餐" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 背景上傳 -->
-            <div class="space-y-1.5 text-xs bg-slate-800/90 border border-slate-700 p-3 rounded-2xl">
-                <label class="block text-slate-300 font-semibold mb-1">🖼️ 上傳手機桌面背景照片：</label>
-                <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-300 bg-slate-900 p-2 rounded-xl border border-slate-700">
-            </div>
-
-            <div class="flex justify-between items-center pt-2">
-                <button onclick="goToStep(1)" class="text-xs text-slate-300 hover:text-white py-2 px-3">上一步</button>
-                <button onclick="finishWizardToDesktop()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-xl shadow-md text-xs transition">
-                    完成設定，生成專屬手機桌面 ✨
-                </button>
-            </div>
-        </section>
+        <div style="text-align: center; margin-top: 30px;">
+          <button onclick="goToStep(1)" style="background: var(--accent-color); color: #fff; border: none; padding: 12px 36px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);">
+            我了解了，開始打造專屬主題 ✨
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（App 模樣與 Widget 資料夾，不超過 3 個點） ================= -->
+    <!-- PAGE 1: 勾選實用模組 -->
+    <div id="wizard-step-1" class="hidden card">
+      <span class="card-tag">步驟 1 / 2：選擇生活作息模組</span>
+      <h2 class="card-title">勾選您最想關注的實用模組（皆可自由複選）</h2>
+      
+      <div style="display: grid; gap: 16px; margin-top: 20px;">
+        <!-- 1. 交通 -->
+        <div style="background: #fafaf9; padding: 18px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <strong style="color: #1e1b4b; display: block; margin-bottom: 10px; font-size: 1.05rem;"><i class="fa-solid fa-road text-purple-600"></i> 🚌 即時交通與通勤路況</strong>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 0.95rem;">
+            <label><input type="checkbox" name="widgets" value="t-1968" checked> 🚗 國道即時路況 (1968)</label>
+            <label><input type="checkbox" name="widgets" value="t-168"> 🛣️ 全台省道路況 (168)</label>
+            <label><input type="checkbox" name="widgets" value="t-youbike"> 🚲 YouBike 站點查詢</label>
+            <label><input type="checkbox" name="widgets" value="t-ebus" checked> 🚌 即時公車動態</label>
+            <label><input type="checkbox" name="widgets" value="t-tra"> 🚆 台鐵時刻查詢</label>
+            <label><input type="checkbox" name="widgets" value="t-thsrc"> 🚄 台灣高鐵資訊</label>
+          </div>
+        </div>
+
+        <!-- 2. 財經 -->
+        <div style="background: #fafaf9; padding: 18px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <strong style="color: #1e1b4b; display: block; margin-bottom: 10px; font-size: 1.05rem;"><i class="fa-solid fa-chart-line text-emerald-600"></i> 📈 台股財經快報</strong>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 0.95rem;">
+            <label><input type="checkbox" name="widgets" value="f-yahoo" checked> 📈 Yahoo 股市行情</label>
+            <label><input type="checkbox" name="widgets" value="f-cnyes" checked> 📰 鉅亨網財經新聞</label>
+          </div>
+        </div>
+
+        <!-- 3. 新聞與待辦 -->
+        <div style="background: #fafaf9; padding: 18px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <strong style="color: #1e1b4b; display: block; margin-bottom: 10px; font-size: 1.05rem;"><i class="fa-solid fa-pen-nib text-purple-600"></i> 📰 新聞與互動待辦便籤</strong>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; font-size: 0.95rem; margin-bottom: 12px;">
+            <label><input type="checkbox" name="widgets" value="news-summary" checked> 📰 焦點新聞自動彙整</label>
+            <label><input type="checkbox" name="widgets" value="todo-list" checked> ✅ 互動待辦與便籤</label>
+          </div>
+          <div style="display: grid; gap: 8px;">
+            <input type="text" id="todo-1" value="完成專案架構確認與測試" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+            <input type="text" id="todo-2" value="下午 3 點跨部門線上會議" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+        <button onclick="goToStep(0)" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 0.95rem;">返回說明</button>
+        <button onclick="finishWizard()" style="background: var(--accent-color); color: #fff; border: none; padding: 12px 30px; border-radius: 30px; font-size: 1rem; font-weight: 600; cursor: pointer;">
+          生成專屬主題桌面 ✨
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= 階段二：生成後的 900px 寬版桌面 (App 網格與 Widget 資料夾) ================= -->
     <div id="desktop-container" class="hidden">
-        
-        <!-- 最多 3 頁滑動容器（第 1 頁放不下會自動流向第 2 頁） -->
-        <div class="flex-1 overflow-hidden relative">
-            <div id="swiper" class="swiper-container">
-                
-                <!-- 【第 1 頁】：大時鐘 + 主力 App 與資料夾 -->
-                <div class="swiper-page flex flex-col justify-start pt-6 items-center space-y-4">
-                    <div class="text-center drop-shadow-lg">
-                        <div id="big-clock" class="text-5xl font-bold tracking-tight">15:57:56</div>
-                        <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五 (個人化主題模式)</div>
-                    </div>
+      <header>
+        <h1>✨ 我的專屬數位生活儀表板</h1>
+        <p>完美對齊 theme.html 標準寬版的個人化桌面空間</p>
+      </header>
 
-                    <!-- 桌面 App 網格與 Widget 資料夾容器 (第 1 頁) -->
-                    <div id="page-1-grid" class="w-full grid grid-cols-4 gap-4 px-2">
-                        <!-- 動態塞入勾選的 App / 資料夾 -->
-                    </div>
-                </div>
-
-                <!-- 【第 2 頁】：若第 1 頁裝不下或其餘自訂模組（如待辦便籤、其他捷徑） -->
-                <div class="swiper-page space-y-4">
-                    <div class="text-xs font-bold tracking-wider text-white/80 px-1">工具與隨手便籤區</div>
-                    
-                    <!-- 桌面 App 網格與 Widget 資料夾容器 (第 2 頁) -->
-                    <div id="page-2-grid" class="w-full grid grid-cols-4 gap-4 px-2">
-                        <!-- 裝載更多 App -->
-                    </div>
-
-                    <!-- 待辦清單與便籤卡片專屬放置區（確保不超過 3 個點範圍內） -->
-                    <div id="page-2-widgets" class="w-full space-y-3 pt-2">
-                        <!-- 動態填入待辦/便籤卡片 -->
-                    </div>
-                </div>
-
-                <!-- 【第 3 頁】：常用書籍、發票條碼與其他工具 -->
-                <div class="swiper-page space-y-4">
-                    <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
-                        <div class="flex items-center gap-2">
-                            <span class="p-2 bg-blue-600 text-white rounded-xl text-xs"><i class="fa-solid fa-broom"></i></span>
-                            <span class="text-xs font-bold">最佳化</span>
-                        </div>
-                        <div class="text-[10px] font-semibold bg-white/40 px-2 py-1 rounded-lg">
-                            119.2 GB / 128 GB
-                        </div>
-                    </div>
-
-                    <div class="glass-widget p-4 space-y-2 text-slate-900">
-                        <div class="flex justify-between items-center text-xs font-bold">
-                            <span>📖 你的書籍</span>
-                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2 pt-1">
-                            <div class="bg-emerald-700 text-white p-2 rounded-xl text-[10px] h-20 flex items-end font-bold shadow-sm">我想創富</div>
-                            <div class="bg-indigo-700 text-white p-2 rounded-xl text-[10px] h-20 flex items-end font-bold shadow-sm">新電子</div>
-                            <div class="bg-rose-800 text-white p-2 rounded-xl text-[10px] h-20 flex items-end font-bold shadow-sm">BODY</div>
-                        </div>
-                    </div>
-
-                    <div class="glass-widget p-3 flex justify-between items-center text-slate-900">
-                        <span class="text-xs font-bold">發票存摺 手機條碼</span>
-                        <span class="text-xs font-mono font-bold bg-white/50 px-2 py-0.5 rounded">/T.40NNQ</span>
-                    </div>
-                </div>
-
-            </div>
+      <!-- App 網格與 Widget 資料夾區 -->
+      <div class="card">
+        <h3 class="card-title" style="font-size: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+          📂 個人化應用與 Widget 資料夾
+        </h3>
+        <div id="desktop-app-grid" class="app-grid">
+          <!-- 動態填入 -->
         </div>
+      </div>
 
-        <!-- 底部固定 3 個點分頁導覽（嚴格不超過三個點） -->
-        <div class="fixed bottom-0 left-0 right-0 z-20 pb-4 pt-2 bg-gradient-to-t from-black/20 to-transparent">
-            <div class="dots-indicator text-center">
-                <span id="dot-0" class="active" onclick="openPage(0)"></span>
-                <span id="dot-1" class="ml-1" onclick="openPage(1)"></span>
-                <span id="dot-2" class="ml-1" onclick="openPage(2)"></span>
-            </div>
+      <!-- 互動待辦與隨手便籤區 -->
+      <div id="desktop-widgets-area" class="card">
+        <h3 class="card-title" style="font-size: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+          ✒️ 互動待辦與隨手便籤
+        </h3>
+        <div id="todo-render-area" class="space-y-2" style="margin-bottom: 16px;">
+          <!-- 動態填入 -->
         </div>
-
+        <textarea placeholder="點此輸入隨手便籤或靈感記錄..." style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 0.95rem; background: #fafaf9; outline: none; line-height: 1.6;" rows="3"></textarea>
+      </div>
     </div>
 
-    <!-- JavaScript 邏輯控制 -->
-    <script>
-        let userChoices = { state: 'morning' };
-        let currentPage = 0;
+    <footer>
+      <p>&copy; 2026 myezlife.com · 標準 900px 寬版數位生活空間</p>
+    </footer>
+  </div>
 
-        function updateClock() {
-            const now = new Date();
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            
-            const bigClock = document.getElementById('big-clock');
-            if (bigClock) bigClock.innerText = `${h}:${m}:${s}`;
+  <script>
+    function goToStep(step) {
+      document.getElementById('wizard-container').classList.add('hidden');
+      document.getElementById('wizard-step-1').classList.add('hidden');
+      document.getElementById('desktop-container').classList.add('hidden');
+
+      if (step === 0) document.getElementById('wizard-container').classList.remove('hidden');
+      if (step === 1) document.getElementById('wizard-step-1').classList.remove('hidden');
+    }
+
+    function finishWizard() {
+      document.getElementById('wizard-container').classList.add('hidden');
+      document.getElementById('wizard-step-1').classList.add('hidden');
+      document.getElementById('desktop-container').classList.remove('hidden');
+
+      const checkboxes = document.querySelectorAll('input[name="widgets"]:checked');
+      const selectedValues = Array.from(checkboxes).map(cb => cb.value);
+      const gridContainer = document.getElementById('desktop-app-grid');
+      const todoArea = document.getElementById('todo-render-area');
+
+      gridContainer.innerHTML = '';
+      todoArea.innerHTML = '';
+
+      const trafficData = {
+        't-1968': { name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car', bg: '#2563eb' },
+        't-168': { name: '省道 168', url: 'https://168.thb.gov.tw', icon: 'fa-route', bg: '#4f46e5' },
+        't-youbike': { name: 'YouBike', url: 'https://youbike.com.tw/', icon: 'fa-person-biking', bg: '#059669' },
+        't-ebus': { name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus', bg: '#0284c7' },
+        't-tra': { name: '台鐵動態', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train-subway', bg: '#d97706' },
+        't-thsrc': { name: '台灣高鐵', url: 'https://www.thsrc.com.tw/', icon: 'fa-gauge-high', bg: '#ea580c' }
+      };
+
+      const selectedTraffic = selectedValues.filter(v => v.startsWith('t-'));
+      if (selectedTraffic.length > 0) {
+        if (selectedTraffic.length > 1) {
+          let folderHtml = `
+            <div class="app-icon" onclick="alert('開啟交通 Widget 資料夾：包含 ${selectedTraffic.length} 項通勤捷徑')">
+              <div class="app-box" style="display:grid; grid-template-columns:repeat(2,1fr); gap:3px; padding:4px; background:#f1f5f9;">
+          `;
+          selectedTraffic.slice(0, 4).forEach(key => {
+            const item = trafficData[key];
+            folderHtml += `<div style="background:${item.bg}; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px;"><i class="fa-solid ${item.icon}"></i></div>`;
+          });
+          folderHtml += `</div><span class="app-label">交通資料夾</span></div>`;
+          gridContainer.innerHTML += folderHtml;
+        } else {
+          const item = trafficData[selectedTraffic[0]];
+          gridContainer.innerHTML += `
+            <a href="${item.url}" target="_blank" class="app-icon">
+              <div class="app-box" style="color:${item.bg};"><i class="fa-solid ${item.icon}"></i></div>
+              <span class="app-label">${item.name}</span>
+            </a>
+          `;
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+      }
 
-        function goToStep(step) {
-            document.getElementById('page-landing').classList.add('hidden');
-            document.getElementById('page-wizard-1').classList.add('hidden');
-            document.getElementById('page-wizard-2').classList.add('hidden');
+      if (selectedValues.includes('f-yahoo')) {
+        gridContainer.innerHTML += `
+          <a href="https://tw.stock.yahoo.com/" target="_blank" class="app-icon">
+            <div class="app-box" style="color:#10b981;"><i class="fa-solid fa-chart-line"></i></div>
+            <span class="app-label">Yahoo股市</span>
+          </a>
+        `;
+      }
+      if (selectedValues.includes('f-cnyes')) {
+        gridContainer.innerHTML += `
+          <a href="https://www.cnyes.com/" target="_blank" class="app-icon">
+            <div class="app-box" style="color:#0d9488;"><i class="fa-solid fa-newspaper"></i></div>
+            <span class="app-label">鉅亨網</span>
+          </a>
+        `;
+      }
+      if (selectedValues.includes('news-summary')) {
+        gridContainer.innerHTML += `
+          <a href="https://myezlife.com/index_news.html" target="_blank" class="app-icon">
+            <div class="app-box" style="color:#f59e0b;"><i class="fa-solid fa-bolt"></i></div>
+            <span class="app-label">焦點新聞</span>
+          </a>
+        `;
+      }
 
-            if (step === 1) document.getElementById('page-wizard-1').classList.remove('hidden');
-            if (step === 2) document.getElementById('page-wizard-2').classList.remove('hidden');
-        }
+      if (selectedValues.includes('todo-list')) {
+        const t1 = document.getElementById('todo-1').value || '待辦事項 1';
+        const t2 = document.getElementById('todo-2').value || '待辦事項 2';
+        todoArea.innerHTML = `
+          <label style="display:flex; align-items:center; gap:10px; background:#fafaf9; padding:12px 16px; border-radius:10px; border:1px solid var(--border-color); cursor:pointer;">
+            <input type="checkbox" onchange="toggleTodo(this)" style="width:16px; height:16px; accent-color:var(--accent-color);">
+            <span style="font-weight:600; font-size:0.95rem;">${t1}</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:10px; background:#fafaf9; padding:12px 16px; border-radius:10px; border:1px solid var(--border-color); cursor:pointer;">
+            <input type="checkbox" onchange="toggleTodo(this)" style="width:16px; height:16px; accent-color:var(--accent-color);">
+            <span style="font-weight:600; font-size:0.95rem;">${t2}</span>
+          </label>
+        `;
+      } else {
+        document.getElementById('desktop-widgets-area').style.display = 'none';
+      }
+    }
 
-        function backToLanding() {
-            document.getElementById('page-wizard-1').classList.add('hidden');
-            document.getElementById('page-landing').classList.remove('hidden');
-        }
-
-        function selectState(stateVal, element) {
-            document.querySelectorAll('#page-wizard-1 .option-card').forEach(card => {
-                card.classList.remove('border-blue-400', 'bg-blue-500/20');
-            });
-            element.classList.add('border-blue-400', 'bg-blue-500/20');
-            userChoices.state = stateVal;
-
-            const nextBtn = document.getElementById('next-btn-1');
-            nextBtn.removeAttribute('disabled');
-            nextBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
-            nextBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
-        }
-
-        // 上傳自訂桌布背景
-        document.getElementById('wallpaper-upload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.getElementById('theme-wallpaper').style.backgroundImage = `url('${evt.target.result}')`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // 點擊完成，依據複選項目動態生成桌面 App 模樣與 Widget 資料夾
-        function finishWizardToDesktop() {
-            document.getElementById('wizard-container').classList.add('hidden');
-            document.getElementById('desktop-container').classList.remove('hidden');
-
-            const checkboxes = document.querySelectorAll('input[name="widgets"]:checked');
-            const selectedValues = Array.from(checkboxes).map(cb => cb.value);
-
-            const page1Grid = document.getElementById('page-1-grid');
-            const page2Grid = document.getElementById('page-2-grid');
-            const page2Widgets = document.getElementById('page-2-widgets');
-            
-            page1Grid.innerHTML = '';
-            page2Grid.innerHTML = '';
-            page2Widgets.innerHTML = '';
-
-            let appCount = 0;
-
-            // 1. 交通選項資料
-            const trafficData = {
-                't-1968': { name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car', bg: 'bg-blue-600' },
-                't-168': { name: '省道 168', url: 'https://168.thb.gov.tw', icon: 'fa-route', bg: 'bg-indigo-600' },
-                't-youbike': { name: 'YouBike', url: 'https://youbike.com.tw/', icon: 'fa-person-biking', bg: 'bg-emerald-600' },
-                't-ebus': { name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus', bg: 'bg-sky-600' },
-                't-tra': { name: '台鐵動態', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train-subway', bg: 'bg-amber-600' },
-                't-thsrc': { name: '台灣高鐵', url: 'https://www.thsrc.com.tw/', icon: 'fa-gauge-high', bg: 'bg-orange-600' }
-            };
-
-            const selectedTraffic = selectedValues.filter(v => v.startsWith('t-'));
-            if (selectedTraffic.length > 0) {
-                // 如果勾選多個交通項目，打包成一個「Widget 資料夾」模樣；若單個則直接顯示為 App
-                if (selectedTraffic.length > 1) {
-                    let folderHtml = `
-                        <div class="app-icon" onclick="alert('開啟交通 Widget 資料夾：包含 ${selectedTraffic.length} 項通勤捷徑')">
-                            <div class="app-box bg-slate-800/80 border border-white/30 grid grid-cols-2 gap-1 p-1">
-                    `;
-                    selectedTraffic.slice(0, 4).forEach(key => {
-                        const item = trafficData[key];
-                        folderHtml += `<div class="${item.bg} rounded-md flex items-center justify-center text-[10px] text-white"><i class="fa-solid ${item.icon}"></i></div>`;
-                    });
-                    folderHtml += `</div><span class="app-label">交通資料夾</span></div>`;
-                    
-                    if (appCount < 8) { page1Grid.innerHTML += folderHtml; appCount++; }
-                    else { page2Grid.innerHTML += folderHtml; }
-                } else {
-                    const key = selectedTraffic[0];
-                    const item = trafficData[key];
-                    let appHtml = `
-                        <a href="${item.url}" target="_blank" class="app-icon">
-                            <div class="app-box ${item.bg} text-white"><i class="fa-solid ${item.icon}"></i></div>
-                            <span class="app-label">${item.name}</span>
-                        </a>
-                    `;
-                    if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
-                    else { page2Grid.innerHTML += appHtml; }
-                }
-            }
-
-            // 2. 台股財經快報
-            if (selectedValues.includes('f-yahoo')) {
-                let appHtml = `
-                    <a href="https://tw.stock.yahoo.com/" target="_blank" class="app-icon">
-                        <div class="app-box bg-emerald-500 text-white"><i class="fa-solid fa-chart-line"></i></div>
-                        <span class="app-label">Yahoo股市</span>
-                    </a>
-                `;
-                if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
-                else { page2Grid.innerHTML += appHtml; }
-            }
-            if (selectedValues.includes('f-cnyes')) {
-                let appHtml = `
-                    <a href="https://www.cnyes.com/" target="_blank" class="app-icon">
-                        <div class="app-box bg-teal-600 text-white"><i class="fa-solid fa-newspaper"></i></div>
-                        <span class="app-label">鉅亨網</span>
-                    </a>
-                `;
-                if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
-                else { page2Grid.innerHTML += appHtml; }
-            }
-
-            // 3. 新聞劃重點
-            if (selectedValues.includes('news-summary')) {
-                let appHtml = `
-                    <a href="https://myezlife.com/index_news.html" target="_blank" class="app-icon">
-                        <div class="app-box bg-amber-500 text-white"><i class="fa-solid fa-bolt"></i></div>
-                        <span class="app-label">焦點新聞</span>
-                    </a>
-                `;
-                if (appCount < 8) { page1Grid.innerHTML += appHtml; appCount++; }
-                else { page2Grid.innerHTML += appHtml; }
-            }
-
-            // 4. 互動待辦事項與隨手便籤（放置於第 2 頁專屬 Widget 區塊）
-            if (selectedValues.includes('todo-list')) {
-                const t1 = document.getElementById('todo-1').value || '待辦事項 1';
-                const t2 = document.getElementById('todo-2').value || '待辦事項 2';
-                const t3 = document.getElementById('todo-3').value || '待辦事項 3';
-
-                page2Widgets.innerHTML += `
-                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="font-bold text-xs border-b border-black/10 pb-1.5 flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤
-                        </div>
-                        <div class="space-y-1.5 text-xs pt-0.5">
-                            <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
-                                <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
-                                <span class="font-bold text-slate-900">${t1}</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
-                                <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
-                                <span class="font-bold text-slate-900">${t2}</span>
-                            </label>
-                            <label class="flex items-center gap-2 bg-white/40 p-2 rounded-xl cursor-pointer hover:bg-white/60 transition">
-                                <input type="checkbox" onchange="toggleTodo(this)" class="rounded text-purple-600 w-4 h-4">
-                                <span class="font-bold text-slate-900">${t3}</span>
-                            </label>
-                        </div>
-                        <div class="pt-1">
-                            <textarea placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-white/50 text-slate-900 placeholder-slate-500 text-xs p-2.5 rounded-xl border border-white/40 focus:outline-none focus:bg-white transition" rows="2"></textarea>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        // 待辦打勾切換刪除線特效
-        function toggleTodo(checkbox) {
-            const span = checkbox.nextElementSibling;
-            if (checkbox.checked) {
-                span.style.textDecoration = 'line-through';
-                span.style.opacity = '0.6';
-            } else {
-                span.style.textDecoration = 'none';
-                span.style.opacity = '1';
-            }
-        }
-
-        function openPage(index) {
-            currentPage = index;
-            const swiper = document.getElementById('swiper');
-            swiper.style.transform = `translateX(-${index * 33.333}%)`;
-
-            for (let i = 0; i < 3; i++) {
-                const dot = document.getElementById(`dot-${i}`);
-                if (i === index) dot.classList.add('active');
-                else dot.classList.remove('active');
-            }
-        }
-
-        let touchStartX = 0;
-        let touchEndX = 0;
-        document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-        document.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchEndX < touchStartX - 50 && currentPage < 2) openPage(currentPage + 1);
-            if (touchEndX > touchStartX + 50 && currentPage > 0) openPage(currentPage - 1);
-        });
-    </script>
+    function toggleTodo(checkbox) {
+      const span = checkbox.nextElementSibling;
+      if (checkbox.checked) {
+        span.style.textDecoration = 'line-through';
+        span.style.opacity = '0.5';
+      } else {
+        span.style.textDecoration = 'none';
+        span.style.opacity = '1';
+      }
+    }
+  </script>
 </body>
 </html>
