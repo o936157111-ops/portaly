@@ -15,13 +15,14 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
             color: #ffffff;
             user-select: none;
-            min-height: 100vh;
+            width: 100vw;
+            height: 100vh;
             margin: 0;
             overflow: hidden;
             background-color: #0f172a;
         }
 
-        /* 沉浸式專屬主題桌布背景 */
+        /* 沉浸式專屬主題桌布背景 (支援自訂上傳與全螢幕滿版) */
         #theme-wallpaper {
             position: fixed;
             inset: 0;
@@ -35,11 +36,11 @@
         .wallpaper-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
 
-        /* 前幾頁設定精靈與宣言容器 */
+        /* 前幾頁設定精靈容器 (完整保留互動與信任宣言) */
         #wizard-container {
             position: fixed;
             inset: 0;
@@ -52,7 +53,7 @@
             justify-content: space-between;
         }
 
-        /* 最後產生的擬真桌面容器 (多頁滑動) */
+        /* 最後產生的全螢幕擬真桌面容器 (多頁滑動) */
         #desktop-container {
             position: fixed;
             inset: 0;
@@ -60,6 +61,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            width: 100vw;
+            height: 100vh;
         }
 
         /* 滑動分頁容器 */
@@ -74,8 +77,9 @@
             width: 33.333%;
             height: 100%;
             padding: 16px;
-            padding-top: calc(env(safe-area-inset-top) + 24px);
-            padding-bottom: calc(env(safe-area-inset-bottom) + 85px);
+            /* 頂部避開狀態列，底部保留空間給 Dock 與手機原生導覽列 */
+            padding-top: calc(env(safe-area-inset-top) + 20px);
+            padding-bottom: calc(env(safe-area-inset-bottom) + 95px);
             overflow-y: auto;
             flex-shrink: 0;
         }
@@ -154,7 +158,7 @@
                         <i class="fa-solid fa-circle-question text-slate-400 text-[10px]"></i> 這東西跑在哪裡？需要辦帳號嗎？
                     </h4>
                     <p class="text-slate-300 leading-relaxed pl-4">
-                        完全不用！這是我在 GitHub 上建立的免費開源架構。你不需要申請任何開發者帳號，也不用填寫名字或 Email。你就像是借用我的廚房來為自己煮一碗專屬的麵，不需要懂怎麼蓋廚房。
+                        完全不用！免申請帳號、免填 Email，純前端架構直接運行，就像借用廚房煮麵一樣輕鬆。
                     </p>
                 </div>
 
@@ -163,7 +167,7 @@
                         <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> 會不會收集我的個人隱私資料？
                     </h4>
                     <p class="text-slate-300 leading-relaxed pl-4">
-                        零個資、零追蹤。所有你選擇的習慣、待辦事項與心情隨筆，預設全部安全地存在你<strong>自己的手機瀏覽器（LocalStorage）</strong>裡。
+                        零個資、零追蹤。所有選定偏好均安全存於您自己的手機本機瀏覽器（LocalStorage）中。
                     </p>
                 </div>
 
@@ -172,7 +176,7 @@
                         <i class="fa-solid fa-gift text-slate-400 text-[10px]"></i> 這世界上真的有免費的午餐嗎？
                     </h4>
                     <p class="text-slate-300 leading-relaxed pl-4">
-                        老實說，架設網站、寫程式都有成本。但因為這是我自己每天也在用的工具，所以順便做出來跟大家分享。我不需要你的信用卡，如果你覺得好用，順手點點頁面上的小廣告或贊助連結就能幫忙貼補；不點也沒關係，安心用、開心用最重要！
+                        架設網站有主機成本，但因為這是我自己每天也在用的工具。覺得好用順手點點頁面上的小廣告或贊助即可；不點也沒關係，安心用最重要！
                     </p>
                 </div>
 
@@ -181,7 +185,7 @@
                         <i class="fa-solid fa-trash-can text-slate-400 text-[10px]"></i> 如果以後不想用了怎麼辦？
                     </h4>
                     <p class="text-slate-300 leading-relaxed pl-4">
-                        直接把手機桌面上的這個捷徑圖示像刪普通 App 一樣刪掉就好。拍拍屁股走人，完全不留負擔，也不會影響手機原本的運作。
+                        直接將手機桌面上的捷徑像刪 App 一樣刪除即可，完全不留痕跡，也不影響手機原本運作。
                     </p>
                 </div>
             </div>
@@ -228,21 +232,21 @@
             </div>
         </section>
 
-        <!-- PAGE 2: 選擇背景照片與確認 -->
+        <!-- PAGE 2: 上傳背景照片與確認 -->
         <section id="page-wizard-2" class="hidden space-y-4 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2</div>
             <h2 class="text-lg font-bold text-white mb-2">個性化工具與桌面背景</h2>
-            <p class="text-xs text-slate-300 mb-3">設定你的自訂背景照片與小工具。</p>
+            <p class="text-xs text-slate-300 mb-3">上傳自訂背景照片（由於系統隱私限制，需手動上傳照片來模擬桌布）。</p>
 
             <div class="space-y-3 text-xs bg-slate-800/90 border border-slate-700 p-4 rounded-3xl">
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1">🖼️ 上傳你的手機桌面背景照片：</label>
+                    <label class="block text-slate-300 font-semibold mb-1">🖼️ 上傳手機桌面背景照片：</label>
                     <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-300 bg-slate-900 p-2 rounded-xl border border-slate-700">
                 </div>
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1">✨ 當前選擇的節奏：</label>
+                    <label class="block text-slate-300 font-semibold mb-1">✨ 當前選擇的節奏（已連動）：</label>
                     <div id="selected-state-display" class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-blue-400 font-bold">
-                        尚未選擇
+                        晨間甦醒 / 準備啟動
                     </div>
                 </div>
             </div>
@@ -250,14 +254,14 @@
             <div class="flex justify-between items-center pt-2">
                 <button onclick="goToStep(1)" class="text-xs text-slate-300 hover:text-white py-2 px-3">上一步</button>
                 <button onclick="finishWizardToDesktop()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-xl shadow-md text-xs transition">
-                    完成設定，進入擬真桌面 ✨
+                    完成設定，進入全螢幕桌面 ✨
                 </button>
             </div>
         </section>
     </div>
 
-    <!-- ================= 最後成果：多頁滑動擬真手機桌面 (動態反映節奏選擇) ================= -->
-    <div id="desktop-container" class="hidden max-w-md mx-auto">
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（保留底部空間給手機系統按鈕） ================= -->
+    <div id="desktop-container" class="hidden">
         
         <!-- 頂部時間狀態列 -->
         <header class="flex justify-between items-center text-xs font-bold px-6 pt-3 drop-shadow-md z-20">
@@ -274,14 +278,14 @@
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
-                <!-- 【第 1 頁】：動態反映節奏的主頁 Widget -->
-                <div class="swiper-page flex flex-col justify-start pt-10 items-center text-center space-y-4">
+                <!-- 【第 1 頁】：大時鐘主頁 + 動態節奏 Widget -->
+                <div class="swiper-page flex flex-col justify-start pt-6 items-center text-center space-y-4">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-6xl font-bold tracking-tight">15:57:56</div>
                         <div id="big-date" class="text-sm font-semibold mt-2 opacity-95">10月23日, 週五</div>
                     </div>
 
-                    <!-- 根據步驟 1 選擇動態渲染的節奏 Widget -->
+                    <!-- 動態反映節奏選擇的 Widget -->
                     <div id="dynamic-state-widget" class="glass-widget w-full p-4 text-slate-900 text-left space-y-2">
                         <!-- 動態填入 -->
                     </div>
@@ -364,16 +368,16 @@
             </div>
         </div>
 
-        <!-- 底部 Indicator 與全透明 Dock 欄 -->
-        <div class="pb-4 pt-2 z-20">
-            <div class="dots-indicator text-center mb-3">
+        <!-- 底部 Indicator 與 Dock 欄（保留安全底部空間給手機系統導覽列） -->
+        <div class="fixed bottom-0 left-0 right-0 z-20 pb-6 pt-2 bg-gradient-to-t from-black/30 to-transparent">
+            <div class="dots-indicator text-center mb-2">
                 <span id="dot-0" class="active"></span>
                 <span id="dot-1" class="ml-1"></span>
                 <span id="dot-2" class="ml-1"></span>
             </div>
 
             <footer class="px-6">
-                <div class="grid grid-cols-5 gap-3 text-center">
+                <div class="grid grid-cols-5 gap-3 text-center max-w-md mx-auto">
                     <div class="flex justify-center" onclick="openPage(0)"><div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-lg">💬</div></div>
                     <div class="flex justify-center" onclick="openPage(1)"><div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-xl shadow-lg">🟢</div></div>
                     <div class="flex justify-center" onclick="openPage(2)"><div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-xl shadow-lg">📷</div></div>
@@ -388,7 +392,7 @@
 
     <!-- JavaScript 邏輯控制 -->
     <script>
-        let userChoices = { state: 'morning' }; // 預設晨間
+        let userChoices = { state: 'morning' };
         let currentPage = 0;
 
         function updateClock() {
@@ -428,7 +432,6 @@
             element.classList.add('border-blue-400', 'bg-blue-500/20');
             userChoices.state = stateVal;
 
-            // 更新步驟 2 的顯示文字
             const displayMap = {
                 'morning': '🌅 晨間甦醒 / 準備啟動',
                 'work': '💻 白日專注 / 正在工作中',
@@ -454,12 +457,11 @@
             }
         });
 
-        // 點擊完成，進入桌面（根據選擇的 state 動態渲染 Widget）
+        // 點擊完成，進入全螢幕桌面（動態渲染選擇結果）
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
 
-            // 根據 userChoices.state 動態渲染第一頁的專屬 Widget
             const stateWidget = document.getElementById('dynamic-state-widget');
             if (userChoices.state === 'morning') {
                 stateWidget.innerHTML = `
@@ -467,7 +469,7 @@
                         <span>🌅 早安！新的一天充滿希望</span>
                         <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full">晨間模式</span>
                     </div>
-                    <p class="text-[11px] text-slate-700">今日待辦：查看氣象與台股盤勢，準備迎接美好早晨。</p>
+                    <p class="text-[11px] text-slate-800">今日待辦：查看氣象與台股盤勢，準備迎接美好早晨。</p>
                 `;
             } else if (userChoices.state === 'work') {
                 stateWidget.innerHTML = `
@@ -475,7 +477,7 @@
                         <span>💻 專注中！高效處理今日事務</span>
                         <span class="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full">工作模式</span>
                     </div>
-                    <p class="text-[11px] text-slate-700">保持專注，隨時掌握通勤動態與高效工具導航。</p>
+                    <p class="text-[11px] text-slate-800">保持專注，隨時掌握通勤動態與高效工具導航。</p>
                 `;
             } else {
                 stateWidget.innerHTML = `
@@ -483,12 +485,12 @@
                         <span>🌙 晚安！卸下忙碌，享受放鬆</span>
                         <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded-full">放鬆模式</span>
                     </div>
-                    <p class="text-[11px] text-slate-700">沉澱心靈，聽首好歌、寫下今日心情隨筆與靈感。</p>
+                    <p class="text-[11px] text-slate-800">沉澱心靈，聽首好歌、寫下今日心情隨筆與靈感。</p>
                 `;
             }
         }
 
-        // 點擊齒輪返回設定精靈
+        // 返回精靈設定
         function backToWizard() {
             document.getElementById('desktop-container').classList.add('hidden');
             document.getElementById('wizard-container').classList.remove('hidden');
