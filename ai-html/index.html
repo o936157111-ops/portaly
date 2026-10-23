@@ -204,14 +204,14 @@
         <section id="page-wizard-1" class="hidden space-y-5 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 1 / 2：選擇生活節奏</div>
             <h2 class="text-lg font-bold text-white mb-2">您現在正處於什麼樣的節奏？</h2>
-            <p class="text-xs text-slate-300 mb-4">選擇後將為您配置對應的交通、台股財經與新聞選項：</p>
+            <p class="text-xs text-slate-300 mb-4">選擇後將為您配置對應的交通、台股財經、新聞與待辦事項選項：</p>
             
             <div class="space-y-3 text-xs">
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('morning', this)">
                     <div class="text-xl">🌅</div>
                     <div>
                         <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
-                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經與新聞劃重點。</p>
+                        <p class="text-[11px] text-slate-300">新的一天，自選即時交通、台股財經、新聞劃重點與待辦清單。</p>
                     </div>
                 </div>
                 <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
@@ -236,7 +236,7 @@
             </div>
         </section>
 
-        <!-- PAGE 2: 晨間專屬大分類複選與背景設定 -->
+        <!-- PAGE 2: 晨間專屬大分類複選（含自訂 3 個待辦項目輸入框）與背景設定 -->
         <section id="page-wizard-2" class="hidden space-y-4 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2：晨間細項複選與背景</div>
             <h2 class="text-sm font-bold text-white mb-1">勾選您早晨上班最想關注的實用模組（皆可自由複選）</h2>
@@ -269,7 +269,20 @@
                 <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2">
                     <strong class="text-white block text-xs flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-400"></i> 📰 今日新聞劃重點</strong>
                     <div class="pl-3 space-y-1.5 text-[11px] text-slate-300">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="news-summary" checked class="rounded text-blue-600"> <span>捷運通勤時事重點與 AI 摘要速覽</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="widgets" value="news-summary" checked class="rounded text-blue-600"> <span>焦點新聞每日自動彙整</span></label>
+                    </div>
+                </div>
+
+                <!-- 4. 待辦事項與護眼便籤複選（支援自訂 3 個待辦項目） -->
+                <div class="bg-slate-900/80 border border-slate-700 p-3 rounded-2xl space-y-2.5">
+                    <label class="flex items-center gap-2 cursor-pointer font-bold text-white">
+                        <input type="checkbox" name="widgets" value="todo-list" checked class="rounded text-blue-600"> 
+                        <span><i class="fa-solid fa-pen-nib text-purple-400"></i> 自訂今日件待辦事項</span>
+                    </label>
+                    <div class="pl-5 space-y-1.5">
+                        <input type="text" id="todo-1" value="完成專案架構確認與 PWA 測試" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
+                        <input type="text" id="todo-2" value="下午 3 點跨部門線上會議" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
+                        <input type="text" id="todo-3" value="記得預約週末家庭聚餐" class="w-full bg-slate-950 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 focus:outline-none focus:border-blue-500">
                     </div>
                 </div>
             </div>
@@ -289,14 +302,14 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已移除頂部虛擬狀態列） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面 ================= -->
     <div id="desktop-container" class="hidden">
         
         <!-- 3 頁滑動內容區 -->
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
-                <!-- 【第 1 頁】：大時鐘主頁 + 動態生成的複選 Widgets -->
+                <!-- 【第 1 頁】：大時鐘主頁 + 動態生成的複選 Widgets (新聞劃重點改為與交通/財經完全一致的按鈕外觀) -->
                 <div class="swiper-page flex flex-col justify-start pt-6 items-center text-center space-y-3">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-5xl font-bold tracking-tight">15:57:56</div>
@@ -462,7 +475,7 @@
             const container = document.getElementById('dynamic-widgets-container');
             container.innerHTML = ''; // 清空重建
 
-            // 交通對應資料
+            // 1. 交通對應資料
             const trafficData = {
                 't-1968': { name: '國道即時路況 (1968 高公局)', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car' },
                 't-168': { name: '全台省道路況 (168 即時路況網)', url: 'https://168.thb.gov.tw', icon: 'fa-route' },
@@ -497,7 +510,7 @@
                 container.innerHTML += trafficHtml;
             }
 
-            // 台股財經快報
+            // 2. 台股財經快報
             if (selectedValues.includes('f-yahoo') || selectedValues.includes('f-cnyes')) {
                 let financeHtml = `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
@@ -517,16 +530,42 @@
                 container.innerHTML += financeHtml;
             }
 
-            // 新聞劃重點 (說明文字已改為「焦點新聞每日自動彙整」，並直連 https://myezlife.com/index_news.html)
+            // 3. 新聞劃重點（修正為與其他模組完全一致的按鈕外觀風格，說明文字為「焦點新聞每日自動彙整」）
             if (selectedValues.includes('news-summary')) {
                 container.innerHTML += `
-                    <a href="https://myezlife.com/index_news.html" target="_blank" class="glass-widget block p-3.5 text-slate-900 text-left space-y-1.5 hover:bg-white/30 transition">
-                        <div class="flex justify-between items-center font-bold text-xs">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日新聞劃重點</span>
+                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
+                        <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日新聞劃重點</span>
                             <span class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded">主站直連</span>
                         </div>
-                        <p class="text-[11px] text-slate-700 leading-snug">焦點新聞每日自動彙整</p>
-                    </a>
+                        <div class="space-y-1.5 text-xs">
+                            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex items-center gap-2.5 bg-white/50 hover:bg-white p-2 rounded-xl transition">
+                                <i class="fa-solid fa-bolt text-amber-600"></i>
+                                <span class="font-bold text-slate-900">焦點新聞每日自動彙整</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 4. 今日待辦事項與護眼便籤（使用在精靈中自訂輸入的 3 個項目）
+            if (selectedValues.includes('todo-list')) {
+                const t1 = document.getElementById('todo-1').value || '待辦事項 1';
+                const t2 = document.getElementById('todo-2').value || '待辦事項 2';
+                const t3 = document.getElementById('todo-3').value || '待辦事項 3';
+
+                container.innerHTML += `
+                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
+                        <div class="flex justify-between items-center font-bold text-xs border-b border-black/10 pb-1.5">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 今日待辦與護眼便籤</span>
+                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded">自訂 3 事</span>
+                        </div>
+                        <div class="text-[11px] text-slate-800 space-y-1 pt-1">
+                            <div>☑ ${t1}</div>
+                            <div>☐ ${t2}</div>
+                            <div>☐ ${t3}</div>
+                        </div>
+                    </div>
                 `;
             }
         }
