@@ -233,18 +233,19 @@
       </button>
     </div>
 
-    <!-- 🌟 重新排版的贊助與隨機「深入了解」專區 -->
+    <!-- 重新排版的贊助與隨機「深入了解」專區 -->
     <div class="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-sm">
       
-      <!-- 標題與誠懇說明 -->
+      <!-- 標題與分兩列置中的誠懇說明 -->
       <div class="text-center space-y-1 pb-2 border-b border-slate-100">
         <p class="text-xs font-bold text-slate-800">💖 喜歡本免費工具嗎？</p>
-        <p class="text-[11px] text-slate-500 leading-relaxed">
-          本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！
+        <p class="text-[11px] text-slate-500 leading-relaxed font-medium">
+          本站長期免費提供大眾製作問候圖，<br>
+          歡迎點擊下方贊助商廣告支援伺服器開銷！
         </p>
       </div>
 
-      <!-- 🌟 隨機變動的「深入了解」推薦清單 -->
+      <!-- 隨機變動的「深入了解」推薦清單 -->
       <div>
         <div class="text-[11px] font-bold text-slate-400 mb-2 flex items-center justify-between px-1">
           <span>📖 延伸閱讀與推薦</span>
@@ -274,7 +275,7 @@
     let lastPhotoIndex = -1;
     let currentImageSource = 'system';
 
-    // 🌟 深入了解隨機推薦清單池
+    // 深入了解隨機推薦清單池
     const allRecommendLinks = [
       { title: "學習社交禮儀與長輩互動技巧", url: "https://myezlife.com/" },
       { title: "閱讀社會科學與生活哲學選集", url: "https://myezlife.com/index_news.html" },
@@ -287,9 +288,8 @@
     // 每次載入時隨機挑選 3 個顯示
     function initRandomLinks() {
       const container = document.getElementById('randomLinksContainer');
-      // 隨機打散陣列
       const shuffled = [...allRecommendLinks].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 3); // 取前 3 個
+      const selected = shuffled.slice(0, 3);
 
       container.innerHTML = selected.map(item => `
         <a href="${item.url}" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition text-xs font-semibold text-slate-700 group">
@@ -517,7 +517,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchPhotoUrls();
-      initRandomLinks(); // 頁面載入時隨機產生推薦連結
+      initRandomLinks();
     });
 
     document.getElementById('downloadBtn').addEventListener('click', () => {
