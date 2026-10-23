@@ -132,7 +132,7 @@
         <span class="text-[11px] text-slate-400">客製化祝福語</span>
       </div>
 
-      <!-- 🌟 優化後的背景圖片來源選擇區塊（更顯眼的邊框與底色、完美行距對齊） -->
+      <!-- 背景圖片來源選擇區塊 -->
       <div class="bg-slate-100/90 border border-slate-300 rounded-2xl p-4 space-y-3 shadow-sm">
         <label class="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
           <i class="fa-solid fa-image text-emerald-700"></i> 背景圖片來源
@@ -350,7 +350,7 @@
           }
         }
       } catch (err) {
-        console.warn("無法動態載入 CSV，使用預設圖庫備援：", err);
+        console.warn("無法動態載入 CSV：", err);
       }
     }
 
@@ -418,49 +418,33 @@
       generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 載入與合成圖片中...';
       generateBtn.disabled = true;
 
-      let bgUrl = "";
-
-      if (currentImageSource === 'custom') {
-        const customUrl = document.getElementById('customImageUrlInput').value.trim();
-        if (!customUrl) {
-          alert('請先輸入自訂圖片網址！');
-          generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
-          generateBtn.disabled = false;
-          return;
-        }
-        bgUrl = customUrl;
-      } else {
-        if (customPhotoUrls.length === 0) {
-          await fetchPhotoUrls();
-        }
-
-        if (customPhotoUrls.length > 0) {
-          let randomIndex;
-          do {
-            randomIndex = Math.floor(Math.random() * customPhotoUrls.length);
-          } while (randomIndex === lastPhotoIndex && customPhotoUrls.length > 1);
-          lastPhotoIndex = randomIndex;
-          bgUrl = customPhotoUrls[randomIndex];
-        } else {
-          bgUrl = `https://picsum.photos/768/1024?t=${Date.now()}`;
-        }
+      if (customPhotoUrls.length === 0) {
+        await fetchPhotoUrls();
       }
+
+      if (customPhotoUrls.length === 0) {
+        alert('目前無法讀取您的精選攝影圖庫（CSV），請檢查網路或確認試算表連結是否正確！');
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
+        generateBtn.disabled = false;
+        return;
+      }
+
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * customPhotoUrls.length);
+      } while (randomIndex === lastPhotoIndex && customPhotoUrls.length > 1);
+      lastPhotoIndex = randomIndex;
+      let bgUrl = customPhotoUrls[randomIndex];
 
       let bgImg = null;
       try {
         bgImg = await loadImage(bgUrl);
       } catch (err) {
-        console.warn("載入指定圖片失敗，嘗試備援處理", err);
-        if (currentImageSource === 'custom') {
-          alert('無法讀取該自訂圖片網址，請確認網址是否正確，或是否受跨域政策阻擋。');
-          generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
-          generateBtn.disabled = false;
-          return;
-        } else {
-          try {
-            bgImg = await loadImage(`https://picsum.photos/768/1024?random=${Date.now()}`);
-          } catch (_) {}
-        }
+        console.warn("載入指定圖片失敗", err);
+        alert('無法成功讀取該張攝影作品，請嘗試重新產生或檢查圖片連結是否失效。');
+        generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> 一鍵生成精美早安問候圖';
+        generateBtn.disabled = false;
+        return;
       }
 
       const canvas = compositeCanvas;
@@ -477,8 +461,6 @@
         ctx.filter = 'brightness(1.1) contrast(1.05) saturate(1.2)';
         ctx.drawImage(bgImg, (cw - renderW) / 2, (ch - renderH) / 2, renderW, renderH);
         ctx.filter = 'none';
-      } else {
-        ctx.fillStyle = '#334155'; ctx.fillRect(0, 0, cw, ch);
       }
 
       const gradient = ctx.createLinearGradient(0, 0, 0, ch);
