@@ -40,7 +40,7 @@
             z-index: 1;
         }
 
-        /* 前幾頁設定精靈容器 */
+        /* 設定精靈容器：無論電腦或手機，皆限制最大寬度 (max-w-md mx-auto)，避免電腦版過寬 */
         #wizard-container {
             position: fixed;
             inset: 0;
@@ -53,7 +53,7 @@
             justify-content: space-between;
         }
 
-        /* 最後產生的全螢幕擬真桌面容器 (多頁滑動) */
+        /* 全螢幕桌面容器：限制 max-w-md 讓電腦版也能呈現完美的手機擬真比例 */
         #desktop-container {
             position: fixed;
             inset: 0;
@@ -63,6 +63,11 @@
             justify-content: space-between;
             width: 100vw;
             height: 100vh;
+            max-width: 440px;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
         }
 
         /* 滑動分頁容器 */
@@ -124,8 +129,8 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 前幾頁：完整信任宣言與互動精靈 ================= -->
-    <div id="wizard-container" class="max-w-md mx-auto">
+    <!-- ================= 前幾頁：完整信任宣言與互動精靈 (限制 max-w-md 居中) ================= -->
+    <div id="wizard-container" class="max-w-md mx-auto w-full">
         
         <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
         <section id="page-landing" class="space-y-5 my-auto pb-4">
@@ -231,7 +236,7 @@
             </div>
         </section>
 
-        <!-- PAGE 2: 晨間專屬大分類複選（交通 6 點、台股財經快報、新聞劃重點）與背景設定 -->
+        <!-- PAGE 2: 晨間專屬大分類複選與背景設定 -->
         <section id="page-wizard-2" class="hidden space-y-4 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2：晨間細項複選與背景</div>
             <h2 class="text-sm font-bold text-white mb-1">勾選您早晨上班最想關注的實用模組（皆可自由複選）</h2>
@@ -284,7 +289,7 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（動態渲染勾選項目） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（按鈕全區塊可點，無多餘前往按鈕） ================= -->
     <div id="desktop-container" class="hidden">
         
         <!-- 頂部時間狀態列 -->
@@ -309,9 +314,9 @@
                         <div id="big-date" class="text-xs font-semibold mt-1 opacity-95">10月23日, 週五 (晨間上班模式)</div>
                     </div>
 
-                    <!-- 動態渲染容器：依據使用者在步驟二勾選的項目依序生成 Widget -->
+                    <!-- 動態渲染容器：依據使用者在步驟二勾選的項目生成 Widget (整個按鈕可點，無冗餘前往按鈕) -->
                     <div id="dynamic-widgets-container" class="w-full space-y-3 pb-4">
-                        <!-- 程式碼將依據 checkbox 自動填入對應的 Widget -->
+                        <!-- 動態填入 -->
                     </div>
                 </div>
 
@@ -458,7 +463,7 @@
             }
         });
 
-        // 點擊完成，依據複選項目動態生成桌面 Widgets
+        // 點擊完成，依據複選項目動態生成桌面 Widgets (無冗餘前往按鈕)
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
@@ -469,7 +474,7 @@
             const container = document.getElementById('dynamic-widgets-container');
             container.innerHTML = ''; // 清空重建
 
-            // 交通對應資料
+            // 交通對應資料 (去除了右側前往按鈕，整個區塊為純粹直連)
             const trafficData = {
                 't-1968': { name: '國道即時路況 (1968 高公局)', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car' },
                 't-168': { name: '全台省道路況 (168 即時路況網)', url: 'https://168.thb.gov.tw', icon: 'fa-route' },
@@ -479,7 +484,6 @@
                 't-thsrc': { name: '台灣高鐵時刻與營運資訊', url: 'https://www.thsrc.com.tw/', icon: 'fa-gauge-high' }
             };
 
-            // 檢查是否有選交通項目
             const selectedTraffic = selectedValues.filter(v => v.startsWith('t-'));
             if (selectedTraffic.length > 0) {
                 let trafficHtml = `
@@ -494,12 +498,9 @@
                     const item = trafficData[key];
                     if (item) {
                         trafficHtml += `
-                            <a href="${item.url}" target="_blank" class="flex justify-between items-center bg-white/50 hover:bg-white p-2 rounded-xl transition">
-                                <div class="flex items-center gap-2">
-                                    <i class="fa-solid ${item.icon} text-slate-700"></i>
-                                    <span class="font-bold text-slate-900">${item.name}</span>
-                                </div>
-                                <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded font-bold">前往 ➔</span>
+                            <a href="${item.url}" target="_blank" class="flex items-center gap-2.5 bg-white/50 hover:bg-white p-2 rounded-xl transition">
+                                <i class="fa-solid ${item.icon} text-slate-700"></i>
+                                <span class="font-bold text-slate-900">${item.name}</span>
                             </a>
                         `;
                     }
@@ -508,32 +509,36 @@
                 container.innerHTML += trafficHtml;
             }
 
-            // 台股財經快報
+            // 台股財經快報 (無冗餘前往按鈕)
             if (selectedValues.includes('f-yahoo') || selectedValues.includes('f-cnyes')) {
-                container.innerHTML += `
+                let financeHtml = `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
                         <div class="flex justify-between items-center font-bold text-xs">
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-600"></i> 台股財經快報</span>
                             <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">即時行情</span>
                         </div>
-                        <div class="space-y-1 text-xs">
-                            ${selectedValues.includes('f-yahoo') ? `<a href="https://tw.stock.yahoo.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📈 Yahoo 股市行情與大盤走勢 ➔</a>` : ''}
-                            ${selectedValues.includes('f-cnyes') ? `<a href="https://www.cnyes.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📰 鉅亨網財經新聞與要聞分析 ➔</a>` : ''}
-                        </div>
-                    </div>
+                        <div class="space-y-1.5 text-xs">
                 `;
+                if (selectedValues.includes('f-yahoo')) {
+                    financeHtml += `<a href="https://tw.stock.yahoo.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📈 Yahoo 股市行情與大盤走勢</a>`;
+                }
+                if (selectedValues.includes('f-cnyes')) {
+                    financeHtml += `<a href="https://www.cnyes.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📰 鉅亨網財經新聞與要聞分析</a>`;
+                }
+                financeHtml += `</div></div>`;
+                container.innerHTML += financeHtml;
             }
 
-            // 新聞劃重點
+            // 新聞劃重點 (精準對應 https://myezlife.com/index_news.html，無冗餘按鈕)
             if (selectedValues.includes('news-summary')) {
                 container.innerHTML += `
-                    <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
+                    <a href="https://myezlife.com/index_news.html" target="_blank" class="glass-widget block p-3.5 text-slate-900 text-left space-y-1.5 hover:bg-white/30 transition">
                         <div class="flex justify-between items-center font-bold text-xs">
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日重點新聞劃重點</span>
-                            <a href="https://myezlife.com/index_news.html" target="_blank" class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded">AI 摘要 ➔</a>
+                            <span class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded">主站直連</span>
                         </div>
-                        <p class="text-[11px] text-slate-700 leading-snug">1. 全球淨零碳排政策加速，綠能產業迎來剛性需求。<br>2. 捷運通勤時事重點與 AI 摘要速覽。</p>
-                    </div>
+                        <p class="text-[11px] text-slate-700 leading-snug">點擊快速前往捷運通勤時事重點與 AI 摘要速覽。</p>
+                    </a>
                 `;
             }
         }
