@@ -302,7 +302,7 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已移除底部 5 個按鈕區間，支援打勾與便籤輸入） ================= -->
+    <!-- ================= 最後成果：全螢幕多頁滑動桌面（已移除所有區塊右側文字籤與底部按鈕列） ================= -->
     <div id="desktop-container" class="hidden">
         
         <!-- 3 頁滑動內容區 -->
@@ -386,7 +386,7 @@
             </div>
         </div>
 
-        <!-- 底部僅保留精緻滑動分頁圓點（已完整去除下方 5 個按鈕區間） -->
+        <!-- 底部僅保留精緻滑動分頁圓點 -->
         <div class="fixed bottom-0 left-0 right-0 z-20 pb-4 pt-2 bg-gradient-to-t from-black/20 to-transparent">
             <div class="dots-indicator text-center">
                 <span id="dot-0" class="active"></span>
@@ -453,7 +453,7 @@
             }
         });
 
-        // 點擊完成，依據複選項目動態生成桌面 Widgets
+        // 點擊完成，依據複選項目動態生成桌面 Widgets (已無任何右側文字籤)
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
@@ -478,9 +478,8 @@
             if (selectedTraffic.length > 0) {
                 let trafficHtml = `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                        <div class="border-b border-black/10 pb-1.5">
                             <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-road text-blue-600"></i> 即時交通與通勤路況</span>
-                            <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded">主站直連</span>
                         </div>
                         <div class="space-y-1.5 text-xs">
                 `;
@@ -503,11 +502,10 @@
             if (selectedValues.includes('f-yahoo') || selectedValues.includes('f-cnyes')) {
                 let financeHtml = `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-1.5">
-                        <div class="flex justify-between items-center font-bold text-xs">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-600"></i> 台股財經快報</span>
-                            <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded">即時行情</span>
+                        <div class="border-b border-black/10 pb-1.5">
+                            <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-600"></i> 台股財經快報</span>
                         </div>
-                        <div class="space-y-1.5 text-xs">
+                        <div class="space-y-1.5 text-xs pt-1">
                 `;
                 if (selectedValues.includes('f-yahoo')) {
                     financeHtml += `<a href="https://tw.stock.yahoo.com/" target="_blank" class="block bg-white/50 hover:bg-white p-2 rounded-xl font-bold text-slate-900">📈 Yahoo 股市行情與大盤走勢</a>`;
@@ -523,9 +521,8 @@
             if (selectedValues.includes('news-summary')) {
                 container.innerHTML += `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="flex justify-between items-center border-b border-black/10 pb-1.5">
+                        <div class="border-b border-black/10 pb-1.5">
                             <span class="text-xs font-bold flex items-center gap-1.5"><i class="fa-solid fa-newspaper text-amber-700"></i> 今日新聞劃重點</span>
-                            <span class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded">主站直連</span>
                         </div>
                         <div class="space-y-1.5 text-xs">
                             <a href="https://myezlife.com/index_news.html" target="_blank" class="flex items-center gap-2.5 bg-white/50 hover:bg-white p-2 rounded-xl transition">
@@ -537,7 +534,7 @@
                 `;
             }
 
-            // 4. 互動待辦事項與隨手便籤（支援即時打勾互動與便籤輸入框）
+            // 4. 互動待辦事項與隨手便籤
             if (selectedValues.includes('todo-list')) {
                 const t1 = document.getElementById('todo-1').value || '待辦事項 1';
                 const t2 = document.getElementById('todo-2').value || '待辦事項 2';
@@ -545,9 +542,8 @@
 
                 container.innerHTML += `
                     <div class="glass-widget p-3.5 text-slate-900 text-left space-y-2">
-                        <div class="flex justify-between items-center font-bold text-xs border-b border-black/10 pb-1.5">
+                        <div class="font-bold text-xs border-b border-black/10 pb-1.5">
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-700"></i> 互動待辦清單與隨手便籤</span>
-                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded">可打勾互動</span>
                         </div>
                         
                         <!-- 可打勾的待辦清單 -->
@@ -585,12 +581,6 @@
                 span.style.textDecoration = 'none';
                 span.style.opacity = '1';
             }
-        }
-
-        function backToWizard() {
-            document.getElementById('desktop-container').classList.add('hidden');
-            document.getElementById('wizard-container').classList.remove('hidden');
-            goToStep(1);
         }
 
         function openPage(index) {
