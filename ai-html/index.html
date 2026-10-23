@@ -21,7 +21,7 @@
             background-color: #0f172a;
         }
 
-        /* 沉浸式專屬主題桌布背景 (自成一個精美佈景主題) */
+        /* 沉浸式專屬主題桌布背景 */
         #theme-wallpaper {
             position: fixed;
             inset: 0;
@@ -39,7 +39,7 @@
             z-index: 1;
         }
 
-        /* 前幾頁設定精靈容器 (擁有清晰好讀的卡片底色，絕不簡化) */
+        /* 前幾頁設定精靈與宣言容器 (完整保留) */
         #wizard-container {
             position: fixed;
             inset: 0;
@@ -121,10 +121,10 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 前幾頁：完整保留的設定精靈與信任宣言 ================= -->
+    <!-- ================= 前幾頁：完整保留的信任宣言與互動精靈 ================= -->
     <div id="wizard-container" class="max-w-md mx-auto">
         
-        <!-- PAGE 0: 完整信任宣言落地頁 -->
+        <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
         <section id="page-landing" class="space-y-5 my-auto">
             <div class="text-center">
                 <div class="inline-block p-3 bg-slate-800 text-white rounded-2xl shadow-lg mb-3 border border-slate-700">
@@ -135,56 +135,97 @@
             </div>
 
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-3xl shadow-md text-xs leading-relaxed">
-                <h2 class="font-bold mb-1 flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全</h2>
-                這不是一個強迫綁定的巨型 App。它就像為手機新增一個清爽的**生活佈景主題**——完全不影響手機原本功能，隨時開、隨時用，不用了隨手刪除。
+                <h2 class="font-bold mb-1.5 flex items-center gap-1.5"><i class="fa-solid fa-mobile-screen-button"></i> 就像給手機換個新佈景一樣安全</h2>
+                這不是一個強迫綁定的巨型 App。它就像為手機新增一個清爽的**生活佈景主題**——完全不影響手機原本功能，隨時開、隨時用，不用了隨手刪除，不留痕跡。
             </div>
 
-            <!-- 完整 Q&A 宣言 -->
+            <!-- 完整 Q&A 信任宣言 -->
             <div class="bg-slate-800/95 border border-slate-700 p-4 rounded-3xl space-y-3 text-xs shadow-lg">
-                <h3 class="font-bold text-white border-b border-slate-700 pb-2 flex items-center gap-1.5">
+                <h3 class="font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
                 </h3>
-                <div>
-                    <strong class="text-slate-200">Q: 需要辦帳號或填個資嗎？</strong>
-                    <p class="text-slate-300 pl-3">完全不用！零個資追蹤，所有設定僅存於您自己的手機本機。</p>
+
+                <div class="space-y-1">
+                    <strong class="text-slate-200">Q: 這東西跑在哪裡？需要辦帳號嗎？</strong>
+                    <p class="text-slate-300 pl-4">完全不用！免申請帳號、免填 Email，純前端架構直接運行。</p>
                 </div>
-                <div>
-                    <strong class="text-slate-200">Q: 之後不想用了怎麼辦？</strong>
-                    <p class="text-slate-300 pl-3">直接像刪除普通捷徑一樣移除，不留任何痕跡。</p>
+
+                <div class="space-y-1">
+                    <strong class="text-slate-200">Q: 會不會收集我的個人隱私資料？</strong>
+                    <p class="text-slate-300 pl-4">零個資、零追蹤。所有選定偏好均安全存於您自己的手機本機。</p>
+                </div>
+
+                <div class="space-y-1">
+                    <strong class="text-slate-200">Q: 如果以後不想用了怎麼辦？</strong>
+                    <p class="text-slate-300 pl-4">直接將手機桌面上的捷徑像刪 App 一樣刪除即可，不留任何痕跡。</p>
                 </div>
             </div>
 
-            <button onclick="goToWizardStep(1)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 px-6 rounded-2xl shadow-lg transition text-sm flex items-center justify-center gap-2">
-                <span>我了解了，開始打造我的佈景主題</span>
+            <button onclick="goToStep(1)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3.5 px-6 rounded-2xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+                <span>我了解了，開始打造我的專屬主題</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </section>
 
-        <!-- PAGE 1: 選擇偏好與自訂背景 -->
-        <section id="page-wizard" class="hidden space-y-5 my-auto">
-            <div>
-                <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">個性化設定</div>
-                <h2 class="text-lg font-bold text-white mb-2">自訂你的佈景主題與桌面工具</h2>
-                <p class="text-xs text-slate-300">打造專屬於你的多頁 Widget 手機桌面。</p>
+        <!-- PAGE 1: 選擇當下節奏 -->
+        <section id="page-wizard-1" class="hidden space-y-5 my-auto">
+            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 1 / 2</div>
+            <h2 class="text-lg font-bold text-white mb-2">您現在正處於什麼樣的節奏？</h2>
+            <p class="text-xs text-slate-300 mb-4">跟著此時此刻的心情與身分走。</p>
+            
+            <div class="space-y-3 text-xs">
+                <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('morning', this)">
+                    <div class="text-xl">🌅</div>
+                    <div>
+                        <h3 class="font-bold text-white text-xs">晨間甦醒 / 準備啟動</h3>
+                        <p class="text-[11px] text-slate-300">關注天氣、台股與今日待辦。</p>
+                    </div>
+                </div>
+                <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('work', this)">
+                    <div class="text-xl">💻</div>
+                    <div>
+                        <h3 class="font-bold text-white text-xs">白日專注 / 正在工作中</h3>
+                        <p class="text-[11px] text-slate-300">處理事務、通勤與高效導航。</p>
+                    </div>
+                </div>
+                <div class="option-card border border-slate-700 bg-slate-900/60 rounded-2xl p-4 cursor-pointer transition hover:border-blue-400 hover:bg-blue-500/20 flex items-center gap-3" onclick="selectState('night', this)">
+                    <div class="text-xl">🌙</div>
+                    <div>
+                        <h3 class="font-bold text-white text-xs">夜間放鬆 / 沉澱休息</h3>
+                        <p class="text-[11px] text-slate-300">聽首好歌、寫心情隨筆與放空。</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-4 text-xs bg-slate-800/90 border border-slate-700 p-4 rounded-3xl">
+            <div class="flex justify-between items-center pt-3">
+                <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言</button>
+                <button id="next-btn-1" disabled onclick="goToStep(2)" class="bg-slate-700 text-slate-400 text-xs font-medium py-2.5 px-5 rounded-xl transition cursor-not-allowed">下一步</button>
+            </div>
+        </section>
+
+        <!-- PAGE 2: 選擇核心小幫手與自訂桌布 -->
+        <section id="page-wizard-2" class="hidden space-y-4 my-auto">
+            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2</div>
+            <h2 class="text-lg font-bold text-white mb-2">個性化工具與桌面背景</h2>
+            <p class="text-xs text-slate-300 mb-3">設定你的自訂背景照片與小工具。</p>
+
+            <div class="space-y-3 text-xs bg-slate-800/90 border border-slate-700 p-4 rounded-3xl">
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1.5">🖼️ 更換你的桌面背景照片：</label>
-                    <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-300 bg-slate-900 p-2.5 rounded-xl border border-slate-700">
+                    <label class="block text-slate-300 font-semibold mb-1">🖼️ 上傳你的手機桌面背景照片：</label>
+                    <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-300 bg-slate-900 p-2 rounded-xl border border-slate-700">
                 </div>
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1.5">🚌 通勤公車動態設定：</label>
-                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-amber-400 font-bold">
-                        已預設：汐止/南港線 (藍21, 藍22, 藍23)
+                    <label class="block text-slate-300 font-semibold mb-1">🚌 公車動態站牌設定：</label>
+                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-amber-400 font-bold">
+                        已預設：通勤線 (藍21, 藍22, 藍23)
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-between items-center pt-2">
-                <button onclick="backToLanding()" class="text-xs text-slate-300 hover:text-white py-2 px-3">返回宣言</button>
+                <button onclick="goToStep(1)" class="text-xs text-slate-300 hover:text-white py-2 px-3">上一步</button>
                 <button onclick="finishWizardToDesktop()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-xl shadow-md text-xs transition">
-                    完成設定，進入專屬桌面 ✨
+                    完成設定，進入擬真桌面 ✨
                 </button>
             </div>
         </section>
@@ -311,7 +352,7 @@
                     <div class="flex justify-center" onclick="openPage(0)"><div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-lg">💬</div></div>
                     <div class="flex justify-center" onclick="openPage(1)"><div class="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center text-xl shadow-lg">🟢</div></div>
                     <div class="flex justify-center" onclick="openPage(2)"><div class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-xl shadow-lg">📷</div></div>
-                    <!-- 齒輪：隨時返回前幾頁設定精靈 -->
+                    <!-- 齒輪：隨時返回精靈設定 -->
                     <div class="flex justify-center" onclick="backToWizard()"><div class="w-12 h-12 bg-slate-700 rounded-2xl flex items-center justify-center text-xl shadow-lg">⚙️</div></div>
                     <div class="flex justify-center" onclick="alert('選單')"><div class="w-12 h-12 bg-black/40 border border-white/30 rounded-2xl flex items-center justify-center text-xl shadow-lg">⣿</div></div>
                 </div>
@@ -322,6 +363,7 @@
 
     <!-- JavaScript 邏輯控制 -->
     <script>
+        let userChoices = { state: null };
         let currentPage = 0;
 
         function updateClock() {
@@ -337,17 +379,37 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        function goToWizardStep(step) {
+        function goToStep(step) {
             document.getElementById('page-landing').classList.add('hidden');
-            document.getElementById('page-wizard').classList.remove('hidden');
+            document.getElementById('page-wizard-1').classList.add('hidden');
+            document.getElementById('page-wizard-2').classList.add('hidden');
+
+            if (step === 1) {
+                document.getElementById('page-wizard-1').classList.remove('hidden');
+            } else if (step === 2) {
+                document.getElementById('page-wizard-2').classList.remove('hidden');
+            }
         }
 
         function backToLanding() {
-            document.getElementById('page-wizard').classList.add('hidden');
+            document.getElementById('page-wizard-1').classList.add('hidden');
             document.getElementById('page-landing').classList.remove('hidden');
         }
 
-        // 上傳自訂背景桌布
+        function selectState(stateVal, element) {
+            document.querySelectorAll('#page-wizard-1 .option-card').forEach(card => {
+                card.classList.remove('border-blue-400', 'bg-blue-500/20');
+            });
+            element.classList.add('border-blue-400', 'bg-blue-500/20');
+            userChoices.state = stateVal;
+
+            const nextBtn = document.getElementById('next-btn-1');
+            nextBtn.removeAttribute('disabled');
+            nextBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+            nextBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+        }
+
+        // 上傳自訂桌布背景
         document.getElementById('wallpaper-upload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -359,7 +421,7 @@
             }
         });
 
-        // 點擊完成，隱藏精靈，顯示帶有桌布的多頁滑動桌面
+        // 點擊完成，進入桌面
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
@@ -369,7 +431,7 @@
         function backToWizard() {
             document.getElementById('desktop-container').classList.add('hidden');
             document.getElementById('wizard-container').classList.remove('hidden');
-            document.getElementById('page-wizard').classList.remove('hidden');
+            goToStep(1);
         }
 
         // 切換分頁
