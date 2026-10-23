@@ -29,7 +29,7 @@
             background-position: center;
             background-image: url('https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop');
             z-index: 0;
-            transition: background-image 0.3s ease;
+            transition: background-image 0.5s ease;
         }
 
         .wallpaper-overlay {
@@ -121,7 +121,7 @@
     <div id="theme-wallpaper"></div>
     <div class="wallpaper-overlay"></div>
 
-    <!-- ================= 前幾頁：完整保留當初討論的信任宣言與互動精靈 ================= -->
+    <!-- ================= 前幾頁：完整信任宣言與互動精靈 ================= -->
     <div id="wizard-container" class="max-w-md mx-auto">
         
         <!-- PAGE 0: 完整安心坦白宣言落地頁 -->
@@ -143,7 +143,7 @@
                 </p>
             </div>
 
-            <!-- 完整 Q&A 信任宣言 (完整還原) -->
+            <!-- 完整 Q&A 信任宣言 -->
             <div class="bg-slate-800/95 border border-slate-700 p-5 rounded-3xl space-y-4 text-xs shadow-lg">
                 <h3 class="text-sm font-bold text-white border-b border-slate-700 pb-2.5 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-blue-400"></i> 使用前的安心坦白宣言
@@ -228,7 +228,7 @@
             </div>
         </section>
 
-        <!-- PAGE 2: 選擇核心小幫手與自訂桌布 -->
+        <!-- PAGE 2: 選擇背景照片與確認 -->
         <section id="page-wizard-2" class="hidden space-y-4 my-auto">
             <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">步驟 2 / 2</div>
             <h2 class="text-lg font-bold text-white mb-2">個性化工具與桌面背景</h2>
@@ -240,9 +240,9 @@
                     <input type="file" id="wallpaper-upload" accept="image/*" class="w-full text-xs text-slate-300 bg-slate-900 p-2 rounded-xl border border-slate-700">
                 </div>
                 <div>
-                    <label class="block text-slate-300 font-semibold mb-1">🚌 公車動態站牌設定：</label>
-                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-amber-400 font-bold">
-                        已預設：汐止/南港線 (藍21, 藍22, 藍23)
+                    <label class="block text-slate-300 font-semibold mb-1">✨ 當前選擇的節奏：</label>
+                    <div id="selected-state-display" class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 text-blue-400 font-bold">
+                        尚未選擇
                     </div>
                 </div>
             </div>
@@ -256,7 +256,7 @@
         </section>
     </div>
 
-    <!-- ================= 最後成果：多頁滑動擬真手機桌面 ================= -->
+    <!-- ================= 最後成果：多頁滑動擬真手機桌面 (動態反映節奏選擇) ================= -->
     <div id="desktop-container" class="hidden max-w-md mx-auto">
         
         <!-- 頂部時間狀態列 -->
@@ -274,11 +274,16 @@
         <div class="flex-1 overflow-hidden relative">
             <div id="swiper" class="swiper-container">
                 
-                <!-- 【第 1 頁】：大時鐘主頁 -->
-                <div class="swiper-page flex flex-col justify-start pt-16 items-center text-center">
+                <!-- 【第 1 頁】：動態反映節奏的主頁 Widget -->
+                <div class="swiper-page flex flex-col justify-start pt-10 items-center text-center space-y-4">
                     <div class="drop-shadow-lg">
                         <div id="big-clock" class="text-6xl font-bold tracking-tight">15:57:56</div>
                         <div id="big-date" class="text-sm font-semibold mt-2 opacity-95">10月23日, 週五</div>
+                    </div>
+
+                    <!-- 根據步驟 1 選擇動態渲染的節奏 Widget -->
+                    <div id="dynamic-state-widget" class="glass-widget w-full p-4 text-slate-900 text-left space-y-2">
+                        <!-- 動態填入 -->
                     </div>
                 </div>
 
@@ -383,7 +388,7 @@
 
     <!-- JavaScript 邏輯控制 -->
     <script>
-        let userChoices = { state: null };
+        let userChoices = { state: 'morning' }; // 預設晨間
         let currentPage = 0;
 
         function updateClock() {
@@ -423,6 +428,14 @@
             element.classList.add('border-blue-400', 'bg-blue-500/20');
             userChoices.state = stateVal;
 
+            // 更新步驟 2 的顯示文字
+            const displayMap = {
+                'morning': '🌅 晨間甦醒 / 準備啟動',
+                'work': '💻 白日專注 / 正在工作中',
+                'night': '🌙 夜間放鬆 / 沉澱休息'
+            };
+            document.getElementById('selected-state-display').innerText = displayMap[stateVal];
+
             const nextBtn = document.getElementById('next-btn-1');
             nextBtn.removeAttribute('disabled');
             nextBtn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
@@ -441,10 +454,38 @@
             }
         });
 
-        // 點擊完成，進入桌面
+        // 點擊完成，進入桌面（根據選擇的 state 動態渲染 Widget）
         function finishWizardToDesktop() {
             document.getElementById('wizard-container').classList.add('hidden');
             document.getElementById('desktop-container').classList.remove('hidden');
+
+            // 根據 userChoices.state 動態渲染第一頁的專屬 Widget
+            const stateWidget = document.getElementById('dynamic-state-widget');
+            if (userChoices.state === 'morning') {
+                stateWidget.innerHTML = `
+                    <div class="flex justify-between items-center font-bold text-xs">
+                        <span>🌅 早安！新的一天充滿希望</span>
+                        <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full">晨間模式</span>
+                    </div>
+                    <p class="text-[11px] text-slate-700">今日待辦：查看氣象與台股盤勢，準備迎接美好早晨。</p>
+                `;
+            } else if (userChoices.state === 'work') {
+                stateWidget.innerHTML = `
+                    <div class="flex justify-between items-center font-bold text-xs">
+                        <span>💻 專注中！高效處理今日事務</span>
+                        <span class="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full">工作模式</span>
+                    </div>
+                    <p class="text-[11px] text-slate-700">保持專注，隨時掌握通勤動態與高效工具導航。</p>
+                `;
+            } else {
+                stateWidget.innerHTML = `
+                    <div class="flex justify-between items-center font-bold text-xs">
+                        <span>🌙 晚安！卸下忙碌，享受放鬆</span>
+                        <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded-full">放鬆模式</span>
+                    </div>
+                    <p class="text-[11px] text-slate-700">沉澱心靈，聽首好歌、寫下今日心情隨筆與靈感。</p>
+                `;
+            }
         }
 
         // 點擊齒輪返回設定精靈
