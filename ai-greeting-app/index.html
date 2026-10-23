@@ -88,7 +88,7 @@
     </div>
   </div>
 
-  <!-- 頂部導覽列（統一採用 max-w-xl 確保上下寬度完全一致） -->
+  <!-- 頂部導覽列 -->
   <header class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-sm">
     <div class="max-w-xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
@@ -104,7 +104,7 @@
     </div>
   </header>
 
-  <!-- 主要內容區（統一使用 max-w-xl 單欄置中，確保所有區塊上下寬度完美對齊） -->
+  <!-- 主要內容區 -->
   <main class="max-w-xl mx-auto px-4 mt-5 space-y-4 fade-in">
 
     <!-- 迎賓視覺區塊 -->
@@ -233,16 +233,35 @@
       </button>
     </div>
 
-    <!-- Google AdSense 廣告區塊 -->
-    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 text-center space-y-2 shadow-sm">
-      <p class="text-xs text-slate-700 font-medium">💖 喜歡本免費工具嗎？</p>
-      <p class="text-[11px] text-slate-500">本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！</p>
+    <!-- 🌟 重新排版的贊助與隨機「深入了解」專區 -->
+    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 space-y-3 shadow-sm">
       
-      <div class="mt-2 min-h-[90px]">
+      <!-- 標題與誠懇說明 -->
+      <div class="text-center space-y-1 pb-2 border-b border-slate-100">
+        <p class="text-xs font-bold text-slate-800">💖 喜歡本免費工具嗎？</p>
+        <p class="text-[11px] text-slate-500 leading-relaxed">
+          本站長期免費提供大眾製作問候圖，歡迎點擊下方贊助商廣告支援伺服器開銷！
+        </p>
+      </div>
+
+      <!-- 🌟 隨機變動的「深入了解」推薦清單 -->
+      <div>
+        <div class="text-[11px] font-bold text-slate-400 mb-2 flex items-center justify-between px-1">
+          <span>📖 延伸閱讀與推薦</span>
+          <span class="text-[10px] text-emerald-600">✨ 每次重新整理隨機推薦</span>
+        </div>
+        <div id="randomLinksContainer" class="space-y-1.5">
+          <!-- 由 JS 隨機載入 -->
+        </div>
+      </div>
+
+      <!-- Google AdSense 真實廣告區塊 -->
+      <div class="mt-3 pt-2 border-t border-slate-100 min-h-[90px] flex items-center justify-center bg-slate-50 rounded-xl overflow-hidden">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </div>
+
     </div>
 
   </main>
@@ -254,6 +273,31 @@
     let customPhotoUrls = [];
     let lastPhotoIndex = -1;
     let currentImageSource = 'system';
+
+    // 🌟 深入了解隨機推薦清單池
+    const allRecommendLinks = [
+      { title: "學習社交禮儀與長輩互動技巧", url: "https://myezlife.com/" },
+      { title: "閱讀社會科學與生活哲學選集", url: "https://myezlife.com/index_news.html" },
+      { title: "探索基督教書籍與心靈慰藉", url: "https://myezlife.com/FileExplorer.html" },
+      { title: "好歌一直聽：雲端試算表影音牆", url: "https://myezlife.com/goldmelody_csv.html" },
+      { title: "AI好劇一直看：精選影集清單", url: "https://youtube.com/playlist?list=PLeSu4EJy_yAQ&si=nW1vtYKbmn12uMex" },
+      { title: "生活‧簡居‧生活：找回內心平靜", url: "https://myezlife.com/index-1.html" }
+    ];
+
+    // 每次載入時隨機挑選 3 個顯示
+    function initRandomLinks() {
+      const container = document.getElementById('randomLinksContainer');
+      // 隨機打散陣列
+      const shuffled = [...allRecommendLinks].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 3); // 取前 3 個
+
+      container.innerHTML = selected.map(item => `
+        <a href="${item.url}" target="_blank" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition text-xs font-semibold text-slate-700 group">
+          <span>${item.title}</span>
+          <i class="fa-solid fa-chevron-right text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
+        </a>
+      `).join('');
+    }
 
     function switchImageSource(source) {
       currentImageSource = source;
@@ -473,6 +517,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchPhotoUrls();
+      initRandomLinks(); // 頁面載入時隨機產生推薦連結
     });
 
     document.getElementById('downloadBtn').addEventListener('click', () => {
