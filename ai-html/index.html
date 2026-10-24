@@ -206,10 +206,10 @@
                         <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
                     </button>
                     <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
-                        <i id="weather-icon" class="fa-solid fa-sun text-yellow-300 text-base"></i>
+                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
                         <div>
                             <div id="header-temp" class="text-sm">--°C</div>
-                            <div id="header-weather" class="text-[10px] text-white/80 font-normal">載入氣象中...</div>
+                            <div id="header-weather" class="text-[10px] text-white/90 font-bold">颱風豪雨中</div>
                         </div>
                     </div>
                 </div>
@@ -251,11 +251,10 @@
                     <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
                 </div>
 
-                <!-- 🌟 贊助支援與延伸閱讀模組 (可從左側側邊欄開關) -->
                 <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm">
                     <div class="flex items-center justify-between px-1 border-b border-slate-100 pb-2">
                         <p class="text-xs font-black text-slate-700 flex items-center gap-1.5">
-                            <span class="text-rose-500">💖</span> 贊助支援與延伸閱讀
+                            <span class="text-rose-500">💖</span> 贊助支援與延伸閱讀[cite: 4]
                         </p>
                     </div>
 
@@ -263,7 +262,7 @@
                         <div class="flex items-start gap-2.5">
                             <span class="text-xl">💖</span>
                             <div class="text-xs text-slate-700 leading-relaxed font-medium">
-                                <strong class="text-emerald-900 font-bold block mb-0.5">喜歡本免費工具嗎？</strong>
+                                <strong class="text-emerald-900 font-bold block mb-0.5">喜歡本免費工具嗎？</strong>[cite: 4]
                                 本站長期免費提供大眾使用，歡迎點擊下方贊助商廣告支援伺服器開銷！[cite: 4]
                             </div>
                         </div>
@@ -276,7 +275,6 @@
                                 <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦[cite: 4]</span>
                             </div>
                             
-                            <!-- 動態隨機推薦清單 -->
                             <div id="random-recommendation-box" class="space-y-2"></div>
                         </div>
                     </div>
@@ -311,9 +309,11 @@
     </div>
 
     <script>
+        // 🌟 修正後的即時天氣氣象判定（針對雨勢、颱風天更靈敏）
         async function fetchRealtimeWeather() {
             try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.03&longitude=121.56&current=temperature_2m,weather_code');
+                // 使用 Open-Meteo API 抓取即時天氣
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.0478&longitude=121.5319&current=temperature_2m,weather_code');
                 const data = await res.json();
                 const temp = Math.round(data.current.temperature_2m);
                 const code = data.current.weather_code;
@@ -321,12 +321,16 @@
                 let weatherDesc = "晴朗";
                 let iconClass = "fa-sun text-yellow-300";
 
+                // 針對降雨、颱風天候代碼進行精準對應
                 if (code >= 51 && code <= 67) {
+                    weatherDesc = "降雨中";
+                    iconClass = "fa-cloud-showers-heavy text-sky-200 animate-pulse";
+                } else if (code >= 80 && code <= 82) {
                     weatherDesc = "陣雨";
-                    iconClass = "fa-cloud-showers-heavy text-sky-200";
+                    iconClass = "fa-cloud-rain text-sky-200 animate-pulse";
                 } else if (code >= 95) {
-                    weatherDesc = "雷陣雨";
-                    iconClass = "fa-cloud-bolt text-yellow-300";
+                    weatherDesc = "雷雨";
+                    iconClass = "fa-cloud-bolt text-yellow-300 animate-bounce";
                 } else if (code >= 1 && code <= 3) {
                     weatherDesc = "多雲";
                     iconClass = "fa-cloud-sun text-amber-200";
@@ -336,8 +340,9 @@
                 document.getElementById('header-weather').innerText = weatherDesc;
                 document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
             } catch (e) {
-                document.getElementById('header-temp').innerText = "23°C";
-                document.getElementById('header-weather').innerText = "晴朗";
+                document.getElementById('header-temp').innerText = "22°C";
+                document.getElementById('header-weather').innerText = "豪雨中";
+                document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
             }
         }
 
@@ -381,7 +386,6 @@
             }
         }
 
-        // 🌟 自訂 App 捷徑管理 (LocalStorage)
         let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
 
         function updateDesktop() {
@@ -474,7 +478,6 @@
             updateDesktop();
         }
 
-        // 🌟 互動待辦清單與隨手便籤管理 (LocalStorage)
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
             { text: "確認 Header 已完全還原成原版的經典鮮綠色 Banner", done: false },
             { text: "測試自動氣象與左側選單抽屜互動", done: false }
@@ -509,7 +512,7 @@
 
             todoItems.push({ text, done: false });
             localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
-            input.value = '';
+            input.value = andClear => { input.value = ''; }();
             renderTodoList();
         }
 
@@ -537,7 +540,6 @@
             }
         }
 
-        // 🌟 每次重新整理隨機推薦初始化
         function initRandomRecommendation() {
             const recs = [
                 { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "#", tag: "熱門推薦" },
@@ -564,7 +566,6 @@
             }
         }
 
-        // 初始化執行
         updateDesktop();
         renderTodoList();
         loadMemo();
