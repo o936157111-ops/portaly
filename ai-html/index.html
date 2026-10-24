@@ -6,7 +6,7 @@
     <title>myezlife.com | 我的個人化數位生活儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 🌟 引入強大且支援手機觸控拖曳的 SortableJS -->
+    <!-- 引入 SortableJS 支援手機與電腦的拖曳排序 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         body {
@@ -149,7 +149,6 @@
             text-overflow: ellipsis;
             max-width: 75px;
         }
-        /* 拖曳中的卡片視覺放大效果 */
         .sortable-ghost {
             opacity: 0.3;
             transform: scale(0.95);
@@ -271,29 +270,30 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 重新優化手機與電腦雙適應的綠色 Banner 排版 -->
-            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 relative">
-                <!-- 左側：Logo 觸發按鈕 + 氣象膠囊 -->
-                <div class="flex items-center gap-2 md:gap-3">
-                    <button onclick="toggleSidebar()" class="p-1 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shrink-0" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-8 h-8 md:w-9 md:h-9 object-contain">
+            <!-- 🌟 完美修復：手機與電腦皆美觀的上下分層綠色 Banner 排版 -->
+            <header class="green-banner p-4 md:p-5 flex flex-col gap-3 relative">
+                <!-- 上半部：Logo 與氣象膠囊 -->
+                <div class="flex justify-between items-center">
+                    <button onclick="toggleSidebar()" class="p-1 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-11 h-11 shrink-0 shadow-sm" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-8 h-8 object-contain">
                     </button>
-                    <div class="bg-black/15 backdrop-blur px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-xl border border-white/20 flex items-center gap-1.5 text-xs font-bold">
-                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm md:text-base"></i>
+                    <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
+                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
                         <div>
-                            <div id="header-temp" class="text-xs md:text-sm font-black">21°C</div>
-                            <div id="header-weather" class="text-[9px] md:text-[10px] text-white/90 font-bold whitespace-nowrap">颱風豪雨中</div>
+                            <div id="header-temp" class="text-sm font-black">21°C</div>
+                            <div id="header-weather" class="text-[10px] text-white/90 font-bold">颱風豪雨中</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 右側：日期、大時間與星期 -->
-                <div class="flex flex-col items-end text-right">
-                    <div class="flex items-center gap-2">
-                        <span id="header-date" class="text-[10px] md:text-xs text-white/90 font-medium tracking-wide">載入中...</span>
-                        <span id="header-weekday" class="bg-black/20 backdrop-blur px-2 py-0.5 rounded-lg border border-white/20 text-[10px] md:text-xs font-bold">載入中...</span>
+                <!-- 下半部：日期、大時間與星期 (置中對齊，質感滿分) -->
+                <div class="text-center pt-1 border-t border-white/15">
+                    <div class="flex items-center justify-center gap-2 text-white/90 text-xs font-medium tracking-wide mb-0.5">
+                        <span id="header-date">載入中...</span>
+                        <span class="opacity-60">|</span>
+                        <span id="header-weekday" class="bg-black/20 px-2 py-0.5 rounded-lg border border-white/20 font-bold text-[11px]">載入中...</span>
                     </div>
-                    <div id="header-time" class="text-2xl md:text-4xl font-extrabold tracking-wider leading-none mt-1 drop-shadow-sm">00:00</div>
+                    <div id="header-time" class="text-4xl md:text-5xl font-extrabold tracking-wider drop-shadow-sm">00:00</div>
                 </div>
             </header>
 
@@ -306,7 +306,7 @@
                         </h2>
                         <span class="text-[11px] text-slate-400">💡 提示：手機/電腦均可長按圖示滑動調換順序</span>
                     </div>
-                    <!-- 🌟 可拖曳 App 網格容器 -->
+                    <!-- 支援拖曳的 App 網格容器 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
@@ -406,11 +406,11 @@
 
                 document.getElementById('header-temp').innerText = `${temp}°C`;
                 document.getElementById('header-weather').innerText = weatherDesc;
-                document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-sm md:text-base`;
+                document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
             } catch (e) {
                 document.getElementById('header-temp').innerText = "21°C";
                 document.getElementById('header-weather').innerText = "颱風豪雨中";
-                document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm md:text-base";
+                document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
             }
         }
 
@@ -554,7 +554,6 @@
             document.getElementById('desktop-todo-card').style.display = showTodo ? 'block' : 'none';
             document.getElementById('desktop-sponsor-card').style.display = showSponsor ? 'block' : 'none';
 
-            // 🌟 重新初始化 SortableJS（完美相容手機觸控與電腦滑鼠拖曳）
             if (sortableInstance) {
                 sortableInstance.destroy();
             }
@@ -563,10 +562,9 @@
                 animation: 200,
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
-                delay: 100, // 長按 100ms 觸發拖曳，避免誤觸點擊開網頁
+                delay: 100,
                 delayOnTouchOnly: true,
                 onEnd: function () {
-                    // 拖曳結束後，自動擷取新順序並寫入 localStorage
                     const newOrder = Array.from(grid.children).map(item => item.getAttribute('data-id'));
                     appOrder = newOrder;
                     localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
