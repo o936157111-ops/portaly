@@ -106,23 +106,25 @@
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: 16px;
         }
-        .app-icon {
+        .app-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: grab;
-            text-decoration: none;
             transition: transform 0.2s, opacity 0.2s;
+            user-select: none;
         }
-        .app-icon:active {
+        .app-item:active {
             cursor: grabbing;
         }
-        .app-icon:hover {
-            transform: translateY(-3px);
+        .app-item.dragging {
+            opacity: 0.3;
         }
-        .app-icon.dragging {
-            opacity: 0.4;
+        .app-item.drag-over {
+            border: 2px dashed #00a600;
+            border-radius: 16px;
+            background: rgba(0, 166, 0, 0.05);
         }
         .app-box {
             width: 64px;
@@ -170,7 +172,7 @@
         <div class="space-y-3 text-xs">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
             
-            <!-- 🌟 交通與通勤模組（支援群組全選與摺疊收合） -->
+            <!-- 交通與大眾運輸群組 -->
             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2">
                 <div class="flex items-center justify-between">
                     <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-[11px]">
@@ -209,7 +211,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 台股財經與鉅亨網模組（支援群組全選、獨立選取與摺疊收合） -->
+            <!-- 台股財經與鉅亨網群組 -->
             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2">
                 <div class="flex items-center justify-between">
                     <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-[11px]">
@@ -294,7 +296,7 @@
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                             <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
                         </h2>
-                        <span class="text-xs text-slate-400">💡 提示：可直接用滑鼠拖曳圖示來調整排列順序</span>
+                        <span class="text-xs text-slate-400">💡 提示：按住任一 App 圖示即可拖曳調換順序</span>
                     </div>
                     <!-- 支援拖曳排序的 App 網格 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
@@ -445,7 +447,7 @@
             }
         }
 
-        // 🌟 側邊欄群組全選與摺疊收合功能
+        // 側邊欄群組全選與摺疊收合功能
         function toggleGroup(groupName) {
             const groupCheckbox = document.getElementById(`group-${groupName}`);
             const items = document.querySelectorAll(`.${groupName}-item`);
@@ -467,7 +469,6 @@
             }
         }
 
-        // 🌟 預設內建 App 清單與自訂 App（支援拖曳排序與 localStorage 記憶）
         let defaultApps = [
             { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-blue-600', modId: 'mod-highway' },
             { id: 'provincial', name: '省道路況168', url: 'https://168.thb.gov.tw', icon: 'fa-road text-orange-600', modId: 'mod-provincial' },
@@ -490,7 +491,6 @@
             const showTodo = document.getElementById('mod-todo').checked;
             const showSponsor = document.getElementById('mod-sponsor').checked;
 
-            // 建立所有可用 App 的對照字典
             let appMap = {};
             defaultApps.forEach(app => {
                 const checkbox = document.getElementById(app.modId);
@@ -514,30 +514,47 @@
                 };
             });
 
-            // 依照使用者排序渲染
             appOrder.forEach(id => {
                 if (appMap[id] && appMap[id].visible) {
                     const app = appMap[id];
+                    let div = document.createElement('div');
+                    div.className = 'app-item relative';
+                    div.setAttribute('draggable', 'true');
+                    div.setAttribute('data-id', id);
+
                     if (app.isCustom) {
-                        grid.innerHTML += `
-                            <div class="app-icon relative group" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" data-id="${id}">
-                                <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                                    <div class="app-box ${app.icon}"><i class="fa-solid ${app.icon.split(' ')[0]}"></i></div>
-                                    <span class="app-label">${app.name}</span>
-                                </a>
-                                <button onclick="removeCustomApp(${app.customIndex})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
-                            </div>
+                        div.innerHTML = `
+                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none" onclick="if(isDragging) { event.preventDefault(); }">
+                                <div class="app-box"><i class="fa-solid fa-globe text-purple-600"></i></div>
+                                <span class="app-label">${app.name}</span>
+                            </a>
+                            <button onclick="removeCustomApp(${app.customIndex})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
                         `;
+                        div.classList.add('group');
                     } else {
-                        grid.innerHTML += `
-                            <div class="app-icon" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" data-id="${id}">
-                                <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                                    <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]}"></i></div>
-                                    <span class="app-label">${app.name}</span>
-                                </a>
-                            </div>
+                        div.innerHTML = `
+                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none pointer-events-none">
+                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]}"></i></div>
+                                <span class="app-label">${app.name}</span>
+                            </a>
                         `;
+                        // 讓內部連結可點擊，但拖曳時攔截
+                        const aTag = div.querySelector('a');
+                        aTag.style.pointerEvents = 'auto';
+                        aTag.addEventListener('click', (e) => {
+                            if (isDragging) {
+                                e.preventDefault();
+                            }
+                        });
                     }
+
+                    // 🌟 強化版拖曳事件綁定
+                    div.addEventListener('dragstart', handleDragStart);
+                    div.addEventListener('dragend', handleDragEnd);
+                    div.addEventListener('dragover', handleDragOver);
+                    div.addEventListener('drop', handleDrop);
+
+                    grid.appendChild(div);
                 }
             });
 
@@ -545,34 +562,46 @@
             document.getElementById('desktop-sponsor-card').style.display = showSponsor ? 'block' : 'none';
         }
 
-        // 🌟 拖曳排序功能 (HTML5 Drag and Drop)
-        let draggedId = null;
+        // 🌟 穩健的拖曳排序控制邏輯
+        let draggedSrcEl = null;
+        let isDragging = false;
 
-        function drag(event) {
-            draggedId = event.currentTarget.getAttribute('data-id');
-            event.currentTarget.classList.add('dragging');
+        function handleDragStart(e) {
+            isDragging = true;
+            draggedSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', this.getAttribute('data-id'));
+            this.classList.add('dragging');
         }
 
-        function allowDrop(event) {
-            event.preventDefault();
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
         }
 
-        function drop(event) {
-            event.preventDefault();
-            const targetNode = event.currentTarget.closest('[data-id]');
-            if (!targetNode) return;
-            const targetId = targetNode.getAttribute('data-id');
+        function handleDrop(e) {
+            e.stopPropagation();
+            if (draggedSrcEl !== this) {
+                const srcId = draggedSrcEl.getAttribute('data-id');
+                const targetId = this.getAttribute('data-id');
 
-            if (draggedId && targetId && draggedId !== targetId) {
-                const fromIndex = appOrder.indexOf(draggedId);
-                const toIndex = appOrder.indexOf(targetId);
-                if (fromIndex > -1 && toIndex > -1) {
-                    appOrder.splice(fromIndex, 1);
-                    appOrder.splice(toIndex, 0, draggedId);
+                const oldIndex = appOrder.indexOf(srcId);
+                const newIndex = appOrder.indexOf(targetId);
+
+                if (oldIndex > -1 && newIndex > -1) {
+                    appOrder.splice(oldIndex, 1);
+                    appOrder.splice(newIndex, 0, srcId);
                     localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
                     updateDesktop();
                 }
             }
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            setTimeout(() => { isDragging = false; }, 100);
         }
 
         function addCustomApp() {
@@ -606,15 +635,6 @@
             const targetId = 'custom_' + index;
             appOrder = appOrder.filter(id => id !== targetId);
             customApps.splice(index, 1);
-
-            // 重新對齊自訂 App 的 ID 索引
-            appOrder = appOrder.map(id => {
-                if (id.startsWith('custom_')) {
-                    // 簡化重整
-                    return id;
-                }
-                return id;
-            });
 
             localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
             localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
