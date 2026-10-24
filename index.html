@@ -18,13 +18,23 @@
             overflow-x: hidden;
         }
 
-        /* 🌟 手機版整體字體放大 1 號 */
+        /* 🌟 手機版整體字體放大 2 號 (讓各尺寸級距全面提升，閱讀極度舒適) */
         @media (max-width: 767px) {
-            body { font-size: 1.05rem; }
-            .text-xs { font-size: 0.85rem !important; }
-            .text-sm { font-size: 0.95rem !important; }
-            .text-base { font-size: 1.1rem !important; }
-            .app-label { font-size: 0.85rem !important; max-width: 90px !important; }
+            body { font-size: 1.15rem !important; }
+            .text-xs { font-size: 0.95rem !important; }
+            .text-sm { font-size: 1.05rem !important; }
+            .text-base { font-size: 1.15rem !important; }
+            .text-lg { font-size: 1.25rem !important; }
+            .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
+            
+            /* 手機版側邊欄文字與群組字體特別加大 */
+            #sidebar span, #sidebar label, #sidebar div, #sidebar .text-\[11px\], #sidebar .text-xs {
+                font-size: 1.05rem !important;
+            }
+            #sidebar input[type="checkbox"] {
+                width: 1.1rem !important;
+                height: 1.1rem !important;
+            }
         }
 
         #sidebar {
@@ -32,7 +42,7 @@
             top: 0;
             left: 0;
             height: 100vh;
-            width: 280px;
+            width: 290px;
             background: #ffffff;
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -74,8 +84,8 @@
                 padding: 24px;
             }
             #app-wrapper.push-right {
-                transform: translateX(280px);
-                width: calc(100% - 280px);
+                transform: translateX(290px);
+                width: calc(100% - 290px);
             }
             #backdrop {
                 display: none !important;
@@ -753,8 +763,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認新版圓形 Logo 已完美置入左上角", done: false },
-            { text: "確認精選影音服務與桌面捷徑運作正常", done: false }
+            { text: "確認手機版側邊欄與整體文字已放大 2 號", done: false },
+            { text: "確認圓形 Logo 與各項功能運作順暢", done: false }
         ]));
 
         function renderTodoList() {
