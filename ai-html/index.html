@@ -111,12 +111,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            cursor: grab;
             text-decoration: none;
-            transition: transform 0.2s;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .app-icon:active {
+            cursor: grabbing;
         }
         .app-icon:hover {
             transform: translateY(-3px);
+        }
+        .app-icon.dragging {
+            opacity: 0.4;
         }
         .app-box {
             width: 64px;
@@ -164,41 +170,68 @@
         <div class="space-y-3 text-xs">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
             
-            <!-- 🌟 交通與通勤模組（已按您的要求拆分並新增項目） -->
-            <div class="space-y-1.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                <div class="font-bold text-slate-800 text-[11px] mb-1 flex items-center gap-1.5">
-                    <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+            <!-- 🌟 交通與通勤模組（支援群組全選與摺疊收合） -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-[11px]">
+                        <input type="checkbox" id="group-traffic" checked onchange="toggleGroup('traffic')" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                    </label>
+                    <button onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </button>
                 </div>
-                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
-                    <input type="checkbox" id="mod-highway" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                    <span>🚗 國道 1968 路況</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
-                    <input type="checkbox" id="mod-provincial" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                    <span>🛣️ 全台省道路況 (168)</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
-                    <input type="checkbox" id="mod-bus" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                    <span>🚌 即時公車動態</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
-                    <input type="checkbox" id="mod-bike" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                    <span>🚲 YouBike 站點車位</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
-                    <input type="checkbox" id="mod-train" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                    <span>🚂 台鐵時刻查詢</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
-                    <input type="checkbox" id="mod-hsr" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                    <span>🚄 高鐵時刻查詢</span>
-                </label>
+                <div id="traffic-sub" class="space-y-1.5 pl-5 border-l-2 border-blue-100 mt-1">
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-highway" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 traffic-item">
+                        <span>🚗 國道 1968 路況</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-provincial" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 traffic-item">
+                        <span>🛣️ 全台省道路況 (168)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-bus" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 traffic-item">
+                        <span>🚌 即時公車動態</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-bike" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 traffic-item">
+                        <span>🚲 YouBike 站點車位</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-train" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 traffic-item">
+                        <span>🚂 台鐵時刻查詢</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-hsr" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 traffic-item">
+                        <span>🚄 高鐵時刻查詢</span>
+                    </label>
+                </div>
             </div>
 
-            <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
-                <input type="checkbox" id="mod-finance" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
-                <span>📈 台股財經與鉅亨網</span>
-            </label>
+            <!-- 🌟 台股財經與鉅亨網模組（支援群組全選、獨立選取與摺疊收合） -->
+            <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-800 text-[11px]">
+                        <input type="checkbox" id="group-finance" checked onchange="toggleGroup('finance')" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
+                    </label>
+                    <button onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </button>
+                </div>
+                <div id="finance-sub" class="space-y-1.5 pl-5 border-l-2 border-emerald-100 mt-1">
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-yahoo" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 finance-item">
+                        <span>📈 Yahoo股市</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                        <input type="checkbox" id="mod-cnyes" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5 finance-item">
+                        <span>📰 鉅亨網</span>
+                    </label>
+                </div>
+            </div>
+
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
                 <input type="checkbox" id="mod-news" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>📰 焦點新聞自動彙整</span>
@@ -261,8 +294,9 @@
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                             <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
                         </h2>
-                        <span class="text-xs text-slate-400">點擊圖示即可直接開啟網頁</span>
+                        <span class="text-xs text-slate-400">💡 提示：可直接用滑鼠拖曳圖示來調整排列順序</span>
                     </div>
+                    <!-- 支援拖曳排序的 App 網格 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
@@ -379,7 +413,6 @@
             const weekday = weekdays[now.getDay()];
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
             
             document.getElementById('header-date').innerText = `${year}年${month}月${day}日`;
             document.getElementById('header-time').innerText = `${h}:${m}`;
@@ -412,120 +445,134 @@
             }
         }
 
+        // 🌟 側邊欄群組全選與摺疊收合功能
+        function toggleGroup(groupName) {
+            const groupCheckbox = document.getElementById(`group-${groupName}`);
+            const items = document.querySelectorAll(`.${groupName}-item`);
+            items.forEach(item => {
+                item.checked = groupCheckbox.checked;
+            });
+            updateDesktop();
+        }
+
+        function toggleSubMenu(subId, btn) {
+            const subMenu = document.getElementById(subId);
+            const icon = btn.querySelector('i');
+            if (subMenu.style.display === 'none') {
+                subMenu.style.display = 'block';
+                icon.className = 'fa-solid fa-chevron-up';
+            } else {
+                subMenu.style.display = 'none';
+                icon.className = 'fa-solid fa-chevron-down';
+            }
+        }
+
+        // 🌟 預設內建 App 清單與自訂 App（支援拖曳排序與 localStorage 記憶）
+        let defaultApps = [
+            { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-blue-600', modId: 'mod-highway' },
+            { id: 'provincial', name: '省道路況168', url: 'https://168.thb.gov.tw', icon: 'fa-road text-orange-600', modId: 'mod-provincial' },
+            { id: 'bus', name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus text-sky-600', modId: 'mod-bus' },
+            { id: 'bike', name: 'YouBike', url: 'https://youbike.com.tw/region/main/', icon: 'fa-person-biking text-yellow-500', modId: 'mod-bike' },
+            { id: 'train', name: '台鐵時刻', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train text-indigo-600', modId: 'mod-train' },
+            { id: 'hsr', name: '高鐵時刻', url: 'https://www.thsrc.com.tw/', icon: 'fa-train-subway text-amber-600', modId: 'mod-hsr' },
+            { id: 'yahoo', name: 'Yahoo股市', url: 'https://tw.stock.yahoo.com/', icon: 'fa-chart-line text-[#00a600]', modId: 'mod-yahoo' },
+            { id: 'cnyes', name: '鉅亨網', url: 'https://www.cnyes.com/', icon: 'fa-newspaper text-teal-600', modId: 'mod-cnyes' },
+            { id: 'news', name: '焦點新聞', url: 'https://myezlife.com/index_news.html', icon: 'fa-bolt text-amber-500', modId: 'mod-news' }
+        ];
+
         let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+        let appOrder = JSON.parse(localStorage.getItem('myezlife_app_order') || JSON.stringify(defaultApps.map(a => a.id).concat(customApps.map((_, i) => 'custom_' + i))));
 
         function updateDesktop() {
             const grid = document.getElementById('desktop-app-grid');
             grid.innerHTML = '';
 
-            const showHighway = document.getElementById('mod-highway').checked;
-            const showProvincial = document.getElementById('mod-provincial').checked;
-            const showBus = document.getElementById('mod-bus').checked;
-            const showBike = document.getElementById('mod-bike').checked;
-            const showTrain = document.getElementById('mod-train').checked;
-            const showHsr = document.getElementById('mod-hsr').checked;
-
-            const showFinance = document.getElementById('mod-finance').checked;
-            const showNews = document.getElementById('mod-news').checked;
             const showTodo = document.getElementById('mod-todo').checked;
             const showSponsor = document.getElementById('mod-sponsor').checked;
 
-            // 1. 國道 1968
-            if (showHighway) {
-                grid.innerHTML += `
-                    <a href="https://1968.freeway.gov.tw/" target="_blank" class="app-icon">
-                        <div class="app-box text-blue-600"><i class="fa-solid fa-car"></i></div>
-                        <span class="app-label">國道 1968</span>
-                    </a>
-                `;
-            }
+            // 建立所有可用 App 的對照字典
+            let appMap = {};
+            defaultApps.forEach(app => {
+                const checkbox = document.getElementById(app.modId);
+                appMap[app.id] = {
+                    name: app.name,
+                    url: app.url,
+                    icon: app.icon,
+                    visible: checkbox ? checkbox.checked : true,
+                    isCustom: false
+                };
+            });
 
-            // 2. 全台省道路況 (168)
-            if (showProvincial) {
-                grid.innerHTML += `
-                    <a href="https://168.thb.gov.tw" target="_blank" class="app-icon">
-                        <div class="app-box text-orange-600"><i class="fa-solid fa-road"></i></div>
-                        <span class="app-label">省道路況168</span>
-                    </a>
-                `;
-            }
+            customApps.forEach((app, idx) => {
+                appMap['custom_' + idx] = {
+                    name: app.name,
+                    url: app.url,
+                    icon: 'fa-globe text-purple-600',
+                    visible: true,
+                    isCustom: true,
+                    customIndex: idx
+                };
+            });
 
-            // 3. 即時公車
-            if (showBus) {
-                grid.innerHTML += `
-                    <a href="https://ebus.gov.taipei/" target="_blank" class="app-icon">
-                        <div class="app-box text-sky-600"><i class="fa-solid fa-bus"></i></div>
-                        <span class="app-label">即時公車</span>
-                    </a>
-                `;
-            }
-
-            // 4. YouBike 站點車位
-            if (showBike) {
-                grid.innerHTML += `
-                    <a href="https://youbike.com.tw/region/main/" target="_blank" class="app-icon">
-                        <div class="app-box text-yellow-500"><i class="fa-solid fa-person-biking"></i></div>
-                        <span class="app-label">YouBike</span>
-                    </a>
-                `;
-            }
-
-            // 5. 台鐵時刻
-            if (showTrain) {
-                grid.innerHTML += `
-                    <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="app-icon">
-                        <div class="app-box text-indigo-600"><i class="fa-solid fa-train"></i></div>
-                        <span class="app-label">台鐵時刻</span>
-                    </a>
-                `;
-            }
-
-            // 6. 高鐵時刻
-            if (showHsr) {
-                grid.innerHTML += `
-                    <a href="https://www.thsrc.com.tw/" target="_blank" class="app-icon">
-                        <div class="app-box text-amber-600"><i class="fa-solid fa-train-subway"></i></div>
-                        <span class="app-label">高鐵時刻</span>
-                    </a>
-                `;
-            }
-
-            if (showFinance) {
-                grid.innerHTML += `
-                    <a href="https://tw.stock.yahoo.com/" target="_blank" class="app-icon">
-                        <div class="app-box text-[#00a600]"><i class="fa-solid fa-chart-line"></i></div>
-                        <span class="app-label">Yahoo股市</span>
-                    </a>
-                    <a href="https://www.cnyes.com/" target="_blank" class="app-icon">
-                        <div class="app-box text-teal-600"><i class="fa-solid fa-newspaper"></i></div>
-                        <span class="app-label">鉅亨網</span>
-                    </a>
-                `;
-            }
-
-            if (showNews) {
-                grid.innerHTML += `
-                    <a href="https://myezlife.com/index_news.html" target="_blank" class="app-icon">
-                        <div class="app-box text-amber-500"><i class="fa-solid fa-bolt"></i></div>
-                        <span class="app-label">焦點新聞</span>
-                    </a>
-                `;
-            }
-
-            customApps.forEach((app, index) => {
-                grid.innerHTML += `
-                    <div class="relative group">
-                        <a href="${app.url}" target="_blank" class="app-icon">
-                            <div class="app-box text-purple-600"><i class="fa-solid fa-globe"></i></div>
-                            <span class="app-label">${app.name}</span>
-                        </a>
-                        <button onclick="removeCustomApp(${index})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
-                    </div>
-                `;
+            // 依照使用者排序渲染
+            appOrder.forEach(id => {
+                if (appMap[id] && appMap[id].visible) {
+                    const app = appMap[id];
+                    if (app.isCustom) {
+                        grid.innerHTML += `
+                            <div class="app-icon relative group" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" data-id="${id}">
+                                <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                    <div class="app-box ${app.icon}"><i class="fa-solid ${app.icon.split(' ')[0]}"></i></div>
+                                    <span class="app-label">${app.name}</span>
+                                </a>
+                                <button onclick="removeCustomApp(${app.customIndex})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
+                            </div>
+                        `;
+                    } else {
+                        grid.innerHTML += `
+                            <div class="app-icon" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)" data-id="${id}">
+                                <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                    <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]}"></i></div>
+                                    <span class="app-label">${app.name}</span>
+                                </a>
+                            </div>
+                        `;
+                    }
+                }
             });
 
             document.getElementById('desktop-todo-card').style.display = showTodo ? 'block' : 'none';
             document.getElementById('desktop-sponsor-card').style.display = showSponsor ? 'block' : 'none';
+        }
+
+        // 🌟 拖曳排序功能 (HTML5 Drag and Drop)
+        let draggedId = null;
+
+        function drag(event) {
+            draggedId = event.currentTarget.getAttribute('data-id');
+            event.currentTarget.classList.add('dragging');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const targetNode = event.currentTarget.closest('[data-id]');
+            if (!targetNode) return;
+            const targetId = targetNode.getAttribute('data-id');
+
+            if (draggedId && targetId && draggedId !== targetId) {
+                const fromIndex = appOrder.indexOf(draggedId);
+                const toIndex = appOrder.indexOf(targetId);
+                if (fromIndex > -1 && toIndex > -1) {
+                    appOrder.splice(fromIndex, 1);
+                    appOrder.splice(toIndex, 0, draggedId);
+                    localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
+                    updateDesktop();
+                }
+            }
         }
 
         function addCustomApp() {
@@ -544,7 +591,11 @@
             }
 
             customApps.push({ name, url });
+            const newCustomId = 'custom_' + (customApps.length - 1);
+            appOrder.push(newCustomId);
+
             localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+            localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
 
             nameInput.value = '';
             urlInput.value = '';
@@ -552,8 +603,21 @@
         }
 
         function removeCustomApp(index) {
+            const targetId = 'custom_' + index;
+            appOrder = appOrder.filter(id => id !== targetId);
             customApps.splice(index, 1);
+
+            // 重新對齊自訂 App 的 ID 索引
+            appOrder = appOrder.map(id => {
+                if (id.startsWith('custom_')) {
+                    // 簡化重整
+                    return id;
+                }
+                return id;
+            });
+
             localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+            localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
             updateDesktop();
         }
 
