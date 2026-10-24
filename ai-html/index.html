@@ -6,7 +6,7 @@
     <title>myezlife.com | 我的個人化數位生活儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 SortableJS 支援手機觸控與電腦滑鼠拖曳 -->
+    <!-- 引入 SortableJS 支援手機與電腦拖曳排序 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         body {
@@ -16,6 +16,17 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+        }
+
+        /* 🌟 手機版整體字體放大一號 */
+        @media (max-width: 767px) {
+            body {
+                font-size: 1.05rem;
+            }
+            .text-xs { font-size: 0.85rem !important; }
+            .text-sm { font-size: 0.95rem !important; }
+            .text-base { font-size: 1.1rem !important; }
+            .app-label { font-size: 0.85rem !important; max-width: 90px !important; }
         }
 
         #sidebar {
@@ -96,7 +107,7 @@
             padding-left: 8px;
         }
 
-        /* 經典原汁原味的綠色 Banner */
+        /* 經典綠色 Banner */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -269,27 +280,33 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 完全還原經典經典美觀的橫向 3 欄 Header Banner -->
-            <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4 relative">
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
-                    </button>
-                    <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
-                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
-                        <div>
-                            <div id="header-temp" class="text-sm">21°C</div>
-                            <div id="header-weather" class="text-[10px] text-white/80 font-normal">颱風豪雨中</div>
+            <!-- 🌟 電腦版經典美觀、手機版精緻優化的 Header Banner -->
+            <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 relative">
+                <div class="w-full md:w-auto flex justify-between md:justify-start items-center gap-3">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
+                            <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
+                        </button>
+                        <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
+                            <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
+                            <div>
+                                <div id="header-temp" class="text-sm">21°C</div>
+                                <div id="header-weather" class="text-[10px] text-white/80 font-normal">颱風豪雨中</div>
+                            </div>
                         </div>
+                    </div>
+                    <!-- 手機版專屬右上角星期標籤（與桌機版完美兼顧） -->
+                    <div class="md:hidden bg-black/20 backdrop-blur px-3 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                        <span id="header-weekday-mobile">載入中...</span>
                     </div>
                 </div>
 
-                <div class="text-center">
+                <div class="text-center my-1 md:my-0">
                     <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
                     <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
                 </div>
 
-                <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                <div class="hidden md:block bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
                     <span id="header-weekday">載入中...</span>
                 </div>
             </header>
@@ -301,9 +318,9 @@
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                             <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
                         </h2>
-                        <span class="text-xs text-slate-400">點擊圖示即可直接開啟網頁</span>
+                        <span class="text-xs text-slate-400">點擊圖示開啟網頁，長按/拖曳可調換順序</span>
                     </div>
-                    <!-- 支援無感拖曳排序的 App 網格容器 -->
+                    <!-- 支援拖曳排序的 App 網格容器 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
@@ -424,6 +441,7 @@
             document.getElementById('header-date').innerText = `${year}年${month}月${day}日`;
             document.getElementById('header-time').innerText = `${h}:${m}`;
             document.getElementById('header-weekday').innerText = weekday;
+            document.getElementById('header-weekday-mobile').innerText = weekday;
         }
 
         updateDateTime();
@@ -555,7 +573,6 @@
                 sortableInstance.destroy();
             }
 
-            // 手機按住 150ms 即可拖曳，點擊則正常開啟連結
             sortableInstance = new Sortable(grid, {
                 animation: 200,
                 ghostClass: 'sortable-ghost',
