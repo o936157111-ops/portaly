@@ -6,6 +6,8 @@
     <title>myezlife.com | 我的個人化數位生活儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 🌟 引入強大且支援手機觸控拖曳的 SortableJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -55,7 +57,7 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(0);
             width: 100%;
-            padding: 16px;
+            padding: 12px;
         }
 
         @media (min-width: 768px) {
@@ -101,10 +103,11 @@
             box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
         }
 
+        /* App 網格與卡片 */
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 12px;
         }
         .app-item {
             display: flex;
@@ -112,42 +115,47 @@
             align-items: center;
             justify-content: center;
             cursor: grab;
-            transition: transform 0.2s, opacity 0.2s;
             user-select: none;
+            touch-action: manipulation;
         }
         .app-item:active {
             cursor: grabbing;
         }
-        .app-item.dragging {
-            opacity: 0.3;
-        }
-        .app-item.drag-over {
-            border: 2px dashed #00a600;
-            border-radius: 16px;
-            background: rgba(0, 166, 0, 0.05);
-        }
         .app-box {
-            width: 64px;
-            height: 64px;
+            width: 60px;
+            height: 60px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background: #ffffff;
             border: 1px solid #e2e8f0;
+            transition: transform 0.2s, shadow 0.2s;
+        }
+        .app-item:hover .app-box {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
         .app-label {
             color: #334155;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            margin-top: 6px;
+            margin-top: 5px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 80px;
+            max-width: 75px;
+        }
+        /* 拖曳中的卡片視覺放大效果 */
+        .sortable-ghost {
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+        .sortable-drag {
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -261,48 +269,48 @@
     </aside>
 
     <div id="app-wrapper">
-        <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
+        <div class="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
             
-            <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4 relative">
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
+            <!-- 🌟 重新優化手機與電腦雙適應的綠色 Banner 排版 -->
+            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 relative">
+                <!-- 左側：Logo 觸發按鈕 + 氣象膠囊 -->
+                <div class="flex items-center gap-2 md:gap-3">
+                    <button onclick="toggleSidebar()" class="p-1 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shrink-0" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-8 h-8 md:w-9 md:h-9 object-contain">
                     </button>
-                    <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
-                        <div id="weather-icon-container">
-                            <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
-                        </div>
+                    <div class="bg-black/15 backdrop-blur px-2.5 py-1 md:px-3.5 md:py-1.5 rounded-xl border border-white/20 flex items-center gap-1.5 text-xs font-bold">
+                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm md:text-base"></i>
                         <div>
-                            <div id="header-temp" class="text-sm font-black">21°C</div>
-                            <div id="header-weather" class="text-[10px] text-white/90 font-bold">颱風豪雨中</div>
+                            <div id="header-temp" class="text-xs md:text-sm font-black">21°C</div>
+                            <div id="header-weather" class="text-[9px] md:text-[10px] text-white/90 font-bold whitespace-nowrap">颱風豪雨中</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-center">
-                    <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
-                    <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
-                </div>
-
-                <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
-                    <span id="header-weekday">載入中...</span>
+                <!-- 右側：日期、大時間與星期 -->
+                <div class="flex flex-col items-end text-right">
+                    <div class="flex items-center gap-2">
+                        <span id="header-date" class="text-[10px] md:text-xs text-white/90 font-medium tracking-wide">載入中...</span>
+                        <span id="header-weekday" class="bg-black/20 backdrop-blur px-2 py-0.5 rounded-lg border border-white/20 text-[10px] md:text-xs font-bold">載入中...</span>
+                    </div>
+                    <div id="header-time" class="text-2xl md:text-4xl font-extrabold tracking-wider leading-none mt-1 drop-shadow-sm">00:00</div>
                 </div>
             </header>
 
-            <main class="w-full space-y-5 flex-1">
+            <main class="w-full space-y-4 flex-1">
                 
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-2 gap-1">
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                             <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
                         </h2>
-                        <span class="text-xs text-slate-400">💡 提示：按住任一 App 圖示即可拖曳調換順序</span>
+                        <span class="text-[11px] text-slate-400">💡 提示：手機/電腦均可長按圖示滑動調換順序</span>
                     </div>
-                    <!-- 支援拖曳排序的 App 網格 -->
+                    <!-- 🌟 可拖曳 App 網格容器 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
-                <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div id="desktop-todo-card" class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-pen-nib text-purple-600"></i> 互動待辦清單與隨手便籤
                     </h3>
@@ -357,7 +365,7 @@
 
             </main>
 
-            <footer class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500">
+            <footer class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <div>
                         <p class="font-bold text-slate-700">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -398,11 +406,11 @@
 
                 document.getElementById('header-temp').innerText = `${temp}°C`;
                 document.getElementById('header-weather').innerText = weatherDesc;
-                document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
+                document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-sm md:text-base`;
             } catch (e) {
                 document.getElementById('header-temp').innerText = "21°C";
                 document.getElementById('header-weather').innerText = "颱風豪雨中";
-                document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
+                document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm md:text-base";
             }
         }
 
@@ -447,7 +455,6 @@
             }
         }
 
-        // 側邊欄群組全選與摺疊收合功能
         function toggleGroup(groupName) {
             const groupCheckbox = document.getElementById(`group-${groupName}`);
             const items = document.querySelectorAll(`.${groupName}-item`);
@@ -484,6 +491,8 @@
         let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
         let appOrder = JSON.parse(localStorage.getItem('myezlife_app_order') || JSON.stringify(defaultApps.map(a => a.id).concat(customApps.map((_, i) => 'custom_' + i))));
 
+        let sortableInstance = null;
+
         function updateDesktop() {
             const grid = document.getElementById('desktop-app-grid');
             grid.innerHTML = '';
@@ -518,41 +527,25 @@
                 if (appMap[id] && appMap[id].visible) {
                     const app = appMap[id];
                     let div = document.createElement('div');
-                    div.className = 'app-item relative';
-                    div.setAttribute('draggable', 'true');
+                    div.className = 'app-item relative group';
                     div.setAttribute('data-id', id);
 
                     if (app.isCustom) {
                         div.innerHTML = `
-                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none" onclick="if(isDragging) { event.preventDefault(); }">
+                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box"><i class="fa-solid fa-globe text-purple-600"></i></div>
                                 <span class="app-label">${app.name}</span>
                             </a>
                             <button onclick="removeCustomApp(${app.customIndex})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
                         `;
-                        div.classList.add('group');
                     } else {
                         div.innerHTML = `
-                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none pointer-events-none">
-                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]}"></i></div>
+                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
                                 <span class="app-label">${app.name}</span>
                             </a>
                         `;
-                        // 讓內部連結可點擊，但拖曳時攔截
-                        const aTag = div.querySelector('a');
-                        aTag.style.pointerEvents = 'auto';
-                        aTag.addEventListener('click', (e) => {
-                            if (isDragging) {
-                                e.preventDefault();
-                            }
-                        });
                     }
-
-                    // 🌟 強化版拖曳事件綁定
-                    div.addEventListener('dragstart', handleDragStart);
-                    div.addEventListener('dragend', handleDragEnd);
-                    div.addEventListener('dragover', handleDragOver);
-                    div.addEventListener('drop', handleDrop);
 
                     grid.appendChild(div);
                 }
@@ -560,48 +553,25 @@
 
             document.getElementById('desktop-todo-card').style.display = showTodo ? 'block' : 'none';
             document.getElementById('desktop-sponsor-card').style.display = showSponsor ? 'block' : 'none';
-        }
 
-        // 🌟 穩健的拖曳排序控制邏輯
-        let draggedSrcEl = null;
-        let isDragging = false;
-
-        function handleDragStart(e) {
-            isDragging = true;
-            draggedSrcEl = this;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', this.getAttribute('data-id'));
-            this.classList.add('dragging');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            return false;
-        }
-
-        function handleDrop(e) {
-            e.stopPropagation();
-            if (draggedSrcEl !== this) {
-                const srcId = draggedSrcEl.getAttribute('data-id');
-                const targetId = this.getAttribute('data-id');
-
-                const oldIndex = appOrder.indexOf(srcId);
-                const newIndex = appOrder.indexOf(targetId);
-
-                if (oldIndex > -1 && newIndex > -1) {
-                    appOrder.splice(oldIndex, 1);
-                    appOrder.splice(newIndex, 0, srcId);
-                    localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
-                    updateDesktop();
-                }
+            // 🌟 重新初始化 SortableJS（完美相容手機觸控與電腦滑鼠拖曳）
+            if (sortableInstance) {
+                sortableInstance.destroy();
             }
-            return false;
-        }
 
-        function handleDragEnd(e) {
-            this.classList.remove('dragging');
-            setTimeout(() => { isDragging = false; }, 100);
+            sortableInstance = new Sortable(grid, {
+                animation: 200,
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                delay: 100, // 長按 100ms 觸發拖曳，避免誤觸點擊開網頁
+                delayOnTouchOnly: true,
+                onEnd: function () {
+                    // 拖曳結束後，自動擷取新順序並寫入 localStorage
+                    const newOrder = Array.from(grid.children).map(item => item.getAttribute('data-id'));
+                    appOrder = newOrder;
+                    localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
+                }
+            });
         }
 
         function addCustomApp() {
