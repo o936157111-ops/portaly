@@ -18,7 +18,7 @@
             overflow-x: hidden;
         }
 
-        /* 🌟 手機版整體字體放大 2 號 (讓各尺寸級距全面提升，閱讀極度舒適) */
+        /* 🌟 手機版整體字體放大 2 號 */
         @media (max-width: 767px) {
             body { font-size: 1.15rem !important; }
             .text-xs { font-size: 0.95rem !important; }
@@ -28,7 +28,7 @@
             .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
             
             /* 手機版側邊欄文字與群組字體特別加大 */
-            #sidebar span, #sidebar label, #sidebar div, #sidebar .text-\[11px\], #sidebar .text-xs {
+            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar .text-\[11px\], #sidebar .text-xs {
                 font-size: 1.05rem !important;
             }
             #sidebar input[type="checkbox"] {
@@ -42,7 +42,7 @@
             top: 0;
             left: 0;
             height: 100vh;
-            width: 290px;
+            width: 300px;
             background: #ffffff;
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -84,8 +84,8 @@
                 padding: 24px;
             }
             #app-wrapper.push-right {
-                transform: translateX(290px);
-                width: calc(100% - 290px);
+                transform: translateX(300px);
+                width: calc(100% - 300px);
             }
             #backdrop {
                 display: none !important;
@@ -115,7 +115,7 @@
             padding-left: 8px;
         }
 
-        /* 🌟 綠色 Banner：與下方 max-w-3xl 容器寬度完美對齊 */
+        /* 🌟 綠色 Banner */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -124,7 +124,7 @@
             width: 100%;
         }
 
-        /* 🌟 圓形 Logo 樣式：去除方框，裁切為完美圓形與微光陰影 */
+        /* 🌟 圓形 Logo 樣式 */
         .rounded-logo-btn {
             border-radius: 50% !important;
             overflow: hidden;
@@ -156,21 +156,22 @@
         .app-item:active {
             cursor: grabbing;
         }
+        /* 🌟 讓每個 App 擁有類似真實手機 APP 的精美質感圖示外框與立體陰影 */
         .app-box {
             width: 64px;
             height: 64px;
-            border-radius: 16px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            transition: transform 0.2s;
+            font-size: 26px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .app-item:hover .app-box {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
         }
         .app-label {
             color: #334155;
@@ -215,7 +216,7 @@
         <i id="toggle-icon" class="fa-solid fa-chevron-right text-xs"></i>
     </button>
 
-    <!-- 🌟 左側側邊欄選單（含勾選控制與精選影音服務） -->
+    <!-- 🌟 左側側邊欄選單 -->
     <aside id="sidebar" class="p-5 space-y-5 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -333,6 +334,18 @@
                 <input type="checkbox" id="mod-sponsor" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>💖 贊助支援與延伸閱讀</span>
             </label>
+        </div>
+
+        <!-- 🌟 自訂新增 App 專屬區塊 -->
+        <div class="space-y-2.5 pt-3 border-t border-slate-200">
+            <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
+            </div>
+            <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+            <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+            <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-sm">
+                + 新增至桌面
+            </button>
         </div>
     </aside>
 
@@ -623,26 +636,27 @@
             }
         }
 
-        // 精選影音服務清單
+        // 🌟 賦予精選影音服務專屬精美顏色（背景色 + 圖示色）
         let creativeApps = [
-            { id: 'drama', name: 'AI好劇一直看', url: 'https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ', icon: 'fa-film text-rose-500', modId: 'mod-drama' },
-            { id: 'melody', name: '好歌一直聽', url: 'https://myezlife.com/goldmelody_csv.html', icon: 'fa-music text-amber-500', modId: 'mod-melody' },
-            { id: 'diary', name: '心情隨筆日記', url: 'https://myezlife.com/diary/index.html', icon: 'fa-book-open text-emerald-600', modId: 'mod-diary' },
-            { id: 'greeting', name: 'AI早安問候圖', url: 'https://myezlife.com/ai-greeting-app/', icon: 'fa-sun text-yellow-500', modId: 'mod-greeting' },
-            { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-[#00a600]', modId: 'mod-videowall', isModal: true }
+            { id: 'drama', name: 'AI好劇一直看', url: 'https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ', icon: 'fa-film text-white', bg: 'bg-gradient-to-br from-rose-400 to-red-500', modId: 'mod-drama' },
+            { id: 'melody', name: '好歌一直聽', url: 'https://myezlife.com/goldmelody_csv.html', icon: 'fa-music text-white', bg: 'bg-gradient-to-br from-amber-400 to-orange-500', modId: 'mod-melody' },
+            { id: 'diary', name: '心情隨筆日記', url: 'https://myezlife.com/diary/index.html', icon: 'fa-book-open text-white', bg: 'bg-gradient-to-br from-emerald-400 to-teal-600', modId: 'mod-diary' },
+            { id: 'greeting', name: 'AI早安問候圖', url: 'https://myezlife.com/ai-greeting-app/', icon: 'fa-sun text-white', bg: 'bg-gradient-to-br from-yellow-400 to-amber-500', modId: 'mod-greeting' },
+            { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-white', bg: 'bg-gradient-to-br from-green-500 to-emerald-700', modId: 'mod-videowall', isModal: true }
         ];
 
+        // 🌟 賦予一般內建工具專屬美觀代表色
         let defaultApps = [
-            { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-sky-500', modId: 'mod-weather' },
-            { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-blue-600', modId: 'mod-highway' },
-            { id: 'provincial', name: '省道路況168', url: 'https://168.thb.gov.tw', icon: 'fa-road text-orange-600', modId: 'mod-provincial' },
-            { id: 'bus', name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus text-sky-600', modId: 'mod-bus' },
-            { id: 'bike', name: 'YouBike', url: 'https://youbike.com.tw/region/main/', icon: 'fa-person-biking text-yellow-500', modId: 'mod-bike' },
-            { id: 'train', name: '台鐵時刻', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train text-indigo-600', modId: 'mod-train' },
-            { id: 'hsr', name: '高鐵時刻', url: 'https://www.thsrc.com.tw/', icon: 'fa-train-subway text-amber-600', modId: 'mod-hsr' },
-            { id: 'yahoo', name: 'Yahoo股市', url: 'https://tw.stock.yahoo.com/', icon: 'fa-chart-line text-[#00a600]', modId: 'mod-yahoo' },
-            { id: 'cnyes', name: '鉅亨網', url: 'https://www.cnyes.com/', icon: 'fa-newspaper text-teal-600', modId: 'mod-cnyes' },
-            { id: 'news', name: '焦點新聞', url: 'https://myezlife.com/index_news.html', icon: 'fa-bolt text-amber-500', modId: 'mod-news' }
+            { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-white', bg: 'bg-gradient-to-br from-sky-400 to-blue-500', modId: 'mod-weather' },
+            { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-white', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', modId: 'mod-highway' },
+            { id: 'provincial', name: '省道路況168', url: 'https://168.thb.gov.tw', icon: 'fa-road text-white', bg: 'bg-gradient-to-br from-orange-400 to-red-500', modId: 'mod-provincial' },
+            { id: 'bus', name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus text-white', bg: 'bg-gradient-to-br from-cyan-400 to-blue-600', modId: 'mod-bus' },
+            { id: 'bike', name: 'YouBike', url: 'https://youbike.com.tw/region/main/', icon: 'fa-person-biking text-white', bg: 'bg-gradient-to-br from-lime-400 to-emerald-600', modId: 'mod-bike' },
+            { id: 'train', name: '台鐵時刻', url: 'https://tip.railway.gov.tw/tra-tip-web/tip', icon: 'fa-train text-white', bg: 'bg-gradient-to-br from-indigo-500 to-purple-600', modId: 'mod-train' },
+            { id: 'hsr', name: '高鐵時刻', url: 'https://www.thsrc.com.tw/', icon: 'fa-train-subway text-white', bg: 'bg-gradient-to-br from-amber-500 to-orange-600', modId: 'mod-hsr' },
+            { id: 'yahoo', name: 'Yahoo股市', url: 'https://tw.stock.yahoo.com/', icon: 'fa-chart-line text-white', bg: 'bg-gradient-to-br from-purple-500 to-indigo-700', modId: 'mod-yahoo' },
+            { id: 'cnyes', name: '鉅亨網', url: 'https://www.cnyes.com/', icon: 'fa-newspaper text-white', bg: 'bg-gradient-to-br from-teal-400 to-emerald-600', modId: 'mod-cnyes' },
+            { id: 'news', name: '焦點新聞', url: 'https://myezlife.com/index_news.html', icon: 'fa-bolt text-white', bg: 'bg-gradient-to-br from-amber-400 to-yellow-600', modId: 'mod-news' }
         ];
 
         let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
@@ -665,14 +679,14 @@
                     if (app.isModal) {
                         div.innerHTML = `
                             <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
-                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
+                                <div class="app-box ${app.bg}"><i class="fa-solid ${app.icon}"></i></div>
                                 <span class="app-label">${app.name}</span>
                             </button>
                         `;
                     } else {
                         div.innerHTML = `
                             <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
+                                <div class="app-box ${app.bg}"><i class="fa-solid ${app.icon}"></i></div>
                                 <span class="app-label">${app.name}</span>
                             </a>
                         `;
@@ -697,6 +711,7 @@
                     name: app.name,
                     url: app.url,
                     icon: app.icon,
+                    bg: app.bg,
                     visible: checkbox ? checkbox.checked : true,
                     isCustom: false
                 };
@@ -706,7 +721,8 @@
                 appMap['custom_' + idx] = {
                     name: app.name,
                     url: app.url,
-                    icon: 'fa-globe text-purple-600',
+                    icon: 'fa-globe text-white',
+                    bg: 'bg-gradient-to-br from-violet-500 to-fuchsia-600',
                     visible: true,
                     isCustom: true,
                     customIndex: idx
@@ -723,7 +739,7 @@
                     if (app.isCustom) {
                         div.innerHTML = `
                             <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                                <div class="app-box"><i class="fa-solid fa-globe text-purple-600"></i></div>
+                                <div class="app-box ${app.bg}"><i class="fa-solid fa-globe text-white"></i></div>
                                 <span class="app-label">${app.name}</span>
                             </a>
                             <button onclick="removeCustomApp(${app.customIndex})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
@@ -731,7 +747,7 @@
                     } else {
                         div.innerHTML = `
                             <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
+                                <div class="app-box ${app.bg}"><i class="fa-solid ${app.icon.split(' ')[0]} text-white"></i></div>
                                 <span class="app-label">${app.name}</span>
                             </a>
                         `;
@@ -762,9 +778,51 @@
             });
         }
 
+        // 🌟 新增自訂 App 函式
+        function addCustomApp() {
+            const nameInput = document.getElementById('custom-app-name');
+            const urlInput = document.getElementById('custom-app-url');
+            const name = nameInput.value.trim();
+            let url = urlInput.value.trim();
+
+            if (!name || !url) {
+                alert('請完整輸入網頁名稱與網址！');
+                return;
+            }
+
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+
+            customApps.push({ name, url });
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+
+            const newCustomId = 'custom_' + (customApps.length - 1);
+            appOrder.push(newCustomId);
+            localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
+
+            nameInput.value = '';
+            urlInput.value = '';
+            updateDesktop();
+            alert('成功新增自訂 App 捷徑！');
+        }
+
+        // 🌟 刪除自訂 App 函式
+        function removeCustomApp(index) {
+            if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
+                customApps.splice(index, 1);
+                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+
+                appOrder = defaultApps.map(a => a.id).concat(customApps.map((_, i) => 'custom_' + i));
+                localStorage.setItem('myezlife_app_order', JSON.stringify(appOrder));
+
+                updateDesktop();
+            }
+        }
+
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認手機版側邊欄與整體文字已放大 2 號", done: false },
-            { text: "確認圓形 Logo 與各項功能運作順暢", done: false }
+            { text: "確認所有 App 已套用精美專屬的手機風格代表色", done: false },
+            { text: "確認側邊欄與各項功能運作完美", done: false }
         ]));
 
         function renderTodoList() {
