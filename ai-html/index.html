@@ -349,7 +349,7 @@
         </div>
     </div>
 
-    <!-- 🌟 互動彈窗 2：打造專屬影音牆設定視窗 (寬度放大為 max-w-xl 且支援完美上下捲軸) -->
+    <!-- 🌟 互動彈窗 2：打造專屬影音牆設定視窗 -->
     <div id="modal-step2" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
         <div class="bg-[#1e222b] rounded-3xl max-w-xl w-full p-6 md:p-7 shadow-2xl border border-slate-700 text-white space-y-4 relative max-h-[88vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeModals()" class="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -420,6 +420,18 @@
 
             <main class="w-full space-y-5 flex-1">
                 
+                <!-- 🌟 專屬獨立區塊：精選影音與創作服務桌面 -->
+                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-play text-rose-500"></i> 精選影音與創作服務
+                        </h2>
+                        <span class="text-xs text-slate-400">點擊圖示開啟影音與創作工具</span>
+                    </div>
+                    <div id="creative-app-grid" class="app-grid"></div>
+                </div>
+
+                <!-- 🌟 一般 App 捷徑桌面 -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
@@ -587,12 +599,16 @@
             }
         }
 
-        let defaultApps = [
+        // 精選影音服務清單
+        let creativeApps = [
             { id: 'drama', name: 'AI好劇一直看', url: 'https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ', icon: 'fa-film text-rose-500', modId: 'mod-drama' },
             { id: 'melody', name: '好歌一直聽', url: 'https://myezlife.com/goldmelody_csv.html', icon: 'fa-music text-amber-500', modId: 'mod-melody' },
             { id: 'diary', name: '心情隨筆日記', url: 'https://myezlife.com/diary/index.html', icon: 'fa-book-open text-emerald-600', modId: 'mod-diary' },
             { id: 'greeting', name: 'AI早安問候圖', url: 'https://myezlife.com/ai-greeting-app/', icon: 'fa-sun text-yellow-500', modId: 'mod-greeting' },
-            { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-[#00a600]', modId: 'mod-videowall', isModal: true },
+            { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-[#00a600]', modId: 'mod-videowall', isModal: true }
+        ];
+
+        let defaultApps = [
             { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-sky-500', modId: 'mod-weather' },
             { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-blue-600', modId: 'mod-highway' },
             { id: 'provincial', name: '省道路況168', url: 'https://168.thb.gov.tw', icon: 'fa-road text-orange-600', modId: 'mod-provincial' },
@@ -611,6 +627,40 @@
         let sortableInstance = null;
 
         function updateDesktop() {
+            // 1. 渲染上方「精選影音與創作服務」專屬區塊
+            const creativeGrid = document.getElementById('creative-app-grid');
+            creativeGrid.innerHTML = '';
+            let hasVisibleCreative = false;
+
+            creativeApps.forEach(app => {
+                const checkbox = document.getElementById(app.modId);
+                if (checkbox && checkbox.checked) {
+                    hasVisibleCreative = true;
+                    let div = document.createElement('div');
+                    div.className = 'app-item relative';
+                    if (app.isModal) {
+                        div.innerHTML = `
+                            <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
+                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
+                                <span class="app-label">${app.name}</span>
+                            </button>
+                        `;
+                    } else {
+                        div.innerHTML = `
+                            <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
+                                <span class="app-label">${app.name}</span>
+                            </a>
+                        `;
+                    }
+                    creativeGrid.appendChild(div);
+                }
+            });
+
+            // 如果全部取消勾選，隱藏整個精選影音卡片
+            document.getElementById('desktop-creative-card').style.display = hasVisibleCreative ? 'block' : 'none';
+
+            // 2. 渲染下方「我的專屬 App 捷徑桌面」
             const grid = document.getElementById('desktop-app-grid');
             grid.innerHTML = '';
 
@@ -625,8 +675,7 @@
                     url: app.url,
                     icon: app.icon,
                     visible: checkbox ? checkbox.checked : true,
-                    isCustom: false,
-                    isModal: app.isModal || false
+                    isCustom: false
                 };
             });
 
@@ -648,14 +697,7 @@
                     div.className = 'app-item relative group';
                     div.setAttribute('data-id', id);
 
-                    if (app.isModal) {
-                        div.innerHTML = `
-                            <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
-                                <div class="app-box"><i class="fa-solid ${app.icon.split(' ')[0]} ${app.icon.split(' ')[1]}"></i></div>
-                                <span class="app-label">${app.name}</span>
-                            </button>
-                        `;
-                    } else if (app.isCustom) {
+                    if (app.isCustom) {
                         div.innerHTML = `
                             <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box"><i class="fa-solid fa-globe text-purple-600"></i></div>
@@ -698,8 +740,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認精選影音服務已成功顯示於右側桌面捷徑與左側勾選控制", done: false },
-            { text: "測試影音牆彈窗與各項功能", done: false }
+            { text: "確認精選影音服務已獨立顯示於右側專屬桌面區塊", done: false },
+            { text: "測試左側選單勾選連動與彈窗互動功能", done: false }
         ]));
 
         function renderTodoList() {
