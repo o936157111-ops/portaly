@@ -435,7 +435,7 @@
     <div id="app-wrapper">
         <div class="max-w-3xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner：單一列 [圓形 Logo] [日期 + 時間大字] [星期] -->
+            <!-- 🌟 綠色 Banner -->
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 
                 <div class="flex items-center shrink-0">
@@ -456,6 +456,20 @@
 
             <main class="w-full space-y-5 flex-1">
                 
+                <!-- 🌟 Gemini 智慧對話列區塊 -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <form action="https://gemini.google.com/app" method="get" target="_blank" class="flex items-center gap-2">
+                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-purple-600">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <input type="text" name="q" placeholder="向 Gemini 問問題或尋求協助..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
+                        <button type="submit" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-4 md:px-5 py-2 rounded-xl text-xs md:text-sm font-bold transition cursor-pointer shadow-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>發問</span>
+                        </button>
+                    </form>
+                </div>
+
                 <!-- 🌟 專屬獨立區塊：精選影音與創作服務桌面（無標題） -->
                 <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <div id="creative-app-grid" class="app-grid"></div>
@@ -798,8 +812,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "全頁面卡片區塊標題已全面移除，呈現極簡極致風格", done: false },
-            { text: "確認所有功能運作與視覺排版完美無瑕", done: false }
+            { text: "確認已成功將搜尋列升級為 Gemini 智慧助理對話框", done: false },
+            { text: "確認全頁面極簡風格與各項功能運作完美", done: false }
         ]));
 
         function renderTodoList() {
