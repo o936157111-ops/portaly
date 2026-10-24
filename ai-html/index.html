@@ -365,36 +365,39 @@
         </div>
       </div>
 
-      <!-- 1️⃣ 頂部極簡綠色 Banner -->
-      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-3 text-white shadow-md shadow-emerald-500/15" data-id="banner">
-        <div class="relative z-10 flex items-center justify-between gap-2">
+      <!-- 1️⃣ 頂部極簡綠色 Banner (完全復刻您截圖中的乾淨質感排版) -->
+      <div class="draggable-section relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00B900] to-[#008800] p-4 text-white shadow-md shadow-emerald-500/15" data-id="banner">
+        <div class="relative z-10 flex flex-col items-center justify-center space-y-3">
           
-          <div class="flex items-center gap-2 shrink-0">
-            <div onclick="toggleDrawer()" class="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-105 transition shadow-inner">
+          <!-- 上方：圓形大頭貼/Logo 與 即時天氣小卡並排 -->
+          <div class="flex items-center gap-3">
+            <div onclick="toggleDrawer()" class="w-12 h-12 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center overflow-hidden cursor-pointer hover:scale-105 transition shadow-md">
               <img src="https://myezlife.com/eric-logo.gif" alt="Logo" class="w-full h-full object-cover">
             </div>
-            <div class="bg-black/15 backdrop-blur-sm px-2.5 py-1 rounded-xl border border-white/10 flex items-center gap-1.5">
+            <div class="bg-black/20 backdrop-blur-sm px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2">
               <div id="weatherIcon" class="text-xl text-amber-300">
                 <i class="fa-solid fa-sun animate-pulse"></i>
               </div>
               <div class="leading-tight">
-                <div id="weatherTemp" class="text-xs font-black">--°C</div>
-                <div id="weatherDesc" class="text-[10px] text-emerald-100 font-bold">載入中</div>
+                <div id="weatherTemp" class="text-sm font-black">--°C</div>
+                <div id="weatherDesc" class="text-[11px] text-emerald-100 font-bold">載入中</div>
               </div>
             </div>
           </div>
 
-          <div class="text-center flex-1 min-w-0 px-1">
-            <div id="currentDate" class="text-[11px] font-medium text-emerald-100 truncate">
+          <!-- 中間：日期與超大精美時間 -->
+          <div class="text-center">
+            <div id="currentDate" class="text-xs font-semibold text-emerald-100 tracking-wide">
               2026年10月24日
             </div>
-            <div id="currentTime" class="text-2xl font-black tracking-wider leading-none my-0.5">
-              08:36
+            <div id="currentTime" class="text-4xl font-black tracking-wider leading-none my-1 drop-shadow-sm">
+              08:51
             </div>
           </div>
 
-          <div class="shrink-0">
-            <div id="currentDay" class="text-xs font-bold text-white tracking-wider bg-black/15 backdrop-blur-sm px-2.5 py-2 rounded-xl border border-white/10 text-center">
+          <!-- 下方：星期標籤膠囊 -->
+          <div>
+            <div id="currentDay" class="text-xs font-bold text-white tracking-wider bg-black/20 backdrop-blur-sm px-5 py-1.5 rounded-xl border border-white/20 text-center shadow-sm">
               星期六
             </div>
           </div>
@@ -436,7 +439,7 @@
         </a>
       </div>
 
-      <!-- 3️⃣ 常用功能與工具入口 (包含「自訂新增 APP 捷徑」功能) -->
+      <!-- 3️⃣ 常用功能與工具入口 (內建「自訂新增 APP 捷徑」與永久記憶功能) -->
       <div class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="portalHub">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2.5">
@@ -457,7 +460,6 @@
         </div>
 
         <div id="portalList" class="space-y-3" data-list-id="portalList">
-          <!-- 系統內建捷徑 -->
           <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5 flex items-center justify-between shadow-sm" data-id="portal-file">
             <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex items-center gap-3.5 flex-1 pr-2">
               <div class="w-12 h-12 rounded-xl bg-slate-200 text-slate-800 flex items-center justify-center text-2xl shrink-0"><i class="fa-solid fa-folder-open"></i></div>
@@ -491,7 +493,7 @@
             <div class="btn-handle text-slate-300 hover:text-slate-600 p-2 cursor-grab active:cursor-grabbing text-xl"><i class="fa-solid fa-grip-vertical"></i></div>
           </div>
           
-          <!-- 💡 這裡會由 JS 自動載入使用者本機儲存（LocalStorage）的自訂 App -->
+          <!-- 💡 這裡會由 JS 自動載入使用者本機儲存（LocalStorage）的自訂 App，重整 F5 也不會消失 -->
           <div id="customAppsContainer"></div>
         </div>
       </div>
@@ -510,9 +512,7 @@
           </div>
         </div>
 
-        <div id="dynamicContentGrid" class="space-y-3" data-list-id="dynamicContentGrid">
-          <!-- JavaScript 動態渲染 -->
-        </div>
+        <div id="dynamicContentGrid" class="space-y-3" data-list-id="dynamicContentGrid"></div>
       </div>
 
       <!-- 7️⃣ 雲端影音牆速覽區塊 -->
@@ -763,7 +763,6 @@
       if (event.target.id === 'reelModalOverlay') toggleReelModal(false);
     }
 
-    // 🌟 控制新增 APP 彈窗
     function openAddAppModal() {
       document.getElementById('addAppModal').classList.add('active');
     }
@@ -773,7 +772,7 @@
       }
     }
 
-    // 🌟 儲存自訂 APP 到 LocalStorage
+    // 🌟 儲存自訂 APP 到 LocalStorage (F5 重新整理也不會消失)
     function saveCustomApp() {
       const name = document.getElementById('customAppName').value.trim();
       let url = document.getElementById('customAppUrl').value.trim();
@@ -797,7 +796,6 @@
       loadCustomApps();
     }
 
-    // 🌟 刪除自訂 APP
     function removeCustomApp(index) {
       if (confirm('確定要刪除這個自訂捷徑嗎？')) {
         let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
@@ -807,7 +805,6 @@
       }
     }
 
-    // 🌟 渲染自訂 APP 列表
     function loadCustomApps() {
       const container = document.getElementById('customAppsContainer');
       const customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
