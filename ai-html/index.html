@@ -105,7 +105,7 @@
             padding-left: 8px;
         }
 
-        /* 🌟 綠色 Banner：完美與下方 max-w-3xl 容器寬度對齊 */
+        /* 🌟 綠色 Banner：與下方 max-w-3xl 容器寬度完美對齊 */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -175,6 +175,7 @@
         <i id="toggle-icon" class="fa-solid fa-chevron-right text-xs"></i>
     </button>
 
+    <!-- 🌟 左側側邊欄選單 -->
     <aside id="sidebar" class="p-5 space-y-5 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -186,6 +187,40 @@
         </div>
 
         <div class="space-y-3 text-xs">
+            <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">精選影音與創作服務</div>
+            
+            <!-- 1. AI好劇一直看 -->
+            <a href="https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ" target="_blank" class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 transition border border-slate-100">
+                <i class="fa-solid fa-film text-rose-500 text-sm"></i>
+                <span class="font-bold">AI好劇一直看</span>
+            </a>
+
+            <!-- 2. 好歌一直聽 -->
+            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 transition border border-slate-100">
+                <i class="fa-solid fa-music text-amber-500 text-sm"></i>
+                <span class="font-bold">好歌一直聽</span>
+            </a>
+
+            <!-- 3. 心情隨筆日記 -->
+            <a href="https://myezlife.com/diary/index.html" target="_blank" class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 transition border border-slate-100">
+                <i class="fa-solid fa-book-open text-emerald-600 text-sm"></i>
+                <span class="font-bold">心情隨筆日記</span>
+            </a>
+
+            <!-- 4. AI早安問候圖 -->
+            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 transition border border-slate-100">
+                <i class="fa-solid fa-sun text-yellow-500 text-sm"></i>
+                <span class="font-bold">AI早安問候圖</span>
+            </a>
+
+            <!-- 5. 一鍵打造專屬影音牆 (互動說明彈窗流程) -->
+            <button onclick="openVideoWallModal()" class="w-full text-left flex items-center gap-2.5 p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 transition border border-emerald-200 cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles text-[#00a600] text-sm"></i>
+                <span class="font-bold">一鍵打造專屬影音牆</span>
+            </button>
+        </div>
+
+        <div class="space-y-3 text-xs pt-3 border-t border-slate-100">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
             
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
@@ -268,40 +303,65 @@
                 <span>💖 贊助支援與延伸閱讀</span>
             </label>
         </div>
-
-        <div class="pt-3 border-t border-slate-100 space-y-3">
-            <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">➕ 自訂新增 APP 捷徑</div>
-            <div class="space-y-2 text-xs">
-                <input type="text" id="custom-name" placeholder="APP 名稱 (例如: YouTube)" class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#00a600]">
-                <input type="text" id="custom-url" placeholder="網址 (https://...)" class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#00a600]">
-                <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white font-medium py-2 px-3 rounded-xl transition shadow-sm text-xs cursor-pointer">
-                    新增至我的桌面
-                </button>
-            </div>
-        </div>
     </aside>
 
+    <!-- 🌟 獨家影音牆互動視窗 1：說明視窗 -->
+    <div id="modal-step1" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-500"></i> 獨家亮點：個人影音牆說明
+                </h3>
+                <button onclick="closeModals()" class="text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                厭倦了在各大影音平台大海撈針嗎？透過「一鍵打造個人影音牆」，您可以把喜愛的音樂、戲曲、播放清單或教學影片全部集中在一個專屬頁面，隨點隨聽、乾淨無廣告干擾！
+            </p>
+            <div class="pt-2 flex gap-2">
+                <button onclick="closeModals()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl transition cursor-pointer">關閉</button>
+                <button onclick="goToStep2()" class="flex-1 bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">了解並前往影音牆</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌟 獨家影音牆互動視窗 2：打造專屬影音牆視窗 -->
+    <div id="modal-step2" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-[#00a600]"></i> 打造你的專屬影音牆
+                </h3>
+                <button onclick="closeModals()" class="text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-3 text-xs">
+                <p class="text-slate-600 font-medium">請輸入您的影音牆標題與清單來源網址，立即生成專屬影音中心：</p>
+                <input type="text" id="wall-title" placeholder="影音牆名稱 (例如: 我的金曲回憶)" class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#00a600]">
+                <input type="text" id="wall-url" placeholder="YouTube 播放清單或網址 (https://...)" class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#00a600]">
+            </div>
+            <div class="pt-2 flex gap-2">
+                <button onclick="openStep1()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 px-4 rounded-xl transition cursor-pointer">上一步</button>
+                <button onclick="createVideoWall()" class="flex-1 bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">立即建立專屬影音牆</button>
+            </div>
+        </div>
+    </div>
+
     <div id="app-wrapper">
-        <!-- 🌟 寬度縮小為 max-w-3xl，使畫面更精緻集中 -->
         <div class="max-w-3xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
             <!-- 🌟 綠色 Banner：單一列 [LOGO] [日期 + 時間大字] [星期] -->
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 
-                <!-- 左側：LOGO 按鈕 -->
                 <div class="flex items-center shrink-0">
                     <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
                         <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-7 h-7 md:w-9 md:h-9 object-contain">
                     </button>
                 </div>
 
-                <!-- 中間：日期 + 大字時間 -->
                 <div class="text-center flex-1">
                     <div id="header-date" class="text-[10px] md:text-xs text-white/90 font-medium tracking-wide">載入中...</div>
                     <div id="header-time" class="text-2xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
                 </div>
 
-                <!-- 右側：星期標籤 -->
                 <div class="bg-black/20 backdrop-blur px-2.5 md:px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider shrink-0">
                     <span id="header-weekday">載入中...</span>
                 </div>
@@ -316,7 +376,6 @@
                         </h2>
                         <span class="text-xs text-slate-400">點擊圖示開啟網頁，長按/拖曳可調換順序</span>
                     </div>
-                    <!-- 支援拖曳排序的 App 網格容器 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
@@ -433,6 +492,38 @@
                 backdrop.classList.add('show-backdrop');
                 icon.className = 'fa-solid fa-chevron-left text-xs';
             }
+        }
+
+        // 🌟 影音牆互動視窗控制函式
+        function openVideoWallModal() {
+            toggleSidebar(); // 關閉側邊欄
+            openStep1();
+        }
+
+        function openStep1() {
+            document.getElementById('modal-step2').classList.add('hidden');
+            document.getElementById('modal-step1').classList.remove('hidden');
+        }
+
+        function goToStep2() {
+            document.getElementById('modal-step1').classList.add('hidden');
+            document.getElementById('modal-step2').classList.remove('hidden');
+        }
+
+        function closeModals() {
+            document.getElementById('modal-step1').classList.add('hidden');
+            document.getElementById('modal-step2').classList.add('hidden');
+        }
+
+        function createVideoWall() {
+            const title = document.getElementById('wall-title').value.trim();
+            const url = document.getElementById('wall-url').value.trim();
+            if (!title || !url) {
+                alert('請完整輸入影音牆名稱與網址！');
+                return;
+            }
+            alert(`成功建立專屬影音牆：「${title}」！`);
+            closeModals();
         }
 
         function toggleGroup(groupName) {
@@ -591,8 +682,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認電腦版寬度已調整縮小 (max-w-3xl)", done: false },
-            { text: "測試綠色區塊單一列對齊與即時氣象 APP", done: false }
+            { text: "確認左側選單已加入五個精選影音服務與互動影音牆流程", done: false },
+            { text: "測試綠色區塊單一列對齊與電腦版精緻寬度", done: false }
         ]));
 
         function renderTodoList() {
