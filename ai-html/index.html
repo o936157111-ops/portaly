@@ -455,11 +455,11 @@
                 document.getElementById('weather-icon-mobile').className = `fa-solid ${iconClass} text-xs`;
             } catch (e) {
                 document.getElementById('header-temp').innerText = "21°C";
-                document.getElementById('header-weather').innerText = "颱風豪雨中";
+                document.getElementById('header-weather').innerText = "weatherDesc";
                 document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
 
                 document.getElementById('header-temp-mobile').innerText = "21°C";
-                document.getElementById('header-weather-mobile').innerText = "颱風豪雨中";
+                document.getElementById('header-weather-mobile').innerText = "weatherDesc";
                 document.getElementById('weather-icon-mobile').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-xs";
             }
         }
@@ -737,7 +737,7 @@
                 { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/ai-greeting-app/", tag: "人氣工具" },
                 { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
                 { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://myezlife.com/goldmelody_csv.html", tag: "視聽娛樂" },
-                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://drive.google.com/", tag: "高效助手" }
+                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://myezlife.com/FileExplorer.html", tag: "高效助手" }
             ];
 
             const shuffled = [...recs].sort(() => 0.5 - Math.random());
