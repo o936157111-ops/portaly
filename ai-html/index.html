@@ -105,7 +105,7 @@
             padding-left: 8px;
         }
 
-        /* 🌟 綠色 Banner：完美與下方各區塊 (max-w-5xl 容器) 寬度與邊距對齊 */
+        /* 🌟 綠色 Banner：與下方各區塊 (max-w-5xl) 寬度對齊，且手機/電腦皆為同一列 */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -284,21 +284,24 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner：寬度與下方 max-w-5xl 容器完全對齊，內容為 LOGO + 日期時間(大時間) + 星期 -->
-            <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 relative">
+            <!-- 🌟 綠色 Banner：手機與電腦均於同一列顯示 [LOGO] [日期 + 時間 (大字)] [星期] -->
+            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0 shadow-sm" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
+                <!-- 左側：LOGO 按鈕 -->
+                <div class="flex items-center shrink-0">
+                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-7 h-7 md:w-9 md:h-9 object-contain">
                     </button>
                 </div>
 
-                <div class="text-center my-1 md:my-0">
-                    <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
-                    <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
+                <!-- 中間：日期 + 大字時間 -->
+                <div class="text-center flex-1">
+                    <div id="header-date" class="text-[10px] md:text-xs text-white/90 font-medium tracking-wide">載入中...</div>
+                    <div id="header-time" class="text-2xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
                 </div>
 
-                <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                <!-- 右側：星期標籤 -->
+                <div class="bg-black/20 backdrop-blur px-2.5 md:px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider shrink-0">
                     <span id="header-weekday">載入中...</span>
                 </div>
             </header>
@@ -587,7 +590,7 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認綠色區塊已與下方容器完美對齊寬度", done: false },
+            { text: "確認綠色區塊已於手機/電腦版同一列整齊排列", done: false },
             { text: "測試即時氣象 APP 與各項捷徑功能", done: false }
         ]));
 
