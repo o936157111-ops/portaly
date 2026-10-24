@@ -9,14 +9,13 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f0f4f8; /* 淺灰藍背景，襯托綠色 Banner */
+            background-color: #f0f4f8;
             color: #334155;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
         }
 
-        /* 1. 左側側邊欄：手機版浮動在最上層 (z-50) */
         #sidebar {
             position: fixed;
             top: 0;
@@ -34,7 +33,6 @@
             transform: translateX(0);
         }
 
-        /* 手機版專屬：半透明背景遮罩 */
         #backdrop {
             position: fixed;
             inset: 0;
@@ -49,7 +47,6 @@
             pointer-events: auto;
         }
 
-        /* 2. 主體包裹容器：電腦版往右推移，手機版保持原位 */
         #app-wrapper {
             min-height: 100vh;
             display: flex;
@@ -74,7 +71,6 @@
             }
         }
 
-        /* 3. 左側半透明常駐觸發按鈕 */
         #sidebar-toggle-btn {
             position: fixed;
             left: 0;
@@ -98,7 +94,6 @@
             padding-left: 8px;
         }
 
-        /* 原汁原味的亮綠色 Banner 樣式 */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -106,7 +101,6 @@
             box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
         }
 
-        /* App 網格與圖示樣式 */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -151,15 +145,12 @@
 </head>
 <body>
 
-    <!-- 手機版半透明遮罩背景 -->
     <div id="backdrop" onclick="toggleSidebar()"></div>
 
-    <!-- 左側邊緣半透明觸發按鈕 -->
     <button id="sidebar-toggle-btn" onclick="toggleSidebar()" title="展開功能選單">
         <i id="toggle-icon" class="fa-solid fa-chevron-right text-xs"></i>
     </button>
 
-    <!-- 左側側邊欄 -->
     <aside id="sidebar" class="p-5 space-y-5 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -170,7 +161,6 @@
             </button>
         </div>
 
-        <!-- 內建功能開關列表 -->
         <div class="space-y-3 text-xs">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
@@ -191,7 +181,6 @@
             </label>
         </div>
 
-        <!-- 自訂新增 APP 專區 -->
         <div class="pt-3 border-t border-slate-100 space-y-3">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">➕ 自訂新增 APP 捷徑</div>
             <div class="space-y-2 text-xs">
@@ -204,13 +193,9 @@
         </div>
     </aside>
 
-    <!-- 主體內容包裹容器 -->
     <div id="app-wrapper">
-        
-        <!-- 頂層容器 (max-w-5xl 置中) -->
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- Header 區塊 -->
             <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4 relative">
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
@@ -235,10 +220,8 @@
                 </div>
             </header>
 
-            <!-- 2. 主體內容：右側桌面 -->
             <main class="w-full space-y-5 flex-1">
                 
-                <!-- 桌面主體：App 網格區 -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
@@ -246,33 +229,32 @@
                         </h2>
                         <span class="text-xs text-slate-400">點擊圖示即可直接開啟網頁</span>
                     </div>
-                    <!-- 動態生成的 App 網格 -->
-                    <div id="desktop-app-grid" class="app-grid">
-                        <!-- 由 JavaScript 動態填入 -->
-                    </div>
+                    <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
-                <!-- 互動待辦與隨手便籤區 -->
+                <!-- 🌟 互動待辦與隨手便籤區 (動態新增、刪除、勾選) -->
                 <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-pen-nib text-purple-600"></i> 互動待辦清單與隨手便籤
                     </h3>
-                    <div class="space-y-2 text-sm text-slate-700">
-                        <label class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 cursor-pointer">
-                            <input type="checkbox" onchange="toggleTodo(this)" class="w-4 h-4 text-[#00a600] rounded">
-                            <span class="font-medium">確認自訂新增 APP 捷徑已完美支援 localStorage 永久記憶</span>
-                        </label>
-                        <label class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 cursor-pointer">
-                            <input type="checkbox" onchange="toggleTodo(this)" class="w-4 h-4 text-[#00a600] rounded">
-                            <span class="font-medium">測試按下 F5 重新整理後，自訂捷徑依然健在</span>
-                        </label>
+                    
+                    <!-- 快速新增待辦輸入框 -->
+                    <div class="flex gap-2">
+                        <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
+                        <button onclick="addTodoItem()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-4 py-2 rounded-xl text-xs font-bold transition">新增</button>
                     </div>
-                    <textarea placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2"></textarea>
+
+                    <!-- 待辦清單動態渲染容器 -->
+                    <div id="todo-list-container" class="space-y-2 text-sm text-slate-700">
+                        <!-- 由 JS 動態產生 -->
+                    </div>
+
+                    <!-- 隨手便籤 -->
+                    <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
                 </div>
 
             </main>
 
-            <!-- 3. 底部區塊 -->
             <footer class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <div>
@@ -290,7 +272,6 @@
         </div>
     </div>
 
-    <!-- JavaScript 邏輯 -->
     <script>
         async function fetchRealtimeWeather() {
             try {
@@ -362,7 +343,7 @@
             }
         }
 
-        // 🌟 初始化讀取 localStorage 內的自訂 App 捷徑（確保 F5 重整也不會消失）
+        // 🌟 自訂 App 捷徑管理 (LocalStorage)
         let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
 
         function updateDesktop() {
@@ -409,7 +390,6 @@
                 `;
             }
 
-            // 渲染使用者自訂 App 捷徑
             customApps.forEach((app, index) => {
                 grid.innerHTML += `
                     <div class="relative group">
@@ -425,7 +405,6 @@
             document.getElementById('desktop-todo-card').style.display = showTodo ? 'block' : 'none';
         }
 
-        // 🌟 新增自訂 APP 並存入 localStorage
         function addCustomApp() {
             const nameInput = document.getElementById('custom-name');
             const urlInput = document.getElementById('custom-url');
@@ -442,32 +421,87 @@
             }
 
             customApps.push({ name, url });
-            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps)); // 永久保存
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
 
             nameInput.value = '';
             urlInput.value = '';
             updateDesktop();
         }
 
-        // 🌟 刪除自訂 APP 並更新 localStorage
         function removeCustomApp(index) {
             customApps.splice(index, 1);
-            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps)); // 更新保存
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
             updateDesktop();
         }
 
-        updateDesktop();
+        // 🌟 互動待辦清單與隨手便籤管理 (LocalStorage)
+        let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
+            { text: "確認 Header 已完全還原成原版的經典鮮綠色 Banner", done: false },
+            { text: "測試自動氣象與左側選單抽屜互動", done: false }
+        ]));
 
-        function toggleTodo(checkbox) {
-            const span = checkbox.nextElementSibling;
-            if (checkbox.checked) {
-                span.style.textDecoration = 'line-through';
-                span.style.opacity = '0.5';
-            } else {
-                span.style.textDecoration = 'none';
-                span.style.opacity = '1';
+        function renderTodoList() {
+            const container = document.getElementById('todo-list-container');
+            container.innerHTML = '';
+
+            todoItems.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-100 group">
+                        <label class="flex items-center gap-2 cursor-pointer flex-1 mr-2">
+                            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleTodo(${index})" class="w-4 h-4 text-[#00a600] rounded">
+                            <span class="font-medium ${item.done ? 'line-through opacity-50' : ''}">${item.text}</span>
+                        </label>
+                        <button onclick="removeTodoItem(${index})" class="text-rose-400 hover:text-rose-600 text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition cursor-pointer" title="刪除事項">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function addTodoItem() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (!text) {
+                alert('請輸入待辦事項內容！');
+                return;
+            }
+
+            todoItems.push({ text, done: false });
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            input.value = '';
+            renderTodoList();
+        }
+
+        function toggleTodo(index) {
+            todoItems[index].done = !todoItems[index].done;
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            renderTodoList();
+        }
+
+        function removeTodoItem(index) {
+            todoItems.splice(index, 1);
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            renderTodoList();
+        }
+
+        // 便籤自動儲存
+        function saveMemo() {
+            const memoText = document.getElementById('memo-textarea').value;
+            localStorage.setItem('myezlife_memo', memoText);
+        }
+
+        function loadMemo() {
+            const savedMemo = localStorage.getItem('myezlife_memo');
+            if (savedMemo !== null) {
+                document.getElementById('memo-textarea').value = savedMemo;
             }
         }
+
+        // 初始化執行
+        updateDesktop();
+        renderTodoList();
+        loadMemo();
     </script>
 </body>
 </html>
