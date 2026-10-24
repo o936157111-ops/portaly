@@ -281,32 +281,32 @@
             <!-- 🌟 綠色 Banner -->
             <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 relative">
                 
-                <!-- 🌟 手機版專屬排版：上面是 LOGO，下面是 天氣 + 日期時間 + 星期 (嚴格確保字體大小一致性) -->
-                <div class="w-full flex flex-col items-center justify-center gap-3 md:hidden">
-                    <!-- 上面：LOGO 按鈕 -->
+                <!-- 🌟 手機版專屬排版：第一列 LOGO 置中，第二列三個獨立區塊 (天氣 | 日期時間 | 星期)，字體大小絕對一致 -->
+                <div class="w-full flex flex-col items-center gap-3 md:hidden">
+                    <!-- 第一列：LOGO 置中 -->
                     <button onclick="toggleSidebar()" class="p-1.5 bg-white/25 hover:bg-white/35 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shadow-sm" title="點擊開啟側邊欄選單">
                         <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
                     </button>
 
-                    <!-- 下面：天氣 + 日期時間 + 星期 (同一列，字體大小嚴格一致) -->
-                    <div class="w-full flex items-center justify-between bg-black/15 backdrop-blur px-3.5 py-2 rounded-xl border border-white/20 text-xs font-bold">
-                        <!-- 天氣 -->
-                        <div class="flex items-center gap-1.5">
-                            <i id="weather-icon-mobile" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm"></i>
+                    <!-- 第二列：三個獨立區塊等距排列，字體大小嚴格一致 -->
+                    <div class="w-full grid grid-cols-3 gap-2">
+                        <!-- 1. 天氣區塊 -->
+                        <div class="bg-black/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/25 flex items-center justify-center gap-1.5 text-xs font-bold text-center">
+                            <i id="weather-icon-mobile" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-xs"></i>
                             <div>
                                 <span id="header-temp-mobile">21°C</span>
-                                <span id="header-weather-mobile" class="text-white/90">颱風豪雨中</span>
+                                <span id="header-weather-mobile" class="block text-[10px] text-white/90">颱風豪雨中</span>
                             </div>
                         </div>
 
-                        <!-- 日期時間 -->
-                        <div class="text-center">
-                            <span id="header-date-mobile">載入中...</span>
-                            <span id="header-time-mobile" class="ml-1">00:00</span>
+                        <!-- 2. 日期時間區塊 -->
+                        <div class="bg-black/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/25 flex flex-col items-center justify-center text-xs font-bold text-center">
+                            <span id="header-date-mobile" class="text-[10px] text-white/90">載入中...</span>
+                            <span id="header-time-mobile" class="text-xs">00:00</span>
                         </div>
 
-                        <!-- 星期 -->
-                        <div>
+                        <!-- 3. 星期區塊 -->
+                        <div class="bg-black/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/25 flex items-center justify-center text-xs font-bold text-center">
                             <span id="header-weekday-mobile">載入中...</span>
                         </div>
                     </div>
@@ -388,7 +388,7 @@
                                 <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
                             </div>
                             
-                            <!-- 純資訊展示區塊 -->
+                            <!-- 🌟 已修復：推薦項目帶有正確且可正常點擊的站內導向超連結 -->
                             <div id="random-recommendation-box" class="space-y-2"></div>
                         </div>
                     </div>
@@ -451,16 +451,16 @@
 
                 // 手機版天氣更新
                 document.getElementById('header-temp-mobile').innerText = `${temp}°C`;
-                document.getElementById('header-weather-mobile').innerText = ` ${weatherDesc}`;
-                document.getElementById('weather-icon-mobile').className = `fa-solid ${iconClass} text-sm`;
+                document.getElementById('header-weather-mobile').innerText = weatherDesc;
+                document.getElementById('weather-icon-mobile').className = `fa-solid ${iconClass} text-xs`;
             } catch (e) {
                 document.getElementById('header-temp').innerText = "21°C";
                 document.getElementById('header-weather').innerText = "颱風豪雨中";
                 document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
 
                 document.getElementById('header-temp-mobile').innerText = "21°C";
-                document.getElementById('header-weather-mobile').innerText = " 颱風豪雨中";
-                document.getElementById('weather-icon-mobile').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm";
+                document.getElementById('header-weather-mobile').innerText = "颱風豪雨中";
+                document.getElementById('weather-icon-mobile').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-xs";
             }
         }
 
@@ -482,7 +482,7 @@
             document.getElementById('header-time').innerText = timeStr;
             document.getElementById('header-weekday').innerText = weekday;
 
-            // 手機版更新 (同一列，字體大小一致)
+            // 手機版更新
             document.getElementById('header-date-mobile').innerText = dateStr;
             document.getElementById('header-time-mobile').innerText = timeStr;
             document.getElementById('header-weekday-mobile').innerText = weekday;
@@ -730,13 +730,14 @@
             }
         }
 
+        // 🌟 賦予推薦項目正確且可點擊的站內導向超連結
         function initRandomRecommendation() {
             const recs = [
-                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", tag: "熱門推薦" },
-                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", tag: "人氣工具" },
-                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", tag: "實用資訊" },
-                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", tag: "視聽娛樂" },
-                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", tag: "高效助手" }
+                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/", tag: "熱門推薦" },
+                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/", tag: "人氣工具" },
+                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
+                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://www.youtube.com/", tag: "視聽娛樂" },
+                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://drive.google.com/", tag: "高效助手" }
             ];
 
             const shuffled = [...recs].sort(() => 0.5 - Math.random());
@@ -745,13 +746,13 @@
             const box = document.getElementById('random-recommendation-box');
             if (box) {
                 box.innerHTML = selected.map(item => `
-                    <div class="bg-white border border-emerald-100/90 rounded-lg p-2.5 shadow-sm">
+                    <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100/90 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
                         <div class="flex items-center justify-between mb-0.5">
-                            <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">${item.title}</span>
+                            <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">${item.title}</span>
                             <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
                         </div>
                         <p class="text-[11px] text-slate-600 leading-tight font-medium">${item.desc}</p>
-                    </div>
+                    </a>
                 `).join('');
             }
         }
