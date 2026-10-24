@@ -615,7 +615,7 @@
         </div>
       </div>
 
-      <!-- 5️⃣ 專區二：台股財經快報 (標題已更改並放大至 text-lg) -->
+      <!-- 5️⃣ 專區二：台股財經快報 -->
       <div id="financeCard" class="draggable-section bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm space-y-3" data-id="finance">
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
@@ -659,10 +659,8 @@
         </div>
       </div>
 
-      <!-- 8️⃣ 廣告與贊助推薦區塊 (最下方為預留廣告框) -->
+      <!-- 8️⃣ 廣告與贊助推薦區塊 -->
       <div class="draggable-section bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" data-id="ads">
-        
-        <!-- 頂部卡片標題 -->
         <div class="flex items-center justify-between px-1 border-b border-slate-100 pb-2">
           <p class="text-xs font-black text-slate-700 flex items-center gap-1.5">
             <span class="text-rose-500">💖</span> 贊助支援與延伸閱讀
@@ -672,7 +670,6 @@
           </div>
         </div>
 
-        <!-- 💖 暖心贊助提示與隨機 3 則推薦 -->
         <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
           <div class="flex items-start gap-2.5">
             <span class="text-xl">💖</span>
@@ -690,14 +687,12 @@
               <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
             </div>
             
-            <!-- 顯示 3 筆隨機推薦容器 -->
             <div id="random-recommendation-box" class="space-y-2">
-              <!-- JavaScript 動態渲染 3 筆推薦 -->
+              <!-- 動態渲染 -->
             </div>
           </div>
         </div>
 
-        <!-- 🔻 Google 廣告專區 (放至卡片最下方) -->
         <div class="pt-1">
           <p class="text-[11px] text-slate-400 font-bold mb-1.5 text-center">贊助商廣告</p>
           <div class="min-h-[90px] flex items-center justify-center bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden p-2">
@@ -706,7 +701,6 @@
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -719,13 +713,11 @@
   <script>
     let lastTimePeriod = '';
 
-    // 展開/收合側邊選單
     function toggleDrawer() {
       document.getElementById('sideDrawer').classList.toggle('active');
       document.getElementById('drawerOverlay').classList.toggle('active');
     }
 
-    // 控制彈窗
     function toggleReelModal(show) {
       const modal = document.getElementById('reelModalOverlay');
       if (show) modal.classList.add('active');
@@ -746,9 +738,7 @@
       checkHomeReminder();
       initRandomRecommendation();
 
-      // 初始化主欄位 Sortable 拖曳 (加入 3 秒防誤觸長按機制)
       initColumnSortable('mainColumn', 'myezlife_main_order');
-
       initSortableList('portalList', 'myezlife_portal_order');
       initSortableList('trafficList', 'myezlife_traffic_order');
       initSortableList('financeList', 'myezlife_finance_order');
@@ -763,42 +753,15 @@
       setInterval(updateDateTime, 1000);
     });
 
-    // 🌟 隨機推薦 3 筆清單邏輯
     function initRandomRecommendation() {
       const recs = [
-        {
-          title: "🌱 心情隨筆與待辦日記",
-          desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。",
-          url: "https://myezlife.com/diary/index.html",
-          tag: "熱門推薦"
-        },
-        {
-          title: "🌻 輕鬆製作精美問候圖",
-          desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。",
-          url: "https://myezlife.com/ai-greeting-app/",
-          tag: "人氣工具"
-        },
-        {
-          title: "📰 新聞劃重點",
-          desc: "快速掌握捷運通勤時事重點與最新趨勢。",
-          url: "https://myezlife.com/index_news.html",
-          tag: "實用資訊"
-        },
-        {
-          title: "🎵 好歌一直聽 (雲端影音牆)",
-          desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。",
-          url: "https://myezlife.com/goldmelody_csv.html",
-          tag: "視聽娛樂"
-        },
-        {
-          title: "📂 個人檔案總管",
-          desc: "便利的管理與瀏覽個人雲端檔案內容。",
-          url: "https://myezlife.com/FileExplorer.html",
-          tag: "高效助手"
-        }
+        { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/diary/index.html", tag: "熱門推薦" },
+        { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/ai-greeting-app/", tag: "人氣工具" },
+        { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
+        { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://myezlife.com/goldmelody_csv.html", tag: "視聽娛樂" },
+        { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://myezlife.com/FileExplorer.html", tag: "高效助手" }
       ];
 
-      // 隨機排序並選取前 3 筆
       const shuffled = [...recs].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, 3);
 
@@ -807,9 +770,7 @@
         box.innerHTML = selected.map(item => `
           <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100/90 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
             <div class="flex items-center justify-between mb-0.5">
-              <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">
-                ${item.title}
-              </span>
+              <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">${item.title}</span>
               <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
             </div>
             <p class="text-[11px] text-slate-600 leading-tight line-clamp-1 font-medium">${item.desc}</p>
@@ -836,8 +797,8 @@
       new Sortable(colEl, {
         handle: '.section-handle',
         animation: 150,
-        delay: 3000,              // 🛡️ 手機觸控按住 3 秒後才進入拖曳模式
-        delayOnTouchOnly: true,   // 僅限觸控裝置啟用延遲，滑鼠操作維持正常
+        delay: 3000,
+        delayOnTouchOnly: true,
         ghostClass: 'sortable-ghost',
         dragClass: 'sortable-drag',
         onEnd: function () {
@@ -1218,18 +1179,46 @@
       document.getElementById('currentDay').innerText = days[now.getDay()];
     }
 
+    // 🌟 修正後的即時天氣抓取函式（自動解析氣象狀態與圖示）
     async function fetchWeather() {
       try {
         const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.0478&longitude=121.5319&current_weather=true');
         const data = await res.json();
         if (data && data.current_weather) {
           const temp = Math.round(data.current_weather.temperature);
+          const code = data.current_weather.weathercode;
+          
+          let desc = "晴朗";
+          let iconHTML = '<i class="fa-solid fa-sun animate-pulse text-amber-300"></i>';
+
+          // 依照 WMO 天氣代碼自動對應即時狀態
+          if (code >= 1 && code <= 3) {
+            desc = "多雲";
+            iconHTML = '<i class="fa-solid fa-cloud-sun text-amber-200"></i>';
+          } else if (code >= 45 && code <= 48) {
+            desc = "起霧";
+            iconHTML = '<i class="fa-solid fa-smog text-slate-200"></i>';
+          } else if (code >= 51 && code <= 67) {
+            desc = "降雨";
+            iconHTML = '<i class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse"></i>';
+          } else if (code >= 71 && code <= 77) {
+            desc = "降雪";
+            iconHTML = '<i class="fa-solid fa-snowflake text-sky-200"></i>';
+          } else if (code >= 80 && code <= 82) {
+            desc = "陣雨";
+            iconHTML = '<i class="fa-solid fa-cloud-rain text-sky-200 animate-pulse"></i>';
+          } else if (code >= 95) {
+            desc = "雷雨";
+            iconHTML = '<i class="fa-solid fa-bolt text-amber-300 animate-bounce"></i>';
+          }
+
           document.getElementById('weatherTemp').innerText = `${temp}°C`;
-          document.getElementById('weatherDesc').innerText = '晴朗';
+          document.getElementById('weatherDesc').innerText = desc;
+          document.getElementById('weatherIcon').innerHTML = iconHTML;
         }
       } catch (e) {
-        document.getElementById('weatherTemp').innerText = '24°C';
-        document.getElementById('weatherDesc').innerText = '舒適';
+        document.getElementById('weatherTemp').innerText = '--°C';
+        document.getElementById('weatherDesc').innerText = '載入失敗';
       }
     }
 
