@@ -105,7 +105,7 @@
             padding-left: 8px;
         }
 
-        /* 🌟 綠色 Banner：與下方各區塊 (max-w-5xl) 寬度對齊，且手機/電腦皆為同一列 */
+        /* 🌟 綠色 Banner：完美與下方 max-w-3xl 容器寬度對齊 */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -282,9 +282,10 @@
     </aside>
 
     <div id="app-wrapper">
-        <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
+        <!-- 🌟 寬度縮小為 max-w-3xl，使畫面更精緻集中 -->
+        <div class="max-w-3xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner：手機與電腦均於同一列顯示 [LOGO] [日期 + 時間 (大字)] [星期] -->
+            <!-- 🌟 綠色 Banner：單一列 [LOGO] [日期 + 時間大字] [星期] -->
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 
                 <!-- 左側：LOGO 按鈕 -->
@@ -378,7 +379,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <div>
                         <p class="font-bold text-slate-700">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
-                        <p class="mt-1 text-slate-400">延伸閱讀：<a href="#" class="text-[#00a600] hover:underline font-medium">數位斷捨離指南</a> | <a href="#" class="text-[#00a600] hover:underline font-medium">個人化網頁開源筆記</a></p>
+                        <p class="mt-1 text-slate-400">延伸閱讀：數位斷捨離指南 | 個人化網頁開源筆記</p>
                     </div>
                     <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 px-4 py-2.5 rounded-2xl text-amber-800">
                         <i class="fa-solid fa-mug-hot text-amber-600"></i>
@@ -590,8 +591,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認綠色區塊已於手機/電腦版同一列整齊排列", done: false },
-            { text: "測試即時氣象 APP 與各項捷徑功能", done: false }
+            { text: "確認電腦版寬度已調整縮小 (max-w-3xl)", done: false },
+            { text: "測試綠色區塊單一列對齊與即時氣象 APP", done: false }
         ]));
 
         function renderTodoList() {
