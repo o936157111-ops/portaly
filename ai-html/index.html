@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f8fafc;
+            background-color: #f0f4f8; /* 淺灰藍背景，襯托綠色 Banner */
             color: #334155;
             margin: 0;
             padding: 0;
@@ -94,8 +94,16 @@
         }
         #sidebar-toggle-btn:hover {
             background: #ffffff;
-            color: #2563eb;
+            color: #00a600;
             padding-left: 8px;
+        }
+
+        /* 原汁原味的亮綠色 Banner 樣式 (對齊截圖中的綠色) */
+        .green-banner {
+            background-color: #00a600; /* 精準復刻截圖鮮綠色 */
+            border-radius: 20px;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
         }
 
         /* App 網格與圖示樣式 */
@@ -124,7 +132,7 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background: #ffffff;
             border: 1px solid #e2e8f0;
         }
@@ -155,7 +163,7 @@
     <aside id="sidebar" class="p-5 space-y-5 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-blue-600"></i> 功能模組側邊欄
+                <i class="fa-solid fa-sliders text-[#00a600]"></i> 功能模組側邊欄
             </h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -166,19 +174,19 @@
         <div class="space-y-3 text-xs">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
-                <input type="checkbox" id="mod-traffic" checked onchange="updateDesktop()" class="rounded text-blue-600 w-4 h-4">
+                <input type="checkbox" id="mod-traffic" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>🚗 即時交通與通勤 (1968/公車)</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
-                <input type="checkbox" id="mod-finance" checked onchange="updateDesktop()" class="rounded text-blue-600 w-4 h-4">
+                <input type="checkbox" id="mod-finance" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>📈 台股財經與鉅亨網</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
-                <input type="checkbox" id="mod-news" checked onchange="updateDesktop()" class="rounded text-blue-600 w-4 h-4">
+                <input type="checkbox" id="mod-news" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>📰 焦點新聞自動彙整</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
-                <input type="checkbox" id="mod-todo" checked onchange="updateDesktop()" class="rounded text-blue-600 w-4 h-4">
+                <input type="checkbox" id="mod-todo" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>✅ 互動待辦清單與隨手便籤</span>
             </label>
         </div>
@@ -187,9 +195,9 @@
         <div class="pt-3 border-t border-slate-100 space-y-3">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">➕ 自訂新增 APP 捷徑</div>
             <div class="space-y-2 text-xs">
-                <input type="text" id="custom-name" placeholder="APP 名稱 (例如: YouTube)" class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-500">
-                <input type="text" id="custom-url" placeholder="網址 (https://...)" class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-500">
-                <button onclick="addCustomApp()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-xl transition shadow-sm text-xs cursor-pointer">
+                <input type="text" id="custom-name" placeholder="APP 名稱 (例如: YouTube)" class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#00a600]">
+                <input type="text" id="custom-url" placeholder="網址 (https://...)" class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#00a600]">
+                <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white font-medium py-2 px-3 rounded-xl transition shadow-sm text-xs cursor-pointer">
                     新增至我的桌面
                 </button>
             </div>
@@ -200,35 +208,45 @@
     <div id="app-wrapper">
         
         <!-- 頂層容器 (max-w-5xl 置中) -->
-        <div class="max-w-5xl mx-auto w-full space-y-6 flex-1 flex flex-col justify-between">
+        <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- Header 區塊：完美對齊 myezlife.com 官網底色（純白圓角卡片 Banner） -->
-            <header class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Header 區塊：精準復刻原版鮮綠色 Banner 卡片樣式 -->
+            <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4 relative">
+                <!-- 左側：Eric Logo 觸發按鈕 + 即時氣象小卡 -->
                 <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="p-2 bg-white rounded-2xl border border-slate-200 shadow-sm hover:bg-slate-50 transition cursor-pointer flex items-center justify-center overflow-hidden w-14 h-14" title="點擊切換側邊欄">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-10 h-10 object-contain">
+                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
                     </button>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-900 cursor-pointer" onclick="toggleSidebar()">myezlife.com</h1>
-                        <p class="text-xs text-slate-500">點擊左側按鈕或 Logo 展開側邊欄選單</p>
+                    <!-- 氣象膠囊卡片 (類似原版左側綠底氣象塊) -->
+                    <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
+                        <i id="weather-icon" class="fa-solid fa-sun text-yellow-300 text-base"></i>
+                        <div>
+                            <div id="header-temp" class="text-sm">--°C</div>
+                            <div id="header-weather" class="text-[10px] text-white/80 font-normal">載入氣象中...</div>
+                        </div>
                     </div>
                 </div>
-                <!-- 即時天氣與日期時間顯示區（由 API 自動抓取當前真實天氣與時間） -->
-                <div class="flex items-center gap-4 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-200 text-xs font-medium text-slate-700">
-                    <div class="flex items-center gap-1.5"><i id="weather-icon" class="fa-solid fa-cloud-sun text-amber-500"></i> <span id="header-weather">載入即時天氣中...</span></div>
-                    <div class="text-slate-300">|</div>
-                    <div><i class="fa-regular fa-calendar text-blue-500"></i> <span id="header-datetime">載入中...</span></div>
+
+                <!-- 中間：經典大字體日期與時間 -->
+                <div class="text-center">
+                    <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">2026年10月24日</div>
+                    <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">08:03</div>
+                </div>
+
+                <!-- 右側：星期幾標籤 -->
+                <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                    <span id="header-weekday">星期六</span>
                 </div>
             </header>
 
             <!-- 2. 主體內容：右側桌面 -->
-            <main class="w-full space-y-6 flex-1">
+            <main class="w-full space-y-5 flex-1">
                 
                 <!-- 桌面主體：App 網格區 -->
-                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-desktop text-blue-600"></i> 我的專屬 App 捷徑桌面
+                            <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
                         </h2>
                         <span class="text-xs text-slate-400">點擊圖示即可直接開啟網頁</span>
                     </div>
@@ -239,18 +257,18 @@
                 </div>
 
                 <!-- 互動待辦與隨手便籤區 -->
-                <div id="desktop-todo-card" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+                <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-pen-nib text-purple-600"></i> 互動待辦清單與隨手便籤
                     </h3>
                     <div class="space-y-2 text-sm text-slate-700">
-                        <label class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl cursor-pointer">
-                            <input type="checkbox" onchange="toggleTodo(this)" class="w-4 h-4 text-purple-600 rounded">
-                            <span class="font-medium">確認 Header 底色為純白卡片 Banner 且 Logo 顯示正確</span>
+                        <label class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" onchange="toggleTodo(this)" class="w-4 h-4 text-[#00a600] rounded">
+                            <span class="font-medium">確認 Header 已完全還原成原版的經典鮮綠色 Banner</span>
                         </label>
-                        <label class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl cursor-pointer">
-                            <input type="checkbox" onchange="toggleTodo(this)" class="w-4 h-4 text-purple-600 rounded">
-                            <span class="font-medium">確認氣象資訊已透過免費 API 自動抓取即時天氣與溫度</span>
+                        <label class="flex items-center gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100 cursor-pointer">
+                            <input type="checkbox" onchange="toggleTodo(this)" class="w-4 h-4 text-[#00a600] rounded">
+                            <span class="font-medium">測試自動氣象與左側選單抽屜互動</span>
                         </label>
                     </div>
                     <textarea placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2"></textarea>
@@ -259,11 +277,11 @@
             </main>
 
             <!-- 3. 底部區塊：贊助支援、延伸閱讀與廣告 -->
-            <footer class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm text-xs text-slate-500">
+            <footer class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <div>
                         <p class="font-bold text-slate-700">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
-                        <p class="mt-1 text-slate-400">延伸閱讀：<a href="#" class="text-blue-600 hover:underline">數位斷捨離指南</a> | <a href="#" class="text-blue-600 hover:underline">個人化網頁開源筆記</a></p>
+                        <p class="mt-1 text-slate-400">延伸閱讀：<a href="#" class="text-[#00a600] hover:underline font-medium">數位斷捨離指南</a> | <a href="#" class="text-[#00a600] hover:underline font-medium">個人化網頁開源筆記</a></p>
                     </div>
                     <!-- 贊助支援與廣告區塊 -->
                     <div class="flex items-center gap-3 bg-amber-50 border border-amber-200 px-4 py-2.5 rounded-2xl text-amber-800">
@@ -277,39 +295,36 @@
         </div>
     </div>
 
-    <!-- JavaScript 邏輯：即時天氣 API 串接與日常互動 -->
+    <!-- JavaScript 邏輯：即時氣象與日期時間自動更新 -->
     <script>
-        // 1. 自動抓取即時天氣與日期時間
+        // 1. 自動抓取真實即時天氣與格式化時間
         async function fetchRealtimeWeather() {
             try {
-                // 預設抓取台北市座標 (25.03, 121.56)
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.03&longitude=121.56&current=temperature_2m,weather_code');
                 const data = await res.json();
                 const temp = Math.round(data.current.temperature_2m);
                 const code = data.current.weather_code;
 
-                let weatherDesc = "晴時多雲";
-                let iconClass = "fa-cloud-sun text-amber-500";
+                let weatherDesc = "晴朗";
+                let iconClass = "fa-sun text-yellow-300";
 
-                // 簡易氣象代碼對應
                 if (code >= 51 && code <= 67) {
-                    weatherDesc = "雨勢陣陣";
-                    iconClass = "fa-cloud-showers-heavy text-blue-600";
+                    weatherDesc = "陣雨";
+                    iconClass = "fa-cloud-showers-heavy text-sky-200";
                 } else if (code >= 95) {
-                    weatherDesc = "風雨交加 (雷雨)";
-                    iconClass = "fa-cloud-bolt text-indigo-600";
-                } else if (code >= 71) {
-                    weatherDesc = "降雪中";
-                    iconClass = "fa-snowflake text-sky-400";
+                    weatherDesc = "雷陣雨";
+                    iconClass = "fa-cloud-bolt text-yellow-300";
                 } else if (code >= 1 && code <= 3) {
                     weatherDesc = "多雲";
-                    iconClass = "fa-cloud text-slate-400";
+                    iconClass = "fa-cloud-sun text-amber-200";
                 }
 
-                document.getElementById('header-weather').innerText = `台北市 ${temp}°C ${weatherDesc}`;
-                document.getElementById('weather-icon').className = `fa-solid ${iconClass}`;
+                document.getElementById('header-temp').innerText = `${temp}°C`;
+                document.getElementById('header-weather').innerText = weatherDesc;
+                document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
             } catch (e) {
-                document.getElementById('header-weather').innerText = "台北市 26°C 晴時多雲";
+                document.getElementById('header-temp').innerText = "23°C";
+                document.getElementById('header-weather').innerText = "晴朗";
             }
         }
 
@@ -318,12 +333,14 @@
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
-            const weekdays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
             const weekday = weekdays[now.getDay()];
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             
-            document.getElementById('header-datetime').innerText = `${year}-${month}-${day} ${weekday} ${h}:${m}`;
+            document.getElementById('header-date').innerText = `${year}年${month}月${day}日`;
+            document.getElementById('header-time').innerText = `${h}:${m}`;
+            document.getElementById('header-weekday').innerText = weekday;
         }
 
         setInterval(updateDateTime, 1000);
@@ -379,7 +396,7 @@
             if (showFinance) {
                 grid.innerHTML += `
                     <a href="https://tw.stock.yahoo.com/" target="_blank" class="app-icon">
-                        <div class="app-box text-emerald-600"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="app-box text-[#00a600]"><i class="fa-solid fa-chart-line"></i></div>
                         <span class="app-label">Yahoo股市</span>
                     </a>
                     <a href="https://www.cnyes.com/" target="_blank" class="app-icon">
