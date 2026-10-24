@@ -197,6 +197,12 @@
         .sidebar-drag-handle:active {
             cursor: grabbing;
         }
+        .sub-drag-item {
+            cursor: grab;
+        }
+        .sub-drag-item:active {
+            cursor: grabbing;
+        }
 
         /* 暗色彈窗美化滾動條 */
         .custom-scrollbar::-webkit-scrollbar {
@@ -223,7 +229,7 @@
         <i id="toggle-icon" class="fa-solid fa-chevron-right text-xs"></i>
     </button>
 
-    <!-- 🌟 左側側邊欄選單（支援拖曳排序） -->
+    <!-- 🌟 左側側邊欄選單（支援整體與子項目拖曳排序） -->
     <aside id="sidebar" class="p-5 space-y-4 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3">
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -236,7 +242,7 @@
 
         <div id="sidebar-sortable-container" class="space-y-3">
             
-            <!-- 🌟 精選影音與創作服務群組（包含氣象預報、新聞、檔案總管等，預設收合） -->
+            <!-- 🌟 精選影音與創作服務群組（子項目可獨立拖曳排序） -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-creative">
                 <div class="flex items-center justify-between sidebar-drag-handle">
                     <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
@@ -248,42 +254,50 @@
                     </button>
                 </div>
                 <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-weather">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-weather" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>🌤️ 即時氣象預報</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-drama">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-drama" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>🎬 AI好劇一直看</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-melody">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-melody" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>🎵 好歌一直聽</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-diary">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-diary" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>📖 心情隨筆日記</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-greeting">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-greeting" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>🌻 AI早安問候圖</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-videowall">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-videowall" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>🪄 一鍵打造專屬影音牆</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-news">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-news" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>📰 焦點新聞自動彙整</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded text-xs">
+                    </div>
+                    <div class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs" data-id="mod-explorer">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                         <input type="checkbox" id="mod-explorer" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         <span>📂 個人檔案總管</span>
-                    </label>
+                    </div>
                 </div>
             </div>
 
-            <!-- 🌟 即時交通與大眾運輸群組（預設收合） -->
+            <!-- 🌟 即時交通與大眾運輸群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-traffic">
                 <div class="flex items-center justify-between sidebar-drag-handle">
                     <label class="flex items-center gap-1.5 cursor-pointer font-bold text-slate-800 text-[11px]">
@@ -323,7 +337,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 台股財經與鉅亨網群組（預設收合） -->
+            <!-- 🌟 台股財經與鉅亨網群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-finance">
                 <div class="flex items-center justify-between sidebar-drag-handle">
                     <label class="flex items-center gap-1.5 cursor-pointer font-bold text-slate-800 text-[11px]">
@@ -665,17 +679,17 @@
             }
         }
 
-        // 🌟 精選影音與創作服務陣列（包含即時氣象、新聞與檔案總管）
-        let creativeApps = [
-            { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-white', bg: 'bg-gradient-to-br from-sky-400 to-blue-500', modId: 'mod-weather' },
-            { id: 'drama', name: 'AI好劇一直看', url: 'https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ', icon: 'fa-film text-white', bg: 'bg-gradient-to-br from-rose-400 to-red-500', modId: 'mod-drama' },
-            { id: 'melody', name: '好歌一直聽', url: 'https://myezlife.com/goldmelody_csv.html', icon: 'fa-music text-white', bg: 'bg-gradient-to-br from-amber-400 to-orange-500', modId: 'mod-melody' },
-            { id: 'diary', name: '心情隨筆日記', url: 'https://myezlife.com/diary/index.html', icon: 'fa-book-open text-white', bg: 'bg-gradient-to-br from-emerald-400 to-teal-600', modId: 'mod-diary' },
-            { id: 'greeting', name: 'AI早安問候圖', url: 'https://myezlife.com/ai-greeting-app/', icon: 'fa-sun text-white', bg: 'bg-gradient-to-br from-yellow-400 to-amber-500', modId: 'mod-greeting' },
-            { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-white', bg: 'bg-gradient-to-br from-green-500 to-emerald-700', modId: 'mod-videowall', isModal: true },
-            { id: 'news', name: '焦點新聞', url: 'https://myezlife.com/index_news.html', icon: 'fa-bolt text-white', bg: 'bg-gradient-to-br from-amber-400 to-yellow-600', modId: 'mod-news' },
-            { id: 'explorer', name: '檔案總管', url: 'https://myezlife.com/FileExplorer.html', icon: 'fa-folder-open text-white', bg: 'bg-gradient-to-br from-blue-400 to-indigo-600', modId: 'mod-explorer' }
-        ];
+        // 原始定義對照表
+        const creativeAppsMap = {
+            'mod-weather': { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-white', bg: 'bg-gradient-to-br from-sky-400 to-blue-500', modId: 'mod-weather' },
+            'mod-drama': { id: 'drama', name: 'AI好劇一直看', url: 'https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ', icon: 'fa-film text-white', bg: 'bg-gradient-to-br from-rose-400 to-red-500', modId: 'mod-drama' },
+            'mod-melody': { id: 'melody', name: '好歌一直聽', url: 'https://myezlife.com/goldmelody_csv.html', icon: 'fa-music text-white', bg: 'bg-gradient-to-br from-amber-400 to-orange-500', modId: 'mod-melody' },
+            'mod-diary': { id: 'diary', name: '心情隨筆日記', url: 'https://myezlife.com/diary/index.html', icon: 'fa-book-open text-white', bg: 'bg-gradient-to-br from-emerald-400 to-teal-600', modId: 'mod-diary' },
+            'mod-greeting': { id: 'greeting', name: 'AI早安問候圖', url: 'https://myezlife.com/ai-greeting-app/', icon: 'fa-sun text-white', bg: 'bg-gradient-to-br from-yellow-400 to-amber-500', modId: 'mod-greeting' },
+            'mod-videowall': { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-white', bg: 'bg-gradient-to-br from-green-500 to-emerald-700', modId: 'mod-videowall', isModal: true },
+            'mod-news': { id: 'news', name: '焦點新聞', url: 'https://myezlife.com/index_news.html', icon: 'fa-bolt text-white', bg: 'bg-gradient-to-br from-amber-400 to-yellow-600', modId: 'mod-news' },
+            'mod-explorer': { id: 'explorer', name: '檔案總管', url: 'https://myezlife.com/FileExplorer.html', icon: 'fa-folder-open text-white', bg: 'bg-gradient-to-br from-blue-400 to-indigo-600', modId: 'mod-explorer' }
+        };
 
         let defaultApps = [
             { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-white', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', modId: 'mod-highway' },
@@ -693,8 +707,9 @@
 
         let sortableInstance = null;
         let sidebarSortableInstance = null;
+        let creativeSubSortableInstance = null;
 
-        // 初始化側邊欄拖曳排序
+        // 初始化側邊欄與子項目拖曳排序
         function initSidebarSortable() {
             const container = document.getElementById('sidebar-sortable-container');
             if (container) {
@@ -709,7 +724,6 @@
                     }
                 });
 
-                // 讀取並還原側邊欄順序
                 const savedSidebarOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
                 if (savedSidebarOrder) {
                     savedSidebarOrder.forEach(id => {
@@ -718,17 +732,46 @@
                     });
                 }
             }
+
+            // 精選影音與創作服務子項目排序初始化
+            const creativeSubContainer = document.getElementById('creative-sub');
+            if (creativeSubContainer) {
+                creativeSubSortableInstance = new Sortable(creativeSubContainer, {
+                    animation: 200,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    onEnd: function () {
+                        const subOrder = Array.from(creativeSubContainer.children).map(el => el.getAttribute('data-id'));
+                        localStorage.setItem('myezlife_creative_sub_order', JSON.stringify(subOrder));
+                        updateDesktop();
+                    }
+                });
+
+                const savedSubOrder = JSON.parse(localStorage.getItem('myezlife_creative_sub_order') || 'null');
+                if (savedSubOrder) {
+                    savedSubOrder.forEach(modId => {
+                        const el = creativeSubContainer.querySelector(`[data-id="${modId}"]`);
+                        if (el) creativeSubContainer.appendChild(el);
+                    });
+                }
+            }
         }
 
         function updateDesktop() {
-            // 1. 渲染上方「精選影音與創作服務」專屬區塊
+            // 1. 依據側邊欄目前 DOM 順序來渲染上方「精選影音與創作服務」專屬區塊
+            const creativeSubContainer = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
             creativeGrid.innerHTML = '';
             let hasVisibleCreative = false;
 
-            creativeApps.forEach(app => {
-                const checkbox = document.getElementById(app.modId);
-                if (checkbox && checkbox.checked) {
+            const subItems = creativeSubContainer ? Array.from(creativeSubContainer.children) : [];
+            
+            subItems.forEach(item => {
+                const modId = item.getAttribute('data-id');
+                const app = creativeAppsMap[modId];
+                const checkbox = document.getElementById(modId);
+
+                if (app && checkbox && checkbox.checked) {
                     hasVisibleCreative = true;
                     let div = document.createElement('div');
                     div.className = 'app-item relative';
@@ -877,8 +920,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "即時氣象已移至精選影音與創作服務項下", done: false },
-            { text: "側邊欄已支援自由拖曳調整排列順序", done: false }
+            { text: "精選影音與創作服務項下的子選單已支援拖曳排序", done: false },
+            { text: "確認主畫面同步依側邊欄順序完美呈現", done: false }
         ]));
 
         function renderTodoList() {
@@ -964,11 +1007,11 @@
             }
         }
 
+        initSidebarSortable();
         updateDesktop();
         renderTodoList();
         loadMemo();
         initRandomRecommendation();
-        initSidebarSortable();
     </script>
 </body>
 </html>
