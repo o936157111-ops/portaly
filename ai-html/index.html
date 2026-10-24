@@ -163,10 +163,38 @@
 
         <div class="space-y-3 text-xs">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
-            <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
-                <input type="checkbox" id="mod-traffic" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
-                <span>🚗 即時交通與通勤 (1968/公車)</span>
-            </label>
+            
+            <!-- 🌟 交通與通勤模組（已按您的要求拆分並新增項目） -->
+            <div class="space-y-1.5 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <div class="font-bold text-slate-800 text-[11px] mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                    <input type="checkbox" id="mod-highway" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <span>🚗 國道 1968 路況</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                    <input type="checkbox" id="mod-provincial" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <span>🛣️ 全台省道路況 (168)</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                    <input type="checkbox" id="mod-bus" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <span>🚌 即時公車動態</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                    <input type="checkbox" id="mod-bike" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <span>🚲 YouBike 站點車位</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                    <input type="checkbox" id="mod-train" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <span>🚂 台鐵時刻查詢</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1 rounded">
+                    <input type="checkbox" id="mod-hsr" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <span>🚄 高鐵時刻查詢</span>
+                </label>
+            </div>
+
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
                 <input type="checkbox" id="mod-finance" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                 <span>📈 台股財經與鉅亨網</span>
@@ -200,7 +228,6 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 即時更新的綠色 Banner -->
             <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4 relative">
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
@@ -219,7 +246,6 @@
 
                 <div class="text-center">
                     <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
-                    <!-- 即時跳動大時間 -->
                     <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
                 </div>
 
@@ -313,10 +339,8 @@
     </div>
 
     <script>
-        // 🌟 即時氣象與颱風豪雨智慧判定（新北市土城區/板橋座標對應）
         async function fetchRealtimeWeather() {
             try {
-                // 使用 Open-Meteo 氣象 API (對應新北市土城/板橋一帶精準座標)
                 const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=24.9873&longitude=121.4435&current=temperature_2m,weather_code');
                 const data = await res.json();
                 const temp = Math.round(data.current.temperature_2m);
@@ -325,7 +349,6 @@
                 let weatherDesc = "多雲";
                 let iconClass = "fa-cloud-sun text-amber-200";
 
-                // 精準對應氣象代碼：降雨與颱風天候強制顯示暴雨/降雨中
                 if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95)) {
                     weatherDesc = "颱風豪雨中";
                     iconClass = "fa-cloud-showers-heavy text-sky-200 animate-pulse";
@@ -341,14 +364,12 @@
                 document.getElementById('header-weather').innerText = weatherDesc;
                 document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
             } catch (e) {
-                // 網路失敗時的備用預設（確保颱風天雨勢資訊不遺漏）
                 document.getElementById('header-temp').innerText = "21°C";
                 document.getElementById('header-weather').innerText = "颱風豪雨中";
                 document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
             }
         }
 
-        // 🌟 絕對不會停格的動態時間與日期更新
         function updateDateTime() {
             const now = new Date();
             const year = now.getFullYear();
@@ -365,11 +386,9 @@
             document.getElementById('header-weekday').innerText = weekday;
         }
 
-        // 啟動時立即執行並設定每秒定時更新
         updateDateTime();
         setInterval(updateDateTime, 1000);
         fetchRealtimeWeather();
-        // 每 10 分鐘自動重新整理一次氣象
         setInterval(fetchRealtimeWeather, 600000);
 
         function toggleSidebar() {
@@ -399,21 +418,74 @@
             const grid = document.getElementById('desktop-app-grid');
             grid.innerHTML = '';
 
-            const showTraffic = document.getElementById('mod-traffic').checked;
+            const showHighway = document.getElementById('mod-highway').checked;
+            const showProvincial = document.getElementById('mod-provincial').checked;
+            const showBus = document.getElementById('mod-bus').checked;
+            const showBike = document.getElementById('mod-bike').checked;
+            const showTrain = document.getElementById('mod-train').checked;
+            const showHsr = document.getElementById('mod-hsr').checked;
+
             const showFinance = document.getElementById('mod-finance').checked;
             const showNews = document.getElementById('mod-news').checked;
             const showTodo = document.getElementById('mod-todo').checked;
             const showSponsor = document.getElementById('mod-sponsor').checked;
 
-            if (showTraffic) {
+            // 1. 國道 1968
+            if (showHighway) {
                 grid.innerHTML += `
                     <a href="https://1968.freeway.gov.tw/" target="_blank" class="app-icon">
                         <div class="app-box text-blue-600"><i class="fa-solid fa-car"></i></div>
                         <span class="app-label">國道 1968</span>
                     </a>
+                `;
+            }
+
+            // 2. 全台省道路況 (168)
+            if (showProvincial) {
+                grid.innerHTML += `
+                    <a href="https://168.thb.gov.tw" target="_blank" class="app-icon">
+                        <div class="app-box text-orange-600"><i class="fa-solid fa-road"></i></div>
+                        <span class="app-label">省道路況168</span>
+                    </a>
+                `;
+            }
+
+            // 3. 即時公車
+            if (showBus) {
+                grid.innerHTML += `
                     <a href="https://ebus.gov.taipei/" target="_blank" class="app-icon">
                         <div class="app-box text-sky-600"><i class="fa-solid fa-bus"></i></div>
                         <span class="app-label">即時公車</span>
+                    </a>
+                `;
+            }
+
+            // 4. YouBike 站點車位
+            if (showBike) {
+                grid.innerHTML += `
+                    <a href="https://youbike.com.tw/region/main/" target="_blank" class="app-icon">
+                        <div class="app-box text-yellow-500"><i class="fa-solid fa-person-biking"></i></div>
+                        <span class="app-label">YouBike</span>
+                    </a>
+                `;
+            }
+
+            // 5. 台鐵時刻
+            if (showTrain) {
+                grid.innerHTML += `
+                    <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="app-icon">
+                        <div class="app-box text-indigo-600"><i class="fa-solid fa-train"></i></div>
+                        <span class="app-label">台鐵時刻</span>
+                    </a>
+                `;
+            }
+
+            // 6. 高鐵時刻
+            if (showHsr) {
+                grid.innerHTML += `
+                    <a href="https://www.thsrc.com.tw/" target="_blank" class="app-icon">
+                        <div class="app-box text-amber-600"><i class="fa-solid fa-train-subway"></i></div>
+                        <span class="app-label">高鐵時刻</span>
                     </a>
                 `;
             }
