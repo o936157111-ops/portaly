@@ -248,57 +248,57 @@
                     <div class="flex items-center gap-2 sidebar-drag-handle">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
                     </div>
-                    <div class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer" onclick="handleGroupClick('creative')">
-                        <input type="checkbox" id="group-creative" checked class="rounded text-[#00a600] w-4 h-4 pointer-events-none">
+                    <label class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer">
+                        <input type="checkbox" id="group-creative" checked onchange="toggleGroup('creative')" class="rounded text-[#00a600] w-4 h-4">
                         <span class="font-bold text-slate-800 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
                         </span>
-                    </div>
+                    </label>
                     <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-700 text-sm px-2 py-1 cursor-pointer">
                         <i class="fa-solid fa-chevron-down submenu-icon"></i>
                     </button>
                 </div>
                 <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-weather')">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-weather">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-weather" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-weather" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">🌤️ 即時氣象預報</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-drama')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-drama">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-drama" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-drama" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">🎬 AI好劇一直看</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-melody')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-melody">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-melody" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-melody" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">🎵 好歌一直聽</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-diary')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-diary">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-diary" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-diary" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">📖 心情隨筆日記</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-greeting')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-greeting">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-greeting" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-greeting" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">🌻 AI早安問候圖</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-videowall')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-videowall">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-videowall" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-videowall" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">🪄 一鍵打造專屬影音牆</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-news')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-news">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-news" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-news" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">📰 焦點新聞自動彙整</span>
-                    </div>
-                    <div class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-explorer')">
+                    </label>
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" data-id="mod-explorer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]" onclick="event.stopPropagation();"></i>
-                        <input type="checkbox" id="mod-explorer" checked class="rounded text-[#00a600] w-4 h-4 creative-item pointer-events-none">
+                        <input type="checkbox" id="mod-explorer" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 creative-item">
                         <span class="flex-1 select-none">📂 個人檔案總管</span>
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -308,41 +308,41 @@
                     <div class="flex items-center gap-2 sidebar-drag-handle">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
                     </div>
-                    <div class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer" onclick="handleGroupClick('traffic')">
-                        <input type="checkbox" id="group-traffic" checked class="rounded text-[#00a600] w-4 h-4 pointer-events-none">
+                    <label class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer">
+                        <input type="checkbox" id="group-traffic" checked onchange="toggleGroup('traffic')" class="rounded text-[#00a600] w-4 h-4">
                         <span class="font-bold text-slate-800 text-[11px] flex items-center gap-1.5">
                             <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
                         </span>
-                    </div>
+                    </label>
                     <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-sm px-2 py-1 cursor-pointer">
                         <i class="fa-solid fa-chevron-down submenu-icon"></i>
                     </button>
                 </div>
                 <div id="traffic-sub" class="space-y-1.5 pl-5 border-l-2 border-blue-100 mt-1" style="display: none;">
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-highway')">
-                        <input type="checkbox" id="mod-highway" checked class="rounded text-[#00a600] w-4 h-4 traffic-item pointer-events-none">
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-highway" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 traffic-item">
                         <span class="flex-1 select-none">🚗 國道 1968 路況</span>
-                    </div>
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-provincial')">
-                        <input type="checkbox" id="mod-provincial" checked class="rounded text-[#00a600] w-4 h-4 traffic-item pointer-events-none">
+                    </label>
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-provincial" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 traffic-item">
                         <span class="flex-1 select-none">🛣️ 全台省道路況 (168)</span>
-                    </div>
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-bus')">
-                        <input type="checkbox" id="mod-bus" checked class="rounded text-[#00a600] w-4 h-4 traffic-item pointer-events-none">
+                    </label>
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-bus" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 traffic-item">
                         <span class="flex-1 select-none">🚌 即時公車動態</span>
-                    </div>
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-bike')">
-                        <input type="checkbox" id="mod-bike" checked class="rounded text-[#00a600] w-4 h-4 traffic-item pointer-events-none">
+                    </label>
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-bike" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 traffic-item">
                         <span class="flex-1 select-none">🚲 YouBike 站點車位</span>
-                    </div>
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-train')">
-                        <input type="checkbox" id="mod-train" checked class="rounded text-[#00a600] w-4 h-4 traffic-item pointer-events-none">
+                    </label>
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-train" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 traffic-item">
                         <span class="flex-1 select-none">🚂 台鐵時刻查詢</span>
-                    </div>
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-hsr')">
-                        <input type="checkbox" id="mod-hsr" checked class="rounded text-[#00a600] w-4 h-4 traffic-item pointer-events-none">
+                    </label>
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-hsr" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 traffic-item">
                         <span class="flex-1 select-none">🚄 高鐵時刻查詢</span>
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -352,25 +352,25 @@
                     <div class="flex items-center gap-2 sidebar-drag-handle">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
                     </div>
-                    <div class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer" onclick="handleGroupClick('finance')">
-                        <input type="checkbox" id="group-finance" checked class="rounded text-[#00a600] w-4 h-4 pointer-events-none">
+                    <label class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer">
+                        <input type="checkbox" id="group-finance" checked onchange="toggleGroup('finance')" class="rounded text-[#00a600] w-4 h-4">
                         <span class="font-bold text-slate-800 text-[11px] flex items-center gap-1.5">
                             <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
                         </span>
-                    </div>
+                    </label>
                     <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-sm px-2 py-1 cursor-pointer">
                         <i class="fa-solid fa-chevron-down submenu-icon"></i>
                     </button>
                 </div>
                 <div id="finance-sub" class="space-y-1.5 pl-5 border-l-2 border-emerald-100 mt-1" style="display: none;">
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-yahoo')">
-                        <input type="checkbox" id="mod-yahoo" checked class="rounded text-[#00a600] w-4 h-4 finance-item pointer-events-none">
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-yahoo" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 finance-item">
                         <span class="flex-1 select-none">📈 Yahoo股市</span>
-                    </div>
-                    <div class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer" onclick="handleItemClick('mod-cnyes')">
-                        <input type="checkbox" id="mod-cnyes" checked class="rounded text-[#00a600] w-4 h-4 finance-item pointer-events-none">
+                    </label>
+                    <label class="flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                        <input type="checkbox" id="mod-cnyes" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4 finance-item">
                         <span class="flex-1 select-none">📰 鉅亨網</span>
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -380,10 +380,10 @@
                     <div class="sidebar-drag-handle">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
                     </div>
-                    <div class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer" onclick="handleItemClick('mod-todo')">
-                        <input type="checkbox" id="mod-todo" checked class="rounded text-[#00a600] w-4 h-4 pointer-events-none">
+                    <label class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer">
+                        <input type="checkbox" id="mod-todo" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                         <span class="text-xs font-bold text-slate-800">✅ 互動待辦清單與隨手便籤</span>
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -393,10 +393,10 @@
                     <div class="sidebar-drag-handle">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
                     </div>
-                    <div class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer" onclick="handleItemClick('mod-sponsor')">
-                        <input type="checkbox" id="mod-sponsor" checked class="rounded text-[#00a600] w-4 h-4 pointer-events-none">
+                    <label class="flex items-center gap-2 flex-1 select-none pl-1 cursor-pointer">
+                        <input type="checkbox" id="mod-sponsor" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
                         <span class="text-xs font-bold text-slate-800">💖 贊助支援與延伸閱讀</span>
-                    </div>
+                    </label>
                 </div>
             </div>
 
@@ -654,23 +654,9 @@
             }
         }
 
-        // 🌟 絕對安全的獨立項目點擊切換（完美即時視覺反應）
-        function handleItemClick(itemId) {
-            const cb = document.getElementById(itemId);
-            if (cb) {
-                cb.checked = !cb.checked;
-                updateDesktop();
-            }
-        }
-
-        // 🌟 絕對安全的大項群組點擊切換（一秒全選或全取消）
-        function handleGroupClick(groupName) {
-            const groupCb = document.getElementById(`group-${groupName}`);
-            if (!groupCb) return;
-
-            groupCb.checked = !groupCb.checked;
-            const newState = groupCb.checked;
-
+        // 🌟 群組總開關（原生连動）
+        function toggleGroup(groupName) {
+            const groupCheckbox = document.getElementById(`group-${groupName}`);
             let items = [];
             if (groupName === 'creative') {
                 items = document.querySelectorAll('.creative-item');
@@ -679,11 +665,9 @@
             } else if (groupName === 'finance') {
                 items = document.querySelectorAll('.finance-item');
             }
-
             items.forEach(item => {
-                item.checked = newState;
+                item.checked = groupCheckbox.checked;
             });
-
             updateDesktop();
         }
 
@@ -940,8 +924,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "側邊欄勾選狀態完美即時切換修復", done: false },
-            { text: "各群組總開關與獨立子項目可自由勾選取消", done: false }
+            { text: "側邊欄與右側 App 完美原生連動修復", done: false },
+            { text: "點擊立即反應，絕無延遲與異常", done: false }
         ]));
 
         function renderTodoList() {
