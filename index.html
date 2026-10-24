@@ -114,6 +114,20 @@
             width: 100%;
         }
 
+        /* 🌟 圓形 Logo 樣式：去除方框，裁切為完美圓形與微光陰影 */
+        .rounded-logo-btn {
+            border-radius: 50% !important;
+            overflow: hidden;
+            background: transparent !important;
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .rounded-logo-btn:hover {
+            transform: scale(1.05);
+            border-color: #ffffff !important;
+        }
+
         /* App 網格與卡片 */
         .app-grid {
             display: grid;
@@ -399,12 +413,12 @@
     <div id="app-wrapper">
         <div class="max-w-3xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner：單一列 [LOGO] [日期 + 時間大字] [星期] -->
+            <!-- 🌟 綠色 Banner：單一列 [圓形 Logo] [日期 + 時間大字] [星期] -->
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 
                 <div class="flex items-center shrink-0">
-                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-7 h-7 md:w-9 md:h-9 object-contain">
+                    <button onclick="toggleSidebar()" class="p-0 rounded-logo-btn transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
                     </button>
                 </div>
 
@@ -657,7 +671,6 @@
                 }
             });
 
-            // 如果全部取消勾選，隱藏整個精選影音卡片
             document.getElementById('desktop-creative-card').style.display = hasVisibleCreative ? 'block' : 'none';
 
             // 2. 渲染下方「我的專屬 App 捷徑桌面」
@@ -740,8 +753,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認精選影音服務已獨立顯示於右側專屬桌面區塊", done: false },
-            { text: "測試左側選單勾選連動與彈窗互動功能", done: false }
+            { text: "確認新版圓形 Logo 已完美置入左上角", done: false },
+            { text: "確認精選影音服務與桌面捷徑運作正常", done: false }
         ]));
 
         function renderTodoList() {
