@@ -156,7 +156,6 @@
         .app-item:active {
             cursor: grabbing;
         }
-        /* 🌟 讓每個 App 擁有類似真實手機 APP 的精美質感圖示外框與立體陰影 */
         .app-box {
             width: 64px;
             height: 64px;
@@ -457,33 +456,18 @@
 
             <main class="w-full space-y-5 flex-1">
                 
-                <!-- 🌟 專屬獨立區塊：精選影音與創作服務桌面 -->
-                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                        <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-play text-rose-500"></i> 精選影音與創作服務
-                        </h2>
-                        <span class="text-xs text-slate-400">點擊圖示開啟影音與創作工具</span>
-                    </div>
+                <!-- 🌟 專屬獨立區塊：精選影音與創作服務桌面（無標題） -->
+                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <div id="creative-app-grid" class="app-grid"></div>
                 </div>
 
-                <!-- 🌟 一般 App 捷徑桌面 -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                        <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                            <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
-                        </h2>
-                        <span class="text-xs text-slate-400">點擊圖示開啟網頁，長按/拖曳可調換順序</span>
-                    </div>
+                <!-- 🌟 一般 App 捷徑桌面（無標題） -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
+                <!-- 🌟 互動待辦清單與隨手便籤（無標題） -->
                 <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                    <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-pen-nib text-purple-600"></i> 互動待辦清單與隨手便籤
-                    </h3>
-                    
                     <div class="flex gap-2">
                         <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
                         <button onclick="addTodoItem()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-4 py-2 rounded-xl text-xs font-bold transition">新增</button>
@@ -494,13 +478,8 @@
                     <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
                 </div>
 
+                <!-- 🌟 贊助支援與延伸閱讀（無標題） -->
                 <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm">
-                    <div class="flex items-center justify-between px-1 border-b border-slate-100 pb-2">
-                        <p class="text-xs font-black text-slate-700 flex items-center gap-1.5">
-                            <span class="text-rose-500">💖</span> 贊助支援與延伸閱讀
-                        </p>
-                    </div>
-
                     <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
                         <div class="flex items-start gap-2.5">
                             <span class="text-xl">💖</span>
@@ -636,7 +615,6 @@
             }
         }
 
-        // 🌟 賦予精選影音服務專屬精美顏色（背景色 + 圖示色）
         let creativeApps = [
             { id: 'drama', name: 'AI好劇一直看', url: 'https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ', icon: 'fa-film text-white', bg: 'bg-gradient-to-br from-rose-400 to-red-500', modId: 'mod-drama' },
             { id: 'melody', name: '好歌一直聽', url: 'https://myezlife.com/goldmelody_csv.html', icon: 'fa-music text-white', bg: 'bg-gradient-to-br from-amber-400 to-orange-500', modId: 'mod-melody' },
@@ -645,7 +623,6 @@
             { id: 'videowall', name: '打造影音牆', url: '#', icon: 'fa-wand-magic-sparkles text-white', bg: 'bg-gradient-to-br from-green-500 to-emerald-700', modId: 'mod-videowall', isModal: true }
         ];
 
-        // 🌟 賦予一般內建工具專屬美觀代表色
         let defaultApps = [
             { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-white', bg: 'bg-gradient-to-br from-sky-400 to-blue-500', modId: 'mod-weather' },
             { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-white', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600', modId: 'mod-highway' },
@@ -821,8 +798,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認所有 App 已套用精美專屬的手機風格代表色", done: false },
-            { text: "確認側邊欄與各項功能運作完美", done: false }
+            { text: "全頁面卡片區塊標題已全面移除，呈現極簡極致風格", done: false },
+            { text: "確認所有功能運作與視覺排版完美無瑕", done: false }
         ]));
 
         function renderTodoList() {
