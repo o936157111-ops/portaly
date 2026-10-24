@@ -6,7 +6,7 @@
     <title>myezlife.com | 我的個人化數位生活儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 SortableJS 支援手機與電腦的拖曳排序 -->
+    <!-- 引入 SortableJS 支援手機觸控與電腦滑鼠拖曳 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         body {
@@ -57,7 +57,7 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(0);
             width: 100%;
-            padding: 12px;
+            padding: 16px;
         }
 
         @media (min-width: 768px) {
@@ -96,6 +96,7 @@
             padding-left: 8px;
         }
 
+        /* 經典原汁原味的綠色 Banner */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
@@ -106,8 +107,8 @@
         /* App 網格與卡片 */
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 16px;
         }
         .app-item {
             display: flex;
@@ -122,36 +123,34 @@
             cursor: grabbing;
         }
         .app-box {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            transition: transform 0.2s, shadow 0.2s;
+            transition: transform 0.2s;
         }
         .app-item:hover .app-box {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
         }
         .app-label {
             color: #334155;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-top: 5px;
+            margin-top: 6px;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 75px;
+            max-width: 80px;
         }
         .sortable-ghost {
             opacity: 0.3;
-            transform: scale(0.95);
         }
         .sortable-drag {
             opacity: 0.9;
@@ -268,49 +267,47 @@
     </aside>
 
     <div id="app-wrapper">
-        <div class="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
+        <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 完美修復：手機與電腦皆美觀的上下分層綠色 Banner 排版 -->
-            <header class="green-banner p-4 md:p-5 flex flex-col gap-3 relative">
-                <!-- 上半部：Logo 與氣象膠囊 -->
-                <div class="flex justify-between items-center">
-                    <button onclick="toggleSidebar()" class="p-1 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-11 h-11 shrink-0 shadow-sm" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-8 h-8 object-contain">
+            <!-- 🌟 完全還原經典經典美觀的橫向 3 欄 Header Banner -->
+            <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-4 relative">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
                     </button>
                     <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
                         <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
                         <div>
-                            <div id="header-temp" class="text-sm font-black">21°C</div>
-                            <div id="header-weather" class="text-[10px] text-white/90 font-bold">颱風豪雨中</div>
+                            <div id="header-temp" class="text-sm">21°C</div>
+                            <div id="header-weather" class="text-[10px] text-white/80 font-normal">颱風豪雨中</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 下半部：日期、大時間與星期 (置中對齊，質感滿分) -->
-                <div class="text-center pt-1 border-t border-white/15">
-                    <div class="flex items-center justify-center gap-2 text-white/90 text-xs font-medium tracking-wide mb-0.5">
-                        <span id="header-date">載入中...</span>
-                        <span class="opacity-60">|</span>
-                        <span id="header-weekday" class="bg-black/20 px-2 py-0.5 rounded-lg border border-white/20 font-bold text-[11px]">載入中...</span>
-                    </div>
-                    <div id="header-time" class="text-4xl md:text-5xl font-extrabold tracking-wider drop-shadow-sm">00:00</div>
+                <div class="text-center">
+                    <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
+                    <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
+                </div>
+
+                <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                    <span id="header-weekday">載入中...</span>
                 </div>
             </header>
 
-            <main class="w-full space-y-4 flex-1">
+            <main class="w-full space-y-5 flex-1">
                 
-                <div class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-2 gap-1">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                             <i class="fa-solid fa-desktop text-[#00a600]"></i> 我的專屬 App 捷徑桌面
                         </h2>
-                        <span class="text-[11px] text-slate-400">💡 提示：手機/電腦均可長按圖示滑動調換順序</span>
+                        <span class="text-xs text-slate-400">點擊圖示即可直接開啟網頁</span>
                     </div>
-                    <!-- 支援拖曳的 App 網格容器 -->
+                    <!-- 支援無感拖曳排序的 App 網格容器 -->
                     <div id="desktop-app-grid" class="app-grid"></div>
                 </div>
 
-                <div id="desktop-todo-card" class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-pen-nib text-purple-600"></i> 互動待辦清單與隨手便籤
                     </h3>
@@ -365,7 +362,7 @@
 
             </main>
 
-            <footer class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500">
+            <footer class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-500">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <div>
                         <p class="font-bold text-slate-700">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -558,11 +555,12 @@
                 sortableInstance.destroy();
             }
 
+            // 手機按住 150ms 即可拖曳，點擊則正常開啟連結
             sortableInstance = new Sortable(grid, {
                 animation: 200,
                 ghostClass: 'sortable-ghost',
                 dragClass: 'sortable-drag',
-                delay: 100,
+                delay: 150,
                 delayOnTouchOnly: true,
                 onEnd: function () {
                     const newOrder = Array.from(grid.children).map(item => item.getAttribute('data-id'));
