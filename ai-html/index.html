@@ -278,42 +278,61 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner：桌機版維持經典三欄，手機版完美呈現「上下二列」 (上列: 日期+時間，下列: LOGO+星期+天氣) -->
+            <!-- 🌟 綠色 Banner -->
             <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 relative">
                 
-                <!-- 手機版「上列」：日期 + 時間 | 電腦版則自動融入三欄 -->
-                <div class="w-full md:w-auto flex flex-col md:flex-row items-center justify-between md:contents">
-                    <div class="order-2 md:order-1 text-center md:text-left">
-                        <div id="header-date" class="text-xs md:text-xs text-white/90 font-medium tracking-wide">載入中...</div>
-                        <div class="hidden md:block text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm" id="header-time-desktop">00:00</div>
-                    </div>
+                <!-- 🌟 手機版專屬排版：上面是 LOGO，下面是 天氣 + 日期時間 + 星期 (嚴格確保字體大小一致性) -->
+                <div class="w-full flex flex-col items-center justify-center gap-3 md:hidden">
+                    <!-- 上面：LOGO 按鈕 -->
+                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/25 hover:bg-white/35 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shadow-sm" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
+                    </button>
 
-                    <!-- 手機版大時間（置中顯示於上列正中央） -->
-                    <div class="order-1 md:hidden text-center w-full mb-1">
-                        <div id="header-time-mobile" class="text-4xl font-extrabold tracking-wider drop-shadow-sm">00:00</div>
-                    </div>
-
-                    <!-- 手機版「下列」：LOGO + 星期 + 天氣 -->
-                    <div class="order-3 w-full md:w-auto flex items-center justify-between md:justify-end gap-2 mt-2 md:mt-0 pt-2 md:pt-0 border-t border-white/20 md:border-t-0">
-                        <!-- 1. LOGO 按鈕 -->
-                        <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-11 h-11 shrink-0" title="點擊開啟側邊欄選單">
-                            <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-8 h-8 object-contain">
-                        </button>
-
-                        <!-- 2. 星期標籤 -->
-                        <div class="bg-black/20 backdrop-blur px-3 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
-                            <span id="header-weekday">載入中...</span>
-                        </div>
-
-                        <!-- 3. 天氣資訊 -->
-                        <div class="bg-black/15 backdrop-blur px-3 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
-                            <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
+                    <!-- 下面：天氣 + 日期時間 + 星期 (同一列，字體大小嚴格一致) -->
+                    <div class="w-full flex items-center justify-between bg-black/15 backdrop-blur px-3.5 py-2 rounded-xl border border-white/20 text-xs font-bold">
+                        <!-- 天氣 -->
+                        <div class="flex items-center gap-1.5">
+                            <i id="weather-icon-mobile" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm"></i>
                             <div>
-                                <div id="header-temp" class="text-sm font-black">21°C</div>
-                                <div id="header-weather" class="text-[10px] text-white/90 font-bold">颱風豪雨中</div>
+                                <span id="header-temp-mobile">21°C</span>
+                                <span id="header-weather-mobile" class="text-white/90">颱風豪雨中</span>
                             </div>
                         </div>
+
+                        <!-- 日期時間 -->
+                        <div class="text-center">
+                            <span id="header-date-mobile">載入中...</span>
+                            <span id="header-time-mobile" class="ml-1">00:00</span>
+                        </div>
+
+                        <!-- 星期 -->
+                        <div>
+                            <span id="header-weekday-mobile">載入中...</span>
+                        </div>
                     </div>
+                </div>
+
+                <!-- 🌟 桌面版維持原本完美的經典三欄佈局 (手機隱藏) -->
+                <div class="hidden md:flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
+                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
+                    </button>
+                    <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
+                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
+                        <div>
+                            <div id="header-temp" class="text-sm">21°C</div>
+                            <div id="header-weather" class="text-[10px] text-white/85 font-normal">颱風豪雨中</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden md:block text-center">
+                    <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
+                    <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
+                </div>
+
+                <div class="hidden md:block bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                    <span id="header-weekday">載入中...</span>
                 </div>
             </header>
 
@@ -369,7 +388,7 @@
                                 <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
                             </div>
                             
-                            <!-- 🌟 已修復：推薦按鈕擁有完整點擊連結反應 -->
+                            <!-- 純資訊展示區塊 -->
                             <div id="random-recommendation-box" class="space-y-2"></div>
                         </div>
                     </div>
@@ -425,13 +444,23 @@
                     iconClass = "fa-sun text-yellow-300";
                 }
 
+                // 桌機版天氣更新
                 document.getElementById('header-temp').innerText = `${temp}°C`;
                 document.getElementById('header-weather').innerText = weatherDesc;
                 document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
+
+                // 手機版天氣更新
+                document.getElementById('header-temp-mobile').innerText = `${temp}°C`;
+                document.getElementById('header-weather-mobile').innerText = ` ${weatherDesc}`;
+                document.getElementById('weather-icon-mobile').className = `fa-solid ${iconClass} text-sm`;
             } catch (e) {
                 document.getElementById('header-temp').innerText = "21°C";
                 document.getElementById('header-weather').innerText = "颱風豪雨中";
                 document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
+
+                document.getElementById('header-temp-mobile').innerText = "21°C";
+                document.getElementById('header-weather-mobile').innerText = " 颱風豪雨中";
+                document.getElementById('weather-icon-mobile').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-sm";
             }
         }
 
@@ -448,10 +477,15 @@
             const dateStr = `${year}年${month}月${day}日`;
             const timeStr = `${h}:${m}`;
 
+            // 桌機版更新
             document.getElementById('header-date').innerText = dateStr;
-            document.getElementById('header-time-desktop').innerText = timeStr;
-            document.getElementById('header-time-mobile').innerText = timeStr;
+            document.getElementById('header-time').innerText = timeStr;
             document.getElementById('header-weekday').innerText = weekday;
+
+            // 手機版更新 (同一列，字體大小一致)
+            document.getElementById('header-date-mobile').innerText = dateStr;
+            document.getElementById('header-time-mobile').innerText = timeStr;
+            document.getElementById('header-weekday-mobile').innerText = weekday;
         }
 
         updateDateTime();
@@ -696,14 +730,13 @@
             }
         }
 
-        // 🌟 修正：賦予推薦項目真實且有用的有效連結（不再是點了沒反應的 #）
         function initRandomRecommendation() {
             const recs = [
-                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/", tag: "熱門推薦" },
-                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/", tag: "人氣工具" },
-                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
-                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://www.youtube.com/", tag: "視聽娛樂" },
-                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://drive.google.com/", tag: "高效助手" }
+                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", tag: "熱門推薦" },
+                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", tag: "人氣工具" },
+                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", tag: "實用資訊" },
+                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", tag: "視聽娛樂" },
+                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", tag: "高效助手" }
             ];
 
             const shuffled = [...recs].sort(() => 0.5 - Math.random());
@@ -712,13 +745,13 @@
             const box = document.getElementById('random-recommendation-box');
             if (box) {
                 box.innerHTML = selected.map(item => `
-                    <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100/90 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
+                    <div class="bg-white border border-emerald-100/90 rounded-lg p-2.5 shadow-sm">
                         <div class="flex items-center justify-between mb-0.5">
-                            <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">${item.title}</span>
+                            <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">${item.title}</span>
                             <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
                         </div>
-                        <p class="text-[11px] text-slate-600 leading-tight line-clamp-1 font-medium">${item.desc}</p>
-                    </a>
+                        <p class="text-[11px] text-slate-600 leading-tight font-medium">${item.desc}</p>
+                    </div>
                 `).join('');
             }
         }
