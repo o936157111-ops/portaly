@@ -23,8 +23,8 @@
             body { font-size: 1.05rem; }
             .text-xs { font-size: 0.85rem !important; }
             .text-sm { font-size: 0.95rem !important; }
-            .text-base { font-size: 1.2rem !important; }
-            .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
+            .text-base { font-size: 1.1rem !important; }
+            .app-label { font-size: 0.85rem !important; max-width: 90px !important; }
         }
 
         #sidebar {
@@ -105,12 +105,16 @@
             padding-left: 8px;
         }
 
-        /* 經典綠色 Banner */
+        /* 經典綠色 Banner (電腦版稍微縮小寬度至 max-w-4xl) */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
             color: #ffffff;
             box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
+            max-width: 56rem; /* 相當於 max-w-4xl */
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
         }
 
         /* App 網格與卡片 */
@@ -187,6 +191,11 @@
         <div class="space-y-3 text-xs">
             <div class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">內建實用工具</div>
             
+            <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
+                <input type="checkbox" id="mod-weather" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
+                <span>🌤️ 即時氣象預報 (中央氣象署)</span>
+            </label>
+
             <!-- 交通與大眾運輸群組 -->
             <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2">
                 <div class="flex items-center justify-between">
@@ -278,60 +287,24 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner -->
+            <!-- 🌟 綠色 Banner：移除天氣，統一改為 LOGO + 日期時間(時間大字) + 星期 -->
             <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 relative">
                 
-                <!-- 🌟 手機版專屬排版：第一列 LOGO 置中，第二列三個獨立區塊 (天氣 | 日期時間 | 星期) -->
-                <div class="w-full flex flex-col items-center gap-3 md:hidden">
-                    <!-- 第一列：LOGO 置中 -->
-                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/25 hover:bg-white/35 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shadow-sm" title="點擊開啟側邊欄選單">
+                <!-- 1. LOGO 按鈕 (手機與電腦共用) -->
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0 shadow-sm" title="點擊開啟側邊欄選單">
                         <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
                     </button>
-
-                    <!-- 第二列：三個獨立區塊等距排列，字體大小絕對一致 -->
-                    <div class="w-full grid grid-cols-3 gap-2">
-                        <!-- 1. 天氣區塊 -->
-                        <div class="bg-black/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/25 flex items-center justify-center gap-1.5 text-xs font-bold text-center">
-                            <i id="weather-icon-mobile" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-xs"></i>
-                            <div>
-                                <span id="header-temp-mobile">21°C</span>
-                                <span id="header-weather-mobile" class="block text-[10px] text-white/90"></span>
-                            </div>
-                        </div>
-
-                        <!-- 2. 日期時間區塊 -->
-                        <div class="bg-black/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/25 flex flex-col items-center justify-center text-xs font-bold text-center">
-                            <span id="header-date-mobile" class="text-[10px] text-white/90">載入中...</span>
-                            <span id="header-time-mobile" class="text-xs">00:00</span>
-                        </div>
-
-                        <!-- 3. 星期區塊 -->
-                        <div class="bg-black/15 backdrop-blur px-2.5 py-2 rounded-xl border border-white/25 flex items-center justify-center text-xs font-bold text-center">
-                            <span id="header-weekday-mobile">載入中...</span>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- 🌟 桌面版維持原本完美的經典三欄佈局 (手機隱藏) -->
-                <div class="hidden md:flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0" title="點擊開啟側邊欄選單">
-                        <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
-                    </button>
-                    <div class="bg-black/15 backdrop-blur px-3.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-2 text-xs font-bold">
-                        <i id="weather-icon" class="fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base"></i>
-                        <div>
-                            <div id="header-temp" class="text-sm">21°C</div>
-                            <div id="header-weather" class="text-[10px] text-white/85 font-normal">颱風豪雨中</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hidden md:block text-center">
+                <!-- 2. 日期與大時間 -->
+                <div class="text-center my-1 md:my-0">
                     <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
                     <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
                 </div>
 
-                <div class="hidden md:block bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
+                <!-- 3. 星期標籤 -->
+                <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
                     <span id="header-weekday">載入中...</span>
                 </div>
             </header>
@@ -388,7 +361,7 @@
                                 <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
                             </div>
                             
-                            <!-- 🌟 已修復：套用您指定的正確網址與點擊超連結 -->
+                            <!-- 推薦項目區塊 -->
                             <div id="random-recommendation-box" class="space-y-2"></div>
                         </div>
                     </div>
@@ -423,47 +396,6 @@
     </div>
 
     <script>
-        async function fetchRealtimeWeather() {
-            try {
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=24.9873&longitude=121.4435&current=temperature_2m,weather_code');
-                const data = await res.json();
-                const temp = Math.round(data.current.temperature_2m);
-                const code = data.current.weather_code;
-
-                let weatherDesc = "多雲";
-                let iconClass = "fa-cloud-sun text-amber-200";
-
-                if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95)) {
-                    weatherDesc = "颱風豪雨中";
-                    iconClass = "fa-cloud-showers-heavy text-sky-200 animate-pulse";
-                } else if (code >= 1 && code <= 3) {
-                    weatherDesc = "多雲";
-                    iconClass = "fa-cloud-sun text-amber-200";
-                } else if (code === 0) {
-                    weatherDesc = "晴朗";
-                    iconClass = "fa-sun text-yellow-300";
-                }
-
-                // 桌機版天氣更新
-                document.getElementById('header-temp').innerText = `${temp}°C`;
-                document.getElementById('header-weather').innerText = weatherDesc;
-                document.getElementById('weather-icon').className = `fa-solid ${iconClass} text-base`;
-
-                // 手機版天氣更新
-                document.getElementById('header-temp-mobile').innerText = `${temp}°C`;
-                document.getElementById('header-weather-mobile').innerText = weatherDesc;
-                document.getElementById('weather-icon-mobile').className = `fa-solid ${iconClass} text-xs`;
-            } catch (e) {
-                document.getElementById('header-temp').innerText = "21°C";
-                document.getElementById('header-weather').innerText = "weatherDesc";
-                document.getElementById('weather-icon').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-base";
-
-                document.getElementById('header-temp-mobile').innerText = "21°C";
-                document.getElementById('header-weather-mobile').innerText = "weatherDesc";
-                document.getElementById('weather-icon-mobile').className = "fa-solid fa-cloud-showers-heavy text-sky-200 animate-pulse text-xs";
-            }
-        }
-
         function updateDateTime() {
             const now = new Date();
             const year = now.getFullYear();
@@ -477,21 +409,13 @@
             const dateStr = `${year}年${month}月${day}日`;
             const timeStr = `${h}:${m}`;
 
-            // 桌機版更新
             document.getElementById('header-date').innerText = dateStr;
             document.getElementById('header-time').innerText = timeStr;
             document.getElementById('header-weekday').innerText = weekday;
-
-            // 手機版更新
-            document.getElementById('header-date-mobile').innerText = dateStr;
-            document.getElementById('header-time-mobile').innerText = timeStr;
-            document.getElementById('header-weekday-mobile').innerText = weekday;
         }
 
         updateDateTime();
         setInterval(updateDateTime, 1000);
-        fetchRealtimeWeather();
-        setInterval(fetchRealtimeWeather, 600000);
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -536,6 +460,7 @@
         }
 
         let defaultApps = [
+            { id: 'weather', name: '即時氣象', url: 'https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65', icon: 'fa-cloud-sun text-sky-500', modId: 'mod-weather' },
             { id: 'highway', name: '國道 1968', url: 'https://1968.freeway.gov.tw/', icon: 'fa-car text-blue-600', modId: 'mod-highway' },
             { id: 'provincial', name: '省道路況168', url: 'https://168.thb.gov.tw', icon: 'fa-road text-orange-600', modId: 'mod-provincial' },
             { id: 'bus', name: '即時公車', url: 'https://ebus.gov.taipei/', icon: 'fa-bus text-sky-600', modId: 'mod-bus' },
@@ -669,8 +594,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認 Header 已完全還原成原版的經典鮮綠色 Banner", done: false },
-            { text: "測試自動氣象與左側選單抽屜互動", done: false }
+            { text: "確認 Header 已精簡為 LOGO + 日期時間 + 星期", done: false },
+            { text: "測試即時氣象 APP 捷徑與拖曳排序", done: false }
         ]));
 
         function renderTodoList() {
@@ -730,14 +655,13 @@
             }
         }
 
-        // 🌟 賦予推薦項目您指定的正確超連結
         function initRandomRecommendation() {
             const recs = [
                 { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/diary/index.html", tag: "熱門推薦" },
                 { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/ai-greeting-app/", tag: "人氣工具" },
                 { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
                 { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://myezlife.com/goldmelody_csv.html", tag: "視聽娛樂" },
-                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://myezlife.com/FileExplorer.html", tag: "高效助手" }
+                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://drive.google.com/", tag: "高效助手" }
             ];
 
             const shuffled = [...recs].sort(() => 0.5 - Math.random());
