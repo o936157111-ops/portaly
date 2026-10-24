@@ -165,22 +165,6 @@
         .sortable-drag {
             opacity: 0.9;
         }
-
-        /* 暗色彈窗美化滾動條 */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1e222b;
-            border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
     </style>
 </head>
 <body>
@@ -312,9 +296,9 @@
         </div>
     </aside>
 
-    <!-- 🌟 互動彈窗 1：說明視窗 -->
+    <!-- 🌟 互動彈窗 1：對應第一張圖「獨家亮點：一鍵打造個人影音牆」說明視窗 -->
     <div id="modal-step1" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-4 relative max-h-[85vh] overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-4 relative">
             <button onclick="closeModals()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
                 <span class="text-amber-500 text-lg">✨</span>
@@ -349,23 +333,23 @@
         </div>
     </div>
 
-    <!-- 🌟 互動彈窗 2：打造專屬影音牆設定視窗 (寬度放大為 max-w-xl 且支援完美上下捲軸) -->
+    <!-- 🌟 互動彈窗 2：對應第二、三張圖「打造你的專屬影音牆」設定視窗 -->
     <div id="modal-step2" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-[#1e222b] rounded-3xl max-w-xl w-full p-6 md:p-7 shadow-2xl border border-slate-700 text-white space-y-4 relative max-h-[88vh] overflow-y-auto custom-scrollbar">
+        <div class="bg-[#1e222b] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 text-white space-y-4 relative">
             <button onclick="closeModals()" class="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             
-            <h3 class="text-center font-black text-base md:text-lg tracking-wide pb-2 border-b border-slate-700">打造你的專屬影音牆</h3>
+            <h3 class="text-center font-black text-base tracking-wide pb-2 border-b border-slate-700">打造你的專屬影音牆</h3>
             
-            <div class="bg-[#2a2f3d] p-4 md:p-5 rounded-2xl border border-slate-700 space-y-3 text-xs md:text-sm text-slate-300">
-                <div class="font-bold text-white flex items-center gap-2 text-sm md:text-base">
+            <div class="bg-[#2a2f3d] p-4 rounded-2xl border border-slate-700 space-y-3 text-xs text-slate-300">
+                <div class="font-bold text-white flex items-center gap-1.5">
                     <span>📑</span> 想要製作自己的播放清單？
                 </div>
                 <div class="text-center pt-1">
-                    <a href="https://docs.google.com/spreadsheets" target="_blank" class="inline-flex items-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2.5 px-5 rounded-xl shadow transition text-xs md:text-sm">
+                    <a href="https://docs.google.com/spreadsheets" target="_blank" class="inline-flex items-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2 px-4 rounded-xl shadow transition">
                         <span>📋</span> 點此複製 Google 試算表範本
                     </a>
                 </div>
-                <ol class="list-decimal list-inside space-y-2 text-xs md:text-sm text-slate-300 leading-relaxed pt-2 border-t border-slate-700/60">
+                <ol class="list-decimal list-inside space-y-1.5 text-[11px] text-slate-300 leading-relaxed pt-1">
                     <li>點擊上方按鈕，將範本「建立副本」到你的 Google 雲端。</li>
                     <li>填入你想放的歌名與 YouTube 影片網址。</li>
                     <li>點選選單「檔案」➔「分享」➔「發布到網路」，選擇「逗號分隔值 (.csv)」並發布，複製該網址貼在下方。</li>
@@ -373,25 +357,23 @@
             </div>
 
             <div class="space-y-3">
-                <input type="text" id="csv-url-input" placeholder="貼上你的 CSV 發布網址..." class="w-full bg-[#2a2f3d] border border-slate-600 p-3.5 rounded-xl text-xs md:text-sm text-white placeholder-slate-400 outline-none focus:border-[#22c55e] transition">
+                <input type="text" id="csv-url-input" placeholder="貼上你的 CSV 發布網址..." class="w-full bg-[#2a2f3d] border border-slate-600 p-3 rounded-xl text-xs text-white placeholder-slate-400 outline-none focus:border-[#22c55e]">
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button class="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold py-2.5 px-3 rounded-xl text-xs md:text-sm transition shadow">
-                        還原為站長預設推薦清單
-                    </button>
-                    <button class="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold py-2.5 px-3 rounded-xl text-xs md:text-sm transition shadow">
-                        🗑️ 清除所有手動新增的自訂歌曲
-                    </button>
-                </div>
+                <button class="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    還原為站長預設推薦清單
+                </button>
+                <button class="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold py-2.5 rounded-xl text-xs transition shadow">
+                    🗑️ 清除所有手動新增的自訂歌曲
+                </button>
 
-                <div class="bg-[#2a2f3d] p-3.5 rounded-xl border-l-4 border-amber-400 text-xs text-slate-300 leading-relaxed">
+                <div class="bg-[#2a2f3d] p-3 rounded-xl border-l-4 border-amber-400 text-[11px] text-slate-300 leading-relaxed">
                     💡 溫馨小提示：自訂的試算表與新增歌曲會安全地存于你當前的裝置瀏覽器中。
                 </div>
             </div>
 
-            <div class="pt-2 flex gap-3">
-                <button onclick="openStep1()" class="bg-[#333d4d] hover:bg-[#475569] text-white text-xs md:text-sm font-bold py-2.5 px-5 rounded-xl transition cursor-pointer">取消</button>
-                <button onclick="closeModals()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md text-center">套用並重新整理</button>
+            <div class="pt-2 flex gap-2">
+                <button onclick="openStep1()" class="bg-[#333d4d] hover:bg-[#475569] text-white text-xs font-bold py-2.5 px-4 rounded-xl transition cursor-pointer">取消</button>
+                <button onclick="closeModals()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md">套用並重新整理</button>
             </div>
         </div>
     </div>
@@ -698,8 +680,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認影音牆視窗已加寬 (max-w-xl) 且支援流暢捲軸", done: false },
-            { text: "測試精選影音服務勾選與彈窗互動功能", done: false }
+            { text: "確認精選影音服務已全數加入側邊欄勾選與桌面捷徑", done: false },
+            { text: "測試影音牆兩階段互動彈窗與說明視窗", done: false }
         ]));
 
         function renderTodoList() {
