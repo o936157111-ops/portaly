@@ -105,15 +105,12 @@
             padding-left: 8px;
         }
 
-        /* 經典綠色 Banner (電腦版稍微縮小寬度至 max-w-4xl) */
+        /* 🌟 綠色 Banner：完美與下方各區塊 (max-w-5xl 容器) 寬度與邊距對齊 */
         .green-banner {
             background-color: #00a600;
             border-radius: 20px;
             color: #ffffff;
             box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
-            max-width: 56rem; /* 相當於 max-w-4xl */
-            margin-left: auto;
-            margin-right: auto;
             width: 100%;
         }
 
@@ -193,7 +190,7 @@
             
             <label class="flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg">
                 <input type="checkbox" id="mod-weather" checked onchange="updateDesktop()" class="rounded text-[#00a600] w-4 h-4">
-                <span>🌤️ 即時氣象預報 (中央氣象署)</span>
+                <span>🌤️ 即時氣象預報</span>
             </label>
 
             <!-- 交通與大眾運輸群組 -->
@@ -287,23 +284,20 @@
     <div id="app-wrapper">
         <div class="max-w-5xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
             
-            <!-- 🌟 綠色 Banner：移除天氣，統一改為 LOGO + 日期時間(時間大字) + 星期 -->
+            <!-- 🌟 綠色 Banner：寬度與下方 max-w-5xl 容器完全對齊，內容為 LOGO + 日期時間(大時間) + 星期 -->
             <header class="green-banner p-4 md:p-5 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 relative">
                 
-                <!-- 1. LOGO 按鈕 (手機與電腦共用) -->
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="p-1.5 bg-white/20 hover:bg-white/30 rounded-2xl border border-white/30 transition cursor-pointer flex items-center justify-center overflow-hidden w-12 h-12 shrink-0 shadow-sm" title="點擊開啟側邊欄選單">
                         <img src="https://myezlife.com/eric-logo.gif" alt="Eric Logo" class="w-9 h-9 object-contain">
                     </button>
                 </div>
 
-                <!-- 2. 日期與大時間 -->
                 <div class="text-center my-1 md:my-0">
                     <div id="header-date" class="text-xs text-white/90 font-medium tracking-wide">載入中...</div>
                     <div id="header-time" class="text-3xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
                 </div>
 
-                <!-- 3. 星期標籤 -->
                 <div class="bg-black/20 backdrop-blur px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider">
                     <span id="header-weekday">載入中...</span>
                 </div>
@@ -361,7 +355,6 @@
                                 <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
                             </div>
                             
-                            <!-- 推薦項目區塊 -->
                             <div id="random-recommendation-box" class="space-y-2"></div>
                         </div>
                     </div>
@@ -594,8 +587,8 @@
         }
 
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "確認 Header 已精簡為 LOGO + 日期時間 + 星期", done: false },
-            { text: "測試即時氣象 APP 捷徑與拖曳排序", done: false }
+            { text: "確認綠色區塊已與下方容器完美對齊寬度", done: false },
+            { text: "測試即時氣象 APP 與各項捷徑功能", done: false }
         ]));
 
         function renderTodoList() {
