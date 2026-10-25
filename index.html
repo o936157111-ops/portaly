@@ -22,7 +22,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 🌟 調整背景遮罩透明度，讓上傳的背景圖清晰可見 (從 0.85 降低至 0.35) */
+        /* 🌟 背景遮罩透明度保持 0.35，讓上傳的自訂背景清晰可見 */
         body.has-custom-bg::before {
             content: "";
             position: fixed;
@@ -426,7 +426,7 @@
         </div>
     </div>
 
-    <!-- 🌟 彈窗 2：完整試算表範本與設定（一頁完整顯示無捲軸） -->
+    <!-- 🌟 彈窗 2：完整試算表範本與設定 -->
     <div id="modal-step2" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 hidden">
         <div class="bg-[#1e222b] rounded-3xl max-w-2xl w-full p-5 shadow-2xl border border-slate-700 text-white space-y-3 relative overflow-hidden">
             <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -969,6 +969,49 @@
             }
         }
 
+        // 🌟 綁定 3 秒長按顯示刪除按鈕 (適用手機觸控與電腦滑鼠)
+        function bindLongPressToDelete(itemElement) {
+            let pressTimer = null;
+            const linkTag = itemElement.querySelector('a');
+
+            const startPress = (e) => {
+                // 如果刪除按鈕已經顯示，就不重複觸發計時
+                if (itemElement.classList.contains('show-delete')) return;
+                
+                pressTimer = setTimeout(() => {
+                    itemElement.classList.add('show-delete');
+                    // 震動回饋 (如果裝置支援)
+                    if (navigator.vibrate) navigator.vibrate(50);
+                }, 3000); // 3 秒
+            };
+
+            const cancelPress = () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+
+            // 觸控事件
+            itemElement.addEventListener('touchstart', startPress, { passive: true });
+            itemElement.addEventListener('touchend', cancelPress);
+            itemElement.addEventListener('touchmove', cancelPress);
+
+            // 滑鼠事件
+            itemElement.addEventListener('mousedown', startPress);
+            itemElement.addEventListener('mouseup', cancelPress);
+            itemElement.addEventListener('mouseleave', cancelPress);
+
+            // 長按期間若想點擊連結，需在顯示 X 前攔截或透過計時判斷
+            if (linkTag) {
+                linkTag.addEventListener('click', (e) => {
+                    if (itemElement.classList.contains('show-delete')) {
+                        e.preventDefault(); // 若處於刪除模式，點擊圖示不跳轉連結
+                    }
+                });
+            }
+        }
+
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -992,9 +1035,10 @@
                     <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="fa-solid fa-globe text-white"></i></div>
                     <span class="app-label">${name}</span>
                 </a>
-                <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
+                <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
             `;
             generalGrid.appendChild(div);
+            bindLongPressToDelete(div);
 
             nameInput.value = '';
             urlInput.value = '';
@@ -1030,9 +1074,10 @@
                         <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="fa-solid fa-globe text-white"></i></div>
                         <span class="app-label">${app.name}</span>
                     </a>
-                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow cursor-pointer">×</button>
+                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
                 `;
                 generalGrid.appendChild(div);
+                bindLongPressToDelete(div);
             });
         }
 
