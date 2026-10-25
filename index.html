@@ -44,6 +44,7 @@
             #sidebar input[type="checkbox"] {
                 width: 1.2rem !important;
                 height: 1.2rem !important;
+                pointer-events: auto !important;
             }
         }
 
@@ -173,7 +174,7 @@
         .sortable-ghost { opacity: 0.3; }
         .sortable-drag { opacity: 0.9; }
 
-        .sidebar-drag-handle, .sub-drag-item { cursor: grab; }
+        .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
@@ -219,63 +220,62 @@
                     </div>
                     <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🌤️ 即時氣象預報</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🎬 AI好劇一直看</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🎵 好歌一直聽</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📖 心情隨筆日記</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🌻 AI早安問候圖</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🪄 一鍵打造專屬影音牆</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📰 焦點新聞自動彙整</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📂 個人檔案總管</span>
                         </label>
-                        <!-- 新增的 4 個選項 -->
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-life-simple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🏡 生活‧簡居‧生活</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📚 生活圖書館</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-simple-home" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🏠 簡易首頁</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-games" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🎮 復古小遊戲</span>
                         </label>
@@ -297,32 +297,32 @@
                     </div>
                     <div id="traffic-sub" class="space-y-1.5 pl-2 border-l-2 border-blue-100 mt-1" style="display: none;">
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🚗 國道 1968 路況</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🛣️ 全台省道路況 (168)</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🚌 即時公車動態</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🚲 YouBike 站點車位</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🚂 台鐵時刻查詢</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>🚄 高鐵時刻查詢</span>
                         </label>
@@ -344,12 +344,12 @@
                     </div>
                     <div id="finance-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-100 mt-1" style="display: none;">
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📈 Yahoo股市</span>
                         </label>
                         <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px] pointer-events-none"></i>
                             <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📰 鉅亨網</span>
                         </label>
@@ -947,13 +947,17 @@
                 syncDesktopCardsOrder();
             }
 
-            // 2. 子選項清單內的排序支援
+            // 2. 子選項清單內的排序支援（修正手機版點擊與觸控衝突）
             document.querySelectorAll('#creative-sub, #traffic-sub, #finance-sub').forEach(subContainer => {
                 new Sortable(subContainer, {
                     animation: 150,
                     handle: '.sub-drag-item',
+                    filter: 'input, label',
+                    preventOnFilter: false,
                     ghostClass: 'sortable-ghost',
                     dragClass: 'sortable-drag',
+                    delay: 200,
+                    delayOnTouchOnly: true,
                     onEnd: function() {
                         saveSubItemOrder(subContainer.id);
                         syncDesktopGridWithSidebar();
