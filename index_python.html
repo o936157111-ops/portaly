@@ -371,6 +371,13 @@
                 </button>
             </div>
 
+            <!-- 一鍵重置 localStorage 按鈕 -->
+            <div class="pt-2 border-t border-slate-200">
+                <button onclick="resetLocalStorage()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold py-2 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-trash-can"></i> 清除並重設所有暫存資料
+                </button>
+            </div>
+
             <!-- 隱身背景圖設定 -->
             <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2 mt-4 shrink-0">
                 <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
@@ -399,23 +406,23 @@
                 <span class="text-amber-500 text-lg">✨</span>
                 <h3 class="font-black text-slate-800 text-sm">獨家亮點：一鍵打造個人影音牆</h3>
             </div>
-            <p class="text-xs text-slate-600 leading-relaxed font-medium">這是一套別人沒有的智慧影音牆功能！您可以：[cite: 2]</p>
+            <p class="text-xs text-slate-600 leading-relaxed font-medium">這是一套別人沒有的智慧影音牆功能！您可以：</p>
             <div class="space-y-2.5 text-xs text-slate-700">
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">📋</span>
-                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。[cite: 2]</div>
+                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。</div>
                 </div>
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">☁️</span>
-                    <div><strong class="font-bold">雲端 CSV 即時同步</strong>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！[cite: 2]</div>
+                    <div><strong class="font-bold">雲端 CSV 即時同步</strong>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</div>
                 </div>
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">🎯</span>
-                    <div><strong class="font-bold">智慧記憶與隨機</strong>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。[cite: 2]</div>
+                    <div><strong class="font-bold">智慧記憶與隨機</strong>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</div>
                 </div>
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">➕</span>
-                    <div><strong class="font-bold">隨手即時新增</strong>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。[cite: 2]</div>
+                    <div><strong class="font-bold">隨手即時新增</strong>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</div>
                 </div>
             </div>
             <div class="pt-2">
@@ -703,6 +710,14 @@
             }
         }
 
+        // 一鍵清空 localStorage 並重設畫面
+        function resetLocalStorage() {
+            if (confirm('確定要清除所有紀錄（包括自訂App、便籤與勾選狀態）嗎？此動作無法復原。')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
         // 背景圖片設定功能
         function applyBackground() {
             const url = document.getElementById('bg-url-input').value.trim();
@@ -837,7 +852,7 @@
             groupOrder.forEach(groupId => {
                 let card = null;
                 if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
-                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-traffic' || groupId === 'group-[#finance]') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 
@@ -872,7 +887,7 @@
             }
         }
 
-        // 長按 3 秒顯示 X
+        // 長按 3 秒顯示 X 刪除按鈕
         function bindLongPressToDelete(itemElement) {
             let pressTimer = null;
             const linkTag = itemElement.querySelector('a');
@@ -927,7 +942,7 @@
             });
         }
 
-        // --- 🌟 自訂 App 載入與渲染防重複疊加 ---
+        // --- 自訂 App 載入與渲染防重複機制 ---
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -952,11 +967,13 @@
         function removeCustomApp(btn) {
             if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
                 const item = btn.closest('.app-item');
-                const customIdx = item.getAttribute('data-custom-idx');
+                const customIdx = parseInt(item.getAttribute('data-custom-idx'), 10);
                 
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-                customApps.splice(customIdx, 1);
-                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+                if (!isNaN(customIdx) && customIdx >= 0 && customIdx < customApps.length) {
+                    customApps.splice(customIdx, 1);
+                    localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+                }
 
                 loadCustomApps();
                 updateDesktopVisibility();
@@ -967,6 +984,7 @@
             const generalGrid = document.getElementById('general-app-grid');
             if (!generalGrid) return;
 
+            // 清除現有的自訂項目防止重複疊加
             generalGrid.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
 
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
@@ -1096,6 +1114,7 @@
             }
         }
 
+        // 載入初始化
         loadSavedBackground();
         loadCustomApps();
         initSortables();
