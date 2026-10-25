@@ -390,7 +390,7 @@
         </div>
     </aside>
 
-    <!-- 彈窗 1 -->
+    <!-- 🌟 完整彈窗 1：打造個人影音牆說明 -->
     <div id="modal-step1" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-4 relative max-h-[85vh] overflow-y-auto">
             <button onclick="closeModals()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -402,33 +402,69 @@
             <div class="space-y-2.5 text-xs text-slate-700">
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">📋</span>
-                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。</div>
+                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。[cite: 2]</div>
+                </div>
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">☁️</span>
+                    <div><strong class="font-bold">雲端 CSV 即時同步</strong>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！[cite: 2]</div>
+                </div>
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">🎯</span>
+                    <div><strong class="font-bold">智慧記憶與隨機</strong>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。[cite: 2]</div>
+                </div>
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">➕</span>
+                    <div><strong class="font-bold">隨手即時新增</strong>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。[cite: 2]</div>
                 </div>
             </div>
             <div class="pt-2">
-                <button onclick="goToStep2()" class="w-full bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold py-3 rounded-xl transition cursor-pointer shadow-md text-center">
+                <button onclick="goToStep2()" class="w-full bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs font-bold py-3 rounded-xl transition cursor-pointer shadow-md text-center">
                     了解並前往影音牆 ➔
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 彈窗 2 -->
+    <!-- 🌟 完整彈窗 2：試算表範本與設定 -->
     <div id="modal-step2" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
         <div class="bg-[#1e222b] rounded-3xl max-w-xl w-full p-6 md:p-7 shadow-2xl border border-slate-700 text-white space-y-4 relative max-h-[88vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeModals()" class="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-center font-black text-base md:text-lg tracking-wide pb-2 border-b border-slate-700">打造你的專屬影音牆</h3>
+            
             <div class="bg-[#2a2f3d] p-4 md:p-5 rounded-2xl border border-slate-700 space-y-3 text-xs md:text-sm text-slate-300">
-                <div class="font-bold text-white flex items-center gap-2 text-sm md:text-base"><span>📑</span> 想要製作自己的播放清單？</div>
+                <div class="font-bold text-white flex items-center gap-2 text-sm md:text-base"><span>📑</span> 想要製作自己的播放清單？[cite: 4]</div>
                 <div class="text-center pt-1">
-                    <a href="https://docs.google.com/spreadsheets" target="_blank" class="inline-flex items-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2.5 px-5 rounded-xl shadow transition text-xs md:text-sm">
-                        <span>📋</span> 點此複製 Google 試算表範本
+                    <a href="https://docs.google.com/spreadsheets/d/1_template_example/copy" target="_blank" class="inline-flex items-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2.5 px-5 rounded-xl shadow transition text-xs md:text-sm">
+                        <span>📋</span> 點此複製 Google 試算表範本[cite: 3, 4]
                     </a>
                 </div>
+                <div class="text-slate-400 text-[11px] md:text-xs space-y-1.5 pt-2 leading-relaxed">
+                    <p>1. 點擊上方按鈕，將範本「建立副本」到你的 Google 雲端。[cite: 3, 4]</p>
+                    <p>2. 填入你想放的歌單名與 YouTube 影片網址。[cite: 3, 4]</p>
+                    <p>3. 點選選單「檔案」➔「分享」➔「發布到網路」，選擇「逗號分隔值 (.csv)」並發布，複製該網址貼在下方。[cite: 3, 4]</p>
+                </div>
             </div>
+
+            <div class="space-y-2">
+                <input type="url" id="csv-url-input" placeholder="貼上你的 CSV 發布網址..." class="w-full bg-[#11141b] text-white p-3 rounded-xl border border-slate-700 text-xs md:text-sm outline-none focus:border-[#22c55e]">
+            </div>
+
+            <div class="space-y-2">
+                <button onclick="resetToDefaultPlaylist()" class="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow">
+                    還原為站長預設推薦清單
+                </button>
+                <button onclick="clearAllCustomSongs()" class="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow">
+                    🗑️ 清除所有手動新增的自訂歌曲
+                </button>
+            </div>
+
+            <div class="bg-[#11141b] p-3 rounded-xl border border-slate-800 text-[11px] text-slate-400">
+                💡 溫馨小提示：自訂的試算表與新增歌曲會安全地存儲於您當前的裝置瀏覽器中。[cite: 3]
+            </div>
+
             <div class="pt-2 flex gap-3">
                 <button onclick="openStep1()" class="bg-[#333d4d] hover:bg-[#475569] text-white text-xs md:text-sm font-bold py-2.5 px-5 rounded-xl transition cursor-pointer">取消</button>
-                <button onclick="closeModals()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md text-center">套用並重新整理</button>
+                <button onclick="saveVideowallSettings()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md text-center">套用並重新整理</button>
             </div>
         </div>
     </div>
@@ -762,7 +798,7 @@
         }
 
         function loadCheckboxStates() {
-            const savedState = JSON.parse(localStorage.getItem('myezlife_checkbox_states') || 'null');
+            const savedState = JSON.parse(localStorage.getItem('myezlife_checkbox_states'] || 'null');
             if (savedState) {
                 for (const [id, checked] of Object.entries(savedState)) {
                     const cb = document.getElementById(id);
@@ -1075,10 +1111,33 @@
             }
         }
 
+        // 影音牆彈窗與設定控制函式
         function openVideoWallModal() { toggleSidebar(); openStep1(); }
         function openStep1() { document.getElementById('modal-step2').classList.add('hidden'); document.getElementById('modal-step1').classList.remove('hidden'); }
         function goToStep2() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.remove('hidden'); }
         function closeModals() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.add('hidden'); }
+
+        function saveVideowallSettings() {
+            const csvUrl = document.getElementById('csv-url-input').value.trim();
+            if (csvUrl) {
+                localStorage.setItem('myezlife_custom_csv', csvUrl);
+            }
+            closeModals();
+            location.reload();
+        }
+
+        function resetToDefaultPlaylist() {
+            localStorage.removeItem('myezlife_custom_csv');
+            document.getElementById('csv-url-input').value = '';
+            alert('已還原為站長預設推薦清單！');
+        }
+
+        function clearAllCustomSongs() {
+            if (confirm('確定要清除所有手動新增的自訂歌曲嗎？')) {
+                localStorage.removeItem('myezlife_custom_songs');
+                alert('已清除所有手動新增的自訂歌曲！');
+            }
+        }
 
         // 🌟 初始化執行
         loadSavedBackground();
