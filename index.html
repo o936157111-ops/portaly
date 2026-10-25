@@ -38,7 +38,7 @@
             .text-lg { font-size: 1.25rem !important; }
             .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
             
-            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar .text-\[11px\], #sidebar .text-xs {
+            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar select, #sidebar .text-\[11px\], #sidebar .text-xs {
                 font-size: 1.05rem !important;
             }
             #sidebar input[type="checkbox"] {
@@ -370,7 +370,7 @@
                 </button>
             </div>
 
-            <!-- 🌟 隱身在左側側邊欄最下方的背景圖片設定區塊 -->
+            <!-- 隱身背景圖設定 -->
             <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2 mt-4 shrink-0">
                 <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
                     <i class="fa-solid fa-image text-[#00a600]"></i> 設定滿版背景圖
@@ -387,6 +387,48 @@
                     🔄 恢復預設背景
                 </button>
             </div>
+
+            <!-- 🌟 開發者專用隱形解鎖區塊 (最下方) -->
+            <div class="pt-2 border-t border-slate-200 shrink-0">
+                <div id="dev-unlock-trigger" onclick="toggleDevLogin()" class="h-4 w-full cursor-pointer flex items-center justify-center" title="開發者解鎖專用">
+                    <div class="w-8 h-1 bg-slate-200 rounded-full hover:bg-slate-400 transition"></div>
+                </div>
+                <div id="dev-panel" class="hidden mt-2 bg-slate-900 p-3 rounded-xl text-white space-y-2 border border-slate-700">
+                    <div class="text-[11px] font-bold text-amber-400">🛠️ 開發者管理面板</div>
+                    <input type="password" id="dev-password-input" placeholder="輸入動態密碼 (6碼)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none focus:border-amber-400">
+                    <button onclick="unlockDevPanel()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold py-1.5 rounded transition cursor-pointer">解鎖新增功能</button>
+                    
+                    <!-- 解鎖後顯示的表單介面 -->
+                    <div id="dev-form-box" class="hidden space-y-2 pt-2 border-t border-slate-700">
+                        <div class="text-[11px] text-emerald-400 font-bold">➕ 直接新增選項/項目</div>
+                        
+                        <label class="text-[10px] text-slate-400 block">選擇要加入的區塊或群組：</label>
+                        <select id="new-mod-group" onchange="handleGroupSelectChange(this)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                            <option value="creative-sub">📂 精選影音與創作服務</option>
+                            <option value="traffic-sub">📂 即時交通與大眾運輸</option>
+                            <option value="finance-sub">📂 台股財經與鉅亨網</option>
+                            <option value="new-group">✨ 新增一個全新的群組（區塊）</option>
+                        </select>
+
+                        <!-- 若選擇新增全新群組時顯示的輸入框 -->
+                        <div id="new-group-name-wrapper" class="hidden space-y-1">
+                            <input type="text" id="new-group-title-input" placeholder="輸入新群組名稱 (例如: 🚀 常用工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        </div>
+
+                        <input type="text" id="new-mod-title" placeholder="選項名稱 (例如: 🤖 AI工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        <input type="url" id="new-mod-url" placeholder="網址 (https://...)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        <input type="text" id="new-mod-icon" placeholder="FontAwesome 圖示 (預設 fa-globe)" value="fa-globe" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        
+                        <button onclick="addNewOptionToPage()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded transition cursor-pointer">
+                            確認新增選項
+                        </button>
+                        <button onclick="saveAndDownloadHtml()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 rounded transition cursor-pointer shadow flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-download"></i> 儲存並下載更新後的 HTML
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </aside>
 
@@ -702,6 +744,167 @@
             }
         }
 
+        // 開發者面板解鎖邏輯
+        function toggleDevLogin() {
+            const panel = document.getElementById('dev-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function unlockDevPanel() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const expectedPwd = `${y}${m}${d}`;
+
+            const inputPwd = document.getElementById('dev-password-input').value.trim();
+            if (inputPwd === expectedPwd) {
+                document.getElementById('dev-form-box').classList.remove('hidden');
+                alert('解鎖成功！您現在可以透過下拉選單選擇或建立新群組來新增選項。');
+            } else {
+                alert('密碼錯誤！請輸入正確的 6 位當日日期密碼。');
+            }
+        }
+
+        function handleGroupSelectChange(select) {
+            const wrapper = document.getElementById('new-group-name-wrapper');
+            if (select.value === 'new-group') {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+            }
+        }
+
+        // 支援下拉選單選擇現有群組或動態新增全新群組
+        function addNewOptionToPage() {
+            const groupSelectVal = document.getElementById('new-mod-group').value;
+            const title = document.getElementById('new-mod-title').value.trim();
+            const url = document.getElementById('new-mod-url').value.trim();
+            const icon = document.getElementById('new-mod-icon').value.trim() || 'fa-globe';
+
+            if (!title || !url) {
+                alert('請完整填寫選項名稱與網址！');
+                return;
+            }
+
+            const modId = 'mod-custom-' + Date.now();
+            let targetSubId = groupSelectVal;
+
+            // 如果使用者選擇新增全新群組
+            if (groupSelectVal === 'new-group') {
+                const newGroupName = document.getElementById('new-group-title-input').value.trim();
+                if (!newGroupName) {
+                    alert('請輸入新群組的名稱！');
+                    return;
+                }
+
+                const uniqueId = 'custom-group-' + Date.now();
+                targetSubId = uniqueId + '-sub';
+                const cardId = uniqueId + '-card';
+                const gridId = uniqueId + '-grid';
+
+                // 1. 在側邊欄 Sortable 容器中新增群組
+                const sidebarContainer = document.getElementById('sidebar-sortable-container');
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2';
+                groupDiv.setAttribute('data-id', uniqueId);
+                groupDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-folder text-amber-500"></i> ${newGroupName}
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('${targetSubId}', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="${targetSubId}" class="space-y-1.5 pl-2 border-l-2 border-amber-100 mt-1" style="display: block;"></div>
+                `;
+                sidebarContainer.appendChild(groupDiv);
+
+                // 2. 在桌面上新增對應的卡片容器
+                const desktopContainer = document.getElementById('desktop-cards-container');
+                const desktopCard = document.createElement('div');
+                desktopCard.id = cardId;
+                desktopCard.setAttribute('data-[#group-id]', uniqueId);
+                desktopCard.className = 'bg-white p-6 rounded-2xl border border-slate-200 shadow-sm';
+                desktopCard.innerHTML = `<div id="${gridId}" class="app-grid"></div>`;
+                desktopContainer.appendChild(desktopCard);
+
+                // 3. 同步更新下拉選單，讓以後也能選到這個新群組
+                const selectElem = document.getElementById('new-mod-group');
+                const newOption = document.createElement('option');
+                newOption.value = targetSubId;
+                newOption.textContent = `📁 ${newGroupName}`;
+                selectElem.insertBefore(newOption, selectElem.lastElementChild);
+                selectElem.value = targetSubId;
+                document.getElementById('new-group-name-wrapper').classList.add('hidden');
+                document.getElementById('new-group-title-input').value = '';
+            }
+
+            // 4. 在目標群組的子選單中加入 Checkbox
+            const targetSub = document.getElementById(targetSubId);
+            if (targetSub) {
+                targetSub.style.display = 'block';
+                const label = document.createElement('label');
+                label.className = 'sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer';
+                label.innerHTML = `
+                    <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                    <input type="checkbox" id="${modId}" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                    <span><i class="fa-solid ${icon} mr-1 text-emerald-600"></i> ${title}</span>
+                `;
+                targetSub.appendChild(label);
+            }
+
+            // 5. 在對應的桌面 Grid 中加入 App 圖示
+            let targetGrid = null;
+            if (targetSubId.includes('creative')) {
+                targetGrid = document.getElementById('creative-app-grid');
+            } else if (targetSubId.includes('traffic')) {
+                targetGrid = document.getElementById('general-app-grid');
+            } else if (targetSubId.includes('finance')) {
+                targetGrid = document.getElementById('general-app-grid');
+            } else {
+                // 自訂群組對應的 grid
+                const baseId = targetSubId.replace('-sub', '');
+                targetGrid = document.getElementById(baseId + '-grid');
+            }
+
+            if (targetGrid) {
+                const appDiv = document.createElement('div');
+                appDiv.className = 'app-item';
+                appDiv.setAttribute('data-mod', modId);
+                appDiv.innerHTML = `
+                    <a href="${url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                        <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid ${icon} text-white"></i></div>
+                        <span class="app-label">${title}</span>
+                    </a>
+                `;
+                targetGrid.appendChild(appDiv);
+            }
+
+            updateDesktopVisibility();
+            document.getElementById('new-mod-title').value = '';
+            document.getElementById('new-mod-url').value = '';
+            alert(`成功新增選項「${title}」！`);
+        }
+
+        function saveAndDownloadHtml() {
+            const updatedHtml = document.documentElement.outerHTML;
+            const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('已成功將最新完整網頁打包下載！請直接上傳至 GitHub。');
+        }
+
         // 背景圖片設定功能
         function applyBackground() {
             const url = document.getElementById('bg-url-input').value.trim();
@@ -759,7 +962,8 @@
                     }
                 }
             });
-            document.getElementById('desktop-creative-card').style.display = hasCreativeVisible ? 'block' : 'none';
+            const creativeCard = document.getElementById('desktop-creative-card');
+            if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
 
             let hasGeneralVisible = false;
             ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
@@ -781,9 +985,16 @@
                 hasGeneralVisible = true;
             }
 
-            document.getElementById('desktop-app-card').style.display = hasGeneralVisible ? 'block' : 'none';
-            document.getElementById('desktop-todo-card').style.display = document.getElementById('mod-todo').checked ? 'block' : 'none';
-            document.getElementById('desktop-sponsor-card').style.display = document.getElementById('mod-sponsor').checked ? 'block' : 'none';
+            const generalCard = document.getElementById('desktop-app-card');
+            if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
+
+            const todoCard = document.getElementById('desktop-todo-card');
+            const modTodo = document.getElementById('mod-todo');
+            if (todoCard && modTodo) todoCard.style.display = modTodo.checked ? 'block' : 'none';
+
+            const sponsorCard = document.getElementById('desktop-sponsor-card');
+            const modSponsor = document.getElementById('mod-sponsor');
+            if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
 
             saveCheckboxStates();
         }
@@ -810,8 +1021,10 @@
                     const parentSub = cb.closest('#creative-sub');
                     cb.checked = (parentSub !== null);
                 });
-                document.getElementById('mod-todo').checked = false;
-                document.getElementById('mod-sponsor').checked = false;
+                const modTodo = document.getElementById('mod-todo');
+                const modSponsor = document.getElementById('mod-sponsor');
+                if (modTodo) modTodo.checked = false;
+                if (modSponsor) modSponsor.checked = false;
             }
             updateDesktopVisibility();
         }
@@ -829,6 +1042,9 @@
                 else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
+                else {
+                    card = document.getElementById(groupId + '-card');
+                }
                 
                 if (card) desktopContainer.appendChild(card);
             });
@@ -859,123 +1075,15 @@
                 }
                 syncDesktopCardsOrder();
             }
-
-            const creativeSub = document.getElementById('creative-sub');
-            const creativeGrid = document.getElementById('creative-app-grid');
-            if (creativeSub && creativeGrid) {
-                new Sortable(creativeSub, {
-                    animation: 200,
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    delay: 150,
-                    delayOnTouchOnly: true,
-                    onEnd: function () {
-                        const subOrder = Array.from(creativeSub.children).map(el => el.getAttribute('data-id') || el.querySelector('input')?.id);
-                        localStorage.setItem('myezlife_creative_sub_order', JSON.stringify(subOrder));
-                        subOrder.forEach(modId => {
-                            const item = creativeGrid.querySelector(`[data-mod="${modId}"]`);
-                            if (item) creativeGrid.appendChild(item);
-                        });
-                    }
-                });
-                const savedSubOrder = JSON.parse(localStorage.getItem('myezlife_creative_sub_order') || 'null');
-                if (savedSubOrder) {
-                    savedSubOrder.forEach(modId => {
-                        const el = creativeSub.querySelector(`[data-id="${modId}"]`) || creativeSub.querySelector(`#${modId}`)?.closest('.sub-drag-item');
-                        if (el) creativeSub.appendChild(el);
-                        const item = creativeGrid.querySelector(`[data-mod="${modId}"]`);
-                        if (item) creativeGrid.appendChild(item);
-                    });
-                }
-            }
-
-            const trafficSub = document.getElementById('traffic-sub');
-            const generalGrid = document.getElementById('general-app-grid');
-            if (trafficSub && generalGrid) {
-                new Sortable(trafficSub, {
-                    animation: 200,
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    delay: 150,
-                    delayOnTouchOnly: true,
-                    onEnd: function () {
-                        const subOrder = Array.from(trafficSub.children).map(el => el.querySelector('input')?.id);
-                        localStorage.setItem('myezlife_traffic_sub_order', JSON.stringify(subOrder));
-                        subOrder.forEach(modId => {
-                            const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                            if (item) generalGrid.appendChild(item);
-                        });
-                    }
-                });
-                const savedTrafficOrder = JSON.parse(localStorage.getItem('myezlife_traffic_sub_order') || 'null');
-                if (savedTrafficOrder) {
-                    savedTrafficOrder.forEach(modId => {
-                        const el = trafficSub.querySelector(`#${modId}`)?.closest('.sub-drag-item');
-                        if (el) trafficSub.appendChild(el);
-                        const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                        if (item) generalGrid.appendChild(item);
-                    });
-                }
-            }
-
-            const financeSub = document.getElementById('finance-sub');
-            if (financeSub && generalGrid) {
-                new Sortable(financeSub, {
-                    animation: 200,
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    delay: 150,
-                    delayOnTouchOnly: true,
-                    onEnd: function () {
-                        const subOrder = Array.from(financeSub.children).map(el => el.querySelector('input')?.id);
-                        localStorage.setItem('myezlife_finance_sub_order', JSON.stringify(subOrder));
-                        subOrder.forEach(modId => {
-                            const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                            if (item) generalGrid.appendChild(item);
-                        });
-                    }
-                });
-                const savedFinanceOrder = JSON.parse(localStorage.getItem('myezlife_finance_sub_order') || 'null');
-                if (savedFinanceOrder) {
-                    savedFinanceOrder.forEach(modId => {
-                        const el = financeSub.querySelector(`#${modId}`)?.closest('.sub-drag-item');
-                        if (el) financeSub.appendChild(el);
-                        const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                        if (item) generalGrid.appendChild(item);
-                    });
-                }
-            }
-
-            if (generalGrid) {
-                new Sortable(generalGrid, {
-                    animation: 200,
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    delay: 150,
-                    delayOnTouchOnly: true,
-                    onEnd: function () {
-                        const order = Array.from(generalGrid.children).map(el => el.getAttribute('data-mod') || ('custom_' + el.getAttribute('data-custom-idx')));
-                        localStorage.setItem('myezlife_general_app_order', JSON.stringify(order));
-                    }
-                });
-                const savedGeneralOrder = JSON.parse(localStorage.getItem('myezlife_general_app_order') || 'null');
-                if (savedGeneralOrder) {
-                    savedGeneralOrder.forEach(key => {
-                        let item = generalGrid.querySelector(`[data-mod="${key}"]`) || generalGrid.querySelector(`[data-custom-idx="${key.replace('custom_', '')}"]`);
-                        if (item) generalGrid.appendChild(item);
-                    });
-                }
-            }
         }
 
-        // 🌟 3 秒長按顯示 X，再次長按或點擊空白處可取消刪除狀態
+        // 長按 3 秒顯示 X
         function bindLongPressToDelete(itemElement) {
             let pressTimer = null;
             const linkTag = itemElement.querySelector('a');
 
             const startPress = (e) => {
                 pressTimer = setTimeout(() => {
-                    // 切換刪除狀態：若已顯示則隱藏，若未顯示則顯示
                     const isShown = itemElement.classList.contains('show-delete');
                     document.querySelectorAll('.app-item.show-delete').forEach(el => el.classList.remove('show-delete'));
                     
@@ -983,7 +1091,7 @@
                         itemElement.classList.add('show-delete');
                         if (navigator.vibrate) navigator.vibrate(50);
                     }
-                }, 3000); // 3 秒
+                }, 3000);
             };
 
             const cancelPress = () => {
@@ -1010,7 +1118,6 @@
             }
         }
 
-        // 🌟 點擊頁面其他空白處時，自動取消所有 App 的刪除狀態（關閉 X）
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.app-item')) {
                 document.querySelectorAll('.app-item.show-delete').forEach(el => {
