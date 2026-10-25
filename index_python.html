@@ -450,10 +450,10 @@
             </div>
 
             <div class="space-y-2">
-                <button onclick="resetToDefaultPlaylist()" class="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow">
+                <button type="button" onclick="resetToDefaultPlaylist()" class="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow">
                     還原為站長預設推薦清單
                 </button>
-                <button onclick="clearAllCustomSongs()" class="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow">
+                <button type="button" onclick="clearAllCustomSongs()" class="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow">
                     🗑️ 清除所有手動新增的自訂歌曲
                 </button>
             </div>
@@ -463,8 +463,8 @@
             </div>
 
             <div class="pt-2 flex gap-3">
-                <button onclick="openStep1()" class="bg-[#333d4d] hover:bg-[#475569] text-white text-xs md:text-sm font-bold py-2.5 px-5 rounded-xl transition cursor-pointer">取消</button>
-                <button onclick="saveVideowallSettings()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md text-center">套用並重新整理</button>
+                <button type="button" onclick="openStep1()" class="bg-[#333d4d] hover:bg-[#475569] text-white text-xs md:text-sm font-bold py-2.5 px-5 rounded-xl transition cursor-pointer">取消</button>
+                <button type="button" onclick="saveVideowallSettings()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs md:text-sm font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md text-center">套用並重新整理</button>
             </div>
         </div>
     </div>
@@ -1114,7 +1114,14 @@
         // 影音牆彈窗與設定控制函式
         function openVideoWallModal() { toggleSidebar(); openStep1(); }
         function openStep1() { document.getElementById('modal-step2').classList.add('hidden'); document.getElementById('modal-step1').classList.remove('hidden'); }
-        function goToStep2() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.remove('hidden'); }
+        function goToStep2() { 
+            document.getElementById('modal-step1').classList.add('hidden'); 
+            document.getElementById('modal-step2').classList.remove('hidden');
+            const savedCsv = localStorage.getItem('myezlife_custom_csv');
+            if (savedCsv) {
+                document.getElementById('csv-url-input').value = savedCsv;
+            }
+        }
         function closeModals() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.add('hidden'); }
 
         function saveVideowallSettings() {
@@ -1123,7 +1130,8 @@
                 localStorage.setItem('myezlife_custom_csv', csvUrl);
             }
             closeModals();
-            location.reload();
+            // 直接跳轉至指定的影音牆頁面
+            window.location.href = "https://myezlife.com/goldmelody_csv.html";
         }
 
         function resetToDefaultPlaylist() {
