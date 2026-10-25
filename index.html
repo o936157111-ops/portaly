@@ -258,6 +258,27 @@
                             <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                             <span>📂 個人檔案總管</span>
                         </label>
+                        <!-- 新增的 4 個選項 -->
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-life-simple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🏡 生活‧簡居‧生活</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📚 生活圖書館</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-simple-home" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🏠 簡易首頁</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-games" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🎮 復古小遊戲</span>
+                        </label>
                     </div>
                 </div>
 
@@ -371,14 +392,7 @@
                 </button>
             </div>
 
-            <!-- 一鍵重置 localStorage 按鈕 -->
-            <div class="pt-2 border-t border-slate-200">
-                <button onclick="resetLocalStorage()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-bold py-2 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-trash-can"></i> 清除並重設所有暫存資料
-                </button>
-            </div>
-
-            <!-- 隱身背景圖設定 -->
+            <!-- 隱身背景圖設定與資料清理按鈕 -->
             <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2 mt-4 shrink-0">
                 <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
                     <i class="fa-solid fa-image text-[#00a600]"></i> 設定滿版背景圖
@@ -394,6 +408,11 @@
                 <button onclick="resetBackground()" class="w-full text-slate-500 hover:text-rose-600 text-[10px] font-medium pt-0.5 transition text-center">
                     🔄 恢復預設背景
                 </button>
+                <div class="pt-2 border-t border-emerald-200/60 mt-2">
+                    <button onclick="clearAllLocalStorage()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold py-2 px-3 rounded-lg transition shadow-sm cursor-pointer">
+                        🗑️ 清除並重設所有暫存資料
+                    </button>
+                </div>
             </div>
         </div>
     </aside>
@@ -406,23 +425,23 @@
                 <span class="text-amber-500 text-lg">✨</span>
                 <h3 class="font-black text-slate-800 text-sm">獨家亮點：一鍵打造個人影音牆</h3>
             </div>
-            <p class="text-xs text-slate-600 leading-relaxed font-medium">這是一套別人沒有的智慧影音牆功能！您可以：</p>
+            <p class="text-xs text-slate-600 leading-relaxed font-medium">這是一套別人沒有的智慧影音牆功能！您可以：[cite: 2]</p>
             <div class="space-y-2.5 text-xs text-slate-700">
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">📋</span>
-                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。</div>
+                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。[cite: 2]</div>
                 </div>
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">☁️</span>
-                    <div><strong class="font-bold">雲端 CSV 即時同步</strong>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</div>
+                    <div><strong class="font-bold">雲端 CSV 即時同步</strong>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！[cite: 2]</div>
                 </div>
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">🎯</span>
-                    <div><strong class="font-bold">智慧記憶與隨機</strong>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</div>
+                    <div><strong class="font-bold">智慧記憶與隨機</strong>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。[cite: 2]</div>
                 </div>
                 <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <span class="text-base">➕</span>
-                    <div><strong class="font-bold">隨手即時新增</strong>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</div>
+                    <div><strong class="font-bold">隨手即時新增</strong>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。[cite: 2]</div>
                 </div>
             </div>
             <div class="pt-2">
@@ -560,6 +579,31 @@
                             <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-blue-400 to-indigo-600"><i class="fa-solid fa-folder-open text-white"></i></div>
                                 <span class="app-label">檔案總管</span>
+                            </a>
+                        </div>
+                        <!-- 新增的 4 個選項對應桌面卡片 -->
+                        <div class="app-item" data-mod="mod-life-simple">
+                            <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-teal-500 to-emerald-700"><i class="fa-solid fa-house text-white"></i></div>
+                                <span class="app-label">生活簡居</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-library">
+                            <a href="https://myezlife.com/mylibrary.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-indigo-400 to-blue-700"><i class="fa-solid fa-book text-white"></i></div>
+                                <span class="app-label">生活圖書館</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-simple-home">
+                            <a href="https://myezlife.com/index-2.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-500 to-yellow-600"><i class="fa-solid fa-desktop text-white"></i></div>
+                                <span class="app-label">簡易首頁</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-games">
+                            <a href="https://myezlife.com/games.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-pink-500 to-rose-600"><i class="fa-solid fa-gamepad text-white"></i></div>
+                                <span class="app-label">復古小遊戲</span>
                             </a>
                         </div>
                     </div>
@@ -710,10 +754,11 @@
             }
         }
 
-        // 一鍵清空 localStorage 並重設畫面
-        function resetLocalStorage() {
-            if (confirm('確定要清除所有紀錄（包括自訂App、便籤與勾選狀態）嗎？此動作無法復原。')) {
+        // 資料清理按鈕邏輯
+        function clearAllLocalStorage() {
+            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？這將清除自訂 App 與設定。')) {
                 localStorage.clear();
+                alert('已成功清除所有暫存資料，網頁將自動重新整理！');
                 location.reload();
             }
         }
@@ -810,6 +855,7 @@
             if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
 
             saveCheckboxStates();
+            syncDesktopGridWithSidebar();
         }
 
         function saveCheckboxStates() {
@@ -842,6 +888,20 @@
             updateDesktopVisibility();
         }
 
+        // 同步桌面網格順序與側邊欄勾選子選項順序一致
+        function syncDesktopGridWithSidebar() {
+            const creativeSub = document.getElementById('creative-sub');
+            const creativeGrid = document.getElementById('creative-app-grid');
+            if (creativeSub && creativeGrid) {
+                const subLabels = Array.from(creativeSub.querySelectorAll('input[type="checkbox"]'));
+                subLabels.forEach(cb => {
+                    const modId = cb.id;
+                    const item = creativeGrid.querySelector(`[data-mod="${modId}"]`);
+                    if (item) creativeGrid.appendChild(item);
+                });
+            }
+        }
+
         function syncDesktopCardsOrder() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             const desktopContainer = document.getElementById('desktop-cards-container');
@@ -852,7 +912,7 @@
             groupOrder.forEach(groupId => {
                 let card = null;
                 if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
-                else if (groupId === 'group-traffic' || groupId === 'group-[#finance]') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 
@@ -861,6 +921,7 @@
         }
 
         function initSortables() {
+            // 1. 群組大項目的排序
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
                 new Sortable(sidebarContainer, {
@@ -885,9 +946,46 @@
                 }
                 syncDesktopCardsOrder();
             }
+
+            // 2. 子選項清單內的排序支援
+            document.querySelectorAll('#creative-sub, #traffic-sub, #finance-sub').forEach(subContainer => {
+                new Sortable(subContainer, {
+                    animation: 150,
+                    handle: '.sub-drag-item',
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    onEnd: function() {
+                        saveSubItemOrder(subContainer.id);
+                        syncDesktopGridWithSidebar();
+                    }
+                });
+                loadSubItemOrder(subContainer.id);
+            });
         }
 
-        // 長按 3 秒顯示 X 刪除按鈕
+        function saveSubItemOrder(subId) {
+            const container = document.getElementById(subId);
+            if (!container) return;
+            const order = Array.from(container.querySelectorAll('input[type="checkbox"]')).map(cb => cb.id);
+            localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(order));
+        }
+
+        function loadSubItemOrder(subId) {
+            const container = document.getElementById(subId);
+            if (!container) return;
+            const savedOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
+            if (savedOrder) {
+                savedOrder.forEach(modId => {
+                    const cb = document.getElementById(modId);
+                    if (cb) {
+                        const labelItem = cb.closest('.sub-drag-item');
+                        if (labelItem) container.appendChild(labelItem);
+                    }
+                });
+            }
+        }
+
+        // 長按 3 秒顯示 X 刪除
         function bindLongPressToDelete(itemElement) {
             let pressTimer = null;
             const linkTag = itemElement.querySelector('a');
@@ -942,7 +1040,7 @@
             });
         }
 
-        // --- 自訂 App 載入與渲染防重複機制 ---
+        // --- 🌟 自訂 App 載入與渲染防重複疊加 ---
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -967,13 +1065,11 @@
         function removeCustomApp(btn) {
             if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
                 const item = btn.closest('.app-item');
-                const customIdx = parseInt(item.getAttribute('data-custom-idx'), 10);
+                const customIdx = item.getAttribute('data-custom-idx');
                 
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-                if (!isNaN(customIdx) && customIdx >= 0 && customIdx < customApps.length) {
-                    customApps.splice(customIdx, 1);
-                    localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-                }
+                customApps.splice(customIdx, 1);
+                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
 
                 loadCustomApps();
                 updateDesktopVisibility();
@@ -984,7 +1080,6 @@
             const generalGrid = document.getElementById('general-app-grid');
             if (!generalGrid) return;
 
-            // 清除現有的自訂項目防止重複疊加
             generalGrid.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
 
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
@@ -1114,7 +1209,6 @@
             }
         }
 
-        // 載入初始化
         loadSavedBackground();
         loadCustomApps();
         initSortables();
