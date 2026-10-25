@@ -22,7 +22,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 🌟 背景遮罩透明度保持 0.35，讓上傳的自訂背景清晰可見 */
         body.has-custom-bg::before {
             content: "";
             position: fixed;
@@ -969,19 +968,21 @@
             }
         }
 
-        // 🌟 綁定 3 秒長按顯示刪除按鈕 (適用手機觸控與電腦滑鼠)
+        // 🌟 3 秒長按顯示 X，再次長按或點擊空白處可取消刪除狀態
         function bindLongPressToDelete(itemElement) {
             let pressTimer = null;
             const linkTag = itemElement.querySelector('a');
 
             const startPress = (e) => {
-                // 如果刪除按鈕已經顯示，就不重複觸發計時
-                if (itemElement.classList.contains('show-delete')) return;
-                
                 pressTimer = setTimeout(() => {
-                    itemElement.classList.add('show-delete');
-                    // 震動回饋 (如果裝置支援)
-                    if (navigator.vibrate) navigator.vibrate(50);
+                    // 切換刪除狀態：若已顯示則隱藏，若未顯示則顯示
+                    const isShown = itemElement.classList.contains('show-delete');
+                    document.querySelectorAll('.app-item.show-delete').forEach(el => el.classList.remove('show-delete'));
+                    
+                    if (!isShown) {
+                        itemElement.classList.add('show-delete');
+                        if (navigator.vibrate) navigator.vibrate(50);
+                    }
                 }, 3000); // 3 秒
             };
 
@@ -992,25 +993,31 @@
                 }
             };
 
-            // 觸控事件
             itemElement.addEventListener('touchstart', startPress, { passive: true });
             itemElement.addEventListener('touchend', cancelPress);
             itemElement.addEventListener('touchmove', cancelPress);
 
-            // 滑鼠事件
             itemElement.addEventListener('mousedown', startPress);
             itemElement.addEventListener('mouseup', cancelPress);
             itemElement.addEventListener('mouseleave', cancelPress);
 
-            // 長按期間若想點擊連結，需在顯示 X 前攔截或透過計時判斷
             if (linkTag) {
                 linkTag.addEventListener('click', (e) => {
                     if (itemElement.classList.contains('show-delete')) {
-                        e.preventDefault(); // 若處於刪除模式，點擊圖示不跳轉連結
+                        e.preventDefault();
                     }
                 });
             }
         }
+
+        // 🌟 點擊頁面其他空白處時，自動取消所有 App 的刪除狀態（關閉 X）
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.app-item')) {
+                document.querySelectorAll('.app-item.show-delete').forEach(el => {
+                    el.classList.remove('show-delete');
+                });
+            }
+        });
 
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
