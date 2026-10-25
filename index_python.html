@@ -388,72 +388,6 @@
                     🔄 恢復預設背景
                 </button>
             </div>
-
-            <!-- 🌟 開發者專用隱形解鎖區塊 (最下方) -->
-            <div class="pt-2 border-t border-slate-200 shrink-0">
-                <div id="dev-unlock-trigger" onclick="toggleDevLogin()" class="h-4 w-full cursor-pointer flex items-center justify-center" title="開發者解鎖專用">
-                    <div class="w-8 h-1 bg-slate-200 rounded-full hover:bg-slate-400 transition"></div>
-                </div>
-                <div id="dev-panel" class="hidden mt-2 bg-slate-900 p-3 rounded-xl text-white space-y-2 border border-slate-700">
-                    <div class="text-[11px] font-bold text-amber-400">🛠️ 開發者管理面板</div>
-                    <input type="password" id="dev-password-input" placeholder="輸入動態密碼 (6碼)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none focus:border-amber-400">
-                    <button onclick="unlockDevPanel()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold py-1.5 rounded transition cursor-pointer">解鎖新增功能</button>
-                    
-                    <!-- 解鎖後顯示的表單介面 -->
-                    <div id="dev-form-box" class="hidden space-y-2 pt-2 border-t border-slate-700">
-                        <div class="text-[11px] text-emerald-400 font-bold">➕ 直接新增選項/項目</div>
-                        
-                        <label class="text-[10px] text-slate-400 block">選擇要加入的區塊或群組：</label>
-                        <select id="new-mod-group" onchange="handleGroupSelectChange(this)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
-                            <option value="creative-sub">📂 精選影音與創作服務</option>
-                            <option value="traffic-sub">📂 即時交通與大眾運輸</option>
-                            <option value="finance-sub">📂 台股財經與鉅亨網</option>
-                            <option value="new-group">✨ 新增一個全新的群組（區塊）</option>
-                        </select>
-
-                        <!-- 若選擇新增全新群組時顯示的輸入框 -->
-                        <div id="new-group-name-wrapper" class="hidden space-y-1">
-                            <input type="text" id="new-group-title-input" placeholder="輸入新群組名稱 (例如: 🚀 常用工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
-                        </div>
-
-                        <input type="text" id="new-mod-title" placeholder="選項名稱 (例如: 🤖 AI工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
-                        <input type="url" id="new-mod-url" placeholder="網址 (https://...)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
-                        
-                        <!-- 🌟 圖形圖示下拉選單 -->
-                        <label class="text-[10px] text-slate-400 block">選擇 App 圖示：</label>
-                        <select id="new-mod-icon-select" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
-                            <option value="fa-globe">🌐 網際網路 / 瀏覽器</option>
-                            <option value="fa-bolt">⚡ 閃電 / 熱門焦點</option>
-                            <option value="fa-star">⭐ 星星 / 收藏推薦</option>
-                            <option value="fa-heart">❤️ 愛心 / 常用最愛</option>
-                            <option value="fa-bookmark">🔖 書籤 / 閱讀筆記</option>
-                            <option value="fa-gamepad">🎮 遊戲 / 娛樂</option>
-                            <option value="fa-music">🎵 音樂 / 旋律</option>
-                            <option value="fa-film">🎬 電影 / 影音</option>
-                            <option value="fa-book">📖 書籍 / 閱讀</option>
-                            <option value="fa-comments">💬 聊天 / 社群</option>
-                            <option value="fa-envelope">✉️ 信箱 / 郵件</option>
-                            <option value="fa-calendar">📅 行事曆 / 計劃</option>
-                            <option value="fa-chart-line">📈 股市 / 圖表</option>
-                            <option value="fa-wallet">👛 錢包 / 財務</option>
-                            <option value="fa-map-marker-alt">📍 地圖 / 位置</option>
-                            <option value="fa-car">🚗 汽車 / 交通</option>
-                            <option value="fa-utensils">🍽️ 美食 / 餐廳</option>
-                            <option value="fa-dumbbell">🏋️ 運動 / 健身</option>
-                            <option value="fa-tools">🛠️ 工具 / 設定</option>
-                            <option value="fa-shield-alt">🛡️ 安全 / 防護</option>
-                        </select>
-                        
-                        <button onclick="addNewOptionToPage()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded transition cursor-pointer">
-                            確認新增選項
-                        </button>
-                        <button onclick="saveAndDownloadHtml()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 rounded transition cursor-pointer shadow flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-download"></i> 儲存並下載更新後的 HTML
-                        </button>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </aside>
 
@@ -769,174 +703,6 @@
             }
         }
 
-        // 開發者面板解鎖邏輯
-        function toggleDevLogin() {
-            const panel = document.getElementById('dev-panel');
-            panel.classList.toggle('hidden');
-        }
-
-        function unlockDevPanel() {
-            const now = new Date();
-            const y = now.getFullYear();
-            const m = String(now.getMonth() + 1).padStart(2, '0');
-            const d = String(now.getDate()).padStart(2, '0');
-            const expectedPwd = `${y}${m}${d}`;
-
-            const inputPwd = document.getElementById('dev-password-input').value.trim();
-            if (inputPwd === expectedPwd) {
-                document.getElementById('dev-form-box').classList.remove('hidden');
-                alert('解鎖成功！您現在可以透過下拉選單選擇圖示與群組來新增選項。');
-            } else {
-                alert('密碼錯誤！請輸入正確的 6 位當日日期密碼。');
-            }
-        }
-
-        function handleGroupSelectChange(select) {
-            const wrapper = document.getElementById('new-group-name-wrapper');
-            if (select.value === 'new-group') {
-                wrapper.classList.remove('hidden');
-            } else {
-                wrapper.classList.add('hidden');
-            }
-        }
-
-        // 支援下拉選單選擇現有群組或動態新增全新群組
-        function addNewOptionToPage() {
-            const groupSelectVal = document.getElementById('new-mod-group').value;
-            const title = document.getElementById('new-mod-title').value.trim();
-            const url = document.getElementById('new-mod-url').value.trim();
-            const icon = document.getElementById('new-mod-icon-select').value;
-
-            if (!title || !url) {
-                alert('請完整填寫選項名稱與網址！');
-                return;
-            }
-
-            const modId = 'mod-custom-' + Date.now();
-            let targetSubId = groupSelectVal;
-
-            if (groupSelectVal === 'new-group') {
-                const newGroupName = document.getElementById('new-group-title-input').value.trim();
-                if (!newGroupName) {
-                    alert('請輸入新群組的名稱！');
-                    return;
-                }
-
-                const uniqueId = 'custom-group-' + Date.now();
-                targetSubId = uniqueId + '-sub';
-                const cardId = uniqueId + '-card';
-                const gridId = uniqueId + '-grid';
-
-                const sidebarContainer = document.getElementById('sidebar-sortable-container');
-                const groupDiv = document.createElement('div');
-                groupDiv.className = 'sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2';
-                groupDiv.setAttribute('data-id', uniqueId);
-                groupDiv.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-folder text-amber-500"></i> ${newGroupName}
-                            </span>
-                        </div>
-                        <button type="button" onclick="toggleSubMenu('${targetSubId}', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </button>
-                    </div>
-                    <div id="${targetSubId}" class="space-y-1.5 pl-2 border-l-2 border-amber-100 mt-1" style="display: block;"></div>
-                `;
-                sidebarContainer.appendChild(groupDiv);
-
-                const desktopContainer = document.getElementById('desktop-cards-container');
-                const desktopCard = document.createElement('div');
-                desktopCard.id = cardId;
-                desktopCard.setAttribute('data-[#group-id]', uniqueId);
-                desktopCard.className = 'bg-white p-6 rounded-2xl border border-slate-200 shadow-sm';
-                desktopCard.innerHTML = `<div id="${gridId}" class="app-grid"></div>`;
-                desktopContainer.appendChild(desktopCard);
-
-                const selectElem = document.getElementById('new-mod-group');
-                const newOption = document.createElement('option');
-                newOption.value = targetSubId;
-                newOption.textContent = `📁 ${newGroupName}`;
-                selectElem.insertBefore(newOption, selectElem.lastElementChild);
-                selectElem.value = targetSubId;
-                document.getElementById('new-group-name-wrapper').classList.add('hidden');
-                document.getElementById('new-group-title-input').value = '';
-            }
-
-            const targetSub = document.getElementById(targetSubId);
-            if (targetSub) {
-                targetSub.style.display = 'block';
-                const label = document.createElement('label');
-                label.className = 'sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer';
-                label.innerHTML = `
-                    <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                    <input type="checkbox" id="${modId}" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                    <span><i class="fa-solid ${icon} mr-1 text-emerald-600"></i> ${title}</span>
-                `;
-                targetSub.appendChild(label);
-            }
-
-            let targetGrid = null;
-            if (targetSubId.includes('creative')) {
-                targetGrid = document.getElementById('creative-app-grid');
-            } else if (targetSubId.includes('traffic') || targetSubId.includes('finance')) {
-                targetGrid = document.getElementById('general-app-grid');
-            } else {
-                const baseId = targetSubId.replace('-sub', '');
-                targetGrid = document.getElementById(baseId + '-grid');
-            }
-
-            if (targetGrid) {
-                const appDiv = document.createElement('div');
-                appDiv.className = 'app-item';
-                appDiv.setAttribute('data-mod', modId);
-                appDiv.innerHTML = `
-                    <a href="${url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                        <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid ${icon} text-white"></i></div>
-                        <span class="app-label">${title}</span>
-                    </a>
-                    <button onclick="removeDynamicOption(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
-                `;
-                appDiv.classList.add('group');
-                targetGrid.appendChild(appDiv);
-                bindLongPressToDelete(appDiv);
-            }
-
-            updateDesktopVisibility();
-            document.getElementById('new-mod-title').value = '';
-            document.getElementById('new-mod-url').value = '';
-            alert(`成功新增選項「${title}」！`);
-        }
-
-        function removeDynamicOption(btn) {
-            if (confirm('確定要刪除這個選項嗎？')) {
-                const item = btn.closest('.app-item');
-                const modId = item.getAttribute('data-mod');
-                if (modId) {
-                    const cb = document.getElementById(modId);
-                    if (cb) cb.closest('label').remove();
-                }
-                item.remove();
-                updateDesktopVisibility();
-            }
-        }
-
-        function saveAndDownloadHtml() {
-            const updatedHtml = document.documentElement.outerHTML;
-            const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'index.html';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            alert('已成功將最新完整網頁打包下載！請直接上傳至 GitHub。');
-        }
-
         // 背景圖片設定功能
         function applyBackground() {
             const url = document.getElementById('bg-url-input').value.trim();
@@ -1074,9 +840,6 @@
                 else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
-                else {
-                    card = document.getElementById(groupId + '-card');
-                }
                 
                 if (card) desktopContainer.appendChild(card);
             });
@@ -1164,7 +927,7 @@
             });
         }
 
-        // --- 🌟 關鍵修復：自訂 App 載入與渲染防重複疊加 ---
+        // --- 🌟 自訂 App 載入與渲染防重複疊加 ---
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -1181,7 +944,6 @@
             nameInput.value = '';
             urlInput.value = '';
             
-            // 重新載入並渲染，徹底避免重複疊加
             loadCustomApps();
             updateDesktopVisibility();
             alert('成功新增自訂 App 捷徑！');
@@ -1205,10 +967,8 @@
             const generalGrid = document.getElementById('general-app-grid');
             if (!generalGrid) return;
 
-            // 1. 移除舊的自訂 App 元素，避免重複渲染
             generalGrid.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
 
-            // 2. 從 localStorage 讀取最新清單並重新繪製
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
             customApps.forEach((app, newIndex) => {
                 let div = document.createElement('div');
