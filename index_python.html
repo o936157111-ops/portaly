@@ -1,267 +1,1361 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>myezlife - 個人化數位生活儀表板</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myezlife.com | 我的個人化數位生活儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f0f4f8;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body.has-custom-bg::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(240, 244, 248, 0.35);
+            z-index: -1;
+        }
+
+        @media (max-width: 767px) {
+            body { font-size: 1.15rem !important; }
+            .text-xs { font-size: 0.95rem !important; }
+            .text-sm { font-size: 1.05rem !important; }
+            .text-base { font-size: 1.15rem !important; }
+            .text-lg { font-size: 1.25rem !important; }
+            .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
+            
+            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar select, #sidebar .text-\[11px\], #sidebar .text-xs {
+                font-size: 1.05rem !important;
+            }
+            #sidebar input[type="checkbox"] {
+                width: 1.2rem !important;
+                height: 1.2rem !important;
+            }
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            border-right: 1px solid #e2e8f0;
+            touch-action: pan-y;
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar.show-sidebar { transform: translateX(0); }
+
+        #backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #backdrop.show-backdrop { opacity: 1; pointer-events: auto; }
+
+        #app-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+            width: 100%;
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            #app-wrapper { padding: 24px; }
+            #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
+            #backdrop { display: none !important; }
+        }
+
+        #sidebar-toggle-btn {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 35;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            border: 1px solid #e2e8f0;
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+            padding: 12px 6px 12px 4px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #475569;
+        }
+        #sidebar-toggle-btn:hover { background: #ffffff; color: #00a600; padding-left: 8px; }
+
+        .green-banner {
+            background-color: #00a600;
+            border-radius: 20px;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
+            width: 100%;
+        }
+
+        .rounded-logo-btn {
+            border-radius: 50% !important;
+            overflow: hidden;
+            background: transparent !important;
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .rounded-logo-btn:hover { transform: scale(1.05); border-color: #ffffff !important; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 16px;
+        }
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            position: relative;
+        }
+        .app-item:active { cursor: grabbing; }
+        .app-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .app-item:hover .app-box { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+        .app-label {
+            color: #334155;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 80px;
+        }
+        .sortable-ghost { opacity: 0.3; }
+        .sortable-drag { opacity: 0.9; }
+
+        .sidebar-drag-handle, .sub-drag-item { cursor: grab; }
+        .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e222b; border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col md:flex-row">
+<body>
 
-  <!-- 左側邊欄 -->
-  <aside id="sidebar" class="w-full md:w-80 bg-slate-950/80 border-r border-slate-800 p-4 md:p-6 flex flex-col justify-between hidden md:flex">
-    <div class="space-y-6">
-      <!-- Header / 大頭貼與天氣 -->
-      <div class="flex items-center space-x-3 pb-4 border-b border-slate-800">
-        <div class="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center text-xl font-bold text-white shadow-md">
-          🌱
-        </div>
-        <div>
-          <h2 class="font-bold text-lg text-emerald-400">myezlife 儀表板</h2>
-          <div id="weather-info" class="text-xs text-slate-400 flex items-center gap-1">
-            <span>🌦️ 台北市 26°C 多雲時晴</span>
-          </div>
-        </div>
-      </div>
+    <div id="backdrop" onclick="toggleSidebar()"></div>
 
-      <!-- 選單目錄 -->
-      <nav class="space-y-2">
-        <a href="https://myezlife.com/diary/index.html" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-slate-800/60 transition text-slate-300 hover:text-white">
-          <i class="fa-solid fa-seedling text-emerald-400 w-5"></i>
-          <span>心情隨筆與待辦</span>
-        </a>
-        <a href="https://myezlife.com/FileExplorer.html" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-slate-800/60 transition text-slate-300 hover:text-white">
-          <i class="fa-solid fa-folder-open text-amber-400 w-5"></i>
-          <span>個人檔案總管</span>
-        </a>
-        <a href="https://myezlife.com/ai-html/" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-slate-800/60 transition text-slate-300 hover:text-white">
-          <i class="fa-solid fa-wand-magic-sparkles text-purple-400 w-5"></i>
-          <span>AI 創作藝廊</span>
-        </a>
-      </nav>
+    <button id="sidebar-toggle-btn" onclick="toggleSidebar()" title="展開功能選單">
+        <i id="toggle-icon" class="fa-solid fa-chevron-right text-xs"></i>
+    </button>
+
+    <!-- 🌟 左側側邊欄選單 -->
+    <aside id="sidebar" class="p-5 space-y-4 overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0">
+            <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-[#00a600]"></i> 功能模組側邊欄
+            </h2>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-2 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 space-y-4 overflow-y-auto">
+            <div id="sidebar-sortable-container" class="space-y-3">
+                
+                <!-- 1. 精選影音與創作服務群組 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-creative">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🌤️ 即時氣象預報</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🎬 AI好劇一直看</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🎵 好歌一直聽</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📖 心情隨筆日記</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🌻 AI早安問候圖</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🪄 一鍵打造專屬影音牆</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📰 焦點新聞自動彙整</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📂 個人檔案總管</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 2. 即時交通與大眾運輸群組 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-traffic">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="traffic-sub" class="space-y-1.5 pl-2 border-l-2 border-blue-100 mt-1" style="display: none;">
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚗 國道 1968 路況</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🛣️ 全台省道路況 (168)</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚌 即時公車動態</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚲 YouBike 站點車位</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚂 台鐵時刻查詢</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚄 高鐵時刻查詢</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. 台股財經與鉅亨網群組 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-finance">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="finance-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-100 mt-1" style="display: none;">
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📈 Yahoo股市</span>
+                        </label>
+                        <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📰 鉅亨網</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 4. 互動待辦清單 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-todo">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
+                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>✅ 互動待辦清單與隨手便籤</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 5. 贊助支援與延伸閱讀 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-sponsor">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
+                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>💖 贊助支援與延伸閱讀</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 自訂新增 App 專屬區塊 -->
+            <div class="space-y-2.5 pt-3 border-t border-slate-200">
+                <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
+                </div>
+                <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+                <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+                <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">
+                    + 新增至桌面
+                </button>
+            </div>
+
+            <!-- 隱身背景圖設定 -->
+            <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2 mt-4 shrink-0">
+                <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-image text-[#00a600]"></i> 設定滿版背景圖
+                </div>
+                <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-emerald-200 text-xs outline-none focus:border-[#00a600]">
+                <div class="flex gap-2">
+                    <label class="flex-1 bg-white hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold py-1.5 px-2 rounded-lg border border-emerald-200 text-center cursor-pointer transition">
+                        📁 上傳圖片檔案
+                        <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
+                    </label>
+                    <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-1.5 px-3 rounded-lg transition shadow-sm cursor-pointer">套用</button>
+                </div>
+                <button onclick="resetBackground()" class="w-full text-slate-500 hover:text-rose-600 text-[10px] font-medium pt-0.5 transition text-center">
+                    🔄 恢復預設背景
+                </button>
+            </div>
+
+            <!-- 🌟 開發者專用隱形解鎖區塊 (最下方) -->
+            <div class="pt-2 border-t border-slate-200 shrink-0">
+                <div id="dev-unlock-trigger" onclick="toggleDevLogin()" class="h-4 w-full cursor-pointer flex items-center justify-center" title="開發者解鎖專用">
+                    <div class="w-8 h-1 bg-slate-200 rounded-full hover:bg-slate-400 transition"></div>
+                </div>
+                <div id="dev-panel" class="hidden mt-2 bg-slate-900 p-3 rounded-xl text-white space-y-2 border border-slate-700">
+                    <div class="text-[11px] font-bold text-amber-400">🛠️ 開發者管理面板</div>
+                    <input type="password" id="dev-password-input" placeholder="輸入動態密碼 (6碼)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none focus:border-amber-400">
+                    <button onclick="unlockDevPanel()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold py-1.5 rounded transition cursor-pointer">解鎖新增功能</button>
+                    
+                    <!-- 解鎖後顯示的表單介面 -->
+                    <div id="dev-form-box" class="hidden space-y-2 pt-2 border-t border-slate-700">
+                        <div class="text-[11px] text-emerald-400 font-bold">➕ 直接新增選項/項目</div>
+                        
+                        <label class="text-[10px] text-slate-400 block">選擇要加入的區塊或群組：</label>
+                        <select id="new-mod-group" onchange="handleGroupSelectChange(this)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                            <option value="creative-sub">📂 精選影音與創作服務</option>
+                            <option value="traffic-sub">📂 即時交通與大眾運輸</option>
+                            <option value="finance-sub">📂 台股財經與鉅亨網</option>
+                            <option value="new-group">✨ 新增一個全新的群組（區塊）</option>
+                        </select>
+
+                        <!-- 若選擇新增全新群組時顯示的輸入框 -->
+                        <div id="new-group-name-wrapper" class="hidden space-y-1">
+                            <input type="text" id="new-group-title-input" placeholder="輸入新群組名稱 (例如: 🚀 常用工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        </div>
+
+                        <input type="text" id="new-mod-title" placeholder="選項名稱 (例如: 🤖 AI工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        <input type="url" id="new-mod-url" placeholder="網址 (https://...)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        
+                        <!-- 🌟 圖形圖示下拉選單 -->
+                        <label class="text-[10px] text-slate-400 block">選擇 App 圖示：</label>
+                        <select id="new-mod-icon-select" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                            <option value="fa-globe">🌐 網際網路 / 瀏覽器</option>
+                            <option value="fa-bolt">⚡ 閃電 / 熱門焦點</option>
+                            <option value="fa-star">⭐ 星星 / 收藏推薦</option>
+                            <option value="fa-heart">❤️ 愛心 / 常用最愛</option>
+                            <option value="fa-bookmark">🔖 書籤 / 閱讀筆記</option>
+                            <option value="fa-gamepad">🎮 遊戲 / 娛樂</option>
+                            <option value="fa-music">🎵 音樂 / 旋律</option>
+                            <option value="fa-film">🎬 電影 / 影音</option>
+                            <option value="fa-book">📖 書籍 / 閱讀</option>
+                            <option value="fa-comments">💬 聊天 / 社群</option>
+                            <option value="fa-envelope">✉️ 信箱 / 郵件</option>
+                            <option value="fa-calendar">📅 行事曆 / 計劃</option>
+                            <option value="fa-chart-line">📈 股市 / 圖表</option>
+                            <option value="fa-wallet">👛 錢包 / 財務</option>
+                            <option value="fa-map-marker-alt">📍 地圖 / 位置</option>
+                            <option value="fa-car">🚗 汽車 / 交通</option>
+                            <option value="fa-utensils">🍽️ 美食 / 餐廳</option>
+                            <option value="fa-dumbbell">🏋️ 運動 / 健身</option>
+                            <option value="fa-tools">🛠️ 工具 / 設定</option>
+                            <option value="fa-shield-alt">🛡️ 安全 / 防護</option>
+                        </select>
+                        
+                        <button onclick="addNewOptionToPage()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded transition cursor-pointer">
+                            確認新增選項
+                        </button>
+                        <button onclick="saveAndDownloadHtml()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2 rounded transition cursor-pointer shadow flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-download"></i> 儲存並下載更新後的 HTML
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- 🌟 彈窗 1：完整獨家亮點說明 -->
+    <div id="modal-step1" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-4 relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeModals()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <span class="text-amber-500 text-lg">✨</span>
+                <h3 class="font-black text-slate-800 text-sm">獨家亮點：一鍵打造個人影音牆</h3>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed font-medium">這是一套別人沒有的智慧影音牆功能！您可以：[cite: 2]</p>
+            <div class="space-y-2.5 text-xs text-slate-700">
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">📋</span>
+                    <div><strong class="font-bold">一鍵建立雲端副本</strong>：免複雜程式設定，一秒將標準歌單複製到您自己的 Google 雲端。[cite: 2]</div>
+                </div>
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">☁️</span>
+                    <div><strong class="font-bold">雲端 CSV 即時同步</strong>：在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！[cite: 2]</div>
+                </div>
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">🎯</span>
+                    <div><strong class="font-bold">智慧記憶與隨機</strong>：自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。[cite: 2]</div>
+                </div>
+                <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <span class="text-base">➕</span>
+                    <div><strong class="font-bold">隨手即時新增</strong>：隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。[cite: 2]</div>
+                </div>
+            </div>
+            <div class="pt-2">
+                <button type="button" onclick="goToStep2()" class="w-full bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs font-bold py-3 rounded-xl transition cursor-pointer shadow-md text-center">
+                    了解並前往影音牆 ➔
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- 左側最下方：開發者管理面板解鎖入口 -->
-    <div class="pt-6 border-t border-slate-800/80">
-      <button onclick="toggleDevPanel()" class="w-full text-left text-xs text-slate-600 hover:text-slate-400 p-2 rounded transition flex items-center justify-between">
-        <span>⚙️ 系統管理員存取</span>
-        <i class="fa-solid fa-lock text-[10px]"></i>
-      </button>
+    <!-- 🌟 彈窗 2：完整試算表範本與設定 -->
+    <div id="modal-step2" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+        <div class="bg-[#1e222b] rounded-3xl max-w-2xl w-full p-5 shadow-2xl border border-slate-700 text-white space-y-3 relative overflow-hidden">
+            <button onclick="closeModals()" class="absolute top-4 right-4 text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-center font-black text-base tracking-wide pb-1.5 border-b border-slate-700">打造你的專屬影音牆</h3>
+            
+            <div class="bg-[#2a2f3d] p-3.5 rounded-2xl border border-slate-700 space-y-2 text-xs text-slate-300">
+                <div class="font-bold text-white flex items-center gap-2 text-xs"><span>📑</span> 想要製作自己的播放清單？[cite: 4]</div>
+                <div class="text-center">
+                    <a href="https://docs.google.com/spreadsheets/d/1_template_example/copy" target="_blank" class="inline-flex items-center gap-2 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2 px-4 rounded-xl shadow transition text-xs">
+                        <span>📋</span> 點此複製 Google 試算表範本[cite: 3, 4]
+                    </a>
+                </div>
+                <div class="text-slate-400 text-[11px] space-y-0.5 leading-tight">
+                    <p>1. 點擊上方按鈕，將範本「建立副本」到你的 Google 雲端。[cite: 3, 4]</p>
+                    <p>2. 填入你想放的歌單名與 YouTube 影片網址。[cite: 3, 4]</p>
+                    <p>3. 點選選單「檔案」➔「分享」➔「發布到網路」，選擇「逗號分隔值 (.csv)」並發布，複製該網址貼在下方。[cite: 3, 4]</p>
+                </div>
+            </div>
 
-      <!-- 動態密碼解鎖面板 (預設隱藏) -->
-      <div id="dev-panel" class="hidden mt-3 p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-3">
-        <div class="text-slate-300 font-bold flex items-center justify-between">
-          <span>動態密碼驗證</span>
-          <span class="text-[10px] text-amber-400">YYYYMMDD</span>
+            <div>
+                <input type="url" id="csv-url-input" placeholder="貼上你的 CSV 發布網址..." class="w-full bg-[#11141b] text-white p-2.5 rounded-xl border border-slate-700 text-xs outline-none focus:border-[#22c55e]">
+            </div>
+
+            <div class="flex gap-2">
+                <button type="button" onclick="resetToDefaultPlaylist()" class="flex-1 bg-[#3b82f6] hover:bg-[#2563eb] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow">
+                    還原為站長預設清單
+                </button>
+                <button type="button" onclick="clearAllCustomSongs()" class="flex-1 bg-[#ef4444] hover:bg-[#dc2626] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow">
+                    🗑️ 清除自訂歌曲
+                </button>
+            </div>
+
+            <div class="bg-[#11141b] p-2 rounded-xl border border-slate-800 text-[10px] text-slate-400 text-center">
+                💡 溫馨小提示：自訂的試算表與新增歌曲會安全地存儲於您當前的裝置瀏覽器中。[cite: 3]
+            </div>
+
+            <div class="pt-1 flex gap-2">
+                <button type="button" onclick="openStep1()" class="bg-[#333d4d] hover:bg-[#475569] text-white text-xs font-bold py-2.5 px-4 rounded-xl transition cursor-pointer">上一步</button>
+                <button type="button" onclick="saveVideowallSettings()" class="flex-1 bg-[#ff4d4f] hover:bg-[#ff7875] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-md text-center">套用並前往影音牆</button>
+            </div>
         </div>
-        <div class="flex gap-2">
-          <input type="password" id="dev-pass-input" placeholder="請輸入 8 位數密碼" class="w-full bg-slate-950 border border-slate-700 px-2 py-1 rounded text-white text-xs focus:outline-none focus:border-emerald-500">
-          <button onclick="unlockAdmin()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 px-3 py-1 rounded font-bold transition">解鎖</button>
-        </div>
-        <div id="admin-tools" class="hidden space-y-2 pt-2 border-t border-slate-800">
-          <button onclick="exportPageHTML()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded transition flex items-center justify-center gap-1">
-            <i class="fa-solid fa-download"></i> 儲存並下載完整 HTML
-          </button>
-        </div>
-      </div>
     </div>
-  </aside>
 
-  <!-- 主要內容區 -->
-  <main class="flex-1 p-4 md:p-8 space-y-6 max-w-6xl mx-auto w-full">
-    
-    <!-- 頂部時間與歡迎標題 -->
-    <header class="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-      <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-white tracking-wide">個人數位生活儀表板</h1>
-        <p class="text-slate-400 text-sm mt-1" id="date-display">載入日期中...</p>
-      </div>
-      <div class="text-right">
-        <div class="text-3xl md:text-4xl font-extrabold text-emerald-400 font-mono" id="clock-display">00:00:00</div>
-      </div>
-    </header>
+    <div id="app-wrapper">
+        <div class="max-w-3xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
+            
+            <!-- 綠色 Banner -->
+            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
+                <div class="flex items-center shrink-0">
+                    <button onclick="toggleSidebar()" class="p-0 rounded-logo-btn transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
+                    </button>
+                </div>
+                <div class="text-center flex-1">
+                    <div id="header-date" class="text-[10px] md:text-xs text-white/90 font-medium tracking-wide">載入中...</div>
+                    <div id="header-time" class="text-2xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
+                </div>
+                <div class="bg-black/20 backdrop-blur px-2.5 md:px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider shrink-0">
+                    <span id="header-weekday">載入中...</span>
+                </div>
+            </header>
 
-    <!-- 自訂 APP 捷徑區 -->
-    <section class="glass-panel p-6 rounded-2xl space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-grip text-emerald-400"></i> 自訂 App 捷徑
-        </h2>
-        <button onclick="openAddAppModal()" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-lg transition flex items-center gap-1">
-          <i class="fa-solid fa-plus"></i> 新增捷徑
-        </button>
-      </div>
+            <main id="desktop-cards-container" class="w-full space-y-5 flex-1 flex flex-col">
+                
+                <!-- Gemini 智慧對話列 -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <form action="https://gemini.google.com/app" method="get" target="_blank" class="flex items-center gap-2">
+                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-purple-600">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <input type="text" name="q" placeholder="向 Gemini 問問題或尋求協助..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
+                        <button type="submit" title="發問" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center">
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </form>
+                </div>
 
-      <!-- App 捷徑容器 (已加入清空渲染防護，絕不重複新增) -->
-      <div id="app-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
-        <!-- 由 JS 動態繪製 -->
-      </div>
-    </section>
+                <!-- 1. 精選影音與創作服務 -->
+                <div id="desktop-creative-card" data-[#group-id]="group-creative" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="creative-app-grid" class="app-grid">
+                        <div class="app-item" data-mod="mod-weather">
+                            <a href="https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-sky-400 to-blue-500"><i class="fa-solid fa-cloud-sun text-white"></i></div>
+                                <span class="app-label">即時氣象</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-drama">
+                            <a href="https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-rose-400 to-red-500"><i class="fa-solid fa-film text-white"></i></div>
+                                <span class="app-label">AI好劇一直看</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-melody">
+                            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-400 to-orange-500"><i class="fa-solid fa-music text-white"></i></div>
+                                <span class="app-label">好歌一直聽</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-diary">
+                            <a href="https://myezlife.com/diary/index.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-emerald-400 to-teal-600"><i class="fa-solid fa-book-open text-white"></i></div>
+                                <span class="app-label">心情隨筆日記</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-greeting">
+                            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-yellow-400 to-amber-500"><i class="fa-solid fa-sun text-white"></i></div>
+                                <span class="app-label">AI早安問候圖</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-videowall">
+                            <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
+                                <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></div>
+                                <span class="app-label">打造影音牆</span>
+                            </button>
+                        </div>
+                        <div class="app-item" data-mod="mod-news">
+                            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-400 to-yellow-600"><i class="fa-solid fa-bolt text-white"></i></div>
+                                <span class="app-label">焦點新聞</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-explorer">
+                            <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-blue-400 to-indigo-600"><i class="fa-solid fa-folder-open text-white"></i></div>
+                                <span class="app-label">檔案總管</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-  </main>
+                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
+                <div id="desktop-app-card" data-[#group-id]="group-traffic-finance" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="general-app-grid" class="app-grid">
+                        <div class="app-item" data-mod="mod-highway">
+                            <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-blue-500 to-indigo-600"><i class="fa-solid fa-car text-white"></i></div>
+                                <span class="app-label">國道 1968</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-provincial">
+                            <a href="https://168.thb.gov.tw" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-orange-400 to-red-500"><i class="fa-solid fa-road text-white"></i></div>
+                                <span class="app-label">省道路況168</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-bus">
+                            <a href="https://ebus.gov.taipei/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-cyan-400 to-blue-600"><i class="fa-solid fa-bus text-white"></i></div>
+                                <span class="app-label">即時公車</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-bike">
+                            <a href="https://youbike.com.tw/region/main/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-lime-400 to-emerald-600"><i class="fa-solid fa-person-biking text-white"></i></div>
+                                <span class="app-label">YouBike</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-train">
+                            <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid fa-train text-white"></i></div>
+                                <span class="app-label">台鐵時刻</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-hsr">
+                            <a href="https://www.thsrc.com.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-500 to-orange-600"><i class="fa-solid fa-train-subway text-white"></i></div>
+                                <span class="app-label">高鐵時刻</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-yahoo">
+                            <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-purple-500 to-indigo-700"><i class="fa-solid fa-chart-line text-white"></i></div>
+                                <span class="app-label">Yahoo股市</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-cnyes">
+                            <a href="https://www.cnyes.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-teal-400 to-emerald-600"><i class="fa-solid fa-newspaper text-white"></i></div>
+                                <span class="app-label">鉅亨網</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
-  <!-- 新增 App 彈出視窗 -->
-  <div id="app-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-md space-y-4">
-      <h3 class="text-lg font-bold text-white">新增自訂 App 捷徑</h3>
-      <div class="space-y-3 text-sm">
-        <div>
-          <label class="block text-slate-400 mb-1">App 名稱</label>
-          <input type="text" id="app-name-input" placeholder="例：Google" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-white focus:outline-none focus:border-emerald-500">
+                <!-- 3. 互動待辦清單 -->
+                <div id="desktop-todo-card" data-[#group-id]="group-todo" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
+                    <div class="flex gap-2">
+                        <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
+                        <button onclick="addTodoItem()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-4 py-2 rounded-xl text-xs font-bold transition">新增</button>
+                    </div>
+                    <div id="todo-list-container" class="space-y-2 text-sm text-slate-700"></div>
+                    <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
+                </div>
+
+                <!-- 4. 贊助支援與延伸閱讀 -->
+                <div id="desktop-sponsor-card" data-[#group-id]="group-sponsor" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
+                    <div class="text-center pb-2 border-b border-slate-100">
+                        <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
+                        <p class="text-[11px] text-emerald-800 mt-1 font-medium bg-emerald-50 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
+                            ☕ 覺得好用嗎？本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機與伺服器維護開銷！
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-1">
+                                <i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦
+                            </span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
+                        </div>
+                        <div id="random-recommendation-box" class="space-y-2"></div>
+                    </div>
+                    <div class="pt-1">
+                        <p class="text-[11px] text-slate-400 font-bold mb-1.5 text-center">贊助商廣告</p>
+                        <div class="min-h-[90px] flex items-center justify-center bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden p-2">
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+                            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
         </div>
-        <div>
-          <label class="block text-slate-400 mb-1">網址 (URL)</label>
-          <input type="text" id="app-url-input" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-white focus:outline-none focus:border-emerald-500">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">圖示 Emoji</label>
-          <input type="text" id="app-icon-input" placeholder="🌐" value="🌐" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-white focus:outline-none focus:border-emerald-500">
-        </div>
-      </div>
-      <div class="flex justify-end gap-2 pt-2">
-        <button onclick="closeAddAppModal()" class="px-4 py-2 rounded-xl text-slate-400 hover:bg-slate-800 transition">取消</button>
-        <button onclick="saveCustomApp()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-xl transition">新增</button>
-      </div>
     </div>
-  </div>
 
-  <script>
-    const DEFAULT_APPS = [
-      { id: 'def-1', name: 'GitHub', url: 'https://github.com', icon: '🐙' },
-      { id: 'def-2', name: 'ChatGPT', url: 'https://chatgpt.com', icon: '🤖' },
-      { id: 'def-3', name: 'YouTube', url: 'https://youtube.com', icon: '▶️' }
-    ];
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            
+            document.getElementById('header-date').innerText = `${year}年${month}月${day}日`;
+            document.getElementById('header-time').innerText = `${h}:${m}`;
+            document.getElementById('header-weekday').innerText = weekday;
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
 
-    window.onload = function() {
-      updateClock();
-      setInterval(updateClock, 1000);
-      renderCustomApps();
-    };
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const wrapper = document.getElementById('app-wrapper');
+            const backdrop = document.getElementById('backdrop');
+            const icon = document.getElementById('toggle-icon');
+            const isOpen = sidebar.classList.contains('show-sidebar');
 
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('clock-display').innerText = now.toLocaleTimeString('zh-TW', { hour12: false });
-      document.getElementById('date-display').innerText = now.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-    }
+            if (isOpen) {
+                sidebar.classList.remove('show-sidebar');
+                wrapper.classList.remove('push-right');
+                backdrop.classList.remove('show-backdrop');
+                icon.className = 'fa-solid fa-chevron-right text-xs';
+            } else {
+                sidebar.classList.add('show-sidebar');
+                wrapper.classList.add('push-right');
+                backdrop.classList.add('show-backdrop');
+                icon.className = 'fa-solid fa-chevron-left text-xs';
+            }
+        }
 
-    function getStoredApps() {
-      const stored = localStorage.getItem('myezlife_custom_apps');
-      return stored ? JSON.parse(stored) : DEFAULT_APPS;
-    }
+        function toggleSubMenu(subId, btn) {
+            const subMenu = document.getElementById(subId);
+            const icon = btn.querySelector('i');
+            if (subMenu.style.display === 'none') {
+                subMenu.style.display = 'block';
+                icon.className = 'fa-solid fa-chevron-up';
+            } else {
+                subMenu.style.display = 'none';
+                icon.className = 'fa-solid fa-chevron-down';
+            }
+        }
 
-    function renderCustomApps() {
-      const grid = document.getElementById('app-grid');
-      if (!grid) return;
+        // 開發者面板解鎖邏輯
+        function toggleDevLogin() {
+            const panel = document.getElementById('dev-panel');
+            panel.classList.toggle('hidden');
+        }
 
-      // 核心修復：寫入前強制清空容器，解決重新整理重複疊加的問題
-      grid.innerHTML = '';
+        function unlockDevPanel() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const expectedPwd = `${y}${m}${d}`;
 
-      const apps = getStoredApps();
-      
-      apps.forEach(app => {
-        const appCard = document.createElement('div');
-        appCard.className = 'relative group bg-slate-950/60 hover:bg-slate-800/80 border border-slate-800/80 p-3 rounded-2xl flex flex-col items-center justify-center gap-1 text-center transition cursor-pointer';
-        appCard.onclick = () => window.open(app.url, '_blank');
-        
-        appCard.innerHTML = `
-          <span class="text-2xl my-1">${app.icon || '🌐'}</span>
-          <span class="text-xs font-medium text-slate-300 truncate w-full">${escapeHtml(app.name)}</span>
-          <button onclick="deleteApp(event, '${app.id}')" class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 text-slate-500 hover:text-rose-400 text-xs p-1 transition" title="刪除捷徑">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        `;
-        grid.appendChild(appCard);
-      });
-    }
+            const inputPwd = document.getElementById('dev-password-input').value.trim();
+            if (inputPwd === expectedPwd) {
+                document.getElementById('dev-form-box').classList.remove('hidden');
+                alert('解鎖成功！您現在可以透過下拉選單選擇圖示與群組來新增選項。');
+            } else {
+                alert('密碼錯誤！請輸入正確的 6 位當日日期密碼。');
+            }
+        }
 
-    function openAddAppModal() {
-      document.getElementById('app-modal').classList.remove('hidden');
-    }
+        function handleGroupSelectChange(select) {
+            const wrapper = document.getElementById('new-group-name-wrapper');
+            if (select.value === 'new-group') {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+            }
+        }
 
-    function closeAddAppModal() {
-      document.getElementById('app-modal').classList.add('hidden');
-      document.getElementById('app-name-input').value = '';
-      document.getElementById('app-url-input').value = '';
-    }
+        // 支援下拉選單選擇現有群組或動態新增全新群組
+        function addNewOptionToPage() {
+            const groupSelectVal = document.getElementById('new-mod-group').value;
+            const title = document.getElementById('new-mod-title').value.trim();
+            const url = document.getElementById('new-mod-url').value.trim();
+            const icon = document.getElementById('new-mod-icon-select').value;
 
-    function saveCustomApp() {
-      const name = document.getElementById('app-name-input').value.trim();
-      let url = document.getElementById('app-url-input').value.trim();
-      const icon = document.getElementById('app-icon-input').value.trim() || '🌐';
+            if (!title || !url) {
+                alert('請完整填寫選項名稱與網址！');
+                return;
+            }
 
-      if (!name || !url) {
-        alert('請填寫 App 名稱與網址！');
-        return;
-      }
+            const modId = 'mod-custom-' + Date.now();
+            let targetSubId = groupSelectVal;
 
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
-      }
+            if (groupSelectVal === 'new-group') {
+                const newGroupName = document.getElementById('new-group-title-input').value.trim();
+                if (!newGroupName) {
+                    alert('請輸入新群組的名稱！');
+                    return;
+                }
 
-      const apps = getStoredApps();
-      const newApp = {
-        id: 'app-' + Date.now(),
-        name,
-        url,
-        icon
-      };
+                const uniqueId = 'custom-group-' + Date.now();
+                targetSubId = uniqueId + '-sub';
+                const cardId = uniqueId + '-card';
+                const gridId = uniqueId + '-grid';
 
-      apps.push(newApp);
-      localStorage.setItem('myezlife_custom_apps', JSON.stringify(apps));
+                const sidebarContainer = document.getElementById('sidebar-sortable-container');
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2';
+                groupDiv.setAttribute('data-id', uniqueId);
+                groupDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-folder text-amber-500"></i> ${newGroupName}
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('${targetSubId}', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="${targetSubId}" class="space-y-1.5 pl-2 border-l-2 border-amber-100 mt-1" style="display: block;"></div>
+                `;
+                sidebarContainer.appendChild(groupDiv);
 
-      closeAddAppModal();
-      renderCustomApps();
-    }
+                const desktopContainer = document.getElementById('desktop-cards-container');
+                const desktopCard = document.createElement('div');
+                desktopCard.id = cardId;
+                desktopCard.setAttribute('data-[#group-id]', uniqueId);
+                desktopCard.className = 'bg-white p-6 rounded-2xl border border-slate-200 shadow-sm';
+                desktopCard.innerHTML = `<div id="${gridId}" class="app-grid"></div>`;
+                desktopContainer.appendChild(desktopCard);
 
-    function deleteApp(event, appId) {
-      event.stopPropagation();
-      if (confirm('確定要刪除這個捷徑嗎？')) {
-        let apps = getStoredApps();
-        apps = apps.filter(a => a.id !== appId);
-        localStorage.setItem('myezlife_custom_apps', JSON.stringify(apps));
-        renderCustomApps();
-      }
-    }
+                const selectElem = document.getElementById('new-mod-group');
+                const newOption = document.createElement('option');
+                newOption.value = targetSubId;
+                newOption.textContent = `📁 ${newGroupName}`;
+                selectElem.insertBefore(newOption, selectElem.lastElementChild);
+                selectElem.value = targetSubId;
+                document.getElementById('new-group-name-wrapper').classList.add('hidden');
+                document.getElementById('new-group-title-input').value = '';
+            }
 
-    function toggleDevPanel() {
-      document.getElementById('dev-panel').classList.toggle('hidden');
-    }
+            const targetSub = document.getElementById(targetSubId);
+            if (targetSub) {
+                targetSub.style.display = 'block';
+                const label = document.createElement('label');
+                label.className = 'sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer';
+                label.innerHTML = `
+                    <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                    <input type="checkbox" id="${modId}" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                    <span><i class="fa-solid ${icon} mr-1 text-emerald-600"></i> ${title}</span>
+                `;
+                targetSub.appendChild(label);
+            }
 
-    function unlockAdmin() {
-      const inputPass = document.getElementById('dev-pass-input').value.trim();
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const todayPassword = `${year}${month}${day}`;
+            let targetGrid = null;
+            if (targetSubId.includes('creative')) {
+                targetGrid = document.getElementById('creative-app-grid');
+            } else if (targetSubId.includes('traffic') || targetSubId.includes('finance')) {
+                targetGrid = document.getElementById('general-app-grid');
+            } else {
+                const baseId = targetSubId.replace('-sub', '');
+                targetGrid = document.getElementById(baseId + '-grid');
+            }
 
-      if (inputPass === todayPassword) {
-        document.getElementById('admin-tools').classList.remove('hidden');
-        alert('解鎖成功！您現在可以使用系統管理員儲存與匯出功能。');
-      } else {
-        alert('密碼錯誤！請輸入今日日期 8 位數密碼 (例：' + todayPassword + ')');
-      }
-    }
+            if (targetGrid) {
+                const appDiv = document.createElement('div');
+                appDiv.className = 'app-item';
+                appDiv.setAttribute('data-mod', modId);
+                appDiv.innerHTML = `
+                    <a href="${url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                        <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid ${icon} text-white"></i></div>
+                        <span class="app-label">${title}</span>
+                    </a>
+                    <button onclick="removeDynamicOption(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
+                `;
+                // 賦予 group 類別以便顯示刪除按鈕
+                appDiv.classList.add('group');
+                targetGrid.appendChild(appDiv);
+                bindLongPressToDelete(appDiv);
+            }
 
-    function exportPageHTML() {
-      const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "index.html";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+            updateDesktopVisibility();
+            document.getElementById('new-mod-title').value = '';
+            document.getElementById('new-mod-url').value = '';
+            alert(`成功新增選項「${title}」！`);
+        }
 
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
-  </script>
+        // 刪除動態新增的選項
+        function removeDynamicOption(btn) {
+            if (confirm('確定要刪除這個選項嗎？')) {
+                const item = btn.closest('.app-item');
+                const modId = item.getAttribute('data-mod');
+                if (modId) {
+                    const cb = document.getElementById(modId);
+                    if (cb) cb.closest('label').remove();
+                }
+                item.remove();
+                updateDesktopVisibility();
+            }
+        }
+
+        function saveAndDownloadHtml() {
+            const updatedHtml = document.documentElement.outerHTML;
+            const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('已成功將最新完整網頁打包下載！請直接上傳至 GitHub。');
+        }
+
+        // 背景圖片設定功能
+        function applyBackground() {
+            const url = document.getElementById('bg-url-input').value.trim();
+            if (!url) { alert('請輸入有效的圖片網址！'); return; }
+            setCustomBackground(url);
+        }
+
+        function handleBgUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                setCustomBackground(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setCustomBackground(imgUrl) {
+            document.body.style.backgroundImage = `url('${imgUrl}')`;
+            document.body.classList.add('has-custom-bg');
+            localStorage.setItem('myezlife_custom_bg', imgUrl);
+            alert('成功套用滿版背景圖片！');
+        }
+
+        function resetBackground() {
+            document.body.style.backgroundImage = 'none';
+            document.body.classList.remove('has-custom-bg');
+            localStorage.removeItem('myezlife_custom_bg');
+            document.getElementById('bg-url-input').value = '';
+            alert('已恢復預設背景！');
+        }
+
+        function loadSavedBackground() {
+            const savedBg = localStorage.getItem('myezlife_custom_bg');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+                document.body.classList.add('has-custom-bg');
+                if (!savedBg.startsWith('data:image')) {
+                    document.getElementById('bg-url-input').value = savedBg;
+                }
+            }
+        }
+
+        function updateDesktopVisibility() {
+            let hasCreativeVisible = false;
+            document.querySelectorAll('#creative-sub input[type="checkbox"]').forEach(cb => {
+                const modId = cb.id;
+                const item = document.querySelector(`#creative-app-grid [data-mod="${modId}"]`);
+                if (cb && item) {
+                    if (cb.checked) {
+                        item.style.display = 'flex';
+                        hasCreativeVisible = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+            const creativeCard = document.getElementById('desktop-creative-card');
+            if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
+
+            let hasGeneralVisible = false;
+            ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
+                document.querySelectorAll(`#${subContainerId} input[type="checkbox"]`).forEach(cb => {
+                    const modId = cb.id;
+                    const item = document.querySelector(`#general-app-grid [data-mod="${modId}"]`);
+                    if (cb && item) {
+                        if (cb.checked) {
+                            item.style.display = 'flex';
+                            hasGeneralVisible = true;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    }
+                });
+            });
+
+            if (document.querySelectorAll('#general-app-grid .app-item[data-custom-idx]').length > 0) {
+                hasGeneralVisible = true;
+            }
+
+            const generalCard = document.getElementById('desktop-app-card');
+            if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
+
+            const todoCard = document.getElementById('desktop-todo-card');
+            const modTodo = document.getElementById('mod-todo');
+            if (todoCard && modTodo) todoCard.style.display = modTodo.checked ? 'block' : 'none';
+
+            const sponsorCard = document.getElementById('desktop-sponsor-card');
+            const modSponsor = document.getElementById('mod-sponsor');
+            if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
+
+            saveCheckboxStates();
+        }
+
+        function saveCheckboxStates() {
+            const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
+            let state = {};
+            checkboxes.forEach(cb => {
+                if (cb.id) state[cb.id] = cb.checked;
+            });
+            localStorage.setItem('myezlife_checkbox_states', JSON.stringify(state));
+        }
+
+        function loadCheckboxStates() {
+            const savedState = JSON.parse(localStorage.getItem('myezlife_checkbox_states') || 'null');
+            if (savedState) {
+                for (const [id, checked] of Object.entries(savedState)) {
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = checked;
+                }
+            } else {
+                const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    const parentSub = cb.closest('#creative-sub');
+                    cb.checked = (parentSub !== null);
+                });
+                const modTodo = document.getElementById('mod-todo');
+                const modSponsor = document.getElementById('mod-sponsor');
+                if (modTodo) modTodo.checked = false;
+                if (modSponsor) modSponsor.checked = false;
+            }
+            updateDesktopVisibility();
+        }
+
+        function syncDesktopCardsOrder() {
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            const desktopContainer = document.getElementById('desktop-cards-container');
+            if (!sidebarContainer || !desktopContainer) return;
+
+            const groupOrder = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
+            
+            groupOrder.forEach(groupId => {
+                let card = null;
+                if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
+                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
+                else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
+                else {
+                    card = document.getElementById(groupId + '-card');
+                }
+                
+                if (card) desktopContainer.appendChild(card);
+            });
+        }
+
+        function initSortables() {
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            if (sidebarContainer) {
+                new Sortable(sidebarContainer, {
+                    animation: 200,
+                    handle: '.sidebar-drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    delay: 150,
+                    delayOnTouchOnly: true,
+                    onEnd: function () {
+                        const order = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
+                        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(order));
+                        syncDesktopCardsOrder();
+                    }
+                });
+                const savedSidebarOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
+                if (savedSidebarOrder) {
+                    savedSidebarOrder.forEach(id => {
+                        const el = sidebarContainer.querySelector(`[data-id="${id}"]`);
+                        if (el) sidebarContainer.appendChild(el);
+                    });
+                }
+                syncDesktopCardsOrder();
+            }
+        }
+
+        // 長按 3 秒顯示 X
+        function bindLongPressToDelete(itemElement) {
+            let pressTimer = null;
+            const linkTag = itemElement.querySelector('a');
+
+            const startPress = (e) => {
+                pressTimer = setTimeout(() => {
+                    const isShown = itemElement.classList.contains('show-delete');
+                    document.querySelectorAll('.app-item.show-delete').forEach(el => el.classList.remove('show-delete'));
+                    
+                    if (!isShown) {
+                        itemElement.classList.add('show-delete');
+                        if (navigator.vibrate) navigator.vibrate(50);
+                    }
+                }, 3000);
+            };
+
+            const cancelPress = () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+
+            itemElement.addEventListener('touchstart', startPress, { passive: true });
+            itemElement.addEventListener('touchend', cancelPress);
+            itemElement.addEventListener('touchmove', cancelPress);
+
+            itemElement.addEventListener('mousedown', startPress);
+            itemElement.addEventListener('mouseup', cancelPress);
+            itemElement.addEventListener('mouseleave', cancelPress);
+
+            if (linkTag) {
+                linkTag.addEventListener('click', (e) => {
+                    if (itemElement.classList.contains('show-delete')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.app-item')) {
+                document.querySelectorAll('.app-item.show-delete').forEach(el => {
+                    el.classList.remove('show-delete');
+                });
+            }
+        });
+
+        // 初始化所有現有 App 項目綁定長按刪除
+        function initAllAppItems() {
+            document.querySelectorAll('.app-item').forEach(item => {
+                bindLongPressToDelete(item);
+            });
+        }
+
+        function addCustomApp() {
+            const nameInput = document.getElementById('custom-app-name');
+            const urlInput = document.getElementById('custom-app-url');
+            const name = nameInput.value.trim();
+            let url = urlInput.value.trim();
+
+            if (!name || !url) { alert('請完整輸入網頁名稱與網址！'); return; }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+
+            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+            const newIndex = customApps.length;
+            customApps.push({ name, url });
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+
+            const generalGrid = document.getElementById('general-app-grid');
+            let div = document.createElement('div');
+            div.className = 'app-item relative group';
+            div.setAttribute('data-custom-idx', newIndex);
+            div.innerHTML = `
+                <a href="${url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                    <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="fa-solid fa-globe text-white"></i></div>
+                    <span class="app-label">${name}</span>
+                </a>
+                <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
+            `;
+            generalGrid.appendChild(div);
+            bindLongPressToDelete(div);
+
+            nameInput.value = '';
+            urlInput.value = '';
+            updateDesktopVisibility();
+            alert('成功新增自訂 App 捷徑！');
+        }
+
+        function removeCustomApp(btn) {
+            if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
+                const item = btn.closest('.app-item');
+                item.remove();
+                let customApps = [];
+                document.querySelectorAll('#general-app-grid .app-item[data-custom-idx]').forEach((el, idx) => {
+                    el.setAttribute('data-custom-idx', idx);
+                    const label = el.querySelector('.app-label').innerText;
+                    const url = el.querySelector('a').href;
+                    customApps.push({ name: label, url });
+                });
+                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+                updateDesktopVisibility();
+            }
+        }
+
+        function loadCustomApps() {
+            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+            const generalGrid = document.getElementById('general-app-grid');
+            customApps.forEach((app, newIndex) => {
+                let div = document.createElement('div');
+                div.className = 'app-item relative group';
+                div.setAttribute('data-custom-idx', newIndex);
+                div.innerHTML = `
+                    <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                        <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="fa-solid fa-globe text-white"></i></div>
+                        <span class="app-label">${app.name}</span>
+                    </a>
+                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
+                `;
+                generalGrid.appendChild(div);
+                bindLongPressToDelete(div);
+            });
+        }
+
+        let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
+            { text: "極簡版網頁，自主勾選喜愛功能", done: false }
+        ]));
+
+        function renderTodoList() {
+            const container = document.getElementById('todo-list-container');
+            container.innerHTML = '';
+            todoItems.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-100 group">
+                        <label class="flex items-center gap-2 cursor-pointer flex-1 mr-2">
+                            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleTodo(${index})" class="w-4 h-4 text-[#00a600] rounded">
+                            <span class="font-medium ${item.done ? 'line-through opacity-50' : ''}">${item.text}</span>
+                        </label>
+                        <button onclick="removeTodoItem(${index})" class="text-rose-400 hover:text-rose-600 text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function addTodoItem() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (!text) { alert('請輸入待辦事項內容！'); return; }
+            todoItems.push({ text, done: false });
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            input.value = '';
+            renderTodoList();
+        }
+
+        function toggleTodo(index) {
+            todoItems[index].done = !todoItems[index].done;
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            renderTodoList();
+        }
+
+        function removeTodoItem(index) {
+            todoItems.splice(index, 1);
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            renderTodoList();
+        }
+
+        function saveMemo() {
+            localStorage.setItem('myezlife_memo', document.getElementById('memo-textarea').value);
+        }
+
+        function loadMemo() {
+            const savedMemo = localStorage.getItem('myezlife_memo');
+            if (savedMemo !== null) document.getElementById('memo-textarea').value = savedMemo;
+        }
+
+        function initRandomRecommendation() {
+            const recs = [
+                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/diary/index.html", tag: "熱門推薦" },
+                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/ai-greeting-app/", tag: "人氣工具" },
+                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
+                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://myezlife.com/goldmelody_csv.html", tag: "視聽娛樂" },
+                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://myezlife.com/FileExplorer.html", tag: "高效助手" }
+            ];
+            const shuffled = [...recs].sort(() => 0.5 - Math.random());
+            const box = document.getElementById('random-recommendation-box');
+            if (box) {
+                box.innerHTML = shuffled.slice(0, 3).map(item => `
+                    <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100/90 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">${item.title}</span>
+                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 leading-tight font-medium">${item.desc}</p>
+                    </a>
+                `).join('');
+            }
+        }
+
+        // 影音牆彈窗流程控制
+        function openVideoWallModal() { toggleSidebar(); openStep1(); }
+        function openStep1() { document.getElementById('modal-step2').classList.add('hidden'); document.getElementById('modal-step1').classList.remove('hidden'); }
+        function goToStep2() { 
+            document.getElementById('modal-step1').classList.add('hidden'); 
+            document.getElementById('modal-step2').classList.remove('hidden');
+            const savedCsv = localStorage.getItem('myezlife_custom_csv');
+            if (savedCsv) {
+                document.getElementById('csv-url-input').value = savedCsv;
+            }
+        }
+        function closeModals() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.add('hidden'); }
+
+        function saveVideowallSettings() {
+            const csvUrl = document.getElementById('csv-url-input').value.trim();
+            if (csvUrl) {
+                localStorage.setItem('myezlife_custom_csv', csvUrl);
+            }
+            closeModals();
+            window.location.href = "https://myezlife.com/goldmelody_csv.html";
+        }
+
+        function resetToDefaultPlaylist() {
+            localStorage.removeItem('myezlife_custom_csv');
+            document.getElementById('csv-url-input').value = '';
+            alert('已還原為站長預設推薦清單！');
+        }
+
+        function clearAllCustomSongs() {
+            if (confirm('確定要清除所有手動新增的自訂歌曲嗎？')) {
+                localStorage.removeItem('myezlife_custom_songs');
+                alert('已清除所有手動新增的自訂歌曲！');
+            }
+        }
+
+        // 🌟 初始化執行
+        loadSavedBackground();
+        loadCustomApps();
+        initSortables();
+        loadCheckboxStates();
+        renderTodoList();
+        loadMemo();
+        initRandomRecommendation();
+        initAllAppItems();
+    </script>
 </body>
 </html>
