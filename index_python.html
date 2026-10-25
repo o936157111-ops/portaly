@@ -15,6 +15,7 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
         @media (max-width: 767px) {
@@ -29,8 +30,8 @@
                 font-size: 1.05rem !important;
             }
             #sidebar input[type="checkbox"] {
-                width: 1.1rem !important;
-                height: 1.1rem !important;
+                width: 1.2rem !important;
+                height: 1.2rem !important;
             }
         }
 
@@ -46,6 +47,7 @@
             transform: translateX(-100%);
             box-shadow: 4px 0 20px rgba(0,0,0,0.1);
             border-right: 1px solid #e2e8f0;
+            touch-action: pan-y;
         }
         #sidebar.show-sidebar { transform: translateX(0); }
 
@@ -126,7 +128,6 @@
             justify-content: center;
             cursor: grab;
             user-select: none;
-            touch-action: manipulation;
         }
         .app-item:active { cursor: grabbing; }
         .app-box {
@@ -179,7 +180,7 @@
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <i class="fa-solid fa-sliders text-[#00a600]"></i> 功能模組側邊欄
             </h2>
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-1 cursor-pointer">
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-2 cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
@@ -188,54 +189,56 @@
             
             <!-- 1. 精選影音與創作服務群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-creative">
-                <div class="flex items-center justify-between sidebar-drag-handle">
-                    <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <div class="flex items-center justify-between">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
                         <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                        <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
-                    </span>
-                    <button onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
+                        </span>
+                    </div>
+                    <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                 </div>
                 <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-weather">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🌤️ 即時氣象預報</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-drama">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🎬 AI好劇一直看</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-melody">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🎵 好歌一直聽</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-diary">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>📖 心情隨筆日記</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-greeting">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🌻 AI早安問候圖</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-videowall">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🪄 一鍵打造專屬影音牆</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-news">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>📰 焦點新聞自動彙整</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-explorer">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>📂 個人檔案總管</span>
                     </label>
                 </div>
@@ -243,44 +246,46 @@
 
             <!-- 2. 即時交通與大眾運輸群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-traffic">
-                <div class="flex items-center justify-between sidebar-drag-handle">
-                    <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <div class="flex items-center justify-between">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
                         <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                        <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
-                    </span>
-                    <button onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                        </span>
+                    </div>
+                    <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                 </div>
                 <div id="traffic-sub" class="space-y-1.5 pl-2 border-l-2 border-blue-100 mt-1" style="display: none;">
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-highway">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🚗 國道 1968 路況</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-provincial">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🛣️ 全台省道路況 (168)</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-bus">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🚌 即時公車動態</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-bike">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🚲 YouBike 站點車位</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-train">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🚂 台鐵時刻查詢</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-hsr">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>🚄 高鐵時刻查詢</span>
                     </label>
                 </div>
@@ -288,24 +293,26 @@
 
             <!-- 3. 台股財經與鉅亨網群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-finance">
-                <div class="flex items-center justify-between sidebar-drag-handle">
-                    <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                <div class="flex items-center justify-between">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
                         <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                        <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
-                    </span>
-                    <button onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs px-1 cursor-pointer">
+                        <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
+                        </span>
+                    </div>
+                    <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                 </div>
                 <div id="finance-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-100 mt-1" style="display: none;">
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-yahoo">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>📈 Yahoo股市</span>
                     </label>
-                    <label class="sub-drag-item flex items-center gap-1.5 hover:bg-white p-1 rounded text-xs cursor-pointer" data-id="mod-cnyes">
+                    <label class="sub-drag-item flex items-center gap-2 hover:bg-white p-1.5 rounded text-xs cursor-pointer">
                         <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                        <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>📰 鉅亨網</span>
                     </label>
                 </div>
@@ -313,9 +320,9 @@
 
             <!-- 4. 互動待辦清單 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-todo">
-                <div class="flex items-center sidebar-drag-handle">
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-transparent p-0 rounded-lg text-xs font-bold text-slate-800 w-full">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
+                    <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
                         <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>✅ 互動待辦清單與隨手便籤</span>
                     </label>
@@ -324,9 +331,9 @@
 
             <!-- 5. 贊助支援與延伸閱讀 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-sponsor">
-                <div class="flex items-center sidebar-drag-handle">
-                    <label class="flex items-center gap-2 cursor-pointer hover:bg-transparent p-0 rounded-lg text-xs font-bold text-slate-800 w-full">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
+                    <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
                         <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
                         <span>💖 贊助支援與延伸閱讀</span>
                     </label>
@@ -340,9 +347,9 @@
             <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
                 <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
             </div>
-            <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
-            <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
-            <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-sm">
+            <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+            <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+            <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">
                 + 新增至桌面
             </button>
         </div>
@@ -425,7 +432,7 @@
                     </form>
                 </div>
 
-                <!-- 🌟 桌面大區塊 1：精選影音與創作服務 -->
+                <!-- 1. 精選影音與創作服務 -->
                 <div id="desktop-creative-card" data-[#group-id]="group-creative" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
@@ -479,7 +486,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 桌面大區塊 2：一般 App 捷徑 (包含即時交通與台股財經) -->
+                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
                 <div id="desktop-app-card" data-[#group-id]="group-traffic-finance" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="general-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
@@ -533,7 +540,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 桌面大區塊 3：互動待辦清單 -->
+                <!-- 3. 互動待辦清單 -->
                 <div id="desktop-todo-card" data-[#group-id]="group-todo" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
                     <div class="flex gap-2">
                         <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
@@ -543,7 +550,7 @@
                     <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
                 </div>
 
-                <!-- 🌟 桌面大區塊 4：贊助支援與延伸閱讀 -->
+                <!-- 4. 贊助支援與延伸閱讀 -->
                 <div id="desktop-sponsor-card" data-[#group-id]="group-sponsor" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
                     <div class="text-center pb-2 border-b border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -624,13 +631,10 @@
             }
         }
 
-        // 🌟 狀態與顯示同步（完全保留 DOM，絕不失效）
         function updateDesktopVisibility() {
-            // 1. 同步精選影音
             let hasCreativeVisible = false;
-            document.querySelectorAll('#creative-sub .sub-drag-item').forEach(label => {
-                const modId = label.getAttribute('data-id');
-                const cb = document.getElementById(modId);
+            document.querySelectorAll('#creative-sub input[type="checkbox"]').forEach(cb => {
+                const modId = cb.id;
                 const item = document.querySelector(`#creative-app-grid [data-mod="${modId}"]`);
                 if (cb && item) {
                     if (cb.checked) {
@@ -643,12 +647,10 @@
             });
             document.getElementById('desktop-creative-card').style.display = hasCreativeVisible ? 'block' : 'none';
 
-            // 2. 同步即時交通與台股財經
             let hasGeneralVisible = false;
             ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
-                document.querySelectorAll(`#${subContainerId} .sub-drag-item`).forEach(label => {
-                    const modId = label.getAttribute('data-id');
-                    const cb = document.getElementById(modId);
+                document.querySelectorAll(`#${subContainerId} input[type="checkbox"]`).forEach(cb => {
+                    const modId = cb.id;
                     const item = document.querySelector(`#general-app-grid [data-mod="${modId}"]`);
                     if (cb && item) {
                         if (cb.checked) {
@@ -661,13 +663,11 @@
                 });
             });
 
-            // 檢查自訂 App 是否存在
-            const customItems = document.querySelectorAll('#general-app-grid .app-item[data-custom-idx]');
-            if (customItems.length > 0) hasGeneralVisible = true;
+            if (document.querySelectorAll('#general-app-grid .app-item[data-custom-idx]').length > 0) {
+                hasGeneralVisible = true;
+            }
 
             document.getElementById('desktop-app-card').style.display = hasGeneralVisible ? 'block' : 'none';
-
-            // 3. 待辦與贊助卡片
             document.getElementById('desktop-todo-card').style.display = document.getElementById('mod-todo').checked ? 'block' : 'none';
             document.getElementById('desktop-sponsor-card').style.display = document.getElementById('mod-sponsor').checked ? 'block' : 'none';
 
@@ -691,7 +691,6 @@
                     if (cb) cb.checked = checked;
                 }
             } else {
-                // 首次預設：精選影音全勾選，其餘不勾選
                 const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
                 checkboxes.forEach(cb => {
                     const parentSub = cb.closest('#creative-sub');
@@ -703,7 +702,6 @@
             updateDesktopVisibility();
         }
 
-        // 🌟 側邊欄大項與桌面區塊 (Cards) 同步排序
         function syncDesktopCardsOrder() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             const desktopContainer = document.getElementById('desktop-cards-container');
@@ -711,28 +709,18 @@
 
             const groupOrder = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
             
-            // 對應桌面四大卡片
             groupOrder.forEach(groupId => {
                 let card = null;
-                if (groupId === 'group-creative') {
-                    card = document.getElementById('desktop-creative-card');
-                } else if (groupId === 'group-traffic' || groupId === 'group-finance') {
-                    card = document.getElementById('desktop-app-card');
-                } else if (groupId === 'group-todo') {
-                    card = document.getElementById('desktop-todo-card');
-                } else if (groupId === 'group-sponsor') {
-                    card = document.getElementById('desktop-sponsor-card');
-                }
+                if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
+                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
+                else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 
-                if (card) {
-                    desktopContainer.appendChild(card);
-                }
+                if (card) desktopContainer.appendChild(card);
             });
         }
 
-        // 🌟 初始化所有群組與子項目的拖曳排序 (SortableJS)
         function initSortables() {
-            // 1. 側邊欄大群組排序 (拖曳連動桌面大卡片順序)
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
                 new Sortable(sidebarContainer, {
@@ -740,6 +728,8 @@
                     handle: '.sidebar-drag-handle',
                     ghostClass: 'sortable-ghost',
                     dragClass: 'sortable-drag',
+                    delay: 150,
+                    delayOnTouchOnly: true,
                     onEnd: function () {
                         const order = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
                         localStorage.setItem('myezlife_sidebar_order', JSON.stringify(order));
@@ -756,7 +746,6 @@
                 syncDesktopCardsOrder();
             }
 
-            // 2. 精選影音子項目排序 (側邊欄連動桌面)
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
             if (creativeSub && creativeGrid) {
@@ -764,8 +753,10 @@
                     animation: 200,
                     ghostClass: 'sortable-ghost',
                     dragClass: 'sortable-drag',
+                    delay: 150,
+                    delayOnTouchOnly: true,
                     onEnd: function () {
-                        const subOrder = Array.from(creativeSub.children).map(el => el.getAttribute('data-id'));
+                        const subOrder = Array.from(creativeSub.children).map(el => el.getAttribute('data-id') || el.querySelector('input')?.id);
                         localStorage.setItem('myezlife_creative_sub_order', JSON.stringify(subOrder));
                         subOrder.forEach(modId => {
                             const item = creativeGrid.querySelector(`[data-mod="${modId}"]`);
@@ -776,7 +767,7 @@
                 const savedSubOrder = JSON.parse(localStorage.getItem('myezlife_creative_sub_order') || 'null');
                 if (savedSubOrder) {
                     savedSubOrder.forEach(modId => {
-                        const el = creativeSub.querySelector(`[data-id="${modId}"]`);
+                        const el = creativeSub.querySelector(`[data-id="${modId}"]`) || creativeSub.querySelector(`#${modId}`)?.closest('.sub-drag-item');
                         if (el) creativeSub.appendChild(el);
                         const item = creativeGrid.querySelector(`[data-mod="${modId}"]`);
                         if (item) creativeGrid.appendChild(item);
@@ -784,7 +775,6 @@
                 }
             }
 
-            // 3. 即時交通子項目排序 (側邊欄連動桌面)
             const trafficSub = document.getElementById('traffic-sub');
             const generalGrid = document.getElementById('general-app-grid');
             if (trafficSub && generalGrid) {
@@ -792,8 +782,10 @@
                     animation: 200,
                     ghostClass: 'sortable-ghost',
                     dragClass: 'sortable-drag',
+                    delay: 150,
+                    delayOnTouchOnly: true,
                     onEnd: function () {
-                        const subOrder = Array.from(trafficSub.children).map(el => el.getAttribute('data-id'));
+                        const subOrder = Array.from(trafficSub.children).map(el => el.querySelector('input')?.id);
                         localStorage.setItem('myezlife_traffic_sub_order', JSON.stringify(subOrder));
                         subOrder.forEach(modId => {
                             const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
@@ -804,7 +796,7 @@
                 const savedTrafficOrder = JSON.parse(localStorage.getItem('myezlife_traffic_sub_order') || 'null');
                 if (savedTrafficOrder) {
                     savedTrafficOrder.forEach(modId => {
-                        const el = trafficSub.querySelector(`[data-id="${modId}"]`);
+                        const el = trafficSub.querySelector(`#${modId}`)?.closest('.sub-drag-item');
                         if (el) trafficSub.appendChild(el);
                         const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
                         if (item) generalGrid.appendChild(item);
@@ -812,15 +804,16 @@
                 }
             }
 
-            // 4. 台股財經子項目排序 (側邊欄連動桌面)
             const financeSub = document.getElementById('finance-sub');
             if (financeSub && generalGrid) {
                 new Sortable(financeSub, {
                     animation: 200,
                     ghostClass: 'sortable-ghost',
                     dragClass: 'sortable-drag',
+                    delay: 150,
+                    delayOnTouchOnly: true,
                     onEnd: function () {
-                        const subOrder = Array.from(financeSub.children).map(el => el.getAttribute('data-id'));
+                        const subOrder = Array.from(financeSub.children).map(el => el.querySelector('input')?.id);
                         localStorage.setItem('myezlife_finance_sub_order', JSON.stringify(subOrder));
                         subOrder.forEach(modId => {
                             const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
@@ -831,7 +824,7 @@
                 const savedFinanceOrder = JSON.parse(localStorage.getItem('myezlife_finance_sub_order') || 'null');
                 if (savedFinanceOrder) {
                     savedFinanceOrder.forEach(modId => {
-                        const el = financeSub.querySelector(`[data-id="${modId}"]`);
+                        const el = financeSub.querySelector(`#${modId}`)?.closest('.sub-drag-item');
                         if (el) financeSub.appendChild(el);
                         const item = generalGrid.querySelector(`[data-mod="${modId}"]`);
                         if (item) generalGrid.appendChild(item);
@@ -839,7 +832,6 @@
                 }
             }
 
-            // 5. 一般 App 捷徑桌面自由拖曳排序
             if (generalGrid) {
                 new Sortable(generalGrid, {
                     animation: 200,
@@ -862,7 +854,6 @@
             }
         }
 
-        // 自訂 App 新增與刪除
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -930,7 +921,6 @@
             });
         }
 
-        // 待辦事項與隨手便籤
         let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
             { text: "極簡版網頁，自主勾選喜愛功能", done: false }
         ]));
