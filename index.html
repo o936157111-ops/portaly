@@ -241,7 +241,7 @@
                 </div>
             </div>
 
-            <!-- 2. 即時交通與大眾運輸群組 (已啟用子項目拖曳排序) -->
+            <!-- 2. 即時交通與大眾運輸群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-traffic">
                 <div class="flex items-center justify-between sidebar-drag-handle">
                     <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
@@ -286,7 +286,7 @@
                 </div>
             </div>
 
-            <!-- 3. 台股財經與鉅亨網群組 (已啟用子項目拖曳排序) -->
+            <!-- 3. 台股財經與鉅亨網群組 -->
             <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-finance">
                 <div class="flex items-center justify-between sidebar-drag-handle">
                     <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
@@ -410,7 +410,7 @@
                 </div>
             </header>
 
-            <main class="w-full space-y-5 flex-1">
+            <main id="desktop-cards-container" class="w-full space-y-5 flex-1 flex flex-col">
                 
                 <!-- Gemini 智慧對話列 -->
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
@@ -425,8 +425,8 @@
                     </form>
                 </div>
 
-                <!-- 🌟 桌面容器 1：精選影音與創作服務 -->
-                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                <!-- 🌟 桌面大區塊 1：精選影音與創作服務 -->
+                <div id="desktop-creative-card" data-[#group-id]="group-creative" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
                             <a href="https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -479,8 +479,8 @@
                     </div>
                 </div>
 
-                <!-- 🌟 桌面容器 2：一般 App 捷徑（交通 + 財經 + 自訂） -->
-                <div id="desktop-app-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                <!-- 🌟 桌面大區塊 2：一般 App 捷徑 (包含即時交通與台股財經) -->
+                <div id="desktop-app-card" data-[#group-id]="group-traffic-finance" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="general-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
                             <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -533,8 +533,8 @@
                     </div>
                 </div>
 
-                <!-- 互動待辦清單 -->
-                <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
+                <!-- 🌟 桌面大區塊 3：互動待辦清單 -->
+                <div id="desktop-todo-card" data-[#group-id]="group-todo" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
                     <div class="flex gap-2">
                         <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
                         <button onclick="addTodoItem()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-4 py-2 rounded-xl text-xs font-bold transition">新增</button>
@@ -543,8 +543,8 @@
                     <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
                 </div>
 
-                <!-- 贊助支援與延伸閱讀 -->
-                <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
+                <!-- 🌟 桌面大區塊 4：贊助支援與延伸閱讀 -->
+                <div id="desktop-sponsor-card" data-[#group-id]="group-sponsor" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
                     <div class="text-center pb-2 border-b border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
                         <p class="text-[11px] text-emerald-800 mt-1 font-medium bg-emerald-50 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
@@ -703,9 +703,36 @@
             updateDesktopVisibility();
         }
 
+        // 🌟 側邊欄大項與桌面區塊 (Cards) 同步排序
+        function syncDesktopCardsOrder() {
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            const desktopContainer = document.getElementById('desktop-cards-container');
+            if (!sidebarContainer || !desktopContainer) return;
+
+            const groupOrder = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
+            
+            // 對應桌面四大卡片
+            groupOrder.forEach(groupId => {
+                let card = null;
+                if (groupId === 'group-creative') {
+                    card = document.getElementById('desktop-creative-card');
+                } else if (groupId === 'group-traffic' || groupId === 'group-finance') {
+                    card = document.getElementById('desktop-app-card');
+                } else if (groupId === 'group-todo') {
+                    card = document.getElementById('desktop-todo-card');
+                } else if (groupId === 'group-sponsor') {
+                    card = document.getElementById('desktop-sponsor-card');
+                }
+                
+                if (card) {
+                    desktopContainer.appendChild(card);
+                }
+            });
+        }
+
         // 🌟 初始化所有群組與子項目的拖曳排序 (SortableJS)
         function initSortables() {
-            // 1. 側邊欄大群組排序
+            // 1. 側邊欄大群組排序 (拖曳連動桌面大卡片順序)
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
                 new Sortable(sidebarContainer, {
@@ -716,6 +743,7 @@
                     onEnd: function () {
                         const order = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
                         localStorage.setItem('myezlife_sidebar_order', JSON.stringify(order));
+                        syncDesktopCardsOrder();
                     }
                 });
                 const savedSidebarOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
@@ -725,6 +753,7 @@
                         if (el) sidebarContainer.appendChild(el);
                     });
                 }
+                syncDesktopCardsOrder();
             }
 
             // 2. 精選影音子項目排序 (側邊欄連動桌面)
@@ -755,7 +784,7 @@
                 }
             }
 
-            // 3. 🌟 即時交通子項目排序 (側邊欄連動桌面)
+            // 3. 即時交通子項目排序 (側邊欄連動桌面)
             const trafficSub = document.getElementById('traffic-sub');
             const generalGrid = document.getElementById('general-app-grid');
             if (trafficSub && generalGrid) {
@@ -783,7 +812,7 @@
                 }
             }
 
-            // 4. 🌟 台股財經子項目排序 (側邊欄連動桌面)
+            // 4. 台股財經子項目排序 (側邊欄連動桌面)
             const financeSub = document.getElementById('finance-sub');
             if (financeSub && generalGrid) {
                 new Sortable(financeSub, {
