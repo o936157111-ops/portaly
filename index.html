@@ -11,11 +11,24 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f0f4f8;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             color: #334155;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 滿版背景時的半透明遮罩，確保文字清晰易讀 */
+        body.has-custom-bg::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(240, 244, 248, 0.85); /* 可依喜好調整遮罩深淺 */
+            z-index: -1;
         }
 
         @media (max-width: 767px) {
@@ -41,7 +54,8 @@
             left: 0;
             height: 100vh;
             width: 300px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(-100%);
@@ -182,6 +196,24 @@
             </h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-2 cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- 🌟 背景圖片設定區塊 -->
+        <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2">
+            <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+                <i class="fa-solid fa-image text-[#00a600]"></i> 設定手機滿版背景圖
+            </div>
+            <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-emerald-200 text-xs outline-none focus:border-[#00a600]">
+            <div class="flex gap-2">
+                <label class="flex-1 bg-white hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold py-1.5 px-2 rounded-lg border border-emerald-200 text-center cursor-pointer transition">
+                    📁 上傳圖片檔案
+                    <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
+                </label>
+                <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-1.5 px-3 rounded-lg transition shadow-sm cursor-pointer">套用</button>
+            </div>
+            <button onclick="resetBackground()" class="w-full text-slate-500 hover:text-rose-600 text-[10px] font-medium pt-0.5 transition text-center">
+                🔄 恢復預設背景
             </button>
         </div>
 
@@ -631,6 +663,49 @@
             }
         }
 
+        // 🌟 背景圖片設定功能
+        function applyBackground() {
+            const url = document.getElementById('bg-url-input').value.trim();
+            if (!url) { alert('請輸入有效的圖片網址！'); return; }
+            setCustomBackground(url);
+        }
+
+        function handleBgUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                setCustomBackground(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setCustomBackground(imgUrl) {
+            document.body.style.backgroundImage = `url('${imgUrl}')`;
+            document.body.classList.add('has-custom-bg');
+            localStorage.setItem('myezlife_custom_bg', imgUrl);
+            alert('成功套用滿版背景圖片！');
+        }
+
+        function resetBackground() {
+            document.body.style.backgroundImage = 'none';
+            document.body.classList.remove('has-custom-bg');
+            localStorage.removeItem('myezlife_custom_bg');
+            document.getElementById('bg-url-input').value = '';
+            alert('已恢復預設背景！');
+        }
+
+        function loadSavedBackground() {
+            const savedBg = localStorage.getItem('myezlife_custom_bg');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+                document.body.classList.add('has-custom-bg');
+                if (!savedBg.startsWith('data:image')) {
+                    document.getElementById('bg-url-input').value = savedBg;
+                }
+            }
+        }
+
         function updateDesktopVisibility() {
             let hasCreativeVisible = false;
             document.querySelectorAll('#creative-sub input[type="checkbox"]').forEach(cb => {
@@ -1003,6 +1078,7 @@
         function closeModals() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.add('hidden'); }
 
         // 🌟 初始化執行
+        loadSavedBackground();
         loadCustomApps();
         initSortables();
         loadCheckboxStates();
