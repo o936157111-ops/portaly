@@ -143,6 +143,7 @@
             justify-content: center;
             cursor: grab;
             user-select: none;
+            position: relative;
         }
         .app-item:active { cursor: grabbing; }
         .app-box {
@@ -417,7 +418,31 @@
 
                         <input type="text" id="new-mod-title" placeholder="選項名稱 (例如: 🤖 AI工具)..." class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
                         <input type="url" id="new-mod-url" placeholder="網址 (https://...)" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
-                        <input type="text" id="new-mod-icon" placeholder="FontAwesome 圖示 (預設 fa-globe)" value="fa-globe" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                        
+                        <!-- 🌟 圖形圖示下拉選單 -->
+                        <label class="text-[10px] text-slate-400 block">選擇 App 圖示：</label>
+                        <select id="new-mod-icon-select" class="w-full bg-slate-800 text-xs p-2 rounded border border-slate-700 text-white outline-none">
+                            <option value="fa-globe">🌐 網際網路 / 瀏覽器</option>
+                            <option value="fa-bolt">⚡ 閃電 / 熱門焦點</option>
+                            <option value="fa-star">⭐ 星星 / 收藏推薦</option>
+                            <option value="fa-heart">❤️ 愛心 / 常用最愛</option>
+                            <option value="fa-bookmark">🔖 書籤 / 閱讀筆記</option>
+                            <option value="fa-gamepad">🎮 遊戲 / 娛樂</option>
+                            <option value="fa-music">🎵 音樂 / 旋律</option>
+                            <option value="fa-film">🎬 電影 / 影音</option>
+                            <option value="fa-book">📖 書籍 / 閱讀</option>
+                            <option value="fa-comments">💬 聊天 / 社群</option>
+                            <option value="fa-envelope">✉️ 信箱 / 郵件</option>
+                            <option value="fa-calendar">📅 行事曆 / 計劃</option>
+                            <option value="fa-chart-line">📈 股市 / 圖表</option>
+                            <option value="fa-wallet">👛 錢包 / 財務</option>
+                            <option value="fa-map-marker-alt">📍 地圖 / 位置</option>
+                            <option value="fa-car">🚗 汽車 / 交通</option>
+                            <option value="fa-utensils">🍽️ 美食 / 餐廳</option>
+                            <option value="fa-dumbbell">🏋️ 運動 / 健身</option>
+                            <option value="fa-tools">🛠️ 工具 / 設定</option>
+                            <option value="fa-shield-alt">🛡️ 安全 / 防護</option>
+                        </select>
                         
                         <button onclick="addNewOptionToPage()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded transition cursor-pointer">
                             確認新增選項
@@ -760,7 +785,7 @@
             const inputPwd = document.getElementById('dev-password-input').value.trim();
             if (inputPwd === expectedPwd) {
                 document.getElementById('dev-form-box').classList.remove('hidden');
-                alert('解鎖成功！您現在可以透過下拉選單選擇或建立新群組來新增選項。');
+                alert('解鎖成功！您現在可以透過下拉選單選擇圖示與群組來新增選項。');
             } else {
                 alert('密碼錯誤！請輸入正確的 6 位當日日期密碼。');
             }
@@ -780,7 +805,7 @@
             const groupSelectVal = document.getElementById('new-mod-group').value;
             const title = document.getElementById('new-mod-title').value.trim();
             const url = document.getElementById('new-mod-url').value.trim();
-            const icon = document.getElementById('new-mod-icon').value.trim() || 'fa-globe';
+            const icon = document.getElementById('new-mod-icon-select').value;
 
             if (!title || !url) {
                 alert('請完整填寫選項名稱與網址！');
@@ -790,7 +815,6 @@
             const modId = 'mod-custom-' + Date.now();
             let targetSubId = groupSelectVal;
 
-            // 如果使用者選擇新增全新群組
             if (groupSelectVal === 'new-group') {
                 const newGroupName = document.getElementById('new-group-title-input').value.trim();
                 if (!newGroupName) {
@@ -803,7 +827,6 @@
                 const cardId = uniqueId + '-card';
                 const gridId = uniqueId + '-grid';
 
-                // 1. 在側邊欄 Sortable 容器中新增群組
                 const sidebarContainer = document.getElementById('sidebar-sortable-container');
                 const groupDiv = document.createElement('div');
                 groupDiv.className = 'sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2';
@@ -824,7 +847,6 @@
                 `;
                 sidebarContainer.appendChild(groupDiv);
 
-                // 2. 在桌面上新增對應的卡片容器
                 const desktopContainer = document.getElementById('desktop-cards-container');
                 const desktopCard = document.createElement('div');
                 desktopCard.id = cardId;
@@ -833,7 +855,6 @@
                 desktopCard.innerHTML = `<div id="${gridId}" class="app-grid"></div>`;
                 desktopContainer.appendChild(desktopCard);
 
-                // 3. 同步更新下拉選單，讓以後也能選到這個新群組
                 const selectElem = document.getElementById('new-mod-group');
                 const newOption = document.createElement('option');
                 newOption.value = targetSubId;
@@ -844,7 +865,6 @@
                 document.getElementById('new-group-title-input').value = '';
             }
 
-            // 4. 在目標群組的子選單中加入 Checkbox
             const targetSub = document.getElementById(targetSubId);
             if (targetSub) {
                 targetSub.style.display = 'block';
@@ -858,16 +878,12 @@
                 targetSub.appendChild(label);
             }
 
-            // 5. 在對應的桌面 Grid 中加入 App 圖示
             let targetGrid = null;
             if (targetSubId.includes('creative')) {
                 targetGrid = document.getElementById('creative-app-grid');
-            } else if (targetSubId.includes('traffic')) {
-                targetGrid = document.getElementById('general-app-grid');
-            } else if (targetSubId.includes('finance')) {
+            } else if (targetSubId.includes('traffic') || targetSubId.includes('finance')) {
                 targetGrid = document.getElementById('general-app-grid');
             } else {
-                // 自訂群組對應的 grid
                 const baseId = targetSubId.replace('-sub', '');
                 targetGrid = document.getElementById(baseId + '-grid');
             }
@@ -881,14 +897,32 @@
                         <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid ${icon} text-white"></i></div>
                         <span class="app-label">${title}</span>
                     </a>
+                    <button onclick="removeDynamicOption(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
                 `;
+                // 賦予 group 類別以便顯示刪除按鈕
+                appDiv.classList.add('group');
                 targetGrid.appendChild(appDiv);
+                bindLongPressToDelete(appDiv);
             }
 
             updateDesktopVisibility();
             document.getElementById('new-mod-title').value = '';
             document.getElementById('new-mod-url').value = '';
             alert(`成功新增選項「${title}」！`);
+        }
+
+        // 刪除動態新增的選項
+        function removeDynamicOption(btn) {
+            if (confirm('確定要刪除這個選項嗎？')) {
+                const item = btn.closest('.app-item');
+                const modId = item.getAttribute('data-mod');
+                if (modId) {
+                    const cb = document.getElementById(modId);
+                    if (cb) cb.closest('label').remove();
+                }
+                item.remove();
+                updateDesktopVisibility();
+            }
         }
 
         function saveAndDownloadHtml() {
@@ -1126,6 +1160,13 @@
             }
         });
 
+        // 初始化所有現有 App 項目綁定長按刪除
+        function initAllAppItems() {
+            document.querySelectorAll('.app-item').forEach(item => {
+                bindLongPressToDelete(item);
+            });
+        }
+
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -1314,6 +1355,7 @@
         renderTodoList();
         loadMemo();
         initRandomRecommendation();
+        initAllAppItems();
     </script>
 </body>
 </html>
