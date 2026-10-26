@@ -87,13 +87,13 @@
             transform: translateX(0);
             width: 100%;
             padding: 16px;
-            padding-bottom: 100px; /* 手機版預留固定底部 Dock 的高度 */
+            padding-bottom: 110px; /* 手機版底部留白，避免內容被固定 Dock 擋住 */
         }
 
         @media (min-width: 768px) {
             #app-wrapper { 
                 padding: 24px; 
-                padding-bottom: 24px; /* 電腦版恢復正常頁尾內距 */
+                padding-bottom: 24px; /* 電腦版恢復一般內距 */
             }
             #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
             #backdrop { display: none !important; }
@@ -181,7 +181,10 @@
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
-        /* 第三區塊：手機版 fixed 固定於螢幕最下方；電腦版 (≥768px) 為靜態流動卡片 */
+        /* 🌟 第三區塊 (Dock 欄)：
+           - 手機版：fixed 固定在螢幕最下方，模擬手機桌面操作
+           - 電腦版 (md)：static 正常排列在二個區塊下方，與前二區塊同寬、同風格
+        */
         #dock-bar {
             position: fixed;
             bottom: 12px;
@@ -653,7 +656,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 第三區塊：APP 捷徑 Dock 欄 (手機版固定於底部 / 電腦版為等寬標準卡片) -->
+                <!-- 🌟 第三區塊：固定捷徑 Dock 欄 (放置於所有卡片容器的最下方) -->
                 <div id="dock-bar">
                     <div class="flex items-center justify-around">
                         <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
@@ -981,6 +984,9 @@
                 
                 if (card) desktopContainer.appendChild(card);
             });
+            // 確保第三區塊 (dock-bar) 永遠固定在最下方/第二個區塊後方
+            const dockBar = document.getElementById('dock-bar');
+            if (dockBar) desktopContainer.appendChild(dockBar);
         }
 
         function bindLongPressToDelete(itemElement) {
