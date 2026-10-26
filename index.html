@@ -87,13 +87,13 @@
             transform: translateX(0);
             width: 100%;
             padding: 16px;
-            padding-bottom: 110px; /* 手機版底部留白，避免內容被固定 Dock 擋住 */
+            padding-bottom: 110px; /* 手機版底部留白，讓固定 Dock 與上方區塊保有完美間距與模擬空間 */
         }
 
         @media (min-width: 768px) {
             #app-wrapper { 
                 padding: 24px; 
-                padding-bottom: 24px; /* 電腦版恢復一般內距 */
+                padding-bottom: 24px; 
             }
             #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
             #backdrop { display: none !important; }
@@ -182,12 +182,12 @@
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
         /* 🌟 第三區塊 (Dock 欄)：
-           - 手機版：fixed 固定在螢幕最下方，模擬手機桌面操作
-           - 電腦版 (md)：static 正常排列在二個區塊下方，與前二區塊同寬、同風格
+           - 手機版：fixed 固定在螢幕最下方（如手機主畫面 Dock 欄），並與上方內容保持精美間距
+           - 電腦版 (md)：static 完美置於第 4 個區塊之下，與前幾個區塊完全同寬、同風格
         */
         #dock-bar {
             position: fixed;
-            bottom: 12px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 35;
@@ -215,6 +215,7 @@
                 box-shadow: 0 1px 3px rgba(0,0,0,0.05);
                 border-radius: 1rem; /* rounded-2xl */
                 padding: 1.5rem;   /* p-6 */
+                margin-top: 0px;   /* 完美接續在區塊下方 */
             }
         }
     </style>
@@ -416,13 +417,34 @@
 
             </div>
 
-            <!-- 自訂新增 App 專屬區塊 -->
+            <!-- 自訂新增 App 專屬區塊 (已新增 APP LOGO 下拉選單) -->
             <div class="space-y-2.5 pt-3 border-t border-slate-200">
                 <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
                     <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
                 </div>
                 <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
                 <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+                
+                <!-- 🌟 新增的 APP LOGO 下拉選單 -->
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold text-slate-600 whitespace-nowrap">選擇圖示:</span>
+                    <select id="custom-app-icon" class="flex-1 bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer">
+                        <option value="fa-solid fa-globe">🌐 預設網路 (Globe)</option>
+                        <option value="fa-solid fa-star">⭐ 星星 (Star)</option>
+                        <option value="fa-solid fa-briefcase">💼 商務公事包 (Briefcase)</option>
+                        <option value="fa-solid fa-film">🎬 電影娛樂 (Film)</option>
+                        <option value="fa-solid fa-music">🎵 音樂旋律 (Music)</option>
+                        <option value="fa-solid fa-newspaper">📰 新聞資訊 (Newspaper)</option>
+                        <option value="fa-solid fa-cart-shopping">🛒 購物商城 (Shopping)</option>
+                        <option value="fa-solid fa-comments">💬 對話社群 (Comments)</option>
+                        <option value="fa-solid fa-gamepad">🎮 遊戲休閒 (Gamepad)</option>
+                        <option value="fa-solid fa-tools">🛠️ 工具設定 (Tools)</option>
+                        <option value="fa-solid fa-location-dot">📍 地圖地標 (Location)</option>
+                        <option value="fa-solid fa-lightbulb">💡 靈感點子 (Lightbulb)</option>
+                        <option value="fa-solid fa-book">📚 書籍閱讀 (Book)</option>
+                    </select>
+                </div>
+
                 <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">
                     + 新增至桌面
                 </button>
@@ -656,7 +678,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 第三區塊：固定捷徑 Dock 欄 (放置於所有卡片容器的最下方) -->
+                <!-- 🌟 第三區塊：固定的捷徑 Dock 欄 (放置於所有卡片容器的最下方) -->
                 <div id="dock-bar">
                     <div class="flex items-center justify-around">
                         <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
@@ -984,7 +1006,7 @@
                 
                 if (card) desktopContainer.appendChild(card);
             });
-            // 確保第三區塊 (dock-bar) 永遠固定在最下方/第二個區塊後方
+            // 確保第三區塊 (dock-bar) 永遠放在所有卡片的最後方（最下方）
             const dockBar = document.getElementById('dock-bar');
             if (dockBar) desktopContainer.appendChild(dockBar);
         }
@@ -1036,21 +1058,26 @@
             }
         });
 
+        // --- 🌟 自訂 App 新增邏輯（支援選擇圖示） ---
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
+            const iconSelect = document.getElementById('custom-app-icon');
+            
             const name = nameInput.value.trim();
             let url = urlInput.value.trim();
+            const icon = iconSelect.value;
 
             if (!name || !url) { alert('請完整輸入網頁名稱與網址！'); return; }
             if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
 
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-            customApps.push({ name, url });
+            customApps.push({ name, url, icon });
             localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
 
             nameInput.value = '';
             urlInput.value = '';
+            iconSelect.selectedIndex = 0;
             
             loadCustomApps();
             updateDesktopVisibility();
@@ -1082,9 +1109,11 @@
                 let div = document.createElement('div');
                 div.className = 'app-item relative group';
                 div.setAttribute('data-custom-idx', newIndex);
+                // 讀取所選的圖示，若舊資料沒有 icon 則預設使用 fa-solid fa-globe
+                const appIcon = app.icon || 'fa-solid fa-globe';
                 div.innerHTML = `
                     <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                        <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="fa-solid fa-globe text-white"></i></div>
+                        <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
                         <span class="app-label">${app.name}</span>
                     </a>
                     <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
