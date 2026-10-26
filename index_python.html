@@ -238,27 +238,42 @@
 
         <div class="flex-1 space-y-4 overflow-y-auto">
             
-            <!-- 🌟 新增：網站特性與隱私說明區塊 -->
+            <!-- 🌟 網站特性、手機App捷徑製作與隱私說明區塊 -->
             <div class="bg-gradient-to-br from-emerald-50 to-teal-50/60 p-3 rounded-xl border border-emerald-100/80 space-y-2">
                 <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('about-app-sub', this)">
                     <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
-                        <i class="fa-solid fa-shield-halved text-[#00a600]"></i> 網站特性與隱私說明
+                        <i class="fa-solid fa-circle-info text-[#00a600]"></i> 網站使用與隱私說明
                     </div>
                     <i class="fa-solid fa-chevron-down text-emerald-600 text-xs"></i>
                 </div>
-                <div id="about-app-sub" class="text-[11px] text-slate-600 space-y-2 pt-1 border-t border-emerald-100" style="display: none;">
+                <div id="about-app-sub" class="text-[11px] text-slate-600 space-y-2.5 pt-2 border-t border-emerald-100" style="display: none;">
+                    
+                    <!-- 手機加入主畫面教學 -->
+                    <div class="bg-white/80 p-2 rounded-lg border border-emerald-100 space-y-1">
+                        <strong class="text-emerald-800 flex items-center gap-1">
+                            <i class="fa-solid fa-mobile-screen-button"></i> 如何當作 App 使用？
+                        </strong>
+                        <p class="leading-relaxed text-slate-700">
+                            無需下載 APK，直接在手機瀏覽器輸入 <strong class="text-[#00a600]">myezlife.com</strong> 開啟後，點選瀏覽器選單並選擇：
+                        </p>
+                        <p class="pl-1 text-slate-600">
+                            👉 <strong>iOS (Safari)</strong>：點擊下方「分享」按鈕 ➔ 選擇「<strong>加入主畫面</strong>」。<br>
+                            👉 <strong>Android (Chrome)</strong>：點擊右上角「選單 (⋮)」➔ 選擇「<strong>加到主畫面</strong>」或「<strong>安裝應用程式</strong>」。
+                        </p>
+                        <p class="text-[10px] text-slate-500 italic pt-0.5">完成後桌面就會出現專屬 Logo 圖示，點擊即可全螢幕像 App 般流暢使用！</p>
+                    </div>
+
+                    <!-- 隱私安全說明 -->
                     <p class="leading-relaxed">
                         <strong class="text-emerald-800">🔒 100% 本機隱私安全：</strong><br>
-                        本站注重個人隱私，您所新增的自訂 App 捷徑、待辦清單、便籤及背景設定，<strong class="text-slate-800">全部僅儲存在您的裝置（LocalStorage）中</strong>，絕不傳送至任何外部伺服器。
+                        本站重視個人隱私，您所新增的自訂捷徑、待辦清單、便籤及背景設定，<strong class="text-slate-800">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
                     </p>
+
+                    <!-- 基本操作 -->
                     <p class="leading-relaxed">
-                        <strong class="text-emerald-800">⚙️ 操作說明：</strong>
+                        <strong class="text-emerald-800">⚙️ 模組自訂：</strong><br>
+                        勾選下方模組可自訂顯示，按住群組標頭可拖曳排序桌面卡片。
                     </p>
-                    <ul class="list-disc list-inside space-y-1 pl-1 text-slate-600">
-                        <td><strong>自訂顯示</strong>：在下方勾選或取消項目，即時顯示/隱藏桌面卡片。</td>
-                        <td><strong>拖曳排序</strong>：按住群組標頭可調整桌面卡片上下順序。</td>
-                        <td><strong>捷徑管理</strong>：可隨時新增自訂網址，長按捷徑圖示即可刪除。</td>
-                    </ul>
                 </div>
             </div>
 
