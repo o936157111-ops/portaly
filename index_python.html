@@ -1,2175 +1,1226 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>我的好讀書單</title>
-
-<!-- PWA 支援與手機優化 -->
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<meta name="theme-color" content="#4a90e2">
-
-<!-- 內嵌 PWA Manifest -->
-
-<link rel="manifest" href="data:application/json;charset=utf-8,{&quot;name&quot;:&quot;我的好讀書單&quot;,&quot;short_name&quot;:&quot;好讀書單&quot;,&quot;start_url&quot;:&quot;./&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#f4f7f6&quot;,&quot;theme_color&quot;:&quot;#4a90e2&quot;}">
-
-
-
-<style>
-
-:root {
-
---primary-color: #4a90e2;
-
---primary-light: #eef2f7;
-
---bg-color: #f4f7f6;
-
---card-bg: #ffffff;
-
---text-color: #333333;
-
---text-secondary: #666666;
-
---border-radius: 12px;
-
-}
-
-
-
-* {
-
-box-sizing: border-box;
-
-margin: 0;
-
-padding: 0;
-
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-}
-
-
-
-body {
-
-background-color: var(--bg-color);
-
-color: var(--text-color);
-
-padding-bottom: 40px;
-
-line-height: 1.8;
-
-}
-
-
-
-header {
-
-background: linear-gradient(135deg, #4a90e2, #357abd);
-
-color: white;
-
-padding: 24px 16px;
-
-text-align: center;
-
-box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-
-position: relative;
-
-}
-
-
-
-.top-home-btn {
-
-position: absolute;
-
-top: 16px;
-
-left: 16px;
-
-background: rgba(255, 255, 255, 0.2);
-
-color: white;
-
-text-decoration: none;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-padding: 6px 12px;
-
-border-radius: 20px;
-
-display: flex;
-
-align-items: center;
-
-gap: 4px;
-
-transition: background 0.2s;
-
-backdrop-filter: blur(4px);
-
-}
-
-
-
-.top-home-btn:hover {
-
-background: rgba(255, 255, 255, 0.35);
-
-}
-
-
-
-header h1 {
-
-font-size: 1.75rem; /* 字體放大 2 號 */
-
-margin-bottom: 6px;
-
-}
-
-
-
-header p {
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-opacity: 0.9;
-
-}
-
-
-
-.container {
-
-max-width: 600px;
-
-margin: 0 auto;
-
-padding: 16px;
-
-}
-
-
-
-.daily-special-card {
-
-background: linear-gradient(135deg, #fff9e6, #fff3cd);
-
-border: 1px solid #ffeeba;
-
-border-radius: var(--border-radius);
-
-padding: 16px;
-
-margin-bottom: 16px;
-
-box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-
-position: relative;
-
-}
-
-
-
-.daily-special-badge {
-
-display: inline-block;
-
-background: #d48806;
-
-color: white;
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-padding: 2px 8px;
-
-border-radius: 10px;
-
-margin-bottom: 8px;
-
-font-weight: bold;
-
-}
-
-
-
-.daily-title {
-
-font-size: 1.35rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-color: #856404;
-
-margin-bottom: 4px;
-
-}
-
-
-
-.daily-author {
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: #a07800;
-
-margin-bottom: 8px;
-
-}
-
-
-
-.daily-desc {
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: #665c3b;
-
-line-height: 1.5;
-
-margin-bottom: 12px;
-
-display: -webkit-box;
-
--webkit-line-clamp: 6;
-
--webkit-box-orient: vertical;
-
-overflow: hidden;
-
-}
-
-
-
-.daily-footer {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-}
-
-
-
-.btn-daily-read {
-
-background-color: #d48806;
-
-color: white;
-
-text-decoration: none;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-padding: 6px 16px;
-
-border-radius: 15px;
-
-font-weight: 500;
-
-transition: background 0.2s;
-
-}
-
-
-
-.btn-daily-read:hover {
-
-background-color: #b77103;
-
-}
-
-
-
-.btn-refresh-daily {
-
-background: none;
-
-border: none;
-
-color: #a07800;
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-text-decoration: underline;
-
-}
-
-
-
-.search-box {
-
-margin-bottom: 14px;
-
-}
-
-
-
-.search-box input {
-
-width: 100%;
-
-padding: 12px 16px;
-
-font-size: 1.2rem; /* 字體放大 2 號 */
-
-border: 1px solid #ddd;
-
-border-radius: var(--border-radius);
-
-outline: none;
-
-background: white;
-
-box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-
-transition: border-color 0.2s;
-
-}
-
-
-
-.search-box input:focus {
-
-border-color: var(--primary-color);
-
-}
-
-
-
-.tabs-container {
-
-display: flex;
-
-overflow-x: auto;
-
-margin-bottom: 16px;
-
-border: 1px solid #ddd;
-
-background: white;
-
-scrollbar-width: none;
-
-}
-
-
-
-.tabs-container::-webkit-scrollbar {
-
-display: none;
-
-}
-
-
-
-.tab-btn {
-
-background: white;
-
-border: none;
-
-border-right: 1px solid #ddd;
-
-color: var(--text-secondary);
-
-padding: 10px 16px;
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-white-space: nowrap;
-
-cursor: pointer;
-
-transition: all 0.2s;
-
-flex: 1;
-
-text-align: center;
-
-}
-
-
-
-.tab-btn:last-child {
-
-border-right: none;
-
-}
-
-
-
-.tab-btn.active {
-
-background: var(--primary-color);
-
-color: white;
-
-font-weight: bold;
-
-}
-
-
-
-.author-group {
-
-margin-bottom: 12px;
-
-background: white;
-
-border-radius: var(--border-radius);
-
-box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-
-overflow: hidden;
-
-}
-
-
-
-.author-header {
-
-width: 100%;
-
-background: white;
-
-border: none;
-
-padding: 16px;
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-font-size: 1.25rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-color: var(--text-color);
-
-cursor: pointer;
-
-text-align: left;
-
-transition: background 0.2s;
-
-}
-
-
-
-.author-header:hover {
-
-background: #fafafa;
-
-}
-
-
-
-.author-info {
-
-display: flex;
-
-align-items: center;
-
-gap: 10px;
-
-}
-
-
-
-.book-count-badge {
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-background: var(--primary-light);
-
-color: var(--primary-color);
-
-padding: 2px 8px;
-
-border-radius: 12px;
-
-font-weight: normal;
-
-}
-
-
-
-.arrow-icon {
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-color: #999;
-
-transition: transform 0.3s ease;
-
-}
-
-
-
-.author-header.active .arrow-icon {
-
-transform: rotate(180deg);
-
-}
-
-
-
-.book-list-container {
-
-max-height: 0;
-
-overflow: hidden;
-
-transition: max-height 0.3s ease-out;
-
-background: #fdfdfd;
-
-border-top: 1px solid transparent;
-
-}
-
-
-
-.book-list-inner {
-
-padding: 12px 16px;
-
-display: flex;
-
-flex-direction: column;
-
-gap: 12px;
-
-}
-
-
-
-.book-card {
-
-background: var(--card-bg);
-
-border-radius: 8px;
-
-padding: 12px 14px;
-
-border: 1px solid #eee;
-
-display: flex;
-
-flex-direction: column;
-
-gap: 6px;
-
-}
-
-
-
-.book-title {
-
-font-size: 1.2rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-color: var(--text-color);
-
-}
-
-
-
-.book-desc {
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: var(--text-secondary);
-
-line-height: 1.6;
-
-white-space: normal;
-
-}
-
-
-
-.book-footer {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-margin-top: 4px;
-
-padding-top: 6px;
-
-border-top: 1px solid #f5f5f5;
-
-}
-
-
-
-.category-tag {
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-background: #eef2f7;
-
-color: #555;
-
-padding: 2px 6px;
-
-border-radius: 10px;
-
-}
-
-
-
-.btn-read {
-
-background-color: var(--primary-color);
-
-color: white;
-
-text-decoration: none;
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-padding: 5px 12px;
-
-border-radius: 15px;
-
-font-weight: 500;
-
-}
-
-
-
-.btn-read:hover {
-
-background-color: #357abd;
-
-}
-
-
-
-.no-result {
-
-text-align: center;
-
-color: var(--text-secondary);
-
-margin-top: 40px;
-
-display: none;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-}
-
-
-
-.admin-section {
-
-margin-top: 30px;
-
-text-align: center;
-
-}
-
-
-
-.btn-admin-toggle {
-
-background: none;
-
-border: none;
-
-color: #bbb;
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-padding: 10px;
-
-}
-
-
-
-.admin-panel {
-
-display: none;
-
-background: white;
-
-border-radius: var(--border-radius);
-
-padding: 16px;
-
-margin-top: 10px;
-
-box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-text-align: left;
-
-}
-
-
-
-.admin-panel h3 {
-
-font-size: 1.3rem; /* 字體放大 2 號 */
-
-margin-bottom: 12px;
-
-color: var(--primary-color);
-
-border-bottom: 2px solid var(--primary-light);
-
-padding-bottom: 6px;
-
-}
-
-
-
-.form-group {
-
-margin-bottom: 10px;
-
-}
-
-
-
-.form-group label {
-
-display: block;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: var(--text-secondary);
-
-margin-bottom: 4px;
-
-}
-
-
-
-.form-group input, .form-group textarea {
-
-width: 100%;
-
-padding: 8px 12px;
-
-border: 1px solid #ddd;
-
-border-radius: 6px;
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-outline: none;
-
-}
-
-
-
-.form-group input:focus, .form-group textarea:focus {
-
-border-color: var(--primary-color);
-
-}
-
-
-
-.btn-submit {
-
-background-color: #27ae60;
-
-color: white;
-
-border: none;
-
-width: 100%;
-
-padding: 10px;
-
-border-radius: 6px;
-
-font-size: 1.2rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-cursor: pointer;
-
-margin-top: 6px;
-
-margin-bottom: 16px;
-
-}
-
-
-
-.btn-submit:hover {
-
-background-color: #219653;
-
-}
-
-
-
-.manage-book-item {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-padding: 8px 0;
-
-border-bottom: 1px solid #eee;
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-}
-
-
-
-.manage-book-info {
-
-overflow: hidden;
-
-text-overflow: ellipsis;
-
-white-space: nowrap;
-
-margin-right: 10px;
-
-flex: 1;
-
-}
-
-
-
-.manage-actions {
-
-display: flex;
-
-gap: 6px;
-
-flex-shrink: 0;
-
-}
-
-
-
-.btn-edit-item {
-
-background-color: #f39c12;
-
-color: white;
-
-border: none;
-
-padding: 4px 8px;
-
-border-radius: 4px;
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-}
-
-
-
-.btn-delete-item {
-
-background-color: #e74c3c;
-
-color: white;
-
-border: none;
-
-padding: 4px 8px;
-
-border-radius: 4px;
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-}
-
-</style>
-
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myezlife.com | 我的個人化數位生活儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f0f4f8;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body.has-custom-bg::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(240, 244, 248, 0.35);
+            z-index: -1;
+        }
+
+        @media (max-width: 767px) {
+            body { font-size: 1.15rem !important; }
+            .text-xs { font-size: 0.95rem !important; }
+            .text-sm { font-size: 1.05rem !important; }
+            .text-base { font-size: 1.15rem !important; }
+            .text-lg { font-size: 1.25rem !important; }
+            .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
+            
+            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar select, #sidebar .text-\[11px\], #sidebar .text-xs {
+                font-size: 1.05rem !important;
+            }
+            #sidebar input[type="checkbox"] {
+                width: 1.2rem !important;
+                height: 1.2rem !important;
+                pointer-events: auto !important;
+            }
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            border-right: 1px solid #e2e8f0;
+            touch-action: pan-y;
+            display: flex;
+            flex-direction: column;
+        }
+        #sidebar.show-sidebar { transform: translateX(0); }
+
+        #backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        #backdrop.show-backdrop { opacity: 1; pointer-events: auto; }
+
+        #app-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(0);
+            width: 100%;
+            padding: 16px;
+            padding-bottom: 120px;
+        }
+
+        @media (min-width: 768px) {
+            #app-wrapper { 
+                padding: 24px; 
+                padding-bottom: 40px; 
+            }
+            #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
+            #backdrop { display: none !important; }
+        }
+
+        #sidebar-toggle-btn {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 35;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            border: 1px solid #e2e8f0;
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+            padding: 12px 6px 12px 4px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #475569;
+        }
+        #sidebar-toggle-btn:hover { background: #ffffff; color: #00a600; padding-left: 8px; }
+
+        .green-banner {
+            background-color: #00a600;
+            border-radius: 20px;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
+            width: 100%;
+        }
+
+        .rounded-logo-btn {
+            border-radius: 50% !important;
+            overflow: hidden;
+            background: transparent !important;
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .rounded-logo-btn:hover { transform: scale(1.05); border-color: #ffffff !important; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 16px;
+        }
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            position: relative;
+        }
+        .app-item:active { cursor: grabbing; }
+        .app-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .app-item:hover .app-box { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+        .app-label {
+            color: #334155;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 80px;
+        }
+        .sortable-ghost { opacity: 0.3; }
+        .sortable-drag { opacity: 0.9; }
+
+        .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
+        .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
+
+        /* 🌟 Dock 欄：
+           - 手機版：fixed 懸浮最下層
+           - 電腦版 (md)：static 轉為最下方的獨立卡片，並加上 margin-top 確保空隙
+        */
+        #dock-bar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 35;
+            width: calc(100% - 32px);
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            border-radius: 24px;
+            padding: 10px 16px;
+        }
+
+        @media (min-width: 768px) {
+            #dock-bar {
+                position: static !important;
+                transform: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+                border-radius: 1rem !important; /* rounded-2xl */
+                padding: 1.5rem !important;   /* p-6 */
+                margin-top: 1.25rem !important; /* 🌟 修正：強制電腦版產生與上一區塊完全一致的離距離空隙 (20px) */
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-
-
-<header>
-
-<a href="https://myezlife.com/index-1.html" class="top-home-btn">🏠 首頁</a>
-
-<h1>📚 我的私房好讀書單</h1>
-
-<p>精選好讀網站經典推薦，隨身帶著走</p>
-
-</header>
-
-
-
-<div class="container">
-
-
-
-<div class="daily-special-card" id="dailySpecialCard">
-
-<span class="daily-special-badge">✨ 今日推薦線上電子書</span>
-
-<div class="daily-title" id="dailyTitle">天龍八部</div>
-
-<div class="daily-author" id="dailyAuthor">作者： 金庸</div>
-
-<div class="daily-desc" id="dailyDesc">金庸武俠小說的宏偉巨作，以北宋年間為時代背景...</div>
-
-<div class="daily-footer">
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
-
-<button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
-
-</div>
-
-</div>
-
-
-
-<div class="search-box">
-
-<input type="text" id="searchInput" placeholder="搜尋書名或作者..." onkeyup="filterContent()">
-
-</div>
-
-
-
-<div class="tabs-container" id="tabContainer">
-
-<button class="tab-btn active" onclick="filterCategory('全部')">全部</button>
-
-<button class="tab-btn" onclick="filterCategory('武俠小說')">武俠小說</button>
-
-<button class="tab-btn" onclick="filterCategory('歷史煙雲')">歷史煙雲</button>
-
-<button class="tab-btn" onclick="filterCategory('奇幻小說')">奇幻小說</button>
-
-<button class="tab-btn" onclick="filterCategory('小說園地')">小說園地</button>
-
-<button class="tab-btn" onclick="filterCategory('懸疑小說')">懸疑小說</button>
-
-</div>
-
-
-
-<div id="authorGroupsContainer">
-
-<div class="author-group" data-category="武俠小說" data-author="金庸" style="display: block;">
-
-<button class="author-header active" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>金庸</span>
-
-<span class="book-count-badge">7 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container" style="border-top-color: rgb(240, 240, 240); max-height: 1010px;">
-
-<div class="book-list-inner">
-
-<div class="book-card" data-title="笑傲江湖" data-search="笑傲江湖 金庸 武俠小說" style="">
-
-<div class="book-title">笑傲江湖</div>
-
-<div class="book-desc"><b>【政客面具、正邪迷思與靈魂自由：金庸最具政治寓言色彩的絕響】</b><br><br>
-• <b>【名門正派與魔教的虛偽解構】</b><br>
-《笑傲江湖》沒有明確的歷史時代背景，正是因為它是一部超越時代的政治與人性寓言。金庸透過「君子劍」嶽不群的偽善、左冷禪的霸道、任我行的專制，無情揭露了權力對人性的腐蝕。所謂的名門正派往往心懷鬼胎，而被稱為「邪教」的人卻不乏真性情之士。<br><br>
-• <b>【令狐沖：獨孤九求與道家解脫】</b><br>
-主角令狐沖是金庸筆下最具道家采風與詩人氣質的人物。他重情重義卻屢遭師門誤解與背叛，身負重傷、體內真氣紊亂。然而正是這種「無招勝有招」的獨孤九劍心法，象徵著擺脫規則束縛、回歸本真生活的哲學。他追求的從不是武林至尊，而是大自然與心靈的絕對自由。<br><br>
-• <b>【絕響《笑傲江湖》曲】</b><br>
-正邪不兩立的嵇康式奇人琴簫合奏，曲洋與劉正風甘願為音樂與知音獻出生命。《笑傲江湖》曲不僅是小說的靈魂線索，更是魏晉風骨與現代人對心靈淨土終極嚮往的縮影。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《鹿鼎記》（金庸 著）：</b>金庸封筆之作，以荒誕市井視角進一步解構英雄主義。<br>
-• 🔗 <b>《倚天屠龍記》（金庸 著）：</b>同樣探討名門正派與所謂「邪教」（明教）之間的偏見與恩怨。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D517:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="射鵰英雄傳" data-search="射鵰英雄傳 金庸 武俠小說" style="">
-
-<div class="book-title">射鵰英雄傳</div>
-
-<div class="book-desc"><b>【俠之大者，為國為民：浪漫武俠史詩的奠基巨作】</b><br><br>
-• <b>【從大漠少年到一代大俠的成長典範】</b><br>
-《射鵰英雄傳》作為金庸「射鵰三部曲」的開山之作，奠定了現代武俠小說的宏大格局。主角郭靖天資愚鈍、質樸純真，憑藉著一股「大巧若拙」的韌性與俠義赤子之心，從大漠蒙古一路成長為中原武林的頂樑柱，完美詮釋了「俠之大者，為國為民」的崇高精神。<br><br>
-• <b>【江湖奇人與天下五絕的哲學隱喻】</b><br>
-東邪黃藥師的孤傲不羈、西毒歐陽鋒的癡迷癲狂、南帝段智興的佛門慈悲、北丐洪七公的美味與正氣、中神通王重陽的道法自然——金庸將中國傳統文化哲學（儒、釋、道、邪）融入五絕個人性格與絕學中，構成了一幅絢麗多彩的江湖全景圖。<br><br>
-• <b>【郭黃之戀與歷史大時代的交織】</b><br>
-憨厚郭靖與冰雪聰明黃蓉的互補愛情，堪稱文學史上最受喜愛的佳偶。小說將個人命運緊密織入宋、金、蒙古三大勢力交替的浩瀚歷史背景中，使武俠小說擁有了史詩般的厚重質感。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《神鵰俠侶》（金庸 著）：</b>射鵰二部曲，延續郭靖黃蓉守護襄陽的史詩，並聚焦楊過小龍女的情深。<br>
-• 🔗 <b>《天龍八部》（金庸 著）：</b>同為北宋與周邊大國交界時代的宏大史詩巨作。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D301:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="神鵰俠侶" data-search="神鵰俠侶 金庸 武俠小說" style="">
-
-<div class="book-title">神鵰俠侶</div>
-
-<div class="book-desc"><b>【問世間情為何物：狂傲大俠與世俗禮教的終極對抗】</b><br><br>
-• <b>【「情」字為骨的武俠奇峰】</b><br>
-如果說《射鵰》寫的是「俠」，《神鵰》寫的就是極致的「情」。楊過與小龍女之間超越師徒名分、世俗眼光、生死別離與十六年時光考驗的愛情，成為中文文學中愛情信仰的代名詞。<br><br>
-• <b>【楊過的叛逆性格與心靈救贖】</b><br>
-身世坎坷的楊過性格孤傲狂放、性格敏感多疑，他性格中帶著魏晉名士的「狂」與對傳統禮教的蔑視。從斷臂殘缺到重劍無鋒，從寄人籬下到成為萬人敬仰的神鵰大俠，楊過完成了從個人恩怨到超越自我心靈救贖。<br><br>
-• <b>【黯然銷魂掌與情深意切的境界】</b><br>
-「重劍無鋒，大巧不工；木劍無勝，無劍勝有劍。」金庸將武功境界與人的情感經歷深度結合。楊過在絕情谷底失落十六年後自創的「黯然銷魂掌」，唯有至情至性、心如死灰之人方能發揮威力，將武俠小說的情感深度推向極致。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《倚天屠龍記》（金庸 著）：</b>射鵰三部曲終章，承接神鵰結尾郭襄與九陽真經線索。<br>
-• 🔗 <b>《查令十字路84號》（海蓮．漢芙 著）：</b>同樣講述跨越時間與空間考驗、深厚動人的靈魂牽絆。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D354:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="倚天屠龍記" data-search="倚天屠龍記 金庸 武俠小說" style="">
-
-<div class="book-title">倚天屠龍記</div>
-
-<div class="book-desc"><b>【武林至尊與人性抉擇：元末紛爭下的江湖與紅塵】</b><br><br>
-• <b>【武林至尊的權力隱喻】</b><br>
-「寶刀屠龍，號令天下，莫敢不從！倚天不出，誰與爭鋒？」小說以此名言貫穿始終。屠龍刀象徵著至高無上的政治權力，倚天劍象徵著監督權力的正義力量。金庸藉此探討了權力對江湖與歷史朝代更迭的巨大吸引力與毀滅性。<br><br>
-• <b>【張無忌的性格悲劇與寬恕哲學】</b><br>
-主角張無忌與郭靖、楊過不同，他性格溫和、優柔寡斷、缺乏政治野心，卻因緣際會身兼九陽神功與乾坤大挪移絕學，並被推舉為明教教主。他的寬恕與善良化解了明教與六大派數十年的血海深仇，展現了「以德報怨」的儒佛寬容精神。<br><br>
-• <b>【四美紛爭與紅塵選擇】</b><br>
-趙敏的燦爛潑辣、周芷若的幽微黑化、小昭的溫柔奉獻、殷離的執念癡情。張無忌在多位紅顏知己間的情感搖擺，反映了普通人在面臨重大抉擇時的真實心理人性狀況。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《射鵰英雄傳》（金庸 著）：</b>射鵰三部曲源頭，了解郭靖黃蓉武學與兵法遺存。<br>
-• 🔗 <b>《天龍八部》（金庸 著）：</b>同樣呈現多種宗教、門派與大時代背景下的歷史紛爭。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D354:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="天龍八部" data-search="天龍八部 金庸 武俠小說" style="">
-
-<div class="book-title">天龍八部</div>
-
-<div class="book-desc"><b>【有情皆孽，無人不苦：佛家悲劇史詩的最高峰】</b><br><br>
-• <b>【佛哲背景與命案悲劇史詩】</b><br>
-書名取自佛經「天龍八部」八種神道怪物，象徵大千世界中千奇百怪、受欲望與宿命驅使的眾生。金庸在本作中擺脫了傳統善惡二元對立，展現出「求而不得、得而復失」的深刻佛家宿命悲劇美學。<br><br>
-• <b>【三大主角的三重生命境界】</b><br>
-• <b>喬峰（蕭峰）：</b>悲劇英雄的極致。血統與恩義的撕裂，讓他縱有蓋世武功卻無法阻擋命案與時代輪轉，最終於雁門關前折箭自盡，殉道於和平與天下蒼生。<br>
-• <b>段譽：</b>癡情與解脫。貴為大理王子，癡迷於王語嫣與曼陀山莊神仙姐姐，最終體悟「求不得」之苦與執念解脫。<br>
-• <b>虛竹：</b>無心插柳的人生。本欲為清心寡欲的小和尚，卻機緣巧合繼承百年內力、破戒成為靈鷲宮主與西夏駙馬，展現命運荒謬與無常。<br><br>
-• <b>【無與倫比的武學想像力】</b><br>
-六脈神劍、降龍十八掌、凌波微波、生死符、北冥神功，金庸將武功賦予了極高的美學與哲學意境，使本書成為公認的中文武俠小說巔峰。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《笑傲江湖》（金庸 著）：</b>同樣富含佛道解脫哲學與人性寓言。<br>
-• 🔗 <b>《東方快車謀殺案》（克莉絲蒂 著）：</b>在不同文化語境下探討宿命、復仇與道德決擇。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="雪山飛狐" data-search="雪山飛狐 金庸 武俠小說" style="">
-
-<div class="book-title">雪山飛狐</div>
-
-<div class="book-desc"><b>【大雪封山中的黑澤明式推理：結構精巧的武林傳奇】</b><br><br>
-• <b>【羅生門式的多視角敘事】</b><br>
-《雪山飛狐》是金庸在結構藝術上最具突破性的創新作品。整部小說的故事發生在短短一天之內、大雪封山的山頂山莊中。眾多武林人士圍坐一堂，透過各自的回憶與口述，還原四百年來胡、苗、范、田四大家族的血海深仇。<br><br>
-• <b>【記憶的偏差與人性的自私】</b><br>
-每一個敘述者都帶著自身的立場、偏見與美化，使得「胡一刀與苗人鳳決戰真相」層層反轉、迷霧重重。這種敘事手法與黑澤明電影《羅生門》異曲同工，探討了真實的不可全知性與人性弱點。<br><br>
-• <b>【令人屏息的開放式結局】</b><br>
-「這一刀劈是不劈？」小說在胡斐與苗人鳳高空崖頂生死對決的瞬間定格終結。金庸留下了中文文學史上最著名的開放式懸念，將道德倫理與命運的抉擇留給讀者無限咀嚼。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《飛狐外傳》（金庸 著）：</b>《雪山飛狐》的前傳，詳細講述胡斐成長與程靈素、袁紫衣的情感悲劇。<br>
-• 🔗 <b>《東方快車謀殺案》（克莉絲蒂 著）：</b>同為雪山困境密室中探尋過去真相的結構大師之作。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D501:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="鹿鼎記" data-search="鹿鼎記 金庸 武俠小說" style="">
-
-<div class="book-title">鹿鼎記</div>
-
-<div class="book-desc"><b>【市井無賴的清朝官場奇遇：金庸解構武俠的封筆絕響】</b><br><br>
-• <b>【反英雄的喜劇傳奇】</b><br>
-作為金庸的最後一部長篇小說，《鹿鼎記》完全顛覆了傳統武俠的套路。主角韋小寶出身揚州妓院，不會蓋世武功、不識幾個大字，憑藉著機智、滑頭、講義氣與市井智慧，在康熙皇帝、天地會、神龍教等錯綜複雜的政治勢力間游刃有餘。<br><br>
-• <b>【對傳統忠義與政治權謀的幽默諷刺】</b><br>
-韋小寶既是朝廷的一品大員，又是天地會的木桑堂香主。金庸透過這個滑稽角色，赤裸裸地揭露了政治鬥爭的虛偽與荒誕。無論是朝廷的名利場，還是江湖幫會的「反清復明」口號，在韋小寶實用主義的眼光下都顯得滑稽可笑。<br><br>
-• <b>【時代變遷下的歸宿】</b><br>
-小說結尾韋小寶攜七位夫人隱退江湖，代表著傳統俠義精神在近代世俗化潮流中的終結。《鹿鼎記》不僅是一部爆笑連連的傳奇小說，更是一部深刻的歷史與人性觀察白皮書。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《笑傲江湖》（金庸 著）：</b>同樣深刻解構權謀與偽君子的經典作品。<br>
-• 🔗 <b>《秘密》（東野圭吾 著）：</b>在看似荒誕的日常設定中探討人性最深層的抉擇與牽絆。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D67:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="author-group" data-category="懸疑小說" data-author="阿嘉莎．克莉絲蒂" style="display: block;">
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>阿嘉莎．克莉絲蒂</span>
-
-<span class="book-count-badge">2 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container" style="border-top-color: transparent;">
-
-<div class="book-list-inner"><div class="book-card" data-title="尼羅河謀殺案" data-search="尼羅河謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="">
-
-<div class="book-title">尼羅河謀殺案</div>
-
-<div class="book-desc"><b>【奢華蜜月下的熾熱嫉妒與人性毀滅：流動密室中的愛恨悲劇】</b><br><br>
-• <b>【尼羅河上的移動密室】</b><br>
-浩瀚古老的埃及尼羅河上，「卡納克號」遊輪緩緩前行。沿岸是數千年沉默的法老神殿與金字塔，船上卻上演著極致現代的豪門恩怨與三角情仇。克莉絲蒂巧妙運用遊輪的封閉性與異國古文明的神秘圍，塑造出一種隨時可能爆發的壓迫感。<br><br>
-• <b>【致命三角：金錢、名貌與狂亂的愛】</b><br>
-富家女林內特奪走了好友賈桂琳的未婚夫賽門，這場看似完美的蜜月之旅，卻始終籠罩在賈桂琳陰魂不散的跟蹤與仇恨陰影下。然而，當林內特在睡夢中頭部中彈身亡時，擁有最強謀殺動機的賈桂琳卻擁有無懈可擊的不在場證明。白羅步步深入心理調查，揭開隱藏在盲目愛情與極致貪婪背後令人毛骨悚然的精密陰謀。<br><br>
-• <b>【白羅的人性心理學】</b><br>
-「愛情是極其可怕的東西……它會讓人喪失理智。」白羅在此案中不僅是偵探，更是人性的觀察者與警世者。作品超越了單純的解謎，深刻刻畫了嫉妒如何侵蝕靈魂，以及看似完美的計劃如何在人性弱點面前潰不成軍。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《羅傑．艾克洛命案》（克莉絲蒂 著）：</b>顛覆推理小說敘事常規的里程碑神作。<br>
-• 🔗 <b>《陽光下的罪惡》（克莉絲蒂 著）：</b>陽光海灘渡假勝地發生的密室情殺案，與《尼羅河謀殺案》有異曲同工之妙。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">懸疑小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=E1231:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div><div class="book-card" data-title="東方快車謀殺案" data-search="東方快車謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="">
-
-<div class="book-title">東方快車謀殺案</div>
-
-<div class="book-desc"><b>【封閉雪夜裡的群體私刑與道德思辨：懸疑女王最高峰之作】</b><br><br>
-• <b>【暴風雨山莊模式與文明空間的解構】</b><br>
-東方快車（Orient Express）歷史上是穿梭歐洲大陸、象徵十九世紀工業文明與極致奢華的符號。然而，克莉絲蒂將其困於巴爾幹半島的茫茫大雪中，瞬間將這座移動宮殿轉化為切斷現實法治連結的「封閉密室」。在這一空間內，法治的保護傘暫失，原始的人性抉擇被迫浮出水面。<br><br>
-• <b>【經典謀殺案背後的群體悲劇】</b><br>
-死者雷切特身上慘遭十二刀殘暴刺殺，每一刀的深淺、角度與力道各異。白羅透過著名的請灰色腦細胞層層剝離，發現車廂內十三名背景、國籍、階級截然不同的乘客，竟全數指向多年前一起震驚世界的「阿姆斯壯幼童綁架案」。十二道傷口，代表的是十二位陪審員的共同判決，這不是單純的謀殺，而是一場法律失靈下的集體正義私刑。<br><br>
-• <b>【白羅的最高道德困境】</b><br>
-當事實大白，名偵探白羅面臨了職業生涯中最嚴峻的道德抉擇：是堅持法律形式上的程序正義，將這群承受至深創傷的復仇者送上法庭？還是承認世俗法律的局限，讓位於更高的天理與撫慰？最終白羅選擇向警方提交第一種偽造推論，留下文學史上最具震撼力與人情溫度的結局。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《無人生還 / 十個小印第安人》（克莉絲蒂 著）：</b>孤島密室懸疑的終極鼻祖，深刻探討罪與罰的審判。<br>
-• 🔗 <b>《尼羅河謀殺案》（克莉絲蒂 著）：</b>同為白羅旅途密室系列，將舞台搬至埃及尼羅河豪華遊輪，探討愛與毀滅的心理學。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">懸疑小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=I1037:1&amp;L=Share" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div></div>
-
-</div>
-
-</div><div class="author-group" data-category="懸疑小說" data-author="東野圭吾" style="display: block;">
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>東野圭吾</span>
-
-<span class="book-count-badge">1 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container" style="border-top-color: transparent;">
-
-<div class="book-list-inner"><div class="book-card" data-title="秘密" data-search="秘密 東野圭吾 懸疑小說" style="">
-
-<div class="book-title">秘密</div>
-
-<div class="book-desc"><b>【靈魂寄宿與愛情的終極捨離：東野圭吾情感推理的開山神作】</b><br><br>
-• <b>【倫理邊界上的驚人設定】</b><br>
-一場遊覽車墜崖慘劇，奪走了主角杉田平介妻子的生命，十一歲的女兒藻奈美奇蹟甦醒。然而，甦醒過來的身體裡，裝著的卻是妻子直子的靈魂。「對外是父女，對內是夫妻」，這個驚心動魄的開場，將角色拋入了一個前所未有且無法對外人道倫理迷宮中。<br><br>
-• <b>【重啟人生與心靈束縛的拉扯】</b><br>
-直子獲得了二次青春與重活一次的機會，她重新踏入校園、接觸新知識、拓展視野；而平介卻逐漸老去，被困在「父親」與「丈夫」的身分撕裂中。作品深刻描繪了愛情中的佔有欲、嫉妒、無奈與無私。當愛一個人愛到極致時，究竟是緊緊抓牢，還是放手讓對方飛翔？<br><br>
-• <b>【堪稱完美的震撼結尾】</b><br>
-隨著藻奈美漸漸長大，妻子直子的靈魂似乎逐漸沉睡，女兒的靈魂重新復甦……然而，在女兒出嫁的那一天，平介發現了一個隱藏多年的驚天秘密。這不是物理上的懸疑解謎，而是關於「為了讓至愛獲得真正幸福，甘願獨自承擔一生孤寂」的情感巔峰奇蹟。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《解憂雜貨店》（東野圭吾 著）：</b>穿越時空的溫暖信件，展現東野圭吾極致的人文關懷。<br>
-• 🔗 <b>《白夜行》（東野圭吾 著）：</b>極致黑暗與淒美互為表裏的靈魂羈絆，東野圭吾另一代表作。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">懸疑小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=E13E0:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div></div>
-
-</div>
-
-</div><div class="author-group" data-category="小說園地" data-author="海蓮．漢芙">
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>海蓮．漢芙</span>
-
-<span class="book-count-badge">1 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container">
-
-<div class="book-list-inner"><div class="book-card" data-title="查令十字路84號" data-search="查令十字路84號 海蓮．漢芙 小說園地">
-
-<div class="book-title">查令十字路84號</div>
-
-<div class="book-desc"><b>【門牌號碼背後的靈魂對話：在速食時代重溫「慢速交情」的終極浪漫】</b><br><br>
-• <b>【一本局部擊敗時間的實錄】</b><br>
-阿根廷作家博爾赫斯曾說：「<i>人類發明了各種工具以延伸身體，唯獨書籍，是記憶與想像力的延伸。</i>」這本僅有百餘頁的書信集，記錄了 1949 至 1969 年間，紐約貧困女劇作家海蓮（Helene Hanff）與倫敦二手書店經理法蘭克（Frank Doel）跨越大西洋的 20 年通訊。它之所以成為無數人心中的聖經，正因它用最平凡的紙筆，局部地、甚富意義地擊敗了時間與空間的宰制。<br><br>
-• <b>【戰後灰暗大英帝國裡的「紙上溫暖」】</b><br>
-若不理解時代背景，便讀不懂這份深情。1949 年的英國仍沉浸在二戰後的物資匱乏與配給制度（Rationing）中。當海蓮在紐約抱怨「怎麼又寄這版給我」時，她卻默默跨海寄去全磅的雞蛋粉、火腿與尼龍襪。如海蓮在信中所寫：<i>「我寄給你們的東西，你們頂多一個星期就吃光抹淨；而你們送給我的禮物，卻能和朝夕相處、至死方休……」</i>這不僅是愛書人的狂熱，更是兩個平行世界在戰後動盪年代裡，透過文字傳遞的至高人道關懷與互助。<br><br>
-• <b>【未曾謀面的柏拉圖式知己】</b><br>
-這份長達二十年的情誼始於「尋書」，終點卻超越了書籍。海蓮是典型的紐約客——率直、潑辣、幽默；法蘭克則是正宗的大英紳士——含蓄、嚴謹、克制。這不是男女間的俗世情愛，而是法語所說的 <i>« Affinité élective »</i>（靈魂共鳴）——兩個同樣熱愛古典文學的孤獨靈魂，隔著浩瀚大海，在紙頁間相認。<br><br>
-• <b>【終將錯過的遺憾，與永遠敞開的門牌】</b><br>
-「明年我一定去倫敦看你們……」這個許了無數次的承諾，終因生活窘迫與命運捉弄而多次延宕。當海蓮終於在 1971 年踏上倫敦查令十字路 84 號時，法蘭克已然離世，書店也已人去樓空。這間「活脫是從狄更斯小說裡蹦出來」的老書店雖然熄了燈，卻因為這本小書，在全世界所有愛書人的心中，蓋起了一座永遠不熄燈的心靈避風港。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《重返查令十字路84號》（海蓮．漢芙 著）：</b>記載海蓮大獲成功後，於1971年親赴倫敦的日記，滿溢著對老街區、文學故居的深情體悟與懷念。<br>
-• 🔗 <b>《島嶼書譯》（嘉莉．費雪 著）：</b>講述小島孤僻書店老闆如何透過書籍與愛重新與世界連結，充滿對愛書人的致敬。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">小說園地</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=P1010490099:3&amp;L=Share" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div></div>
-
-</div>
-
-</div></div>
-
-
-
-<div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
-
-
-
-<div class="admin-section">
-
-<button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙ 管理書單</button>
-
-<div class="admin-panel" id="adminPanel" style="display: none;">
-
-<input type="hidden" id="editCardId" value="">
-
-<h3 id="formTitle">➕ 新增書籍與類別</h3>
-
-<div class="form-group">
-
-<label>書籍名稱</label>
-
-<input type="text" id="newTitle" placeholder="例如：鹿鼎記">
-
-</div>
-
-<div class="form-group">
-
-<label>作者名稱</label>
-
-<input type="text" id="newAuthor" placeholder="例如：金庸">
-
-</div>
-
-<div class="form-group">
-
-<label>類別（若輸入新類別會自動建立上方頁籤）</label>
-
-<input type="text" id="newCategory" placeholder="例如：科幻小說">
-
-</div>
-
-<div class="form-group">
-
-<label>好讀網址</label>
-
-<input type="text" id="newUrl" placeholder="https://www.haodoo.net/...">
-
-</div>
-
-<div class="form-group">
-
-<label>書籍簡介</label>
-
-<textarea id="newDesc" rows="3" placeholder="請輸入精彩簡述..."></textarea>
-
-</div>
-
-<button class="btn-submit" id="submitBtn" onclick="saveBookAndExport()">確認新增並下載新 HTML</button>
-
-
-
-<h3 style="margin-top: 20px;">📋 現有書籍管理 (修改 / 刪除)</h3>
-
-<div id="manageBookList" style="max-height: 250px; overflow-y: auto;"></div>
-
-</div>
-
-</div>
-
-
-
-</div>
-
-
-
-<script>
-
-let currentCategory = '全部';
-
-
-
-window.addEventListener('DOMContentLoaded', () => {
-
-updateBookCounts();
-
-pickRandomBook();
-
-});
-
-
-
-function pickRandomBook() {
-
-const allCards = document.querySelectorAll('.book-card');
-
-if (allCards.length === 0) {
-
-document.getElementById('dailyTitle').textContent = "目前無書籍";
-
-document.getElementById('dailyAuthor').textContent = "";
-
-document.getElementById('dailyDesc').textContent = "請透過管理功能新增書籍。";
-
-document.getElementById('dailyLink').setAttribute('href', "#");
-
-return;
-
-}
-
-
-
-const randomIndex = Math.floor(Math.random() * allCards.length);
-
-const card = allCards[randomIndex];
-
-
-
-const title = card.getAttribute('data-title');
-
-const desc = card.querySelector('.book-desc').innerHTML;
-
-const link = card.querySelector('.btn-read').getAttribute('href');
-
-
-
-const authorGroup = card.closest('.author-group');
-
-const author = authorGroup ? authorGroup.getAttribute('data-author') : '未知作者';
-
-
-
-document.getElementById('dailyTitle').textContent = title;
-
-document.getElementById('dailyAuthor').textContent = '作者： ' + author;
-
-document.getElementById('dailyDesc').innerHTML = desc;
-
-document.getElementById('dailyLink').setAttribute('href', link);
-
-}
-
-
-
-function updateBookCounts() {
-
-const groups = document.querySelectorAll('.author-group');
-
-groups.forEach(group => {
-
-const cards = group.querySelectorAll('.book-card');
-
-const badge = group.querySelector('.book-count-badge');
-
-if (badge) {
-
-badge.textContent = cards.length + ' 本書';
-
-}
-
-if (cards.length === 0) {
-
-group.remove();
-
-}
-
-});
-
-}
-
-
-
-function toggleAuthor(button) {
-
-button.classList.toggle('active');
-
-const container = button.nextElementSibling;
-
-if (container.style.maxHeight) {
-
-container.style.maxHeight = null;
-
-container.style.borderTopColor = 'transparent';
-
-} else {
-
-container.style.maxHeight = container.scrollHeight + "px";
-
-container.style.borderTopColor = '#f0f0f0';
-
-}
-
-}
-
-
-
-function filterCategory(categoryName) {
-
-currentCategory = categoryName;
-
-const buttons = document.querySelectorAll('.tab-btn');
-
-buttons.forEach(btn => {
-
-if (btn.textContent === categoryName) {
-
-btn.classList.add('active');
-
-} else {
-
-btn.classList.remove('active');
-
-}
-
-});
-
-filterContent();
-
-}
-
-
-
-function filterContent() {
-
-const input = document.getElementById('searchInput');
-
-const keyword = input.value.toLowerCase().trim();
-
-const groups = document.querySelectorAll('.author-group');
-
-const noResult = document.getElementById('noResult');
-
-let visibleGroupCount = 0;
-
-
-
-groups.forEach(group => {
-
-const groupCategory = group.getAttribute('data-category');
-
-const authorName = group.getAttribute('data-author').toLowerCase();
-
-const cards = group.querySelectorAll('.book-card');
-
-const matchCategory = (currentCategory === '全部' || groupCategory === currentCategory);
-
-let groupHasVisibleCard = false;
-
-
-
-cards.forEach(card => {
-
-const searchData = card.getAttribute('data-search').toLowerCase();
-
-const matchKeyword = (keyword === '' || searchData.includes(keyword) || authorName.includes(keyword));
-
-
-
-if (matchCategory && matchKeyword) {
-
-card.style.display = '';
-
-groupHasVisibleCard = true;
-
-} else {
-
-card.style.display = 'none';
-
-}
-
-});
-
-
-
-if (groupHasVisibleCard) {
-
-group.style.display = 'block';
-
-visibleGroupCount++;
-
-const header = group.querySelector('.author-header');
-
-const container = group.querySelector('.book-list-container');
-
-if (keyword !== '' && !header.classList.contains('active')) {
-
-header.classList.add('active');
-
-container.style.maxHeight = container.scrollHeight + "px";
-
-container.style.borderTopColor = '#f0f0f0';
-
-}
-
-} else {
-
-group.style.display = 'none';
-
-}
-
-});
-
-
-
-if (visibleGroupCount === 0) {
-
-noResult.style.display = 'block';
-
-} else {
-
-noResult.style.display = 'none';
-
-}
-
-}
-
-
-
-// 動態密碼（抓取當天日期 YYYYMMDD）
-
-function tryOpenAdmin() {
-
-const today = new Date();
-
-const year = today.getFullYear();
-
-const month = String(today.getMonth() + 1).padStart(2, '0');
-
-const day = String(today.getDate()).padStart(2, '0');
-
-const dynamicPassword = `${year}${month}${day}`;
-
-
-
-const pwd = prompt("請輸入密碼解鎖管理功能：");
-
-if (pwd === dynamicPassword) {
-
-const panel = document.getElementById('adminPanel');
-
-if (panel.style.display === 'block') {
-
-panel.style.display = 'none';
-
-} else {
-
-panel.style.display = 'block';
-
-renderManageList();
-
-}
-
-} else if (pwd !== null) {
-
-alert("密碼錯誤！");
-
-}
-
-}
-
-
-
-function renderManageList() {
-
-const manageListContainer = document.getElementById('manageBookList');
-
-manageListContainer.innerHTML = '';
-
-
-
-const cards = document.querySelectorAll('.book-card');
-
-if (cards.length === 0) {
-
-manageListContainer.innerHTML = '<div style="color:#888; font-size:0.85rem; padding:8px 0;">目前沒有任何書籍</div>';
-
-return;
-
-}
-
-
-
-cards.forEach((card, index) => {
-
-const title = card.getAttribute('data-title');
-
-const authorGroup = card.closest('.author-group');
-
-const author = authorGroup ? authorGroup.getAttribute('data-author') : '';
-
-
-
-card.setAttribute('data-temp-id', 'book_' + index);
-
-
-
-const itemDiv = document.createElement('div');
-
-itemDiv.className = 'manage-book-item';
-
-itemDiv.innerHTML = `
-
-<div class="manage-book-info"><b>${title}</b> <span style="color:#666; font-size:0.95rem;">(${author})</span></div>
-
-<div class="manage-actions">
-
-<button class="btn-edit-item" onclick="prepareEditBook('book_${index}')">修改</button>
-
-<button class="btn-delete-item" onclick="deleteBook('book_${index}')">刪除</button>
-
-</div>
-
-`;
-
-manageListContainer.appendChild(itemDiv);
-
-});
-
-}
-
-
-
-function prepareEditBook(tempId) {
-
-const card = document.querySelector(`[data-temp-id="${tempId}"]`);
-
-if (!card) return;
-
-
-
-const title = card.getAttribute('data-title');
-
-const desc = card.querySelector('.book-desc').innerHTML;
-
-const url = card.querySelector('.btn-read').getAttribute('href');
-
-const authorGroup = card.closest('.author-group');
-
-const author = authorGroup ? authorGroup.getAttribute('data-author') : '';
-
-const category = authorGroup ? authorGroup.getAttribute('data-category') : '';
-
-
-
-document.getElementById('editCardId').value = tempId;
-
-document.getElementById('newTitle').value = title;
-
-document.getElementById('newAuthor').value = author;
-
-document.getElementById('newCategory').value = category;
-
-document.getElementById('newUrl').value = url;
-
-document.getElementById('newDesc').value = desc;
-
-
-
-document.getElementById('formTitle').textContent = "✏️ 修改書籍資料";
-
-document.getElementById('submitBtn').textContent = "確認修改並下載新 HTML";
-
-document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
-
-}
-
-
-
-function deleteBook(tempId) {
-
-if (!confirm("確定要刪除這本書嗎？")) return;
-
-const card = document.querySelector(`[data-temp-id="${tempId}"]`);
-
-if (card) {
-
-card.remove();
-
-updateBookCounts();
-
-pickRandomBook();
-
-renderManageList();
-
-exportCurrentHtml();
-
-alert("已刪除並自動下載更新後的 HTML 檔案！");
-
-}
-
-}
-
-
-
-function saveBookAndExport() {
-
-const editId = document.getElementById('editCardId').value;
-
-const title = document.getElementById('newTitle').value.trim();
-
-const author = document.getElementById('newAuthor').value.trim();
-
-const category = document.getElementById('newCategory').value.trim();
-
-const url = document.getElementById('newUrl').value.trim() || 'https://www.haodoo.net/';
-
-const desc = document.getElementById('newDesc').value.trim();
-
-
-
-if (!title || !author || !category) {
-
-alert("請至少填寫書名、作者與類別！");
-
-return;
-
-}
-
-
-
-let categoryExists = false;
-
-const tabContainer = document.getElementById('tabContainer');
-
-const existingTabs = tabContainer.querySelectorAll('.tab-btn');
-
-existingTabs.forEach(btn => {
-
-if (btn.textContent === category) {
-
-categoryExists = true;
-
-}
-
-});
-
-
-
-if (!categoryExists) {
-
-const newTabBtn = document.createElement('button');
-
-newTabBtn.className = 'tab-btn';
-
-newTabBtn.setAttribute('onclick', `filterCategory('${category}')`);
-
-newTabBtn.textContent = category;
-
-tabContainer.appendChild(newTabBtn);
-
-}
-
-
-
-if (editId) {
-
-const card = document.querySelector(`[data-temp-id="${editId}"]`);
-
-if (card) {
-
-card.setAttribute('data-title', title);
-
-card.setAttribute('data-search', `${title} ${author} ${category}`);
-
-card.querySelector('.book-title').textContent = title;
-
-card.querySelector('.book-desc').textContent = desc;
-
-card.querySelector('.category-tag').textContent = category;
-
-card.querySelector('.btn-read').setAttribute('href', url);
-
-
-
-const oldAuthorGroup = card.closest('.author-group');
-
-if (oldAuthorGroup && oldAuthorGroup.getAttribute('data-author') !== author) {
-
-let targetAuthorGroup = null;
-
-document.querySelectorAll('.author-group').forEach(g => {
-
-if (g.getAttribute('data-author') === author) targetAuthorGroup = g;
-
-});
-
-
-
-if (!targetAuthorGroup) {
-
-targetAuthorGroup = document.createElement('div');
-
-targetAuthorGroup.className = 'author-group';
-
-targetAuthorGroup.setAttribute('data-category', category);
-
-targetAuthorGroup.setAttribute('data-author', author);
-
-targetAuthorGroup.innerHTML = `
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>${author}</span>
-
-<span class="book-count-badge">0 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container">
-
-<div class="book-list-inner"></div>
-
-</div>
-
-`;
-
-document.getElementById('authorGroupsContainer').appendChild(targetAuthorGroup);
-
-}
-
-targetAuthorGroup.querySelector('.book-list-inner').appendChild(card);
-
-oldAuthorGroup.remove();
-
-} else if (oldAuthorGroup) {
-
-oldAuthorGroup.setAttribute('data-category', category);
-
-}
-
-}
-
-alert("修改成功！");
-
-} else {
-
-let authorGroup = null;
-
-document.querySelectorAll('.author-group').forEach(g => {
-
-if (g.getAttribute('data-author') === author) {
-
-authorGroup = g;
-
-}
-
-});
-
-
-
-if (!authorGroup) {
-
-authorGroup = document.createElement('div');
-
-authorGroup.className = 'author-group';
-
-authorGroup.setAttribute('data-category', category);
-
-authorGroup.setAttribute('data-author', author);
-
-authorGroup.innerHTML = `
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>${author}</span>
-
-<span class="book-count-badge">0 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container">
-
-<div class="book-list-inner"></div>
-
-</div>
-
-`;
-
-document.getElementById('authorGroupsContainer').appendChild(authorGroup);
-
-} else {
-
-authorGroup.setAttribute('data-category', category);
-
-}
-
-
-
-const innerList = authorGroup.querySelector('.book-list-inner');
-
-const newCard = document.createElement('div');
-
-newCard.className = 'book-card';
-
-newCard.setAttribute('data-title', title);
-
-newCard.setAttribute('data-search', `${title} ${author} ${category}`);
-
-newCard.innerHTML = `
-
-<div class="book-title">${title}</div>
-
-<div class="book-desc">${desc}</div>
-
-<div class="book-footer">
-
-<span class="category-tag">${category}</span>
-
-<a href="${url}" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-`;
-
-innerList.appendChild(newCard);
-
-alert("新增成功！");
-
-}
-
-
-
-document.getElementById('editCardId').value = '';
-
-document.getElementById('formTitle').textContent = "➕ 新增書籍與類別";
-
-document.getElementById('submitBtn').textContent = "確認新增並下載新 HTML";
-
-document.getElementById('newTitle').value = '';
-
-document.getElementById('newAuthor').value = '';
-
-document.getElementById('newCategory').value = '';
-
-document.getElementById('newUrl').value = '';
-
-document.getElementById('newDesc').value = '';
-
-document.getElementById('adminPanel').style.display = 'none';
-
-
-
-updateBookCounts();
-
-pickRandomBook();
-
-exportCurrentHtml();
-
-}
-
-
-
-function exportCurrentHtml() {
-
-const cloneDoc = document.documentElement.cloneNode(true);
-
-
-
-cloneDoc.querySelectorAll('.book-card').forEach(c => c.removeAttribute('data-temp-id'));
-
-cloneDoc.querySelector('#adminPanel').style.display = 'none';
-
-cloneDoc.querySelector('#newTitle').value = '';
-
-cloneDoc.querySelector('#newAuthor').value = '';
-
-cloneDoc.querySelector('#newCategory').value = '';
-
-cloneDoc.querySelector('#newUrl').value = '';
-
-cloneDoc.querySelector('#newDesc').value = '';
-
-cloneDoc.querySelector('#editCardId').value = '';
-
-cloneDoc.querySelector('#manageBookList').innerHTML = '';
-
-
-
-const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
-
-const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-
-const link = document.createElement('a');
-
-link.href = URL.createObjectURL(blob);
-
-link.download = 'index.html';
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-}
-
-</script>
-
-
-
-
-
- 
-
-</body></html>
+    <div id="backdrop" onclick="toggleSidebar()"></div>
+
+    <button id="sidebar-toggle-btn" onclick="toggleSidebar()" title="展開功能選單">
+        <i id="toggle-icon" class="fa-solid fa-chevron-right text-xs"></i>
+    </button>
+
+    <!-- 🌟 左側側邊欄選單 -->
+    <aside id="sidebar" class="p-5 space-y-4 overflow-y-auto">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0">
+            <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-[#00a600]"></i> 功能模組側邊欄
+            </h2>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-2 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 space-y-4 overflow-y-auto">
+            <div id="sidebar-sortable-container" class="space-y-3">
+                
+                <!-- 1. 精選影音與創作服務群組 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-creative">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-weather">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🌤️ 即時氣象預報</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-drama">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🎬 AI好劇一直看</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-melody">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🎵 好歌一直聽</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-diary">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📖 心情隨筆日記</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-greeting">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🌻 AI早安問候圖</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-videowall">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🪄 一鍵打造專屬影音牆</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-news">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📰 焦點新聞自動彙整</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-explorer">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📂 個人檔案總管</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-life-simple">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-life-simple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🏡 生活‧簡居‧生活</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-library">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📚 生活圖書館</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-simple-home">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-simple-home" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🏠 簡易首頁</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-games">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-games" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🎮 復古小遊戲</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 即時交通與大眾運輸群組 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-traffic">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="traffic-sub" class="space-y-1.5 pl-2 border-l-2 border-blue-100 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-highway">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚗 國道 1968 路況</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-provincial">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🛣️ 全台省道路況 (168)</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-bus">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚌 即時公車動態</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-bike">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚲 YouBike 站點車位</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-train">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚂 台鐵時刻查詢</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-hsr">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>🚄 高鐵時刻查詢</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 台股財經與鉅亨網群組 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-finance">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="finance-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-100 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-yahoo">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📈 Yahoo股市</span>
+                        </div>
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-cnyes">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
+                            <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>📰 鉅亨網</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. 互動待辦清單 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-todo">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
+                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>✅ 互動待辦清單與隨手便籤</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 5. 贊助支援與延伸閱讀 -->
+                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-sponsor">
+                    <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
+                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
+                            <span>💖 贊助支援與延伸閱讀</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 自訂新增 App 專屬區塊 -->
+            <div class="space-y-2.5 pt-3 border-t border-slate-200">
+                <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
+                </div>
+                <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+                <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+                
+                <!-- 圖示下拉選單區塊 -->
+                <div class="flex items-center gap-2 w-full">
+                    <span class="text-[11px] font-bold text-slate-600 shrink-0">圖示:</span>
+                    <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate">
+                        <option value="fa-solid fa-globe">🌐 預設網路</option>
+                        <option value="fa-solid fa-star">⭐ 星星焦點</option>
+                        <option value="fa-solid fa-briefcase">💼 工作商務</option>
+                        <option value="fa-solid fa-film">🎬 影音娛樂</option>
+                        <option value="fa-solid fa-music">🎵 音樂播放</option>
+                        <option value="fa-solid fa-newspaper">📰 時事新聞</option>
+                        <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
+                        <option value="fa-solid fa-comments">💬 社群通訊</option>
+                        <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
+                        <option value="fa-solid fa-tools">🛠️ 工具設定</option>
+                        <option value="fa-solid fa-location-dot">📍 地圖地標</option>
+                        <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
+                        <option value="fa-solid fa-book">📚 書籍閱讀</option>
+                    </select>
+                </div>
+
+                <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">
+                    + 新增至桌面
+                </button>
+            </div>
+
+            <!-- 背景圖設定與資料清理按鈕 -->
+            <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2 mt-4 shrink-0">
+                <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-image text-[#00a600]"></i> 設定滿版背景圖
+                </div>
+                <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-emerald-200 text-xs outline-none focus:border-[#00a600]">
+                <div class="flex gap-2">
+                    <label class="flex-1 bg-white hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold py-1.5 px-2 rounded-lg border border-emerald-200 text-center cursor-pointer transition">
+                        📁 上傳圖片檔案
+                        <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
+                    </label>
+                    <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-1.5 px-3 rounded-lg transition shadow-sm cursor-pointer">套用</button>
+                </div>
+                <button onclick="resetBackground()" class="w-full text-slate-500 hover:text-rose-600 text-[10px] font-medium pt-0.5 transition text-center">
+                    🔄 恢復預設背景
+                </button>
+                <div class="pt-2 border-t border-emerald-200/60 mt-2">
+                    <button onclick="clearAllLocalStorage()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold py-2 px-3 rounded-lg transition shadow-sm cursor-pointer">
+                        🗑️ 清除並重設所有暫存資料
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div id="app-wrapper">
+        <div class="max-w-3xl mx-auto w-full space-y-5">
+            
+            <!-- 綠色 Banner -->
+            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
+                <div class="flex items-center shrink-0">
+                    <button onclick="toggleSidebar()" class="p-0 rounded-logo-btn transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
+                    </button>
+                </div>
+                <div class="text-center flex-1">
+                    <div id="header-date" class="text-[10px] md:text-xs text-white/90 font-medium tracking-wide">載入中...</div>
+                    <div id="header-time" class="text-2xl md:text-4xl font-extrabold tracking-wider my-0.5 drop-shadow-sm">00:00</div>
+                </div>
+                <div class="bg-black/20 backdrop-blur px-2.5 md:px-4 py-1.5 rounded-xl border border-white/20 text-xs font-bold tracking-wider shrink-0">
+                    <span id="header-weekday">載入中...</span>
+                </div>
+            </header>
+
+            <main id="desktop-cards-container" class="w-full space-y-5">
+                
+                <!-- Gemini 智慧對話列 -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <form action="https://gemini.google.com/app" method="get" target="_blank" class="flex items-center gap-2">
+                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-purple-600">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <input type="text" name="q" placeholder="向 Gemini 問問題或尋求協助..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
+                        <button type="submit" title="發問" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center">
+                            <i class="fa-solid fa-paper-plane text-sm"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 1. 精選影音與創作服務 -->
+                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="creative-app-grid" class="app-grid">
+                        <div class="app-item" data-mod="mod-weather">
+                            <a href="https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-sky-400 to-blue-500"><i class="fa-solid fa-cloud-sun text-white"></i></div>
+                                <span class="app-label">即時氣象</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-drama">
+                            <a href="https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-rose-400 to-red-500"><i class="fa-solid fa-film text-white"></i></div>
+                                <span class="app-label">AI好劇一直看</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-melody">
+                            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-400 to-orange-500"><i class="fa-solid fa-music text-white"></i></div>
+                                <span class="app-label">好歌一直聽</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-diary">
+                            <a href="https://myezlife.com/diary/index.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-emerald-400 to-teal-600"><i class="fa-solid fa-book-open text-white"></i></div>
+                                <span class="app-label">心情隨筆日記</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-greeting">
+                            <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-yellow-400 to-amber-500"><i class="fa-solid fa-sun text-white"></i></div>
+                                <span class="app-label">AI早安問候圖</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-videowall">
+                            <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
+                                <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></div>
+                                <span class="app-label">打造影音牆</span>
+                            </button>
+                        </div>
+                        <div class="app-item" data-mod="mod-news">
+                            <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-400 to-yellow-600"><i class="fa-solid fa-bolt text-white"></i></div>
+                                <span class="app-label">焦點新聞</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-explorer">
+                            <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-blue-400 to-indigo-600"><i class="fa-solid fa-folder-open text-white"></i></div>
+                                <span class="app-label">檔案總管</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-life-simple">
+                            <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-teal-500 to-emerald-700"><i class="fa-solid fa-house text-white"></i></div>
+                                <span class="app-label">生活簡居</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-library">
+                            <a href="https://myezlife.com/mylibrary.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-indigo-400 to-blue-700"><i class="fa-solid fa-book text-white"></i></div>
+                                <span class="app-label">生活圖書館</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-simple-home">
+                            <a href="https://myezlife.com/index-2.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-500 to-yellow-600"><i class="fa-solid fa-desktop text-white"></i></div>
+                                <span class="app-label">簡易首頁</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-games">
+                            <a href="https://myezlife.com/games.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-pink-500 to-rose-600"><i class="fa-solid fa-gamepad text-white"></i></div>
+                                <span class="app-label">復古小遊戲</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
+                <div id="desktop-app-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="general-app-grid" class="app-grid">
+                        <div class="app-item" data-mod="mod-highway">
+                            <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-blue-500 to-indigo-600"><i class="fa-solid fa-car text-white"></i></div>
+                                <span class="app-label">國道 1968</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-provincial">
+                            <a href="https://168.thb.gov.tw" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-orange-400 to-red-500"><i class="fa-solid fa-road text-white"></i></div>
+                                <span class="app-label">省道路況168</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-bus">
+                            <a href="https://ebus.gov.taipei/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-cyan-400 to-blue-600"><i class="fa-solid fa-bus text-white"></i></div>
+                                <span class="app-label">即時公車</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-bike">
+                            <a href="https://youbike.com.tw/region/main/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-lime-400 to-emerald-600"><i class="fa-solid fa-person-biking text-white"></i></div>
+                                <span class="app-label">YouBike</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-train">
+                            <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid fa-train text-white"></i></div>
+                                <span class="app-label">台鐵時刻</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-hsr">
+                            <a href="https://www.thsrc.com.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-amber-500 to-orange-600"><i class="fa-solid fa-train-subway text-white"></i></div>
+                                <span class="app-label">高鐵時刻</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-yahoo">
+                            <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-purple-500 to-indigo-700"><i class="fa-solid fa-chart-line text-white"></i></div>
+                                <span class="app-label">Yahoo股市</span>
+                            </a>
+                        </div>
+                        <div class="app-item" data-mod="mod-cnyes">
+                            <a href="https://www.cnyes.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                                <div class="app-box bg-gradient-to-br from-teal-400 to-emerald-600"><i class="fa-solid fa-newspaper text-white"></i></div>
+                                <span class="app-label">鉅亨網</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 互動待辦清單 -->
+                <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
+                    <div class="flex gap-2">
+                        <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
+                        <button onclick="addTodoItem()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-4 py-2 rounded-xl text-xs font-bold transition">新增</button>
+                    </div>
+                    <div id="todo-list-container" class="space-y-2 text-sm text-slate-700"></div>
+                    <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
+                </div>
+
+                <!-- 4. 贊助支援與延伸閱讀 -->
+                <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
+                    <div class="text-center pb-2 border-b border-slate-100">
+                        <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
+                        <p class="text-[11px] text-emerald-800 mt-1 font-medium bg-emerald-50 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
+                            ☕ 覺得好用嗎？本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機與伺服器維護開銷！
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-1">
+                                <i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦
+                            </span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
+                        </div>
+                        <div id="random-recommendation-box" class="space-y-2"></div>
+                    </div>
+                    <div class="pt-1">
+                        <p class="text-[11px] text-slate-400 font-bold mb-1.5 text-center">贊助商廣告</p>
+                        <div class="min-h-[90px] flex items-center justify-center bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden p-2">
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
+                            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🌟 捷徑 Dock 欄 -->
+                <div id="dock-bar">
+                    <div class="flex items-center justify-around">
+                        <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 text-xl md:text-2xl">
+                                <i class="fa-solid fa-folder-open text-white"></i>
+                            </div>
+                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">檔案總管</span>
+                        </a>
+                        <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 text-xl md:text-2xl">
+                                <i class="fa-solid fa-bolt text-white"></i>
+                            </div>
+                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">新聞焦點</span>
+                        </a>
+                        <!-- 僅電腦版顯示的第 3 個捷徑：簡易首頁 -->
+                        <a href="https://myezlife.com/index-2.html" target="_blank" class="hidden md:flex flex-col items-center justify-center text-decoration-none group">
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 text-xl md:text-2xl">
+                                <i class="fa-solid fa-desktop text-white"></i>
+                            </div>
+                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">簡易首頁</span>
+                        </a>
+                        <a href="https://myezlife.com/haodoo.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl">
+                                <i class="fa-solid fa-book-bookmark text-white"></i>
+                            </div>
+                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">好讀書單</span>
+                        </a>
+                        <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-xl md:text-2xl">
+                                <i class="fa-solid fa-house text-white"></i>
+                            </div>
+                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活簡居</span>
+                        </a>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            
+            document.getElementById('header-date').innerText = `${year}年${month}月${day}日`;
+            document.getElementById('header-time').innerText = `${h}:${m}`;
+            document.getElementById('header-weekday').innerText = weekday;
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const wrapper = document.getElementById('app-wrapper');
+            const backdrop = document.getElementById('backdrop');
+            const icon = document.getElementById('toggle-icon');
+            const isOpen = sidebar.classList.contains('show-sidebar');
+
+            if (isOpen) {
+                sidebar.classList.remove('show-sidebar');
+                wrapper.classList.remove('push-right');
+                backdrop.classList.remove('show-backdrop');
+                icon.className = 'fa-solid fa-chevron-right text-xs';
+            } else {
+                sidebar.classList.add('show-sidebar');
+                wrapper.classList.add('push-right');
+                backdrop.classList.add('show-backdrop');
+                icon.className = 'fa-solid fa-chevron-left text-xs';
+            }
+        }
+
+        function toggleSubMenu(subId, btn) {
+            const subMenu = document.getElementById(subId);
+            const icon = btn.querySelector('i');
+            if (subMenu.style.display === 'none') {
+                subMenu.style.display = 'block';
+                icon.className = 'fa-solid fa-chevron-up';
+            } else {
+                subMenu.style.display = 'none';
+                icon.className = 'fa-solid fa-chevron-down';
+            }
+        }
+
+        function clearAllLocalStorage() {
+            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？這將清除自訂 App 與設定。')) {
+                localStorage.clear();
+                alert('已成功清除所有暫存資料，網頁將自動重新整理！');
+                location.reload();
+            }
+        }
+
+        function applyBackground() {
+            const url = document.getElementById('bg-url-input').value.trim();
+            if (!url) { alert('請輸入有效的圖片網址！'); return; }
+            setCustomBackground(url);
+        }
+
+        function handleBgUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                setCustomBackground(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setCustomBackground(imgUrl) {
+            document.body.style.backgroundImage = `url('${imgUrl}')`;
+            document.body.classList.add('has-custom-bg');
+            localStorage.setItem('myezlife_custom_bg', imgUrl);
+            alert('成功套用滿版背景圖片！');
+        }
+
+        function resetBackground() {
+            document.body.style.backgroundImage = 'none';
+            document.body.classList.remove('has-custom-bg');
+            localStorage.removeItem('myezlife_custom_bg');
+            document.getElementById('bg-url-input').value = '';
+            alert('已恢復預設背景！');
+        }
+
+        function loadSavedBackground() {
+            const savedBg = localStorage.getItem('myezlife_custom_bg');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+                document.body.classList.add('has-custom-bg');
+                if (!savedBg.startsWith('data:image')) {
+                    document.getElementById('bg-url-input').value = savedBg;
+                }
+            }
+        }
+
+        // --- 核心同步：側邊欄小項目排序連動右側桌面 App ---
+        function updateDesktopVisibility() {
+            // 1. 精選影音與創作服務群組連動
+            let hasCreativeVisible = false;
+            const creativeSub = document.getElementById('creative-sub');
+            const creativeGrid = document.getElementById('creative-app-grid');
+            
+            if (creativeSub && creativeGrid) {
+                const subItems = Array.from(creativeSub.querySelectorAll('.sub-drag-item'));
+                subItems.forEach(itemEl => {
+                    const cb = itemEl.querySelector('input[type="checkbox"]');
+                    const modId = itemEl.getAttribute('data-mod-id');
+                    const appItem = creativeGrid.querySelector(`[data-mod="${modId}"]`);
+                    
+                    if (cb && appItem) {
+                        creativeGrid.appendChild(appItem);
+                        if (cb.checked) {
+                            appItem.style.display = 'flex';
+                            hasCreativeVisible = true;
+                        } else {
+                            appItem.style.display = 'none';
+                        }
+                    }
+                });
+            }
+            const creativeCard = document.getElementById('desktop-creative-card');
+            if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
+
+            // 2. 即時交通與台股財經群組連動
+            let hasGeneralVisible = false;
+            const generalGrid = document.getElementById('general-app-grid');
+
+            ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
+                const subContainer = document.getElementById(subContainerId);
+                if (subContainer && generalGrid) {
+                    const subItems = Array.from(subContainer.querySelectorAll('.sub-drag-item'));
+                    subItems.forEach(itemEl => {
+                        const cb = itemEl.querySelector('input[type="checkbox"]');
+                        const modId = itemEl.getAttribute('data-mod-id');
+                        const appItem = generalGrid.querySelector(`[data-mod="${modId}"]`);
+                        
+                        if (cb && appItem) {
+                            generalGrid.appendChild(appItem);
+                            if (cb.checked) {
+                                appItem.style.display = 'flex';
+                                hasGeneralVisible = true;
+                            } else {
+                                appItem.style.display = 'none';
+                            }
+                        }
+                    });
+                }
+            });
+
+            if (generalGrid && generalGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) {
+                hasGeneralVisible = true;
+            }
+
+            const generalCard = document.getElementById('desktop-app-card');
+            if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
+
+            const todoCard = document.getElementById('desktop-todo-card');
+            const modTodo = document.getElementById('mod-todo');
+            if (todoCard && modTodo) todoCard.style.display = modTodo.checked ? 'block' : 'none';
+
+            const sponsorCard = document.getElementById('desktop-sponsor-card');
+            const modSponsor = document.getElementById('mod-sponsor');
+            if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
+
+            saveCheckboxStates();
+        }
+
+        function saveCheckboxStates() {
+            const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
+            let state = {};
+            checkboxes.forEach(cb => {
+                if (cb.id) state[cb.id] = cb.checked;
+            });
+            localStorage.setItem('myezlife_checkbox_states', JSON.stringify(state));
+        }
+
+        function loadCheckboxStates() {
+            const savedState = JSON.parse(localStorage.getItem('myezlife_checkbox_states') || 'null');
+            if (savedState) {
+                for (const [id, checked] of Object.entries(savedState)) {
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = checked;
+                }
+            } else {
+                const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    const parentSub = cb.closest('#creative-sub');
+                    cb.checked = (parentSub !== null);
+                });
+                const modTodo = document.getElementById('mod-todo');
+                const modSponsor = document.getElementById('mod-sponsor');
+                if (modTodo) modTodo.checked = false;
+                if (modSponsor) modSponsor.checked = false;
+            }
+        }
+
+        // --- 初始化 Sortable 拖曳排序 ---
+        function initSortables() {
+            // 1. 大群組順序排序
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            if (sidebarContainer) {
+                new Sortable(sidebarContainer, {
+                    animation: 200,
+                    handle: '.sidebar-drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    delay: 150,
+                    delayOnTouchOnly: true,
+                    onEnd: function () {
+                        const order = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
+                        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(order));
+                        syncDesktopCardsOrder();
+                    }
+                });
+                const savedSidebarOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
+                if (savedSidebarOrder) {
+                    savedSidebarOrder.forEach(id => {
+                        const el = sidebarContainer.querySelector(`[data-id="${id}"]`);
+                        if (el) sidebarContainer.appendChild(el);
+                    });
+                }
+                syncDesktopCardsOrder();
+            }
+
+            // 2. 各個大項目底下的「小項目」拖曳排序初始化
+            ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
+                const subContainer = document.getElementById(subId);
+                if (subContainer) {
+                    new Sortable(subContainer, {
+                        animation: 150,
+                        handle: '.sub-drag-item',
+                        filter: 'input',
+                        preventOnFilter: false,
+                        ghostClass: 'sortable-ghost',
+                        dragClass: 'sortable-drag',
+                        delay: 100,
+                        delayOnTouchOnly: true,
+                        onEnd: function() {
+                            saveSubItemOrder(subId);
+                            updateDesktopVisibility();
+                        }
+                    });
+                    loadSubItemOrder(subId);
+                }
+            });
+        }
+
+        function saveSubItemOrder(subId) {
+            const container = document.getElementById(subId);
+            if (!container) return;
+            const order = Array.from(container.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'));
+            localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(order));
+        }
+
+        function loadSubItemOrder(subId) {
+            const container = document.getElementById(subId);
+            if (!container) return;
+            const savedOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
+            if (savedOrder) {
+                savedOrder.forEach(modId => {
+                    const item = container.querySelector(`[data-mod-id="${modId}"]`);
+                    if (item) container.appendChild(item);
+                });
+            }
+        }
+
+        function syncDesktopCardsOrder() {
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            const desktopContainer = document.getElementById('desktop-cards-container');
+            if (!sidebarContainer || !desktopContainer) return;
+
+            const groupOrder = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
+            
+            groupOrder.forEach(groupId => {
+                let card = null;
+                if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
+                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
+                else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
+                
+                if (card) desktopContainer.appendChild(card);
+            });
+            // 確保第三區塊 (dock-bar) 永遠放在所有卡片的最後方（最下方）
+            const dockBar = document.getElementById('dock-bar');
+            if (dockBar) desktopContainer.appendChild(dockBar);
+        }
+
+        function bindLongPressToDelete(itemElement) {
+            let pressTimer = null;
+            const linkTag = itemElement.querySelector('a');
+
+            const startPress = () => {
+                pressTimer = setTimeout(() => {
+                    const isShown = itemElement.classList.contains('show-delete');
+                    document.querySelectorAll('.app-item.show-delete').forEach(el => el.classList.remove('show-delete'));
+                    
+                    if (!isShown) {
+                        itemElement.classList.add('show-delete');
+                        if (navigator.vibrate) navigator.vibrate(50);
+                    }
+                }, 3000);
+            };
+
+            const cancelPress = () => {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+            };
+
+            itemElement.addEventListener('touchstart', startPress, { passive: true });
+            itemElement.addEventListener('touchend', cancelPress);
+            itemElement.addEventListener('touchmove', cancelPress);
+            itemElement.addEventListener('mousedown', startPress);
+            itemElement.addEventListener('mouseup', cancelPress);
+            itemElement.addEventListener('mouseleave', cancelPress);
+
+            if (linkTag) {
+                linkTag.addEventListener('click', (e) => {
+                    if (itemElement.classList.contains('show-delete')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.app-item')) {
+                document.querySelectorAll('.app-item.show-delete').forEach(el => {
+                    el.classList.remove('show-delete');
+                });
+            }
+        });
+
+        // --- 自訂 App 新增邏輯（支援選擇圖示） ---
+        function addCustomApp() {
+            const nameInput = document.getElementById('custom-app-name');
+            const urlInput = document.getElementById('custom-app-url');
+            const iconSelect = document.getElementById('custom-app-icon');
+            
+            const name = nameInput.value.trim();
+            let url = urlInput.value.trim();
+            const icon = iconSelect.value;
+
+            if (!name || !url) { alert('請完整輸入網頁名稱與網址！'); return; }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+
+            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+            customApps.push({ name, url, icon });
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+
+            nameInput.value = '';
+            urlInput.value = '';
+            iconSelect.selectedIndex = 0;
+            
+            loadCustomApps();
+            updateDesktopVisibility();
+            alert('成功新增自訂 App 捷徑！');
+        }
+
+        function removeCustomApp(btn) {
+            if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
+                const item = btn.closest('.app-item');
+                const customIdx = item.getAttribute('data-custom-idx');
+                
+                let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+                customApps.splice(customIdx, 1);
+                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+
+                loadCustomApps();
+                updateDesktopVisibility();
+            }
+        }
+
+        function loadCustomApps() {
+            const generalGrid = document.getElementById('general-app-grid');
+            if (!generalGrid) return;
+
+            generalGrid.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
+
+            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+            customApps.forEach((app, newIndex) => {
+                let div = document.createElement('div');
+                div.className = 'app-item relative group';
+                div.setAttribute('data-custom-idx', newIndex);
+                // 讀取所選圖示，若舊資料無 icon 則預設使用 fa-solid fa-globe
+                const appIcon = app.icon || 'fa-solid fa-globe';
+                div.innerHTML = `
+                    <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                        <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
+                        <span class="app-label">${app.name}</span>
+                    </a>
+                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
+                `;
+                generalGrid.appendChild(div);
+                bindLongPressToDelete(div);
+            });
+        }
+
+        let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
+            { text: "極簡版網頁，自主勾選喜愛功能", done: false }
+        ]));
+
+        function renderTodoList() {
+            const container = document.getElementById('todo-list-container');
+            container.innerHTML = '';
+            todoItems.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-100 group">
+                        <label class="flex items-center gap-2 cursor-pointer flex-1 mr-2">
+                            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleTodo(${index})" class="w-4 h-4 text-[#00a600] rounded">
+                            <span class="font-medium ${item.done ? 'line-through opacity-50' : ''}">${item.text}</span>
+                        </label>
+                        <button onclick="removeTodoItem(${index})" class="text-rose-400 hover:text-rose-600 text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition cursor-pointer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        function addTodoItem() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            if (!text) { alert('請輸入待辦事項內容！'); return; }
+            todoItems.push({ text, done: false });
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            input.value = '';
+            renderTodoList();
+        }
+
+        function toggleTodo(index) {
+            todoItems[index].done = !todoItems[index].done;
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            renderTodoList();
+        }
+
+        function removeTodoItem(index) {
+            todoItems.splice(index, 1);
+            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
+            renderTodoList();
+        }
+
+        function saveMemo() {
+            localStorage.setItem('myezlife_memo', document.getElementById('memo-textarea').value);
+        }
+
+        function loadMemo() {
+            const savedMemo = localStorage.getItem('myezlife_memo');
+            if (savedMemo !== null) document.getElementById('memo-textarea').value = savedMemo;
+        }
+
+        function initRandomRecommendation() {
+            const recs = [
+                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/diary/index.html", tag: "熱門推薦" },
+                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/ai-greeting-app/", tag: "人氣工具" },
+                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
+                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://myezlife.com/goldmelody_csv.html", tag: "視聽娛樂" },
+                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://myezlife.com/FileExplorer.html", tag: "高效助手" }
+            ];
+            const shuffled = [...recs].sort(() => 0.5 - Math.random());
+            const box = document.getElementById('random-recommendation-box');
+            if (box) {
+                box.innerHTML = shuffled.slice(0, 3).map(item => `
+                    <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100/90 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
+                        <div class="flex items-center justify-between mb-0.5">
+                            <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">${item.title}</span>
+                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 leading-tight font-medium">${item.desc}</p>
+                    </a>
+                `).join('');
+            }
+        }
+
+        function openVideoWallModal() { toggleSidebar(); openStep1(); }
+        function openStep1() { document.getElementById('modal-step2').classList.add('hidden'); document.getElementById('modal-step1').classList.remove('hidden'); }
+        function goToStep2() { 
+            document.getElementById('modal-step1').classList.add('hidden'); 
+            document.getElementById('modal-step2').classList.remove('hidden');
+            const savedCsv = localStorage.getItem('myezlife_custom_csv');
+            if (savedCsv) {
+                document.getElementById('csv-url-input').value = savedCsv;
+            }
+        }
+        function closeModals() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.add('hidden'); }
+
+        // 頁面初始化
+        loadSavedBackground();
+        loadCheckboxStates();
+        initSortables();
+        loadCustomApps();
+        updateDesktopVisibility();
+        renderTodoList();
+        loadMemo();
+        initRandomRecommendation();
+        document.querySelectorAll('.app-item').forEach(item => bindLongPressToDelete(item));
+    </script>
+</body>
+</html>
