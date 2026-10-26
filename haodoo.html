@@ -188,15 +188,34 @@ line-height: 1.8;
     background-color: #fef3c7;
 }
 
-/* 頂端藍色漸層 Header 樣式 */
-header {
+.container {
+
+max-width: 600px;
+
+margin: 0 auto;
+
+padding: 16px;
+
+}
+
+
+
+/* 將頂端標題改成與下方一致的獨立白色圓角區塊卡片，內部包含藍色漸層標題列 */
+.header-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1px solid #eee;
+}
+
+/* 頂端藍色漸層標題列 */
+.header-inner {
     background: linear-gradient(135deg, #4a90e2, #357abd);
     color: white;
     padding: 24px 16px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    position: relative;
-    margin-bottom: 16px;
 }
 
 
@@ -251,7 +270,7 @@ border: 2px solid rgba(255, 255, 255, 0.8);
 
 
 
-header h1 {
+.header-inner h1 {
 
 font-size: 1.5rem;
 
@@ -261,23 +280,11 @@ margin: 0;
 
 
 
-header p {
+.header-inner p {
 
 font-size: 0.9rem;
 
 opacity: 0.9;
-
-}
-
-
-
-.container {
-
-max-width: 600px;
-
-margin: 0 auto;
-
-padding: 0 16px 16px 16px;
 
 }
 
@@ -1066,22 +1073,20 @@ cursor: pointer;
     </div>
 </aside>
 
-<header>
-<!-- 點擊 Logo 開啟側邊選單 -->
-<div class="header-title-wrapper">
-    <button class="header-logo-btn" onclick="toggleSidebar()" title="開啟功能選單">
-        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="header-logo-img">
-    </button>
-    <h1>📚 我的私房好讀書單</h1>
-</div>
-
-<p>精選好讀網站經典推薦，隨身帶著走</p>
-
-</header>
-
-
-
 <div class="container">
+
+<!-- 將最上方標題改為獨立的白色圓角區塊卡片，內部維持藍色漸層標題列 -->
+<div class="header-card">
+    <div class="header-inner">
+        <div class="header-title-wrapper">
+            <button class="header-logo-btn" onclick="toggleSidebar()" title="開啟功能選單">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="header-logo-img">
+            </button>
+            <h1>我的私房好讀書單</h1>
+        </div>
+        <p>精選好讀網站經典推薦，隨身帶著走</p>
+    </div>
+</div>
 
 
 
@@ -1313,7 +1318,7 @@ cursor: pointer;
 
 <div class="book-desc"><b>【市井無賴的清朝官場奇遇：金庸解構武俠的封筆絕響】</b><br><br>
 • <b>【反英雄的喜劇傳奇】</b><br>
-作為金庸的最後一部長篇小說，《鹿鼎記》完全顛覆了傳統武俠的套路。主角韋小寶出身揚州妓院，不會蓋世武功、不識幾個大字，憑藉著機智、滑頭、講義氣與市井智慧，在康熙皇帝、天地會,、神龍教等錯綜複雜的政治勢力間游刃有餘。<br><br>
+作為金庸的最後一部長篇小說，《鹿鼎記》完全顛覆了傳統武俠的套路。主角韋小寶出身揚州妓院，不會蓋世武功、不識幾個大字，憑藉著機智、滑頭、講義氣與市井智慧，在康熙皇帝、天地會、神龍教等錯綜複雜的政治勢力間游刃有餘。<br><br>
 • <b>【對傳統忠義與政治權謀的幽默諷刺】</b><br>
 韋小寶既是朝廷的一品大員，又是天地會的木桑堂香主。金庸透過這個滑稽角色，赤裸裸地揭露了政治鬥爭的虛偽與荒誕。無論是朝廷的名利場，還是江湖幫會的「反清復明」口號，在韋小寶實用主義的眼光下都顯得滑稽可笑。<br><br>
 • <b>【時代變遷下的歸宿】</b><br>
