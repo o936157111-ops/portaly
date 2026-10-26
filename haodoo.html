@@ -7,6 +7,9 @@
 
 <title>我的好讀書單</title>
 
+<!-- 瀏覽器分頁小圖示 (Favicon) -->
+<link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" type="image/gif">
+
 <!-- PWA 支援與手機優化 -->
 
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -71,85 +74,119 @@ line-height: 1.8;
 
 
 
-header {
-
-background: linear-gradient(135deg, #4a90e2, #357abd);
-
-color: white;
-
-padding: 24px 16px;
-
-text-align: center;
-
-box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-
-position: relative;
-
+/* 側邊抽屜選單與遮罩樣式 */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    backdrop-filter: blur(2px);
 }
 
-
-
-.top-home-btn {
-
-position: absolute;
-
-top: 16px;
-
-left: 16px;
-
-background: rgba(255, 255, 255, 0.2);
-
-color: white;
-
-text-decoration: none;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-padding: 6px 12px;
-
-border-radius: 20px;
-
-display: flex;
-
-align-items: center;
-
-gap: 4px;
-
-transition: background 0.2s;
-
-backdrop-filter: blur(4px);
-
+.sidebar-overlay.active {
+    display: block;
 }
 
-
-
-.top-home-btn:hover {
-
-background: rgba(255, 255, 255, 0.35);
-
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 15px;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
 }
 
-
-
-header h1 {
-
-font-size: 1.75rem; /* 字體放大 2 號 */
-
-margin-bottom: 6px;
-
+.sidebar.active {
+    left: 0;
 }
 
-
-
-header p {
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-opacity: 0.9;
-
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
 }
 
+.sidebar-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
+.sidebar-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-title {
+    font-size: 1.2rem; /* 字體放大 2 號 */
+    font-weight: bold;
+    color: #333;
+}
+
+.sidebar-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.75rem; /* 字體放大 2 號 */
+    color: #666;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    background-color: #ffffff;
+    color: #333;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1.15rem; /* 字體放大 2 號 */
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.sidebar-btn:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.sidebar-btn.highlight {
+    background-color: #fffbeb;
+    border-color: #fef3c7;
+    color: #d97706;
+    font-weight: bold;
+}
+
+.sidebar-btn.highlight:hover {
+    background-color: #fef3c7;
+}
 
 .container {
 
@@ -158,6 +195,96 @@ max-width: 600px;
 margin: 0 auto;
 
 padding: 16px;
+
+}
+
+
+
+/* 將頂端標題改成與下方一致的獨立白色圓角區塊卡片，內部包含藍色漸層標題列 */
+.header-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1px solid #eee;
+}
+
+/* 頂端藍色漸層標題列 */
+.header-inner {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    padding: 24px 16px;
+    text-align: center;
+}
+
+
+
+/* 標題區塊與 Logo 的排版設定 */
+
+.header-title-wrapper {
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+gap: 12px;
+
+margin-bottom: 6px;
+
+}
+
+
+
+.header-logo-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.header-logo-btn:hover {
+    transform: scale(1.05);
+}
+
+
+
+.header-logo-img {
+
+width: 40px;
+
+height: 40px;
+
+border-radius: 50%;
+
+object-fit: cover;
+
+border: 2px solid rgba(255, 255, 255, 0.8);
+
+}
+
+
+
+.header-inner h1 {
+
+font-size: 1.75rem; /* 字體放大 2 號 */
+
+margin: 0;
+
+}
+
+
+
+.header-inner p {
+
+font-size: 1.1rem; /* 字體放大 2 號 */
+
+opacity: 0.9;
 
 }
 
@@ -925,21 +1052,43 @@ cursor: pointer;
 
 <body>
 
+<!-- 側邊抽屜選單背景遮罩 -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-
-<header>
-
-<a href="https://myezlife.com/index-1.html" class="top-home-btn">🏠 首頁</a>
-
-<h1>📚 我的私房好讀書單</h1>
-
-<p>精選好讀網站經典推薦，隨身帶著走</p>
-
-</header>
-
-
+<!-- 側邊抽屜選單 -->
+<aside class="sidebar" id="sidebarMenu">
+    <div class="sidebar-header">
+        <div class="sidebar-header-left">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="sidebar-logo">
+            <span class="sidebar-title">功能選單</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="toggleSidebar()">&times;</button>
+    </div>
+    <div class="sidebar-menu">
+        <a href="https://myezlife.com/index-1.html" class="sidebar-btn" target="_blank" rel="noopener noreferrer">首頁</a>
+        <a href="https://myezlife.com" class="sidebar-btn" target="_blank" rel="noopener noreferrer">生活・簡居・生活</a>
+        <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="sidebar-btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
+        <a href="https://myezlife.com/index_news.html" class="sidebar-btn" target="_blank" rel="noopener noreferrer">新聞劃重點</a>
+        <a href="https://portaly.cc/myezlife/pages/wind" class="sidebar-btn" target="_blank" rel="noopener noreferrer">AI好劇一直看</a>
+        <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac" class="sidebar-btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
+        <a href="https://myezlife.com/ai-greeting-app/" class="sidebar-btn highlight" target="_blank" rel="noopener noreferrer">🌻 製作早安問候圖</a>
+    </div>
+</aside>
 
 <div class="container">
+
+<!-- 將最上方標題改為獨立的白色圓角區塊卡片，內部維持藍色漸層標題列 -->
+<div class="header-card">
+    <div class="header-inner">
+        <div class="header-title-wrapper">
+            <button class="header-logo-btn" onclick="toggleSidebar()" title="開啟功能選單">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="header-logo-img">
+            </button>
+            <h1>我的私房好讀書單</h1>
+        </div>
+        <p>精選好讀網站經典推薦，隨身帶著走</p>
+    </div>
+</div>
 
 
 
@@ -1220,7 +1369,7 @@ cursor: pointer;
 
 <div class="book-desc"><b>【奢華蜜月下的熾熱嫉妒與人性毀滅：流動密室中的愛恨悲劇】</b><br><br>
 • <b>【尼羅河上的移動密室】</b><br>
-浩瀚古老的埃及尼羅河上，「卡納克號」遊輪緩緩前行。沿岸是數千年沉默的法老神殿與金字塔，船上卻上演著極致現代的豪門恩怨與三角情仇。克莉絲蒂巧妙運用遊輪的封閉性與異國古文明的神秘圍，塑造出一種隨時可能爆發的壓迫感。<br><br>
+浩瀚古老的埃及尼羅河上，「卡納克號」遊輪緩緩前行。沿岸是數千年沉默的法老神殿與金字塔，船上卻上演著極致現代的豪門恩怨與三角情仇。克莉絲蒂巧妙運用遊輪的封閉性與異國古文明的神秘氛圍，塑造出一種隨時可能爆發的壓迫感。<br><br>
 • <b>【致命三角：金錢、名貌與狂亂的愛】</b><br>
 富家女林內特奪走了好友賈桂琳的未婚夫賽門，這場看似完美的蜜月之旅，卻始終籠罩在賈桂琳陰魂不散的跟蹤與仇恨陰影下。然而，當林內特在睡夢中頭部中彈身亡時，擁有最強謀殺動機的賈桂琳卻擁有無懈可擊的不在場證明。白羅步步深入心理調查，揭開隱藏在盲目愛情與極致貪婪背後令人毛骨悚然的精密陰謀。<br><br>
 • <b>【白羅的人性心理學】</b><br>
@@ -1245,7 +1394,7 @@ cursor: pointer;
 • <b>【暴風雨山莊模式與文明空間的解構】</b><br>
 東方快車（Orient Express）歷史上是穿梭歐洲大陸、象徵十九世紀工業文明與極致奢華的符號。然而，克莉絲蒂將其困於巴爾幹半島的茫茫大雪中，瞬間將這座移動宮殿轉化為切斷現實法治連結的「封閉密室」。在這一空間內，法治的保護傘暫失，原始的人性抉擇被迫浮出水面。<br><br>
 • <b>【經典謀殺案背後的群體悲劇】</b><br>
-死者雷切特身上慘遭十二刀殘暴刺殺，每一刀的深淺、角度與力道各異。白羅透過著名的請灰色腦細胞層層剝離，發現車廂內十三名背景、國籍、階級截然不同的乘客，竟全數指向多年前一起震驚世界的「阿姆斯壯幼童綁架案」。十二道傷口，代表的是十二位陪審員的共同判決，這不是單純的謀殺，而是一場法律失靈下的集體正義私刑。<br><br>
+死者雷切特身上慘遭十二刀殘暴刺殺，每一刀的深淺、角度與力道各異。白羅透過著名的「灰色腦細胞」層層剝離，發現車廂內十三名背景、國籍、階級截然不同的乘客，竟全數指向多年前一起震驚世界的「阿姆斯壯幼童綁架案」。十二道傷口，代表的是十二位陪審員的共同判決，這不是單純的謀殺，而是一場法律失靈下的集體正義私刑。<br><br>
 • <b>【白羅的最高道德困境】</b><br>
 當事實大白，名偵探白羅面臨了職業生涯中最嚴峻的道德抉擇：是堅持法律形式上的程序正義，將這群承受至深創傷的復仇者送上法庭？還是承認世俗法律的局限，讓位於更高的天理與撫慰？最終白羅選擇向警方提交第一種偽造推論，留下文學史上最具震撼力與人情溫度的結局。<br><br>
 <b>📖 延伸閱讀與同場加映：</b><br>
@@ -1335,7 +1484,7 @@ cursor: pointer;
 • <b>【一本局部擊敗時間的實錄】</b><br>
 阿根廷作家博爾赫斯曾說：「<i>人類發明了各種工具以延伸身體，唯獨書籍，是記憶與想像力的延伸。</i>」這本僅有百餘頁的書信集，記錄了 1949 至 1969 年間，紐約貧困女劇作家海蓮（Helene Hanff）與倫敦二手書店經理法蘭克（Frank Doel）跨越大西洋的 20 年通訊。它之所以成為無數人心中的聖經，正因它用最平凡的紙筆，局部地、甚富意義地擊敗了時間與空間的宰制。<br><br>
 • <b>【戰後灰暗大英帝國裡的「紙上溫暖」】</b><br>
-若不理解時代背景，便讀不懂這份深情。1949 年的英國仍沉浸在二戰後的物資匱乏與配給制度（Rationing）中。當海蓮在紐約抱怨「怎麼又寄這版給我」時，她卻默默跨海寄去全磅的雞蛋粉、火腿與尼龍襪。如海蓮在信中所寫：<i>「我寄給你們的東西，你們頂多一個星期就吃光抹淨；而你們送給我的禮物，卻能和朝夕相處、至死方休……」</i>這不僅是愛書人的狂熱，更是兩個平行世界在戰後動盪年代裡，透過文字傳遞的至高人道關懷與互助。<br><br>
+若不理解時代背景，便讀不懂這份深情。1949 年的英國仍沉浸在二戰後的物資匱乏與配給制度（Rationing）中。當海蓮在紐約抱怨「怎麼又寄這版給我」時，她卻默默跨海寄去全磅的雞蛋粉、火腿與尼龍襪。如海蓮在信中所寫：<i>「我寄給你們的東西，你們頂多一個星期就吃光抹淨；而你們送給我的禮物，卻能和我朝夕相處、至死方休……」</i>這不僅是愛書人的狂熱，更是兩個平行世界在戰後動盪年代裡，透過文字傳遞的至高人道關懷與互助。<br><br>
 • <b>【未曾謀面的柏拉圖式知己】</b><br>
 這份長達二十年的情誼始於「尋書」，終點卻超越了書籍。海蓮是典型的紐約客——率直、潑辣、幽默；法蘭克則是正宗的大英紳士——含蓄、嚴謹、克制。這不是男女間的俗世情愛，而是法語所說的 <i>« Affinité élective »</i>（靈魂共鳴）——兩個同樣熱愛古典文學的孤獨靈魂，隔著浩瀚大海，在紙頁間相認。<br><br>
 • <b>【終將錯過的遺憾，與永遠敞開的門牌】</b><br>
@@ -1433,6 +1582,13 @@ cursor: pointer;
 
 
 <script>
+// 控制側邊抽屜選單開關的函式
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
 
 let currentCategory = '全部';
 
