@@ -13,7 +13,7 @@
   --text-main: #1e293b;
   --text-secondary: #64748b;
   --border-color: #e2e8f0;
-  --accent-color: #0f766e; /* 深度解析視覺主色 */
+  --accent-color: #0f766e;
   --accent-bg: #f0fdf4;
 }
 
@@ -36,7 +36,6 @@ body {
   margin: 0 auto;
 }
 
-/* 標題區塊 */
 header {
   text-align: center;
   margin-bottom: 24px;
@@ -53,7 +52,6 @@ header p {
   color: var(--text-secondary);
 }
 
-/* 類別頁籤容器 */
 .category-scroll-container {
   display: flex;
   justify-content: flex-start;
@@ -101,7 +99,6 @@ header p {
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
 }
 
-/* 導航按鈕 */
 .nav-pagination {
   display: flex;
   justify-content: space-between;
@@ -139,7 +136,6 @@ header p {
   font-weight: 600;
 }
 
-/* 新聞卡片 */
 .card {
   background: var(--card-bg);
   border-radius: 12px;
@@ -204,7 +200,6 @@ header p {
   border-left: 4px solid var(--primary-color);
 }
 
-/* 深度分析區塊樣式 */
 .analysis-box {
   margin-top: 16px;
   background: var(--accent-bg);
@@ -240,7 +235,6 @@ header p {
   margin-bottom: 2px;
 }
 
-/* 摘要收合區塊 */
 .summary-container {
   margin-top: 16px;
   border-top: 1px dashed var(--border-color);
@@ -274,7 +268,6 @@ header p {
   display: block;
 }
 
-/* 外部搜尋連結 */
 .external-link-container {
   margin-top: 20px;
   text-align: center;
@@ -310,6 +303,11 @@ header p {
 .error-msg {
   color: #ef4444;
 }
+
+.footer-nav {
+  text-align: center;
+  margin-top: 24px;
+}
 </style>
 </head>
 <body>
@@ -326,7 +324,7 @@ header p {
   <!-- 分頁切換導航列 -->
   <div class="nav-pagination">
     <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">◀ 上一則</button>
-    <span class="page-indicator" id="pageIndicator">1 / 1</span>
+    <span class="page-indicator" id="pageIndicator">0 / 0</span>
     <button class="nav-btn" id="nextBtn" onclick="changePage(1)">下一則 ▶</button>
   </div>
 
@@ -381,11 +379,11 @@ function renderTabs() {
   const tabContainer = document.getElementById('tabContainer');
   tabContainer.innerHTML = '';
 
-  const categories = newsData.categories;
+  const categories = newsData.categories || {};
   for (const [key, catObj] of Object.entries(categories)) {
     const btn = document.createElement('button');
     btn.className = `category-btn ${key === currentCategoryKey ? 'active' : ''}`;
-    btn.textContent = catObj.name;
+    btn.textContent = catObj.name || key;
     btn.onclick = () => switchCategory(key);
     tabContainer.appendChild(btn);
   }
@@ -399,7 +397,7 @@ function switchCategory(categoryKey) {
 }
 
 function changePage(direction) {
-  const currentCatData = newsData.categories[currentCategoryKey];
+  const currentCatData = newsData.categories?.[currentCategoryKey];
   if (!currentCatData || !currentCatData.articles) return;
 
   currentIndex += direction;
@@ -413,21 +411,34 @@ function changePage(direction) {
 }
 
 function renderCurrentView() {
-  const currentCatData = newsData.categories[currentCategoryKey];
+  const currentCatData = newsData.categories?.[currentCategoryKey];
+  const container = document.getElementById('newsCardContainer');
+
   if (!currentCatData || !currentCatData.articles || currentCatData.articles.length === 0) {
-    document.getElementById('newsCardContainer').innerHTML = '<div class="loading">此類別目前尚無新聞資料</div>';
+    document.getElementById('pageIndicator').textContent = '0 / 0';
+    document.getElementById('prevBtn').disabled = true;
+    document.getElementById('nextBtn').disabled = true;
+    container.innerHTML = '<div class="loading">此類別目前尚無新聞資料</div>';
     return;
   }
 
   const articles = currentCatData.articles;
+  
+  // 確保 currentIndex 不會超出陣列邊界
+  if (currentIndex >= articles.length) {
+    currentIndex = articles.length - 1;
+  }
+  if (currentIndex < 0) {
+    currentIndex = 0;
+  }
+
   const currentItem = articles[currentIndex];
 
   document.getElementById('pageIndicator').textContent = `${currentIndex + 1} / ${articles.length}`;
   document.getElementById('prevBtn').disabled = (currentIndex === 0);
   document.getElementById('nextBtn').disabled = (currentIndex === articles.length - 1);
 
-  const container = document.getElementById('newsCardContainer');
-  const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(currentItem.title)}`;
+  const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(currentItem.title || '')}`;
 
   let analysisHtml = '';
   if (currentItem.analysis) {
@@ -463,7 +474,7 @@ function renderCurrentView() {
     <div class="card">
       <div class="card-header">
         <span class="media-badge">來源：${currentItem.source || '專業媒體'}</span>
-        <span class="exclusive-badge">類別：${currentCatData.name}</span>
+        <span class="exclusive-badge">類別：${currentCatData.name || '焦點'}</span>
       </div>
 
       <h2 class="headline">${currentItem.title || '無標題'}</h2>
@@ -479,8 +490,8 @@ function renderCurrentView() {
         </button>
         <div class="summary-content">
           <strong>【焦點深度解讀】</strong><br>
-          本則報導由 <strong>${currentItem.source}</strong> 提供，針對「${currentItem.title}」進行即時追蹤。助您快速掌握事件核心脈絡與產業趨勢。<br><br>
-          <em>原始摘要內容：</em>${currentItem.summary}
+          本則報導由 <strong>${currentItem.source || '專業媒體'}</strong> 提供，針對「${currentItem.title || ''}」進行即時追蹤。助您快速掌握事件核心脈絡與產業趨勢。<br><br>
+          <em>原始摘要內容：</em>${currentItem.summary || ''}
         </div>
       </div>
 
@@ -505,7 +516,9 @@ function toggleSummary(btn) {
 }
 </script>
 
-<center style="margin-top: 24px;"><a href="https://www.myezlife.com/index-1.html">回首頁</a></center>
+<div class="footer-nav">
+  <a href="https://www.myezlife.com/index-1.html">回首頁</a>
+</div>
 
 </body>
 </html>
