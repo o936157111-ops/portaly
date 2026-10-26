@@ -417,7 +417,7 @@
 
             </div>
 
-            <!-- 自訂新增 App 專屬區塊 (已新增 APP LOGO 下拉選單) -->
+            <!-- 🌟 自訂新增 App 專屬區塊 (修正選單名稱為「圖示」且嚴格控制寬度) -->
             <div class="space-y-2.5 pt-3 border-t border-slate-200">
                 <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
                     <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
@@ -425,23 +425,23 @@
                 <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
                 <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
                 
-                <!-- 🌟 新增的 APP LOGO 下拉選單 -->
-                <div class="flex items-center gap-2">
-                    <span class="text-[11px] font-bold text-slate-600 whitespace-nowrap">選擇圖示:</span>
-                    <select id="custom-app-icon" class="flex-1 bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer">
-                        <option value="fa-solid fa-globe">🌐 預設網路 (Globe)</option>
-                        <option value="fa-solid fa-star">⭐ 星星 (Star)</option>
-                        <option value="fa-solid fa-briefcase">💼 商務公事包 (Briefcase)</option>
-                        <option value="fa-solid fa-film">🎬 電影娛樂 (Film)</option>
-                        <option value="fa-solid fa-music">🎵 音樂旋律 (Music)</option>
-                        <option value="fa-solid fa-newspaper">📰 新聞資訊 (Newspaper)</option>
-                        <option value="fa-solid fa-cart-shopping">🛒 購物商城 (Shopping)</option>
-                        <option value="fa-solid fa-comments">💬 對話社群 (Comments)</option>
-                        <option value="fa-solid fa-gamepad">🎮 遊戲休閒 (Gamepad)</option>
-                        <option value="fa-solid fa-tools">🛠️ 工具設定 (Tools)</option>
-                        <option value="fa-solid fa-location-dot">📍 地圖地標 (Location)</option>
-                        <option value="fa-solid fa-lightbulb">💡 靈感點子 (Lightbulb)</option>
-                        <option value="fa-solid fa-book">📚 書籍閱讀 (Book)</option>
+                <!-- 🌟 修正後的圖示下拉選單區塊 -->
+                <div class="flex items-center gap-2 w-full">
+                    <span class="text-[11px] font-bold text-slate-600 shrink-0">圖示:</span>
+                    <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate">
+                        <option value="fa-solid fa-globe">🌐 預設網路</option>
+                        <option value="fa-solid fa-star">⭐ 星星焦點</option>
+                        <option value="fa-solid fa-briefcase">💼 工作商務</option>
+                        <option value="fa-solid fa-film">🎬 影音娛樂</option>
+                        <option value="fa-solid fa-music">🎵 音樂播放</option>
+                        <option value="fa-solid fa-newspaper">📰 時事新聞</option>
+                        <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
+                        <option value="fa-solid fa-comments">💬 社群通訊</option>
+                        <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
+                        <option value="fa-solid fa-tools">🛠️ 工具設定</option>
+                        <option value="fa-solid fa-location-dot">📍 地圖地標</option>
+                        <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
+                        <option value="fa-solid fa-book">📚 書籍閱讀</option>
                     </select>
                 </div>
 
@@ -1058,7 +1058,7 @@
             }
         });
 
-        // --- 🌟 自訂 App 新增邏輯（支援選擇圖示） ---
+        // --- 自訂 App 新增邏輯（支援選擇圖示） ---
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -1109,14 +1109,14 @@
                 let div = document.createElement('div');
                 div.className = 'app-item relative group';
                 div.setAttribute('data-custom-idx', newIndex);
-                // 讀取所選的圖示，若舊資料沒有 icon 則預設使用 fa-solid fa-globe
+                // 讀取所選圖示，若舊資料無 icon 則預設使用 fa-solid fa-globe
                 const appIcon = app.icon || 'fa-solid fa-globe';
                 div.innerHTML = `
                     <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                         <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
                         <span class="app-label">${app.name}</span>
                     </a>
-                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
+                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×` + `</button>
                 `;
                 generalGrid.appendChild(div);
                 bindLongPressToDelete(div);
