@@ -7,6 +7,9 @@
 
 <title>我的好讀書單</title>
 
+<!-- 瀏覽器分頁小圖示 (Favicon) -->
+<link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" type="image/gif">
+
 <!-- PWA 支援與手機優化 -->
 
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -71,61 +74,178 @@ line-height: 1.8;
 
 
 
+/* 側邊抽屜選單與遮罩樣式 */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 280px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 15px;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    transition: left 0.3s ease-in-out;
+    overflow-y: auto;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.sidebar-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    background-color: #ffffff;
+    color: #333;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.sidebar-btn:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.sidebar-btn.highlight {
+    background-color: #fffbeb;
+    border-color: #fef3c7;
+    color: #d97706;
+    font-weight: bold;
+}
+
+.sidebar-btn.highlight:hover {
+    background-color: #fef3c7;
+}
+
+/* 頂端藍色漸層 Header 樣式 */
 header {
-
-background: linear-gradient(135deg, #4a90e2, #357abd);
-
-color: white;
-
-padding: 24px 16px;
-
-text-align: center;
-
-box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-
-position: relative;
-
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    padding: 24px 16px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    margin-bottom: 16px;
 }
 
 
 
-.top-home-btn {
+/* 標題區塊與 Logo 的排版設定 */
 
-position: absolute;
-
-top: 16px;
-
-left: 16px;
-
-background: rgba(255, 255, 255, 0.2);
-
-color: white;
-
-text-decoration: none;
-
-font-size: 0.85rem;
-
-padding: 6px 12px;
-
-border-radius: 20px;
+.header-title-wrapper {
 
 display: flex;
 
 align-items: center;
 
-gap: 4px;
+justify-content: center;
 
-transition: background 0.2s;
+gap: 12px;
 
-backdrop-filter: blur(4px);
+margin-bottom: 6px;
 
 }
 
 
 
-.top-home-btn:hover {
+.header-logo-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
 
-background: rgba(255, 255, 255, 0.35);
+.header-logo-btn:hover {
+    transform: scale(1.05);
+}
+
+
+
+.header-logo-img {
+
+width: 36px;
+
+height: 36px;
+
+border-radius: 50%;
+
+object-fit: cover;
+
+border: 2px solid rgba(255, 255, 255, 0.8);
 
 }
 
@@ -135,7 +255,7 @@ header h1 {
 
 font-size: 1.5rem;
 
-margin-bottom: 6px;
+margin: 0;
 
 }
 
@@ -157,7 +277,7 @@ max-width: 600px;
 
 margin: 0 auto;
 
-padding: 16px;
+padding: 0 16px 16px 16px;
 
 }
 
@@ -602,7 +722,8 @@ font-size: 0.85rem;
 color: var(--text-secondary);
 
 line-height: 1.6;
- white-space: normal;
+
+white-space: normal;
 
 }
 
@@ -922,13 +1043,37 @@ cursor: pointer;
 
 <body>
 
+<!-- 側邊抽屜選單背景遮罩 -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
+<!-- 側邊抽屜選單 -->
+<aside class="sidebar" id="sidebarMenu">
+    <div class="sidebar-header">
+        <div class="sidebar-header-left">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="sidebar-logo">
+            <span class="sidebar-title">功能選單</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="toggleSidebar()">&times;</button>
+    </div>
+    <div class="sidebar-menu">
+        <a href="https://myezlife.com/index-1.html" class="sidebar-btn" target="_blank" rel="noopener noreferrer">首頁</a>
+        <a href="https://myezlife.com" class="sidebar-btn" target="_blank" rel="noopener noreferrer">生活・簡居・生活</a>
+        <a href="https://o936157111-ops.github.io/portaly/FileExplorer.html" class="sidebar-btn" target="_blank" rel="noopener noreferrer">檔案總管</a>
+        <a href="https://myezlife.com/index_news.html" class="sidebar-btn" target="_blank" rel="noopener noreferrer">新聞劃重點</a>
+        <a href="https://portaly.cc/myezlife/pages/wind" class="sidebar-btn" target="_blank" rel="noopener noreferrer">AI好劇一直看</a>
+        <a href="https://youtube.com/playlist?list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac" class="sidebar-btn" target="_blank" rel="noopener noreferrer">好歌一直聽</a>
+        <a href="https://myezlife.com/ai-greeting-app/" class="sidebar-btn highlight" target="_blank" rel="noopener noreferrer">🌻 製作早安問候圖</a>
+    </div>
+</aside>
 
 <header>
-
-<a href="https://myezlife.com/index-1.html" class="top-home-btn">🏠 首頁</a>
-
-<h1>📚 我的私房好讀書單</h1>
+<!-- 點擊 Logo 開啟側邊選單 -->
+<div class="header-title-wrapper">
+    <button class="header-logo-btn" onclick="toggleSidebar()" title="開啟功能選單">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="header-logo-img">
+    </button>
+    <h1>📚 我的私房好讀書單</h1>
+</div>
 
 <p>精選好讀網站經典推薦，隨身帶著走</p>
 
@@ -1168,7 +1313,7 @@ cursor: pointer;
 
 <div class="book-desc"><b>【市井無賴的清朝官場奇遇：金庸解構武俠的封筆絕響】</b><br><br>
 • <b>【反英雄的喜劇傳奇】</b><br>
-作為金庸的最後一部長篇小說，《鹿鼎記》完全顛覆了傳統武俠的套路。主角韋小寶出身揚州妓院，不會蓋世武功、不識幾個大字，憑藉著機智、滑頭、講義氣與市井智慧，在康熙皇帝、天地會、神龍教等錯綜複雜的政治勢力間游刃有餘。<br><br>
+作為金庸的最後一部長篇小說，《鹿鼎記》完全顛覆了傳統武俠的套路。主角韋小寶出身揚州妓院，不會蓋世武功、不識幾個大字，憑藉著機智、滑頭、講義氣與市井智慧，在康熙皇帝、天地會,、神龍教等錯綜複雜的政治勢力間游刃有餘。<br><br>
 • <b>【對傳統忠義與政治權謀的幽默諷刺】</b><br>
 韋小寶既是朝廷的一品大員，又是天地會的木桑堂香主。金庸透過這個滑稽角色，赤裸裸地揭露了政治鬥爭的虛偽與荒誕。無論是朝廷的名利場，還是江湖幫會的「反清復明」口號，在韋小寶實用主義的眼光下都顯得滑稽可笑。<br><br>
 • <b>【時代變遷下的歸宿】</b><br>
@@ -1363,7 +1508,7 @@ cursor: pointer;
 
 <div class="admin-section">
 
-<button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙️️ 管理書單</button>
+<button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙ 管理書單</button>
 
 <div class="admin-panel" id="adminPanel" style="display: none;">
 
@@ -1430,6 +1575,13 @@ cursor: pointer;
 
 
 <script>
+// 控制側邊抽屜選單開關的函式
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
 
 let currentCategory = '全部';
 
@@ -1755,7 +1907,7 @@ itemDiv.className = 'manage-book-item';
 
 itemDiv.innerHTML = `
 
-<div class="manage-book-info"><b>${title}</b> <span style="color:#666; font-size:0.8rem;">(${author})</span></div>
+<div class="manage-book-info"><b>${title}</b> <span style="color:#666; font-size:0.80rem;">(${author})</span></div>
 
 <div class="manage-actions">
 
