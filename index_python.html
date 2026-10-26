@@ -82,18 +82,18 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(0);
             width: 100%;
             padding: 16px;
-            padding-bottom: 110px; /* 手機版底部留白，讓固定 Dock 與上方區塊保有完美間距與模擬空間 */
+            padding-bottom: 120px;
         }
 
         @media (min-width: 768px) {
             #app-wrapper { 
                 padding: 24px; 
-                padding-bottom: 24px; 
+                padding-bottom: 40px; 
             }
             #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
             #backdrop { display: none !important; }
@@ -181,9 +181,9 @@
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
-        /* 🌟 第三區塊 (Dock 欄)：
-           - 手機版：fixed 固定在螢幕最下方（如手機主畫面 Dock 欄），並與上方內容保持精美間距
-           - 電腦版 (md)：static 完美置於第 4 個區塊之下，與前幾個區塊完全同寬、同風格
+        /* 🌟 Dock 欄：
+           - 手機版：fixed 懸浮最下層
+           - 電腦版 (md)：static 轉為最下方的獨立卡片，並加上 margin-top 確保空隙
         */
         #dock-bar {
             position: fixed;
@@ -204,18 +204,18 @@
 
         @media (min-width: 768px) {
             #dock-bar {
-                position: static;
-                transform: none;
-                width: 100%;
-                max-width: 100%;
-                background: #ffffff;
-                backdrop-filter: none;
-                -webkit-backdrop-filter: none;
-                border: 1px solid #e2e8f0;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-                border-radius: 1rem; /* rounded-2xl */
-                padding: 1.5rem;   /* p-6 */
-                margin-top: 0px;   /* 完美接續在區塊下方 */
+                position: static !important;
+                transform: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+                border-radius: 1rem !important; /* rounded-2xl */
+                padding: 1.5rem !important;   /* p-6 */
+                margin-top: 1.25rem !important; /* 🌟 修正：強制電腦版產生與上一區塊完全一致的離距離空隙 (20px) */
             }
         }
     </style>
@@ -417,7 +417,7 @@
 
             </div>
 
-            <!-- 🌟 自訂新增 App 專屬區塊 (修正選單名稱為「圖示」且嚴格控制寬度) -->
+            <!-- 自訂新增 App 專屬區塊 -->
             <div class="space-y-2.5 pt-3 border-t border-slate-200">
                 <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
                     <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
@@ -425,7 +425,7 @@
                 <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
                 <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
                 
-                <!-- 🌟 修正後的圖示下拉選單區塊 -->
+                <!-- 圖示下拉選單區塊 -->
                 <div class="flex items-center gap-2 w-full">
                     <span class="text-[11px] font-bold text-slate-600 shrink-0">圖示:</span>
                     <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate">
@@ -476,7 +476,7 @@
     </aside>
 
     <div id="app-wrapper">
-        <div class="max-w-3xl mx-auto w-full space-y-5 flex-1 flex flex-col justify-between">
+        <div class="max-w-3xl mx-auto w-full space-y-5">
             
             <!-- 綠色 Banner -->
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
@@ -494,7 +494,7 @@
                 </div>
             </header>
 
-            <main id="desktop-cards-container" class="w-full space-y-5 flex-1 flex flex-col">
+            <main id="desktop-cards-container" class="w-full space-y-5">
                 
                 <!-- Gemini 智慧對話列 -->
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
@@ -678,7 +678,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 第三區塊：固定的捷徑 Dock 欄 (放置於所有卡片容器的最下方) -->
+                <!-- 🌟 捷徑 Dock 欄 -->
                 <div id="dock-bar">
                     <div class="flex items-center justify-around">
                         <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
@@ -1116,7 +1116,7 @@
                         <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
                         <span class="app-label">${app.name}</span>
                     </a>
-                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×` + `</button>
+                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
                 `;
                 generalGrid.appendChild(div);
                 bindLongPressToDelete(div);
