@@ -533,17 +533,17 @@
 
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
-                <!-- Gemini 智慧對話列 -->
+                <!-- Google 智慧搜尋列 -->
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-purple-600">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
+                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600">
+                            <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
-                        <input type="text" id="gemini-input" placeholder="向 Gemini 問問題或尋求協助（輸入後點按鈕或按 Enter 自動複製並開窗）..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400" onkeydown="handleGeminiKeydown(event)">
-                        <button type="button" onclick="sendToGemini()" title="發問" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center">
+                        <input type="text" name="q" placeholder="Google 搜尋您想尋求的解答..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
+                        <button type="submit" title="搜尋" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center">
                             <i class="fa-solid fa-paper-plane text-sm"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
 
                 <!-- 1. 精選影音與創作服務 -->
@@ -855,31 +855,6 @@
                 if (!savedBg.startsWith('data:image')) {
                     document.getElementById('bg-url-input').value = savedBg;
                 }
-            }
-        }
-
-        // --- Gemini 智慧對話列處理函式 ---
-        function sendToGemini() {
-            const inputEl = document.getElementById('gemini-input');
-            const query = inputEl.value.trim();
-            
-            if (!query) {
-                window.open('https://gemini.google.com/app', '_blank');
-                return;
-            }
-
-            navigator.clipboard.writeText(query).then(() => {
-                window.open('https://gemini.google.com/app', '_blank');
-                inputEl.value = '';
-            }).catch(err => {
-                console.error('無法複製文字：', err);
-                window.open('https://gemini.google.com/app', '_blank');
-            });
-        }
-
-        function handleGeminiKeydown(event) {
-            if (event.key === 'Enter') {
-                sendToGemini();
             }
         }
 
@@ -1286,3 +1261,5 @@
     </script>
 </body>
 </html>
+```<ElicitationsGroup>
+</ElicitationsGroup>
