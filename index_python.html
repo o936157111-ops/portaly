@@ -181,10 +181,7 @@
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
-        /* 🌟 Dock 欄：
-           - 手機版：fixed 懸浮最下層
-           - 電腦版 (md)：static 轉為最下方的獨立卡片，並加上 margin-top 確保空隙
-        */
+        /* Dock 欄 */
         #dock-bar {
             position: fixed;
             bottom: 16px;
@@ -213,9 +210,9 @@
                 -webkit-backdrop-filter: none !important;
                 border: 1px solid #e2e8f0 !important;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
-                border-radius: 1rem !important; /* rounded-2xl */
-                padding: 1.5rem !important;   /* p-6 */
-                margin-top: 1.25rem !important; /* 🌟 修正：強制電腦版產生與上一區塊完全一致的離距離空隙 (20px) */
+                border-radius: 1rem !important;
+                padding: 1.5rem !important;
+                margin-top: 1.25rem !important;
             }
         }
     </style>
@@ -240,6 +237,31 @@
         </div>
 
         <div class="flex-1 space-y-4 overflow-y-auto">
+            
+            <!-- 🌟 新增：網站特性與隱私說明區塊 -->
+            <div class="bg-gradient-to-br from-emerald-50 to-teal-50/60 p-3 rounded-xl border border-emerald-100/80 space-y-2">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('about-app-sub', this)">
+                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved text-[#00a600]"></i> 網站特性與隱私說明
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-emerald-600 text-xs"></i>
+                </div>
+                <div id="about-app-sub" class="text-[11px] text-slate-600 space-y-2 pt-1 border-t border-emerald-100" style="display: none;">
+                    <p class="leading-relaxed">
+                        <strong class="text-emerald-800">🔒 100% 本機隱私安全：</strong><br>
+                        本站注重個人隱私，您所新增的自訂 App 捷徑、待辦清單、便籤及背景設定，<strong class="text-slate-800">全部僅儲存在您的裝置（LocalStorage）中</strong>，絕不傳送至任何外部伺服器。
+                    </p>
+                    <p class="leading-relaxed">
+                        <strong class="text-emerald-800">⚙️ 操作說明：</strong>
+                    </p>
+                    <ul class="list-disc list-inside space-y-1 pl-1 text-slate-600">
+                        <td><strong>自訂顯示</strong>：在下方勾選或取消項目，即時顯示/隱藏桌面卡片。</td>
+                        <td><strong>拖曳排序</strong>：按住群組標頭可調整桌面卡片上下順序。</td>
+                        <td><strong>捷徑管理</strong>：可隨時新增自訂網址，長按捷徑圖示即可刪除。</td>
+                    </ul>
+                </div>
+            </div>
+
             <div id="sidebar-sortable-container" class="space-y-3">
                 
                 <!-- 1. 精選影音與創作服務群組 -->
@@ -759,13 +781,15 @@
 
         function toggleSubMenu(subId, btn) {
             const subMenu = document.getElementById(subId);
-            const icon = btn.querySelector('i');
+            let icon = null;
+            if (btn.querySelector) icon = btn.querySelector('.fa-chevron-down, .fa-chevron-up');
+            
             if (subMenu.style.display === 'none') {
                 subMenu.style.display = 'block';
-                icon.className = 'fa-solid fa-chevron-up';
+                if (icon) icon.className = icon.className.replace('fa-chevron-down', 'fa-chevron-up');
             } else {
                 subMenu.style.display = 'none';
-                icon.className = 'fa-solid fa-chevron-down';
+                if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
             }
         }
 
@@ -1006,7 +1030,6 @@
                 
                 if (card) desktopContainer.appendChild(card);
             });
-            // 確保第三區塊 (dock-bar) 永遠放在所有卡片的最後方（最下方）
             const dockBar = document.getElementById('dock-bar');
             if (dockBar) desktopContainer.appendChild(dockBar);
         }
@@ -1058,7 +1081,7 @@
             }
         });
 
-        // --- 自訂 App 新增邏輯（支援選擇圖示） ---
+        // --- 自訂 App 新增邏輯 ---
         function addCustomApp() {
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
@@ -1109,7 +1132,6 @@
                 let div = document.createElement('div');
                 div.className = 'app-item relative group';
                 div.setAttribute('data-custom-idx', newIndex);
-                // 讀取所選圖示，若舊資料無 icon 則預設使用 fa-solid fa-globe
                 const appIcon = app.icon || 'fa-solid fa-globe';
                 div.innerHTML = `
                     <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
