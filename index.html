@@ -87,14 +87,10 @@
             transform: translateX(0);
             width: 100%;
             padding: 16px;
-            padding-bottom: 110px; /* 留出底部固定 Dock 的高度 space */
         }
 
         @media (min-width: 768px) {
-            #app-wrapper { 
-                padding: 24px; 
-                padding-bottom: 120px;
-            }
+            #app-wrapper { padding: 24px; }
             #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
             #backdrop { display: none !important; }
         }
@@ -178,45 +174,8 @@
         .sortable-ghost { opacity: 0.3; }
         .sortable-drag { opacity: 0.9; }
 
-        /* 手機版左右滑動隱藏滾動條 */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
-
-        /* 固定底部 Dock 樣式：寬度與 max-w-3xl 對齊並置中 */
-        #dock-wrapper {
-            position: fixed;
-            bottom: 12px;
-            left: 0;
-            right: 0;
-            z-index: 30;
-            pointer-events: none; /* 穿透外層空白處 */
-            padding: 0 16px;
-        }
-        @media (min-width: 768px) {
-            #dock-wrapper {
-                bottom: 20px;
-                padding: 0 24px;
-            }
-        }
-        #dock-bar {
-            pointer-events: auto; /* 恢復內容點擊 */
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-            border-radius: 28px;
-            padding: 10px 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
     </style>
 </head>
 <body>
@@ -488,75 +447,75 @@
                 </div>
 
                 <!-- 1. 精選影音與創作服務 -->
-                <div id="desktop-creative-card" class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
-                    <div id="creative-app-grid" class="flex md:grid md:grid-cols-auto-fill md:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-4 overflow-x-auto md:overflow-visible no-scrollbar snap-x pb-1">
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-weather">
+                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="creative-app-grid" class="app-grid">
+                        <div class="app-item" data-mod="mod-weather">
                             <a href="https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-sky-400 to-blue-500"><i class="fa-solid fa-cloud-sun text-white"></i></div>
                                 <span class="app-label">即時氣象</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-drama">
+                        <div class="app-item" data-mod="mod-drama">
                             <a href="https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-rose-400 to-red-500"><i class="fa-solid fa-film text-white"></i></div>
                                 <span class="app-label">AI好劇一直看</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-melody">
+                        <div class="app-item" data-mod="mod-melody">
                             <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-amber-400 to-orange-500"><i class="fa-solid fa-music text-white"></i></div>
                                 <span class="app-label">好歌一直聽</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-diary">
+                        <div class="app-item" data-mod="mod-diary">
                             <a href="https://myezlife.com/diary/index.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-emerald-400 to-teal-600"><i class="fa-solid fa-book-open text-white"></i></div>
                                 <span class="app-label">心情隨筆日記</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-greeting">
+                        <div class="app-item" data-mod="mod-greeting">
                             <a href="https://myezlife.com/ai-greeting-app/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-yellow-400 to-amber-500"><i class="fa-solid fa-sun text-white"></i></div>
                                 <span class="app-label">AI早安問候圖</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-videowall">
+                        <div class="app-item" data-mod="mod-videowall">
                             <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
                                 <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></div>
                                 <span class="app-label">打造影音牆</span>
                             </button>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-news">
+                        <div class="app-item" data-mod="mod-news">
                             <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-amber-400 to-yellow-600"><i class="fa-solid fa-bolt text-white"></i></div>
                                 <span class="app-label">焦點新聞</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-explorer">
+                        <div class="app-item" data-mod="mod-explorer">
                             <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-blue-400 to-indigo-600"><i class="fa-solid fa-folder-open text-white"></i></div>
                                 <span class="app-label">檔案總管</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-life-simple">
+                        <div class="app-item" data-mod="mod-life-simple">
                             <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-teal-500 to-emerald-700"><i class="fa-solid fa-house text-white"></i></div>
                                 <span class="app-label">生活簡居</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-library">
+                        <div class="app-item" data-mod="mod-library">
                             <a href="https://myezlife.com/mylibrary.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-indigo-400 to-blue-700"><i class="fa-solid fa-book text-white"></i></div>
                                 <span class="app-label">生活圖書館</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-simple-home">
+                        <div class="app-item" data-mod="mod-simple-home">
                             <a href="https://myezlife.com/index-2.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-amber-500 to-yellow-600"><i class="fa-solid fa-desktop text-white"></i></div>
                                 <span class="app-label">簡易首頁</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-games">
+                        <div class="app-item" data-mod="mod-games">
                             <a href="https://myezlife.com/games.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-pink-500 to-rose-600"><i class="fa-solid fa-gamepad text-white"></i></div>
                                 <span class="app-label">復古小遊戲</span>
@@ -566,51 +525,51 @@
                 </div>
 
                 <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
-                <div id="desktop-app-card" class="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
-                    <div id="general-app-grid" class="flex md:grid md:grid-cols-auto-fill md:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-4 overflow-x-auto md:overflow-visible no-scrollbar snap-x pb-1">
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-highway">
+                <div id="desktop-app-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="general-app-grid" class="app-grid">
+                        <div class="app-item" data-mod="mod-highway">
                             <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-blue-500 to-indigo-600"><i class="fa-solid fa-car text-white"></i></div>
                                 <span class="app-label">國道 1968</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-provincial">
+                        <div class="app-item" data-mod="mod-provincial">
                             <a href="https://168.thb.gov.tw" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-orange-400 to-red-500"><i class="fa-solid fa-road text-white"></i></div>
                                 <span class="app-label">省道路況168</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-bus">
+                        <div class="app-item" data-mod="mod-bus">
                             <a href="https://ebus.gov.taipei/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-cyan-400 to-blue-600"><i class="fa-solid fa-bus text-white"></i></div>
                                 <span class="app-label">即時公車</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-bike">
+                        <div class="app-item" data-mod="mod-bike">
                             <a href="https://youbike.com.tw/region/main/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-lime-400 to-emerald-600"><i class="fa-solid fa-person-biking text-white"></i></div>
                                 <span class="app-label">YouBike</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-train">
+                        <div class="app-item" data-mod="mod-train">
                             <a href="https://tip.railway.gov.tw/tra-tip-web/tip" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-indigo-500 to-purple-600"><i class="fa-solid fa-train text-white"></i></div>
                                 <span class="app-label">台鐵時刻</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-hsr">
+                        <div class="app-item" data-mod="mod-hsr">
                             <a href="https://www.thsrc.com.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-amber-500 to-orange-600"><i class="fa-solid fa-train-subway text-white"></i></div>
                                 <span class="app-label">高鐵時刻</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-yahoo">
+                        <div class="app-item" data-mod="mod-yahoo">
                             <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-purple-500 to-indigo-700"><i class="fa-solid fa-chart-line text-white"></i></div>
                                 <span class="app-label">Yahoo股市</span>
                             </a>
                         </div>
-                        <div class="app-item shrink-0 snap-start" data-mod="mod-cnyes">
+                        <div class="app-item" data-mod="mod-cnyes">
                             <a href="https://www.cnyes.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-teal-400 to-emerald-600"><i class="fa-solid fa-newspaper text-white"></i></div>
                                 <span class="app-label">鉅亨網</span>
@@ -648,57 +607,15 @@
                     </div>
                     <div class="pt-1">
                         <p class="text-[11px] text-slate-400 font-bold mb-1.5 text-center">贊助商廣告</p>
-                        <div id="ad-container" class="min-h-[90px] w-full flex items-center justify-center bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden p-2">
+                        <div class="min-h-[90px] flex items-center justify-center bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden p-2">
                             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
-                            <ins class="adsbygoogle"
-                                 style="display:block; width: 100%;"
-                                 data-ad-client="ca-pub-5328509571221811"
-                                 data-ad-format="auto"
-                                 data-full-width-responsive="true"></ins>
+                            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                         </div>
                     </div>
                 </div>
 
             </main>
-        </div>
-    </div>
-
-    <!-- 🌟 第三區塊：固定底部 APP 捷徑 Dock 欄 -->
-    <div id="dock-wrapper">
-        <div id="dock-bar" class="max-w-3xl mx-auto w-full">
-            <div class="flex items-center justify-around gap-2 md:gap-4">
-                <!-- 1. 檔案總管 -->
-                <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group flex-1">
-                    <div class="app-box w-12 h-12 md:w-14 md:h-14 !rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 text-xl md:text-2xl">
-                        <i class="fa-solid fa-folder-open text-white"></i>
-                    </div>
-                    <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">檔案總管</span>
-                </a>
-
-                <!-- 2. 新聞焦點 (已取消隱藏，手機/電腦皆顯示) -->
-                <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group flex-1">
-                    <div class="app-box w-12 h-12 md:w-14 md:h-14 !rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 text-xl md:text-2xl">
-                        <i class="fa-solid fa-bolt text-white"></i>
-                    </div>
-                    <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">新聞焦點</span>
-                </a>
-
-                <!-- 3. 好讀書單 (已取消隱藏，手機/電腦皆顯示) -->
-                <a href="https://myezlife.com/haodoo.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group flex-1">
-                    <div class="app-box w-12 h-12 md:w-14 md:h-14 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl">
-                        <i class="fa-solid fa-book-bookmark text-white"></i>
-                    </div>
-                    <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">好讀書單</span>
-                </a>
-
-                <!-- 4. 生活簡居 -->
-                <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group flex-1">
-                    <div class="app-box w-12 h-12 md:w-14 md:h-14 !rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-xl md:text-2xl">
-                        <i class="fa-solid fa-house text-white"></i>
-                    </div>
-                    <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活簡居</span>
-                </a>
-            </div>
         </div>
     </div>
 
@@ -1082,7 +999,7 @@
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
             customApps.forEach((app, newIndex) => {
                 let div = document.createElement('div');
-                div.className = 'app-item shrink-0 snap-start relative group';
+                div.className = 'app-item relative group';
                 div.setAttribute('data-custom-idx', newIndex);
                 div.innerHTML = `
                     <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -1194,37 +1111,6 @@
         loadMemo();
         initRandomRecommendation();
         document.querySelectorAll('.app-item').forEach(item => bindLongPressToDelete(item));
-
-        // 安全載入 AdSense 廣告，避免 availableWidth=0 錯誤
-        function safePushAd() {
-            const adContainer = document.getElementById('ad-container');
-            if (adContainer && adContainer.offsetWidth > 0 && !adContainer.dataset.adLoaded) {
-                try {
-                    (window.adsbygoogle = window.adsbygoogle || []).push({});
-                    adContainer.dataset.adLoaded = "true";
-                } catch (e) {
-                    console.warn("AdSense push ignored/failed:", e);
-                }
-            }
-        }
-
-        // 使用 ResizeObserver 或延遲確認寬度後再載入廣告
-        if ('ResizeObserver' in window) {
-            const adContainer = document.getElementById('ad-container');
-            if (adContainer) {
-                const observer = new ResizeObserver((entries) => {
-                    for (let entry of entries) {
-                        if (entry.contentRect.width > 0) {
-                            safePushAd();
-                            observer.disconnect();
-                        }
-                    }
-                });
-                observer.observe(adContainer);
-            }
-        } else {
-            setTimeout(safePushAd, 500);
-        }
     </script>
 </body>
 </html>
