@@ -1,1053 +1,169 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
-
+<html lang="zh-TW">
+<head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>我的好讀書單</title>
 
 <!-- 瀏覽器分頁小圖示 (Favicon) -->
 <link rel="icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" type="image/gif">
 
 <!-- PWA 支援與手機優化 -->
-
 <meta name="apple-mobile-web-app-capable" content="yes">
-
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
 <meta name="theme-color" content="#4a90e2">
-
-<!-- 內嵌 PWA Manifest -->
-
 <link rel="manifest" href="data:application/json;charset=utf-8,{&quot;name&quot;:&quot;我的好讀書單&quot;,&quot;short_name&quot;:&quot;好讀書單&quot;,&quot;start_url&quot;:&quot;./&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#f4f7f6&quot;,&quot;theme_color&quot;:&quot;#4a90e2&quot;}">
 
-
-
 <style>
-
 :root {
-
---primary-color: #4a90e2;
-
---primary-light: #eef2f7;
-
---bg-color: #f4f7f6;
-
---card-bg: #ffffff;
-
---text-color: #333333;
-
---text-secondary: #666666;
-
---border-radius: 12px;
-
+  --primary-color: #4a90e2;
+  --primary-light: #eef2f7;
+  --bg-color: #f4f7f6;
+  --card-bg: #ffffff;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --border-radius: 12px;
 }
-
-
 
 * {
-
-box-sizing: border-box;
-
-margin: 0;
-
-padding: 0;
-
-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
-
-
 
 body {
-
-background-color: var(--bg-color);
-
-color: var(--text-color);
-
-padding-bottom: 40px;
-
-line-height: 1.8;
-
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding-bottom: 40px;
+  line-height: 1.8;
 }
-
-
 
 /* 側邊抽屜選單與遮罩樣式 */
 .sidebar-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-    backdrop-filter: blur(2px);
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  backdrop-filter: blur(2px);
 }
-
-.sidebar-overlay.active {
-    display: block;
-}
+.sidebar-overlay.active { display: block; }
 
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: -300px;
-    width: 280px;
-    height: 100vh;
-    background: #ffffff;
-    border-right: 1px solid #e2e8f0;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 15px;
-    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
-    transition: left 0.3s ease-in-out;
-    overflow-y: auto;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 280px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+  transition: left 0.3s ease-in-out;
+  overflow-y: auto;
 }
-
-.sidebar.active {
-    left: 0;
-}
+.sidebar.active { left: 0; }
 
 .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
 }
+.sidebar-header-left { display: flex; align-items: center; gap: 10px; }
+.sidebar-logo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.sidebar-title { font-size: 1.2rem; font-weight: bold; color: #333; }
+.sidebar-close-btn { background: none; border: none; font-size: 1.75rem; color: #666; cursor: pointer; padding: 0 5px; }
 
-.sidebar-header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.sidebar-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.sidebar-title {
-    font-size: 1.2rem; /* 字體放大 2 號 */
-    font-weight: bold;
-    color: #333;
-}
-
-.sidebar-close-btn {
-    background: none;
-    border: none;
-    font-size: 1.75rem; /* 字體放大 2 號 */
-    color: #666;
-    cursor: pointer;
-    padding: 0 5px;
-}
-
-.sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
+.sidebar-menu { display: flex; flex-direction: column; gap: 10px; }
 .sidebar-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 48px;
-    background-color: #ffffff;
-    color: #333;
-    text-decoration: none;
-    border-radius: 12px;
-    font-weight: 500;
-    font-size: 1.15rem; /* 字體放大 2 號 */
-    border: 1px solid #e2e8f0;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  display: flex; align-items: center; justify-content: center;
+  height: 48px; background-color: #ffffff; color: #333;
+  text-decoration: none; border-radius: 12px; font-weight: 500;
+  font-size: 1.15rem; border: 1px solid #e2e8f0; transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
+.sidebar-btn:hover { background-color: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
+.sidebar-btn.highlight { background-color: #fffbeb; border-color: #fef3c7; color: #d97706; font-weight: bold; }
+.sidebar-btn.highlight:hover { background-color: #fef3c7; }
 
-.sidebar-btn:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
-    transform: translateY(-1px);
-}
+.container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
-.sidebar-btn.highlight {
-    background-color: #fffbeb;
-    border-color: #fef3c7;
-    color: #d97706;
-    font-weight: bold;
-}
-
-.sidebar-btn.highlight:hover {
-    background-color: #fef3c7;
-}
-
-.container {
-
-max-width: 600px;
-
-margin: 0 auto;
-
-padding: 16px;
-
-}
-
-
-
-/* 將頂端標題改成與下方一致的獨立白色圓角區塊卡片，內部包含藍色漸層標題列 */
 .header-card {
-    background: var(--card-bg);
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    overflow: hidden;
-    margin-bottom: 16px;
-    border: 1px solid #eee;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid #eee;
 }
-
-/* 頂端藍色漸層標題列 */
-.header-inner {
-    background: linear-gradient(135deg, #4a90e2, #357abd);
-    color: white;
-    padding: 24px 16px;
-    text-align: center;
-}
-
-
-
-/* 標題區塊與 Logo 的排版設定 */
-
-.header-title-wrapper {
-
-display: flex;
-
-align-items: center;
-
-justify-content: center;
-
-gap: 12px;
-
-margin-bottom: 6px;
-
-}
-
-
-
-.header-logo-btn {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: transform 0.2s;
-}
-
-.header-logo-btn:hover {
-    transform: scale(1.05);
-}
-
-
-
-.header-logo-img {
-
-width: 40px;
-
-height: 40px;
-
-border-radius: 50%;
-
-object-fit: cover;
-
-border: 2px solid rgba(255, 255, 255, 0.8);
-
-}
-
-
-
-.header-inner h1 {
-
-font-size: 1.75rem; /* 字體放大 2 號 */
-
-margin: 0;
-
-}
-
-
-
-.header-inner p {
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-opacity: 0.9;
-
-}
-
-
+.header-inner { background: linear-gradient(135deg, #4a90e2, #357abd); color: white; padding: 24px 16px; text-align: center; }
+.header-title-wrapper { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 6px; }
+.header-logo-btn { background: none; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; transition: transform 0.2s; }
+.header-logo-btn:hover { transform: scale(1.05); }
+.header-logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.8); }
+.header-inner h1 { font-size: 1.75rem; margin: 0; }
+.header-inner p { font-size: 1.1rem; opacity: 0.9; }
 
 .daily-special-card {
-
-background: linear-gradient(135deg, #fff9e6, #fff3cd);
-
-border: 1px solid #ffeeba;
-
-border-radius: var(--border-radius);
-
-padding: 16px;
-
-margin-bottom: 16px;
-
-box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-
-position: relative;
-
+  background: linear-gradient(135deg, #fff9e6, #fff3cd);
+  border: 1px solid #ffeeba;
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: relative;
 }
-
-
-
-.daily-special-badge {
-
-display: inline-block;
-
-background: #d48806;
-
-color: white;
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-padding: 2px 8px;
-
-border-radius: 10px;
-
-margin-bottom: 8px;
-
-font-weight: bold;
-
-}
-
-
-
-.daily-title {
-
-font-size: 1.35rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-color: #856404;
-
-margin-bottom: 4px;
-
-}
-
-
-
-.daily-author {
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: #a07800;
-
-margin-bottom: 8px;
-
-}
-
-
-
-.daily-desc {
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: #665c3b;
-
-line-height: 1.5;
-
-margin-bottom: 12px;
-
-display: -webkit-box;
-
--webkit-line-clamp: 6;
-
--webkit-box-orient: vertical;
-
-overflow: hidden;
-
-}
-
-
-
-.daily-footer {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-}
-
-
-
-.btn-daily-read {
-
-background-color: #d48806;
-
-color: white;
-
-text-decoration: none;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-padding: 6px 16px;
-
-border-radius: 15px;
-
-font-weight: 500;
-
-transition: background 0.2s;
-
-}
-
-
-
-.btn-daily-read:hover {
-
-background-color: #b77103;
-
-}
-
-
-
-.btn-refresh-daily {
-
-background: none;
-
-border: none;
-
-color: #a07800;
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-text-decoration: underline;
-
-}
-
-
-
-.search-box {
-
-margin-bottom: 14px;
-
-}
-
-
-
-.search-box input {
-
-width: 100%;
-
-padding: 12px 16px;
-
-font-size: 1.2rem; /* 字體放大 2 號 */
-
-border: 1px solid #ddd;
-
-border-radius: var(--border-radius);
-
-outline: none;
-
-background: white;
-
-box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-
-transition: border-color 0.2s;
-
-}
-
-
-
-.search-box input:focus {
-
-border-color: var(--primary-color);
-
-}
-
-
-
-.tabs-container {
-
-display: flex;
-
-overflow-x: auto;
-
-margin-bottom: 16px;
-
-border: 1px solid #ddd;
-
-background: white;
-
-scrollbar-width: none;
-
-}
-
-
-
-.tabs-container::-webkit-scrollbar {
-
-display: none;
-
-}
-
-
-
-.tab-btn {
-
-background: white;
-
-border: none;
-
-border-right: 1px solid #ddd;
-
-color: var(--text-secondary);
-
-padding: 10px 16px;
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-white-space: nowrap;
-
-cursor: pointer;
-
-transition: all 0.2s;
-
-flex: 1;
-
-text-align: center;
-
-}
-
-
-
-.tab-btn:last-child {
-
-border-right: none;
-
-}
-
-
-
-.tab-btn.active {
-
-background: var(--primary-color);
-
-color: white;
-
-font-weight: bold;
-
-}
-
-
-
-.author-group {
-
-margin-bottom: 12px;
-
-background: white;
-
-border-radius: var(--border-radius);
-
-box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-
-overflow: hidden;
-
-}
-
-
-
-.author-header {
-
-width: 100%;
-
-background: white;
-
-border: none;
-
-padding: 16px;
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-font-size: 1.25rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-color: var(--text-color);
-
-cursor: pointer;
-
-text-align: left;
-
-transition: background 0.2s;
-
-}
-
-
-
-.author-header:hover {
-
-background: #fafafa;
-
-}
-
-
-
-.author-info {
-
-display: flex;
-
-align-items: center;
-
-gap: 10px;
-
-}
-
-
-
-.book-count-badge {
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-background: var(--primary-light);
-
-color: var(--primary-color);
-
-padding: 2px 8px;
-
-border-radius: 12px;
-
-font-weight: normal;
-
-}
-
-
-
-.arrow-icon {
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-color: #999;
-
-transition: transform 0.3s ease;
-
-}
-
-
-
-.author-header.active .arrow-icon {
-
-transform: rotate(180deg);
-
-}
-
-
-
-.book-list-container {
-
-max-height: 0;
-
-overflow: hidden;
-
-transition: max-height 0.3s ease-out;
-
-background: #fdfdfd;
-
-border-top: 1px solid transparent;
-
-}
-
-
-
-.book-list-inner {
-
-padding: 12px 16px;
-
-display: flex;
-
-flex-direction: column;
-
-gap: 12px;
-
-}
-
-
-
-.book-card {
-
-background: var(--card-bg);
-
-border-radius: 8px;
-
-padding: 12px 14px;
-
-border: 1px solid #eee;
-
-display: flex;
-
-flex-direction: column;
-
-gap: 6px;
-
-}
-
-
-
-.book-title {
-
-font-size: 1.2rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-color: var(--text-color);
-
-}
-
-
-
-.book-desc {
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: var(--text-secondary);
-
-line-height: 1.6;
-
-white-space: normal;
-
-}
-
-
-
-.book-footer {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-margin-top: 4px;
-
-padding-top: 6px;
-
-border-top: 1px solid #f5f5f5;
-
-}
-
-
-
-.category-tag {
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-background: #eef2f7;
-
-color: #555;
-
-padding: 2px 6px;
-
-border-radius: 10px;
-
-}
-
-
-
-.btn-read {
-
-background-color: var(--primary-color);
-
-color: white;
-
-text-decoration: none;
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-padding: 5px 12px;
-
-border-radius: 15px;
-
-font-weight: 500;
-
-}
-
-
-
-.btn-read:hover {
-
-background-color: #357abd;
-
-}
-
-
-
-.no-result {
-
-text-align: center;
-
-color: var(--text-secondary);
-
-margin-top: 40px;
-
-display: none;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-}
-
-
-
-.admin-section {
-
-margin-top: 30px;
-
-text-align: center;
-
-}
-
-
-
-.btn-admin-toggle {
-
-background: none;
-
-border: none;
-
-color: #bbb;
-
-font-size: 1.0rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-padding: 10px;
-
-}
-
-
-
-.admin-panel {
-
-display: none;
-
-background: white;
-
-border-radius: var(--border-radius);
-
-padding: 16px;
-
-margin-top: 10px;
-
-box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-text-align: left;
-
-}
-
-
-
-.admin-panel h3 {
-
-font-size: 1.3rem; /* 字體放大 2 號 */
-
-margin-bottom: 12px;
-
-color: var(--primary-color);
-
-border-bottom: 2px solid var(--primary-light);
-
-padding-bottom: 6px;
-
-}
-
-
-
-.form-group {
-
-margin-bottom: 10px;
-
-}
-
-
-
-.form-group label {
-
-display: block;
-
-font-size: 1.05rem; /* 字體放大 2 號 */
-
-color: var(--text-secondary);
-
-margin-bottom: 4px;
-
-}
-
-
-
-.form-group input, .form-group textarea {
-
-width: 100%;
-
-padding: 8px 12px;
-
-border: 1px solid #ddd;
-
-border-radius: 6px;
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-outline: none;
-
-}
-
-
-
-.form-group input:focus, .form-group textarea:focus {
-
-border-color: var(--primary-color);
-
-}
-
-
-
-.btn-submit {
-
-background-color: #27ae60;
-
-color: white;
-
-border: none;
-
-width: 100%;
-
-padding: 10px;
-
-border-radius: 6px;
-
-font-size: 1.2rem; /* 字體放大 2 號 */
-
-font-weight: bold;
-
-cursor: pointer;
-
-margin-top: 6px;
-
-margin-bottom: 16px;
-
-}
-
-
-
-.btn-submit:hover {
-
-background-color: #219653;
-
-}
-
-
-
-.manage-book-item {
-
-display: flex;
-
-justify-content: space-between;
-
-align-items: center;
-
-padding: 8px 0;
-
-border-bottom: 1px solid #eee;
-
-font-size: 1.1rem; /* 字體放大 2 號 */
-
-}
-
-
-
-.manage-book-info {
-
-overflow: hidden;
-
-text-overflow: ellipsis;
-
-white-space: nowrap;
-
-margin-right: 10px;
-
-flex: 1;
-
-}
-
-
-
-.manage-actions {
-
-display: flex;
-
-gap: 6px;
-
-flex-shrink: 0;
-
-}
-
-
-
-.btn-edit-item {
-
-background-color: #f39c12;
-
-color: white;
-
-border: none;
-
-padding: 4px 8px;
-
-border-radius: 4px;
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-}
-
-
-
-.btn-delete-item {
-
-background-color: #e74c3c;
-
-color: white;
-
-border: none;
-
-padding: 4px 8px;
-
-border-radius: 4px;
-
-font-size: 0.95rem; /* 字體放大 2 號 */
-
-cursor: pointer;
-
-}
-
+.daily-special-badge { display: inline-block; background: #d48806; color: white; font-size: 0.95rem; padding: 2px 8px; border-radius: 10px; margin-bottom: 8px; font-weight: bold; }
+.daily-title { font-size: 1.35rem; font-weight: bold; color: #856404; margin-bottom: 4px; }
+.daily-author { font-size: 1.05rem; color: #a07800; margin-bottom: 8px; }
+.daily-desc { font-size: 1.05rem; color: #665c3b; line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.daily-footer { display: flex; justify-content: space-between; align-items: center; }
+.btn-daily-read { background-color: #d48806; color: white; text-decoration: none; font-size: 1.05rem; padding: 6px 16px; border-radius: 15px; font-weight: 500; transition: background 0.2s; }
+.btn-daily-read:hover { background-color: #b77103; }
+.btn-refresh-daily { background: none; border: none; color: #a07800; font-size: 1.0rem; cursor: pointer; text-decoration: underline; }
+
+.search-box { margin-bottom: 14px; }
+.search-box input { width: 100%; padding: 12px 16px; font-size: 1.2rem; border: 1px solid #ddd; border-radius: var(--border-radius); outline: none; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s; }
+.search-box input:focus { border-color: var(--primary-color); }
+
+.tabs-container { display: flex; overflow-x: auto; margin-bottom: 16px; border: 1px solid #ddd; background: white; scrollbar-width: none; }
+.tabs-container::-webkit-scrollbar { display: none; }
+.tab-btn { background: white; border: none; border-right: 1px solid #ddd; color: var(--text-secondary); padding: 10px 16px; font-size: 1.1rem; white-space: nowrap; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
+.tab-btn:last-child { border-right: none; }
+.tab-btn.active { background: var(--primary-color); color: white; font-weight: bold; }
+
+.author-group { margin-bottom: 12px; background: white; border-radius: var(--border-radius); box-shadow: 0 2px 6px rgba(0,0,0,0.04); overflow: hidden; }
+.author-header { width: 100%; background: white; border: none; padding: 16px; display: flex; justify-content: space-between; align-items: center; font-size: 1.25rem; font-weight: bold; color: var(--text-color); cursor: pointer; text-align: left; transition: background 0.2s; }
+.author-header:hover { background: #fafafa; }
+.author-info { display: flex; align-items: center; gap: 10px; }
+.book-count-badge { font-size: 0.95rem; background: var(--primary-light); color: var(--primary-color); padding: 2px 8px; border-radius: 12px; font-weight: normal; }
+.arrow-icon { font-size: 1.0rem; color: #999; transition: transform 0.3s ease; }
+.author-header.active .arrow-icon { transform: rotate(180deg); }
+
+.book-list-container { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: #fdfdfd; border-top: 1px solid transparent; }
+.book-list-inner { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.book-card { background: var(--card-bg); border-radius: 8px; padding: 12px 14px; border: 1px solid #eee; display: flex; flex-direction: column; gap: 6px; }
+.book-title { font-size: 1.2rem; font-weight: bold; color: var(--text-color); }
+.book-desc { font-size: 1.05rem; color: var(--text-secondary); line-height: 1.6; white-space: normal; }
+.book-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 6px; border-top: 1px solid #f5f5f5; }
+.category-tag { font-size: 0.95rem; background: #eef2f7; color: #555; padding: 2px 6px; border-radius: 10px; }
+.btn-read { background-color: var(--primary-color); color: white; text-decoration: none; font-size: 1.0rem; padding: 5px 12px; border-radius: 15px; font-weight: 500; }
+.btn-read:hover { background-color: #357abd; }
+
+.no-result { text-align: center; color: var(--text-secondary); margin-top: 40px; display: none; font-size: 1.05rem; }
+.loading-box { text-align: center; padding: 40px 0; color: var(--text-secondary); font-size: 1.2rem; }
 </style>
-
 </head>
 
 <body>
@@ -1077,7 +193,7 @@ cursor: pointer;
 
 <div class="container">
 
-<!-- 將最上方標題改為獨立的白色圓角區塊卡片，內部維持藍色漸層標題列 -->
+<!-- 標題卡片 -->
 <div class="header-card">
     <div class="header-inner">
         <div class="header-title-wrapper">
@@ -1090,1242 +206,296 @@ cursor: pointer;
     </div>
 </div>
 
-
-
+<!-- 今日推薦 -->
 <div class="daily-special-card" id="dailySpecialCard">
-
-<span class="daily-special-badge">✨ 今日推薦線上電子書</span>
-
-<div class="daily-title" id="dailyTitle">天龍八部</div>
-
-<div class="daily-author" id="dailyAuthor">作者： 金庸</div>
-
-<div class="daily-desc" id="dailyDesc">金庸武俠小說的宏偉巨作，以北宋年間為時代背景...</div>
-
-<div class="daily-footer">
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
-
-<button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
-
+    <span class="daily-special-badge">✨ 今日推薦線上電子書</span>
+    <div class="daily-title" id="dailyTitle">讀取中...</div>
+    <div class="daily-author" id="dailyAuthor"></div>
+    <div class="daily-desc" id="dailyDesc">正在從 Google Sheet 載入書籍資料...</div>
+    <div class="daily-footer">
+        <a href="#" id="dailyLink" target="_blank" rel="noopener noreferrer" class="btn-daily-read">進入閱讀</a>
+        <button class="btn-refresh-daily" onclick="pickRandomBook()">換一本 🎲</button>
+    </div>
 </div>
 
-</div>
-
-
-
+<!-- 搜尋框 -->
 <div class="search-box">
-
-<input type="text" id="searchInput" placeholder="搜尋書名或作者..." onkeyup="filterContent()">
-
+    <input type="text" id="searchInput" placeholder="搜尋書名或作者..." onkeyup="filterContent()">
 </div>
 
-
-
+<!-- 分類頁籤 -->
 <div class="tabs-container" id="tabContainer">
-
-<button class="tab-btn active" onclick="filterCategory('全部')">全部</button>
-
-<button class="tab-btn" onclick="filterCategory('武俠小說')">武俠小說</button>
-
-<button class="tab-btn" onclick="filterCategory('歷史煙雲')">歷史煙雲</button>
-
-<button class="tab-btn" onclick="filterCategory('奇幻小說')">奇幻小說</button>
-
-<button class="tab-btn" onclick="filterCategory('小說園地')">小說園地</button>
-
-<button class="tab-btn" onclick="filterCategory('懸疑小說')">懸疑小說</button>
-
+    <button class="tab-btn active" onclick="filterCategory('全部')">全部</button>
 </div>
 
+<!-- 動態載入提示 -->
+<div id="loadingBox" class="loading-box">📖 正在載入雲端書單資料...</div>
 
+<!-- 作者與書籍卡片容器 -->
+<div id="authorGroupsContainer"></div>
 
-<div id="authorGroupsContainer">
-
-<div class="author-group" data-category="武俠小說" data-author="金庸" style="display: block;">
-
-<button class="author-header active" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>金庸</span>
-
-<span class="book-count-badge">7 本書</span>
+<!-- 查無結果 -->
+<div class="no-result" id="noResult">找不到符合的書籍或作者</div>
 
 </div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container" style="border-top-color: rgb(240, 240, 240); max-height: 1010px;">
-
-<div class="book-list-inner">
-
-<div class="book-card" data-title="笑傲江湖" data-search="笑傲江湖 金庸 武俠小說" style="">
-
-<div class="book-title">笑傲江湖</div>
-
-<div class="book-desc"><b>【政客面具、正邪迷思與靈魂自由：金庸最具政治寓言色彩的絕響】</b><br><br>
-• <b>【名門正派與魔教的虛偽解構】</b><br>
-《笑傲江湖》沒有明確的歷史時代背景，正是因為它是一部超越時代的政治與人性寓言。金庸透過「君子劍」嶽不群的偽善、左冷禪的霸道、任我行的專制，無情揭露了權力對人性的腐蝕。所謂的名門正派往往心懷鬼胎，而被稱為「邪教」的人卻不乏真性情之士。<br><br>
-• <b>【令狐沖：獨孤九求與道家解脫】</b><br>
-主角令狐沖是金庸筆下最具道家采風與詩人氣質的人物。他重情重義卻屢遭師門誤解與背叛，身負重傷、體內真氣紊亂。然而正是這種「無招勝有招」的獨孤九劍心法，象徵著擺脫規則束縛、回歸本真生活的哲學。他追求的從不是武林至尊，而是大自然與心靈的絕對自由。<br><br>
-• <b>【絕響《笑傲江湖》曲】</b><br>
-正邪不兩立的嵇康式奇人琴簫合奏，曲洋與劉正風甘願為音樂與知音獻出生命。《笑傲江湖》曲不僅是小說的靈魂線索，更是魏晉風骨與現代人對心靈淨土終極嚮往的縮影。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《鹿鼎記》（金庸 著）：</b>金庸封筆之作，以荒誕市井視角進一步解構英雄主義。<br>
-• 🔗 <b>《倚天屠龍記》（金庸 著）：</b>同樣探討名門正派與所謂「邪教」（明教）之間的偏見與恩怨。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D517:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="射鵰英雄傳" data-search="射鵰英雄傳 金庸 武俠小說" style="">
-
-<div class="book-title">射鵰英雄傳</div>
-
-<div class="book-desc"><b>【俠之大者，為國為民：浪漫武俠史詩的奠基巨作】</b><br><br>
-• <b>【從大漠少年到一代大俠的成長典範】</b><br>
-《射鵰英雄傳》作為金庸「射鵰三部曲」的開山之作，奠定了現代武俠小說的宏大格局。主角郭靖天資愚鈍、質樸純真，憑藉著一股「大巧若拙」的韌性與俠義赤子之心，從大漠蒙古一路成長為中原武林的頂樑柱，完美詮釋了「俠之大者，為國為民」的崇高精神。<br><br>
-• <b>【江湖奇人與天下五絕的哲學隱喻】</b><br>
-東邪黃藥師的孤傲不羈、西毒歐陽鋒的癡迷癲狂、南帝段智興的佛門慈悲、北丐洪七公的美味與正氣、中神通王重陽的道法自然——金庸將中國傳統文化哲學（儒、釋、道、邪）融入五絕個人性格與絕學中，構成了一幅絢麗多彩的江湖全景圖。<br><br>
-• <b>【郭黃之戀與歷史大時代的交織】</b><br>
-憨厚郭靖與冰雪聰明黃蓉的互補愛情，堪稱文學史上最受喜愛的佳偶。小說將個人命運緊密織入宋、金、蒙古三大勢力交替的浩瀚歷史背景中，使武俠小說擁有了史詩般的厚重質感。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《神鵰俠侶》（金庸 著）：</b>射鵰二部曲，延續郭靖黃蓉守護襄陽的史詩，並聚焦楊過小龍女的情深。<br>
-• 🔗 <b>《天龍八部》（金庸 著）：</b>同為北宋與周邊大國交界時代的宏大史詩巨作。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D301:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="神鵰俠侶" data-search="神鵰俠侶 金庸 武俠小說" style="">
-
-<div class="book-title">神鵰俠侶</div>
-
-<div class="book-desc"><b>【問世間情為何物：狂傲大俠與世俗禮教的終極對抗】</b><br><br>
-• <b>【「情」字為骨的武俠奇峰】</b><br>
-如果說《射鵰》寫的是「俠」，《神鵰》寫的就是極致的「情」。楊過與小龍女之間超越師徒名分、世俗眼光、生死別離與十六年時光考驗的愛情，成為中文文學中愛情信仰的代名詞。<br><br>
-• <b>【楊過的叛逆性格與心靈救贖】</b><br>
-身世坎坷的楊過性格孤傲狂放、性格敏感多疑，他性格中帶著魏晉名士的「狂」與對傳統禮教的蔑視。從斷臂殘缺到重劍無鋒，從寄人籬下到成為萬人敬仰的神鵰大俠，楊過完成了從個人恩怨到超越自我心靈救贖。<br><br>
-• <b>【黯然銷魂掌與情深意切的境界】</b><br>
-「重劍無鋒，大巧不工；木劍無勝，無劍勝有劍。」金庸將武功境界與人的情感經歷深度結合。楊過在絕情谷底失落十六年後自創的「黯然銷魂掌」，唯有至情至性、心如死灰之人方能發揮威力，將武俠小說的情感深度推向極致。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《倚天屠龍記》（金庸 著）：</b>射鵰三部曲終章，承接神鵰結尾郭襄與九陽真經線索。<br>
-• 🔗 <b>《查令十字路84號》（海蓮．漢芙 著）：</b>同樣講述跨越時間與空間考驗、深厚動人的靈魂牽絆。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D354:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="倚天屠龍記" data-search="倚天屠龍記 金庸 武俠小說" style="">
-
-<div class="book-title">倚天屠龍記</div>
-
-<div class="book-desc"><b>【武林至尊與人性抉擇：元末紛爭下的江湖與紅塵】</b><br><br>
-• <b>【武林至尊的權力隱喻】</b><br>
-「寶刀屠龍，號令天下，莫敢不從！倚天不出，誰與爭鋒？」小說以此名言貫穿始終。屠龍刀象徵著至高無上的政治權力，倚天劍象徵著監督權力的正義力量。金庸藉此探討了權力對江湖與歷史朝代更迭的巨大吸引力與毀滅性。<br><br>
-• <b>【張無忌的性格悲劇與寬恕哲學】</b><br>
-主角張無忌與郭靖、楊過不同，他性格溫和、優柔寡斷、缺乏政治野心，卻因緣際會身兼九陽神功與乾坤大挪移絕學，並被推舉為明教教主。他的寬恕與善良化解了明教與六大派數十年的血海深仇，展現了「以德報怨」的儒佛寬容精神。<br><br>
-• <b>【四美紛爭與紅塵選擇】</b><br>
-趙敏的燦爛潑辣、周芷若的幽微黑化、小昭的溫柔奉獻、殷離的執念癡情。張無忌在多位紅顏知己間的情感搖擺，反映了普通人在面臨重大抉擇時的真實心理人性狀況。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《射鵰英雄傳》（金庸 著）：</b>射鵰三部曲源頭，了解郭靖黃蓉武學與兵法遺存。<br>
-• 🔗 <b>《天龍八部》（金庸 著）：</b>同樣呈現多種宗教、門派與大時代背景下的歷史紛爭。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D354:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="天龍八部" data-search="天龍八部 金庸 武俠小說" style="">
-
-<div class="book-title">天龍八部</div>
-
-<div class="book-desc"><b>【有情皆孽，無人不苦：佛家悲劇史詩的最高峰】</b><br><br>
-• <b>【佛哲背景與命案悲劇史詩】</b><br>
-書名取自佛經「天龍八部」八種神道怪物，象徵大千世界中千奇百怪、受欲望與宿命驅使的眾生。金庸在本作中擺脫了傳統善惡二元對立，展現出「求而不得、得而復失」的深刻佛家宿命悲劇美學。<br><br>
-• <b>【三大主角的三重生命境界】</b><br>
-• <b>喬峰（蕭峰）：</b>悲劇英雄的極致。血統與恩義的撕裂，讓他縱有蓋世武功卻無法阻擋命案與時代輪轉，最終於雁門關前折箭自盡，殉道於和平與天下蒼生。<br>
-• <b>段譽：</b>癡情與解脫。貴為大理王子，癡迷於王語嫣與曼陀山莊神仙姐姐，最終體悟「求不得」之苦與執念解脫。<br>
-• <b>虛竹：</b>無心插柳的人生。本欲為清心寡欲的小和尚，卻機緣巧合繼承百年內力、破戒成為靈鷲宮主與西夏駙馬，展現命運荒謬與無常。<br><br>
-• <b>【無與倫比的武學想像力】</b><br>
-六脈神劍、降龍十八掌、凌波微波、生死符、北冥神功，金庸將武功賦予了極高的美學與哲學意境，使本書成為公認的中文武俠小說巔峰。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《笑傲江湖》（金庸 著）：</b>同樣富含佛道解脫哲學與人性寓言。<br>
-• 🔗 <b>《東方快車謀殺案》（克莉絲蒂 著）：</b>在不同文化語境下探討宿命、復仇與道德決擇。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D552:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="雪山飛狐" data-search="雪山飛狐 金庸 武俠小說" style="">
-
-<div class="book-title">雪山飛狐</div>
-
-<div class="book-desc"><b>【大雪封山中的黑澤明式推理：結構精巧的武林傳奇】</b><br><br>
-• <b>【羅生門式的多視角敘事】</b><br>
-《雪山飛狐》是金庸在結構藝術上最具突破性的創新作品。整部小說的故事發生在短短一天之內、大雪封山的山頂山莊中。眾多武林人士圍坐一堂，透過各自的回憶與口述，還原四百年來胡、苗、范、田四大家族的血海深仇。<br><br>
-• <b>【記憶的偏差與人性的自私】</b><br>
-每一個敘述者都帶著自身的立場、偏見與美化，使得「胡一刀與苗人鳳決戰真相」層層反轉、迷霧重重。這種敘事手法與黑澤明電影《羅生門》異曲同工，探討了真實的不可全知性與人性弱點。<br><br>
-• <b>【令人屏息的開放式結局】</b><br>
-「這一刀劈是不劈？」小說在胡斐與苗人鳳高空崖頂生死對決的瞬間定格終結。金庸留下了中文文學史上最著名的開放式懸念，將道德倫理與命運的抉擇留給讀者無限咀嚼。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《飛狐外傳》（金庸 著）：</b>《雪山飛狐》的前傳，詳細講述胡斐成長與程靈素、袁紫衣的情感悲劇。<br>
-• 🔗 <b>《東方快車謀殺案》（克莉絲蒂 著）：</b>同為雪山困境密室中探尋過去真相的結構大師之作。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D501:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-<div class="book-card" data-title="鹿鼎記" data-search="鹿鼎記 金庸 武俠小說" style="">
-
-<div class="book-title">鹿鼎記</div>
-
-<div class="book-desc"><b>【市井無賴的清朝官場奇遇：金庸解構武俠的封筆絕響】</b><br><br>
-• <b>【反英雄的喜劇傳奇】</b><br>
-作為金庸的最後一部長篇小說，《鹿鼎記》完全顛覆了傳統武俠的套路。主角韋小寶出身揚州妓院，不會蓋世武功、不識幾個大字，憑藉著機智、滑頭、講義氣與市井智慧，在康熙皇帝、天地會、神龍教等錯綜複雜的政治勢力間游刃有餘。<br><br>
-• <b>【對傳統忠義與政治權謀的幽默諷刺】</b><br>
-韋小寶既是朝廷的一品大員，又是天地會的木桑堂香主。金庸透過這個滑稽角色，赤裸裸地揭露了政治鬥爭的虛偽與荒誕。無論是朝廷的名利場，還是江湖幫會的「反清復明」口號，在韋小寶實用主義的眼光下都顯得滑稽可笑。<br><br>
-• <b>【時代變遷下的歸宿】</b><br>
-小說結尾韋小寶攜七位夫人隱退江湖，代表著傳統俠義精神在近代世俗化潮流中的終結。《鹿鼎記》不僅是一部爆笑連連的傳奇小說，更是一部深刻的歷史與人性觀察白皮書。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《笑傲江湖》（金庸 著）：</b>同樣深刻解構權謀與偽君子的經典作品。<br>
-• 🔗 <b>《秘密》（東野圭吾 著）：</b>在看似荒誕的日常設定中探討人性最深層的抉擇與牽絆。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">武俠小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=D67:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="author-group" data-category="懸疑小說" data-author="阿嘉莎．克莉絲蒂" style="display: block;">
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>阿嘉莎．克莉絲蒂</span>
-
-<span class="book-count-badge">2 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container" style="border-top-color: transparent;">
-
-<div class="book-list-inner"><div class="book-card" data-title="尼羅河謀殺案" data-search="尼羅河謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="">
-
-<div class="book-title">尼羅河謀殺案</div>
-
-<div class="book-desc"><b>【奢華蜜月下的熾熱嫉妒與人性毀滅：流動密室中的愛恨悲劇】</b><br><br>
-• <b>【尼羅河上的移動密室】</b><br>
-浩瀚古老的埃及尼羅河上，「卡納克號」遊輪緩緩前行。沿岸是數千年沉默的法老神殿與金字塔，船上卻上演著極致現代的豪門恩怨與三角情仇。克莉絲蒂巧妙運用遊輪的封閉性與異國古文明的神秘氛圍，塑造出一種隨時可能爆發的壓迫感。<br><br>
-• <b>【致命三角：金錢、名貌與狂亂的愛】</b><br>
-富家女林內特奪走了好友賈桂琳的未婚夫賽門，這場看似完美的蜜月之旅，卻始終籠罩在賈桂琳陰魂不散的跟蹤與仇恨陰影下。然而，當林內特在睡夢中頭部中彈身亡時，擁有最強謀殺動機的賈桂琳卻擁有無懈可擊的不在場證明。白羅步步深入心理調查，揭開隱藏在盲目愛情與極致貪婪背後令人毛骨悚然的精密陰謀。<br><br>
-• <b>【白羅的人性心理學】</b><br>
-「愛情是極其可怕的東西……它會讓人喪失理智。」白羅在此案中不僅是偵探，更是人性的觀察者與警世者。作品超越了單純的解謎，深刻刻畫了嫉妒如何侵蝕靈魂，以及看似完美的計劃如何在人性弱點面前潰不成軍。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《羅傑．艾克洛命案》（克莉絲蒂 著）：</b>顛覆推理小說敘事常規的里程碑神作。<br>
-• 🔗 <b>《陽光下的罪惡》（克莉絲蒂 著）：</b>陽光海灘渡假勝地發生的密室情殺案，與《尼羅河謀殺案》有異曲同工之妙。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">懸疑小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=E1231:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div><div class="book-card" data-title="東方快車謀殺案" data-search="東方快車謀殺案 阿嘉莎．克莉絲蒂 懸疑小說" style="">
-
-<div class="book-title">東方快車謀殺案</div>
-
-<div class="book-desc"><b>【封閉雪夜裡的群體私刑與道德思辨：懸疑女王最高峰之作】</b><br><br>
-• <b>【暴風雨山莊模式與文明空間的解構】</b><br>
-東方快車（Orient Express）歷史上是穿梭歐洲大陸、象徵十九世紀工業文明與極致奢華的符號。然而，克莉絲蒂將其困於巴爾幹半島的茫茫大雪中，瞬間將這座移動宮殿轉化為切斷現實法治連結的「封閉密室」。在這一空間內，法治的保護傘暫失，原始的人性抉擇被迫浮出水面。<br><br>
-• <b>【經典謀殺案背後的群體悲劇】</b><br>
-死者雷切特身上慘遭十二刀殘暴刺殺，每一刀的深淺、角度與力道各異。白羅透過著名的「灰色腦細胞」層層剝離，發現車廂內十三名背景、國籍、階級截然不同的乘客，竟全數指向多年前一起震驚世界的「阿姆斯壯幼童綁架案」。十二道傷口，代表的是十二位陪審員的共同判決，這不是單純的謀殺，而是一場法律失靈下的集體正義私刑。<br><br>
-• <b>【白羅的最高道德困境】</b><br>
-當事實大白，名偵探白羅面臨了職業生涯中最嚴峻的道德抉擇：是堅持法律形式上的程序正義，將這群承受至深創傷的復仇者送上法庭？還是承認世俗法律的局限，讓位於更高的天理與撫慰？最終白羅選擇向警方提交第一種偽造推論，留下文學史上最具震撼力與人情溫度的結局。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《無人生還 / 十個小印第安人》（克莉絲蒂 著）：</b>孤島密室懸疑的終極鼻祖，深刻探討罪與罰的審判。<br>
-• 🔗 <b>《尼羅河謀殺案》（克莉絲蒂 著）：</b>同為白羅旅途密室系列，將舞台搬至埃及尼羅河豪華遊輪，探討愛與毀滅的心理學。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">懸疑小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=I1037:1&amp;L=Share" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div></div>
-
-</div>
-
-</div><div class="author-group" data-category="懸疑小說" data-author="東野圭吾" style="display: block;">
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>東野圭吾</span>
-
-<span class="book-count-badge">1 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container" style="border-top-color: transparent;">
-
-<div class="book-list-inner"><div class="book-card" data-title="秘密" data-search="秘密 東野圭吾 懸疑小說" style="">
-
-<div class="book-title">秘密</div>
-
-<div class="book-desc"><b>【靈魂寄宿與愛情的終極捨離：東野圭吾情感推理的開山神作】</b><br><br>
-• <b>【倫理邊界上的驚人設定】</b><br>
-一場遊覽車墜崖慘劇，奪走了主角杉田平介妻子的生命，十一歲的女兒藻奈美奇蹟甦醒。然而，甦醒過來的身體裡，裝著的卻是妻子直子的靈魂。「對外是父女，對內是夫妻」，這個驚心動魄的開場，將角色拋入了一個前所未有且無法對外人道倫理迷宮中。<br><br>
-• <b>【重啟人生與心靈束縛的拉扯】</b><br>
-直子獲得了二次青春與重活一次的機會，她重新踏入校園、接觸新知識、拓展視野；而平介卻逐漸老去，被困在「父親」與「丈夫」的身分撕裂中。作品深刻描繪了愛情中的佔有欲、嫉妒、無奈與無私。當愛一個人愛到極致時，究竟是緊緊抓牢，還是放手讓對方飛翔？<br><br>
-• <b>【堪稱完美的震撼結尾】</b><br>
-隨著藻奈美漸漸長大，妻子直子的靈魂似乎逐漸沉睡，女兒的靈魂重新復甦……然而，在女兒出嫁的那一天，平介發現了一個隱藏多年的驚天秘密。這不是物理上的懸疑解謎，而是關於「為了讓至愛獲得真正幸福，甘願獨自承擔一生孤寂」的情感巔峰奇蹟。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《解憂雜貨店》（東野圭吾 著）：</b>穿越時空的溫暖信件，展現東野圭吾極致的人文關懷。<br>
-• 🔗 <b>《白夜行》（東野圭吾 著）：</b>極致黑暗與淒美互為表裏的靈魂羈絆，東野圭吾另一代表作。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">懸疑小說</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=E13E0:1&amp;L=book" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div></div>
-
-</div>
-
-</div><div class="author-group" data-category="小說園地" data-author="海蓮．漢芙">
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>海蓮．漢芙</span>
-
-<span class="book-count-badge">1 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container">
-
-<div class="book-list-inner"><div class="book-card" data-title="查令十字路84號" data-search="查令十字路84號 海蓮．漢芙 小說園地">
-
-<div class="book-title">查令十字路84號</div>
-
-<div class="book-desc"><b>【門牌號碼背後的靈魂對話：在速食時代重溫「慢速交情」的終極浪漫】</b><br><br>
-• <b>【一本局部擊敗時間的實錄】</b><br>
-阿根廷作家博爾赫斯曾說：「<i>人類發明了各種工具以延伸身體，唯獨書籍，是記憶與想像力的延伸。</i>」這本僅有百餘頁的書信集，記錄了 1949 至 1969 年間，紐約貧困女劇作家海蓮（Helene Hanff）與倫敦二手書店經理法蘭克（Frank Doel）跨越大西洋的 20 年通訊。它之所以成為無數人心中的聖經，正因它用最平凡的紙筆，局部地、甚富意義地擊敗了時間與空間的宰制。<br><br>
-• <b>【戰後灰暗大英帝國裡的「紙上溫暖」】</b><br>
-若不理解時代背景，便讀不懂這份深情。1949 年的英國仍沉浸在二戰後的物資匱乏與配給制度（Rationing）中。當海蓮在紐約抱怨「怎麼又寄這版給我」時，她卻默默跨海寄去全磅的雞蛋粉、火腿與尼龍襪。如海蓮在信中所寫：<i>「我寄給你們的東西，你們頂多一個星期就吃光抹淨；而你們送給我的禮物，卻能和我朝夕相處、至死方休……」</i>這不僅是愛書人的狂熱，更是兩個平行世界在戰後動盪年代裡，透過文字傳遞的至高人道關懷與互助。<br><br>
-• <b>【未曾謀面的柏拉圖式知己】</b><br>
-這份長達二十年的情誼始於「尋書」，終點卻超越了書籍。海蓮是典型的紐約客——率直、潑辣、幽默；法蘭克則是正宗的大英紳士——含蓄、嚴謹、克制。這不是男女間的俗世情愛，而是法語所說的 <i>« Affinité élective »</i>（靈魂共鳴）——兩個同樣熱愛古典文學的孤獨靈魂，隔著浩瀚大海，在紙頁間相認。<br><br>
-• <b>【終將錯過的遺憾，與永遠敞開的門牌】</b><br>
-「明年我一定去倫敦看你們……」這個許了無數次的承諾，終因生活窘迫與命運捉弄而多次延宕。當海蓮終於在 1971 年踏上倫敦查令十字路 84 號時，法蘭克已然離世，書店也已人去樓空。這間「活脫是從狄更斯小說裡蹦出來」的老書店雖然熄了燈，卻因為這本小書，在全世界所有愛書人的心中，蓋起了一座永遠不熄燈的心靈避風港。<br><br>
-<b>📖 延伸閱讀與同場加映：</b><br>
-• ✍️ <b>《重返查令十字路84號》（海蓮．漢芙 著）：</b>記載海蓮大獲成功後，於1971年親赴倫敦的日記，滿溢著對老街區、文學故居的深情體悟與懷念。<br>
-• 🔗 <b>《島嶼書譯》（嘉莉．費雪 著）：</b>講述小島孤僻書店老闆如何透過書籍與愛重新與世界連結，充滿對愛書人的致敬。</div>
-
-<div class="book-footer">
-
-<span class="category-tag">小說園地</span>
-
-<a href="https://www.haodoo.net/?M=u&amp;P=P1010490099:3&amp;L=Share" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-</div></div>
-
-</div>
-
-</div></div>
-
-
-
-<div class="no-result" id="noResult" style="display: none;">找不到符合的書籍或作者</div>
-
-
-
-<div class="admin-section">
-
-<button class="btn-admin-toggle" onclick="tryOpenAdmin()">⚙ 管理書單</button>
-
-<div class="admin-panel" id="adminPanel" style="display: none;">
-
-<input type="hidden" id="editCardId" value="">
-
-<h3 id="formTitle">➕ 新增書籍與類別</h3>
-
-<div class="form-group">
-
-<label>書籍名稱</label>
-
-<input type="text" id="newTitle" placeholder="例如：鹿鼎記">
-
-</div>
-
-<div class="form-group">
-
-<label>作者名稱</label>
-
-<input type="text" id="newAuthor" placeholder="例如：金庸">
-
-</div>
-
-<div class="form-group">
-
-<label>類別（若輸入新類別會自動建立上方頁籤）</label>
-
-<input type="text" id="newCategory" placeholder="例如：科幻小說">
-
-</div>
-
-<div class="form-group">
-
-<label>好讀網址</label>
-
-<input type="text" id="newUrl" placeholder="https://www.haodoo.net/...">
-
-</div>
-
-<div class="form-group">
-
-<label>書籍簡介</label>
-
-<textarea id="newDesc" rows="3" placeholder="請輸入精彩簡述..."></textarea>
-
-</div>
-
-<button class="btn-submit" id="submitBtn" onclick="saveBookAndExport()">確認新增並下載新 HTML</button>
-
-
-
-<h3 style="margin-top: 20px;">📋 現有書籍管理 (修改 / 刪除)</h3>
-
-<div id="manageBookList" style="max-height: 250px; overflow-y: auto;"></div>
-
-</div>
-
-</div>
-
-
-
-</div>
-
-
 
 <script>
-// 控制側邊抽屜選單開關的函式
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebarMenu');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
-}
+// 您發布的 Google 試算表 CSV 連結
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTLByelrszBCdDAlpzHiHB6AHqZH8EH5ctJlWzN08TtUrvilRkCIYko1PXYrbvWFmEdtAdHjOdN3feg/pub?gid=0&single=true&output=csv';
 
+let allBooks = [];
 let currentCategory = '全部';
 
+function toggleSidebar() {
+    document.getElementById('sidebarMenu').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
 
-
+// 頁面載入後自動從 Google Sheet 讀取 CSV
 window.addEventListener('DOMContentLoaded', () => {
-
-updateBookCounts();
-
-pickRandomBook();
-
+    fetchCSVData();
 });
 
+// 解析 CSV 格式 (處理跨行文字與雙引號)
+function parseCSV(text) {
+    let lines = [];
+    let row = [];
+    let inQuotes = false;
+    let field = '';
 
+    for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        let nextChar = text[i+1];
 
-function pickRandomBook() {
-
-const allCards = document.querySelectorAll('.book-card');
-
-if (allCards.length === 0) {
-
-document.getElementById('dailyTitle').textContent = "目前無書籍";
-
-document.getElementById('dailyAuthor').textContent = "";
-
-document.getElementById('dailyDesc').textContent = "請透過管理功能新增書籍。";
-
-document.getElementById('dailyLink').setAttribute('href', "#");
-
-return;
-
+        if (char === '"') {
+            if (inQuotes && nextChar === '"') {
+                field += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            row.push(field.trim());
+            field = '';
+        } else if ((char === '\r' || char === '\n') && !inQuotes) {
+            if (char === '\r' && nextChar === '\n') { i++; }
+            row.push(field.trim());
+            if (row.length > 1 || row[0] !== '') lines.push(row);
+            row = [];
+            field = '';
+        } else {
+            field += char;
+        }
+    }
+    if (field || row.length > 0) {
+        row.push(field.trim());
+        lines.push(row);
+    }
+    return lines;
 }
 
+// 抓取並處理數據
+function fetchCSVData() {
+    fetch(CSV_URL)
+        .then(response => {
+            if (!response.ok) throw new Error("網絡回應失敗");
+            return response.text();
+        })
+        .then(data => {
+            const rows = parseCSV(data);
+            if (rows.length < 2) {
+                document.getElementById('loadingBox').textContent = "⚠️ Google 試算表中目前沒有資料";
+                return;
+            }
 
+            // 取得標題列索引 (Category, Author, Title, Url, Description)
+            const headers = rows[0].map(h => h.trim().toLowerCase());
+            const catIdx = headers.findIndex(h => h.includes('cat') || h.includes('類別'));
+            const authorIdx = headers.findIndex(h => h.includes('author') || h.includes('作者'));
+            const titleIdx = headers.findIndex(h => h.includes('title') || h.includes('書名'));
+            const urlIdx = headers.findIndex(h => h.includes('url') || h.includes('網址') || h.includes('連結'));
+            const descIdx = headers.findIndex(h => h.includes('desc') || h.includes('簡介') || h.includes('介紹'));
 
-const randomIndex = Math.floor(Math.random() * allCards.length);
+            allBooks = [];
+            for (let i = 1; i < rows.length; i++) {
+                const r = rows[i];
+                if (!r || r.length === 0) continue;
+                
+                const category = catIdx !== -1 && r[catIdx] ? r[catIdx] : '其他';
+                const author = authorIdx !== -1 && r[authorIdx] ? r[authorIdx] : '未知作者';
+                const title = titleIdx !== -1 && r[titleIdx] ? r[titleIdx] : '未命名書籍';
+                const url = urlIdx !== -1 && r[urlIdx] ? r[urlIdx] : 'https://www.haodoo.net/';
+                const desc = descIdx !== -1 && r[descIdx] ? r[descIdx] : '';
 
-const card = allCards[randomIndex];
+                if (title && author) {
+                    allBooks.push({ category, author, title, url, desc });
+                }
+            }
 
-
-
-const title = card.getAttribute('data-title');
-
-const desc = card.querySelector('.book-desc').innerHTML;
-
-const link = card.querySelector('.btn-read').getAttribute('href');
-
-
-
-const authorGroup = card.closest('.author-group');
-
-const author = authorGroup ? authorGroup.getAttribute('data-author') : '未知作者';
-
-
-
-document.getElementById('dailyTitle').textContent = title;
-
-document.getElementById('dailyAuthor').textContent = '作者： ' + author;
-
-document.getElementById('dailyDesc').innerHTML = desc;
-
-document.getElementById('dailyLink').setAttribute('href', link);
-
+            document.getElementById('loadingBox').style.display = 'none';
+            renderTabs();
+            renderBookGroups();
+            pickRandomBook();
+        })
+        .catch(err => {
+            console.error("載入失敗:", err);
+            document.getElementById('loadingBox').textContent = "❌ 資料載入失敗，請確認 Google Sheet 是否已「發布到網路」。";
+        });
 }
 
-
-
-function updateBookCounts() {
-
-const groups = document.querySelectorAll('.author-group');
-
-groups.forEach(group => {
-
-const cards = group.querySelectorAll('.book-card');
-
-const badge = group.querySelector('.book-count-badge');
-
-if (badge) {
-
-badge.textContent = cards.length + ' 本書';
-
+// 動態建立分類頁籤
+function renderTabs() {
+    const tabContainer = document.getElementById('tabContainer');
+    tabContainer.innerHTML = '<button class="tab-btn active" onclick="filterCategory(\'全部\')">全部</button>';
+    
+    const categories = [...new Set(allBooks.map(b => b.category))];
+    categories.forEach(cat => {
+        if (!cat) return;
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn';
+        btn.textContent = cat;
+        btn.onclick = () => filterCategory(cat);
+        tabContainer.appendChild(btn);
+    });
 }
 
-if (cards.length === 0) {
+// 根據作者分組繪製書籍列表
+function renderBookGroups() {
+    const container = document.getElementById('authorGroupsContainer');
+    container.innerHTML = '';
 
-group.remove();
+    // 按作者分組
+    const groupsMap = {};
+    allBooks.forEach(book => {
+        if (!groupsMap[book.author]) {
+            groupsMap[book.author] = {
+                author: book.author,
+                categories: new Set(),
+                books: []
+            };
+        }
+        groupsMap[book.author].categories.add(book.category);
+        groupsMap[book.author].books.push(book);
+    });
 
+    Object.values(groupsMap).forEach(group => {
+        const groupCategories = Array.from(group.categories).join(',');
+        
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'author-group';
+        groupDiv.setAttribute('data-categories', groupCategories);
+        groupDiv.setAttribute('data-author', group.author);
+
+        let booksHTML = group.books.map(b => `
+            <div class="book-card" data-category="${b.category}" data-title="${b.title}" data-search="${b.title} ${b.author} ${b.category}">
+                <div class="book-title">${b.title}</div>
+                <div class="book-desc">${b.desc}</div>
+                <div class="book-footer">
+                    <span class="category-tag">${b.category}</span>
+                    <a href="${b.url}" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
+                </div>
+            </div>
+        `).join('');
+
+        groupDiv.innerHTML = `
+            <button class="author-header" onclick="toggleAuthor(this)">
+                <div class="author-info">
+                    <span>${group.author}</span>
+                    <span class="book-count-badge">${group.books.length} 本書</span>
+                </div>
+                <span class="arrow-icon">▼</span>
+            </button>
+            <div class="book-list-container">
+                <div class="book-list-inner">
+                    ${booksHTML}
+                </div>
+            </div>
+        `;
+        container.appendChild(groupDiv);
+    });
 }
 
-});
-
-}
-
-
-
+// 摺疊選單控制
 function toggleAuthor(button) {
-
-button.classList.toggle('active');
-
-const container = button.nextElementSibling;
-
-if (container.style.maxHeight) {
-
-container.style.maxHeight = null;
-
-container.style.borderTopColor = 'transparent';
-
-} else {
-
-container.style.maxHeight = container.scrollHeight + "px";
-
-container.style.borderTopColor = '#f0f0f0';
-
+    button.classList.toggle('active');
+    const container = button.nextElementSibling;
+    if (container.style.maxHeight) {
+        container.style.maxHeight = null;
+        container.style.borderTopColor = 'transparent';
+    } else {
+        container.style.maxHeight = container.scrollHeight + "px";
+        container.style.borderTopColor = '#f0f0f0';
+    }
 }
 
-}
-
-
-
+// 分類過濾
 function filterCategory(categoryName) {
-
-currentCategory = categoryName;
-
-const buttons = document.querySelectorAll('.tab-btn');
-
-buttons.forEach(btn => {
-
-if (btn.textContent === categoryName) {
-
-btn.classList.add('active');
-
-} else {
-
-btn.classList.remove('active');
-
+    currentCategory = categoryName;
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        if (btn.textContent === categoryName) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+    filterContent();
 }
 
-});
-
-filterContent();
-
-}
-
-
-
+// 搜尋與動態過濾
 function filterContent() {
+    const input = document.getElementById('searchInput');
+    const keyword = input.value.toLowerCase().trim();
+    const groups = document.querySelectorAll('.author-group');
+    let visibleGroupCount = 0;
 
-const input = document.getElementById('searchInput');
+    groups.forEach(group => {
+        const authorName = group.getAttribute('data-author').toLowerCase();
+        const cards = group.querySelectorAll('.book-card');
+        let groupHasVisibleCard = false;
 
-const keyword = input.value.toLowerCase().trim();
+        cards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+            const searchData = card.getAttribute('data-search').toLowerCase();
+            
+            const matchCategory = (currentCategory === '全部' || cardCategory === currentCategory);
+            const matchKeyword = (keyword === '' || searchData.includes(keyword) || authorName.includes(keyword));
 
-const groups = document.querySelectorAll('.author-group');
+            if (matchCategory && matchKeyword) {
+                card.style.display = '';
+                groupHasVisibleCard = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
 
-const noResult = document.getElementById('noResult');
+        if (groupHasVisibleCard) {
+            group.style.display = 'block';
+            visibleGroupCount++;
+            const header = group.querySelector('.author-header');
+            const container = group.querySelector('.book-list-container');
+            if (keyword !== '' && !header.classList.contains('active')) {
+                header.classList.add('active');
+                container.style.maxHeight = container.scrollHeight + "px";
+                container.style.borderTopColor = '#f0f0f0';
+            }
+        } else {
+            group.style.display = 'none';
+        }
+    });
 
-let visibleGroupCount = 0;
-
-
-
-groups.forEach(group => {
-
-const groupCategory = group.getAttribute('data-category');
-
-const authorName = group.getAttribute('data-author').toLowerCase();
-
-const cards = group.querySelectorAll('.book-card');
-
-const matchCategory = (currentCategory === '全部' || groupCategory === currentCategory);
-
-let groupHasVisibleCard = false;
-
-
-
-cards.forEach(card => {
-
-const searchData = card.getAttribute('data-search').toLowerCase();
-
-const matchKeyword = (keyword === '' || searchData.includes(keyword) || authorName.includes(keyword));
-
-
-
-if (matchCategory && matchKeyword) {
-
-card.style.display = '';
-
-groupHasVisibleCard = true;
-
-} else {
-
-card.style.display = 'none';
-
+    document.getElementById('noResult').style.display = (visibleGroupCount === 0) ? 'block' : 'none';
 }
 
-});
+// 隨機抽書功能
+function pickRandomBook() {
+    if (allBooks.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * allBooks.length);
+    const book = allBooks[randomIndex];
 
-
-
-if (groupHasVisibleCard) {
-
-group.style.display = 'block';
-
-visibleGroupCount++;
-
-const header = group.querySelector('.author-header');
-
-const container = group.querySelector('.book-list-container');
-
-if (keyword !== '' && !header.classList.contains('active')) {
-
-header.classList.add('active');
-
-container.style.maxHeight = container.scrollHeight + "px";
-
-container.style.borderTopColor = '#f0f0f0';
-
+    document.getElementById('dailyTitle').textContent = book.title;
+    document.getElementById('dailyAuthor').textContent = '作者： ' + book.author;
+    document.getElementById('dailyDesc').innerHTML = book.desc || '暫無簡介';
+    document.getElementById('dailyLink').setAttribute('href', book.url || 'https://www.haodoo.net/');
 }
-
-} else {
-
-group.style.display = 'none';
-
-}
-
-});
-
-
-
-if (visibleGroupCount === 0) {
-
-noResult.style.display = 'block';
-
-} else {
-
-noResult.style.display = 'none';
-
-}
-
-}
-
-
-
-// 動態密碼（抓取當天日期 YYYYMMDD）
-
-function tryOpenAdmin() {
-
-const today = new Date();
-
-const year = today.getFullYear();
-
-const month = String(today.getMonth() + 1).padStart(2, '0');
-
-const day = String(today.getDate()).padStart(2, '0');
-
-const dynamicPassword = `${year}${month}${day}`;
-
-
-
-const pwd = prompt("請輸入密碼解鎖管理功能：");
-
-if (pwd === dynamicPassword) {
-
-const panel = document.getElementById('adminPanel');
-
-if (panel.style.display === 'block') {
-
-panel.style.display = 'none';
-
-} else {
-
-panel.style.display = 'block';
-
-renderManageList();
-
-}
-
-} else if (pwd !== null) {
-
-alert("密碼錯誤！");
-
-}
-
-}
-
-
-
-function renderManageList() {
-
-const manageListContainer = document.getElementById('manageBookList');
-
-manageListContainer.innerHTML = '';
-
-
-
-const cards = document.querySelectorAll('.book-card');
-
-if (cards.length === 0) {
-
-manageListContainer.innerHTML = '<div style="color:#888; font-size:0.85rem; padding:8px 0;">目前沒有任何書籍</div>';
-
-return;
-
-}
-
-
-
-cards.forEach((card, index) => {
-
-const title = card.getAttribute('data-title');
-
-const authorGroup = card.closest('.author-group');
-
-const author = authorGroup ? authorGroup.getAttribute('data-author') : '';
-
-
-
-card.setAttribute('data-temp-id', 'book_' + index);
-
-
-
-const itemDiv = document.createElement('div');
-
-itemDiv.className = 'manage-book-item';
-
-itemDiv.innerHTML = `
-
-<div class="manage-book-info"><b>${title}</b> <span style="color:#666; font-size:0.95rem;">(${author})</span></div>
-
-<div class="manage-actions">
-
-<button class="btn-edit-item" onclick="prepareEditBook('book_${index}')">修改</button>
-
-<button class="btn-delete-item" onclick="deleteBook('book_${index}')">刪除</button>
-
-</div>
-
-`;
-
-manageListContainer.appendChild(itemDiv);
-
-});
-
-}
-
-
-
-function prepareEditBook(tempId) {
-
-const card = document.querySelector(`[data-temp-id="${tempId}"]`);
-
-if (!card) return;
-
-
-
-const title = card.getAttribute('data-title');
-
-const desc = card.querySelector('.book-desc').innerHTML;
-
-const url = card.querySelector('.btn-read').getAttribute('href');
-
-const authorGroup = card.closest('.author-group');
-
-const author = authorGroup ? authorGroup.getAttribute('data-author') : '';
-
-const category = authorGroup ? authorGroup.getAttribute('data-category') : '';
-
-
-
-document.getElementById('editCardId').value = tempId;
-
-document.getElementById('newTitle').value = title;
-
-document.getElementById('newAuthor').value = author;
-
-document.getElementById('newCategory').value = category;
-
-document.getElementById('newUrl').value = url;
-
-document.getElementById('newDesc').value = desc;
-
-
-
-document.getElementById('formTitle').textContent = "✏️ 修改書籍資料";
-
-document.getElementById('submitBtn').textContent = "確認修改並下載新 HTML";
-
-document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
-
-}
-
-
-
-function deleteBook(tempId) {
-
-if (!confirm("確定要刪除這本書嗎？")) return;
-
-const card = document.querySelector(`[data-temp-id="${tempId}"]`);
-
-if (card) {
-
-card.remove();
-
-updateBookCounts();
-
-pickRandomBook();
-
-renderManageList();
-
-exportCurrentHtml();
-
-alert("已刪除並自動下載更新後的 HTML 檔案！");
-
-}
-
-}
-
-
-
-function saveBookAndExport() {
-
-const editId = document.getElementById('editCardId').value;
-
-const title = document.getElementById('newTitle').value.trim();
-
-const author = document.getElementById('newAuthor').value.trim();
-
-const category = document.getElementById('newCategory').value.trim();
-
-const url = document.getElementById('newUrl').value.trim() || 'https://www.haodoo.net/';
-
-const desc = document.getElementById('newDesc').value.trim();
-
-
-
-if (!title || !author || !category) {
-
-alert("請至少填寫書名、作者與類別！");
-
-return;
-
-}
-
-
-
-let categoryExists = false;
-
-const tabContainer = document.getElementById('tabContainer');
-
-const existingTabs = tabContainer.querySelectorAll('.tab-btn');
-
-existingTabs.forEach(btn => {
-
-if (btn.textContent === category) {
-
-categoryExists = true;
-
-}
-
-});
-
-
-
-if (!categoryExists) {
-
-const newTabBtn = document.createElement('button');
-
-newTabBtn.className = 'tab-btn';
-
-newTabBtn.setAttribute('onclick', `filterCategory('${category}')`);
-
-newTabBtn.textContent = category;
-
-tabContainer.appendChild(newTabBtn);
-
-}
-
-
-
-if (editId) {
-
-const card = document.querySelector(`[data-temp-id="${editId}"]`);
-
-if (card) {
-
-card.setAttribute('data-title', title);
-
-card.setAttribute('data-search', `${title} ${author} ${category}`);
-
-card.querySelector('.book-title').textContent = title;
-
-card.querySelector('.book-desc').textContent = desc;
-
-card.querySelector('.category-tag').textContent = category;
-
-card.querySelector('.btn-read').setAttribute('href', url);
-
-
-
-const oldAuthorGroup = card.closest('.author-group');
-
-if (oldAuthorGroup && oldAuthorGroup.getAttribute('data-author') !== author) {
-
-let targetAuthorGroup = null;
-
-document.querySelectorAll('.author-group').forEach(g => {
-
-if (g.getAttribute('data-author') === author) targetAuthorGroup = g;
-
-});
-
-
-
-if (!targetAuthorGroup) {
-
-targetAuthorGroup = document.createElement('div');
-
-targetAuthorGroup.className = 'author-group';
-
-targetAuthorGroup.setAttribute('data-category', category);
-
-targetAuthorGroup.setAttribute('data-author', author);
-
-targetAuthorGroup.innerHTML = `
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>${author}</span>
-
-<span class="book-count-badge">0 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container">
-
-<div class="book-list-inner"></div>
-
-</div>
-
-`;
-
-document.getElementById('authorGroupsContainer').appendChild(targetAuthorGroup);
-
-}
-
-targetAuthorGroup.querySelector('.book-list-inner').appendChild(card);
-
-oldAuthorGroup.remove();
-
-} else if (oldAuthorGroup) {
-
-oldAuthorGroup.setAttribute('data-category', category);
-
-}
-
-}
-
-alert("修改成功！");
-
-} else {
-
-let authorGroup = null;
-
-document.querySelectorAll('.author-group').forEach(g => {
-
-if (g.getAttribute('data-author') === author) {
-
-authorGroup = g;
-
-}
-
-});
-
-
-
-if (!authorGroup) {
-
-authorGroup = document.createElement('div');
-
-authorGroup.className = 'author-group';
-
-authorGroup.setAttribute('data-category', category);
-
-authorGroup.setAttribute('data-author', author);
-
-authorGroup.innerHTML = `
-
-<button class="author-header" onclick="toggleAuthor(this)">
-
-<div class="author-info">
-
-<span>${author}</span>
-
-<span class="book-count-badge">0 本書</span>
-
-</div>
-
-<span class="arrow-icon">▼</span>
-
-</button>
-
-<div class="book-list-container">
-
-<div class="book-list-inner"></div>
-
-</div>
-
-`;
-
-document.getElementById('authorGroupsContainer').appendChild(authorGroup);
-
-} else {
-
-authorGroup.setAttribute('data-category', category);
-
-}
-
-
-
-const innerList = authorGroup.querySelector('.book-list-inner');
-
-const newCard = document.createElement('div');
-
-newCard.className = 'book-card';
-
-newCard.setAttribute('data-title', title);
-
-newCard.setAttribute('data-search', `${title} ${author} ${category}`);
-
-newCard.innerHTML = `
-
-<div class="book-title">${title}</div>
-
-<div class="book-desc">${desc}</div>
-
-<div class="book-footer">
-
-<span class="category-tag">${category}</span>
-
-<a href="${url}" target="_blank" rel="noopener noreferrer" class="btn-read">去好讀閱讀</a>
-
-</div>
-
-`;
-
-innerList.appendChild(newCard);
-
-alert("新增成功！");
-
-}
-
-
-
-document.getElementById('editCardId').value = '';
-
-document.getElementById('formTitle').textContent = "➕ 新增書籍與類別";
-
-document.getElementById('submitBtn').textContent = "確認新增並下載新 HTML";
-
-document.getElementById('newTitle').value = '';
-
-document.getElementById('newAuthor').value = '';
-
-document.getElementById('newCategory').value = '';
-
-document.getElementById('newUrl').value = '';
-
-document.getElementById('newDesc').value = '';
-
-document.getElementById('adminPanel').style.display = 'none';
-
-
-
-updateBookCounts();
-
-pickRandomBook();
-
-exportCurrentHtml();
-
-}
-
-
-
-function exportCurrentHtml() {
-
-const cloneDoc = document.documentElement.cloneNode(true);
-
-
-
-cloneDoc.querySelectorAll('.book-card').forEach(c => c.removeAttribute('data-temp-id'));
-
-cloneDoc.querySelector('#adminPanel').style.display = 'none';
-
-cloneDoc.querySelector('#newTitle').value = '';
-
-cloneDoc.querySelector('#newAuthor').value = '';
-
-cloneDoc.querySelector('#newCategory').value = '';
-
-cloneDoc.querySelector('#newUrl').value = '';
-
-cloneDoc.querySelector('#newDesc').value = '';
-
-cloneDoc.querySelector('#editCardId').value = '';
-
-cloneDoc.querySelector('#manageBookList').innerHTML = '';
-
-
-
-const htmlContent = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
-
-const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-
-const link = document.createElement('a');
-
-link.href = URL.createObjectURL(blob);
-
-link.download = 'index.html';
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-}
-
 </script>
 
-
-
-
-
- 
-
-</body></html>
+</body>
+</html>
