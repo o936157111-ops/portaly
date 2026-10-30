@@ -23,6 +23,14 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* 💡 針對手機版觸控優化 Checkbox 與層級 */
+        #sidebar input[type="checkbox"] {
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 20;
+            cursor: pointer;
+        }
+
         @media (max-width: 767px) {
             body { font-size: 1.15rem !important; }
             .text-xs { font-size: 0.95rem !important; }
@@ -35,9 +43,8 @@
                 font-size: 1.05rem !important;
             }
             #sidebar input[type="checkbox"] {
-                width: 1.2rem !important;
-                height: 1.2rem !important;
-                pointer-events: auto !important;
+                width: 1.35rem !important;
+                height: 1.35rem !important;
             }
         }
 
@@ -269,12 +276,14 @@
             <!-- 可排序的大群組容器 -->
             <div id="sidebar-sortable-container" class="space-y-2.5">
                 
-                <!-- 0. Google 搜尋列 -->
+                <!-- 🌟 0. Google 搜尋列 (手機版觸控綁定修復) -->
                 <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs transition-all hover:border-emerald-200" data-id="group-search">
-                    <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
-                            <input type="checkbox" id="mod-search" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-search" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-search" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 Google 智慧搜尋列
@@ -439,10 +448,12 @@
 
                 <!-- 4. 個人靈感隨筆與圖文日誌 -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
-                    <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
-                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-todo" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-pen-nib"></i></span>
                                 個人靈感隨筆與圖文日誌
@@ -453,10 +464,12 @@
 
                 <!-- 5. 贊助支援與延伸閱讀 -->
                 <div class="sidebar-item-group bg-pink-50/40 p-2.5 rounded-2xl border border-pink-100 shadow-2xs transition-all hover:border-pink-200" data-id="group-sponsor">
-                    <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
-                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-sponsor" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-heart"></i></span>
                                 贊助支援與延伸閱讀
@@ -504,7 +517,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 外觀、LOGO 與背景設定 (已完整補回背景區塊顏色選擇器與透明度開關) -->
+            <!-- 外觀、LOGO 與背景設定 -->
             <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('appearance-section-sub', this)">
                     <div class="font-bold text-indigo-900 text-xs flex items-center gap-2">
@@ -531,7 +544,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 GOOGLE 雲端同步 (完整建置教學與說明) -->
+            <!-- GOOGLE 雲端同步 -->
             <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-200 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('sync-section-sub', this)">
                     <div class="font-bold text-amber-900 text-xs flex items-center gap-2">
@@ -907,7 +920,6 @@
             }
         }
 
-        // 背景顏色變更與設定
         function changeBackgroundColor(color) {
             document.body.style.backgroundColor = color;
             document.body.style.backgroundImage = 'none';
@@ -915,7 +927,6 @@
             localStorage.removeItem('myezlife_custom_bg');
         }
 
-        // 影音櫃雙步驟互動邏輯[cite: 1]
         function openVideoWallModal() {
             document.getElementById('videowall-intro-modal').classList.remove('hidden');
         }
@@ -1140,7 +1151,10 @@
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
                 new Sortable(sidebarContainer, {
-                    animation: 200, handle: '.sidebar-drag-handle',
+                    animation: 200, 
+                    handle: '.sidebar-drag-handle',
+                    filter: 'input, label',
+                    preventOnFilter: false,
                     onEnd: function () {
                         localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
                         syncDesktopCardsOrder();
@@ -1156,7 +1170,10 @@
                 const subContainer = document.getElementById(subId);
                 if (subContainer) {
                     new Sortable(subContainer, {
-                        animation: 150, handle: '.sub-drag-item', filter: 'input', preventOnFilter: false,
+                        animation: 150, 
+                        handle: '.sub-drag-item', 
+                        filter: 'input', 
+                        preventOnFilter: false,
                         onEnd: function() {
                             localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
                             updateDesktopVisibility();
@@ -1241,7 +1258,6 @@
             });
         }
 
-        // 日誌功能
         function getBlogPosts() { return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'); }
         function saveBlogPosts(posts) { localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts)); syncToCloud(); }
 
@@ -1303,7 +1319,6 @@
             if (box) box.innerHTML = recs.map(item => `<a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition"><div class="flex items-center justify-between mb-0.5"><span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">${item.title}</span><span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span></div><p class="text-[11px] text-slate-600">${item.desc}</p></a>`).join('');
         }
 
-        // 頁面初始化載入本機儲存設定
         if (localStorage.getItem('myezlife_custom_bg_color')) {
             const savedColor = localStorage.getItem('myezlife_custom_bg_color');
             document.body.style.backgroundColor = savedColor;
