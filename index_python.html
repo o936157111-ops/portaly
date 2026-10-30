@@ -250,7 +250,7 @@
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             
-            <!-- 🌟 網站使用與隱私說明 (同 Banner 深綠品牌教學版本) -->
+            <!-- 🌟 1. 網站使用與隱私說明 (可收合) -->
             <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
                     <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
@@ -505,114 +505,129 @@
 
             </div>
 
-            <!-- 🌟 升級版專屬卡片：自訂新增群組與自訂 App -->
-            <div class="bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-emerald-500/10 p-3 rounded-2xl border border-emerald-200/90 space-y-3 shadow-xs mt-1 backdrop-blur-xs">
-                
-                <!-- 1. 新增自訂區塊 / 分類 -->
-                <div class="space-y-1.5">
-                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+            <!-- 🌟 2. 側邊欄整合群組：【自訂新增管理】(可收合折疊) -->
+            <div class="bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-emerald-500/10 p-3 rounded-2xl border border-emerald-200/90 shadow-xs backdrop-blur-xs space-y-2">
+                <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('manage-section-sub', this)">
+                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-2">
                         <span class="w-5 h-5 rounded-md bg-[#00a600] text-white flex items-center justify-center text-[10px] shadow-xs">
                             <i class="fa-solid fa-folder-plus"></i>
                         </span>
-                        新增自訂區塊 / 分類
+                        自訂區塊與捷徑管理
                     </div>
-                    <div class="flex gap-1.5 w-full">
-                        <input type="text" id="custom-group-name" placeholder="區塊名稱 (如：工作專案)..." class="w-0 min-w-0 flex-1 bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] focus:ring-1 focus:ring-[#00a600]/30 transition shadow-2xs">
-                        <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold px-3 py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs active:scale-95 whitespace-nowrap">
-                            + 建立區塊
+                    <i class="fa-solid fa-chevron-down text-emerald-700 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                </div>
+                <div id="manage-section-sub" class="space-y-3 pt-2 border-t border-emerald-200/60" style="display: none;">
+                    <!-- 1. 新增自訂區塊 / 分類 -->
+                    <div class="space-y-1.5">
+                        <div class="text-[11px] font-bold text-emerald-900">新增自訂區塊 / 分類</div>
+                        <div class="flex gap-1.5 w-full">
+                            <input type="text" id="custom-group-name" placeholder="區塊名稱 (如：工作專案)..." class="w-0 min-w-0 flex-1 bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                            <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold px-3 py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs active:scale-95 whitespace-nowrap">
+                                + 建立
+                            </button>
+                        </div>
+                    </div>
+                    <!-- 2. 新增自訂 App 捷徑 -->
+                    <div class="space-y-2 pt-1 border-t border-emerald-200/40">
+                        <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
+                        <div class="flex items-center gap-2 w-full">
+                            <span class="text-[10px] font-bold text-emerald-800 shrink-0">放至區塊:</span>
+                            <select id="custom-app-target-group" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
+                                <option value="group-creative">🎬 精選影音與創作服務</option>
+                                <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+                            </select>
+                        </div>
+                        <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                        <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                        <div class="flex items-center gap-2 w-full">
+                            <span class="text-[10px] font-bold text-emerald-800 shrink-0">選擇圖示:</span>
+                            <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
+                                <option value="fa-solid fa-globe">🌐 預設網路</option>
+                                <option value="fa-solid fa-star">⭐ 星星焦點</option>
+                                <option value="fa-solid fa-briefcase">💼 工作商務</option>
+                                <option value="fa-solid fa-film">🎬 影音娛樂</option>
+                                <option value="fa-solid fa-music">🎵 音樂播放</option>
+                                <option value="fa-solid fa-newspaper">📰 時事新聞</option>
+                                <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
+                                <option value="fa-solid fa-comments">💬 社群通訊</option>
+                                <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
+                                <option value="fa-solid fa-tools">🛠️ 工具設定</option>
+                                <option value="fa-solid fa-location-dot">📍 地圖地標</option>
+                                <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
+                                <option value="fa-solid fa-book">📚 書籍閱讀</option>
+                                <option value="fa-solid fa-heart">❤️ 喜愛珍藏</option>
+                                <option value="fa-solid fa-chart-line">📈 財經投資</option>
+                            </select>
+                        </div>
+                        <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-xs">
+                            + 新增至桌面
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <div class="border-t border-emerald-200/50 pt-2.5 space-y-2">
-                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
-                        <span class="w-5 h-5 rounded-md bg-teal-600 text-white flex items-center justify-center text-[10px] shadow-xs">
-                            <i class="fa-solid fa-circle-plus"></i>
+            <!-- 🌟 3. 側邊欄整合群組：【外觀與版面設定】(可收合折疊) -->
+            <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 shadow-2xs space-y-2">
+                <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('appearance-section-sub', this)">
+                    <div class="font-bold text-indigo-900 text-xs flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px]">
+                            <i class="fa-solid fa-palette"></i>
                         </span>
-                        新增自訂 App 捷徑
+                        外觀、LOGO 與背景設定
                     </div>
-                    
-                    <!-- 選擇目標區塊 -->
-                    <div class="flex items-center gap-2 w-full">
-                        <span class="text-[11px] font-bold text-emerald-800 shrink-0">放至區塊:</span>
-                        <select id="custom-app-target-group" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
-                            <option value="group-creative">🎬 精選影音與創作服務</option>
-                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
-                        </select>
-                    </div>
-
-                    <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] focus:ring-1 focus:ring-[#00a600]/30 transition shadow-2xs">
-                    <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] focus:ring-1 focus:ring-[#00a600]/30 transition shadow-2xs">
-                    
-                    <!-- 圖示下拉選單 -->
-                    <div class="flex items-center gap-2 w-full">
-                        <span class="text-[11px] font-bold text-emerald-800 shrink-0">選擇圖示:</span>
-                        <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
-                            <option value="fa-solid fa-globe">🌐 預設網路</option>
-                            <option value="fa-solid fa-star">⭐ 星星焦點</option>
-                            <option value="fa-solid fa-briefcase">💼 工作商務</option>
-                            <option value="fa-solid fa-film">🎬 影音娛樂</option>
-                            <option value="fa-solid fa-music">🎵 音樂播放</option>
-                            <option value="fa-solid fa-newspaper">📰 時事新聞</option>
-                            <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
-                            <option value="fa-solid fa-comments">💬 社群通訊</option>
-                            <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
-                            <option value="fa-solid fa-tools">🛠️ 工具設定</option>
-                            <option value="fa-solid fa-location-dot">📍 地圖地標</option>
-                            <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
-                            <option value="fa-solid fa-book">📚 書籍閱讀</option>
-                            <option value="fa-solid fa-heart">❤️ 喜愛珍藏</option>
-                            <option value="fa-solid fa-chart-line">📈 財經投資</option>
-                        </select>
-                    </div>
-
-                    <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-xs active:scale-98">
-                        + 新增至桌面
-                    </button>
+                    <i class="fa-solid fa-chevron-down text-indigo-600 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
+                <div id="appearance-section-sub" class="space-y-3 pt-2 border-t border-indigo-200/60" style="display: none;">
+                    
+                    <!-- 卡片外觀 -->
+                    <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">捷徑卡片底色與透明度</div>
+                        <label class="flex items-center justify-between gap-2 cursor-pointer text-xs">
+                            <span class="text-slate-700 font-medium">100% 完全透明底色</span>
+                            <input type="checkbox" id="card-transparent-toggle" onchange="applyCardStyle()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                        </label>
+                        <div class="flex items-center justify-between gap-2 text-xs pt-1">
+                            <span class="text-slate-700 font-medium">自訂卡片底色</span>
+                            <input type="color" id="card-bg-color" value="#ffffff" onchange="applyCardStyle()" class="w-6 h-6 rounded border-0 cursor-pointer bg-transparent">
+                        </div>
+                    </div>
 
-            </div>
+                    <!-- 自訂 Logo -->
+                    <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">自訂上方 Logo 圖片</div>
+                        <input type="url" id="custom-logo-url-input" placeholder="貼上 Logo 圖片網址..." class="w-full bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs outline-none focus:border-indigo-500">
+                        <div class="flex gap-2 pt-0.5">
+                            <button onclick="applyCustomLogo()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-1 px-2 rounded-lg transition cursor-pointer">套用 Logo</button>
+                            <button onclick="resetCustomLogo()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-[10px] font-bold py-1 px-2 rounded-lg transition cursor-pointer">預設</button>
+                        </div>
+                    </div>
 
-            <!-- 🌟 LOGO 自訂網址設定區塊 -->
-            <div class="bg-purple-50/50 p-3 rounded-2xl border border-purple-100 shadow-2xs space-y-2">
-                <div class="font-bold text-purple-900 text-xs flex items-center gap-1.5">
-                    <span class="w-5 h-5 rounded-md bg-purple-500 text-white flex items-center justify-center text-[10px]">
-                        <i class="fa-solid fa-image"></i>
-                    </span>
-                    自訂上方 Logo 圖片
-                </div>
-                <input type="url" id="custom-logo-url-input" placeholder="貼上 Logo 圖片網址 (https://...)" class="w-full bg-white/90 p-2 rounded-xl border border-purple-200 text-xs outline-none focus:border-purple-500">
-                <div class="flex gap-2">
-                    <button onclick="applyCustomLogo()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold py-1.5 px-3 rounded-xl transition cursor-pointer shadow-xs">套用 Logo</button>
-                    <button onclick="resetCustomLogo()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-bold py-1.5 px-3 rounded-xl transition cursor-pointer">預設</button>
+                    <!-- 背景圖與清除資料 -->
+                    <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">設定滿版背景圖</div>
+                        <input type="url" id="bg-url-input" placeholder="貼上圖片網址..." class="w-full bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+                        <div class="flex gap-2">
+                            <label class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[10px] font-bold py-1 px-2 rounded-lg border border-slate-200 text-center cursor-pointer transition">
+                                📁 上傳檔案
+                                <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
+                            </label>
+                            <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[10px] font-bold py-1 px-2 rounded-lg transition cursor-pointer">套用背景</button>
+                        </div>
+                        <button onclick="resetBackground()" class="w-full text-slate-400 hover:text-rose-500 text-[10px] font-medium pt-0.5 transition text-center">
+                            🔄 恢復預設背景
+                        </button>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- 背景圖設定與資料清理按鈕 -->
-            <div class="bg-white p-3 rounded-2xl border border-slate-200/70 shadow-2xs space-y-2 shrink-0">
-                <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                    <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px]">
-                        <i class="fa-solid fa-panorama"></i>
-                    </span>
-                    設定滿版背景圖
-                </div>
-                <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-slate-50/80 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
-                <div class="flex gap-2">
-                    <label class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[11px] font-bold py-1.5 px-2 rounded-xl border border-slate-200 text-center cursor-pointer transition">
-                        📁 上傳圖片檔案
-                        <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
-                    </label>
-                    <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-1.5 px-3 rounded-xl transition shadow-xs cursor-pointer">套用背景</button>
-                </div>
-                <button onclick="resetBackground()" class="w-full text-slate-400 hover:text-rose-500 text-[10px] font-medium pt-0.5 transition text-center">
-                    🔄 恢復預設背景
+            <!-- 資料清理按鈕區 (保持獨立置底方便使用) -->
+            <div class="pt-2">
+                <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-red-800 cursor-pointer shadow-xs">
+                    🗑️ 清除並重設所有暫存資料
                 </button>
-                <div class="pt-2 border-t border-slate-100 mt-2">
-                    <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-red-800 cursor-pointer shadow-xs">
-                        🗑️ 清除並重設所有暫存資料
-                    </button>
-                </div>
             </div>
+
         </div>
     </aside>
 
@@ -637,7 +652,7 @@
 
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
-                <!-- Google 智慧搜尋列 (已補上 ID 可供控制顯示與排序) -->
+                <!-- Google 智慧搜尋列 -->
                 <div id="desktop-search-card" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
                         <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600">
@@ -650,8 +665,8 @@
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 (已改為完全透明背景與隱形邊框) -->
-                <div id="desktop-creative-card" class="bg-transparent p-2 border-0 shadow-none" style="display: none;">
+                <!-- 1. 精選影音與創作服務 -->
+                <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
                             <a href="https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -728,8 +743,8 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經，已改為完全透明背景與隱形邊框) -->
-                <div id="desktop-app-card" class="bg-transparent p-2 border-0 shadow-none" style="display: none;">
+                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
+                <div id="desktop-app-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="general-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
                             <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -961,6 +976,38 @@
             }
         }
 
+        // --- 🌟 自訂區塊底色與透明度 ---
+        function applyCardStyle() {
+            const isTransparent = document.getElementById('card-transparent-toggle').checked;
+            const customColor = document.getElementById('card-bg-color').value;
+
+            const cards = document.querySelectorAll('.app-shortcut-card, .custom-desktop-card');
+            cards.forEach(card => {
+                if (isTransparent) {
+                    card.style.backgroundColor = 'transparent';
+                    card.style.borderColor = 'transparent';
+                    card.style.boxShadow = 'none';
+                } else {
+                    card.style.backgroundColor = customColor;
+                    card.style.borderColor = '#e2e8f0';
+                    card.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
+                }
+            });
+
+            localStorage.setItem('myezlife_card_transparent', isTransparent);
+            localStorage.setItem('myezlife_card_color', customColor);
+        }
+
+        function loadCardStyle() {
+            const isTransparent = localStorage.getItem('myezlife_card_transparent') === 'true';
+            const savedColor = localStorage.getItem('myezlife_card_color') || '#ffffff';
+
+            document.getElementById('card-transparent-toggle').checked = isTransparent;
+            document.getElementById('card-bg-color').value = savedColor;
+
+            applyCardStyle();
+        }
+
         // --- 🌟 自訂 Logo 功能 ---
         function applyCustomLogo() {
             const url = document.getElementById('custom-logo-url-input').value.trim();
@@ -1013,6 +1060,7 @@
             renderCustomGroups();
             updateTargetGroupSelect();
             syncDesktopCardsOrder();
+            applyCardStyle();
             alert(`成功建立自訂區塊：「${name}」！`);
         }
 
@@ -1074,9 +1122,9 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.id = `desktop-${group.id}-card`;
-                cardDiv.className = 'custom-desktop-card bg-transparent p-2 border-0 shadow-none space-y-3';
+                cardDiv.className = 'custom-desktop-card app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3';
                 cardDiv.innerHTML = `
-                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100/50 pb-2 flex items-center gap-2">
+                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-folder-open text-[#00a600]"></i> ${group.name}
                     </div>
                     <div id="${group.id}-app-grid" class="app-grid"></div>
@@ -1519,6 +1567,7 @@
         initSortables();
         loadCustomApps();
         updateDesktopVisibility();
+        loadCardStyle();
         renderTodoList();
         loadMemo();
         initRandomRecommendation();
