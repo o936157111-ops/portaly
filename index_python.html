@@ -177,16 +177,9 @@
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
-        #sidebar-scroll-content::-webkit-scrollbar {
-            width: 4px;
-        }
-        #sidebar-scroll-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #sidebar-scroll-content::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+        #sidebar-scroll-content::-webkit-scrollbar { width: 4px; }
+        #sidebar-scroll-content::-webkit-scrollbar-track { background: transparent; }
+        #sidebar-scroll-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
         #dock-bar {
             position: fixed;
@@ -234,13 +227,10 @@
 
     <!-- 🌟 左側側邊欄選單 -->
     <aside id="sidebar" class="p-4 space-y-3">
-        <!-- 頂部標頭 -->
         <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0 relative">
             <div class="absolute -top-4 -left-4 -right-4 h-1 bg-gradient-to-r from-emerald-500 via-[#00a600] to-teal-500"></div>
             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 pt-1">
-                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs">
-                    <i class="fa-solid fa-sliders"></i>
-                </span>
+                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-sliders"></i></span>
                 功能模組側邊欄
             </h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-600 w-7 h-7 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
@@ -250,44 +240,19 @@
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             
-            <!-- 🌟 1. 網站使用與隱私說明 (可收合) -->
+            <!-- 網站使用與隱私說明 -->
             <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
                     <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-md bg-white text-[#00a600] flex items-center justify-center text-[10px] shadow-xs">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </span>
+                        <span class="w-5 h-5 rounded-md bg-white text-[#00a600] flex items-center justify-center text-[10px] shadow-xs"><i class="fa-solid fa-circle-info"></i></span>
                         網站使用與隱私說明
                     </div>
                     <i class="fa-solid fa-chevron-down text-yellow-300 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
                 <div id="about-app-sub" class="text-[11px] text-emerald-50 space-y-2.5 pt-2 border-t border-emerald-500/50" style="display: none;">
-                    
-                    <!-- 手機加入主畫面教學 -->
-                    <div class="bg-emerald-900/80 p-2.5 rounded-xl border border-emerald-600/60 space-y-1.5 shadow-2xs">
-                        <strong class="text-yellow-300 flex items-center gap-1.5 text-[11px]">
-                            <i class="fa-solid fa-mobile-screen-button text-yellow-400"></i> 如何當作 App 使用？
-                        </strong>
-                        <p class="leading-relaxed text-emerald-50 text-[11px]">
-                            無需下載 APK，直接在手機瀏覽器輸入 <strong class="text-yellow-300">myezlife.com</strong> 開啟後，點選瀏覽器選單並選擇：
-                        </p>
-                        <p class="pl-1 text-emerald-50 text-[11px] leading-relaxed">
-                            👉 <strong class="text-white">iOS (Safari)</strong>：點擊下方「分享」按鈕 ➔ 選擇「<strong>加入主畫面</strong>」。<br>
-                            👉 <strong class="text-white">Android (Chrome)</strong>：點擊右上角「選單 (⋮)」➔ 選擇「<strong>加到主畫面</strong>」或「<strong>安裝應用程式</strong>」。
-                        </p>
-                        <p class="text-[10px] text-emerald-200/90 italic pt-0.5">完成後桌面就會出現專屬 Logo 圖示，點擊即可全螢幕像 App 般流暢使用！</p>
-                    </div>
-
-                    <!-- 隱私安全說明 -->
                     <p class="leading-relaxed text-[11px] px-0.5">
-                        <strong class="text-yellow-300">🔒 100% 本機隱私安全：</strong><br>
-                        本站重視個人隱私，您所新增的自訂區塊、捷徑、文章創作、隨筆與背景設定，<strong class="text-white">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
-                    </p>
-
-                    <!-- 基本操作 -->
-                    <p class="leading-relaxed text-[11px] px-0.5">
-                        <strong class="text-yellow-300">⚙️ 模組自訂與拖曳：</strong><br>
-                        勾選下方模組可自訂顯示與隱藏，按住群組標頭或項目旁的圖示可自由拖曳排序桌面卡片。
+                        <strong class="text-yellow-300">🔒 Google 雲端自動同步：</strong><br>
+                        支援透過 GAS 自動同步自訂 App、分類與日誌文章至您的 Google 雲端硬碟，維護個人隱私安全。
                     </p>
                 </div>
             </div>
@@ -295,16 +260,14 @@
             <!-- 可排序的大群組容器 -->
             <div id="sidebar-sortable-container" class="space-y-2.5">
                 
-                <!-- 0. Google 搜尋列控制開關 -->
+                <!-- 0. Google 搜尋列 -->
                 <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs transition-all hover:border-emerald-200" data-id="group-search">
                     <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
                         <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
                         <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
                             <input type="checkbox" id="mod-search" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-magnifying-glass"></i>
-                                </span>
+                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 Google 智慧搜尋列
                             </span>
                         </label>
@@ -317,9 +280,7 @@
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
                             <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
                             <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-500 flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-film"></i>
-                                </span>
+                                <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-film"></i></span>
                                 精選影音與創作服務
                             </span>
                         </div>
@@ -356,7 +317,7 @@
                         <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-videowall">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
-                            <span class="text-slate-700 font-medium">🪄 一鍵打造專屬影音牆</span>
+                            <span class="text-slate-700 font-medium">🪄 一鍵打造專屬影音櫃</span>
                         </div>
                         <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-news">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
@@ -368,9 +329,9 @@
                             <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📂 個人檔案總管</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-life-simple">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-lifesimple">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-life-simple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <input type="checkbox" id="mod-lifesimple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🏡 生活‧簡居‧生活</span>
                         </div>
                         <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-library">
@@ -378,9 +339,9 @@
                             <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📚 生活圖書館</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-simple-home">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-simplehome">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-simple-home" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <input type="checkbox" id="mod-simplehome" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🏠 簡易首頁</span>
                         </div>
                         <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-games">
@@ -397,9 +358,7 @@
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
                             <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
                             <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-route"></i>
-                                </span>
+                                <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-route"></i></span>
                                 即時交通與大眾運輸
                             </span>
                         </div>
@@ -447,9 +406,7 @@
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
                             <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
                             <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-chart-line"></i>
-                                </span>
+                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-chart-line"></i></span>
                                 台股財經與鉅亨網
                             </span>
                         </div>
@@ -471,17 +428,15 @@
                     </div>
                 </div>
 
-                <!-- 🌟 4. 靈感隨筆圖文日誌 (全新名稱升級) -->
+                <!-- 4. 個人靈感隨筆與圖文日誌 -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
                         <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
                         <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
                             <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </span>
-                                靈感隨筆圖文日誌
+                                <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-pen-nib"></i></span>
+                                個人靈感隨筆與圖文日誌
                             </span>
                         </label>
                     </div>
@@ -494,9 +449,7 @@
                         <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
                             <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-heart"></i>
-                                </span>
+                                <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-heart"></i></span>
                                 贊助支援與延伸閱讀
                             </span>
                         </label>
@@ -505,123 +458,100 @@
 
             </div>
 
-            <!-- 🌟 2. 側邊欄整合群組：【自訂新增管理】(可收合折疊) -->
+            <!-- 自訂新增管理 -->
             <div class="bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-emerald-500/10 p-3 rounded-2xl border border-emerald-200/90 shadow-xs backdrop-blur-xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('manage-section-sub', this)">
                     <div class="font-bold text-emerald-900 text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-md bg-[#00a600] text-white flex items-center justify-center text-[10px] shadow-xs">
-                            <i class="fa-solid fa-folder-plus"></i>
-                        </span>
+                        <span class="w-5 h-5 rounded-md bg-[#00a600] text-white flex items-center justify-center text-[10px] shadow-xs"><i class="fa-solid fa-folder-plus"></i></span>
                         自訂區塊與捷徑管理
                     </div>
                     <i class="fa-solid fa-chevron-down text-emerald-700 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
                 <div id="manage-section-sub" class="space-y-3 pt-2 border-t border-emerald-200/60" style="display: none;">
-                    <!-- 1. 新增自訂區塊 / 分類 -->
                     <div class="space-y-1.5">
                         <div class="text-[11px] font-bold text-emerald-900">新增自訂區塊 / 分類</div>
                         <div class="flex gap-1.5 w-full">
-                            <input type="text" id="custom-group-name" placeholder="區塊名稱 (如：工作專案)..." class="w-0 min-w-0 flex-1 bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
-                            <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold px-3 py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs active:scale-95 whitespace-nowrap">
-                                + 建立
-                            </button>
+                            <input type="text" id="custom-group-name" placeholder="區塊名稱..." class="w-0 min-w-0 flex-1 bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                            <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold px-3 py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs active:scale-95 whitespace-nowrap">+ 建立</button>
                         </div>
                     </div>
-                    <!-- 2. 新增自訂 App 捷徑 -->
                     <div class="space-y-2 pt-1 border-t border-emerald-200/40">
                         <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
-                        <div class="flex items-center gap-2 w-full">
-                            <span class="text-[10px] font-bold text-emerald-800 shrink-0">放至區塊:</span>
-                            <select id="custom-app-target-group" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
-                                <option value="group-creative">🎬 精選影音與創作服務</option>
-                                <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
-                            </select>
-                        </div>
+                        <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
+                            <option value="group-creative">🎬 精選影音與創作服務</option>
+                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+                        </select>
                         <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
                         <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
-                        <div class="flex items-center gap-2 w-full">
-                            <span class="text-[10px] font-bold text-emerald-800 shrink-0">選擇圖示:</span>
-                            <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
-                                <option value="fa-solid fa-globe">🌐 預設網路</option>
-                                <option value="fa-solid fa-star">⭐ 星星焦點</option>
-                                <option value="fa-solid fa-briefcase">💼 工作商務</option>
-                                <option value="fa-solid fa-film">🎬 影音娛樂</option>
-                                <option value="fa-solid fa-music">🎵 音樂播放</option>
-                                <option value="fa-solid fa-newspaper">📰 時事新聞</option>
-                                <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
-                                <option value="fa-solid fa-comments">💬 社群通訊</option>
-                                <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
-                                <option value="fa-solid fa-tools">🛠️ 工具設定</option>
-                                <option value="fa-solid fa-location-dot">📍 地圖地標</option>
-                                <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
-                                <option value="fa-solid fa-book">📚 書籍閱讀</option>
-                                <option value="fa-solid fa-heart">❤️ 喜愛珍藏</option>
-                                <option value="fa-solid fa-chart-line">📈 財經投資</option>
-                            </select>
-                        </div>
-                        <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-xs">
-                            + 新增至桌面
-                        </button>
+                        <select id="custom-app-icon" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
+                            <option value="fa-solid fa-globe">🌐 預設網路</option>
+                            <option value="fa-solid fa-star">⭐ 星星焦點</option>
+                            <option value="fa-solid fa-briefcase">💼 工作商務</option>
+                            <option value="fa-solid fa-film">🎬 影音娛樂</option>
+                            <option value="fa-solid fa-music">🎵 音樂播放</option>
+                        </select>
+                        <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-xs">+ 新增至桌面</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 🌟 3. 側邊欄整合群組：【外觀與版面設定】(可收合折疊) -->
+            <!-- 外觀設定 -->
             <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('appearance-section-sub', this)">
                     <div class="font-bold text-indigo-900 text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px]">
-                            <i class="fa-solid fa-palette"></i>
-                        </span>
+                        <span class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-palette"></i></span>
                         外觀、LOGO 與背景設定
                     </div>
                     <i class="fa-solid fa-chevron-down text-indigo-600 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
                 <div id="appearance-section-sub" class="space-y-3 pt-2 border-t border-indigo-200/60" style="display: none;">
-                    
-                    <!-- 卡片外觀 -->
                     <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
                         <div class="font-bold text-indigo-900 text-[11px]">捷徑卡片底色與透明度</div>
                         <label class="flex items-center justify-between gap-2 cursor-pointer text-xs">
                             <span class="text-slate-700 font-medium">100% 完全透明底色</span>
                             <input type="checkbox" id="card-transparent-toggle" onchange="applyCardStyle()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         </label>
-                        <div class="flex items-center justify-between gap-2 text-xs pt-1">
-                            <span class="text-slate-700 font-medium">自訂卡片底色</span>
-                            <input type="color" id="card-bg-color" value="#ffffff" onchange="applyCardStyle()" class="w-6 h-6 rounded border-0 cursor-pointer bg-transparent">
-                        </div>
                     </div>
-
-                    <!-- 自訂 Logo -->
-                    <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
-                        <div class="font-bold text-indigo-900 text-[11px]">自訂上方 Logo 圖片</div>
-                        <input type="url" id="custom-logo-url-input" placeholder="貼上 Logo 圖片網址..." class="w-full bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs outline-none focus:border-indigo-500">
-                        <div class="flex gap-2 pt-0.5">
-                            <button onclick="applyCustomLogo()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold py-1 px-2 rounded-lg transition cursor-pointer">套用 Logo</button>
-                            <button onclick="resetCustomLogo()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-[10px] font-bold py-1 px-2 rounded-lg transition cursor-pointer">預設</button>
-                        </div>
-                    </div>
-
-                    <!-- 背景圖與清除資料 -->
-                    <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
-                        <div class="font-bold text-indigo-900 text-[11px]">設定滿版背景圖</div>
-                        <input type="url" id="bg-url-input" placeholder="貼上圖片網址..." class="w-full bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600]">
-                        <div class="flex gap-2">
-                            <label class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[10px] font-bold py-1 px-2 rounded-lg border border-slate-200 text-center cursor-pointer transition">
-                                📁 上傳檔案
-                                <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
-                            </label>
-                            <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[10px] font-bold py-1 px-2 rounded-lg transition cursor-pointer">套用背景</button>
-                        </div>
-                        <button onclick="resetBackground()" class="w-full text-slate-400 hover:text-rose-500 text-[10px] font-medium pt-0.5 transition text-center">
-                            🔄 恢復預設背景
-                        </button>
-                    </div>
-
                 </div>
             </div>
 
-            <!-- 資料清理按鈕區 (保持獨立置底方便使用) -->
+            <!-- 🌟 GOOGLE 雲端同步 (含完整建置教學與說明) -->
+            <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-200 shadow-2xs space-y-2">
+                <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('sync-section-sub', this)">
+                    <div class="font-bold text-amber-900 text-xs flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-amber-500 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-cloud"></i></span>
+                        GOOGLE 雲端同步
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-amber-700 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                </div>
+                <div id="sync-section-sub" class="space-y-3 pt-2 border-t border-amber-200/60 text-xs text-slate-700" style="display: none;">
+                    
+                    <!-- 建置步驟教學說明區塊 -->
+                    <div class="bg-white/80 p-3 rounded-xl border border-amber-200/80 space-y-2 text-[11px] leading-relaxed">
+                        <div class="font-bold text-amber-900 flex items-center gap-1.5 border-b border-amber-100 pb-1">
+                            <i class="fa-solid fa-book text-amber-600"></i> GAS 雲端同步建置教學指南：
+                        </div>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-slate-600">
+                            <li><strong>建立 App Script：</strong>前往 Google 雲端硬碟建立一個新的「Google Apps Script」專案。</li>
+                            <li><strong>貼上同步程式碼：</strong>將處理 JSON 資料存取的 `doGet` 與 `doPost` 腳本程式碼貼入專案中。</li>
+                            <li><strong>部署為 Web App：</strong>點擊右上角「部署」➔「新增部署作業」，選擇「網頁應用程式 (Web App)」。</li>
+                            <li><strong>設定存取權限：</strong>將「誰可以存取」設定為 <strong class="text-amber-800">「所有人 (Anyone)」</strong> 並完成部署。</li>
+                            <li><strong>貼上 Web App 網址：</strong>複製獲得的 Web App 網址並貼入下方輸入框，即可實現多裝置自動備份與同步！</li>
+                        </ol>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <div class="font-bold text-amber-900 text-[11px]">設定雲端同步網址</div>
+                        <input type="url" id="gas-url-input" placeholder="貼上 GAS Web App 網址 (https://script.google.com/...)" class="w-full bg-white p-2 rounded-xl border border-amber-200 text-xs outline-none focus:border-amber-600 shadow-2xs">
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="saveGasUrl()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-2 px-2 rounded-xl transition cursor-pointer shadow-xs active:scale-95">儲存網址</button>
+                        <button onclick="syncFromCloud()" class="flex-1 bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-2 px-2 rounded-xl transition cursor-pointer shadow-xs active:scale-95">立即同步</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="pt-2">
                 <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-red-800 cursor-pointer shadow-xs">
                     🗑️ 清除並重設所有暫存資料
@@ -634,7 +564,6 @@
     <div id="app-wrapper">
         <div class="max-w-3xl mx-auto w-full space-y-5">
             
-            <!-- 綠色 Banner -->
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 <div class="flex items-center shrink-0">
                     <button onclick="toggleSidebar()" class="p-0 rounded-logo-btn transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
@@ -655,17 +584,13 @@
                 <!-- Google 智慧搜尋列 -->
                 <div id="desktop-search-card" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
-                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </div>
+                        <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600"><i class="fa-solid fa-magnifying-glass"></i></div>
                         <input type="text" name="q" placeholder="Google 搜尋您想尋求的解答..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
-                        <button type="submit" title="搜尋" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center">
-                            <i class="fa-solid fa-paper-plane text-sm"></i>
-                        </button>
+                        <button type="submit" title="搜尋" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center"><i class="fa-solid fa-paper-plane text-sm"></i></button>
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 -->
+                <!-- 1. 精選影音與創作服務 (完整 12 個選項) -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
@@ -701,7 +626,7 @@
                         <div class="app-item" data-mod="mod-videowall">
                             <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
                                 <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></div>
-                                <span class="app-label">打造影音牆</span>
+                                <span class="app-label">打造影音櫃</span>
                             </button>
                         </div>
                         <div class="app-item" data-mod="mod-news">
@@ -716,7 +641,7 @@
                                 <span class="app-label">檔案總管</span>
                             </a>
                         </div>
-                        <div class="app-item" data-mod="mod-life-simple">
+                        <div class="app-item" data-mod="mod-lifesimple">
                             <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-teal-500 to-emerald-700"><i class="fa-solid fa-house text-white"></i></div>
                                 <span class="app-label">生活簡居</span>
@@ -728,7 +653,7 @@
                                 <span class="app-label">生活圖書館</span>
                             </a>
                         </div>
-                        <div class="app-item" data-mod="mod-simple-home">
+                        <div class="app-item" data-mod="mod-simplehome">
                             <a href="https://myezlife.com/index-2.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-amber-500 to-yellow-600"><i class="fa-solid fa-desktop text-white"></i></div>
                                 <span class="app-label">簡易首頁</span>
@@ -743,7 +668,7 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
+                <!-- 2. 一般 App 捷徑 (即時交通與台股財經) -->
                 <div id="desktop-app-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="general-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
@@ -797,28 +722,21 @@
                     </div>
                 </div>
 
-                <!-- 動態產生的自訂卡片區塊會插入於此 -->
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 🌟 4. 全新升級：Blogger 式圖文與多媒體發布器卡片 -->
+                <!-- 4. 個人靈感隨筆與圖文日誌 -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
-                            <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-pen-nib"></i>
-                            </span>
+                            <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs"><i class="fa-solid fa-pen-nib"></i></span>
                             個人靈感隨筆與圖文日誌
                         </div>
-                        <span class="text-[11px] text-slate-400">100% 本機儲存創作</span>
+                        <span class="text-[11px] text-slate-400">支援雲端自動同步</span>
                     </div>
 
-                    <!-- 發布發想區 -->
                     <div class="space-y-2.5 bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/80">
                         <input type="text" id="post-title" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-white px-3 py-2 rounded-lg border border-slate-200 text-sm font-bold outline-none focus:border-[#00a600] transition">
-                        
                         <textarea id="post-content" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-white p-3 rounded-lg border border-slate-200 text-sm outline-none focus:border-[#00a600] transition" rows="3"></textarea>
-
-                        <!-- 多媒體 URL 附加 -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
                             <div class="flex items-center gap-1.5 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200">
                                 <i class="fa-solid fa-image text-emerald-600"></i>
@@ -829,7 +747,6 @@
                                 <input type="url" id="post-video-url" placeholder="YouTube 影片網址..." class="w-full bg-transparent outline-none text-xs">
                             </div>
                         </div>
-
                         <div class="flex justify-end pt-1">
                             <button onclick="publishBlogPost()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5">
                                 <i class="fa-solid fa-paper-plane"></i> 發布隨筆文章
@@ -837,11 +754,8 @@
                         </div>
                     </div>
 
-                    <!-- 文章紀錄展示區 -->
                     <div class="space-y-3 pt-2">
-                        <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-1.5">
-                            <i class="fa-solid fa-clock-rotate-left"></i> 歷史隨筆日誌清單
-                        </div>
+                        <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-1.5"><i class="fa-solid fa-clock-rotate-left"></i> 歷史隨筆日誌清單</div>
                         <div id="blog-posts-container" class="space-y-3"></div>
                     </div>
                 </div>
@@ -856,60 +770,49 @@
                     </div>
                     <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
                         <div class="flex items-center justify-between">
-                            <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-1">
-                                <i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦
-                            </span>
+                            <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-1"><i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦</span>
                             <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
                         </div>
                         <div id="random-recommendation-box" class="space-y-2"></div>
                     </div>
-                    <div class="pt-1">
-                        <p class="text-[11px] text-slate-400 font-bold mb-1.5 text-center">贊助商廣告</p>
-                        <div class="min-h-[90px] flex items-center justify-center bg-slate-50 border border-slate-200/80 rounded-xl overflow-hidden p-2">
-                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811" crossorigin="anonymous"></script>
-                            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5328509571221811" data-ad-format="auto" data-full-width-responsive="true"></ins>
-                            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- 🌟 捷徑 Dock 欄 -->
+                <!-- Dock 欄 -->
                 <div id="dock-bar">
                     <div class="flex items-center justify-around">
                         <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 text-xl md:text-2xl">
-                                <i class="fa-solid fa-folder-open text-white"></i>
-                            </div>
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 text-xl md:text-2xl"><i class="fa-solid fa-folder-open text-white"></i></div>
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">檔案總管</span>
                         </a>
                         <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 text-xl md:text-2xl">
-                                <i class="fa-solid fa-bolt text-white"></i>
-                            </div>
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 text-xl md:text-2xl"><i class="fa-solid fa-bolt text-white"></i></div>
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">新聞焦點</span>
                         </a>
-                        <a href="https://myezlife.com/index-2.html" target="_blank" class="hidden md:flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 text-xl md:text-2xl">
-                                <i class="fa-solid fa-desktop text-white"></i>
-                            </div>
-                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">簡易首頁</span>
-                        </a>
                         <a href="https://myezlife.com/haodoo.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl">
-                                <i class="fa-solid fa-book-bookmark text-white"></i>
-                            </div>
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl"><i class="fa-solid fa-book-bookmark text-white"></i></div>
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">好讀書單</span>
                         </a>
                         <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-xl md:text-2xl">
-                                <i class="fa-solid fa-house text-white"></i>
-                            </div>
+                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-xl md:text-2xl"><i class="fa-solid fa-house text-white"></i></div>
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活簡居</span>
                         </a>
                     </div>
                 </div>
 
             </main>
+        </div>
+    </div>
+
+    <!-- 影音櫃 Modal 視窗 -->
+    <div id="modal-step1" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-2xl max-w-md w-full space-y-4">
+            <h3 class="font-bold text-slate-800 text-base">🪄 一鍵打造專屬影音櫃</h3>
+            <p class="text-xs text-slate-600">請輸入您的 Google 試算表 CSV 連結或直接進行設定：</p>
+            <input type="text" id="csv-url-input" placeholder="請輸入 CSV 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none">
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModals()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl cursor-pointer">取消</button>
+                <button onclick="closeModals()" class="px-4 py-2 bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold rounded-xl cursor-pointer">確認設定</button>
+            </div>
         </div>
     </div>
 
@@ -920,13 +823,9 @@
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-            const weekday = weekdays[now.getDay()];
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            
             document.getElementById('header-date').innerText = `${year}年${month}月${day}日`;
-            document.getElementById('header-time').innerText = `${h}:${m}`;
-            document.getElementById('header-weekday').innerText = weekday;
+            document.getElementById('header-time').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            document.getElementById('header-weekday').innerText = weekdays[now.getDay()];
         }
         updateDateTime();
         setInterval(updateDateTime, 1000);
@@ -953,9 +852,7 @@
 
         function toggleSubMenu(subId, btn) {
             const subMenu = document.getElementById(subId);
-            let icon = null;
-            if (btn && btn.querySelector) icon = btn.querySelector('.fa-chevron-down, .fa-chevron-up');
-            
+            let icon = btn ? btn.querySelector('.fa-chevron-down, .fa-chevron-up') : null;
             if (subMenu.style.display === 'none') {
                 subMenu.style.display = 'block';
                 if (icon) icon.className = icon.className.replace('fa-chevron-down', 'fa-chevron-up');
@@ -965,151 +862,98 @@
             }
         }
 
+        function openVideoWallModal() {
+            toggleSidebar();
+            document.getElementById('modal-step1').classList.remove('hidden');
+        }
+        function closeModals() {
+            document.getElementById('modal-step1').classList.add('hidden');
+        }
+
+        function saveGasUrl() {
+            localStorage.setItem('myezlife_gas_url', document.getElementById('gas-url-input').value.trim());
+            alert('✅ GAS 網址已儲存！');
+            syncFromCloud();
+        }
+
+        async function syncFromCloud() {
+            const gasUrl = localStorage.getItem('myezlife_gas_url');
+            if (!gasUrl) { alert('請先輸入並儲存 GAS 部署網址！'); return; }
+            try {
+                const res = await fetch(gasUrl);
+                const cloudData = await res.json();
+                if (cloudData && Object.keys(cloudData).length > 0) {
+                    if (cloudData.custom_groups) localStorage.setItem('myezlife_custom_groups', JSON.stringify(cloudData.custom_groups));
+                    if (cloudData.custom_apps) localStorage.setItem('myezlife_custom_apps', JSON.stringify(cloudData.custom_apps));
+                    if (cloudData.blog_posts) localStorage.setItem('myezlife_blog_posts', JSON.stringify(cloudData.blog_posts));
+                    alert('🎉 雲端資料同步成功！網頁將重新整理。');
+                    location.reload();
+                }
+            } catch (err) { alert('❌ 雲端同步讀取失敗。'); }
+        }
+
+        async function syncToCloud() {
+            const gasUrl = localStorage.getItem('myezlife_gas_url');
+            if (!gasUrl) return;
+            try {
+                await fetch(gasUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        custom_groups: JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]'),
+                        custom_apps: JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]'),
+                        blog_posts: JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'),
+                        updated_at: new Date().toISOString()
+                    })
+                });
+            } catch (err) { console.error(err); }
+        }
+
         function clearAllLocalStorage() {
-            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？這將清除自訂區塊、App捷徑、Logo與設定。')) {
+            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？')) {
                 localStorage.clear();
-                alert('已成功清除所有暫存資料，網頁將自動重新整理！');
+                alert('已成功清除！');
                 location.reload();
             }
         }
 
-        function applyBackground() {
-            const url = document.getElementById('bg-url-input').value.trim();
-            if (!url) { alert('請輸入有效的圖片網址！'); return; }
-            setCustomBackground(url);
-        }
-
-        function handleBgUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                setCustomBackground(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function setCustomBackground(imgUrl) {
-            document.body.style.backgroundImage = `url('${imgUrl}')`;
-            localStorage.setItem('myezlife_custom_bg', imgUrl);
-            alert('成功套用滿版背景圖片！');
-        }
-
-        function resetBackground() {
-            document.body.style.backgroundImage = 'none';
-            localStorage.removeItem('myezlife_custom_bg');
-            document.getElementById('bg-url-input').value = '';
-            alert('已恢復預設背景！');
-        }
-
-        function loadSavedBackground() {
-            const savedBg = localStorage.getItem('myezlife_custom_bg');
-            if (savedBg) {
-                document.body.style.backgroundImage = `url('${savedBg}')`;
-                if (!savedBg.startsWith('data:image')) {
-                    document.getElementById('bg-url-input').value = savedBg;
-                }
-            }
-        }
-
-        // --- 🌟 自訂區塊底色與透明度 ---
         function applyCardStyle() {
             const isTransparent = document.getElementById('card-transparent-toggle').checked;
-            const customColor = document.getElementById('card-bg-color').value;
-
-            const cards = document.querySelectorAll('.app-shortcut-card, .custom-desktop-card');
-            cards.forEach(card => {
-                if (isTransparent) {
-                    card.style.backgroundColor = 'transparent';
-                    card.style.borderColor = 'transparent';
-                    card.style.boxShadow = 'none';
-                } else {
-                    card.style.backgroundColor = customColor;
-                    card.style.borderColor = '#e2e8f0';
-                    card.style.boxShadow = '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
-                }
+            document.querySelectorAll('.app-shortcut-card, .custom-desktop-card').forEach(card => {
+                card.style.backgroundColor = isTransparent ? 'transparent' : '#ffffff';
+                card.style.borderColor = isTransparent ? 'transparent' : '#e2e8f0';
+                card.style.boxShadow = isTransparent ? 'none' : '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
             });
-
             localStorage.setItem('myezlife_card_transparent', isTransparent);
-            localStorage.setItem('myezlife_card_color', customColor);
         }
 
         function loadCardStyle() {
             const isTransparent = localStorage.getItem('myezlife_card_transparent') === 'true';
-            const savedColor = localStorage.getItem('myezlife_card_color') || '#ffffff';
-
             document.getElementById('card-transparent-toggle').checked = isTransparent;
-            document.getElementById('card-bg-color').value = savedColor;
-
             applyCardStyle();
         }
 
-        // --- 🌟 自訂 Logo 功能 ---
-        function applyCustomLogo() {
-            const url = document.getElementById('custom-logo-url-input').value.trim();
-            if (!url) { alert('請輸入有效的 Logo 圖片網址！'); return; }
-            setCustomLogo(url);
-            alert('成功套用自訂 Logo！');
-        }
-
-        function setCustomLogo(url) {
-            document.getElementById('header-logo-img').src = url;
-            localStorage.setItem('myezlife_custom_logo', url);
-        }
-
-        function resetCustomLogo() {
-            const defaultLogo = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
-            document.getElementById('header-logo-img').src = defaultLogo;
-            localStorage.removeItem('myezlife_custom_logo');
-            document.getElementById('custom-logo-url-input').value = '';
-            alert('已恢復預設 Logo！');
-        }
-
-        function loadSavedLogo() {
-            const savedLogo = localStorage.getItem('myezlife_custom_logo');
-            if (savedLogo) {
-                document.getElementById('header-logo-img').src = savedLogo;
-                document.getElementById('custom-logo-url-input').value = savedLogo;
-            }
-        }
-
-        // --- 🌟 自訂區塊 (Category Groups) 管理 ---
-        function getCustomGroups() {
-            return JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]');
-        }
-
-        function saveCustomGroups(groups) {
-            localStorage.setItem('myezlife_custom_groups', JSON.stringify(groups));
-        }
+        function getCustomGroups() { return JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]'); }
+        function saveCustomGroups(groups) { localStorage.setItem('myezlife_custom_groups', JSON.stringify(groups)); syncToCloud(); }
 
         function addCustomGroup() {
-            const nameInput = document.getElementById('custom-group-name');
-            const name = nameInput.value.trim();
-            if (!name) { alert('請輸入自訂區塊名稱！'); return; }
-
+            const name = document.getElementById('custom-group-name').value.trim();
+            if (!name) { alert('請輸入區塊名稱！'); return; }
             const groups = getCustomGroups();
             const groupId = 'group-custom-' + Date.now();
             groups.push({ id: groupId, name: name });
             saveCustomGroups(groups);
-
-            nameInput.value = '';
+            document.getElementById('custom-group-name').value = '';
             renderCustomGroups();
             updateTargetGroupSelect();
             syncDesktopCardsOrder();
-            applyCardStyle();
-            alert(`成功建立自訂區塊：「${name}」！`);
+            alert(`成功建立區塊：「${name}」！`);
         }
 
         function removeCustomGroup(groupId, groupName) {
-            if (confirm(`確定要刪除區塊「${groupName}」及其底下的所有捷徑嗎？`)) {
-                let groups = getCustomGroups();
-                groups = groups.filter(g => g.id !== groupId);
-                saveCustomGroups(groups);
-
-                let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-                customApps = customApps.filter(app => app.groupId !== groupId);
-                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-
+            if (confirm(`確定刪除區塊「${groupName}」？`)) {
+                saveCustomGroups(getCustomGroups().filter(g => g.id !== groupId));
+                localStorage.setItem('myezlife_custom_apps', JSON.stringify(JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').filter(a => a.groupId !== groupId)));
+                syncToCloud();
                 renderCustomGroups();
                 updateTargetGroupSelect();
                 loadCustomApps();
@@ -1120,69 +964,46 @@
         function renderCustomGroups() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             const desktopWrapper = document.getElementById('custom-desktop-cards-wrapper');
-            
             document.querySelectorAll('.custom-sidebar-group').forEach(el => el.remove());
             desktopWrapper.innerHTML = '';
 
-            const groups = getCustomGroups();
-
-            groups.forEach(group => {
+            getCustomGroups().forEach(group => {
                 const sideDiv = document.createElement('div');
-                sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2 transition-all hover:border-emerald-200';
+                sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2';
                 sideDiv.setAttribute('data-id', group.id);
                 sideDiv.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
-                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-folder"></i>
-                                </span>
-                                ${group.name}
-                            </span>
+                            <i class="fa-solid fa-grip-vertical text-slate-300"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5"><i class="fa-solid fa-folder text-[#00a600]"></i> ${group.name}</span>
                         </div>
                         <div class="flex items-center gap-1">
-                            <button type="button" onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center cursor-pointer transition" title="刪除此區塊">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                            <button type="button" onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
-                                <i class="fa-solid fa-chevron-down"></i>
-                            </button>
+                            <button onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-chevron-down"></i></button>
                         </div>
                     </div>
                     <div id="${group.id}-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
-                        <div class="text-[10px] text-slate-400 italic py-1 px-1">（新增 App 時選擇此區塊即可放入）</div>
-                    </div>
-                `;
+                        <div class="text-[10px] text-slate-400 italic py-1">（新增 App 時可選此區塊）</div>
+                    </div>`;
                 sidebarContainer.appendChild(sideDiv);
 
                 const cardDiv = document.createElement('div');
                 cardDiv.id = `desktop-${group.id}-card`;
                 cardDiv.className = 'custom-desktop-card app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3';
                 cardDiv.innerHTML = `
-                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-folder-open text-[#00a600]"></i> ${group.name}
-                    </div>
-                    <div id="${group.id}-app-grid" class="app-grid"></div>
-                `;
+                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2"><i class="fa-solid fa-folder-open text-[#00a600]"></i> ${group.name}</div>
+                    <div id="${group.id}-app-grid" class="app-grid"></div>`;
                 desktopWrapper.appendChild(cardDiv);
             });
         }
 
         function updateTargetGroupSelect() {
             const select = document.getElementById('custom-app-target-group');
-            select.innerHTML = `
-                <option value="group-creative">🎬 精選影音與創作服務</option>
-                <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
-            `;
-            const groups = getCustomGroups();
-            groups.forEach(g => {
-                select.innerHTML += `<option value="${g.id}">📁 ${g.name}</option>`;
-            });
+            select.innerHTML = `<option value="group-creative">🎬 精選影音與創作服務</option><option value="group-general">🚗 一般捷徑 (交通與財經)</option>`;
+            getCustomGroups().forEach(g => { select.innerHTML += `<option value="${g.id}">📁 ${g.name}</option>`; });
         }
 
         function updateDesktopVisibility() {
-            // 控制 Google 搜尋列顯示狀態
             const searchCard = document.getElementById('desktop-search-card');
             const modSearch = document.getElementById('mod-search');
             if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
@@ -1190,71 +1011,47 @@
             let hasCreativeVisible = false;
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
-            
             if (creativeSub && creativeGrid) {
-                const subItems = Array.from(creativeSub.querySelectorAll('.sub-drag-item'));
-                subItems.forEach(itemEl => {
+                Array.from(creativeSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
                     const cb = itemEl.querySelector('input[type="checkbox"]');
                     const modId = itemEl.getAttribute('data-mod-id');
                     const appItem = creativeGrid.querySelector(`[data-mod="${modId}"]`);
-                    
                     if (cb && appItem) {
                         creativeGrid.appendChild(appItem);
-                        if (cb.checked) {
-                            appItem.style.display = 'flex';
-                            hasCreativeVisible = true;
-                        } else {
-                            appItem.style.display = 'none';
-                        }
+                        if (cb.checked) { appItem.style.display = 'flex'; hasCreativeVisible = true; }
+                        else { appItem.style.display = 'none'; }
                     }
                 });
             }
-            if (creativeGrid && creativeGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) {
-                hasCreativeVisible = true;
-            }
+            if (creativeGrid && creativeGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasCreativeVisible = true;
             const creativeCard = document.getElementById('desktop-creative-card');
             if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
 
             let hasGeneralVisible = false;
             const generalGrid = document.getElementById('general-app-grid');
-
             ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
                 const subContainer = document.getElementById(subContainerId);
                 if (subContainer && generalGrid) {
-                    const subItems = Array.from(subContainer.querySelectorAll('.sub-drag-item'));
-                    subItems.forEach(itemEl => {
+                    Array.from(subContainer.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
                         const cb = itemEl.querySelector('input[type="checkbox"]');
                         const modId = itemEl.getAttribute('data-mod-id');
                         const appItem = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                        
                         if (cb && appItem) {
                             generalGrid.appendChild(appItem);
-                            if (cb.checked) {
-                                appItem.style.display = 'flex';
-                                hasGeneralVisible = true;
-                            } else {
-                                appItem.style.display = 'none';
-                            }
+                            if (cb.checked) { appItem.style.display = 'flex'; hasGeneralVisible = true; }
+                            else { appItem.style.display = 'none'; }
                         }
                     });
                 }
             });
-
-            if (generalGrid && generalGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) {
-                hasGeneralVisible = true;
-            }
-
+            if (generalGrid && generalGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasGeneralVisible = true;
             const generalCard = document.getElementById('desktop-app-card');
             if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
 
-            const groups = getCustomGroups();
-            groups.forEach(g => {
+            getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
                 const grid = document.getElementById(`${g.id}-app-grid`);
-                if (card && grid) {
-                    const count = grid.querySelectorAll('.app-item').length;
-                    card.style.display = count > 0 ? 'block' : 'none';
-                }
+                if (card && grid) card.style.display = grid.querySelectorAll('.app-item').length > 0 ? 'block' : 'none';
             });
 
             const todoCard = document.getElementById('desktop-todo-card');
@@ -1265,15 +1062,8 @@
             const modSponsor = document.getElementById('mod-sponsor');
             if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
 
-            saveCheckboxStates();
-        }
-
-        function saveCheckboxStates() {
-            const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
             let state = {};
-            checkboxes.forEach(cb => {
-                if (cb.id) state[cb.id] = cb.checked;
-            });
+            document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => { if (cb.id) state[cb.id] = cb.checked; });
             localStorage.setItem('myezlife_checkbox_states', JSON.stringify(state));
         }
 
@@ -1285,15 +1075,11 @@
                     if (cb) cb.checked = checked;
                 }
             } else {
-                const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
-                checkboxes.forEach(cb => {
-                    const parentSub = cb.closest('#creative-sub');
-                    cb.checked = (parentSub !== null || cb.id === 'mod-search');
+                document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
+                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search');
                 });
-                const modTodo = document.getElementById('mod-todo');
-                const modSponsor = document.getElementById('mod-sponsor');
-                if (modTodo) modTodo.checked = false;
-                if (modSponsor) modSponsor.checked = false;
+                if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
+                if (document.getElementById('mod-sponsor')) document.getElementById('mod-sponsor').checked = false;
             }
         }
 
@@ -1301,25 +1087,15 @@
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
                 new Sortable(sidebarContainer, {
-                    animation: 200,
-                    handle: '.sidebar-drag-handle',
-                    ghostClass: 'sortable-ghost',
-                    dragClass: 'sortable-drag',
-                    delay: 150,
-                    delayOnTouchOnly: true,
+                    animation: 200, handle: '.sidebar-drag-handle',
                     onEnd: function () {
-                        const order = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
-                        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(order));
+                        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
                         syncDesktopCardsOrder();
+                        syncToCloud();
                     }
                 });
-                const savedSidebarOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
-                if (savedSidebarOrder) {
-                    savedSidebarOrder.forEach(id => {
-                        const el = sidebarContainer.querySelector(`[data-id="${id}"]`);
-                        if (el) sidebarContainer.appendChild(el);
-                    });
-                }
+                const savedOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
+                if (savedOrder) savedOrder.forEach(id => { const el = sidebarContainer.querySelector(`[data-id="${id}"]`); if (el) sidebarContainer.appendChild(el); });
                 syncDesktopCardsOrder();
             }
 
@@ -1327,51 +1103,24 @@
                 const subContainer = document.getElementById(subId);
                 if (subContainer) {
                     new Sortable(subContainer, {
-                        animation: 150,
-                        handle: '.sub-drag-item',
-                        filter: 'input',
-                        preventOnFilter: false,
-                        ghostClass: 'sortable-ghost',
-                        dragClass: 'sortable-drag',
-                        delay: 100,
-                        delayOnTouchOnly: true,
+                        animation: 150, handle: '.sub-drag-item', filter: 'input', preventOnFilter: false,
                         onEnd: function() {
-                            saveSubItemOrder(subId);
+                            localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
                             updateDesktopVisibility();
+                            syncToCloud();
                         }
                     });
-                    loadSubItemOrder(subId);
+                    const savedSubOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
+                    if (savedSubOrder) savedSubOrder.forEach(modId => { const item = subContainer.querySelector(`[data-mod-id="${modId}"]`); if (item) subContainer.appendChild(item); });
                 }
             });
-        }
-
-        function saveSubItemOrder(subId) {
-            const container = document.getElementById(subId);
-            if (!container) return;
-            const order = Array.from(container.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'));
-            localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(order));
-        }
-
-        function loadSubItemOrder(subId) {
-            const container = document.getElementById(subId);
-            if (!container) return;
-            const savedOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
-            if (savedOrder) {
-                savedOrder.forEach(modId => {
-                    const item = container.querySelector(`[data-mod-id="${modId}"]`);
-                    if (item) container.appendChild(item);
-                });
-            }
         }
 
         function syncDesktopCardsOrder() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             const desktopContainer = document.getElementById('desktop-cards-container');
             if (!sidebarContainer || !desktopContainer) return;
-
-            const groupOrder = Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'));
-            
-            groupOrder.forEach(groupId => {
+            Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id')).forEach(groupId => {
                 let card = null;
                 if (groupId === 'group-search') card = document.getElementById('desktop-search-card');
                 else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
@@ -1379,96 +1128,38 @@
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 else if (groupId && groupId.startsWith('group-custom-')) card = document.getElementById(`desktop-${groupId}-card`);
-                
                 if (card) desktopContainer.appendChild(card);
             });
             const dockBar = document.getElementById('dock-bar');
             if (dockBar) desktopContainer.appendChild(dockBar);
         }
 
-        function bindLongPressToDelete(itemElement) {
-            let pressTimer = null;
-            const linkTag = itemElement.querySelector('a');
-
-            const startPress = () => {
-                pressTimer = setTimeout(() => {
-                    const isShown = itemElement.classList.contains('show-delete');
-                    document.querySelectorAll('.app-item.show-delete').forEach(el => el.classList.remove('show-delete'));
-                    
-                    if (!isShown) {
-                        itemElement.classList.add('show-delete');
-                        if (navigator.vibrate) navigator.vibrate(50);
-                    }
-                }, 3000);
-            };
-
-            const cancelPress = () => {
-                if (pressTimer) {
-                    clearTimeout(pressTimer);
-                    pressTimer = null;
-                }
-            };
-
-            itemElement.addEventListener('touchstart', startPress, { passive: true });
-            itemElement.addEventListener('touchend', cancelPress);
-            itemElement.addEventListener('touchmove', cancelPress);
-            itemElement.addEventListener('mousedown', startPress);
-            itemElement.addEventListener('mouseup', cancelPress);
-            itemElement.addEventListener('mouseleave', cancelPress);
-
-            if (linkTag) {
-                linkTag.addEventListener('click', (e) => {
-                    if (itemElement.classList.contains('show-delete')) {
-                        e.preventDefault();
-                    }
-                });
-            }
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.app-item')) {
-                document.querySelectorAll('.app-item.show-delete').forEach(el => {
-                    el.classList.remove('show-delete');
-                });
-            }
-        });
-
         function addCustomApp() {
-            const targetSelect = document.getElementById('custom-app-target-group');
-            const nameInput = document.getElementById('custom-app-name');
-            const urlInput = document.getElementById('custom-app-url');
-            const iconSelect = document.getElementById('custom-app-icon');
-            
-            const groupId = targetSelect.value;
-            const name = nameInput.value.trim();
-            let url = urlInput.value.trim();
-            const icon = iconSelect.value;
-
-            if (!name || !url) { alert('請完整輸入網頁名稱與網址！'); return; }
+            const groupId = document.getElementById('custom-app-target-group').value;
+            const name = document.getElementById('custom-app-name').value.trim();
+            let url = document.getElementById('custom-app-url').value.trim();
+            const icon = document.getElementById('custom-app-icon').value;
+            if (!name || !url) { alert('請完整輸入名稱與網址！'); return; }
             if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
 
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
             customApps.push({ groupId, name, url, icon });
             localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+            syncToCloud();
 
-            nameInput.value = '';
-            urlInput.value = '';
-            iconSelect.selectedIndex = 0;
-            
+            document.getElementById('custom-app-name').value = '';
+            document.getElementById('custom-app-url').value = '';
             loadCustomApps();
             updateDesktopVisibility();
-            alert('成功新增自訂 App 捷徑！');
+            alert('成功新增自訂 App！');
         }
 
         function removeCustomApp(btn) {
-            if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
-                const item = btn.closest('.app-item');
-                const customIdx = parseInt(item.getAttribute('data-custom-idx'), 10);
-                
+            if (confirm('確定刪除此自訂捷徑？')) {
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-                customApps.splice(customIdx, 1);
+                customApps.splice(parseInt(btn.closest('.app-item').getAttribute('data-custom-idx'), 10), 1);
                 localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-
+                syncToCloud();
                 loadCustomApps();
                 updateDesktopVisibility();
             }
@@ -1476,183 +1167,94 @@
 
         function loadCustomApps() {
             document.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
-
-            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-            customApps.forEach((app, index) => {
+            JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').forEach((app, index) => {
                 let targetGrid = null;
-                if (app.groupId === 'group-creative') {
-                    targetGrid = document.getElementById('creative-app-grid');
-                } else if (!app.groupId || app.groupId === 'group-general') {
-                    targetGrid = document.getElementById('general-app-grid');
-                } else {
-                    targetGrid = document.getElementById(`${app.groupId}-app-grid`);
-                }
+                if (app.groupId === 'group-creative') targetGrid = document.getElementById('creative-app-grid');
+                else if (!app.groupId || app.groupId === 'group-general') targetGrid = document.getElementById('general-app-grid');
+                else targetGrid = document.getElementById(`${app.groupId}-app-grid`);
 
                 if (targetGrid) {
                     let div = document.createElement('div');
                     div.className = 'app-item relative group';
                     div.setAttribute('data-custom-idx', index);
-                    const appIcon = app.icon || 'fa-solid fa-globe';
                     div.innerHTML = `
                         <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                            <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
+                            <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${app.icon || 'fa-solid fa-globe'} text-white"></i></div>
                             <span class="app-label">${app.name}</span>
                         </a>
-                        <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>
-                    `;
+                        <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>`;
                     targetGrid.appendChild(div);
-                    bindLongPressToDelete(div);
                 }
             });
         }
 
-        // --- 🌟 全新升級：Blogger 文章/日誌發布功能邏輯 ---
-        function getBlogPosts() {
-            return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]');
-        }
-
-        function saveBlogPosts(posts) {
-            localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts));
-        }
+        // 日誌功能
+        function getBlogPosts() { return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'); }
+        function saveBlogPosts(posts) { localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts)); syncToCloud(); }
 
         function publishBlogPost() {
-            const titleInput = document.getElementById('post-title');
-            const contentInput = document.getElementById('post-content');
-            const imgInput = document.getElementById('post-img-url');
-            const videoInput = document.getElementById('post-video-url');
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            const imgUrl = document.getElementById('post-img-url').value.trim();
+            let videoUrl = document.getElementById('post-video-url').value.trim();
+            if (!title && !content) { alert('請輸入標題或內容！'); return; }
 
-            const title = titleInput.value.trim();
-            const content = contentInput.value.trim();
-            const imgUrl = imgInput.value.trim();
-            let videoUrl = videoInput.value.trim();
-
-            if (!title && !content) {
-                alert('請輸入文章標題或內容！');
-                return;
-            }
-
-            // 轉換 YouTube 網址為 Embed 格式
             let youtubeEmbedUrl = '';
             if (videoUrl) {
-                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                const match = videoUrl.match(regExp);
-                if (match && match[2].length === 11) {
-                    youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
-                }
+                const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                if (match && match[2].length === 11) youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
             }
 
             const now = new Date();
-            const timeStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-            const newPost = {
-                id: 'post-' + Date.now(),
-                title: title || '無標題隨筆',
-                content: content,
-                imgUrl: imgUrl,
-                videoEmbed: youtubeEmbedUrl,
-                date: timeStr
-            };
-
             const posts = getBlogPosts();
-            posts.unshift(newPost); // 最新發布排最前面
+            posts.unshift({ id: 'post-' + Date.now(), title: title || '無標題隨筆', content, imgUrl, videoEmbed: youtubeEmbedUrl, date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` });
             saveBlogPosts(posts);
 
-            // 清空欄位
-            titleInput.value = '';
-            contentInput.value = '';
-            imgInput.value = '';
-            videoInput.value = '';
-
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-img-url').value = '';
+            document.getElementById('post-video-url').value = '';
             renderBlogPosts();
         }
 
         function deleteBlogPost(postId) {
-            if (confirm('確定要刪除這篇隨筆文章嗎？')) {
-                let posts = getBlogPosts();
-                posts = posts.filter(p => p.id !== postId);
-                saveBlogPosts(posts);
-                renderBlogPosts();
-            }
+            if (confirm('確定刪除此隨筆？')) { saveBlogPosts(getBlogPosts().filter(p => p.id !== postId)); renderBlogPosts(); }
         }
 
         function renderBlogPosts() {
             const container = document.getElementById('blog-posts-container');
             const posts = getBlogPosts();
-
-            if (posts.length === 0) {
-                container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-4 bg-slate-50/50 rounded-xl">尚未發布任何隨筆文章，快在上方寫下第一篇吧！</div>`;
-                return;
-            }
-
+            if (posts.length === 0) { container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-4 bg-slate-50/50 rounded-xl">尚無隨筆文章</div>`; return; }
             container.innerHTML = posts.map(post => `
-                <div class="bg-slate-50/80 border border-slate-200/80 p-3.5 rounded-xl space-y-2 relative group hover:border-slate-300 transition">
+                <div class="bg-slate-50/80 border border-slate-200/80 p-3.5 rounded-xl space-y-2 relative group">
                     <div class="flex items-start justify-between gap-2 border-b border-slate-200/60 pb-2">
                         <div>
                             <h4 class="font-bold text-slate-800 text-sm">${post.title}</h4>
-                            <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
-                                <i class="fa-regular fa-calendar-check"></i> ${post.date}
-                            </div>
+                            <div class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar-check"></i> ${post.date}</div>
                         </div>
-                        <button onclick="deleteBlogPost('${post.id}')" class="text-rose-400 hover:text-rose-600 text-xs p-1 rounded hover:bg-rose-50 transition cursor-pointer" title="刪除文章">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        <button onclick="deleteBlogPost('${post.id}')" class="text-rose-400 hover:text-rose-600 text-xs p-1"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-
-                    ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">${post.content}</p>` : ''}
-
-                    ${post.imgUrl ? `
-                        <div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5">
-                            <img src="${post.imgUrl}" alt="文章插圖" class="w-full h-full object-cover" onerror="this.style.display='none'">
-                        </div>
-                    ` : ''}
-
-                    ${post.videoEmbed ? `
-                        <div class="relative w-full overflow-hidden rounded-lg border border-slate-200" style="padding-top: 56.25%;">
-                            <iframe class="absolute top-0 left-0 w-full h-full" src="${post.videoEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
+                    ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap">${post.content}</p>` : ''}
+                    ${post.imgUrl ? `<div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5"><img src="${post.imgUrl}" class="w-full h-full object-cover"></div>` : ''}
+                    ${post.videoEmbed ? `<div class="relative w-full overflow-hidden rounded-lg border border-slate-200" style="padding-top: 56.25%;"><iframe class="absolute top-0 left-0 w-full h-full" src="${post.videoEmbed}" frameborder="0" allowfullscreen></iframe></div>` : ''}
+                </div>`).join('');
         }
 
         function initRandomRecommendation() {
             const recs = [
-                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份，記錄每一天的平靜與感動。", url: "https://myezlife.com/diary/index.html", tag: "熱門推薦" },
-                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡，傳遞溫暖給親朋好友。", url: "https://myezlife.com/ai-greeting-app/", tag: "人氣工具" },
-                { title: "📰 新聞劃重點", desc: "快速掌握捷運通勤時事重點與最新趨勢。", url: "https://myezlife.com/index_news.html", tag: "實用資訊" },
-                { title: "🎵 好歌一直聽 (雲端影音牆)", desc: "專屬雲端試算表影音牆，隨時隨地享受好音樂。", url: "https://myezlife.com/goldmelody_csv.html", tag: "視聽娛樂" },
-                { title: "📂 個人檔案總管", desc: "便利的管理與瀏覽個人雲端檔案內容。", url: "https://myezlife.com/FileExplorer.html", tag: "高效助手" }
+                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份。", url: "https://myezlife.com/diary/index.html", tag: "熱門" },
+                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡。", url: "https://myezlife.com/ai-greeting-app/", tag: "工具" },
+                { title: "📰 新聞劃重點", desc: "快速掌握時事重點。", url: "https://myezlife.com/index_news.html", tag: "資訊" }
             ];
-            const shuffled = [...recs].sort(() => 0.5 - Math.random());
             const box = document.getElementById('random-recommendation-box');
-            if (box) {
-                box.innerHTML = shuffled.slice(0, 3).map(item => `
-                    <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100/90 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
-                        <div class="flex items-center justify-between mb-0.5">
-                            <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700 transition flex items-center gap-1.5">${item.title}</span>
-                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
-                        </div>
-                        <p class="text-[11px] text-slate-600 leading-tight font-medium">${item.desc}</p>
-                    </a>
-                `).join('');
-            }
+            if (box) box.innerHTML = recs.map(item => `<a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition"><div class="flex items-center justify-between mb-0.5"><span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">${item.title}</span><span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span></div><p class="text-[11px] text-slate-600">${item.desc}</p></a>`).join('');
         }
-
-        function openVideoWallModal() { toggleSidebar(); openStep1(); }
-        function openStep1() { document.getElementById('modal-step2').classList.add('hidden'); document.getElementById('modal-step1').classList.remove('hidden'); }
-        function goToStep2() { 
-            document.getElementById('modal-step1').classList.add('hidden'); 
-            document.getElementById('modal-step2').classList.remove('hidden');
-            const savedCsv = localStorage.getItem('myezlife_custom_csv');
-            if (savedCsv) {
-                document.getElementById('csv-url-input').value = savedCsv;
-            }
-        }
-        function closeModals() { document.getElementById('modal-step1').classList.add('hidden'); document.getElementById('modal-step2').classList.add('hidden'); }
 
         // 頁面初始化
-        loadSavedBackground();
-        loadSavedLogo();
+        if (localStorage.getItem('myezlife_custom_bg')) document.body.style.backgroundImage = `url('${localStorage.getItem('myezlife_custom_bg')}')`;
+        if (localStorage.getItem('myezlife_custom_logo')) document.getElementById('header-logo-img').src = localStorage.getItem('myezlife_custom_logo');
+        if (localStorage.getItem('myezlife_gas_url')) document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
+        
         renderCustomGroups();
         updateTargetGroupSelect();
         loadCheckboxStates();
@@ -1662,7 +1264,6 @@
         loadCardStyle();
         renderBlogPosts();
         initRandomRecommendation();
-        document.querySelectorAll('.app-item').forEach(item => bindLongPressToDelete(item));
     </script>
 </body>
 </html>
