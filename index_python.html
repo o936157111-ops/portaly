@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myezlife.com | 你手機日常生活用的網站</title>
+    <title>myezlife.com | 你的日常生活實用工具的網站</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
@@ -54,16 +54,18 @@
             left: 0;
             height: 100vh;
             width: 300px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
+            max-width: 85vw;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
             z-index: 50;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateX(-100%);
-            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-            border-right: 1px solid #e2e8f0;
+            box-shadow: 6px 0 25px rgba(0,0,0,0.08);
+            border-right: 1px solid rgba(226, 232, 240, 0.8);
             touch-action: pan-y;
             display: flex;
             flex-direction: column;
+            box-sizing: border-box;
         }
         #sidebar.show-sidebar { transform: translateX(0); }
 
@@ -88,6 +90,7 @@
             width: 100%;
             padding: 16px;
             padding-bottom: 120px;
+            box-sizing: border-box;
         }
 
         @media (min-width: 768px) {
@@ -124,6 +127,7 @@
             color: #ffffff;
             box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
             width: 100%;
+            box-sizing: border-box;
         }
 
         .rounded-logo-btn {
@@ -181,7 +185,17 @@
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
-        /* Dock 欄 */
+        #sidebar-scroll-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        #sidebar-scroll-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #sidebar-scroll-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
         #dock-bar {
             position: fixed;
             bottom: 16px;
@@ -197,6 +211,7 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
             border-radius: 24px;
             padding: 10px 16px;
+            box-sizing: border-box;
         }
 
         @media (min-width: 768px) {
@@ -226,37 +241,45 @@
     </button>
 
     <!-- 🌟 左側側邊欄選單 -->
-    <aside id="sidebar" class="p-5 space-y-4 overflow-y-auto">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0">
-            <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-[#00a600]"></i> 功能模組側邊欄
+    <aside id="sidebar" class="p-4 space-y-3">
+        <!-- 頂部標頭 -->
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0 relative">
+            <div class="absolute -top-4 -left-4 -right-4 h-1 bg-gradient-to-r from-emerald-500 via-[#00a600] to-teal-500"></div>
+            <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 pt-1">
+                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-sliders"></i>
+                </span>
+                功能模組側邊欄
             </h2>
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-700 p-2 cursor-pointer">
-                <i class="fa-solid fa-xmark text-lg"></i>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-600 w-7 h-7 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
-        <div class="flex-1 space-y-4 overflow-y-auto">
+        <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             
-            <!-- 🌟 網站特性、手機App捷徑製作與隱私說明區塊 -->
-            <div class="bg-gradient-to-br from-emerald-50 to-teal-50/60 p-3 rounded-xl border border-emerald-100/80 space-y-2">
-                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('about-app-sub', this)">
-                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-info text-[#00a600]"></i> 網站使用與隱私說明
+            <!-- 🌟 網站使用與隱私說明 (完整教學版本) -->
+            <div class="bg-gradient-to-br from-emerald-50/90 to-teal-50/50 p-3 rounded-2xl border border-emerald-200/80 shadow-xs space-y-2">
+                <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
+                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-emerald-600 text-white flex items-center justify-center text-[10px] shadow-xs">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                        網站使用與隱私說明
                     </div>
-                    <i class="fa-solid fa-chevron-down text-emerald-600 text-xs"></i>
+                    <i class="fa-solid fa-chevron-down text-emerald-600 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
-                <div id="about-app-sub" class="text-[11px] text-slate-600 space-y-2.5 pt-2 border-t border-emerald-100" style="display: none;">
+                <div id="about-app-sub" class="text-[11px] text-slate-600 space-y-2.5 pt-2 border-t border-emerald-200/60" style="display: none;">
                     
                     <!-- 手機加入主畫面教學 -->
-                    <div class="bg-white/80 p-2 rounded-lg border border-emerald-100 space-y-1">
-                        <strong class="text-emerald-800 flex items-center gap-1">
-                            <i class="fa-solid fa-mobile-screen-button"></i> 如何當作 App 使用？
+                    <div class="bg-white/95 p-2.5 rounded-xl border border-emerald-100 space-y-1.5 shadow-2xs">
+                        <strong class="text-emerald-800 flex items-center gap-1.5 text-[11px]">
+                            <i class="fa-solid fa-mobile-screen-button text-[#00a600]"></i> 如何當作 App 使用？
                         </strong>
-                        <p class="leading-relaxed text-slate-700">
+                        <p class="leading-relaxed text-slate-700 text-[11px]">
                             無需下載 APK，直接在手機瀏覽器輸入 <strong class="text-[#00a600]">myezlife.com</strong> 開啟後，點選瀏覽器選單並選擇：
                         </p>
-                        <p class="pl-1 text-slate-600">
+                        <p class="pl-1 text-slate-600 text-[11px] leading-relaxed">
                             👉 <strong>iOS (Safari)</strong>：點擊下方「分享」按鈕 ➔ 選擇「<strong>加入主畫面</strong>」。<br>
                             👉 <strong>Android (Chrome)</strong>：點擊右上角「選單 (⋮)」➔ 選擇「<strong>加到主畫面</strong>」或「<strong>安裝應用程式</strong>」。
                         </p>
@@ -264,247 +287,320 @@
                     </div>
 
                     <!-- 隱私安全說明 -->
-                    <p class="leading-relaxed">
+                    <p class="leading-relaxed text-[11px] px-0.5">
                         <strong class="text-emerald-800">🔒 100% 本機隱私安全：</strong><br>
-                        本站重視個人隱私，您所新增的自訂捷徑、待辦清單、便籤及背景設定，<strong class="text-slate-800">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
+                        本站重視個人隱私，您所新增的自訂區塊、捷徑、待辦清單、便籤及背景設定，<strong class="text-slate-800">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
                     </p>
 
                     <!-- 基本操作 -->
-                    <p class="leading-relaxed">
-                        <strong class="text-emerald-800">⚙️ 模組自訂：</strong><br>
-                        勾選下方模組可自訂顯示，按住群組標頭可拖曳排序桌面卡片。
+                    <p class="leading-relaxed text-[11px] px-0.5">
+                        <strong class="text-emerald-800">⚙️ 模組自訂與拖曳：</strong><br>
+                        勾選下方模組可自訂顯示與隱藏，按住群組標頭或項目旁的圖示可自由拖曳排序桌面卡片。
                     </p>
                 </div>
             </div>
 
-            <div id="sidebar-sortable-container" class="space-y-3">
+            <!-- 可排序的大群組容器 -->
+            <div id="sidebar-sortable-container" class="space-y-2.5">
                 
                 <!-- 1. 精選影音與創作服務群組 -->
-                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-creative">
+                <div class="sidebar-item-group bg-rose-50/40 p-2.5 rounded-2xl border border-rose-100 shadow-2xs space-y-2 transition-all hover:border-rose-200" data-id="group-creative">
                     <div class="flex items-center justify-between">
-                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
+                        <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-500 flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-film"></i>
+                                </span>
+                                精選影音與創作服務
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                        <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="creative-sub" class="space-y-1.5 pl-2 border-l-2 border-rose-100 mt-1" style="display: none;">
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-weather">
+                    <div id="creative-sub" class="space-y-1 pl-2 border-l-2 border-rose-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-weather">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🌤️ 即時氣象預報</span>
+                            <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🌤️ 即時氣象預報</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-drama">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-drama">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🎬 AI好劇一直看</span>
+                            <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🎬 AI好劇一直看</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-melody">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-melody">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🎵 好歌一直聽</span>
+                            <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🎵 好歌一直聽</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-diary">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-diary">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>📖 心情隨筆日記</span>
+                            <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">📖 心情隨筆日記</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-greeting">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-greeting">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🌻 AI早安問候圖</span>
+                            <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🌻 AI早安問候圖</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-videowall">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-videowall">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🪄 一鍵打造專屬影音牆</span>
+                            <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🪄 一鍵打造專屬影音牆</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-news">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-news">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>📰 焦點新聞自動彙整</span>
+                            <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">📰 焦點新聞自動彙整</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-explorer">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-explorer">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>📂 個人檔案總管</span>
+                            <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">📂 個人檔案總管</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-life-simple">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-life-simple">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-life-simple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🏡 生活‧簡居‧生活</span>
+                            <input type="checkbox" id="mod-life-simple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🏡 生活‧簡居‧生活</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-library">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-library">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>📚 生活圖書館</span>
+                            <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">📚 生活圖書館</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-simple-home">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-simple-home">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-simple-home" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🏠 簡易首頁</span>
+                            <input type="checkbox" id="mod-simple-home" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🏠 簡易首頁</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-games">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-games">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-games" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🎮 復古小遊戲</span>
+                            <input type="checkbox" id="mod-games" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🎮 復古小遊戲</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 2. 即時交通與大眾運輸群組 -->
-                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-traffic">
+                <div class="sidebar-item-group bg-blue-50/40 p-2.5 rounded-2xl border border-blue-100 shadow-2xs space-y-2 transition-all hover:border-blue-200" data-id="group-traffic">
                     <div class="flex items-center justify-between">
-                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                        <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-route"></i>
+                                </span>
+                                即時交通與大眾運輸
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="traffic-sub" class="space-y-1.5 pl-2 border-l-2 border-blue-100 mt-1" style="display: none;">
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-highway">
+                    <div id="traffic-sub" class="space-y-1 pl-2 border-l-2 border-blue-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-highway">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🚗 國道 1968 路況</span>
+                            <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🚗 國道 1968 路況</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-provincial">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-provincial">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🛣️ 全台省道路況 (168)</span>
+                            <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🛣️ 全台省道路況 (168)</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-bus">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-bus">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🚌 即時公車動態</span>
+                            <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🚌 即時公車動態</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-bike">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-bike">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🚲 YouBike 站點車位</span>
+                            <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🚲 YouBike 站點車位</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-train">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-train">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🚂 台鐵時刻查詢</span>
+                            <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🚂 台鐵時刻查詢</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-hsr">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-hsr">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>🚄 高鐵時刻查詢</span>
+                            <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">🚄 高鐵時刻查詢</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. 台股財經與鉅亨網群組 -->
-                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2" data-id="group-finance">
+                <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2 transition-all hover:border-emerald-200" data-id="group-finance">
                     <div class="flex items-center justify-between">
-                        <div class="sidebar-drag-handle flex items-center gap-1.5 flex-1 py-1">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                            <span class="font-semibold text-slate-700 text-[11px] uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-chart-line text-[#00a600]"></i> 台股財經與鉅亨網
+                        <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                </span>
+                                台股財經與鉅亨網
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-700 text-xs p-2 cursor-pointer">
+                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="finance-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-100 mt-1" style="display: none;">
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-yahoo">
+                    <div id="finance-sub" class="space-y-1 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-emerald-100/60 transition" data-mod-id="mod-yahoo">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>📈 Yahoo股市</span>
+                            <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">📈 Yahoo股市</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/60 hover:bg-white p-1.5 rounded text-xs cursor-pointer border border-slate-100" data-mod-id="mod-cnyes">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-emerald-100/60 transition" data-mod-id="mod-cnyes">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
-                            <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>📰 鉅亨網</span>
+                            <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="text-slate-700 font-medium">📰 鉅亨網</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 4. 互動待辦清單 -->
-                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-todo">
-                    <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
-                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>✅ 互動待辦清單與隨手便籤</span>
+                <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
+                    <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
+                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-square-check"></i>
+                                </span>
+                                互動待辦清單與隨手便籤
+                            </span>
                         </label>
                     </div>
                 </div>
 
                 <!-- 5. 贊助支援與延伸閱讀 -->
-                <div class="sidebar-item-group bg-slate-50 p-2.5 rounded-xl border border-slate-100" data-id="group-sponsor">
-                    <div class="sidebar-drag-handle flex items-center gap-1.5 py-1">
-                        <i class="fa-solid fa-grip-vertical text-slate-300 mr-0.5"></i>
-                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-800 w-full">
-                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4">
-                            <span>💖 贊助支援與延伸閱讀</span>
+                <div class="sidebar-item-group bg-pink-50/40 p-2.5 rounded-2xl border border-pink-100 shadow-2xs transition-all hover:border-pink-200" data-id="group-sponsor">
+                    <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
+                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-heart"></i>
+                                </span>
+                                贊助支援與延伸閱讀
+                            </span>
                         </label>
                     </div>
                 </div>
 
             </div>
 
-            <!-- 自訂新增 App 專屬區塊 -->
-            <div class="space-y-2.5 pt-3 border-t border-slate-200">
-                <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus-circle text-[#00a600]"></i> 新增自訂 App 捷徑
-                </div>
-                <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
-                <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
+            <!-- 🌟 升級版專屬卡片：自訂新增群組與自訂 App -->
+            <div class="bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-emerald-500/10 p-3 rounded-2xl border border-emerald-200/90 space-y-3 shadow-xs mt-1 backdrop-blur-xs">
                 
-                <!-- 圖示下拉選單區塊 -->
-                <div class="flex items-center gap-2 w-full">
-                    <span class="text-[11px] font-bold text-slate-600 shrink-0">圖示:</span>
-                    <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-slate-50 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate">
-                        <option value="fa-solid fa-globe">🌐 預設網路</option>
-                        <option value="fa-solid fa-star">⭐ 星星焦點</option>
-                        <option value="fa-solid fa-briefcase">💼 工作商務</option>
-                        <option value="fa-solid fa-film">🎬 影音娛樂</option>
-                        <option value="fa-solid fa-music">🎵 音樂播放</option>
-                        <option value="fa-solid fa-newspaper">📰 時事新聞</option>
-                        <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
-                        <option value="fa-solid fa-comments">💬 社群通訊</option>
-                        <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
-                        <option value="fa-solid fa-tools">🛠️ 工具設定</option>
-                        <option value="fa-solid fa-location-dot">📍 地圖地標</option>
-                        <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
-                        <option value="fa-solid fa-book">📚 書籍閱讀</option>
-                    </select>
+                <!-- 1. 新增自訂區塊 / 分類 -->
+                <div class="space-y-1.5">
+                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-md bg-[#00a600] text-white flex items-center justify-center text-[10px] shadow-xs">
+                            <i class="fa-solid fa-folder-plus"></i>
+                        </span>
+                        新增自訂區塊 / 分類
+                    </div>
+                    <div class="flex gap-1.5 w-full">
+                        <input type="text" id="custom-group-name" placeholder="區塊名稱 (如：工作專案)..." class="w-0 min-w-0 flex-1 bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] focus:ring-1 focus:ring-[#00a600]/30 transition shadow-2xs">
+                        <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold px-3 py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs active:scale-95 whitespace-nowrap">
+                            + 建立區塊
+                        </button>
+                    </div>
                 </div>
 
-                <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-sm">
-                    + 新增至桌面
-                </button>
+                <div class="border-t border-emerald-200/50 pt-2.5 space-y-2">
+                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-md bg-teal-600 text-white flex items-center justify-center text-[10px] shadow-xs">
+                            <i class="fa-solid fa-circle-plus"></i>
+                        </span>
+                        新增自訂 App 捷徑
+                    </div>
+                    
+                    <!-- 選擇目標區塊 -->
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-[11px] font-bold text-emerald-800 shrink-0">放至區塊:</span>
+                        <select id="custom-app-target-group" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
+                            <option value="group-creative">🎬 精選影音與創作服務</option>
+                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+                        </select>
+                    </div>
+
+                    <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] focus:ring-1 focus:ring-[#00a600]/30 transition shadow-2xs">
+                    <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] focus:ring-1 focus:ring-[#00a600]/30 transition shadow-2xs">
+                    
+                    <!-- 圖示下拉選單 -->
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="text-[11px] font-bold text-emerald-800 shrink-0">選擇圖示:</span>
+                        <select id="custom-app-icon" class="w-0 min-w-0 flex-1 max-w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
+                            <option value="fa-solid fa-globe">🌐 預設網路</option>
+                            <option value="fa-solid fa-star">⭐ 星星焦點</option>
+                            <option value="fa-solid fa-briefcase">💼 工作商務</option>
+                            <option value="fa-solid fa-film">🎬 影音娛樂</option>
+                            <option value="fa-solid fa-music">🎵 音樂播放</option>
+                            <option value="fa-solid fa-newspaper">📰 時事新聞</option>
+                            <option value="fa-solid fa-cart-shopping">🛒 線上購物</option>
+                            <option value="fa-solid fa-comments">💬 社群通訊</option>
+                            <option value="fa-solid fa-gamepad">🎮 遊戲休閒</option>
+                            <option value="fa-solid fa-tools">🛠️ 工具設定</option>
+                            <option value="fa-solid fa-location-dot">📍 地圖地標</option>
+                            <option value="fa-solid fa-lightbulb">💡 靈感筆記</option>
+                            <option value="fa-solid fa-book">📚 書籍閱讀</option>
+                            <option value="fa-solid fa-heart">❤️ 喜愛珍藏</option>
+                            <option value="fa-solid fa-chart-line">📈 財經投資</option>
+                        </select>
+                    </div>
+
+                    <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2.5 rounded-xl transition cursor-pointer shadow-xs active:scale-98">
+                        + 新增至桌面
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- 🌟 LOGO 自訂網址設定區塊 -->
+            <div class="bg-purple-50/50 p-3 rounded-2xl border border-purple-100 shadow-2xs space-y-2">
+                <div class="font-bold text-purple-900 text-xs flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-md bg-purple-500 text-white flex items-center justify-center text-[10px]">
+                        <i class="fa-solid fa-image"></i>
+                    </span>
+                    自訂上方 Logo 圖片
+                </div>
+                <input type="url" id="custom-logo-url-input" placeholder="貼上 Logo 圖片網址 (https://...)" class="w-full bg-white/90 p-2 rounded-xl border border-purple-200 text-xs outline-none focus:border-purple-500">
+                <div class="flex gap-2">
+                    <button onclick="applyCustomLogo()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold py-1.5 px-3 rounded-xl transition cursor-pointer shadow-xs">套用 Logo</button>
+                    <button onclick="resetCustomLogo()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-bold py-1.5 px-3 rounded-xl transition cursor-pointer">預設</button>
+                </div>
             </div>
 
             <!-- 背景圖設定與資料清理按鈕 -->
-            <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-100 space-y-2 mt-4 shrink-0">
-                <div class="font-bold text-emerald-900 text-xs flex items-center gap-1.5">
-                    <i class="fa-solid fa-image text-[#00a600]"></i> 設定滿版背景圖
+            <div class="bg-white p-3 rounded-2xl border border-slate-200/70 shadow-2xs space-y-2 shrink-0">
+                <div class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px]">
+                        <i class="fa-solid fa-panorama"></i>
+                    </span>
+                    設定滿版背景圖
                 </div>
-                <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-emerald-200 text-xs outline-none focus:border-[#00a600]">
+                <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-slate-50/80 p-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600]">
                 <div class="flex gap-2">
-                    <label class="flex-1 bg-white hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold py-1.5 px-2 rounded-lg border border-emerald-200 text-center cursor-pointer transition">
+                    <label class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[11px] font-bold py-1.5 px-2 rounded-xl border border-slate-200 text-center cursor-pointer transition">
                         📁 上傳圖片檔案
                         <input type="file" id="bg-file-input" accept="image/*" class="hidden" onchange="handleBgUpload(event)">
                     </label>
-                    <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-1.5 px-3 rounded-lg transition shadow-sm cursor-pointer">套用</button>
+                    <button onclick="applyBackground()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-1.5 px-3 rounded-xl transition shadow-xs cursor-pointer">套用背景</button>
                 </div>
-                <button onclick="resetBackground()" class="w-full text-slate-500 hover:text-rose-600 text-[10px] font-medium pt-0.5 transition text-center">
+                <button onclick="resetBackground()" class="w-full text-slate-400 hover:text-rose-500 text-[10px] font-medium pt-0.5 transition text-center">
                     🔄 恢復預設背景
                 </button>
-                <div class="pt-2 border-t border-emerald-200/60 mt-2">
-                    <button onclick="clearAllLocalStorage()" class="w-full bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold py-2 px-3 rounded-lg transition shadow-sm cursor-pointer">
+                <div class="pt-2 border-t border-slate-100 mt-2">
+                    <button onclick="clearAllLocalStorage()" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-600 hover:text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-rose-200/60 cursor-pointer">
                         🗑️ 清除並重設所有暫存資料
                     </button>
                 </div>
@@ -519,7 +615,7 @@
             <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
                 <div class="flex items-center shrink-0">
                     <button onclick="toggleSidebar()" class="p-0 rounded-logo-btn transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
-                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
+                        <img id="header-logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
                     </button>
                 </div>
                 <div class="text-center flex-1">
@@ -678,6 +774,9 @@
                     </div>
                 </div>
 
+                <!-- 動態產生的自訂卡片區塊會插入於此 -->
+                <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
+
                 <!-- 3. 互動待辦清單 -->
                 <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
                     <div class="flex gap-2">
@@ -730,19 +829,16 @@
                             </div>
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">新聞焦點</span>
                         </a>
-                        <!-- 僅電腦版顯示的第 3 個捷徑：簡易首頁 -->
                         <a href="https://myezlife.com/index-2.html" target="_blank" class="hidden md:flex flex-col items-center justify-center text-decoration-none group">
                             <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 text-xl md:text-2xl">
                                 <i class="fa-solid fa-desktop text-white"></i>
                             </div>
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">簡易首頁</span>
                         </a>
-                       
                         <a href="https://myezlife.com/haodoo.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
                             <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl">
                                 <i class="fa-solid fa-book-bookmark text-white"></i>
                             </div>
-
                             <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">好讀書單</span>
                         </a>
                         <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
@@ -799,7 +895,7 @@
         function toggleSubMenu(subId, btn) {
             const subMenu = document.getElementById(subId);
             let icon = null;
-            if (btn.querySelector) icon = btn.querySelector('.fa-chevron-down, .fa-chevron-up');
+            if (btn && btn.querySelector) icon = btn.querySelector('.fa-chevron-down, .fa-chevron-up');
             
             if (subMenu.style.display === 'none') {
                 subMenu.style.display = 'block';
@@ -811,7 +907,7 @@
         }
 
         function clearAllLocalStorage() {
-            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？這將清除自訂 App 與設定。')) {
+            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？這將清除自訂區塊、App捷徑、Logo與設定。')) {
                 localStorage.clear();
                 alert('已成功清除所有暫存資料，網頁將自動重新整理！');
                 location.reload();
@@ -860,9 +956,143 @@
             }
         }
 
-        // --- 核心同步：側邊欄小項目排序連動右側桌面 App ---
+        // --- 🌟 自訂 Logo 功能 ---
+        function applyCustomLogo() {
+            const url = document.getElementById('custom-logo-url-input').value.trim();
+            if (!url) { alert('請輸入有效的 Logo 圖片網址！'); return; }
+            setCustomLogo(url);
+            alert('成功套用自訂 Logo！');
+        }
+
+        function setCustomLogo(url) {
+            document.getElementById('header-logo-img').src = url;
+            localStorage.setItem('myezlife_custom_logo', url);
+        }
+
+        function resetCustomLogo() {
+            const defaultLogo = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
+            document.getElementById('header-logo-img').src = defaultLogo;
+            localStorage.removeItem('myezlife_custom_logo');
+            document.getElementById('custom-logo-url-input').value = '';
+            alert('已恢復預設 Logo！');
+        }
+
+        function loadSavedLogo() {
+            const savedLogo = localStorage.getItem('myezlife_custom_logo');
+            if (savedLogo) {
+                document.getElementById('header-logo-img').src = savedLogo;
+                document.getElementById('custom-logo-url-input').value = savedLogo;
+            }
+        }
+
+        // --- 🌟 自訂區塊 (Category Groups) 管理 ---
+        function getCustomGroups() {
+            return JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]');
+        }
+
+        function saveCustomGroups(groups) {
+            localStorage.setItem('myezlife_custom_groups', JSON.stringify(groups));
+        }
+
+        function addCustomGroup() {
+            const nameInput = document.getElementById('custom-group-name');
+            const name = nameInput.value.trim();
+            if (!name) { alert('請輸入自訂區塊名稱！'); return; }
+
+            const groups = getCustomGroups();
+            const groupId = 'group-custom-' + Date.now();
+            groups.push({ id: groupId, name: name });
+            saveCustomGroups(groups);
+
+            nameInput.value = '';
+            renderCustomGroups();
+            updateTargetGroupSelect();
+            syncDesktopCardsOrder();
+            alert(`成功建立自訂區塊：「${name}」！`);
+        }
+
+        function removeCustomGroup(groupId, groupName) {
+            if (confirm(`確定要刪除區塊「${groupName}」及其底下的所有捷徑嗎？`)) {
+                let groups = getCustomGroups();
+                groups = groups.filter(g => g.id !== groupId);
+                saveCustomGroups(groups);
+
+                let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+                customApps = customApps.filter(app => app.groupId !== groupId);
+                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+
+                renderCustomGroups();
+                updateTargetGroupSelect();
+                loadCustomApps();
+                updateDesktopVisibility();
+            }
+        }
+
+        function renderCustomGroups() {
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            const desktopWrapper = document.getElementById('custom-desktop-cards-wrapper');
+            
+            document.querySelectorAll('.custom-sidebar-group').forEach(el => el.remove());
+            desktopWrapper.innerHTML = '';
+
+            const groups = getCustomGroups();
+
+            groups.forEach(group => {
+                const sideDiv = document.createElement('div');
+                sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2 transition-all hover:border-emerald-200';
+                sideDiv.setAttribute('data-id', group.id);
+                sideDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-folder"></i>
+                                </span>
+                                ${group.name}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center cursor-pointer transition" title="刪除此區塊">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <button type="button" onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="${group.id}-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
+                        <div class="text-[10px] text-slate-400 italic py-1 px-1">（新增 App 時選擇此區塊即可放入）</div>
+                    </div>
+                `;
+                sidebarContainer.appendChild(sideDiv);
+
+                const cardDiv = document.createElement('div');
+                cardDiv.id = `desktop-${group.id}-card`;
+                cardDiv.className = 'custom-desktop-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3';
+                cardDiv.innerHTML = `
+                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-folder-open text-[#00a600]"></i> ${group.name}
+                    </div>
+                    <div id="${group.id}-app-grid" class="app-grid"></div>
+                `;
+                desktopWrapper.appendChild(cardDiv);
+            });
+        }
+
+        function updateTargetGroupSelect() {
+            const select = document.getElementById('custom-app-target-group');
+            select.innerHTML = `
+                <option value="group-creative">🎬 精選影音與創作服務</option>
+                <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+            `;
+            const groups = getCustomGroups();
+            groups.forEach(g => {
+                select.innerHTML += `<option value="${g.id}">📁 ${g.name}</option>`;
+            });
+        }
+
         function updateDesktopVisibility() {
-            // 1. 精選影音與創作服務群組連動
             let hasCreativeVisible = false;
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
@@ -885,10 +1115,12 @@
                     }
                 });
             }
+            if (creativeGrid && creativeGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) {
+                hasCreativeVisible = true;
+            }
             const creativeCard = document.getElementById('desktop-creative-card');
             if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
 
-            // 2. 即時交通與台股財經群組連動
             let hasGeneralVisible = false;
             const generalGrid = document.getElementById('general-app-grid');
 
@@ -920,6 +1152,16 @@
 
             const generalCard = document.getElementById('desktop-app-card');
             if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
+
+            const groups = getCustomGroups();
+            groups.forEach(g => {
+                const card = document.getElementById(`desktop-${g.id}-card`);
+                const grid = document.getElementById(`${g.id}-app-grid`);
+                if (card && grid) {
+                    const count = grid.querySelectorAll('.app-item').length;
+                    card.style.display = count > 0 ? 'block' : 'none';
+                }
+            });
 
             const todoCard = document.getElementById('desktop-todo-card');
             const modTodo = document.getElementById('mod-todo');
@@ -961,9 +1203,7 @@
             }
         }
 
-        // --- 初始化 Sortable 拖曳排序 ---
         function initSortables() {
-            // 1. 大群組順序排序
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
                 new Sortable(sidebarContainer, {
@@ -989,7 +1229,6 @@
                 syncDesktopCardsOrder();
             }
 
-            // 2. 各個大項目底下的「小項目」拖曳排序初始化
             ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
                 const subContainer = document.getElementById(subId);
                 if (subContainer) {
@@ -1044,6 +1283,7 @@
                 else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
+                else if (groupId && groupId.startsWith('group-custom-')) card = document.getElementById(`desktop-${groupId}-card`);
                 
                 if (card) desktopContainer.appendChild(card);
             });
@@ -1098,12 +1338,13 @@
             }
         });
 
-        // --- 自訂 App 新增邏輯 ---
         function addCustomApp() {
+            const targetSelect = document.getElementById('custom-app-target-group');
             const nameInput = document.getElementById('custom-app-name');
             const urlInput = document.getElementById('custom-app-url');
             const iconSelect = document.getElementById('custom-app-icon');
             
+            const groupId = targetSelect.value;
             const name = nameInput.value.trim();
             let url = urlInput.value.trim();
             const icon = iconSelect.value;
@@ -1112,7 +1353,7 @@
             if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
 
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-            customApps.push({ name, url, icon });
+            customApps.push({ groupId, name, url, icon });
             localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
 
             nameInput.value = '';
@@ -1127,7 +1368,7 @@
         function removeCustomApp(btn) {
             if (confirm('確定要刪除這個自訂 App 捷徑嗎？')) {
                 const item = btn.closest('.app-item');
-                const customIdx = item.getAttribute('data-custom-idx');
+                const customIdx = parseInt(item.getAttribute('data-custom-idx'), 10);
                 
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
                 customApps.splice(customIdx, 1);
@@ -1139,26 +1380,34 @@
         }
 
         function loadCustomApps() {
-            const generalGrid = document.getElementById('general-app-grid');
-            if (!generalGrid) return;
-
-            generalGrid.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
+            document.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
 
             let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-            customApps.forEach((app, newIndex) => {
-                let div = document.createElement('div');
-                div.className = 'app-item relative group';
-                div.setAttribute('data-custom-idx', newIndex);
-                const appIcon = app.icon || 'fa-solid fa-globe';
-                div.innerHTML = `
-                    <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                        <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
-                        <span class="app-label">${app.name}</span>
-                    </a>
-                    <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 transition shadow cursor-pointer">×</button>
-                `;
-                generalGrid.appendChild(div);
-                bindLongPressToDelete(div);
+            customApps.forEach((app, index) => {
+                let targetGrid = null;
+                if (app.groupId === 'group-creative') {
+                    targetGrid = document.getElementById('creative-app-grid');
+                } else if (!app.groupId || app.groupId === 'group-general') {
+                    targetGrid = document.getElementById('general-app-grid');
+                } else {
+                    targetGrid = document.getElementById(`${app.groupId}-app-grid`);
+                }
+
+                if (targetGrid) {
+                    let div = document.createElement('div');
+                    div.className = 'app-item relative group';
+                    div.setAttribute('data-custom-idx', index);
+                    const appIcon = app.icon || 'fa-solid fa-globe';
+                    div.innerHTML = `
+                        <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                            <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${appIcon} text-white"></i></div>
+                            <span class="app-label">${app.name}</span>
+                        </a>
+                        <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>
+                    `;
+                    targetGrid.appendChild(div);
+                    bindLongPressToDelete(div);
+                }
             });
         }
 
@@ -1252,6 +1501,9 @@
 
         // 頁面初始化
         loadSavedBackground();
+        loadSavedLogo();
+        renderCustomGroups();
+        updateTargetGroupSelect();
         loadCheckboxStates();
         initSortables();
         loadCustomApps();
