@@ -590,7 +590,7 @@
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 (完整 12 個選項) -->
+                <!-- 1. 精選影音與創作服務 (完整 12 個選項，包含正確的「打造影音櫃」連結與 Modal) -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
@@ -624,10 +624,10 @@
                             </a>
                         </div>
                         <div class="app-item" data-mod="mod-videowall">
-                            <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
+                            <a href="https://myezlife.com/videowall.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></div>
                                 <span class="app-label">打造影音櫃</span>
-                            </button>
+                            </a>
                         </div>
                         <div class="app-item" data-mod="mod-news">
                             <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -803,19 +803,6 @@
         </div>
     </div>
 
-    <!-- 影音櫃 Modal 視窗 -->
-    <div id="modal-step1" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-2xl max-w-md w-full space-y-4">
-            <h3 class="font-bold text-slate-800 text-base">🪄 一鍵打造專屬影音櫃</h3>
-            <p class="text-xs text-slate-600">請輸入您的 Google 試算表 CSV 連結或直接進行設定：</p>
-            <input type="text" id="csv-url-input" placeholder="請輸入 CSV 網址..." class="w-full bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs outline-none">
-            <div class="flex justify-end gap-2 pt-2">
-                <button onclick="closeModals()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl cursor-pointer">取消</button>
-                <button onclick="closeModals()" class="px-4 py-2 bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold rounded-xl cursor-pointer">確認設定</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         function updateDateTime() {
             const now = new Date();
@@ -860,14 +847,6 @@
                 subMenu.style.display = 'none';
                 if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
             }
-        }
-
-        function openVideoWallModal() {
-            toggleSidebar();
-            document.getElementById('modal-step1').classList.remove('hidden');
-        }
-        function closeModals() {
-            document.getElementById('modal-step1').classList.add('hidden');
         }
 
         function saveGasUrl() {
