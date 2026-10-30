@@ -281,7 +281,7 @@
                     <!-- 隱私安全說明 -->
                     <p class="leading-relaxed text-[11px] px-0.5">
                         <strong class="text-yellow-300">🔒 100% 本機隱私安全：</strong><br>
-                        本站重視個人隱私，您所新增的自訂區塊、捷徑、待辦清單、便籤及背景設定，<strong class="text-white">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
+                        本站重視個人隱私，您所新增的自訂區塊、捷徑、文章創作、隨筆與背景設定，<strong class="text-white">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
                     </p>
 
                     <!-- 基本操作 -->
@@ -471,7 +471,7 @@
                     </div>
                 </div>
 
-                <!-- 4. 互動待辦清單 -->
+                <!-- 🌟 4. 個人靈感隨筆與圖文日誌 (全新名稱升級) -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
                         <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
@@ -479,9 +479,9 @@
                             <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]">
-                                    <i class="fa-solid fa-square-check"></i>
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </span>
-                                互動待辦清單與隨手便籤
+                                個人靈感隨筆與圖文日誌
                             </span>
                         </label>
                     </div>
@@ -800,17 +800,53 @@
                 <!-- 動態產生的自訂卡片區塊會插入於此 -->
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 3. 互動待辦清單 -->
-                <div id="desktop-todo-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
-                    <div class="flex gap-2">
-                        <input type="text" id="todo-input" placeholder="輸入新的待辦事項..." class="flex-1 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600]">
-                        <button onclick="addTodoItem()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-4 py-2 rounded-xl text-xs font-bold transition">新增</button>
+                <!-- 🌟 4. 全新升級：Blogger 式圖文與多媒體發布器卡片 -->
+                <div id="desktop-todo-card" class="app-shortcut-card bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-pen-nib"></i>
+                            </span>
+                            個人靈感隨筆與圖文日誌
+                        </div>
+                        <span class="text-[11px] text-slate-400">100% 本機儲存創作</span>
                     </div>
-                    <div id="todo-list-container" class="space-y-2 text-sm text-slate-700"></div>
-                    <textarea id="memo-textarea" placeholder="點此輸入隨手便籤或靈感記錄..." class="w-full bg-slate-50 p-3 rounded-xl border border-slate-200 text-sm outline-none mt-2" rows="2" oninput="saveMemo()"></textarea>
+
+                    <!-- 發布發想區 -->
+                    <div class="space-y-2.5 bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/80">
+                        <input type="text" id="post-title" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-white px-3 py-2 rounded-lg border border-slate-200 text-sm font-bold outline-none focus:border-[#00a600] transition">
+                        
+                        <textarea id="post-content" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-white p-3 rounded-lg border border-slate-200 text-sm outline-none focus:border-[#00a600] transition" rows="3"></textarea>
+
+                        <!-- 多媒體 URL 附加 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                            <div class="flex items-center gap-1.5 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200">
+                                <i class="fa-solid fa-image text-emerald-600"></i>
+                                <input type="url" id="post-img-url" placeholder="圖片網址 (https://...)" class="w-full bg-transparent outline-none text-xs">
+                            </div>
+                            <div class="flex items-center gap-1.5 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200">
+                                <i class="fa-brands fa-youtube text-red-500"></i>
+                                <input type="url" id="post-video-url" placeholder="YouTube 影片網址..." class="w-full bg-transparent outline-none text-xs">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-1">
+                            <button onclick="publishBlogPost()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5">
+                                <i class="fa-solid fa-paper-plane"></i> 發布隨筆文章
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 文章紀錄展示區 -->
+                    <div class="space-y-3 pt-2">
+                        <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-1.5">
+                            <i class="fa-solid fa-clock-rotate-left"></i> 歷史隨筆日誌清單
+                        </div>
+                        <div id="blog-posts-container" class="space-y-3"></div>
+                    </div>
                 </div>
 
-                <!-- 4. 贊助支援與延伸閱讀 -->
+                <!-- 5. 贊助支援與延伸閱讀 -->
                 <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
                     <div class="text-center pb-2 border-b border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -1470,57 +1506,113 @@
             });
         }
 
-        let todoItems = JSON.parse(localStorage.getItem('myezlife_todos') || JSON.stringify([
-            { text: "極簡版網頁，自主勾選喜愛功能", done: false }
-        ]));
+        // --- 🌟 全新升級：Blogger 文章/日誌發布功能邏輯 ---
+        function getBlogPosts() {
+            return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]');
+        }
 
-        function renderTodoList() {
-            const container = document.getElementById('todo-list-container');
-            container.innerHTML = '';
-            todoItems.forEach((item, index) => {
-                container.innerHTML += `
-                    <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-100 group">
-                        <label class="flex items-center gap-2 cursor-pointer flex-1 mr-2">
-                            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleTodo(${index})" class="w-4 h-4 text-[#00a600] rounded">
-                            <span class="font-medium ${item.done ? 'line-through opacity-50' : ''}">${item.text}</span>
-                        </label>
-                        <button onclick="removeTodoItem(${index})" class="text-rose-400 hover:text-rose-600 text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition cursor-pointer">
+        function saveBlogPosts(posts) {
+            localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts));
+        }
+
+        function publishBlogPost() {
+            const titleInput = document.getElementById('post-title');
+            const contentInput = document.getElementById('post-content');
+            const imgInput = document.getElementById('post-img-url');
+            const videoInput = document.getElementById('post-video-url');
+
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+            const imgUrl = imgInput.value.trim();
+            let videoUrl = videoInput.value.trim();
+
+            if (!title && !content) {
+                alert('請輸入文章標題或內容！');
+                return;
+            }
+
+            // 轉換 YouTube 網址為 Embed 格式
+            let youtubeEmbedUrl = '';
+            if (videoUrl) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = videoUrl.match(regExp);
+                if (match && match[2].length === 11) {
+                    youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                }
+            }
+
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const newPost = {
+                id: 'post-' + Date.now(),
+                title: title || '無標題隨筆',
+                content: content,
+                imgUrl: imgUrl,
+                videoEmbed: youtubeEmbedUrl,
+                date: timeStr
+            };
+
+            const posts = getBlogPosts();
+            posts.unshift(newPost); // 最新發布排最前面
+            saveBlogPosts(posts);
+
+            // 清空欄位
+            titleInput.value = '';
+            contentInput.value = '';
+            imgInput.value = '';
+            videoInput.value = '';
+
+            renderBlogPosts();
+        }
+
+        function deleteBlogPost(postId) {
+            if (confirm('確定要刪除這篇隨筆文章嗎？')) {
+                let posts = getBlogPosts();
+                posts = posts.filter(p => p.id !== postId);
+                saveBlogPosts(posts);
+                renderBlogPosts();
+            }
+        }
+
+        function renderBlogPosts() {
+            const container = document.getElementById('blog-posts-container');
+            const posts = getBlogPosts();
+
+            if (posts.length === 0) {
+                container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-4 bg-slate-50/50 rounded-xl">尚未發布任何隨筆文章，快在上方寫下第一篇吧！</div>`;
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="bg-slate-50/80 border border-slate-200/80 p-3.5 rounded-xl space-y-2 relative group hover:border-slate-300 transition">
+                    <div class="flex items-start justify-between gap-2 border-b border-slate-200/60 pb-2">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${post.title}</h4>
+                            <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+                                <i class="fa-regular fa-calendar-check"></i> ${post.date}
+                            </div>
+                        </div>
+                        <button onclick="deleteBlogPost('${post.id}')" class="text-rose-400 hover:text-rose-600 text-xs p-1 rounded hover:bg-rose-50 transition cursor-pointer" title="刪除文章">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </div>
-                `;
-            });
-        }
 
-        function addTodoItem() {
-            const input = document.getElementById('todo-input');
-            const text = input.value.trim();
-            if (!text) { alert('請輸入待辦事項內容！'); return; }
-            todoItems.push({ text, done: false });
-            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
-            input.value = '';
-            renderTodoList();
-        }
+                    ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed">${post.content}</p>` : ''}
 
-        function toggleTodo(index) {
-            todoItems[index].done = !todoItems[index].done;
-            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
-            renderTodoList();
-        }
+                    ${post.imgUrl ? `
+                        <div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5">
+                            <img src="${post.imgUrl}" alt="文章插圖" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                        </div>
+                    ` : ''}
 
-        function removeTodoItem(index) {
-            todoItems.splice(index, 1);
-            localStorage.setItem('myezlife_todos', JSON.stringify(todoItems));
-            renderTodoList();
-        }
-
-        function saveMemo() {
-            localStorage.setItem('myezlife_memo', document.getElementById('memo-textarea').value);
-        }
-
-        function loadMemo() {
-            const savedMemo = localStorage.getItem('myezlife_memo');
-            if (savedMemo !== null) document.getElementById('memo-textarea').value = savedMemo;
+                    ${post.videoEmbed ? `
+                        <div class="relative w-full overflow-hidden rounded-lg border border-slate-200" style="padding-top: 56.25%;">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="${post.videoEmbed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
         }
 
         function initRandomRecommendation() {
@@ -1568,8 +1660,7 @@
         loadCustomApps();
         updateDesktopVisibility();
         loadCardStyle();
-        renderTodoList();
-        loadMemo();
+        renderBlogPosts();
         initRandomRecommendation();
         document.querySelectorAll('.app-item').forEach(item => bindLongPressToDelete(item));
     </script>
