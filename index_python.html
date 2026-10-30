@@ -591,7 +591,12 @@
                         </div>
                         <ol class="list-decimal pl-4 space-y-1.5 text-slate-600">
                             <li><strong>建立 App Script：</strong>前往 Google 雲端硬碟建立一個新的「Google Apps Script」專案。</li>
-                            <li><strong>貼上同步程式碼：</strong>將處理 JSON 資料存取的 `doGet` 與 `doPost` 腳本程式碼貼入專案中。</li>
+                            <li>
+                                <strong>貼上同步程式碼：</strong>
+                                <button onclick="openGasCodeModal()" class="mt-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-xs transition flex items-center gap-1 cursor-pointer">
+                                    <i class="fa-solid fa-code"></i> 點此開啟專屬程式碼視窗
+                                </button>
+                            </li>
                             <li><strong>部署為 Web App：</strong>點擊右上角「部署」➔「新增部署作業」，選擇「網頁應用程式 (Web App)」。</li>
                             <li><strong>設定存取權限：</strong>將「誰可以存取」設定為 <strong class="text-amber-800">「所有人 (Anyone)」</strong> 並完成部署。</li>
                             <li><strong>貼上 Web App 網址：</strong>複製獲得的 Web App 網址並貼入下方輸入框，即可實現多裝置自動備份與同步！</li>
@@ -867,6 +872,73 @@
         </div>
     </div>
 
+    <!-- 🌟 GAS 雲端同步程式碼專屬彈出視窗 (Code Modal) 🌟 -->
+    <div id="gas-code-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-5 md:p-6 space-y-4 shadow-2xl relative border border-slate-100 max-h-[90vh] flex flex-direction flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-base md:text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm"><i class="fa-solid fa-code"></i></span>
+                    Google Apps Script 雲端同步程式碼
+                </h3>
+                <button onclick="closeGasCodeModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-slate-600 leading-relaxed">
+                請複製以下程式碼，貼入 Google Apps Script 專案的 `Code.gs` 編輯器中（替換掉原本的內容），並存檔後進行部署。
+            </p>
+
+            <div class="relative flex-1 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-inner flex flex-col">
+                <div class="flex items-center justify-between bg-slate-800/80 px-4 py-2 border-b border-slate-700">
+                    <span class="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
+                        Code.gs
+                    </span>
+                    <button id="modal-copy-btn" onclick="copyGasModalCode()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-xs">
+                        <i class="fa-solid fa-copy"></i> 一鍵複製程式碼
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto flex-1 font-mono text-xs text-emerald-400 leading-relaxed">
+<pre id="gas-modal-code-snippet" class="whitespace-pre-wrap break-all">// 處理 GET 請求：從 Google 試算表或屬性讀取備份資料
+function doGet(e) {
+  try {
+    var scriptProperties = PropertiesService.getScriptProperties();
+    var jsonData = scriptProperties.getProperty('MYEZLIFE_BACKUP_DATA') || '{}';
+    return ContentService.createTextOutput(jsonData)
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({error: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// 處理 POST 請求：將前端傳來的 JSON 資料儲存至指令碼屬性中
+function doPost(e) {
+  try {
+    var postData = e.postData.contents;
+    var scriptProperties = PropertiesService.getScriptProperties();
+    scriptProperties.setProperty('MYEZLIFE_BACKUP_DATA', postData);
+    return ContentService.createTextOutput(JSON.stringify({status: "success", message: "資料同步成功"}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-1">
+                <button onclick="closeGasCodeModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-2 rounded-xl text-xs transition cursor-pointer">
+                    關閉視窗
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗[cite: 1] -->
     <div id="videowall-intro-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative border border-slate-100">
@@ -948,6 +1020,33 @@
                 subMenu.style.display = 'none';
                 if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
             }
+        }
+
+        // 🌟 GAS 雲端同步程式碼專屬彈出視窗控制功能 🌟
+        function openGasCodeModal() {
+            document.getElementById('gas-code-modal').classList.remove('hidden');
+        }
+
+        function closeGasCodeModal() {
+            document.getElementById('gas-code-modal').classList.add('hidden');
+        }
+
+        function copyGasModalCode() {
+            const btn = document.getElementById('modal-copy-btn');
+            const codeText = document.getElementById('gas-modal-code-snippet').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> 已複製成功！`;
+                btn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
+                btn.classList.add('bg-emerald-600');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('bg-emerald-600');
+                    btn.classList.add('bg-amber-600', 'hover:bg-amber-700');
+                }, 2000);
+            }).catch(err => {
+                alert('❌ 複製失敗，請手動選取複製。');
+            });
         }
 
         // 背景設定相關函式
