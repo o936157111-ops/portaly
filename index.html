@@ -590,7 +590,7 @@
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 (完整 12 個選項，包含正確的「打造影音櫃」連結與 Modal) -->
+                <!-- 1. 精選影音與創作服務 (完整 12 個選項，其中「打造影音櫃」點擊後會彈出第一張圖的 Modal) -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
@@ -624,10 +624,10 @@
                             </a>
                         </div>
                         <div class="app-item" data-mod="mod-videowall">
-                            <a href="https://myezlife.com/videowall.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
+                            <button onclick="openVideoWallModal()" class="flex flex-col items-center justify-center cursor-pointer w-full bg-transparent border-none p-0">
                                 <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700"><i class="fa-solid fa-wand-magic-sparkles text-white"></i></div>
                                 <span class="app-label">打造影音櫃</span>
-                            </a>
+                            </button>
                         </div>
                         <div class="app-item" data-mod="mod-news">
                             <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -803,6 +803,43 @@
         </div>
     </div>
 
+    <!-- 🌟 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗 -->
+    <div id="videowall-intro-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative border border-slate-100">
+            <div class="space-y-4">
+                <h3 class="text-lg md:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <span class="text-2xl">✨</span> 獨家亮點：一鍵打造個人影音牆
+                </h3>
+                <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
+                    這是一套別人沒有的智慧影音牆功能！您可以：
+                </p>
+                <ul class="space-y-2.5 text-xs md:text-sm text-slate-700">
+                    <li class="flex items-start gap-2">
+                        <span class="text-base leading-none">📖</span>
+                        <div><strong>一鍵建立雲端副本：</strong>免複雜程式設定，一秒將標準歌單複製到您的 Google 雲端。</div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-base leading-none">☁️</span>
+                        <div><strong>雲端 CSV 即時同步：</strong>在自己的 Google 試算表自由增減喜愛的 YouTube 歌單，網站即時對應更新！</div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-base leading-none">🎯</span>
+                        <div><strong>智慧記憶與隨機：</strong>自動記錄您的點擊喜好進行智慧排序，支援一鍵隨機播放與自動連續看。</div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-base leading-none">➕</span>
+                        <div><strong>隨手即時新增：</strong>隨時在畫面上貼上喜歡的 YouTube 網址，立刻排入頂端播放。</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="pt-2">
+                <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" onclick="closeVideoWallModal()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer">
+                    了解並前往影音牆 <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script>
         function updateDateTime() {
             const now = new Date();
@@ -849,9 +886,17 @@
             }
         }
 
+        // 影音櫃雙步驟互動邏輯
+        function openVideoWallModal() {
+            document.getElementById('videowall-intro-modal').classList.remove('hidden');
+        }
+        function closeVideoWallModal() {
+            document.getElementById('videowall-intro-modal').classList.add('hidden');
+        }
+
         function saveGasUrl() {
             localStorage.setItem('myezlife_gas_url', document.getElementById('gas-url-input').value.trim());
-            alert('✅ GAS 網址已儲存！');
+            alert('✅ 雲端同步網址已儲存！');
             syncFromCloud();
         }
 
