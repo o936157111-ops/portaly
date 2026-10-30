@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <!-- 💡 請在此處貼上您的 Google AdSense 主腳本 (例如: <script async src="https://pagead2.googlesyndication.com/..."></script>) -->
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -230,7 +231,7 @@
         <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0 relative">
             <div class="absolute -top-4 -left-4 -right-4 h-1 bg-gradient-to-r from-emerald-500 via-[#00a600] to-teal-500"></div>
             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 pt-1">
-                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-sliders"></i></span>
+                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-[#00a600] fa-sliders"></i></span>
                 功能模組側邊欄
             </h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-600 w-7 h-7 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
@@ -240,7 +241,7 @@
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             
-            <!-- 網站使用與隱私說明 -->
+            <!-- 🌟 完整恢復：網站使用與隱私說明（不縮減任何細節） -->
             <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
                     <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
@@ -250,9 +251,17 @@
                     <i class="fa-solid fa-chevron-down text-yellow-300 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
                 <div id="about-app-sub" class="text-[11px] text-emerald-50 space-y-2.5 pt-2 border-t border-emerald-500/50" style="display: none;">
-                    <p class="leading-relaxed text-[11px] px-0.5">
-                        <strong class="text-yellow-300">🔒 Google 雲端自動同步：</strong><br>
-                        支援透過 GAS 自動同步自訂 App、分類與日誌文章至您的 Google 雲端硬碟，維護個人隱私安全。
+                    <p class="leading-relaxed px-0.5">
+                        <strong class="text-yellow-300">💡 關於本站與理念：</strong><br>
+                        本站為開放式純前頁入口儀表板，專為追求「簡居生活」與個人數位掌控權打造。全站零廣告干擾（僅保留贊助支持區塊），完全免費開放使用。
+                    </p>
+                    <p class="leading-relaxed px-0.5">
+                        <strong class="text-yellow-300">🛡️ 100% 個人隱私保護：</strong><br>
+                        您的所有捷徑排序、新增自訂 App、日記隨筆與偏好設定，均 100% 儲存於您當前裝置的 LocalStorage 本機瀏覽器中。本站無後端資料庫，絕不追蹤或收集您的個人隱私與使用紀錄。
+                    </p>
+                    <p class="leading-relaxed px-0.5">
+                        <strong class="text-yellow-300">🔒 Google 雲端自動同步 (GAS)：</strong><br>
+                        提供免架站、免伺服器費用的 Google Apps Script (GAS) 個人專屬備份方案。資料只會在您的 Google 雲端硬碟與您的手機/電腦瀏覽器之間傳輸，資料完全由您自己掌管！
                     </p>
                 </div>
             </div>
@@ -515,7 +524,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 GOOGLE 雲端同步 (含完整建置教學與說明) -->
+            <!-- 🌟 GOOGLE 雲端同步 (完整建置教學與說明) -->
             <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-200 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('sync-section-sub', this)">
                     <div class="font-bold text-amber-900 text-xs flex items-center gap-2">
@@ -526,7 +535,6 @@
                 </div>
                 <div id="sync-section-sub" class="space-y-3 pt-2 border-t border-amber-200/60 text-xs text-slate-700" style="display: none;">
                     
-                    <!-- 建置步驟教學說明區塊 -->
                     <div class="bg-white/80 p-3 rounded-xl border border-amber-200/80 space-y-2 text-[11px] leading-relaxed">
                         <div class="font-bold text-amber-900 flex items-center gap-1.5 border-b border-amber-100 pb-1">
                             <i class="fa-solid fa-book text-amber-600"></i> GAS 雲端同步建置教學指南：
@@ -590,7 +598,7 @@
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 (完整 12 個選項，其中「打造影音櫃」點擊後會彈出第一張圖的 Modal) -->
+                <!-- 1. 精選影音與創作服務 (完整 12 個選項，點擊「打造影音櫃」彈出第一張圖 Modal[cite: 1]) -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
@@ -760,7 +768,7 @@
                     </div>
                 </div>
 
-                <!-- 5. 贊助支援與延伸閱讀 -->
+                <!-- 5. 贊助支援與延伸閱讀 (含 Google AdSense 廣告區塊) -->
                 <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
                     <div class="text-center pb-2 border-b border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -768,6 +776,23 @@
                             ☕ 覺得好用嗎？本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機與伺服器維護開銷！
                         </p>
                     </div>
+
+                    <!-- 🌟 Google AdSense 廣告專屬區塊 🌟 -->
+                    <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/50 rounded-xl border border-dashed border-slate-200 overflow-hidden">
+                        <!-- 📢 請將您的 Google AdSense 廣告單元程式碼貼在下方： -->
+                        <!-- 範例：
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                        -->
+                    </div>
+
                     <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-1"><i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦</span>
@@ -803,7 +828,7 @@
         </div>
     </div>
 
-    <!-- 🌟 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗 -->
+    <!-- 🌟 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗[cite: 1] -->
     <div id="videowall-intro-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative border border-slate-100">
             <div class="space-y-4">
@@ -886,7 +911,7 @@
             }
         }
 
-        // 影音櫃雙步驟互動邏輯
+        // 影音櫃雙步驟互動邏輯[cite: 1]
         function openVideoWallModal() {
             document.getElementById('videowall-intro-modal').classList.remove('hidden');
         }
