@@ -11,7 +11,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f0f4f8;
-            background-size: cover;
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -20,14 +20,6 @@
             padding: 0;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
-        }
-
-        body.has-custom-bg::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(240, 244, 248, 0.35);
-            z-index: -1;
         }
 
         @media (max-width: 767px) {
@@ -259,50 +251,66 @@
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             
             <!-- 🌟 網站使用與隱私說明 (同 Banner 深綠品牌教學版本) -->
-<div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
-    <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
-        <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
-            <span class="w-5 h-5 rounded-md bg-white text-[#00a600] flex items-center justify-center text-[10px] shadow-xs">
-                <i class="fa-solid fa-circle-info"></i>
-            </span>
-            網站使用與隱私說明
-        </div>
-        <i class="fa-solid fa-chevron-down text-yellow-300 text-xs group-hover:translate-y-0.5 transition-transform"></i>
-    </div>
-    <div id="about-app-sub" class="text-[11px] text-emerald-50 space-y-2.5 pt-2 border-t border-emerald-500/50" style="display: none;">
-        
-        <!-- 手機加入主畫面教學 -->
-        <div class="bg-emerald-900/80 p-2.5 rounded-xl border border-emerald-600/60 space-y-1.5 shadow-2xs">
-            <strong class="text-yellow-300 flex items-center gap-1.5 text-[11px]">
-                <i class="fa-solid fa-mobile-screen-button text-yellow-400"></i> 如何當作 App 使用？
-            </strong>
-            <p class="leading-relaxed text-emerald-50 text-[11px]">
-                無需下載 APK，直接在手機瀏覽器輸入 <strong class="text-yellow-300">myezlife.com</strong> 開啟後，點選瀏覽器選單並選擇：
-            </p>
-            <p class="pl-1 text-emerald-50 text-[11px] leading-relaxed">
-                👉 <strong class="text-white">iOS (Safari)</strong>：點擊下方「分享」按鈕 ➔ 選擇「<strong>加入主畫面</strong>」。<br>
-                👉 <strong class="text-white">Android (Chrome)</strong>：點擊右上角「選單 (⋮)」➔ 選擇「<strong>加到主畫面</strong>」或「<strong>安裝應用程式</strong>」。
-            </p>
-            <p class="text-[10px] text-emerald-200/90 italic pt-0.5">完成後桌面就會出現專屬 Logo 圖示，點擊即可全螢幕像 App 般流暢使用！</p>
-        </div>
+            <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
+                <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
+                    <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-white text-[#00a600] flex items-center justify-center text-[10px] shadow-xs">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </span>
+                        網站使用與隱私說明
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-yellow-300 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                </div>
+                <div id="about-app-sub" class="text-[11px] text-emerald-50 space-y-2.5 pt-2 border-t border-emerald-500/50" style="display: none;">
+                    
+                    <!-- 手機加入主畫面教學 -->
+                    <div class="bg-emerald-900/80 p-2.5 rounded-xl border border-emerald-600/60 space-y-1.5 shadow-2xs">
+                        <strong class="text-yellow-300 flex items-center gap-1.5 text-[11px]">
+                            <i class="fa-solid fa-mobile-screen-button text-yellow-400"></i> 如何當作 App 使用？
+                        </strong>
+                        <p class="leading-relaxed text-emerald-50 text-[11px]">
+                            無需下載 APK，直接在手機瀏覽器輸入 <strong class="text-yellow-300">myezlife.com</strong> 開啟後，點選瀏覽器選單並選擇：
+                        </p>
+                        <p class="pl-1 text-emerald-50 text-[11px] leading-relaxed">
+                            👉 <strong class="text-white">iOS (Safari)</strong>：點擊下方「分享」按鈕 ➔ 選擇「<strong>加入主畫面</strong>」。<br>
+                            👉 <strong class="text-white">Android (Chrome)</strong>：點擊右上角「選單 (⋮)」➔ 選擇「<strong>加到主畫面</strong>」或「<strong>安裝應用程式</strong>」。
+                        </p>
+                        <p class="text-[10px] text-emerald-200/90 italic pt-0.5">完成後桌面就會出現專屬 Logo 圖示，點擊即可全螢幕像 App 般流暢使用！</p>
+                    </div>
 
-        <!-- 隱私安全說明 -->
-        <p class="leading-relaxed text-[11px] px-0.5">
-            <strong class="text-yellow-300">🔒 100% 本機隱私安全：</strong><br>
-            本站重視個人隱私，您所新增的自訂區塊、捷徑、待辦清單、便籤及背景設定，<strong class="text-white">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
-        </p>
+                    <!-- 隱私安全說明 -->
+                    <p class="leading-relaxed text-[11px] px-0.5">
+                        <strong class="text-yellow-300">🔒 100% 本機隱私安全：</strong><br>
+                        本站重視個人隱私，您所新增的自訂區塊、捷徑、待辦清單、便籤及背景設定，<strong class="text-white">全部僅儲存在您的裝置本機（LocalStorage）中</strong>，絕不上傳或備份至外部伺服器。
+                    </p>
 
-        <!-- 基本操作 -->
-        <p class="leading-relaxed text-[11px] px-0.5">
-            <strong class="text-yellow-300">⚙️ 模組自訂與拖曳：</strong><br>
-            勾選下方模組可自訂顯示與隱藏，按住群組標頭或項目旁的圖示可自由拖曳排序桌面卡片。
-        </p>
-    </div>
-</div>
+                    <!-- 基本操作 -->
+                    <p class="leading-relaxed text-[11px] px-0.5">
+                        <strong class="text-yellow-300">⚙️ 模組自訂與拖曳：</strong><br>
+                        勾選下方模組可自訂顯示與隱藏，按住群組標頭或項目旁的圖示可自由拖曳排序桌面卡片。
+                    </p>
+                </div>
+            </div>
 
             <!-- 可排序的大群組容器 -->
             <div id="sidebar-sortable-container" class="space-y-2.5">
                 
+                <!-- 0. Google 搜尋列控制開關 -->
+                <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs transition-all hover:border-emerald-200" data-id="group-search">
+                    <div class="sidebar-drag-handle flex items-center gap-2 py-0.5">
+                        <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full">
+                            <input type="checkbox" id="mod-search" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                Google 智慧搜尋列
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- 1. 精選影音與創作服務群組 -->
                 <div class="sidebar-item-group bg-rose-50/40 p-2.5 rounded-2xl border border-rose-100 shadow-2xs space-y-2 transition-all hover:border-rose-200" data-id="group-creative">
                     <div class="flex items-center justify-between">
@@ -599,11 +607,11 @@
                 <button onclick="resetBackground()" class="w-full text-slate-400 hover:text-rose-500 text-[10px] font-medium pt-0.5 transition text-center">
                     🔄 恢復預設背景
                 </button>
-<div class="pt-2 border-t border-slate-100 mt-2">
-    <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-red-800 cursor-pointer shadow-xs">
-        🗑️ 清除並重設所有暫存資料
-    </button>
-</div>
+                <div class="pt-2 border-t border-slate-100 mt-2">
+                    <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-red-800 cursor-pointer shadow-xs">
+                        🗑️ 清除並重設所有暫存資料
+                    </button>
+                </div>
             </div>
         </div>
     </aside>
@@ -629,8 +637,8 @@
 
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
-                <!-- Google 智慧搜尋列 -->
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <!-- Google 智慧搜尋列 (已補上 ID 可供控制顯示與排序) -->
+                <div id="desktop-search-card" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
                         <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -642,8 +650,8 @@
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 -->
-                <div id="desktop-creative-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                <!-- 1. 精選影音與創作服務 (已改為完全透明背景與隱形邊框) -->
+                <div id="desktop-creative-card" class="bg-transparent p-2 border-0 shadow-none" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
                             <a href="https://www.cwa.gov.tw/V8/C/W/County/County.html?CountyID=65" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -720,8 +728,8 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經) -->
-                <div id="desktop-app-card" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                <!-- 2. 一般 App 捷徑 (包含即時交通與台股財經，已改為完全透明背景與隱形邊框) -->
+                <div id="desktop-app-card" class="bg-transparent p-2 border-0 shadow-none" style="display: none;">
                     <div id="general-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
                             <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
@@ -932,14 +940,12 @@
 
         function setCustomBackground(imgUrl) {
             document.body.style.backgroundImage = `url('${imgUrl}')`;
-            document.body.classList.add('has-custom-bg');
             localStorage.setItem('myezlife_custom_bg', imgUrl);
             alert('成功套用滿版背景圖片！');
         }
 
         function resetBackground() {
             document.body.style.backgroundImage = 'none';
-            document.body.classList.remove('has-custom-bg');
             localStorage.removeItem('myezlife_custom_bg');
             document.getElementById('bg-url-input').value = '';
             alert('已恢復預設背景！');
@@ -949,7 +955,6 @@
             const savedBg = localStorage.getItem('myezlife_custom_bg');
             if (savedBg) {
                 document.body.style.backgroundImage = `url('${savedBg}')`;
-                document.body.classList.add('has-custom-bg');
                 if (!savedBg.startsWith('data:image')) {
                     document.getElementById('bg-url-input').value = savedBg;
                 }
@@ -1069,9 +1074,9 @@
 
                 const cardDiv = document.createElement('div');
                 cardDiv.id = `desktop-${group.id}-card`;
-                cardDiv.className = 'custom-desktop-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3';
+                cardDiv.className = 'custom-desktop-card bg-transparent p-2 border-0 shadow-none space-y-3';
                 cardDiv.innerHTML = `
-                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
+                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100/50 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-folder-open text-[#00a600]"></i> ${group.name}
                     </div>
                     <div id="${group.id}-app-grid" class="app-grid"></div>
@@ -1093,6 +1098,11 @@
         }
 
         function updateDesktopVisibility() {
+            // 控制 Google 搜尋列顯示狀態
+            const searchCard = document.getElementById('desktop-search-card');
+            const modSearch = document.getElementById('mod-search');
+            if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
+
             let hasCreativeVisible = false;
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
@@ -1194,7 +1204,7 @@
                 const checkboxes = document.querySelectorAll('#sidebar input[type="checkbox"]');
                 checkboxes.forEach(cb => {
                     const parentSub = cb.closest('#creative-sub');
-                    cb.checked = (parentSub !== null);
+                    cb.checked = (parentSub !== null || cb.id === 'mod-search');
                 });
                 const modTodo = document.getElementById('mod-todo');
                 const modSponsor = document.getElementById('mod-sponsor');
@@ -1279,7 +1289,8 @@
             
             groupOrder.forEach(groupId => {
                 let card = null;
-                if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
+                if (groupId === 'group-search') card = document.getElementById('desktop-search-card');
+                else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
                 else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
