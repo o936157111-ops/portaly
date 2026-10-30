@@ -12,7 +12,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f0f4f8;
-            background-size: contain;
+            background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -248,7 +248,7 @@
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
             
-            <!-- 網站使用與隱私說明（完整保留） -->
+            <!-- 網站使用與隱私說明 -->
             <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
                     <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
@@ -276,7 +276,7 @@
             <!-- 可排序的大群組容器 -->
             <div id="sidebar-sortable-container" class="space-y-2.5">
                 
-                <!-- 🌟 0. Google 搜尋列 (手機版觸控綁定修復) -->
+                <!-- 0. Google 搜尋列 -->
                 <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs transition-all hover:border-emerald-200" data-id="group-search">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -517,7 +517,7 @@
                 </div>
             </div>
 
-            <!-- 外觀、LOGO 與背景設定 -->
+            <!-- 🌟 外觀、LOGO 與背景設定 (已完整補齊：背景底色、圖片網址、本機圖片上傳) -->
             <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('appearance-section-sub', this)">
                     <div class="font-bold text-indigo-900 text-xs flex items-center gap-2">
@@ -527,20 +527,50 @@
                     <i class="fa-solid fa-chevron-down text-indigo-600 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
                 <div id="appearance-section-sub" class="space-y-3 pt-2 border-t border-indigo-200/60" style="display: none;">
+                    
+                    <!-- 背景底色選擇 -->
                     <div class="space-y-2 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
-                        <div class="font-bold text-indigo-900 text-[11px]">選擇背景區塊顏色 / 模式</div>
+                        <div class="font-bold text-indigo-900 text-[11px]">選擇背景底色</div>
                         <div class="flex items-center gap-2">
                             <input type="color" id="bg-color-picker" value="#f0f4f8" onchange="changeBackgroundColor(this.value)" class="w-8 h-8 rounded border border-indigo-200 cursor-pointer">
-                            <span class="text-[11px] text-slate-600">選擇網頁背景底色</span>
+                            <span class="text-[11px] text-slate-600">選擇網頁背景顏色</span>
                         </div>
                     </div>
-                    <div class="space-y-1.5 bg-white/80 p-2 rounded-xl border border-indigo-100">
+
+                    <!-- 背景圖片設定 (URL / 本機檔案上傳) -->
+                    <div class="space-y-2 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">設定背景圖片</div>
+                        
+                        <!-- 圖片網址輸入 -->
+                        <div class="space-y-1">
+                            <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-indigo-200 text-xs outline-none focus:border-indigo-500">
+                            <button onclick="applyBgUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded-lg transition cursor-pointer shadow-2xs">套用圖片網址</button>
+                        </div>
+
+                        <div class="text-[10px] text-center text-slate-400 font-bold my-1">或</div>
+
+                        <!-- 本機圖檔上傳 -->
+                        <div>
+                            <label class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                                <i class="fa-solid fa-upload"></i> 上傳本機背景圖片
+                                <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBgImage(event)" class="hidden">
+                            </label>
+                        </div>
+
+                        <button onclick="clearBgImage()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold py-1 rounded-lg transition cursor-pointer border border-slate-200 mt-1">
+                            🗑️ 清除背景圖片 (還原純色)
+                        </button>
+                    </div>
+
+                    <!-- 捷徑卡片透明度開關 -->
+                    <div class="space-y-1.5 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
                         <div class="font-bold text-indigo-900 text-[11px]">捷徑卡片底色與透明度</div>
                         <label class="flex items-center justify-between gap-2 cursor-pointer text-xs">
                             <span class="text-slate-700 font-medium">100% 完全透明底色</span>
                             <input type="checkbox" id="card-transparent-toggle" onchange="applyCardStyle()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         </label>
                     </div>
+
                 </div>
             </div>
 
@@ -837,7 +867,7 @@
         </div>
     </div>
 
-    <!-- 🌟 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗[cite: 1] -->
+    <!-- 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗[cite: 1] -->
     <div id="videowall-intro-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative border border-slate-100">
             <div class="space-y-4">
@@ -920,11 +950,40 @@
             }
         }
 
+        // 背景設定相關函式
         function changeBackgroundColor(color) {
             document.body.style.backgroundColor = color;
             document.body.style.backgroundImage = 'none';
             localStorage.setItem('myezlife_custom_bg_color', color);
             localStorage.removeItem('myezlife_custom_bg');
+        }
+
+        function applyBgUrl() {
+            const url = document.getElementById('bg-url-input').value.trim();
+            if (!url) { alert('請輸入圖片網址！'); return; }
+            document.body.style.backgroundImage = `url('${url}')`;
+            localStorage.setItem('myezlife_custom_bg', url);
+            alert('✅ 已套用背景圖片網址！');
+        }
+
+        function uploadBgImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64Img = e.target.result;
+                document.body.style.backgroundImage = `url('${base64Img}')`;
+                localStorage.setItem('myezlife_custom_bg', base64Img);
+                alert('✅ 本機背景圖片上傳套用成功！');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearBgImage() {
+            document.body.style.backgroundImage = 'none';
+            localStorage.removeItem('myezlife_custom_bg');
+            document.getElementById('bg-url-input').value = '';
+            alert('已清除背景圖片，還原為底色！');
         }
 
         function openVideoWallModal() {
@@ -1319,13 +1378,16 @@
             if (box) box.innerHTML = recs.map(item => `<a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition"><div class="flex items-center justify-between mb-0.5"><span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">${item.title}</span><span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span></div><p class="text-[11px] text-slate-600">${item.desc}</p></a>`).join('');
         }
 
+        // 頁面載入時讀取背景圖與設定
         if (localStorage.getItem('myezlife_custom_bg_color')) {
             const savedColor = localStorage.getItem('myezlife_custom_bg_color');
             document.body.style.backgroundColor = savedColor;
             const picker = document.getElementById('bg-color-picker');
             if (picker) picker.value = savedColor;
         }
-        if (localStorage.getItem('myezlife_custom_bg')) document.body.style.backgroundImage = `url('${localStorage.getItem('myezlife_custom_bg')}')`;
+        if (localStorage.getItem('myezlife_custom_bg')) {
+            document.body.style.backgroundImage = `url('${localStorage.getItem('myezlife_custom_bg')}')`;
+        }
         if (localStorage.getItem('myezlife_custom_logo')) document.getElementById('header-logo-img').src = localStorage.getItem('myezlife_custom_logo');
         if (localStorage.getItem('myezlife_gas_url')) document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
         
