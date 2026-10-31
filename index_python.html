@@ -184,19 +184,17 @@
 
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
-        
-        /* 💡 手機版防止誤觸拖曳與滑動干擾設定 */
+
+        /* 💡 手機版防誤觸拖曳視覺提示 */
         .sidebar-item-group, .sub-drag-item {
             touch-action: pan-y;
             user-select: none;
             -webkit-user-select: none;
         }
-        /* 當長按滿 3 秒準備好拖曳時的視覺提示 */
         .ready-to-drag {
             background-color: rgba(0, 166, 0, 0.1) !important;
             border-color: #00a600 !important;
-        }   
-
+        }
 
         #sidebar-scroll-content::-webkit-scrollbar { width: 4px; }
         #sidebar-scroll-content::-webkit-scrollbar-track { background: transparent; }
@@ -524,13 +522,19 @@
                             <option value="fa-solid fa-briefcase">💼 工作商務</option>
                             <option value="fa-solid fa-film">🎬 影音娛樂</option>
                             <option value="fa-solid fa-music">🎵 音樂播放</option>
+                            <option value="fa-solid fa-book">📚 圖書閱讀</option>
+                            <option value="fa-solid fa-pen-nib">✒️ 靈感日誌</option>
+                            <option value="fa-solid fa-map-location-dot">🗺️ 地圖導航</option>
+                            <option value="fa-solid fa-toolbox">🧰 工具箱</option>
+                            <option value="fa-solid fa-cart-shopping">🛒 購物商城</option>
+                            <option value="fa-solid fa-gamepad">🎮 休閒遊戲</option>
                         </select>
                         <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-xs">+ 新增至桌面</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 🌟 外觀、LOGO 與背景設定 (已完整補齊：背景底色、圖片網址、本機圖片上傳) -->
+            <!-- 🌟 外觀、LOGO 與背景設定 -->
             <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('appearance-section-sub', this)">
                     <div class="font-bold text-indigo-900 text-xs flex items-center gap-2">
@@ -550,26 +554,20 @@
                         </div>
                     </div>
 
-                    <!-- 背景圖片設定 (URL / 本機檔案上傳) -->
+                    <!-- 背景圖片設定 -->
                     <div class="space-y-2 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
                         <div class="font-bold text-indigo-900 text-[11px]">設定背景圖片</div>
-                        
-                        <!-- 圖片網址輸入 -->
                         <div class="space-y-1">
                             <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-indigo-200 text-xs outline-none focus:border-indigo-500">
                             <button onclick="applyBgUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded-lg transition cursor-pointer shadow-2xs">套用圖片網址</button>
                         </div>
-
                         <div class="text-[10px] text-center text-slate-400 font-bold my-1">或</div>
-
-                        <!-- 本機圖檔上傳 -->
                         <div>
                             <label class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
                                 <i class="fa-solid fa-upload"></i> 上傳本機背景圖片
                                 <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBgImage(event)" class="hidden">
                             </label>
                         </div>
-
                         <button onclick="clearBgImage()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold py-1 rounded-lg transition cursor-pointer border border-slate-200 mt-1">
                             🗑️ 清除背景圖片 (還原純色)
                         </button>
@@ -604,12 +602,7 @@
                         </div>
                         <ol class="list-decimal pl-4 space-y-1.5 text-slate-600">
                             <li><strong>建立 App Script：</strong>前往 Google 雲端硬碟建立一個新的「Google Apps Script」專案。</li>
-                            <li>
-                                <strong>貼上同步程式碼：</strong>
-                                <button onclick="openGasCodeModal()" class="mt-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg font-bold text-[10px] shadow-xs transition flex items-center gap-1 cursor-pointer">
-                                    <i class="fa-solid fa-code"></i> 點此開啟專屬程式碼視窗
-                                </button>
-                            </li>
+                            <li><strong>貼上同步程式碼：</strong>將處理 JSON 資料存取的 `doGet` 與 `doPost` 腳本程式碼貼入專案中。</li>
                             <li><strong>部署為 Web App：</strong>點擊右上角「部署」➔「新增部署作業」，選擇「網頁應用程式 (Web App)」。</li>
                             <li><strong>設定存取權限：</strong>將「誰可以存取」設定為 <strong class="text-amber-800">「所有人 (Anyone)」</strong> 並完成部署。</li>
                             <li><strong>貼上 Web App 網址：</strong>複製獲得的 Web App 網址並貼入下方輸入框，即可實現多裝置自動備份與同步！</li>
@@ -666,7 +659,7 @@
                     </form>
                 </div>
 
-                <!-- 1. 精選影音與創作服務 (完整 12 個選項，點擊「打造影音櫃」彈出 Modal[cite: 1]) -->
+                <!-- 1. 精選影音與創作服務 -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-weather">
@@ -744,7 +737,7 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑 (即時交通與台股財經) -->
+                <!-- 2. 一般 App 捷徑 -->
                 <div id="desktop-app-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="general-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
@@ -836,7 +829,7 @@
                     </div>
                 </div>
 
-                <!-- 5. 贊助支援與延伸閱讀 (含 Google AdSense 廣告區塊) -->
+                <!-- 5. 贊助支援與延伸閱讀 -->
                 <div id="desktop-sponsor-card" class="bg-white border border-slate-200/90 rounded-2xl p-4 space-y-3.5 shadow-sm" style="display: none;">
                     <div class="text-center pb-2 border-b border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -845,7 +838,6 @@
                         </p>
                     </div>
 
-                    <!-- 🌟 Google AdSense 廣告專屬區塊 🌟 -->
                     <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/50 rounded-xl border border-dashed border-slate-200 overflow-hidden">
                         <!-- 📢 請將您的 Google AdSense 廣告單元程式碼貼在下方 -->
                     </div>
@@ -885,74 +877,7 @@
         </div>
     </div>
 
-    <!-- 🌟 GAS 雲端同步程式碼專屬彈出視窗 (Code Modal) 🌟 -->
-    <div id="gas-code-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-5 md:p-6 space-y-4 shadow-2xl relative border border-slate-100 max-h-[90vh] flex flex-direction flex-col">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 class="text-base md:text-lg font-extrabold text-slate-800 flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm"><i class="fa-solid fa-code"></i></span>
-                    Google Apps Script 雲端同步程式碼
-                </h3>
-                <button onclick="closeGasCodeModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            
-            <p class="text-xs text-slate-600 leading-relaxed">
-                請複製以下程式碼，貼入 Google Apps Script 專案的 `Code.gs` 編輯器中（替換掉原本的內容），並存檔後進行部署。
-            </p>
-
-            <div class="relative flex-1 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-inner flex flex-col">
-                <div class="flex items-center justify-between bg-slate-800/80 px-4 py-2 border-b border-slate-700">
-                    <span class="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
-                        Code.gs
-                    </span>
-                    <button id="modal-copy-btn" onclick="copyGasModalCode()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-copy"></i> 一鍵複製程式碼
-                    </button>
-                </div>
-                <div class="p-4 overflow-y-auto flex-1 font-mono text-xs text-emerald-400 leading-relaxed">
-<pre id="gas-modal-code-snippet" class="whitespace-pre-wrap break-all">// 處理 GET 請求：從 Google 試算表或屬性讀取備份資料
-function doGet(e) {
-  try {
-    var scriptProperties = PropertiesService.getScriptProperties();
-    var jsonData = scriptProperties.getProperty('MYEZLIFE_BACKUP_DATA') || '{}';
-    return ContentService.createTextOutput(jsonData)
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({error: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-// 處理 POST 請求：將前端傳來的 JSON 資料儲存至指令碼屬性中
-function doPost(e) {
-  try {
-    var postData = e.postData.contents;
-    var scriptProperties = PropertiesService.getScriptProperties();
-    scriptProperties.setProperty('MYEZLIFE_BACKUP_DATA', postData);
-    return ContentService.createTextOutput(JSON.stringify({status: "success", message: "資料同步成功"}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}</pre>
-                </div>
-            </div>
-
-            <div class="flex justify-end gap-2 pt-1">
-                <button onclick="closeGasCodeModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-2 rounded-xl text-xs transition cursor-pointer">
-                    關閉視窗
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 第一張圖：點擊「打造影音櫃」後彈出的獨家亮點引導視窗[cite: 1] -->
+    <!-- 影音牆導覽 Modal -->
     <div id="videowall-intro-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative border border-slate-100">
             <div class="space-y-4">
@@ -1035,34 +960,6 @@ function doPost(e) {
             }
         }
 
-        // 🌟 GAS 雲端同步程式碼專屬彈出視窗控制功能 🌟
-        function openGasCodeModal() {
-            document.getElementById('gas-code-modal').classList.remove('hidden');
-        }
-
-        function closeGasCodeModal() {
-            document.getElementById('gas-code-modal').classList.add('hidden');
-        }
-
-        function copyGasModalCode() {
-            const btn = document.getElementById('modal-copy-btn');
-            const codeText = document.getElementById('gas-modal-code-snippet').innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> 已複製成功！`;
-                btn.classList.remove('bg-amber-600', 'hover:bg-amber-700');
-                btn.classList.add('bg-emerald-600');
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.classList.remove('bg-emerald-600');
-                    btn.classList.add('bg-amber-600', 'hover:bg-amber-700');
-                }, 2000);
-            }).catch(err => {
-                alert('❌ 複製失敗，請手動選取複製。');
-            });
-        }
-
-        // 背景設定相關函式
         function changeBackgroundColor(color) {
             document.body.style.backgroundColor = color;
             document.body.style.backgroundImage = 'none';
@@ -1318,14 +1215,19 @@ function doPost(e) {
             }
         }
 
+        // 💡 針對手機版側邊欄增加「長按 3 秒」才可移動的防誤觸機制與 Sortable 設定
         function initSortables() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
+                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                 new Sortable(sidebarContainer, {
                     animation: 200, 
                     handle: '.sidebar-drag-handle',
                     filter: 'input, label',
                     preventOnFilter: false,
+                    delay: isTouchDevice ? 3000 : 0,          // ⏱️ 手機長按 3 秒才可拖曳
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: 5,
                     onEnd: function () {
                         localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
                         syncDesktopCardsOrder();
@@ -1340,11 +1242,15 @@ function doPost(e) {
             ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
                 const subContainer = document.getElementById(subId);
                 if (subContainer) {
+                    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                     new Sortable(subContainer, {
                         animation: 150, 
                         handle: '.sub-drag-item', 
                         filter: 'input', 
                         preventOnFilter: false,
+                        delay: isTouchDevice ? 3000 : 0,          // ⏱️ 手機長按 3 秒才可拖曳
+                        delayOnTouchOnly: true,
+                        touchStartThreshold: 5,
                         onEnd: function() {
                             localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
                             updateDesktopVisibility();
@@ -1490,7 +1396,6 @@ function doPost(e) {
             if (box) box.innerHTML = recs.map(item => `<a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition"><div class="flex items-center justify-between mb-0.5"><span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">${item.title}</span><span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span></div><p class="text-[11px] text-slate-600">${item.desc}</p></a>`).join('');
         }
 
-        // 頁面載入時讀取背景圖與設定
         if (localStorage.getItem('myezlife_custom_bg_color')) {
             const savedColor = localStorage.getItem('myezlife_custom_bg_color');
             document.body.style.backgroundColor = savedColor;
@@ -1512,67 +1417,6 @@ function doPost(e) {
         loadCardStyle();
         renderBlogPosts();
         initRandomRecommendation();
-
-// 💡 針對手機版側邊欄增加「長按 3 秒」才可移動的防誤觸機制
-        function initLongPressDragProtection() {
-            // 處理大群組的 Sortable 延遲
-            const sidebarContainer = document.getElementById('sidebar-sortable-container');
-            if (sidebarContainer && window.Sortable) {
-                // 如果是手機觸控，強制加入 3000 毫秒（3秒）延遲，避免滑動時被帶走
-                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                if (isTouchDevice) {
-                    // 重新初始化大群組 Sortable 加上 delay
-                    let sortableInstance = Sortable.get(sidebarContainer);
-                    if (sortableInstance) sortableInstance.destroy();
-                    
-                    new Sortable(sidebarContainer, {
-                        animation: 200, 
-                        handle: '.sidebar-drag-handle',
-                        filter: 'input, label',
-                        preventOnFilter: false,
-                        delay: 3000,          // ⏱️ 按住 3 秒 (3000ms) 後才可移動群組
-                        delayOnTouchOnly: true, // 僅限手機觸控生效
-                        touchStartThreshold: 5, // 容許 5px 內的輕微晃動，超過即視為上下滾動
-                        onEnd: function () {
-                            localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
-                            syncDesktopCardsOrder();
-                            syncToCloud();
-                        }
-                    });
-                }
-            }
-
-            // 同樣對子選單 (.sub-drag-item) 加上觸控保護
-            ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
-                const subContainer = document.getElementById(subId);
-                if (subContainer && window.Sortable) {
-                    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                    if (isTouchDevice) {
-                        let subSortableInstance = Sortable.get(subContainer);
-                        if (subSortableInstance) subSortableInstance.destroy();
-
-                        new Sortable(subContainer, {
-                            animation: 150, 
-                            handle: '.sub-drag-item', 
-                            filter: 'input', 
-                            preventOnFilter: false,
-                            delay: 3000,          // ⏱️ 子選項也必須按住 3 秒才可移動
-                            delayOnTouchOnly: true,
-                            touchStartThreshold: 5,
-                            onEnd: function() {
-                                localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
-                                updateDesktopVisibility();
-                                syncToCloud();
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
-        // 頁面載入完成後執行長按防護綁定
-        setTimeout(initLongPressDragProtection, 500);
-
     </script>
 </body>
 </html>
