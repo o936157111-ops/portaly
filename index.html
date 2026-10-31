@@ -1418,8 +1418,7 @@
                     </div>
                     ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap">${post.content}</p>` : ''}
                     ${post.imgUrl ? `<div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5"><img src="${post.imgUrl}" class="w-full h-full object-cover"></div>` : ''}
-                    // 在 publishBlogPost 儲存時，可順便記錄 isShorts: isShorts
-// 於 renderBlogPosts 渲染時：
+                    
 ${post.videoEmbed ? `
     <div class="${post.isShorts ? 'shorts-embed-container' : 'relative w-full overflow-hidden rounded-lg border border-slate-200'}" ${!post.isShorts ? 'style="padding-top: 56.25%;"' : ''}>
         <iframe class="${post.isShorts ? 'w-full h-full' : 'absolute top-0 left-0 w-full h-full'}" src="${post.videoEmbed}" frameborder="0" allowfullscreen></iframe>
