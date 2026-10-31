@@ -184,6 +184,19 @@
 
         .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
+        
+        /* 💡 手機版防止誤觸拖曳與滑動干擾設定 */
+        .sidebar-item-group, .sub-drag-item {
+            touch-action: pan-y;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        /* 當長按滿 3 秒準備好拖曳時的視覺提示 */
+        .ready-to-drag {
+            background-color: rgba(0, 166, 0, 0.1) !important;
+            border-color: #00a600 !important;
+        }   
+
 
         #sidebar-scroll-content::-webkit-scrollbar { width: 4px; }
         #sidebar-scroll-content::-webkit-scrollbar-track { background: transparent; }
@@ -1499,6 +1512,67 @@ function doPost(e) {
         loadCardStyle();
         renderBlogPosts();
         initRandomRecommendation();
+
+// 💡 針對手機版側邊欄增加「長按 3 秒」才可移動的防誤觸機制
+        function initLongPressDragProtection() {
+            // 處理大群組的 Sortable 延遲
+            const sidebarContainer = document.getElementById('sidebar-sortable-container');
+            if (sidebarContainer && window.Sortable) {
+                // 如果是手機觸控，強制加入 3000 毫秒（3秒）延遲，避免滑動時被帶走
+                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                if (isTouchDevice) {
+                    // 重新初始化大群組 Sortable 加上 delay
+                    let sortableInstance = Sortable.get(sidebarContainer);
+                    if (sortableInstance) sortableInstance.destroy();
+                    
+                    new Sortable(sidebarContainer, {
+                        animation: 200, 
+                        handle: '.sidebar-drag-handle',
+                        filter: 'input, label',
+                        preventOnFilter: false,
+                        delay: 3000,          // ⏱️ 按住 3 秒 (3000ms) 後才可移動群組
+                        delayOnTouchOnly: true, // 僅限手機觸控生效
+                        touchStartThreshold: 5, // 容許 5px 內的輕微晃動，超過即視為上下滾動
+                        onEnd: function () {
+                            localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
+                            syncDesktopCardsOrder();
+                            syncToCloud();
+                        }
+                    });
+                }
+            }
+
+            // 同樣對子選單 (.sub-drag-item) 加上觸控保護
+            ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
+                const subContainer = document.getElementById(subId);
+                if (subContainer && window.Sortable) {
+                    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+                    if (isTouchDevice) {
+                        let subSortableInstance = Sortable.get(subContainer);
+                        if (subSortableInstance) subSortableInstance.destroy();
+
+                        new Sortable(subContainer, {
+                            animation: 150, 
+                            handle: '.sub-drag-item', 
+                            filter: 'input', 
+                            preventOnFilter: false,
+                            delay: 3000,          // ⏱️ 子選項也必須按住 3 秒才可移動
+                            delayOnTouchOnly: true,
+                            touchStartThreshold: 5,
+                            onEnd: function() {
+                                localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
+                                updateDesktopVisibility();
+                                syncToCloud();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // 頁面載入完成後執行長按防護綁定
+        setTimeout(initLongPressDragProtection, 500);
+
     </script>
 </body>
 </html>
