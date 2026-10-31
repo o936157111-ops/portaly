@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myezlife.com | 網站使用與理念說明</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 圖示庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#00a600',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .tab-active {
+            color: #00a600;
+            border-bottom-color: #00a600;
+            background-color: rgba(16, 185, 129, 0.08);
+            font-weight: 700;
+        }
+        /* 自訂滾動條 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 min-h-screen flex flex-col antialiased transition-colors duration-300">
+
+    <!-- 頂部 Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-emerald-100 shadow-xs transition-all">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00a600] to-teal-600 text-white flex items-center justify-center font-extrabold text-lg shadow-sm">
+                    <i class="fa-solid fa-leaf"></i>
+                </span>
+                <div>
+                    <h1 class="font-extrabold text-slate-800 text-base md:text-lg leading-tight">myezlife.com</h1>
+                    <p class="text-[11px] text-emerald-700 font-medium">自己網站自己做 ‧ 個人化數位生活儀表板</p>
+                </div>
+            </div>
+
+            <!-- 控制功能按鈕區 -->
+            <div class="flex items-center gap-1.5 md:gap-2">
+                <!-- 字體大小調節 -->
+                <button onclick="adjustFontSize(-1)" title="縮小字體" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs transition cursor-pointer">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                <span id="font-size-indicator" class="text-xs font-bold text-slate-500 w-6 text-center">中</span>
+                <button onclick="adjustFontSize(1)" title="放大字體" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs transition cursor-pointer">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+
+                <!-- 分隔線 -->
+                <div class="h-4 w-[1px] bg-slate-200 mx-1"></div>
+
+                <!-- 一鍵複製全文按鈕 -->
+                <button onclick="copyFullText()" id="copy-btn" class="bg-[#00a600] hover:bg-emerald-700 text-white text-xs font-bold py-2 px-3 rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-copy"></i>
+                    <span class="hidden sm:inline">一鍵複製全文</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主視覺 Banner -->
+    <section class="bg-gradient-to-b from-emerald-800 via-emerald-700 to-teal-800 text-white py-10 md:py-14 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-400/20 via-transparent to-transparent"></div>
+        <div class="max-w-4xl mx-auto relative z-10 space-y-4">
+            <div class="inline-flex items-center gap-2 bg-emerald-900/60 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-400/30 text-emerald-200 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                二十年域名的堅持 ‧ 自由與隱私的新主張
+            </div>
+            <h2 class="text-2xl md:text-4xl font-black tracking-tight leading-snug">
+                將選單與掌控權，重新還給自己。
+            </h2>
+            <p class="text-emerald-100 text-sm md:text-base max-w-2xl leading-relaxed font-light">
+                這是一份獻給追求簡居生活與個人數位掌控權者的網站指南。無需繁雜設定，100% 運行於您的個人裝置，享受極致的自由與隱私保障。
+            </p>
+        </div>
+    </section>
+
+    <!-- 頁籤導覽 (Tabs Bar) -->
+    <nav class="sticky top-16 z-30 bg-white border-b border-slate-200 shadow-2xs">
+        <div class="max-w-4xl mx-auto px-2 flex overflow-x-auto no-scrollbar scroll-smooth">
+            <button onclick="switchTab('concept')" id="tab-concept" class="tab-btn tab-active px-4 py-3.5 text-xs md:text-sm font-semibold border-b-2 border-transparent whitespace-nowrap transition flex items-center gap-1.5 shrink-0">
+                <i class="fa-solid fa-compass"></i> 1. 理念與起源
+            </button>
+            <button onclick="switchTab('highlights')" id="tab-highlights" class="tab-btn px-4 py-3.5 text-xs md:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition flex items-center gap-1.5 shrink-0">
+                <i class="fa-solid fa-star"></i> 2. 核心亮點與功能
+            </button>
+            <button onclick="switchTab('scenarios')" id="tab-scenarios" class="tab-btn px-4 py-3.5 text-xs md:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition flex items-center gap-1.5 shrink-0">
+                <i class="fa-solid fa-users-gear"></i> 3. 實際應用情境
+            </button>
+            <button onclick="switchTab('future')" id="tab-future" class="tab-btn px-4 py-3.5 text-xs md:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition flex items-center gap-1.5 shrink-0">
+                <i class="fa-solid fa-[#00a600] fa-rocket"></i> 4. 未來展望與結語
+            </button>
+        </div>
+    </nav>
+
+    <!-- 主要文章內容區域 -->
+    <main id="content-container" class="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-8 text-base">
+
+        <!-- 區塊 1: 理念與起源 -->
+        <section id="section-concept" class="space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-100 text-[#00a600] flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-seedling"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-bold text-slate-800">寫在前面：從「全球化」到「個人化」的數位生活實驗</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">My Easy Life ── 陪伴一二十年的網址故事</p>
+                    </div>
+                </div>
+
+                <div class="prose max-w-none text-slate-600 space-y-4 leading-relaxed">
+                    <p>
+                        這個網址 <strong class="text-emerald-700 font-bold">myezlife.com</strong>（My Easy Life），算算已經陪了我一二十年的光陰。
+                    </p>
+                    <p>
+                        過去這二十年，我們經歷了網路從「搜尋時代」到「社群平台時代」，演進到如今這個「共用 AI 的生成式時代」。我們看著趨勢從「全球化」走向「區域化」，而到了現在，有了 AI 這樣強大的技術可以依靠，數位工具的極致終點，其實是<strong class="text-emerald-700 font-bold">「個人化」</strong>。
+                    </p>
+                    <div class="bg-emerald-50/80 p-4 rounded-2xl border border-emerald-100 space-y-2 text-emerald-900 my-4">
+                        <div class="font-bold flex items-center gap-2 text-sm md:text-base">
+                            <i class="fa-solid fa-shield-halved text-[#00a600]"></i> 100% 本機優先與個人隱私保護
+                        </div>
+                        <p class="text-xs md:text-sm text-emerald-800/90 leading-relaxed">
+                            大家習慣了將資料存在各大商業平台的伺服器裡，但也漸漸失去了對自己數位空間的掌控權。因此，我打造了這套「開放式純前端個人入口儀表板」骨架。它最核心的特色是：<strong class="underline decoration-emerald-400">完全運作在您自己的裝置瀏覽器中（LocalStorage）</strong>。網站沒有後端資料庫，不會追蹤、不抓取、也不會販售您的任何隱私。資料全部握在您自己手裡，既安全又自由。
+                        </p>
+                    </div>
+                    <p>
+                        既然骨架搭好了，我就想把它分享出來，給同樣追求「簡居生活」與「數位自主權」的朋友免費使用。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊 2: 核心亮點與功能 -->
+        <section id="section-highlights" class="space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-100 text-[#00a600] flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-list-check"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-bold text-slate-800">核心亮點與應用範圍：這能為您解決什麼？</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">告別繁雜的書籤列，打造專屬的數位總司令部</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 卡片 1 -->
+                    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:border-emerald-200 hover:bg-emerald-50/30 transition space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-grip-vertical"></i></span>
+                            1. 100% 自由打造的桌面與側邊欄
+                        </div>
+                        <ul class="text-xs md:text-sm text-slate-600 space-y-2 pl-2">
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-[#00a600] mt-1 text-xs"></i>
+                                <span><strong>自訂區塊與捷徑：</strong>可自由新增專屬區塊（如工作必用、常用購物），並將喜愛網站變成本機捷徑。</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-[#00a600] mt-1 text-xs"></i>
+                                <span><strong>防誤觸長按拖曳：</strong>支援拖曳排序，手機版特別設計「長按 3 秒」啟用機制，滑動選單順暢不掉卡。</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 卡片 2 -->
+                    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:border-emerald-200 hover:bg-emerald-50/30 transition space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-palette"></i></span>
+                            2. 外觀自主，打造個人專屬氛圍
+                        </div>
+                        <ul class="text-xs md:text-sm text-slate-600 space-y-2 pl-2">
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-indigo-600 mt-1 text-xs"></i>
+                                <span><strong>客製化背景與外觀：</strong>自由選擇背景底色、貼上圖片網址，或直接上傳手機/電腦裡的照片作為桌面背景。</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-indigo-600 mt-1 text-xs"></i>
+                                <span><strong>卡片透明度開關：</strong>可一鍵啟用「100% 完全透明底色」，讓背景美圖一覽無遺。</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 卡片 3 -->
+                    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:border-emerald-200 hover:bg-emerald-50/30 transition space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-cloud"></i></span>
+                            3. 跨裝置零成本雲端同步 (GAS)
+                        </div>
+                        <ul class="text-xs md:text-sm text-slate-600 space-y-2 pl-2">
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-amber-500 mt-1 text-xs"></i>
+                                <span><strong>免伺服器費用：</strong>提供 Google Apps Script (GAS) 備份方案，免架站、免伺服器月租費。</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-amber-500 mt-1 text-xs"></i>
+                                <span><strong>資料完全由您掌管：</strong>將專屬程式碼貼入自己的 Google 帳號，設定與筆記即可跨裝置自動同步。</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- 卡片 4 -->
+                    <div class="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:border-emerald-200 hover:bg-emerald-50/30 transition space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-rose-500 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-cubes"></i></span>
+                            4. 豐富的內建實用小工具
+                        </div>
+                        <ul class="text-xs md:text-sm text-slate-600 space-y-2 pl-2">
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-rose-500 mt-1 text-xs"></i>
+                                <span><strong>心情隨筆與影音櫃：</strong>隨手紀錄私密日誌，整合 YouTube 自動播放與無廣告歌單牆。</span>
+                            </li>
+                            <li class="flex items-start gap-1.5">
+                                <i class="fa-solid fa-check text-rose-500 mt-1 text-xs"></i>
+                                <span><strong>即時生活資訊網格：</strong>整合 1968 路況、公車動態、台鐵/高鐵時刻表、氣象預報與股市。</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊 3: 實際應用情境範例 -->
+        <section id="section-scenarios" class="space-y-6">
+            <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-100 text-[#00a600] flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-bold text-slate-800">💡 實際應用情境範例</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">看看不同族群如何善用 myezlife.com 提升生活品質</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- 情境 1 -->
+                    <div class="flex flex-col md:flex-row gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="font-bold text-slate-800 text-base">情境 A：上班族／自由工作者</h4>
+                            <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                                將 myezlife.com 設為瀏覽器預設首頁。左側選單擺放公司系統、常用雲端文件與 Gmail 捷徑；桌面卡片開啟「Google 智慧搜尋列」與「即時交通」，每天早上開機就能一秒進入工作狀態。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 情境 2 -->
+                    <div class="flex flex-col md:flex-row gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-[#00a600] flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-house-chimney-heart"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="font-bold text-slate-800 text-base">情境 B：長輩／數位簡居族</h4>
+                            <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                                關閉不必要的複雜功能，僅留「AI早安問候圖」、「好歌一直聽」與「焦點新聞」。放大字體與圖像化圖示，乾淨無雜亂廣告，點擊即用。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 情境 3 -->
+                    <div class="flex flex-col md:flex-row gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 items-start">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="font-bold text-slate-800 text-base">情境 C：創作者／靈感蒐集家</h4>
+                            <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                                利用內建的「個人靈感隨筆」功能，隨手貼上今天看到的好文章、YouTube 靈感影片或心境隨筆，搭配自動同步到自己的 Google 雲端，打造無後顧之憂的個人知識庫。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊 4: 未來展望與結語 -->
+        <section id="section-future" class="space-y-6">
+            <div class="bg-gradient-to-br from-emerald-900 to-teal-900 text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-6 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 text-emerald-800/20 text-9xl font-black select-none pointer-events-none">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+
+                <div class="flex items-center gap-3 border-b border-emerald-800/80 pb-4 relative z-10">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-flag"></i>
+                    </span>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-bold text-white">🚀 未來展望與結語</h3>
+                        <p class="text-xs text-emerald-300">把選擇權與數位空間，重新還給自己</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-emerald-100 text-xs md:text-sm leading-relaxed relative z-10 font-light">
+                    <p>
+                        這只是一個開始。隨著 AI 科技持續進步，未來我也會持續思考並加入更多創新的概念與輕量化工具（例如更智慧的 AI 輔助套件、自動化數據匯入等）。
+                    </p>
+                    <div class="p-4 rounded-2xl bg-emerald-800/50 border border-emerald-500/30 text-white font-medium text-center my-2 text-sm md:text-base">
+                        「把選擇權與數位空間，重新還給自己。」
+                    </div>
+                    <p>
+                        歡迎大家把 <strong class="text-white font-bold">myezlife.com</strong> 當成您自己的數位城堡骨架，自由地使用它、佈置它。如果您有任何想法或新概念，也歡迎隨時交流，讓我們一起探索個人化時代的極致體驗！
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 頁尾 Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 px-4 border-t border-slate-800 text-center text-xs space-y-2">
+        <p class="font-bold text-slate-300">© myezlife.com — 自己網站自己做 ‧ 個人化數位生活儀表板</p>
+        <p class="text-slate-500">開放式純前端架構 ‧ 全站零追蹤 ‧ 本機資料優先</p>
+    </footer>
+
+    <!-- Toast 複製成功提示文字 -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none z-50 border border-slate-700">
+        <i class="fa-solid fa-circle-check text-[#00a600] text-base"></i>
+        <span id="toast-msg">已成功複製全文！</span>
+    </div>
+
+    <!-- 隱藏的全文文字（一鍵複製用） -->
+    <textarea id="full-text-source" class="sr-only">
+# 歡迎來到 myezlife.com —— 自己網站自己做，開啟您的「個人化數位生活儀表板」
+
+### 🌿 寫在前面：從「全球化」到「個人化」的數位生活實驗
+
+這個網址 myezlife.com（My Easy Life），算算已經陪了我一二十年的光陰。
+
+過去這二十年，我們經歷了網路從「搜尋時代」到「社群平台時代」，演進到如今這個「共用 AI 的生成式時代」。我們看著趨勢從「全球化」走向「區域化」，而到了現在，有了 AI 這樣強大的技術可以依靠，數位工具的極致終點，其實是「個人化」。
+
+大家習慣了將資料存在各大商業平台的伺服器裡，但也漸漸失去了對自己數位空間的掌控權。因此，我打造了這套「開放式純前端個人入口儀表板」骨架。
+
+它最核心的特色是：完全運作在您自己的裝置瀏覽器中（LocalStorage）。網站沒有後端資料庫，不會追蹤、不抓取、也不會販售您的任何隱私。資料全部握在您自己手裡，既安全又自由。
+
+既然骨架搭好了，我就想把它分享出來，給同樣追求「簡居生活」與「數位自主權」的朋友免費使用。
+
+---
+
+### ✨ 核心亮點與應用範圍：這能為您解決什麼？
+
+myezlife.com 就像是您專屬的數位生活總司令部，將您每天上網最常用的功能整合在同一個頁面，擺脫繁雜的書籤列與演算法干擾：
+
+1. 100% 自由打造的桌面與側邊欄：
+   - 自訂區塊與捷徑：可自由新增專屬區塊（如：工作必用、常用購物），並將喜愛的網站網址直接變成本機捷徑。
+   - 隨心排序與彈性隱藏：支援自由拖曳排序（手機版貼心設計了「長按 3 秒防誤觸拖曳」機制，順暢滑動不掉卡）。
+
+2. 外觀自主，打造個人專屬氛圍：
+   - 客製化背景與外觀：支援選擇背景底色、貼上圖片網址，或直接上傳手機/電腦裡的照片作為桌面背景。
+   - 卡片透明度開關：可一鍵啟用「100% 完全透明底色」，讓背景美圖一覽無遺。
+
+3. 跨裝置零成本雲端同步（Google Apps Script, GAS）：
+   - 免伺服器費用：提供免架站的 GAS 備份方案。
+   - 資料自己掌管：將專屬程式碼貼入自己的 Google 帳號，設定與筆記即可跨裝置自動同步。
+
+4. 豐富的內建實用小工具：
+   - 心情隨筆與影音櫃：隨手紀錄私密日誌，整合 YouTube 自動播放與歌單牆。
+   - 即時生活資訊網格：整合國道 1968、省道路況、公車動態、台鐵/高鐵時刻表、氣象預報與 Yahoo 股市。
+
+---
+
+### 💡 實際應用情境範例
+
+- 情境 A：上班族／自由工作者
+  將 myezlife.com 設為瀏覽器預設首頁。左側選單擺放公司系統、常用雲端文件與 Gmail 捷徑；桌面卡片開啟「Google 智慧搜尋列」與「即時交通」，每天早上開機就能一秒進入工作狀態。
+
+- 情境 B：長輩／數位簡居族
+  關閉不必要的複雜功能，僅留「AI早安問候圖」、「好歌一直聽」與「焦點新聞」。放大字體與圖像化圖示，乾淨無雜亂廣告，點擊即用。
+
+- 情境 C：創作者／靈感蒐集家
+  利用內建的「個人靈感隨筆」功能，隨手貼上今天看到的好文章、YouTube 靈感影片或心境隨筆，搭配自動同步到自己的 Google 雲端，打造無後顧之憂的個人知識庫。
+
+---
+
+### 🚀 未來展望與結語
+
+這只是一個開始。隨著 AI 科技持續進步，未來我也會持續思考並加入更多創新的概念與輕量化工具（例如更智慧的 AI 輔助套件、自動化數據匯入等）。
+
+「把選擇權與數位空間，重新還給自己。」
+
+歡迎大家把 myezlife.com 當成您自己的數位城堡骨架，自由地使用它、佈置它。如果您有任何想法或新概念，也歡迎隨時交流，讓我們一起探索個人化時代的極致體驗！
+    </textarea>
+
+    <!-- JavaScript 互動邏輯 -->
+    <script>
+        // 字體縮放控制
+        let currentFontLevel = 2; // 1: 小, 2: 中, 3: 大, 4: 特大
+        const fontClasses = ['text-sm', 'text-base', 'text-lg', 'text-xl'];
+        const fontLabels = ['小', '中', '大', '特大'];
+
+        function adjustFontSize(delta) {
+            currentFontLevel += delta;
+            if (currentFontLevel < 1) currentFontLevel = 1;
+            if (currentFontLevel > 4) currentFontLevel = 4;
+
+            const container = document.getElementById('content-container');
+            // 清除舊的字體大小 class
+            container.classList.remove('text-sm', 'text-base', 'text-lg', 'text-xl');
+            // 套用新的字體 class
+            container.classList.add(fontClasses[currentFontLevel - 1]);
+
+            // 更新指示器
+            document.getElementById('font-size-indicator').innerText = fontLabels[currentFontLevel - 1];
+        }
+
+        // 頁籤切換邏輯 (Tabs Switching)
+        function switchTab(tabKey) {
+            // 更新頁籤按鈕樣式
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-slate-500', 'hover:text-slate-800');
+            });
+            const activeBtn = document.getElementById(`tab-${tabKey}`);
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active');
+                activeBtn.classList.remove('text-slate-500', 'hover:text-slate-800');
+            }
+
+            // 平滑滾動到對應的章節
+            const targetSection = document.getElementById(`section-${tabKey}`);
+            if (targetSection) {
+                const headerOffset = 130; // 扣除固定 Header 與 Tab Bar 的高度
+                const elementPosition = targetSection.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // 複製全文功能
+        function copyFullText() {
+            const copyText = document.getElementById('full-text-source').value;
+            
+            // 使用內建 execCommand 或 Clipboard API
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(copyText).then(() => {
+                    showToast('✅ 全文已成功複製到剪貼簿！');
+                }).catch(err => {
+                    fallbackCopy(copyText);
+                });
+            } else {
+                fallbackCopy(copyText);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('✅ 全文已成功複製到剪貼簿！');
+            } catch (err) {
+                showToast('❌ 複製失敗，請手動複製。');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // 顯示 Toast 提示訊息
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toastMsg.innerText = message;
+
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        // 監聽頁面滾動，自動跟隨高亮對應頁籤
+        window.addEventListener('scroll', () => {
+            const sections = ['concept', 'highlights', 'scenarios', 'future'];
+            const scrollPosition = window.scrollY + 180;
+
+            for (const key of sections) {
+                const sec = document.getElementById(`section-${key}`);
+                if (sec) {
+                    const top = sec.offsetTop;
+                    const height = sec.offsetHeight;
+                    if (scrollPosition >= top && scrollPosition < top + height) {
+                        document.querySelectorAll('.tab-btn').forEach(btn => {
+                            btn.classList.remove('tab-active');
+                            btn.classList.add('text-slate-500');
+                        });
+                        const activeBtn = document.getElementById(`tab-${key}`);
+                        if (activeBtn) {
+                            activeBtn.classList.add('tab-active');
+                            activeBtn.classList.remove('text-slate-500');
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
