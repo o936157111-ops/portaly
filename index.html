@@ -190,11 +190,16 @@
         }
         .sortable-drag { opacity: 0.95; }
 
-        .sidebar-drag-handle, .sub-drag-item { 
-            cursor: grab; 
-            touch-action: manipulation; 
-        }
-        .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
+       /* 💡 修正手機觸控手勢衝突 */
+.sidebar-drag-handle, .sub-drag-item { 
+    cursor: grab; 
+    touch-action: none !important; /* 🌟 允許 Sortable 完全接管觸控拖曳手勢 */
+    -webkit-user-select: none;
+    user-select: none;
+}
+.sidebar-drag-handle:active, .sub-drag-item:active { 
+    cursor: grabbing; 
+}
 
         /* 💡 手機版側邊欄防誤觸與順暢滑動設定 */
         .sidebar-item-group, .sub-drag-item {
@@ -1254,56 +1259,60 @@
         }
 
         // 💡 針對手機版側邊欄修復「長按 3 秒」才可移動與流暢滾動的 Sortable 設定
-        function initSortables() {
-            const sidebarContainer = document.getElementById('sidebar-sortable-container');
-            if (sidebarContainer) {
-                new Sortable(sidebarContainer, {
-                    animation: 200, 
-                    handle: '.sidebar-drag-handle',
-                    filter: 'input, label, button, a',
-                    preventOnFilter: false,
-                    delay: 3000,               // ⏱️ 長按 3 秒 (3000 ms) 才可移動
-                    delayOnTouchOnly: true,    // 💡 僅在觸控/手機裝置生效，電腦版拖動不受影響
-                    touchStartThreshold: 5,    // 防誤觸像素閾值
-                    ghostClass: 'sortable-ghost',
-                    chosenClass: 'sortable-chosen',
-                    dragClass: 'sortable-drag',
-                    onEnd: function () {
-                        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
-                        syncDesktopCardsOrder();
-                        syncToCloud();
-                    }
-                });
-                const savedOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
-                if (savedOrder) savedOrder.forEach(id => { const el = sidebarContainer.querySelector(`[data-id="${id}"]`); if (el) sidebarContainer.appendChild(el); });
+        // 💡 手機版完全無法移動的終極修正版
+function initSortables() {
+    const sidebarContainer = document.getElementById('sidebar-sortable-container');
+    if (sidebarContainer) {
+        new Sortable(sidebarContainer, {
+            animation: 200,
+            handle: '.sidebar-drag-handle',          // 指定只能從九宮格把手拖曳
+            filter: 'input, label, button, a, select',// 徹底排除點擊元素
+            preventOnFilter: false,
+            delay: 1500,                             // ⏱️ 長按 1.5 秒觸發 (建議調為 1.5秒，避免 3秒過長無反應感)
+            delayOnTouchOnly: true,
+            touchStartThreshold: 3,                  // 降低觸動門檻
+            forceFallback: true,                     // 🌟 關鍵修復：強制開啟觸控 fallback 模式，避免被手機系統手勢攔截
+            fallbackClass: 'sortable-fallback',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            dragClass: 'sortable-drag',
+            onEnd: function () {
+                localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
                 syncDesktopCardsOrder();
+                syncToCloud();
             }
+        });
+        const savedOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
+        if (savedOrder) savedOrder.forEach(id => { const el = sidebarContainer.querySelector(`[data-id="${id}"]`); if (el) sidebarContainer.appendChild(el); });
+        syncDesktopCardsOrder();
+    }
 
-            ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
-                const subContainer = document.getElementById(subId);
-                if (subContainer) {
-                    new Sortable(subContainer, {
-                        animation: 150, 
-                        handle: '.sub-drag-item', 
-                        filter: 'input, label, button, a', 
-                        preventOnFilter: false,
-                        delay: 3000,               // ⏱️ 子選項長按 3 秒才可移動
-                        delayOnTouchOnly: true,
-                        touchStartThreshold: 5,
-                        ghostClass: 'sortable-ghost',
-                        chosenClass: 'sortable-chosen',
-                        dragClass: 'sortable-drag',
-                        onEnd: function() {
-                            localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
-                            updateDesktopVisibility();
-                            syncToCloud();
-                        }
-                    });
-                    const savedSubOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
-                    if (savedSubOrder) savedSubOrder.forEach(modId => { const item = subContainer.querySelector(`[data-mod-id="${modId}"]`); if (item) subContainer.appendChild(item); });
+    ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
+        const subContainer = document.getElementById(subId);
+        if (subContainer) {
+            new Sortable(subContainer, {
+                animation: 150,
+                handle: '.sub-drag-item',
+                filter: 'input, label, button, a',
+                preventOnFilter: false,
+                delay: 1500,                         // ⏱️ 子項目同步改為長按 1.5 秒
+                delayOnTouchOnly: true,
+                touchStartThreshold: 3,
+                forceFallback: true,                 // 🌟 關鍵修復：強制開啟觸控 fallback 模式
+                ghostClass: 'sortable-ghost',
+                chosenClass: 'sortable-chosen',
+                dragClass: 'sortable-drag',
+                onEnd: function() {
+                    localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
+                    updateDesktopVisibility();
+                    syncToCloud();
                 }
             });
+            const savedSubOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
+            if (savedSubOrder) savedSubOrder.forEach(modId => { const item = subContainer.querySelector(`[data-mod-id="${modId}"]`); if (item) subContainer.appendChild(item); });
         }
+    });
+}
 
         function syncDesktopCardsOrder() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
