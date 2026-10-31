@@ -1389,7 +1389,15 @@
 
             const now = new Date();
             const posts = getBlogPosts();
-            posts.unshift({ id: 'post-' + Date.now(), title: title || '無標題隨筆', content, imgUrl, videoEmbed: youtubeEmbedUrl, date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` });
+            posts.unshift({ 
+                id: 'post-' + Date.now(), 
+                title: title || '無標題隨筆', 
+                content, 
+                imgUrl, 
+                videoEmbed: youtubeEmbedUrl, 
+                isShorts: isShorts, // 💡 補上這行，才能正確記錄並還原 Shorts 直式排版
+                date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` 
+            });
             saveBlogPosts(posts);
 
             document.getElementById('post-title').value = '';
