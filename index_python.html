@@ -179,21 +179,28 @@
             text-overflow: ellipsis;
             max-width: 80px;
         }
-        .sortable-ghost { opacity: 0.3; }
-        .sortable-drag { opacity: 0.9; }
+        
+        /* 💡 拖曳時的視覺反饋效果 */
+        .sortable-ghost { opacity: 0.4; background-color: #e2e8f0 !important; }
+        .sortable-chosen { 
+            transform: scale(1.02); 
+            box-shadow: 0 8px 20px rgba(0, 166, 0, 0.2) !important; 
+            border-color: #00a600 !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .sortable-drag { opacity: 0.95; }
 
-        .sidebar-drag-handle, .sub-drag-item { cursor: grab; touch-action: pan-y; }
+        .sidebar-drag-handle, .sub-drag-item { 
+            cursor: grab; 
+            touch-action: manipulation; 
+        }
         .sidebar-drag-handle:active, .sub-drag-item:active { cursor: grabbing; }
 
-        /* 💡 手機版防誤觸拖曳視覺提示 */
+        /* 💡 手機版側邊欄防誤觸與順暢滑動設定 */
         .sidebar-item-group, .sub-drag-item {
             touch-action: pan-y;
             user-select: none;
             -webkit-user-select: none;
-        }
-        .ready-to-drag {
-            background-color: rgba(0, 166, 0, 0.1) !important;
-            border-color: #00a600 !important;
         }
 
         #sidebar-scroll-content::-webkit-scrollbar { width: 4px; }
@@ -235,13 +242,13 @@
             }
         }
 
-    /* 💡 專門給 YouTube Shorts 直式短影音的嵌入容器 (9:16 比例) */
+        /* 💡 專門給 YouTube Shorts 直式短影音的嵌入容器 (9:16 比例) */
         .shorts-embed-container {
             position: relative;
             width: 100%;
-            max-width: 320px; /* 限制直式影片的最大寬度，避免在電腦版被拉得過寬 */
-            aspect-ratio: 9 / 16; /* 自動維持直式 9:16 比例 */
-            margin: 0 auto; /* 置中顯示 */
+            max-width: 320px;
+            aspect-ratio: 9 / 16;
+            margin: 0 auto;
             overflow: hidden;
             border-radius: 12px;
             border: 1px solid rgba(0,0,0,0.1);
@@ -254,8 +261,6 @@
             width: 100%;
             height: 100%;
         }
-
-
     </style>
 </head>
 <body>
@@ -281,18 +286,17 @@
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
 
-<!-- 🌟 新增：最頂部開啟 Welcome 網頁按鈕 -->
-<a href="https://myezlife.com/welcome.html" target="_blank" class="flex items-center justify-between p-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl shadow-sm transition group text-decoration-none">
-    <div class="flex items-center gap-2">
-        <span class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-xs">
-            <i class="fa-solid fa-house"></i>
-        </span>
-        <span class="text-xs font-bold">歡迎頁面 / Welcome</span>
-    </div>
-    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
-</a>
+            <!-- 🌟 開啟 Welcome 網頁按鈕 -->
+            <a href="https://myezlife.com/welcome.html" target="_blank" class="flex items-center justify-between p-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl shadow-sm transition group text-decoration-none">
+                <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-house"></i>
+                    </span>
+                    <span class="text-xs font-bold">歡迎頁面 / Welcome</span>
+                </div>
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
+            </a>
 
-            
             <!-- 網站使用與隱私說明 -->
             <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
@@ -1249,19 +1253,21 @@
             }
         }
 
-        // 💡 針對手機版側邊欄增加「長按 3 秒」才可移動的防誤觸機制與 Sortable 設定
+        // 💡 針對手機版側邊欄修復「長按 3 秒」才可移動與流暢滾動的 Sortable 設定
         function initSortables() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
             if (sidebarContainer) {
-                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                 new Sortable(sidebarContainer, {
                     animation: 200, 
                     handle: '.sidebar-drag-handle',
-                    filter: 'input, label',
+                    filter: 'input, label, button, a',
                     preventOnFilter: false,
-                    delay: isTouchDevice ? 3000 : 0,          // ⏱️ 手機長按 3 秒才可拖曳
-                    delayOnTouchOnly: true,
-                    touchStartThreshold: 5,
+                    delay: 3000,               // ⏱️ 長按 3 秒 (3000 ms) 才可移動
+                    delayOnTouchOnly: true,    // 💡 僅在觸控/手機裝置生效，電腦版拖動不受影響
+                    touchStartThreshold: 5,    // 防誤觸像素閾值
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    dragClass: 'sortable-drag',
                     onEnd: function () {
                         localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
                         syncDesktopCardsOrder();
@@ -1276,15 +1282,17 @@
             ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
                 const subContainer = document.getElementById(subId);
                 if (subContainer) {
-                    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
                     new Sortable(subContainer, {
                         animation: 150, 
                         handle: '.sub-drag-item', 
-                        filter: 'input', 
+                        filter: 'input, label, button, a', 
                         preventOnFilter: false,
-                        delay: isTouchDevice ? 3000 : 0,          // ⏱️ 手機長按 3 秒才可拖曳
+                        delay: 3000,               // ⏱️ 子選項長按 3 秒才可移動
                         delayOnTouchOnly: true,
                         touchStartThreshold: 5,
+                        ghostClass: 'sortable-ghost',
+                        chosenClass: 'sortable-chosen',
+                        dragClass: 'sortable-drag',
                         onEnd: function() {
                             localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
                             updateDesktopVisibility();
@@ -1383,15 +1391,13 @@
             let isShorts = false;
 
             if (videoUrl) {
-                // 檢查是否為 YouTube Shorts 網址
                 if (videoUrl.includes('/shorts/')) {
                     const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
                     if (shortsMatch && shortsMatch[1]) {
                         youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
-                        isShorts = true; // 標記這是 Shorts
+                        isShorts = true;
                     }
                 } else {
-                    // 一般 YouTube 網址解析
                     const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
                     if (match && match[2] && match[2].length === 11) {
                         youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
@@ -1407,7 +1413,7 @@
                 content, 
                 imgUrl, 
                 videoEmbed: youtubeEmbedUrl, 
-                isShorts: isShorts, // 💡 補上這行，才能正確記錄並還原 Shorts 直式排版
+                isShorts: isShorts,
                 date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` 
             });
             saveBlogPosts(posts);
@@ -1439,11 +1445,11 @@
                     ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap">${post.content}</p>` : ''}
                     ${post.imgUrl ? `<div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5"><img src="${post.imgUrl}" class="w-full h-full object-cover"></div>` : ''}
                     
-${post.videoEmbed ? `
-    <div class="${post.isShorts ? 'shorts-embed-container' : 'relative w-full overflow-hidden rounded-lg border border-slate-200'}" ${!post.isShorts ? 'style="padding-top: 56.25%;"' : ''}>
-        <iframe class="${post.isShorts ? 'w-full h-full' : 'absolute top-0 left-0 w-full h-full'}" src="${post.videoEmbed}" frameborder="0" allowfullscreen></iframe>
-    </div>
-` : ''}
+                    ${post.videoEmbed ? `
+                        <div class="${post.isShorts ? 'shorts-embed-container' : 'relative w-full overflow-hidden rounded-lg border border-slate-200'}" ${!post.isShorts ? 'style="padding-top: 56.25%;"' : ''}>
+                            <iframe class="${post.isShorts ? 'w-full h-full' : 'absolute top-0 left-0 w-full h-full'}" src="${post.videoEmbed}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    ` : ''}
                 </div>`).join('');
         }
 
