@@ -234,6 +234,28 @@
                 margin-top: 1.25rem !important;
             }
         }
+
+    /* 💡 專門給 YouTube Shorts 直式短影音的嵌入容器 (9:16 比例) */
+        .shorts-embed-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px; /* 限制直式影片的最大寬度，避免在電腦版被拉得過寬 */
+            aspect-ratio: 9 / 16; /* 自動維持直式 9:16 比例 */
+            margin: 0 auto; /* 置中顯示 */
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: #000;
+        }
+        .shorts-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+
     </style>
 </head>
 <body>
@@ -1346,9 +1368,23 @@
             if (!title && !content) { alert('請輸入標題或內容！'); return; }
 
             let youtubeEmbedUrl = '';
+            let isShorts = false;
+
             if (videoUrl) {
-                const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-                if (match && match[2].length === 11) youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                // 檢查是否為 YouTube Shorts 網址
+                if (videoUrl.includes('/shorts/')) {
+                    const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+                    if (shortsMatch && shortsMatch[1]) {
+                        youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
+                        isShorts = true; // 標記這是 Shorts
+                    }
+                } else {
+                    // 一般 YouTube 網址解析
+                    const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                    if (match && match[2] && match[2].length === 11) {
+                        youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                    }
+                }
             }
 
             const now = new Date();
@@ -1382,7 +1418,13 @@
                     </div>
                     ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap">${post.content}</p>` : ''}
                     ${post.imgUrl ? `<div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5"><img src="${post.imgUrl}" class="w-full h-full object-cover"></div>` : ''}
-                    ${post.videoEmbed ? `<div class="relative w-full overflow-hidden rounded-lg border border-slate-200" style="padding-top: 56.25%;"><iframe class="absolute top-0 left-0 w-full h-full" src="${post.videoEmbed}" frameborder="0" allowfullscreen></iframe></div>` : ''}
+                    // 在 publishBlogPost 儲存時，可順便記錄 isShorts: isShorts
+// 於 renderBlogPosts 渲染時：
+${post.videoEmbed ? `
+    <div class="${post.isShorts ? 'shorts-embed-container' : 'relative w-full overflow-hidden rounded-lg border border-slate-200'}" ${!post.isShorts ? 'style="padding-top: 56.25%;"' : ''}>
+        <iframe class="${post.isShorts ? 'w-full h-full' : 'absolute top-0 left-0 w-full h-full'}" src="${post.videoEmbed}" frameborder="0" allowfullscreen></iframe>
+    </div>
+` : ''}
                 </div>`).join('');
         }
 
