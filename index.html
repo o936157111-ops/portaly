@@ -1263,25 +1263,25 @@
 function initSortables() {
     const sidebarContainer = document.getElementById('sidebar-sortable-container');
     if (sidebarContainer) {
-        new Sortable(sidebarContainer, {
-            animation: 200,
-            handle: '.sidebar-drag-handle',          // 指定只能從九宮格把手拖曳
-            filter: 'input, label, button, a, select',// 徹底排除點擊元素
-            preventOnFilter: false,
-            delay: 1500,                             // ⏱️ 長按 1.5 秒觸發 (建議調為 1.5秒，避免 3秒過長無反應感)
-            delayOnTouchOnly: true,
-            touchStartThreshold: 3,                  // 降低觸動門檻
-            forceFallback: true,                     // 🌟 關鍵修復：強制開啟觸控 fallback 模式，避免被手機系統手勢攔截
-            fallbackClass: 'sortable-fallback',
-            ghostClass: 'sortable-ghost',
-            chosenClass: 'sortable-chosen',
-            dragClass: 'sortable-drag',
-            onEnd: function () {
-                localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
-                syncDesktopCardsOrder();
-                syncToCloud();
-            }
-        });
+// 💡 手機版拖曳流暢度最佳化設定
+new Sortable(sidebarContainer, {
+    animation: 200,
+    handle: '.sidebar-drag-handle',
+    filter: 'input, label, button, a, select',
+    preventOnFilter: false,
+    delay: 800,               // ⏱️ 將長按延遲縮短為 0.8秒 (800毫秒)，不必等太久
+    delayOnTouchOnly: true,
+    touchStartThreshold: 2,   // 降低手指輕微晃動的容許誤差，更容易判定長按
+    forceFallback: true,      // 保持強制 fallback 避免手機瀏覽器手勢衝突
+    ghostClass: 'sortable-ghost',
+    chosenClass: 'sortable-chosen',
+    dragClass: 'sortable-drag',
+    onEnd: function () {
+        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
+        syncDesktopCardsOrder();
+        syncToCloud();
+    }
+});
         const savedOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
         if (savedOrder) savedOrder.forEach(id => { const el = sidebarContainer.querySelector(`[data-id="${id}"]`); if (el) sidebarContainer.appendChild(el); });
         syncDesktopCardsOrder();
