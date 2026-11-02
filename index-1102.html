@@ -498,7 +498,111 @@ function doPost(e) {
 
         const DEFAULT_LOGO = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
+        // 🌟 完全還原且包含 3 個延伸閱讀推薦的完整贊助區塊結構
+        const FULL_SPONSOR_HTML = `
+            <div class="space-y-4">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-between text-xs text-emerald-900 shadow-xs">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="font-medium">© myezlife.com — 長期免費提供使用，歡迎點擊贊助支援主機維護！</span>
+                    </div>
+                </div>
+
+                <div class="sponsor-items-container space-y-3">
+                    <div class="p-3.5 bg-white rounded-xl border border-stone-200 flex items-center justify-between shadow-xs">
+                        <div>
+                            <div class="text-xs font-bold text-stone-800">心情隨筆與待辦日記</div>
+                            <div class="text-[11px] text-stone-500 mt-0.5">100% 本機優先與雲端自動備份。</div>
+                        </div>
+                        <a href="https://myezlife.com/welcome.html" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition text-decoration-none">了解更多</a>
+                    </div>
+
+                    <!-- AdSense / 贊助推薦廣告預留區塊 -->
+                    <div class="p-4 bg-stone-50 rounded-xl border border-dashed border-stone-300 text-center space-y-1">
+                        <div class="text-[10px] font-bold tracking-wider text-stone-400 uppercase">Sponsor & Advertisement</div>
+                        <div class="text-xs text-stone-500">贊助廠商推薦與 Google AdSense 廣告區塊</div>
+                    </div>
+
+                    <!-- 延伸閱讀與精彩內容推薦 (完整 3 個項目) -->
+                    <div class="pt-2 border-t border-stone-200 space-y-2">
+                        <div class="text-xs font-bold text-stone-600 flex items-center gap-1.5">
+                            <i class="fa-solid fa-compass text-emerald-600"></i> 延伸閱讀與精彩內容推薦
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
+                            <a href="https://myezlife.com/haodoo.html" target="_blank" class="p-2.5 bg-white rounded-xl border border-stone-200 text-stone-700 hover:text-emerald-600 hover:border-emerald-300 transition flex items-center gap-2 text-decoration-none">
+                                <i class="fa-solid fa-book text-emerald-500"></i> 好讀經典書單推薦
+                            </a>
+                            <a href="https://myezlife.com/index_news.html" target="_blank" class="p-2.5 bg-white rounded-xl border border-stone-200 text-stone-700 hover:text-emerald-600 hover:border-emerald-300 transition flex items-center gap-2 text-decoration-none">
+                                <i class="fa-solid fa-newspaper text-amber-500"></i> 每日新聞焦點速覽
+                            </a>
+                            <a href="https://myezlife.com/welcome.html" target="_blank" class="p-2.5 bg-white rounded-xl border border-stone-200 text-stone-700 hover:text-emerald-600 hover:border-emerald-300 transition flex items-center gap-2 text-decoration-none">
+                                <i class="fa-solid fa-house text-teal-500"></i> 簡居生活美學理念
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 🌟 包含圖片 URL 輸入框與 YouTube 影音嵌入語法解析的完整隨筆日誌 HTML 結構
+        const FULL_DIARY_HTML = `
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-[11px] text-stone-400">支援圖片附檔與 YouTube 影音嵌入（雲端同步）</span>
+                </div>
+                <div class="space-y-2.5">
+                    <input type="text" id="diary-title-input" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-white p-3 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500 shadow-xs">
+                    <textarea id="diary-content-input" rows="3" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-white p-3 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500 shadow-xs resize-none"></textarea>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <input type="url" id="diary-img-input" placeholder="🖼️ 貼上圖片網址 (https://...)" class="bg-white p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500">
+                        <input type="url" id="diary-yt-input" placeholder="🎬 貼上 YouTube 影片網址" class="bg-white p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500">
+                    </div>
+
+                    <button onclick="publishDiaryPost(this)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> 發布圖文與影音隨筆
+                    </button>
+                </div>
+                <div class="border-t border-stone-200 pt-3 space-y-2">
+                    <div class="text-xs font-bold text-stone-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> 歷史隨筆日誌清單
+                    </div>
+                    <div class="diary-history-list space-y-3">
+                        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-center text-xs text-stone-400 italic">
+                            尚無隨筆文章
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
         let activeSections = [];
+
+        // 🌟 自動偵測：若 LocalStorage 已有儲存的版面結構，直接進入首頁
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('myezlife.com_custom_logo')) {
+                updateLogoSrc(localStorage.getItem('myezlife.com_custom_logo'));
+            }
+            if (localStorage.getItem('myezlife_gas_url')) {
+                document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
+            }
+
+            const savedSections = localStorage.getItem('myezlife_active_sections');
+            if (savedSections) {
+                try {
+                    activeSections = JSON.parse(savedSections);
+                    if (activeSections.length > 0) {
+                        openStandalonePage();
+                        return;
+                    }
+                } catch(e) {
+                    console.error("解析本機儲存資料失敗", e);
+                }
+            }
+
+            // 無儲存紀錄時才載入 AI 引導第一幕
+            initAiSensing();
+        });
 
         function toggleSidebar() {
             const drawer = document.getElementById('sidebar-drawer');
@@ -624,30 +728,7 @@ function doPost(e) {
                             title: '個人靈感隨筆與圖文日誌',
                             type: 'content_card',
                             styleClass: 'card-bg-glass',
-                            contentHtml: `
-                                <div class="space-y-4">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[11px] text-stone-400">支援雲端自動同步</span>
-                                    </div>
-                                    <div class="space-y-3">
-                                        <input type="text" id="diary-title-input" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-white p-3 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500 shadow-xs">
-                                        <textarea id="diary-content-input" rows="3" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-white p-3 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500 shadow-xs resize-none"></textarea>
-                                        <button onclick="publishDiaryPost(this)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-2">
-                                            <i class="fa-solid fa-paper-plane"></i> 發布隨筆文章
-                                        </button>
-                                    </div>
-                                    <div class="border-t border-stone-200 pt-3 space-y-2">
-                                        <div class="text-xs font-bold text-stone-600 flex items-center gap-1.5">
-                                            <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> 歷史隨筆日誌清單
-                                        </div>
-                                        <div class="diary-history-list space-y-2">
-                                            <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-center text-xs text-stone-400 italic">
-                                                尚無隨筆文章
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `,
+                            contentHtml: FULL_DIARY_HTML,
                             apps: []
                         });
                     }
@@ -659,24 +740,7 @@ function doPost(e) {
                             title: '贊助支援與延伸閱讀',
                             type: 'sponsor_card',
                             styleClass: 'card-bg-glass',
-                            contentHtml: `
-                                <div class="space-y-4">
-                                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs text-emerald-900 shadow-xs">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                            <span>© myezlife.com — 長期免費提供使用，歡迎點擊贊助支援主機維護！</span>
-                                        </div>
-                                    </div>
-                                    <div class="sponsor-items-container space-y-2.5">
-                                        <div class="p-3 bg-white rounded-xl border border-stone-200 flex items-center justify-between">
-                                            <div>
-                                                <div class="text-xs font-bold text-stone-800">心情隨筆與待辦日記</div>
-                                                <div class="text-[11px] text-stone-500">100% 本機優先與雲端自動備份。</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `,
+                            contentHtml: FULL_SPONSOR_HTML,
                             apps: []
                         });
                     }
@@ -689,31 +753,66 @@ function doPost(e) {
             renderWizardSections();
         }
 
+        // 解析 YouTube 網址以提取 Video ID
+        function getYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
         function publishDiaryPost(btn) {
             const card = btn.closest('.space-y-4');
             const titleInput = card.querySelector('#diary-title-input');
             const contentInput = card.querySelector('#diary-content-input');
+            const imgInput = card.querySelector('#diary-img-input');
+            const ytInput = card.querySelector('#diary-yt-input');
             const historyList = card.querySelector('.diary-history-list');
 
             const title = titleInput.value.trim();
             const content = contentInput.value.trim();
-            if (!title && !content) { alert('請至少輸入標題或隨筆內容！'); return; }
+            const imgUrl = imgInput ? imgInput.value.trim() : '';
+            const ytUrl = ytInput ? ytInput.value.trim() : '';
+
+            if (!title && !content && !imgUrl && !ytUrl) { alert('請至少輸入標題、隨筆內容、圖片網址或 YouTube 影片！'); return; }
 
             const nowStr = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             if (historyList.querySelector('.italic')) { historyList.innerHTML = ''; }
 
+            let mediaHtml = '';
+            if (imgUrl) {
+                mediaHtml += `<div class="rounded-xl overflow-hidden my-2 border border-stone-200"><img src="${imgUrl}" class="w-full max-h-60 object-cover" alt="日誌圖片"></div>`;
+            }
+
+            if (ytUrl) {
+                const ytId = getYouTubeId(ytUrl);
+                if (ytId) {
+                    mediaHtml += `
+                        <div class="aspect-video w-full rounded-xl overflow-hidden my-2 border border-stone-200 shadow-xs">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    `;
+                }
+            }
+
             const postItem = document.createElement('div');
-            postItem.className = 'p-3 bg-white rounded-xl border border-stone-200 space-y-1 shadow-xs step-fade-in';
+            postItem.className = 'p-3.5 bg-white rounded-xl border border-stone-200 space-y-1.5 shadow-xs step-fade-in';
             postItem.innerHTML = `
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold text-stone-800">${title || '未命名隨筆'}</span>
                     <span class="text-[10px] text-stone-400">${nowStr}</span>
                 </div>
-                <p class="text-xs text-stone-600 leading-relaxed">${content || ''}</p>
+                ${content ? `<p class="text-xs text-stone-600 leading-relaxed whitespace-pre-wrap">${content}</p>` : ''}
+                ${mediaHtml}
             `;
             historyList.prepend(postItem);
+
             titleInput.value = '';
             contentInput.value = '';
+            if (imgInput) imgInput.value = '';
+            if (ytInput) ytInput.value = '';
+
+            // 儲存最新的版面狀態 (包含發布的圖文影音隨筆內容)
+            saveCurrentSectionsState();
         }
 
         function syncPresetCheckboxes() {
@@ -808,6 +907,7 @@ function doPost(e) {
                 activeSections[index] = activeSections[index - 1];
                 activeSections[index - 1] = temp;
                 renderStandaloneSections();
+                saveCurrentSectionsState();
             }
         }
 
@@ -817,6 +917,7 @@ function doPost(e) {
                 activeSections[index] = activeSections[index + 1];
                 activeSections[index + 1] = temp;
                 renderStandaloneSections();
+                saveCurrentSectionsState();
             }
         }
 
@@ -835,7 +936,7 @@ function doPost(e) {
                 
                 let appsHtml = '';
                 if (sec.type === 'content_card') {
-                    appsHtml = `<div class="text-[11px] text-stone-500 bg-white p-2 rounded-lg border border-stone-200">✨ 圖文日誌發表與歷史清單區塊</div>`;
+                    appsHtml = `<div class="text-[11px] text-stone-500 bg-white p-2 rounded-lg border border-stone-200">✨ 圖文影音日誌發表與歷史清單區塊</div>`;
                 } else if (sec.type === 'sponsor_card') {
                     appsHtml = `<div class="text-[11px] text-stone-500 bg-white p-2 rounded-lg border border-stone-200">✨ 贊助支援與延伸閱讀區塊</div>`;
                 } else if (!sec.apps || sec.apps.length === 0) {
@@ -920,7 +1021,20 @@ function doPost(e) {
             }
         }
 
+        function saveCurrentSectionsState() {
+            localStorage.setItem('myezlife_active_sections', JSON.stringify(activeSections));
+        }
+
         function openStandalonePage() {
+            if (activeSections.length === 0) {
+                activeSections = [
+                    { title: 'AI 智慧推薦首選', styleClass: 'card-bg-glass', apps: ['weather', 'highway', 'music'].map(k => ({ ...APPS_DB[k], id: k })) }
+                ];
+            }
+            
+            // 💡 關鍵：開啓獨立首頁時，將目前的狀態寫入 LocalStorage，實現跨頁面/重開網頁的永久記憶
+            saveCurrentSectionsState();
+
             renderStandaloneSections();
             document.getElementById('wizard-header').classList.add('hidden-step');
             document.getElementById('interactive-stage').classList.add('hidden-step');
@@ -933,9 +1047,12 @@ function doPost(e) {
         }
 
         function restartWizard() {
+            // 重新導引時清除本機記憶
+            localStorage.removeItem('myezlife_active_sections');
             document.getElementById('standalone-dashboard-page').classList.add('hidden-step');
             document.getElementById('wizard-header').classList.remove('hidden-step');
             document.getElementById('interactive-stage').classList.remove('hidden-step');
+            activeSections = [];
             switchScene(1);
             initAiSensing();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -997,14 +1114,6 @@ function doPost(e) {
             });
         }
 
-        if (localStorage.getItem('myezlife.com_custom_logo')) {
-            updateLogoSrc(localStorage.getItem('myezlife.com_custom_logo'));
-        }
-        if (localStorage.getItem('myezlife_gas_url')) {
-            document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
-        }
-
-        initAiSensing();
         setInterval(updateLiveTime, 1000);
     </script>
 </body>
