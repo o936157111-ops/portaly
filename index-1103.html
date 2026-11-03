@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myezlife.com | 自己網站自己做，把數位掌控權還給自己</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Sortable.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#00a600',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 玻纖質感與陰影 */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .hero-gradient {
+            background: radial-gradient(135.8% 112% at 50% 0%, #064e3b 0%, #022c22 45%, #0f172a 100%);
+        }
+
+        /* 按鈕發光特效 */
+        .btn-glow {
+            background: linear-gradient(135deg, #00a600 0%, #059669 100%);
+            box-shadow: 0 4px 20px rgba(0, 166, 0, 0.35);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 166, 0, 0.5);
+        }
+
+        /* 打字機光標 */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* App 捷徑圖示樣式 */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+            gap: 16px;
+        }
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        .app-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.7);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s;
+        }
+        .app-item:hover .app-box {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+        .app-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 6px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 76px;
+        }
+
+        /* YouTube Shorts 直式 9:16 嵌入容器 */
+        .shorts-embed-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            aspect-ratio: 9 / 16;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            background: #000;
+        }
+        .shorts-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 側邊欄抽屜 */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 320px;
+            max-width: 85vw;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            z-index: 60;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+        }
+        #sidebar.show-sidebar { transform: translateX(0); }
+
+        #backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 55;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        #backdrop.show-backdrop { opacity: 1; pointer-events: auto; }
+
+        /* Modal 通用動畫 */
+        .modal-fade {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .modal-fade.hidden-modal {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        /* 隱藏滾動條 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+    <!-- 遮罩背景 -->
+    <div id="backdrop" onclick="toggleSidebar()"></div>
+
+    <!-- 🌟 全站頂部導覽列 (Navbar) -->
+    <nav class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition cursor-pointer" title="開啟功能側邊欄">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchView('landing')">
+                    <img id="nav-logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-9 h-9 rounded-full object-cover border border-brand-500 shadow-xs">
+                    <div>
+                        <span class="font-extrabold text-base md:text-lg tracking-tight text-slate-900 block leading-none">myezlife<span class="text-brand-700">.com</span></span>
+                        <span class="text-[10px] text-slate-400 font-medium">自己網站自己做</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-3">
+                <button onclick="switchView('wizard')" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-brand-700 hover:bg-emerald-100 text-xs font-bold transition">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> AI 3步精靈
+                </button>
+                <button onclick="switchView('dashboard')" class="btn-glow text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-gauge-high"></i> 進入我的儀表板
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🌟 左側功能模組抽屜側邊欄 (Sidebar Drawer) -->
+    <aside id="sidebar" class="flex flex-col p-4 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-3 shrink-0">
+            <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-brand-700 flex items-center justify-center text-xs"><i class="fa-solid fa-sliders"></i></span>
+                功能與控制中樞
+            </h2>
+            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto pr-1 no-scrollbar">
+
+            <!-- 1. 網站理念與隱私說明 -->
+            <div class="bg-brand-700 p-3.5 rounded-2xl text-white space-y-2 shadow-sm">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('about-sub', this)">
+                    <span class="font-bold text-xs text-yellow-300 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved"></i> 隱私安全與簡居理念</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-yellow-300"></i>
+                </div>
+                <div id="about-sub" class="text-[11px] text-emerald-100 space-y-2 pt-2 border-t border-emerald-600/60" style="display: none;">
+                    <p><strong>💡 純前端入口：</strong>零廣告追蹤，所有設定100%儲存於本機 LocalStorage。</p>
+                    <p><strong>🔒 GAS 雲端同步：</strong>零伺服器費用，資料直接備份至個人 Google Drive 雲端。</p>
+                </div>
+            </div>
+
+            <!-- 2. 外觀與透明度設定 -->
+            <div class="bg-indigo-50/60 p-3.5 rounded-2xl border border-indigo-100 space-y-2.5">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('appearance-sub', this)">
+                    <span class="font-bold text-xs text-indigo-900 flex items-center gap-1.5"><i class="fa-solid fa-palette text-indigo-600"></i> 外觀、LOGO 與背景</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-indigo-600"></i>
+                </div>
+                <div id="appearance-sub" class="space-y-3 pt-2 border-t border-indigo-200/60" style="display: none;">
+                    <div>
+                        <label class="text-[11px] font-bold text-indigo-900 block mb-1">背景底色</label>
+                        <input type="color" id="bg-color-picker" value="#f8fafc" onchange="changeBackgroundColor(this.value)" class="w-full h-8 rounded-lg cursor-pointer border border-slate-200">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-indigo-900 block mb-1">背景圖片網址</label>
+                        <input type="url" id="bg-url-input" placeholder="https://..." class="w-full p-2 bg-white rounded-lg border border-slate-200 text-xs outline-none">
+                        <button onclick="applyBgUrl()" class="w-full mt-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded-lg transition">套用背景網址</button>
+                    </div>
+                    <div class="pt-1">
+                        <label class="flex items-center justify-between cursor-pointer text-xs">
+                            <span class="text-slate-700 font-medium">100% 卡片透明</span>
+                            <input type="checkbox" id="card-transparent-toggle" onchange="applyCardStyle()" class="rounded text-brand-700 w-4 h-4">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. GAS 雲端同步教學 modal 召喚按鈕 -->
+            <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200 space-y-2">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('gas-sub', this)">
+                    <span class="font-bold text-xs text-amber-900 flex items-center gap-1.5"><i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> GAS 雲端同步管理</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-amber-600"></i>
+                </div>
+                <div id="gas-sub" class="space-y-2 pt-2 border-t border-amber-200/60" style="display: none;">
+                    <input type="url" id="gas-url-input" placeholder="貼上 GAS Web App 網址..." class="w-full p-2 bg-white rounded-xl border border-amber-200 text-xs outline-none">
+                    <div class="flex gap-1.5">
+                        <button onclick="saveGasUrl()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-1.5 rounded-xl transition">儲存網址</button>
+                        <button onclick="syncFromCloud()" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white text-[11px] font-bold py-1.5 rounded-xl transition">立即同步</button>
+                    </div>
+                    <button onclick="openGasModal()" class="w-full text-amber-700 font-bold text-[11px] underline text-center block pt-1">📖 檢視完整建置教學與腳本</button>
+                </div>
+            </div>
+
+            <!-- 4. 自訂捷徑與分類新增 -->
+            <div class="bg-emerald-50/50 p-3.5 rounded-2xl border border-emerald-200/80 space-y-2">
+                <div class="flex items-center justify-between cursor-pointer" onclick="toggleSubMenu('add-app-sub', this)">
+                    <span class="font-bold text-xs text-emerald-900 flex items-center gap-1.5"><i class="fa-solid fa-square-plus text-brand-700"></i> 新增自訂 App 捷徑</span>
+                    <i class="fa-solid fa-chevron-down text-xs text-emerald-700"></i>
+                </div>
+                <div id="add-app-sub" class="space-y-2 pt-2 border-t border-emerald-200/60" style="display: none;">
+                    <input type="text" id="custom-app-name" placeholder="App 名稱" class="w-full p-2 bg-white rounded-xl border border-emerald-200 text-xs outline-none">
+                    <input type="url" id="custom-app-url" placeholder="網址 (https://...)" class="w-full p-2 bg-white rounded-xl border border-emerald-200 text-xs outline-none">
+                    <button onclick="addCustomApp()" class="w-full bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer">+ 新增至桌面</button>
+                </div>
+            </div>
+
+            <button onclick="clearAllLocalStorage()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-[11px] font-bold py-2 rounded-xl transition cursor-pointer mt-4">
+                🗑️ 重設並清除本機所有資料
+            </button>
+        </div>
+    </aside>
+
+    <!-- 🌟 主要內容容器切換區 -->
+    <div id="main-content-wrapper" class="flex-1">
+
+        <!-- ================================================================= -->
+        <!-- VIEW 1: HERO LANDING PAGE (高轉化門頁 & 實時試用) -->
+        <!-- ================================================================= -->
+        <section id="view-landing" class="space-y-16 pb-20">
+
+            <!-- Hero Banner -->
+            <div class="hero-gradient text-white pt-16 pb-24 px-4 relative overflow-hidden">
+                <!-- 背景光效裝飾 -->
+                <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute top-1/2 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="max-w-5xl mx-auto text-center space-y-6 relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur text-xs font-bold text-emerald-300">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 全新打造．100% 個人掌管首頁儀表板
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+                        自己網站自己做，<br class="sm:hidden">把<span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">數位掌控權</span>還給自己
+                    </h1>
+
+                    <p class="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+                        零廣告追蹤、零伺服器費用。結合極簡美學、個人圖文隨筆日誌、智慧影音牆與全台路況股市捷徑。
+                    </p>
+
+                    <!-- CTA 按鈕群 -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <button onclick="switchView('dashboard')" class="btn-glow text-white text-base font-extrabold px-8 py-4 rounded-2xl w-full sm:w-auto shadow-xl flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-rocket"></i> 🚀 立即體驗入口儀表板
+                        </button>
+                        <button onclick="switchView('wizard')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-base font-bold px-7 py-4 rounded-2xl w-full sm:w-auto transition backdrop-blur flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles text-emerald-300"></i> ✨ AI 嚮導個人化建置
+                        </button>
+                    </div>
+
+                    <!-- 三大承諾標籤 -->
+                    <div class="grid grid-cols-3 max-w-lg mx-auto pt-8 border-t border-white/10 text-xs text-slate-300 font-medium">
+                        <div><i class="fa-solid fa-lock text-emerald-400 mr-1"></i> LocalStorage 優先</div>
+                        <div><i class="fa-solid fa-ban text-emerald-400 mr-1"></i> 零廣告干擾</div>
+                        <div><i class="fa-solid fa-cloud text-emerald-400 mr-1"></i> 免費 GAS 同步</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🌟 實時可互動試用體驗區 (Instant Demo Sandbox) -->
+            <div class="max-w-4xl mx-auto px-4 -mt-16 relative z-20">
+                <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/80 space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-200/80 pb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <span class="text-xs font-bold text-slate-500 ml-2">即刻體驗區 / Live Preview Sandbox</span>
+                        </div>
+                        <span class="text-xs bg-emerald-100 text-brand-800 font-bold px-2.5 py-1 rounded-full">可點擊試用</span>
+                    </div>
+
+                    <!-- 搜尋列試用 -->
+                    <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2 bg-white p-2 rounded-2xl border border-slate-200 shadow-xs">
+                        <div class="pl-3 text-brand-700"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        <input type="text" name="q" placeholder="在此輸入搜尋主題 (例: 台北氣象, 台股)..." class="flex-1 text-xs sm:text-sm outline-none text-slate-700 bg-transparent">
+                        <button type="submit" class="bg-brand-700 text-white px-4 py-2 rounded-xl text-xs font-bold">搜尋</button>
+                    </form>
+
+                    <!-- 常用 App 試用面板 -->
+                    <div class="space-y-2">
+                        <div class="text-xs font-bold text-slate-500">常用捷徑展示 (點擊開啟對應服務)：</div>
+                        <div class="app-grid pt-1">
+                            <a href="https://www.cwa.gov.tw" target="_blank" class="app-item">
+                                <div class="app-box bg-gradient-to-br from-sky-400 to-blue-500 text-white"><i class="fa-solid fa-cloud-sun"></i></div>
+                                <span class="app-label">即時氣象</span>
+                            </a>
+                            <a href="https://1968.freeway.gov.tw" target="_blank" class="app-item">
+                                <div class="app-box bg-gradient-to-br from-blue-500 to-indigo-600 text-white"><i class="fa-solid fa-car"></i></div>
+                                <span class="app-label">國道1968</span>
+                            </a>
+                            <a href="https://tw.stock.yahoo.com" target="_blank" class="app-item">
+                                <div class="app-box bg-gradient-to-br from-purple-500 to-indigo-700 text-white"><i class="fa-solid fa-chart-line"></i></div>
+                                <span class="app-label">Yahoo股市</span>
+                            </a>
+                            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="app-item">
+                                <div class="app-box bg-gradient-to-br from-amber-400 to-orange-500 text-white"><i class="fa-solid fa-music"></i></div>
+                                <span class="app-label">好歌一直聽</span>
+                            </a>
+                            <button onclick="openVideoWallModal()" class="app-item">
+                                <div class="app-box bg-gradient-to-br from-emerald-500 to-teal-700 text-white"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                                <span class="app-label">個人影音牆</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🌟 核心功能亮點展示網格 (Feature Cards Grid) -->
+            <div class="max-w-6xl mx-auto px-4 space-y-10">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-black text-slate-900">為什麼選擇 myezlife.com？</h2>
+                    <p class="text-slate-500 text-xs sm:text-sm">整合全方位生活工具，告別繁雜的廣告與追蹤碼</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- 卡片 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-brand-700 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800">100% 隱私與掌控權</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            所有捷徑排序、自訂 App 與日記隨筆完全保存在您的本機瀏覽器 LocalStorage 中，無後端追蹤。
+                        </p>
+                    </div>
+
+                    <!-- 卡片 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800">GAS 雲端自動同步</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            免伺服器、免維護費！透過 Google Apps Script (GAS)，一鍵將設定同步至您個人的 Google 雲端硬碟。
+                        </p>
+                    </div>
+
+                    <!-- 卡片 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-md transition space-y-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800">靈感圖文與 Shorts 日誌</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            隨時記錄生活靈感，支援貼上圖片與 YouTube Shorts 直式短影音嵌入，自動適應直式9:16畫面。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 2: AI 3步感知建置精靈 (Wizard Mode from index-1102-01.html) -->
+        <!-- ================================================================= -->
+        <section id="view-wizard" class="max-w-2xl mx-auto px-4 py-8 space-y-6 hidden">
+
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-xl space-y-6">
+
+                <!-- 幕次 1: AI 時間感知 -->
+                <div id="scene-1" class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <span id="wizard-time-badge" class="text-xs font-bold text-brand-700 bg-emerald-50 px-3 py-1 rounded-full">
+                            <i class="fa-solid fa-clock"></i> 時間感測中...
+                        </span>
+                        <span class="text-xs text-slate-400 font-bold">1 / 3 幕</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="text-xs font-bold text-brand-700 tracking-wider">🤖 AI 專屬美學顧問</div>
+                        <h2 id="ai-typing-text" class="text-base sm:text-lg font-bold text-slate-800 min-h-[50px]"></h2>
+                    </div>
+
+                    <div id="scenario-options-container" class="space-y-3">
+                        <button onclick="applyWizardScenario('smart')" class="w-full p-4 rounded-2xl bg-white hover:bg-emerald-50 border border-slate-200 hover:border-brand-500 transition text-left flex items-center justify-between">
+                            <div>
+                                <div class="font-bold text-sm text-slate-800">⚡ 智慧推薦 (時間感知模式)</div>
+                                <div class="text-xs text-slate-500 mt-0.5">自動載入即時氣象、國道1968與好歌一直聽</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                        </button>
+                        <button onclick="applyWizardScenario('work')" class="w-full p-4 rounded-2xl bg-white hover:bg-emerald-50 border border-slate-200 hover:border-brand-500 transition text-left flex items-center justify-between">
+                            <div>
+                                <div class="font-bold text-sm text-slate-800">💼 專注工作與理財模式</div>
+                                <div class="text-xs text-slate-500 mt-0.5">自動載入 Yahoo股市、鉅亨網與即時氣象</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 幕次 2: 捷徑管理與選單勾選 -->
+                <div id="scene-2" class="space-y-6 hidden">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                        <span class="text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full">
+                            <i class="fa-solid fa-layer-group"></i> 內容區塊配置
+                        </span>
+                        <span class="text-xs text-slate-400 font-bold">2 / 3 幕</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 cursor-pointer">
+                            <input type="checkbox" id="wizard-cb-diary" checked class="w-4 h-4 text-brand-700 rounded">
+                            <div>
+                                <div class="text-xs font-bold text-slate-800">📖 個人靈感隨筆與圖文日誌</div>
+                                <div class="text-[10px] text-slate-500">提供發布與歷史對照</div>
+                            </div>
+                        </label>
+                        <label class="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 cursor-pointer">
+                            <input type="checkbox" id="wizard-cb-sponsor" checked class="w-4 h-4 text-brand-700 rounded">
+                            <div>
+                                <div class="text-xs font-bold text-slate-800">💖 贊助支援與延伸閱讀</div>
+                                <div class="text-[10px] text-slate-500">支持網站維護與隨機閱讀</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="flex gap-3 pt-4">
+                        <button onclick="switchWizardScene(1)" class="w-1/3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-2xl text-xs">上一步</button>
+                        <button onclick="switchWizardScene(3)" class="w-2/3 btn-glow text-white font-bold py-3 rounded-2xl text-xs">下一步：完成構建</button>
+                    </div>
+                </div>
+
+                <!-- 幕次 3: 構建完成 -->
+                <div id="scene-3" class="space-y-6 text-center py-4 hidden">
+                    <div class="w-16 h-16 bg-emerald-100 text-brand-700 rounded-full flex items-center justify-center text-3xl mx-auto">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-lg font-bold text-slate-800">專屬儀表板設置完成！</h3>
+                        <p class="text-xs text-slate-500">您的個人偏好已儲存至瀏覽器，立即開啓體驗。</p>
+                    </div>
+                    <button onclick="switchView('dashboard')" class="w-full btn-glow text-white font-bold py-4 rounded-2xl text-sm shadow-lg">
+                        🚀 前往我的獨立儀表板
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 3: FULL DASHBOARD MODE (完整實用儀表板 parity with index.html) -->
+        <!-- ================================================================= -->
+        <section id="view-dashboard" class="max-w-4xl mx-auto px-4 py-6 space-y-6 hidden">
+
+            <!-- 頂部綠色時鐘綠洲 Banner -->
+            <header class="bg-brand-700 text-white rounded-3xl p-5 flex items-center justify-between shadow-lg relative overflow-hidden">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="w-12 h-12 rounded-full border-2 border-white/80 overflow-hidden shadow-sm hover:scale-105 transition cursor-pointer">
+                        <img id="dashboard-logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="w-full h-full object-cover">
+                    </button>
+                    <div>
+                        <div id="dash-date" class="text-xs text-emerald-100 font-medium">2026年11月3日</div>
+                        <div id="dash-time" class="text-3xl font-black tracking-wider">00:00</div>
+                    </div>
+                </div>
+                <div class="bg-black/20 backdrop-blur px-3 py-1.5 rounded-xl border border-white/20 text-xs font-bold" id="dash-weekday">
+                    星期二
+                </div>
+            </header>
+
+            <!-- 1. Google 智慧搜尋卡片 -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
+                    <div class="pl-2 text-brand-700 text-lg"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <input type="text" name="q" placeholder="Google 搜尋您想尋求的解答..." class="flex-1 bg-transparent px-2 py-2 text-sm outline-none text-slate-700">
+                    <button type="submit" class="btn-glow text-white p-3 rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2. 精選影音與創作捷徑 -->
+            <div class="app-shortcut-card bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">精選影音與創作服務</div>
+                <div class="app-grid">
+                    <a href="https://www.cwa.gov.tw" target="_blank" class="app-item">
+                        <div class="app-box bg-gradient-to-br from-sky-400 to-blue-500 text-white"><i class="fa-solid fa-cloud-sun"></i></div>
+                        <span class="app-label">即時氣象</span>
+                    </a>
+                    <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="app-item">
+                        <div class="app-box bg-gradient-to-br from-amber-400 to-orange-500 text-white"><i class="fa-solid fa-music"></i></div>
+                        <span class="app-label">好歌一直聽</span>
+                    </a>
+                    <a href="https://myezlife.com/diary/index.html" target="_blank" class="app-item">
+                        <div class="app-box bg-gradient-to-br from-emerald-400 to-teal-600 text-white"><i class="fa-solid fa-book-open"></i></div>
+                        <span class="app-label">心情隨筆</span>
+                    </a>
+                    <button onclick="openVideoWallModal()" class="app-item">
+                        <div class="app-box bg-gradient-to-br from-green-500 to-emerald-700 text-white"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <span class="app-label">打造影音櫃</span>
+                    </button>
+                    <a href="https://myezlife.com/index_news.html" target="_blank" class="app-item">
+                        <div class="app-box bg-gradient-to-br from-amber-400 to-yellow-600 text-white"><i class="fa-solid fa-bolt"></i></div>
+                        <span class="app-label">焦點新聞</span>
+                    </a>
+                    <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="app-item">
+                        <div class="app-box bg-gradient-to-br from-blue-400 to-indigo-600 text-white"><i class="fa-solid fa-folder-open"></i></div>
+                        <span class="app-label">檔案總管</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. 自訂新增 App 捷徑容器區塊 -->
+            <div id="custom-apps-dash-container" class="app-shortcut-card bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3 hidden">
+                <div class="text-xs font-bold text-brand-700 uppercase tracking-wider mb-2">⭐ 個人自訂 App 捷徑</div>
+                <div id="custom-apps-grid" class="app-grid"></div>
+            </div>
+
+            <!-- 4. 個人靈感隨筆與圖文日誌區 -->
+            <div class="app-shortcut-card bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs"><i class="fa-solid fa-pen-nib"></i></span>
+                        個人靈感隨筆與圖文日誌
+                    </div>
+                    <span class="text-[11px] text-slate-400">支援 YouTube Shorts 9:16</span>
+                </div>
+
+                <div class="space-y-2.5 bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+                    <input type="text" id="post-title" placeholder="標題：今天的靈感或短評..." class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold outline-none focus:border-brand-700">
+                    <textarea id="post-content" placeholder="輸入隨筆心得..." class="w-full bg-white p-3 rounded-xl border border-slate-200 text-xs outline-none focus:border-brand-700" rows="3"></textarea>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <input type="url" id="post-img-url" placeholder="🖼️ 圖片網址 (https://...)" class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 outline-none">
+                        <input type="url" id="post-video-url" placeholder="🎬 YouTube / Shorts 影片網址" class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 outline-none">
+                    </div>
+
+                    <div class="flex justify-end pt-1">
+                        <button onclick="publishPost()" class="btn-glow text-white px-5 py-2 rounded-xl text-xs font-bold cursor-pointer">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> 發布隨筆
+                        </button>
+                    </div>
+                </div>
+
+                <div id="blog-posts-list" class="space-y-3 pt-2"></div>
+            </div>
+
+            <!-- 5. 贊助與版權提示 -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-2 text-xs text-slate-500">
+                <p class="font-bold text-slate-700">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
+                <p class="text-[11px] text-brand-800 bg-emerald-50 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
+                    ☕ 覺得好用嗎？歡迎分享給身邊的好友！
+                </p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- 🌟 手機版 Bottom Dock 快捷導覽欄 -->
+    <div class="sticky bottom-4 left-0 right-0 z-30 px-4 pointer-events-none">
+        <div class="max-w-md mx-auto bg-white/90 backdrop-blur-md border border-slate-200 shadow-xl rounded-full p-2 flex items-center justify-around pointer-events-auto">
+            <button onclick="switchView('landing')" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-700 px-3 py-1">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] font-bold">首頁</span>
+            </button>
+            <button onclick="switchView('wizard')" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-700 px-3 py-1">
+                <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                <span class="text-[10px] font-bold">AI 精靈</span>
+            </button>
+            <button onclick="switchView('dashboard')" class="flex flex-col items-center gap-1 text-brand-700 px-3 py-1">
+                <i class="fa-solid fa-gauge-high text-lg"></i>
+                <span class="text-[10px] font-bold">儀表板</span>
+            </button>
+            <button onclick="toggleSidebar()" class="flex flex-col items-center gap-1 text-slate-600 hover:text-brand-700 px-3 py-1">
+                <i class="fa-solid fa-sliders text-lg"></i>
+                <span class="text-[10px] font-bold">選單</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 🌟 Modal 1: 影音牆導覽彈窗 -->
+    <div id="videowall-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-fade hidden-modal">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                    <span>✨</span> 一鍵打造個人影音牆
+                </h3>
+                <button onclick="closeVideoWallModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                透過 Google 試算表 (CSV) 管理您喜愛的 YouTube 歌單與短影音，網站會自動智慧排序並提供點擊連續播放。
+            </p>
+            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" onclick="closeVideoWallModal()" class="btn-glow text-white text-xs font-bold py-3 px-4 rounded-xl block text-center shadow-md">
+                前往體驗影音牆 <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- 🌟 Modal 2: GAS 雲端同步教學彈窗 -->
+    <div id="gas-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 modal-fade hidden-modal">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl relative text-xs">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-code text-brand-700"></i> Google Apps Script (GAS) 部署腳本
+                </h3>
+                <button onclick="closeGasModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <ol class="list-decimal pl-4 space-y-1.5 text-slate-600 text-[11px]">
+                <li>開啟 Google 雲端硬碟 ➔ 新增「Google Apps Script」專案。</li>
+                <li>複製下方腳本程式碼並覆蓋取代專案預設內容。</li>
+                <li>點選右上角「部署」➔「新增部署作業」➔ 選擇「網頁應用程式 (Web App)」。</li>
+                <li>將存取權限設為<strong class="text-brand-700">「所有人 (Anyone)」</strong>並部署獲得 URL。</li>
+            </ol>
+
+            <div class="bg-slate-900 text-emerald-400 p-3 rounded-xl font-mono text-[10px] overflow-x-auto select-all max-h-48 leading-relaxed">
+<pre>function doGet(e) {
+  var fileName = "myezlife_backup.json";
+  var files = DriveApp.getFilesByName(fileName);
+  if (files.hasNext()) {
+    var content = files.next().getBlob().getDataAsString();
+    return ContentService.createTextOutput(content).setMimeType(ContentService.MimeType.JSON);
+  }
+  return ContentService.createTextOutput(JSON.stringify({})).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var fileName = "myezlife_backup.json";
+    var files = DriveApp.getFilesByName(fileName);
+    var file = files.hasNext() ? files.next() : DriveApp.createFile(fileName, "");
+    file.setContent(JSON.stringify(data, null, 2));
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="closeGasModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl">關閉教學</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌟 JavaScript 邏輯控制庫 -->
+    <script>
+        // 1. 視圖切換邏輯 (Landing / Wizard / Dashboard)
+        function switchView(viewName) {
+            document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-wizard').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.add('hidden');
+
+            if (viewName === 'landing') {
+                document.getElementById('view-landing').classList.remove('hidden');
+            } else if (viewName === 'wizard') {
+                document.getElementById('view-wizard').classList.remove('hidden');
+                initWizardAiText();
+            } else if (viewName === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 2. 時鐘與日期更新
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+            const dateStr = `${year}年${month}月${day}日`;
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            document.getElementById('dash-date').innerText = dateStr;
+            document.getElementById('dash-time').innerText = timeStr;
+            document.getElementById('dash-weekday').innerText = weekdays[now.getDay()];
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // 3. 側邊欄與選單開關
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('backdrop');
+            const isOpen = sidebar.classList.contains('show-sidebar');
+
+            if (isOpen) {
+                sidebar.classList.remove('show-sidebar');
+                backdrop.classList.remove('show-backdrop');
+            } else {
+                sidebar.classList.add('show-sidebar');
+                backdrop.classList.add('show-backdrop');
+            }
+        }
+
+        function toggleSubMenu(id, btn) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        // 4. 外觀自訂 (背景底色、圖片、卡片透明度)
+        function changeBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+            document.body.style.backgroundImage = 'none';
+            localStorage.setItem('myezlife_bg_color', color);
+        }
+
+        function applyBgUrl() {
+            const url = document.getElementById('bg-url-input').value.trim();
+            if (!url) return;
+            document.body.style.backgroundImage = `url('${url}')`;
+            localStorage.setItem('myezlife_bg_url', url);
+            alert('✅ 已套用背景圖片！');
+        }
+
+        function applyCardStyle() {
+            const isTransparent = document.getElementById('card-transparent-toggle').checked;
+            document.querySelectorAll('.app-shortcut-card').forEach(card => {
+                if (isTransparent) {
+                    card.style.backgroundColor = 'transparent';
+                    card.style.borderColor = 'transparent';
+                    card.style.boxShadow = 'none';
+                } else {
+                    card.style.backgroundColor = '#ffffff';
+                    card.style.borderColor = '#e2e8f0';
+                    card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+                }
+            });
+            localStorage.setItem('myezlife_card_transparent', isTransparent);
+        }
+
+        // 5. Modal 控制
+        function openVideoWallModal() { document.getElementById('videowall-modal').classList.remove('hidden-modal'); }
+        function closeVideoWallModal() { document.getElementById('videowall-modal').classList.add('hidden-modal'); }
+        function openGasModal() { document.getElementById('gas-modal').classList.remove('hidden-modal'); }
+        function closeGasModal() { document.getElementById('gas-modal').classList.add('hidden-modal'); }
+
+        // 6. AI 3 步精靈邏輯 (from index-1102-01.html)
+        function initWizardAiText() {
+            const hour = new Date().getHours();
+            let msg = "";
+            if (hour >= 5 && hour < 12) {
+                msg = "早安！感測到晨間時段，已為您準備好氣象預報與國道路況。";
+            } else if (hour >= 12 && hour < 18) {
+                msg = "午好！已為您搭配台股股市、新聞與氣象捷徑。";
+            } else {
+                msg = "晚上好！辛苦了，為您推薦放鬆的好歌與影劇牆。";
+            }
+            document.getElementById('wizard-time-badge').innerText = `時間感測: ${hour}:00`;
+            document.getElementById('ai-typing-text').innerText = msg;
+        }
+
+        function switchWizardScene(num) {
+            document.getElementById('scene-1').classList.add('hidden');
+            document.getElementById('scene-2').classList.add('hidden');
+            document.getElementById('scene-3').classList.add('hidden');
+            document.getElementById(`scene-${num}`).classList.remove('hidden');
+        }
+
+        function applyWizardScenario(type) {
+            switchWizardScene(2);
+        }
+
+        // 7. 自訂 App 捷徑管理 (LocalStorage 持久化)
+        function getCustomApps() {
+            return JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+        }
+
+        function addCustomApp() {
+            const name = document.getElementById('custom-app-name').value.trim();
+            let url = document.getElementById('custom-app-url').value.trim();
+            if (!name || !url) { alert('請輸入完整名稱與網址！'); return; }
+            if (!url.startsWith('http')) url = 'https://' + url;
+
+            const apps = getCustomApps();
+            apps.push({ name, url });
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(apps));
+
+            document.getElementById('custom-app-name').value = '';
+            document.getElementById('custom-app-url').value = '';
+            renderCustomApps();
+            alert('✅ 捷徑已成功新增！');
+        }
+
+        function removeCustomApp(idx) {
+            const apps = getCustomApps();
+            apps.splice(idx, 1);
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(apps));
+            renderCustomApps();
+        }
+
+        function renderCustomApps() {
+            const apps = getCustomApps();
+            const container = document.getElementById('custom-apps-dash-container');
+            const grid = document.getElementById('custom-apps-grid');
+
+            if (apps.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            grid.innerHTML = apps.map((app, idx) => `
+                <div class="app-item relative group">
+                    <a href="${app.url}" target="_blank" class="flex flex-col items-center">
+                        <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white"><i class="fa-solid fa-globe"></i></div>
+                        <span class="app-label">${app.name}</span>
+                    </a>
+                    <button onclick="removeCustomApp(${idx})" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition">×</button>
+                </div>
+            `).join('');
+        }
+
+        // 8. 心情隨筆圖文與 Shorts 日誌邏輯
+        function getPosts() {
+            return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]');
+        }
+
+        function publishPost() {
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+            const imgUrl = document.getElementById('post-img-url').value.trim();
+            const videoUrl = document.getElementById('post-video-url').value.trim();
+
+            if (!title && !content) { alert('請輸入標題或內文！'); return; }
+
+            let videoEmbed = '';
+            let isShorts = false;
+
+            if (videoUrl) {
+                if (videoUrl.includes('/shorts/')) {
+                    const match = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+                    if (match && match[1]) {
+                        videoEmbed = `https://www.youtube.com/embed/${match[1]}`;
+                        isShorts = true;
+                    }
+                } else {
+                    const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                    if (match && match[2] && match[2].length === 11) {
+                        videoEmbed = `https://www.youtube.com/embed/${match[2]}`;
+                    }
+                }
+            }
+
+            const now = new Date();
+            const posts = getPosts();
+            posts.unshift({
+                id: 'post-' + Date.now(),
+                title: title || '無標題隨筆',
+                content,
+                imgUrl,
+                videoEmbed,
+                isShorts,
+                date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+            });
+
+            localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts));
+
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('post-img-url').value = '';
+            document.getElementById('post-video-url').value = '';
+
+            renderPosts();
+        }
+
+        function deletePost(id) {
+            if (confirm('確定要刪除這篇隨筆日誌嗎？')) {
+                const posts = getPosts().filter(p => p.id !== id);
+                localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts));
+                renderPosts();
+            }
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('blog-posts-list');
+            const posts = getPosts();
+
+            if (posts.length === 0) {
+                container.innerHTML = `<div class="text-xs text-slate-400 text-center py-4 bg-slate-50 rounded-xl italic">目前尚無發表隨筆</div>`;
+                return;
+            }
+
+            container.innerHTML = posts.map(p => `
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 relative">
+                    <div class="flex justify-between items-start border-b border-slate-200 pb-2">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs sm:text-sm">${p.title}</h4>
+                            <span class="text-[10px] text-slate-400"><i class="fa-regular fa-clock"></i> ${p.date}</span>
+                        </div>
+                        <button onclick="deletePost('${p.id}')" class="text-rose-400 hover:text-rose-600 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    ${p.content ? `<p class="text-xs text-slate-600 whitespace-pre-wrap leading-relaxed">${p.content}</p>` : ''}
+                    ${p.imgUrl ? `<div class="rounded-xl overflow-hidden border border-slate-200 max-h-60 flex justify-center bg-black/5"><img src="${p.imgUrl}" class="w-full object-cover"></div>` : ''}
+                    ${p.videoEmbed ? `
+                        <div class="${p.isShorts ? 'shorts-embed-container' : 'relative w-full overflow-hidden rounded-xl border border-slate-200'}" ${!p.isShorts ? 'style="padding-top: 56.25%;"' : ''}>
+                            <iframe class="${p.isShorts ? 'w-full h-full' : 'absolute top-0 left-0 w-full h-full'}" src="${p.videoEmbed}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // 9. GAS 雲端同步輔助
+        function saveGasUrl() {
+            const url = document.getElementById('gas-url-input').value.trim();
+            localStorage.setItem('myezlife_gas_url', url);
+            alert('✅ 雲端同步 URL 已儲存！');
+        }
+
+        async function syncFromCloud() {
+            const url = localStorage.getItem('myezlife_gas_url');
+            if (!url) { alert('請先設定並儲存 GAS 部署 URL！'); return; }
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.myezlife_custom_apps) localStorage.setItem('myezlife_custom_apps', JSON.stringify(data.myezlife_custom_apps));
+                if (data.myezlife_blog_posts) localStorage.setItem('myezlife_blog_posts', JSON.stringify(data.myezlife_blog_posts));
+                alert('🎉 雲端同步完成！');
+                location.reload();
+            } catch (err) {
+                alert('❌ 讀取失敗，請確認 GAS URL 是否將權限開放給所有人 (Anyone)。');
+            }
+        }
+
+        function clearAllLocalStorage() {
+            if (confirm('確定要清空本機暫存並恢復預設設定嗎？')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // 頁面初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('myezlife_bg_color')) {
+                document.body.style.backgroundColor = localStorage.getItem('myezlife_bg_color');
+            }
+            if (localStorage.getItem('myezlife_bg_url')) {
+                document.body.style.backgroundImage = `url('${localStorage.getItem('myezlife_bg_url')}')`;
+            }
+            if (localStorage.getItem('myezlife_gas_url')) {
+                document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
+            }
+            renderCustomApps();
+            renderPosts();
+        });
+    </script>
+</body>
+</html>
