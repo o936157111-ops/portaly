@@ -305,40 +305,58 @@
         <!-- ================================================================= -->
         <section id="view-landing" class="space-y-16 pb-20">
 
-            <!-- Hero Banner -->
-            <div class="hero-gradient text-white pt-16 pb-24 px-4 relative overflow-hidden">
-                <!-- 背景光效裝飾 -->
-                <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute top-1/2 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <!-- Hero Banner (重新優化排版) -->
+            <div class="hero-gradient text-white pt-14 pb-28 px-4 relative overflow-hidden">
+                <!-- 背景光影裝飾 -->
+                <div class="absolute -top-24 -left-24 w-96 h-96 bg-brand-500/25 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute top-1/2 -right-20 w-80 h-80 bg-teal-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
-                <div class="max-w-5xl mx-auto text-center space-y-6 relative z-10">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur text-xs font-bold text-emerald-300">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> 全新打造．100% 個人掌管首頁儀表板
+                <div class="max-w-4xl mx-auto text-center space-y-7 relative z-10">
+                    <!-- 頂部高質感 Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-inner text-xs font-bold text-emerald-300">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>純前端架構・個人資料零追蹤</span>
                     </div>
 
-                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
-                        自己網站自己做，<br class="sm:hidden">把<span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">數位掌控權</span>還給自己
+                    <!-- 主標題 (清晰排版與醒目高亮) -->
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight md:leading-tight">
+                        自己網站自己做<br class="hidden sm:inline">
+                        <span class="inline-block mt-2 sm:mt-0 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">
+                            把數位掌控權還給自己
+                        </span>
                     </h1>
 
-                    <p class="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-                        零廣告追蹤、零伺服器費用。結合極簡美學、個人圖文隨筆日誌、智慧影音牆與全台路況股市捷徑。
-                    </p>
+                    <!-- 副標題與特色標籤 (清晰簡潔重排) -->
+                    <div class="space-y-4 max-w-2xl mx-auto">
+                        <p class="text-sm sm:text-base md:text-lg text-emerald-100/90 font-medium tracking-wide">
+                            100% 個人隱私保護・零廣告追蹤・零伺服器費用
+                        </p>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+                            整合極簡美學、個人圖文日誌隨筆、智慧影音牆與全台交通股市生活捷徑
+                        </p>
+                    </div>
 
-                    <!-- CTA 按鈕群 -->
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                        <button onclick="switchView('dashboard')" class="btn-glow text-white text-base font-extrabold px-8 py-4 rounded-2xl w-full sm:w-auto shadow-xl flex items-center justify-center gap-2 cursor-pointer">
+                    <!-- CTA 操作按鈕群 -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3">
+                        <button onclick="switchView('dashboard')" class="btn-glow text-white text-sm sm:text-base font-extrabold px-8 py-3.5 rounded-2xl w-full sm:w-auto shadow-xl flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-rocket"></i> 🚀 立即體驗入口儀表板
                         </button>
-                        <button onclick="switchView('wizard')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-base font-bold px-7 py-4 rounded-2xl w-full sm:w-auto transition backdrop-blur flex items-center justify-center gap-2 cursor-pointer">
+                        <button onclick="switchView('wizard')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm sm:text-base font-bold px-7 py-3.5 rounded-2xl w-full sm:w-auto transition backdrop-blur flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-wand-magic-sparkles text-emerald-300"></i> ✨ AI 嚮導個人化建置
                         </button>
                     </div>
 
-                    <!-- 三大承諾標籤 -->
-                    <div class="grid grid-cols-3 max-w-lg mx-auto pt-8 border-t border-white/10 text-xs text-slate-300 font-medium">
-                        <div><i class="fa-solid fa-lock text-emerald-400 mr-1"></i> LocalStorage 優先</div>
-                        <div><i class="fa-solid fa-ban text-emerald-400 mr-1"></i> 零廣告干擾</div>
-                        <div><i class="fa-solid fa-cloud text-emerald-400 mr-1"></i> 免費 GAS 同步</div>
+                    <!-- 三大保障標籤卡片 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto pt-6 border-t border-white/10 text-xs text-slate-200 font-medium">
+                        <div class="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                            <i class="fa-solid fa-shield-halved text-emerald-400"></i> 本機 LocalStorage 優先
+                        </div>
+                        <div class="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                            <i class="fa-solid fa-ban text-emerald-400"></i> 全站無惱人廣告
+                        </div>
+                        <div class="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                            <i class="fa-solid fa-cloud text-emerald-400"></i> 免費 GAS 雲端自動同步
+                        </div>
                     </div>
                 </div>
             </div>
