@@ -895,7 +895,7 @@
                     <div class="bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-200/80 rounded-xl p-3.5 space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wide flex items-center gap-1"><i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦</span>
-                            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">✨ 每次重新整理隨機推薦</span>
+                            <span onclick="initRandomRecommendation()" class="text-[10px] bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-bold cursor-pointer transition" title="點擊重新隨機推薦">🎲 點我隨機換一組</span>
                         </div>
                         <div id="random-recommendation-box" class="space-y-2"></div>
                     </div>
@@ -1501,15 +1501,32 @@
                 </div>`).join('');
         }
 
-        function initRandomRecommendation() {
-            const recs = [
-                { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份。", url: "https://myezlife.com/diary/index.html", tag: "熱門" },
-                { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡。", url: "https://myezlife.com/ai-greeting-app/", tag: "工具" },
-                { title: "📰 新聞劃重點", desc: "快速掌握時事重點。", url: "https://myezlife.com/index_news.html", tag: "資訊" }
-            ];
-            const box = document.getElementById('random-recommendation-box');
-            if (box) box.innerHTML = recs.map(item => `<a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition"><div class="flex items-center justify-between mb-0.5"><span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">${item.title}</span><span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span></div><p class="text-[11px] text-slate-600">${item.desc}</p></a>`).join('');
-        }
+       function initRandomRecommendation() {
+    const recs = [
+        { title: "🌱 心情隨筆與待辦日記", desc: "100% 本機優先與雲端自動備份。", url: "https://myezlife.com/diary/index.html", tag: "熱門" },
+        { title: "🌻 輕鬆製作精美問候圖", desc: "一鍵產生早安問候圖卡。", url: "https://myezlife.com/ai-greeting-app/", tag: "工具" },
+        { title: "📰 新聞劃重點", desc: "快速掌握時事重點。", url: "https://myezlife.com/index_news.html", tag: "資訊" },
+        { title: "🎵 好歌一直聽", desc: "支援一鍵隨機播放與連續看。", url: "https://myezlife.com/goldmelody_csv.html", tag: "影音" },
+        { title: "📂 個人檔案總管", desc: "方便管理您的本機與網頁暫存。", url: "https://myezlife.com/FileExplorer.html", tag: "系統" },
+        { title: "📚 生活圖書館", desc: "溫馨舒適的線上閱讀空間。", url: "https://myezlife.com/mylibrary.html", tag: "閱讀" }
+    ];
+    
+    // 隨機打亂並取前 3 筆
+    const shuffled = [...recs].sort(() => 0.5 - Math.random()).slice(0, 3);
+    
+    const box = document.getElementById('random-recommendation-box');
+    if (box) {
+        box.innerHTML = shuffled.map(item => `
+            <a href="${item.url}" target="_blank" class="block group bg-white border border-emerald-100 hover:border-emerald-300 rounded-lg p-2.5 shadow-sm transition">
+                <div class="flex items-center justify-between mb-0.5">
+                    <span class="text-xs font-bold text-slate-900 group-hover:text-emerald-700">${item.title}</span>
+                    <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
+                </div>
+                <p class="text-[11px] text-slate-600">${item.desc}</p>
+            </a>
+        `).join('');
+    }
+}
 
         // 初始化載入儲存的設定
         if (localStorage.getItem('myezlife_custom_logo')) {
