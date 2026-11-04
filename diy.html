@@ -99,7 +99,7 @@
             <button onclick="toggleSidebar()" class="text-stone-400 hover:text-stone-700 text-sm font-bold cursor-pointer">✕</button>
         </div>
 
-        <!-- 官網同款：網站使用與隱私說明折疊區塊 (完整未簡化) -->
+        <!-- 網站使用與隱私說明折疊區塊 -->
         <div class="bg-emerald-700 rounded-2xl text-white overflow-hidden shadow-md">
             <button onclick="togglePrivacyAccordion()" class="w-full p-3.5 flex items-center justify-between font-bold text-xs bg-emerald-800/80 hover:bg-emerald-800 cursor-pointer border-b border-emerald-600/50">
                 <span class="flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> 網站使用與隱私說明</span>
@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <!-- 🌟 Google 雲端同步 (GAS) 建置教學指南折疊區塊 (完整未簡化) -->
+        <!-- 🌟 Google 雲端同步 (GAS) 建置教學指南折疊區塊 -->
         <div class="bg-stone-100 rounded-2xl text-stone-800 overflow-hidden shadow-sm border border-stone-200">
             <button onclick="toggleGasAccordion()" class="w-full p-3.5 flex items-center justify-between font-bold text-xs bg-stone-200/80 hover:bg-stone-200 cursor-pointer border-b border-stone-300/60 text-stone-800">
                 <span class="flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i> Google 雲端同步 (GAS) 建置教學指南</span>
@@ -308,7 +308,7 @@
 
     </div>
 
-    <!-- 🌟 完全獨立的新首頁容器 (頂部與底部固定，中間區塊可上下移動) -->
+    <!-- 🌟 完全獨立的新首頁容器 -->
     <main id="standalone-dashboard-page" class="w-full max-w-2xl space-y-4 hidden-step min-h-vh py-2 step-fade-in">
         
         <!-- 💡 頂部固定 Header 區塊 -->
@@ -318,7 +318,7 @@
                     <img id="standalone-logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" class="w-10 h-10 rounded-full border border-white/30 object-cover" alt="Logo">
                 </button>
                 <div>
-                    <div id="page-date-text" class="text-[10px] text-emerald-300 font-medium">2026年11月2日</div>
+                    <div id="page-date-text" class="text-[10px] text-emerald-300 font-medium">載入中...</div>
                     <div id="page-time-text" class="text-xl font-extrabold text-white leading-none">00:00</div>
                 </div>
             </div>
@@ -365,7 +365,7 @@
                 <div class="flex flex-col items-center justify-center">
                     <a href="https://myezlife.com" target="_blank" class="flex flex-col items-center text-decoration-none">
                         <div class="app-box bg-gradient-to-br from-emerald-400 to-teal-600"><i class="fa-solid fa-house text-white"></i></div>
-                        <span class="text-xs font-semibold mt-2 text-center text-stone-700">生活首貢</span>
+                        <span class="text-xs font-semibold mt-2 text-center text-stone-700">生活首頁</span>
                     </a>
                 </div>
                 <div class="flex flex-col items-center justify-center">
@@ -498,7 +498,6 @@ function doPost(e) {
 
         const DEFAULT_LOGO = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
-        // 🌟 完全還原且包含 3 個延伸閱讀推薦的完整贊助區塊結構
         const FULL_SPONSOR_HTML = `
             <div class="space-y-4">
                 <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-between text-xs text-emerald-900 shadow-xs">
@@ -517,13 +516,11 @@ function doPost(e) {
                         <a href="https://myezlife.com/welcome.html" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition text-decoration-none">了解更多</a>
                     </div>
 
-                    <!-- AdSense / 贊助推薦廣告預留區塊 -->
                     <div class="p-4 bg-stone-50 rounded-xl border border-dashed border-stone-300 text-center space-y-1">
                         <div class="text-[10px] font-bold tracking-wider text-stone-400 uppercase">Sponsor & Advertisement</div>
                         <div class="text-xs text-stone-500">贊助廠商推薦與 Google AdSense 廣告區塊</div>
                     </div>
 
-                    <!-- 延伸閱讀與精彩內容推薦 (完整 3 個項目) -->
                     <div class="pt-2 border-t border-stone-200 space-y-2">
                         <div class="text-xs font-bold text-stone-600 flex items-center gap-1.5">
                             <i class="fa-solid fa-compass text-emerald-600"></i> 延伸閱讀與精彩內容推薦
@@ -544,7 +541,6 @@ function doPost(e) {
             </div>
         `;
 
-        // 🌟 包含圖片 URL 輸入框與 YouTube 影音嵌入語法解析的完整隨筆日誌 HTML 結構
         const FULL_DIARY_HTML = `
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
@@ -578,7 +574,12 @@ function doPost(e) {
 
         let activeSections = [];
 
-        // 🌟 自動偵測：若 LocalStorage 已有儲存的版面結構，直接進入首頁
+        // 🌟 即時儲存目前的版面與資料結構至 localStorage
+        function saveCurrentSectionsState() {
+            localStorage.setItem('myezlife_active_sections', JSON.stringify(activeSections));
+        }
+
+        // 自動讀取儲存資料與還原頁面
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('myezlife.com_custom_logo')) {
                 updateLogoSrc(localStorage.getItem('myezlife.com_custom_logo'));
@@ -600,7 +601,6 @@ function doPost(e) {
                 }
             }
 
-            // 無儲存紀錄時才載入 AI 引導第一幕
             initAiSensing();
         });
 
@@ -650,6 +650,12 @@ function doPost(e) {
             const timeStr = `${h}:${m}`;
             const badge = document.getElementById('time-badge');
             if (badge) badge.innerHTML = `<i class="fa-solid fa-clock mr-1"></i> 感測時間：${timeStr}`;
+            
+            const pTime = document.getElementById('page-time-text');
+            const pDate = document.getElementById('page-date-text');
+            if (pTime) pTime.innerText = timeStr;
+            if (pDate) pDate.innerText = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+
             return { hour: now.getHours(), timeStr };
         }
 
@@ -707,6 +713,7 @@ function doPost(e) {
                     { title: '影音與心靈放鬆', styleClass: 'card-bg-glass', apps: ['music', 'drama', 'weather'].map(k => ({ ...APPS_DB[k], id: k })) }
                 ];
             }
+            saveCurrentSectionsState();
             syncPresetCheckboxes();
             updateSectionSelectDropdown();
             renderWizardSections();
@@ -729,6 +736,7 @@ function doPost(e) {
                             type: 'content_card',
                             styleClass: 'card-bg-glass',
                             contentHtml: FULL_DIARY_HTML,
+                            posts: [],
                             apps: []
                         });
                     }
@@ -749,11 +757,11 @@ function doPost(e) {
                 label.classList.remove('bg-indigo-50', 'border-indigo-300', 'bg-emerald-50', 'border-emerald-300');
                 activeSections = activeSections.filter(s => s.presetKey !== type);
             }
+            saveCurrentSectionsState();
             updateSectionSelectDropdown();
             renderWizardSections();
         }
 
-        // 解析 YouTube 網址以提取 Video ID
         function getYouTubeId(url) {
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
@@ -761,12 +769,11 @@ function doPost(e) {
         }
 
         function publishDiaryPost(btn) {
-            const card = btn.closest('.space-y-4');
+            const card = btn.closest('.glass-card, .space-y-4');
             const titleInput = card.querySelector('#diary-title-input');
             const contentInput = card.querySelector('#diary-content-input');
             const imgInput = card.querySelector('#diary-img-input');
             const ytInput = card.querySelector('#diary-yt-input');
-            const historyList = card.querySelector('.diary-history-list');
 
             const title = titleInput.value.trim();
             const content = contentInput.value.trim();
@@ -776,43 +783,19 @@ function doPost(e) {
             if (!title && !content && !imgUrl && !ytUrl) { alert('請至少輸入標題、隨筆內容、圖片網址或 YouTube 影片！'); return; }
 
             const nowStr = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            if (historyList.querySelector('.italic')) { historyList.innerHTML = ''; }
 
-            let mediaHtml = '';
-            if (imgUrl) {
-                mediaHtml += `<div class="rounded-xl overflow-hidden my-2 border border-stone-200"><img src="${imgUrl}" class="w-full max-h-60 object-cover" alt="日誌圖片"></div>`;
+            const diarySection = activeSections.find(s => s.presetKey === 'diary');
+            if (diarySection) {
+                if (!diarySection.posts) diarySection.posts = [];
+                diarySection.posts.unshift({ title, content, imgUrl, ytUrl, dateStr: nowStr });
+                saveCurrentSectionsState();
+                renderStandaloneSections();
             }
-
-            if (ytUrl) {
-                const ytId = getYouTubeId(ytUrl);
-                if (ytId) {
-                    mediaHtml += `
-                        <div class="aspect-video w-full rounded-xl overflow-hidden my-2 border border-stone-200 shadow-xs">
-                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        </div>
-                    `;
-                }
-            }
-
-            const postItem = document.createElement('div');
-            postItem.className = 'p-3.5 bg-white rounded-xl border border-stone-200 space-y-1.5 shadow-xs step-fade-in';
-            postItem.innerHTML = `
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-stone-800">${title || '未命名隨筆'}</span>
-                    <span class="text-[10px] text-stone-400">${nowStr}</span>
-                </div>
-                ${content ? `<p class="text-xs text-stone-600 leading-relaxed whitespace-pre-wrap">${content}</p>` : ''}
-                ${mediaHtml}
-            `;
-            historyList.prepend(postItem);
 
             titleInput.value = '';
             contentInput.value = '';
             if (imgInput) imgInput.value = '';
             if (ytInput) ytInput.value = '';
-
-            // 儲存最新的版面狀態 (包含發布的圖文影音隨筆內容)
-            saveCurrentSectionsState();
         }
 
         function syncPresetCheckboxes() {
@@ -859,6 +842,7 @@ function doPost(e) {
             if (!title) { alert('請輸入區塊名稱！'); return; }
 
             activeSections.push({ title: title, styleClass: styleSelect.value, apps: [] });
+            saveCurrentSectionsState();
             nameInput.value = '';
             updateSectionSelectDropdown();
             renderWizardSections();
@@ -884,6 +868,7 @@ function doPost(e) {
                 bg: 'bg-gradient-to-br from-emerald-500 to-teal-700'
             });
 
+            saveCurrentSectionsState();
             document.getElementById('custom-app-name').value = '';
             document.getElementById('custom-app-url').value = '';
             renderWizardSections();
@@ -892,12 +877,14 @@ function doPost(e) {
         function removeSection(secIdx) {
             const removed = activeSections.splice(secIdx, 1)[0];
             if (removed && removed.presetKey) { syncPresetCheckboxes(); }
+            saveCurrentSectionsState();
             updateSectionSelectDropdown();
             renderWizardSections();
         }
 
         function removeAppFromSection(secIdx, appIdx) {
             activeSections[secIdx].apps.splice(appIdx, 1);
+            saveCurrentSectionsState();
             renderWizardSections();
         }
 
@@ -906,8 +893,8 @@ function doPost(e) {
                 const temp = activeSections[index];
                 activeSections[index] = activeSections[index - 1];
                 activeSections[index - 1] = temp;
-                renderStandaloneSections();
                 saveCurrentSectionsState();
+                renderStandaloneSections();
             }
         }
 
@@ -916,8 +903,8 @@ function doPost(e) {
                 const temp = activeSections[index];
                 activeSections[index] = activeSections[index + 1];
                 activeSections[index + 1] = temp;
-                renderStandaloneSections();
                 saveCurrentSectionsState();
+                renderStandaloneSections();
             }
         }
 
@@ -976,7 +963,60 @@ function doPost(e) {
                 card.className = `glass-card p-6 space-y-4 ${sec.styleClass || 'card-bg-glass'} relative`;
                 
                 let bodyContent = '';
-                if (sec.type === 'content_card' || sec.type === 'sponsor_card') {
+                if (sec.type === 'content_card') {
+                    let historyPostsHtml = '';
+                    if (sec.posts && sec.posts.length > 0) {
+                        sec.posts.forEach(p => {
+                            let mediaHtml = '';
+                            if (p.imgUrl) mediaHtml += `<div class="rounded-xl overflow-hidden my-2 border border-stone-200"><img src="${p.imgUrl}" class="w-full max-h-60 object-cover" alt="日誌圖片"></div>`;
+                            if (p.ytUrl) {
+                                const ytId = getYouTubeId(p.ytUrl);
+                                if (ytId) mediaHtml += `<div class="aspect-video w-full rounded-xl overflow-hidden my-2 border border-stone-200 shadow-xs"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${ytId}" frameborder="0" allowfullscreen></iframe></div>`;
+                            }
+                            historyPostsHtml += `
+                                <div class="p-3.5 bg-white rounded-xl border border-stone-200 space-y-1.5 shadow-xs">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-stone-800">${p.title || '未命名隨筆'}</span>
+                                        <span class="text-[10px] text-stone-400">${p.dateStr}</span>
+                                    </div>
+                                    ${p.content ? `<p class="text-xs text-stone-600 leading-relaxed whitespace-pre-wrap">${p.content}</p>` : ''}
+                                    ${mediaHtml}
+                                </div>
+                            `;
+                        });
+                    } else {
+                        historyPostsHtml = `<div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-center text-xs text-stone-400 italic">尚無隨筆文章</div>`;
+                    }
+
+                    bodyContent = `
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] text-stone-400">支援圖片附檔與 YouTube 影音嵌入（雲端同步）</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <input type="text" id="diary-title-input" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-white p-3 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500 shadow-xs">
+                                <textarea id="diary-content-input" rows="3" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-white p-3 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500 shadow-xs resize-none"></textarea>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    <input type="url" id="diary-img-input" placeholder="🖼️ 貼上圖片網址 (https://...)" class="bg-white p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500">
+                                    <input type="url" id="diary-yt-input" placeholder="🎬 貼上 YouTube 影片網址" class="bg-white p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 outline-none focus:border-indigo-500">
+                                </div>
+
+                                <button onclick="publishDiaryPost(this)" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer shadow-md flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> 發布圖文與影音隨筆
+                                </button>
+                            </div>
+                            <div class="border-t border-stone-200 pt-3 space-y-2">
+                                <div class="text-xs font-bold text-stone-600 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> 歷史隨筆日誌清單
+                                </div>
+                                <div class="diary-history-list space-y-3">
+                                    ${historyPostsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (sec.type === 'sponsor_card') {
                     bodyContent = sec.contentHtml;
                 } else {
                     let gridHtml = '<div class="app-grid">';
@@ -1021,33 +1061,23 @@ function doPost(e) {
             }
         }
 
-        function saveCurrentSectionsState() {
-            localStorage.setItem('myezlife_active_sections', JSON.stringify(activeSections));
-        }
-
         function openStandalonePage() {
             if (activeSections.length === 0) {
                 activeSections = [
                     { title: 'AI 智慧推薦首選', styleClass: 'card-bg-glass', apps: ['weather', 'highway', 'music'].map(k => ({ ...APPS_DB[k], id: k })) }
                 ];
             }
-            
-            // 💡 關鍵：開啓獨立首頁時，將目前的狀態寫入 LocalStorage，實現跨頁面/重開網頁的永久記憶
             saveCurrentSectionsState();
-
             renderStandaloneSections();
             document.getElementById('wizard-header').classList.add('hidden-step');
             document.getElementById('interactive-stage').classList.add('hidden-step');
             const page = document.getElementById('standalone-dashboard-page');
             page.classList.remove('hidden-step');
-            const now = new Date();
-            document.getElementById('page-date-text').innerText = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
-            document.getElementById('page-time-text').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            updateLiveTime();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function restartWizard() {
-            // 重新導引時清除本機記憶
             localStorage.removeItem('myezlife_active_sections');
             document.getElementById('standalone-dashboard-page').classList.add('hidden-step');
             document.getElementById('wizard-header').classList.remove('hidden-step');
