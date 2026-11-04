@@ -10,7 +10,7 @@
     <!-- 💡 請在此處貼上您的 Google AdSense 主腳本 -->
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f0f4f8;
             background-size: cover;
             background-position: center;
@@ -32,12 +32,19 @@
         }
 
         @media (max-width: 767px) {
-            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar select {
-                font-size: 0.95rem !important;
+            body { font-size: 1.15rem !important; }
+            .text-xs { font-size: 0.95rem !important; }
+            .text-sm { font-size: 1.05rem !important; }
+            .text-base { font-size: 1.15rem !important; }
+            .text-lg { font-size: 1.25rem !important; }
+            .app-label { font-size: 0.95rem !important; max-width: 90px !important; }
+            
+            #sidebar span, #sidebar label, #sidebar div, #sidebar input, #sidebar button, #sidebar select, #sidebar .text-\[11px\], #sidebar .text-xs {
+                font-size: 1.05rem !important;
             }
             #sidebar input[type="checkbox"] {
-                width: 1.2rem !important;
-                height: 1.2rem !important;
+                width: 1.35rem !important;
+                height: 1.35rem !important;
             }
         }
 
@@ -255,60 +262,64 @@
     <aside id="sidebar" class="p-4 space-y-3">
         <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0 relative">
             <div class="absolute -top-4 -left-4 -right-4 h-1 bg-gradient-to-r from-emerald-500 via-[#00a600] to-teal-500"></div>
-            <h2 class="text-xs font-bold text-slate-800 flex items-center gap-2 pt-1">
-                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-sliders"></i></span>
+            <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2 pt-1">
+                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-sliders"></i></span>
                 功能模組側邊欄
             </h2>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-slate-600 w-7 h-7 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
-                <i class="fa-solid fa-xmark text-sm"></i>
+                <i class="fa-solid fa-xmark text-base"></i>
             </button>
         </div>
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
 
-            <!-- 🌟 最頂部開啟 Welcome 網頁按鈕 -->
-            <a href="https://myezlife.com/welcome.html" target="_blank" class="flex items-center justify-between p-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-xs transition group text-decoration-none">
+            <!-- 最頂部開啟 Welcome 網頁按鈕 -->
+            <a href="https://myezlife.com/welcome.html" target="_blank" class="flex items-center justify-between p-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl shadow-sm transition group text-decoration-none">
                 <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-md bg-white/20 flex items-center justify-center text-[10px]">
+                    <span class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-xs">
                         <i class="fa-solid fa-house"></i>
                     </span>
                     <span class="text-xs font-bold">歡迎頁面 / Welcome</span>
                 </div>
-                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
             </a>
             
-            <!-- 網站使用與隱私說明 -->
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <!-- 🌟 網站使用與隱私說明 -->
+            <div class="bg-[#00a600] p-3 rounded-2xl border border-emerald-700 shadow-xs space-y-2 text-white">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('about-app-sub', this)">
-                    <div class="font-bold text-slate-700 text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-circle-info"></i></span>
+                    <div class="font-bold text-yellow-300 text-xs flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-white text-[#00a600] flex items-center justify-center text-[10px] shadow-xs"><i class="fa-solid fa-circle-info"></i></span>
                         網站使用與隱私說明
                     </div>
-                    <i class="fa-solid fa-chevron-down text-slate-400 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                    <i class="fa-solid fa-chevron-down text-yellow-300 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
-                <div id="about-app-sub" class="text-[11px] text-slate-600 space-y-2 pt-2 border-t border-slate-100" style="display: none;">
-                    <p class="leading-relaxed">
-                        <strong class="text-emerald-700">💡 關於本站與理念：</strong><br>
-                        本站為開放式純前頁入口儀表板，專為追求「簡居生活」打造。全站無廣告干擾，完全免費。
+                <div id="about-app-sub" class="text-[11px] text-emerald-50 space-y-2.5 pt-2 border-t border-emerald-500/50" style="display: none;">
+                    <p class="leading-relaxed px-0.5">
+                        <strong class="text-yellow-300">💡 關於本站與理念：</strong><br>
+                        本站為開放式純前頁入口儀表板，專為追求「簡居生活」與個人數位掌控權打造。全站零廣告干擾（僅保留贊助支持區塊），完全免費開放使用。
                     </p>
-                    <p class="leading-relaxed">
-                        <strong class="text-emerald-700">🛡️ 100% 個人隱私保護：</strong><br>
-                        所有排序與隨筆僅存在本機 LocalStorage 中，全站無後端伺服器收集紀錄。
+                    <p class="leading-relaxed px-0.5">
+                        <strong class="text-yellow-300">🛡️ 100% 個人隱私保護：</strong><br>
+                        您的所有捷徑排序、新增自訂 App、日記隨筆與偏好設定，均 100% 儲存於您當前裝置的 LocalStorage 本機瀏覽器中。本站無後端資料庫，絕不追蹤或收集您的個人隱私與使用紀錄。
+                    </p>
+                    <p class="leading-relaxed px-0.5">
+                        <strong class="text-yellow-300">🔒 Google 雲端自動同步 (GAS)：</strong><br>
+                        提供免架站、免伺服器費用的 Google Apps Script (GAS) 個人專屬備份方案。資料只會在您的 Google 雲端硬碟與您的手機/電腦瀏覽器之間傳輸，資料完全由您自己掌管！
                     </p>
                 </div>
             </div>
 
             <!-- 可排序的大群組容器 -->
-            <div id="sidebar-sortable-container" class="space-y-2">
+            <div id="sidebar-sortable-container" class="space-y-2.5">
                 
                 <!-- 0. Google 搜尋列 -->
-                <div class="sidebar-item-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs" data-id="group-search">
+                <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs transition-all hover:border-emerald-200" data-id="group-search">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
-                            <i class="fa-solid fa-grip-vertical text-xs"></i>
+                            <i class="fa-solid fa-grip-vertical"></i>
                         </div>
                         <label for="mod-search" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
-                            <input type="checkbox" id="mod-search" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5 cursor-pointer">
+                            <input type="checkbox" id="mod-search" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 Google 智慧搜尋列
@@ -318,76 +329,76 @@
                 </div>
 
                 <!-- 1. 精選影音與創作服務群組 -->
-                <div class="sidebar-item-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs space-y-2" data-id="group-creative">
+                <div class="sidebar-item-group bg-rose-50/40 p-2.5 rounded-2xl border border-rose-100 shadow-2xs space-y-2 transition-all hover:border-rose-200" data-id="group-creative">
                     <div class="flex items-center justify-between">
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
-                            <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-film"></i></span>
                                 精選影音與創作服務
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-5 h-5 rounded hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
+                        <button type="button" onclick="toggleSubMenu('creative-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="creative-sub" class="space-y-1 pl-2 border-l-2 border-slate-100 mt-1" style="display: none;">
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-weather">
+                    <div id="creative-sub" class="space-y-1 pl-2 border-l-2 border-rose-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-weather">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-weather" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🌤️ 即時氣象預報</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-drama">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-drama">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-drama" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🎬 AI好劇一直看</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-melody">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-melody">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-melody" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🎵 好歌一直聽</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-diary">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-diary">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-diary" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📖 心情隨筆日記</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-greeting">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-greeting">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-greeting" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🌻 AI早安問候圖</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-videowall">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-videowall">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-videowall" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🪄 一鍵打造專屬影音櫃</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-news">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-news">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-news" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📰 焦點新聞自動彙整</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-explorer">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-explorer">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-explorer" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📂 個人檔案總管</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-lifesimple">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-lifesimple">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-lifesimple" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🏡 生活‧簡居‧生活</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-library">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-library">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-library" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📚 生活圖書館</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-simplehome">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-simplehome">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-simplehome" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🏠 簡易首頁</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-games">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-rose-100/60 transition" data-mod-id="mod-games">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-games" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🎮 復古小遊戲</span>
@@ -396,46 +407,46 @@
                 </div>
 
                 <!-- 2. 即時交通與大眾運輸群組 -->
-                <div class="sidebar-item-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs space-y-2" data-id="group-traffic">
+                <div class="sidebar-item-group bg-blue-50/40 p-2.5 rounded-2xl border border-blue-100 shadow-2xs space-y-2 transition-all hover:border-blue-200" data-id="group-traffic">
                     <div class="flex items-center justify-between">
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
-                            <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-route"></i></span>
                                 即時交通與大眾運輸
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-5 h-5 rounded hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
+                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="traffic-sub" class="space-y-1 pl-2 border-l-2 border-slate-100 mt-1" style="display: none;">
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-highway">
+                    <div id="traffic-sub" class="space-y-1 pl-2 border-l-2 border-blue-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-highway">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-highway" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🚗 國道 1968 路況</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-provincial">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-provincial">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-provincial" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🛣️ 全台省道路況 (168)</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-bus">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-bus">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-bus" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🚌 即時公車動態</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-bike">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-bike">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-bike" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🚲 YouBike 站點車位</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-train">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-train">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-train" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🚂 台鐵時刻查詢</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-hsr">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-hsr">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-hsr" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🚄 高鐵時刻查詢</span>
@@ -444,26 +455,26 @@
                 </div>
 
                 <!-- 3. 台股財經與鉅亨網群組 -->
-                <div class="sidebar-item-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs space-y-2" data-id="group-finance">
+                <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2 transition-all hover:border-emerald-200" data-id="group-finance">
                     <div class="flex items-center justify-between">
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
-                            <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-chart-line"></i></span>
                                 台股財經與鉅亨網
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-5 h-5 rounded hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
+                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="finance-sub" class="space-y-1 pl-2 border-l-2 border-slate-100 mt-1" style="display: none;">
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-yahoo">
+                    <div id="finance-sub" class="space-y-1 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-emerald-100/60 transition" data-mod-id="mod-yahoo">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-yahoo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📈 Yahoo股市</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-slate-50 hover:bg-slate-100 p-1.5 rounded-lg text-xs cursor-pointer transition" data-mod-id="mod-cnyes">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-emerald-100/60 transition" data-mod-id="mod-cnyes">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-cnyes" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📰 鉅亨網</span>
@@ -472,13 +483,13 @@
                 </div>
 
                 <!-- 4. 個人靈感隨筆與圖文日誌 -->
-                <div class="sidebar-item-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs" data-id="group-todo">
+                <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
-                            <i class="fa-solid fa-grip-vertical text-xs"></i>
+                            <i class="fa-solid fa-grip-vertical"></i>
                         </div>
                         <label for="mod-todo" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
-                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5 cursor-pointer">
+                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-pen-nib"></i></span>
                                 個人靈感隨筆與圖文日誌
@@ -488,13 +499,13 @@
                 </div>
 
                 <!-- 5. 贊助支援與延伸閱讀 -->
-                <div class="sidebar-item-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs" data-id="group-sponsor">
+                <div class="sidebar-item-group bg-pink-50/40 p-2.5 rounded-2xl border border-pink-100 shadow-2xs transition-all hover:border-pink-200" data-id="group-sponsor">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
-                            <i class="fa-solid fa-grip-vertical text-xs"></i>
+                            <i class="fa-solid fa-grip-vertical"></i>
                         </div>
                         <label for="mod-sponsor" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
-                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5 cursor-pointer">
+                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-heart"></i></span>
                                 贊助支援與延伸閱讀
@@ -506,31 +517,31 @@
             </div>
 
             <!-- 自訂新增管理 -->
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div class="bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-emerald-500/10 p-3 rounded-2xl border border-emerald-200/90 shadow-xs backdrop-blur-xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('manage-section-sub', this)">
-                    <div class="font-bold text-slate-700 text-xs flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-md bg-[#00a600] text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-folder-plus"></i></span>
+                    <div class="font-bold text-emerald-900 text-xs flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-[#00a600] text-white flex items-center justify-center text-[10px] shadow-xs"><i class="fa-solid fa-folder-plus"></i></span>
                         自訂區塊與捷徑管理
                     </div>
-                    <i class="fa-solid fa-chevron-down text-slate-400 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                    <i class="fa-solid fa-chevron-down text-emerald-700 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
-                <div id="manage-section-sub" class="space-y-3 pt-2 border-t border-slate-100" style="display: none;">
+                <div id="manage-section-sub" class="space-y-3 pt-2 border-t border-emerald-200/60" style="display: none;">
                     <div class="space-y-1.5">
-                        <div class="text-[11px] font-bold text-slate-600">新增自訂區塊 / 分類</div>
+                        <div class="text-[11px] font-bold text-emerald-900">新增自訂區塊 / 分類</div>
                         <div class="flex gap-1.5 w-full">
-                            <input type="text" id="custom-group-name" placeholder="區塊名稱..." class="w-0 min-w-0 flex-1 bg-slate-50 p-2 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600] transition">
-                            <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold px-3 py-2 rounded-lg transition cursor-pointer shrink-0 shadow-2xs active:scale-95 whitespace-nowrap">+ 建立</button>
+                            <input type="text" id="custom-group-name" placeholder="區塊名稱..." class="w-0 min-w-0 flex-1 bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                            <button onclick="addCustomGroup()" class="bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold px-3 py-2 rounded-xl transition cursor-pointer shrink-0 shadow-xs active:scale-95 whitespace-nowrap">+ 建立</button>
                         </div>
                     </div>
-                    <div class="space-y-2 pt-1 border-t border-slate-100">
-                        <div class="text-[11px] font-bold text-slate-600">新增自訂 App 捷徑</div>
-                        <select id="custom-app-target-group" class="w-full bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate">
+                    <div class="space-y-2 pt-1 border-t border-emerald-200/40">
+                        <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
+                        <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="group-creative">🎬 精選影音與創作服務</option>
                             <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
                         </select>
-                        <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600] transition">
-                        <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600] transition">
-                        <select id="custom-app-icon" class="w-full bg-slate-50 p-1.5 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate">
+                        <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                        <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
+                        <select id="custom-app-icon" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="fa-solid fa-globe">🌐 預設網路</option>
                             <option value="fa-solid fa-star">⭐ 星星焦點</option>
                             <option value="fa-solid fa-briefcase">💼 工作商務</option>
@@ -543,70 +554,74 @@
                             <option value="fa-solid fa-cart-shopping">🛒 購物商城</option>
                             <option value="fa-solid fa-gamepad">🎮 休閒遊戲</option>
                         </select>
-                        <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-lg transition cursor-pointer shadow-2xs">+ 新增至桌面</button>
+                        <button onclick="addCustomApp()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white text-xs font-bold py-2 rounded-xl transition cursor-pointer shadow-xs">+ 新增至桌面</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 外觀設定 -->
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <!-- 外觀、LOGO 與背景設定 -->
+            <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('appearance-section-sub', this)">
-                    <div class="font-bold text-slate-700 text-xs flex items-center gap-2">
+                    <div class="font-bold text-indigo-900 text-xs flex items-center gap-2">
                         <span class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-palette"></i></span>
-                        外觀與背景設定
+                        外觀、LOGO 與背景設定
                     </div>
-                    <i class="fa-solid fa-chevron-down text-slate-400 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                    <i class="fa-solid fa-chevron-down text-indigo-600 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
-                <div id="appearance-section-sub" class="space-y-3 pt-2 border-t border-slate-100" style="display: none;">
+                <div id="appearance-section-sub" class="space-y-3 pt-2 border-t border-indigo-200/60" style="display: none;">
                     
-                    <div class="space-y-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                        <div class="font-bold text-slate-700 text-[11px]">設定頂部圓形 LOGO</div>
+                    <!-- LOGO 設定區塊 -->
+                    <div class="space-y-2 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">設定頂部圓形 LOGO</div>
                         <div class="space-y-1">
-                            <input type="url" id="logo-url-input" placeholder="貼上 LOGO 圖片網址 (https://...)" class="w-full bg-white p-1.5 rounded border border-slate-200 text-xs outline-none focus:border-indigo-500">
-                            <button onclick="applyLogoUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded transition cursor-pointer">套用 LOGO 圖片網址</button>
+                            <input type="url" id="logo-url-input" placeholder="貼上 LOGO 圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-indigo-200 text-xs outline-none focus:border-indigo-500">
+                            <button onclick="applyLogoUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded-lg transition cursor-pointer shadow-2xs">套用 LOGO 圖片網址</button>
                         </div>
                         <div class="text-[10px] text-center text-slate-400 font-bold my-1">或</div>
                         <div>
-                            <label class="w-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
-                                <i class="fa-solid fa-upload"></i> 上傳本機 LOGO
+                            <label class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                                <i class="fa-solid fa-upload"></i> 上傳本機 LOGO 圖片
                                 <input type="file" id="logo-file-input" accept="image/*" onchange="uploadLogoImage(event)" class="hidden">
                             </label>
                         </div>
-                        <button onclick="resetDefaultLogo()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 text-[10px] font-bold py-1 rounded transition cursor-pointer mt-1">
+                        <button onclick="resetDefaultLogo()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold py-1 rounded-lg transition cursor-pointer border border-slate-200 mt-1">
                             🔄 恢復預設 LOGO
                         </button>
                     </div>
 
-                    <div class="space-y-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                        <div class="font-bold text-slate-700 text-[11px]">背景底色選擇</div>
+                    <!-- 背景底色選擇 -->
+                    <div class="space-y-2 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">選擇背景底色</div>
                         <div class="flex items-center gap-2">
-                            <input type="color" id="bg-color-picker" value="#f0f4f8" onchange="changeBackgroundColor(this.value)" class="w-7 h-7 rounded border border-slate-200 cursor-pointer">
+                            <input type="color" id="bg-color-picker" value="#f0f4f8" onchange="changeBackgroundColor(this.value)" class="w-8 h-8 rounded border border-indigo-200 cursor-pointer">
                             <span class="text-[11px] text-slate-600">選擇網頁背景顏色</span>
                         </div>
                     </div>
 
-                    <div class="space-y-2 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                        <div class="font-bold text-slate-700 text-[11px]">設定背景圖片</div>
+                    <!-- 背景圖片設定 -->
+                    <div class="space-y-2 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">設定背景圖片</div>
                         <div class="space-y-1">
-                            <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-1.5 rounded border border-slate-200 text-xs outline-none focus:border-indigo-500">
-                            <button onclick="applyBgUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded transition cursor-pointer">套用圖片網址</button>
+                            <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-indigo-200 text-xs outline-none focus:border-indigo-500">
+                            <button onclick="applyBgUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded-lg transition cursor-pointer shadow-2xs">套用圖片網址</button>
                         </div>
                         <div class="text-[10px] text-center text-slate-400 font-bold my-1">或</div>
                         <div>
-                            <label class="w-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
-                                <i class="fa-solid fa-upload"></i> 上傳本機背景圖
+                            <label class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+                                <i class="fa-solid fa-upload"></i> 上傳本機背景圖片
                                 <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBgImage(event)" class="hidden">
                             </label>
                         </div>
-                        <button onclick="clearBgImage()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-600 text-[10px] font-bold py-1 rounded transition cursor-pointer mt-1">
-                            🗑️ 清除背景圖片
+                        <button onclick="clearBgImage()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold py-1 rounded-lg transition cursor-pointer border border-slate-200 mt-1">
+                            🗑️ 清除背景圖片 (還原純色)
                         </button>
                     </div>
 
-                    <div class="space-y-1.5 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                        <div class="font-bold text-slate-700 text-[11px]">捷徑卡片底色與透明度</div>
+                    <!-- 捷徑卡片透明度開關 -->
+                    <div class="space-y-1.5 bg-white/80 p-2.5 rounded-xl border border-indigo-100">
+                        <div class="font-bold text-indigo-900 text-[11px]">捷徑卡片底色與透明度</div>
                         <label class="flex items-center justify-between gap-2 cursor-pointer text-xs">
-                            <span class="text-slate-600 font-medium">100% 完全透明底色</span>
+                            <span class="text-slate-700 font-medium">100% 完全透明底色</span>
                             <input type="checkbox" id="card-transparent-toggle" onchange="applyCardStyle()" class="rounded text-[#00a600] w-3.5 h-3.5">
                         </label>
                     </div>
@@ -614,43 +629,51 @@
                 </div>
             </div>
 
-            <!-- GOOGLE 雲端同步 -->
-            <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <!-- 🌟 GOOGLE 雲端同步 (僅保留新視窗查看/下載按鈕) -->
+            <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-200 shadow-2xs space-y-2">
                 <div class="flex items-center justify-between cursor-pointer group" onclick="toggleSubMenu('sync-section-sub', this)">
-                    <div class="font-bold text-slate-700 text-xs flex items-center gap-2">
+                    <div class="font-bold text-amber-900 text-xs flex items-center gap-2">
                         <span class="w-5 h-5 rounded-md bg-amber-500 text-white flex items-center justify-center text-[10px]"><i class="fa-solid fa-cloud"></i></span>
                         GOOGLE 雲端同步
                     </div>
-                    <i class="fa-solid fa-chevron-down text-slate-400 text-xs group-hover:translate-y-0.5 transition-transform"></i>
+                    <i class="fa-solid fa-chevron-down text-amber-700 text-xs group-hover:translate-y-0.5 transition-transform"></i>
                 </div>
-                <div id="sync-section-sub" class="space-y-3 pt-2 border-t border-slate-100 text-xs text-slate-700" style="display: none;">
+                <div id="sync-section-sub" class="space-y-3 pt-2 border-t border-amber-200/60 text-xs text-slate-700" style="display: none;">
                     
-                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-1.5 text-[11px] leading-relaxed">
-                        <div class="font-bold text-slate-800 flex items-center gap-1.5 border-b border-slate-200 pb-1">
-                            <i class="fa-solid fa-book text-amber-600"></i> GAS 雲端同步建置教學：
+                    <div class="bg-white/90 p-3 rounded-xl border border-amber-200/80 space-y-2 text-[11px] leading-relaxed">
+                        <div class="font-bold text-amber-900 flex items-center justify-between border-b border-amber-100 pb-1">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-book text-amber-600"></i> GAS 雲端同步建置指南：</span>
                         </div>
-                        <ol class="list-decimal pl-4 space-y-1 text-slate-600">
-                            <li>前往 Google 雲端硬碟建立「Google Apps Script」專案。</li>
-                            <li>貼入 JSON 讀寫腳本並「部署為 Web App」。</li>
-                            <li>權限設為「所有人 (Anyone)」並複製網址。</li>
-                            <li>將網址貼入下方後點擊儲存並同步。</li>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-slate-600">
+                            <li>前往 Google 雲端硬碟建立一個全新的「Google Apps Script」專案。</li>
+                            <li>點擊下方按鈕在新視窗中<strong>預覽語法、一鍵複製或下載腳本檔</strong>：
+                                <!-- 💡 僅保留開啟新視窗獨立頁面按鈕 -->
+                                <div class="my-2">
+                                    <button onclick="openGasScriptWindow()" class="w-full bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5 shadow-xs active:scale-95">
+                                        <i class="fa-solid fa-window-restore"></i> 開啟新視窗查看 / 下載語法
+                                    </button>
+                                </div>
+                            </li>
+                            <li>點擊右上角「部署」➔「新增部署作業」，選擇「網頁應用程式 (Web App)」。</li>
+                            <li>將誰可以存取設定為 <strong class="text-amber-800">「所有人 (Anyone)」</strong> 並完成部署。</li>
+                            <li>將獲得的 Web App 網址貼入下方輸入框，即可實現多裝置自動備份與同步！</li>
                         </ol>
                     </div>
 
                     <div class="space-y-1.5">
-                        <div class="font-bold text-slate-700 text-[11px]">設定雲端同步網址</div>
-                        <input type="url" id="gas-url-input" placeholder="貼上 GAS Web App 網址..." class="w-full bg-slate-50 p-2 rounded-lg border border-slate-200 text-xs outline-none focus:border-amber-600">
+                        <div class="font-bold text-amber-900 text-[11px]">設定雲端同步網址</div>
+                        <input type="url" id="gas-url-input" placeholder="貼上 GAS Web App 網址 (https://script.google.com/...)" class="w-full bg-white p-2 rounded-xl border border-amber-200 text-xs outline-none focus:border-amber-600 shadow-2xs">
                     </div>
 
                     <div class="flex gap-2">
-                        <button onclick="saveGasUrl()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-2 px-2 rounded-lg transition cursor-pointer shadow-2xs active:scale-95">儲存網址</button>
-                        <button onclick="syncFromCloud()" class="flex-1 bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-2 px-2 rounded-lg transition cursor-pointer shadow-2xs active:scale-95">立即同步</button>
+                        <button onclick="saveGasUrl()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-2 px-2 rounded-xl transition cursor-pointer shadow-xs active:scale-95">儲存網址</button>
+                        <button onclick="syncFromCloud()" class="flex-1 bg-[#00a600] hover:bg-[#008f00] text-white text-[11px] font-bold py-2 px-2 rounded-xl transition cursor-pointer shadow-xs active:scale-95">立即同步</button>
                     </div>
                 </div>
             </div>
 
             <div class="pt-2">
-                <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-lg transition border border-red-800 cursor-pointer shadow-2xs">
+                <button onclick="clearAllLocalStorage()" class="w-full bg-red-700 hover:bg-red-800 text-white text-[11px] font-bold py-2 px-3 rounded-xl transition border border-red-800 cursor-pointer shadow-xs">
                     🗑️ 清除並重設所有暫存資料
                 </button>
             </div>
@@ -678,7 +701,7 @@
 
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
-                <!-- 0. Google 智慧搜尋列 -->
+                <!-- Google 智慧搜尋列 -->
                 <div id="desktop-search-card" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
                         <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600"><i class="fa-solid fa-magnifying-glass"></i></div>
@@ -821,78 +844,59 @@
 
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 🌟 4. 個人靈感隨筆與圖文日誌 (全站風格一致重構) -->
+                <!-- 4. 個人靈感隨筆與圖文日誌 -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <div class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                            <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-pen-nib"></i></span>
+                        <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs"><i class="fa-solid fa-pen-nib"></i></span>
                             個人靈感隨筆與圖文日誌
                         </div>
                         <span class="text-[11px] text-slate-400 font-medium">支援雲端自動同步</span>
                     </div>
 
-                    <div class="space-y-3">
-                        <input type="text" id="post-title" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-slate-50/70 focus:bg-white px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-bold outline-none focus:border-[#00a600] transition">
-                        <textarea id="post-content" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-slate-50/70 focus:bg-white p-3 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#00a600] transition" rows="3"></textarea>
-                        
+                    <div class="space-y-2.5 bg-white p-4 rounded-xl border border-slate-100 shadow-2xs">
+                        <input type="text" id="post-title" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold outline-none focus:border-[#00a600] transition">
+                        <textarea id="post-content" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-slate-50/50 p-3 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600] transition" rows="3"></textarea>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                            <div class="flex items-center gap-2 bg-slate-50/70 focus-within:bg-white px-3 py-2 rounded-xl border border-slate-200 transition">
-                                <i class="fa-solid fa-image text-emerald-600 text-xs shrink-0"></i>
-                                <input type="url" id="post-img-url" placeholder="圖片網址 (https://...)" class="w-full bg-transparent outline-none text-xs text-slate-700">
+                            <div class="flex items-center gap-1.5 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-200">
+                                <i class="fa-solid fa-image text-emerald-600"></i>
+                                <input type="url" id="post-img-url" placeholder="圖片網址 (https://...)" class="w-full bg-transparent outline-none text-xs">
                             </div>
-                            <div class="flex items-center gap-2 bg-slate-50/70 focus-within:bg-white px-3 py-2 rounded-xl border border-slate-200 transition">
-                                <i class="fa-brands fa-youtube text-red-500 text-xs shrink-0"></i>
-                                <input type="url" id="post-video-url" placeholder="YouTube 影片網址..." class="w-full bg-transparent outline-none text-xs text-slate-700">
+                            <div class="flex items-center gap-1.5 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-200">
+                                <i class="fa-brands fa-youtube text-red-500"></i>
+                                <input type="url" id="post-video-url" placeholder="YouTube 影片網址..." class="w-full bg-transparent outline-none text-xs">
                             </div>
                         </div>
-
                         <div class="flex justify-end pt-1">
-                            <button onclick="publishBlogPost()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-2xs cursor-pointer flex items-center gap-1.5 active:scale-95">
-                                <i class="fa-solid fa-paper-plane text-[11px]"></i> 發布隨筆文章
+                            <button onclick="publishBlogPost()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5">
+                                <i class="fa-solid fa-paper-plane"></i> 發布隨筆文章
                             </button>
                         </div>
                     </div>
 
                     <div class="space-y-3 pt-2">
-                        <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-                            <i class="fa-solid fa-clock-rotate-left"></i> 歷史隨筆日誌清單
-                        </div>
+                        <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2"><i class="fa-solid fa-clock-rotate-left"></i> 歷史隨筆日誌清單</div>
                         <div id="blog-posts-container" class="space-y-3"></div>
                     </div>
                 </div>
 
-                <!-- 🌟 5. 贊助支援與延伸閱讀 (全站風格一致重構) -->
+                <!-- 5. 贊助支援與延伸閱讀 -->
                 <div id="desktop-sponsor-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <div class="font-bold text-slate-800 text-sm flex items-center gap-2">
-                            <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-heart"></i></span>
-                            贊助支援與延伸閱讀
-                        </div>
-                        <span class="text-[11px] text-slate-400 font-medium">myezlife.com</span>
-                    </div>
-
-                    <div class="text-center py-1">
-                        <p class="text-xs text-slate-600 font-medium">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
-                        <p class="text-[11px] text-slate-500 mt-1">
-                            ☕ 本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機維護！
+                    <div class="text-center pb-3 border-b border-slate-100">
+                        <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
+                        <p class="text-[11px] text-emerald-700 mt-1.5 font-medium bg-emerald-50/80 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
+                            ☕ 覺得好用嗎？本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機與伺服器維護開銷！
                         </p>
                     </div>
 
-                    <!-- 廣告區塊：輕極簡虛線框 -->
-                    <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/50 rounded-xl border border-dashed border-slate-200 overflow-hidden text-xs text-slate-400">
+                    <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/40 rounded-xl border border-dashed border-slate-200 overflow-hidden">
                         <!-- 📢 請將您的 Google AdSense 廣告單元程式碼貼在下方 -->
-                        <span class="italic text-[11px]">Google 廣告展示區域</span>
                     </div>
 
-                    <!-- 延伸閱讀區域 -->
                     <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/30">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                                <i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦
-                            </span>
-                            <button onclick="initRandomRecommendation()" class="text-[11px] bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg font-bold cursor-pointer transition shadow-2xs select-none">
-                                🎲 重新隨機推薦
-                            </button>
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦</span>
+                            <span onclick="initRandomRecommendation()" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded-lg font-bold cursor-pointer transition select-none">🎲 重新隨機推薦</span>
                         </div>
                         <div id="random-recommendation-box" class="space-y-2"></div>
                     </div>
@@ -1083,6 +1087,55 @@
             document.getElementById('videowall-intro-modal').classList.add('hidden');
         }
 
+        const gasScriptCode = `function doGet(e) {\n  var userProperties = PropertiesService.getUserProperties();\n  var data = userProperties.getProperty('myezlife_backup_data');\n  return ContentService.createTextOutput(data || '{}').setMimeType(ContentService.MimeType.JSON);\n}\n\nfunction doPost(e) {\n  var postData = e.postData.contents;\n  var userProperties = PropertiesService.getUserProperties();\n  userProperties.setProperty('myezlife_backup_data', postData);\n  return ContentService.createTextOutput(JSON.stringify({ status: 'success' })).setMimeType(ContentService.MimeType.JSON);\n}`;
+
+        // 💡 開啟新視窗：同時提供線上預覽、一鍵複製與下載 .gs 檔功能
+        function openGasScriptWindow() {
+            const win = window.open("", "_blank");
+            win.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Google Apps Script 同步語法展示與下載</title>
+                    <meta charset="utf-8">
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #0f172a; color: #f8fafc; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+                        h2 { color: #38bdf8; margin-top: 0; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+                        p { color: #94a3b8; font-size: 14px; margin-bottom: 16px; }
+                        .btn-group { display: flex; gap: 12px; margin-bottom: 20px; }
+                        button { border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+                        .btn-copy { background: #0284c7; color: white; }
+                        .btn-copy:hover { background: #0369a1; }
+                        .btn-download { background: #059669; color: white; }
+                        .btn-download:hover { background: #047857; }
+                        pre { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; overflow-x: auto; font-family: monospace; font-size: 14px; color: #38bdf8; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+                    </style>
+                </head>
+                <body>
+                    <h2>☁️ Google Apps Script (GAS) 個人備份專用語法</h2>
+                    <p>請檢視下方完整程式碼。您可以直接點擊按鈕複製語法，或下載腳本檔案後匯入至您的 Google Apps Script 專案中部署為 Web App。</p>
+                    <div class="btn-group">
+                        <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('code').innerText); alert('📋 已成功複製完整語法到剪貼簿！');">📋 複製完整語法</button>
+                        <button class="btn-download" onclick="downloadGsFile()">📥 下載 Code.gs 檔案</button>
+                    </div>
+                    <pre id="code">${gasScriptCode}</pre>
+
+                    <script>
+                        function downloadGsFile() {
+                            const code = document.getElementById('code').innerText;
+                            const blob = new Blob([code], { type: 'text/javascript' });
+                            const a = document.createElement('a');
+                            a.href = URL.createObjectURL(blob);
+                            a.download = 'Code.gs';
+                            a.click();
+                            URL.revokeObjectURL(a.href);
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `);
+        }
+
         function saveGasUrl() {
             localStorage.setItem('myezlife_gas_url', document.getElementById('gas-url-input').value.trim());
             alert('✅ 雲端同步網址已儲存！');
@@ -1187,20 +1240,20 @@
 
             getCustomGroups().forEach(group => {
                 const sideDiv = document.createElement('div');
-                sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-white p-2.5 rounded-xl border border-slate-200 shadow-2xs space-y-2';
+                sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2';
                 sideDiv.setAttribute('data-id', group.id);
                 sideDiv.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
-                            <i class="fa-solid fa-grip-vertical text-slate-300 text-xs"></i>
-                            <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5"><i class="fa-solid fa-folder text-[#00a600]"></i> ${group.name}</span>
+                            <i class="fa-solid fa-grip-vertical text-slate-300"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5"><i class="fa-solid fa-folder text-[#00a600]"></i> ${group.name}</span>
                         </div>
                         <div class="flex items-center gap-1">
-                            <button onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-5 h-5 rounded hover:bg-rose-50 flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
-                            <button onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 text-xs w-5 h-5 rounded hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-chevron-down"></i></button>
+                            <button onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-chevron-down"></i></button>
                         </div>
                     </div>
-                    <div id="${group.id}-sub" class="space-y-1.5 pl-2 border-l-2 border-slate-100 mt-1" style="display: none;">
+                    <div id="${group.id}-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
                         <div class="text-[10px] text-slate-400 italic py-1">（新增 App 時可選此區塊）</div>
                     </div>`;
                 sidebarContainer.appendChild(sideDiv);
@@ -1475,17 +1528,17 @@
         function renderBlogPosts() {
             const container = document.getElementById('blog-posts-container');
             const posts = getBlogPosts();
-            if (posts.length === 0) { container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-3 bg-slate-50/50 rounded-xl border border-slate-100">尚無隨筆文章</div>`; return; }
+            if (posts.length === 0) { container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-4 bg-slate-50/50 rounded-xl">尚無隨筆文章</div>`; return; }
             container.innerHTML = posts.map(post => `
-                <div class="bg-slate-50/40 border border-slate-200/80 p-3.5 rounded-xl space-y-2 relative">
-                    <div class="flex items-start justify-between gap-2 border-b border-slate-200/50 pb-1.5">
+                <div class="bg-white border border-slate-100 p-3.5 rounded-xl space-y-2 relative shadow-2xs">
+                    <div class="flex items-start justify-between gap-2 border-b border-slate-100 pb-2">
                         <div>
-                            <h4 class="font-bold text-slate-800 text-xs">${post.title}</h4>
+                            <h4 class="font-bold text-slate-800 text-sm">${post.title}</h4>
                             <div class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar-check"></i> ${post.date}</div>
                         </div>
-                        <button onclick="deleteBlogPost('${post.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1 transition cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>
+                        <button onclick="deleteBlogPost('${post.id}')" class="text-rose-400 hover:text-rose-600 text-xs p-1 cursor-pointer"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-                    ${post.content ? `<p class="text-xs text-slate-600 leading-relaxed whitespace-pre-wrap">${post.content}</p>` : ''}
+                    ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap">${post.content}</p>` : ''}
                     ${post.imgUrl ? `<div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5"><img src="${post.imgUrl}" class="w-full h-full object-cover"></div>` : ''}
                     ${post.videoEmbed ? `
                         <div class="${post.isShorts ? 'shorts-embed-container' : 'relative w-full overflow-hidden rounded-lg border border-slate-200'}" ${!post.isShorts ? 'style="padding-top: 56.25%;"' : ''}>
@@ -1505,18 +1558,16 @@
                 { title: "📖 生活閱讀分享", desc: "探索富有深度的心靈與閱讀筆記。", url: "https://portaly.cc/myezlife/pages/readingshare", tag: "閱讀" },
                 { title: "📚 好讀書單", desc: "舒適豐富的精選線上閱讀書單。", url: "https://myezlife.com/haodoo.html", tag: "書單" }
             ];
-            
             const shuffled = [...recs].sort(() => 0.5 - Math.random()).slice(0, 3);
-            
             const box = document.getElementById('random-recommendation-box');
             if (box) {
                 box.innerHTML = shuffled.map(item => `
-                    <a href="${item.url}" target="_blank" class="block group bg-white border border-slate-200/80 hover:border-emerald-500/50 rounded-xl p-2.5 shadow-2xs transition text-decoration-none">
-                        <div class="flex items-center justify-between mb-0.5">
-                            <span class="text-xs font-bold text-slate-800 group-hover:text-[#00a600] transition-colors">${item.title}</span>
-                            <span class="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">${item.tag}</span>
+                    <a href="${item.url}" target="_blank" class="block group bg-white border border-slate-100 hover:border-emerald-300 rounded-xl p-3 shadow-2xs transition">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-700">${item.title}</span>
+                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md font-bold">${item.tag}</span>
                         </div>
-                        <p class="text-[11px] text-slate-500 m-0">${item.desc}</p>
+                        <p class="text-[11px] text-slate-500">${item.desc}</p>
                     </a>
                 `).join('');
             }
