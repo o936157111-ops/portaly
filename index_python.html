@@ -189,7 +189,7 @@
             -webkit-user-select: none;
         }
 
-        #sidebar-scroll-content::-webkit-scrollbar, .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        #sidebar-scroll-content::-webkit-scrollbar, .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         #sidebar-scroll-content::-webkit-scrollbar-track, .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         #sidebar-scroll-content::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
@@ -716,7 +716,7 @@
                     </form>
                 </div>
 
-                <!-- 🌟 專屬影音櫃 (Gold Melody) - 比照 YouTube 播放頁面排版 (初始為空，右側＋按鈕新增) -->
+                <!-- 🌟 專屬影音櫃 (Gold Melody) - 手機版在上(左右捲) / 電腦版在右(上下捲) -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     
                     <!-- 卡片頂部標題區與＋號按鈕 -->
@@ -751,18 +751,30 @@
                         </div>
                     </div>
 
-              <!-- 🎬 主播放器與播放清單區域 (右側精準對齊 3 個影音高度) -->
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+                    <!-- 🎬 播放器與清單區域 (手機版: 清單在上左右捲, 播放器在下 / 電腦版: 播放器在左, 清單在右上下捲) -->
+                    <div class="flex flex-col lg:grid lg:grid-cols-12 gap-4 items-start">
                         
-                        <!-- 左側：大畫面播放器區塊 (佔 8 欄) -->
-                        <div class="lg:col-span-8 flex flex-col space-y-2">
+                        <!-- 📱 上/右：歌單清單區塊 (手機版顯示在上並水平左右捲滾動；電腦版顯示在右並垂直滾動) -->
+                        <div class="w-full lg:col-span-4 order-1 lg:order-2 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col lg:h-[258px]">
+                            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
+                                <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                                    <i class="fa-solid fa-list-ul text-amber-500"></i> 專屬歌單清單 
+                                    <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
+                                </span>
+                            </div>
+                            <!-- 清單容器：手機版 flex-row overflow-x-auto (左右滑動)；電腦版 flex-col overflow-y-auto (上下滾動) -->
+                            <div id="yt-playlist-items" class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto gap-2 lg:gap-0 lg:space-y-2 pb-2 lg:pb-0 pr-0 lg:pr-1 custom-scrollbar">
+                                <div class="text-center text-xs text-slate-400 py-6 italic w-full">載入固定歌單中...</div>
+                            </div>
+                        </div>
+
+                        <!-- 📺 下/左：大畫面播放器區塊 (手機版顯示在下方；電腦版佔左側 8 欄) -->
+                        <div class="w-full lg:col-span-8 order-2 lg:order-1 flex flex-col space-y-2">
                             <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-sm relative flex items-center justify-center" id="yt-player-container">
-                                <!-- 預設尚未選擇影片時的提示圖文 -->
                                 <div id="yt-player-placeholder" class="text-center p-6 text-slate-400 space-y-2">
                                     <i class="fa-brands fa-youtube text-5xl text-red-500/80"></i>
-                                    <p class="text-xs md:text-sm font-medium">請從右側播放清單點擊影片進行播放<br>或點擊右上角「<strong class="text-amber-500">＋</strong>」新增您的第一首歌曲/影片！</p>
+                                    <p class="text-xs md:text-sm font-medium">請從上方/右側點擊歌曲播放</p>
                                 </div>
-                                <!-- 動態插入的 iframe -->
                                 <iframe id="yt-iframe" class="w-full h-full border-0 hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                             <div class="flex items-center justify-between px-1 shrink-0">
@@ -773,21 +785,9 @@
                             </div>
                         </div>
 
-                        <!-- 右側：播放清單表列區塊 (佔 4 欄，高度剛好 3 個影音，第 4 個起自動出捲軸) -->
-                        <div class="lg:col-span-4 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-[235px] sm:h-[265px] md:h-[295px] lg:h-[258px]">
-                            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
-                                <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
-                                    <i class="fa-solid fa-list-ul text-amber-500"></i> 專屬歌單清單 
-                                    <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
-                                </span>
-                            </div>
-                            <!-- 清單捲動列表：剛好容納 3 個項目 -->
-                            <div id="yt-playlist-items" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                                <div class="text-center text-xs text-slate-400 py-6 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>
-                            </div>
-                        </div>
-
                     </div>
+
+                </div>
 
                 <!-- 1. 精選影音與創作服務 -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
@@ -1091,7 +1091,16 @@
             }
         }
 
-        // 🌟 專屬影音櫃 (Gold Melody) 核心邏輯
+        // 🌟 預設固定的 YouTube 影音清單
+        const defaultYtPlaylist = [
+            { id: "e-ORhEE9VVg", title: "如果連奇蹟都發生了 你還願意再愛我一次嗎？｜《如果烏鴉說情話》", url: "https://www.youtube.com/watch?v=e-ORhEE9VVg" },
+            { id: "L3wKzym12P8", title: "過來人 The OGs - 喆FILM", url: "https://www.youtube.com/watch?v=L3wKzym12P8" },
+            { id: "3u8b8-xH02A", title: "平凡的日常 - 生活‧簡居‧生活", url: "https://www.youtube.com/watch?v=3u8b8-xH02A" },
+            { id: "2V-mY_g9Z_g", title: "回不去的曾經 - 生活‧簡居‧生活", url: "https://www.youtube.com/watch?v=2V-mY_g9Z_g" },
+            { id: "k-X8yYk4_w0", title: "人潮有多擁擠 就有多想你 - 煙嗓隊長", url: "https://www.youtube.com/watch?v=k-X8yYk4_w0" },
+            { id: "m6Q0wX9kY_s", title: "煙火裡的塵埃 - 華晨宇", url: "https://www.youtube.com/watch?v=m6Q0wX9kY_s" }
+        ];
+
         let currentYtPlayingId = null;
 
         function toggleYtAddForm() {
@@ -1107,7 +1116,12 @@
         }
 
         function getYtPlaylist() {
-            return JSON.parse(localStorage.getItem('myezlife_goldmelody_list') || '[]');
+            const saved = localStorage.getItem('myezlife_goldmelody_list');
+            if (!saved || JSON.parse(saved).length === 0) {
+                localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(defaultYtPlaylist));
+                return defaultYtPlaylist;
+            }
+            return JSON.parse(saved);
         }
 
         function saveYtPlaylist(list) {
@@ -1135,7 +1149,6 @@
             toggleYtAddForm();
             renderYtPlaylist();
 
-            // 如果這是加入的第一支影片，自動播放
             if (list.length === 1) {
                 playYtVideo(videoId, title);
             }
@@ -1148,14 +1161,30 @@
             if (countEl) countEl.innerText = list.length;
 
             if (list.length === 0) {
-                container.innerHTML = `<div class="text-center text-xs text-slate-400 py-10 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>`;
+                container.innerHTML = `<div class="text-center text-xs text-slate-400 py-6 italic w-full">目前清單為空<br>點擊右上角「＋」新增影片</div>`;
                 return;
+            }
+
+            if (!currentYtPlayingId && list.length > 0) {
+                currentYtPlayingId = list[0].id;
+                const iframe = document.getElementById('yt-iframe');
+                const placeholder = document.getElementById('yt-player-placeholder');
+                const playingTitle = document.getElementById('yt-playing-title');
+                const deleteBtn = document.getElementById('yt-delete-current-btn');
+                if (iframe && placeholder) {
+                    iframe.src = `https://www.youtube.com/embed/${list[0].id}`;
+                    iframe.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                }
+                if (playingTitle) playingTitle.innerText = `正在播放：${list[0].title}`;
+                if (deleteBtn) deleteBtn.classList.remove('hidden');
             }
 
             container.innerHTML = list.map((item, index) => {
                 const isPlaying = (item.id === currentYtPlayingId);
                 return `
-                    <div onclick="playYtVideo('${item.id}', '${item.title.replace(/'/g, "\\'")}')" class="flex items-center gap-2.5 p-2 rounded-xl border transition cursor-pointer group ${isPlaying ? 'bg-amber-100/80 border-amber-300' : 'bg-white border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'}">
+                    <div onclick="playYtVideo('${item.id}', '${item.title.replace(/'/g, "\\'")}')" 
+                         class="flex items-center gap-2 p-2 rounded-xl border transition cursor-pointer group shrink-0 w-[240px] lg:w-full ${isPlaying ? 'bg-amber-100/80 border-amber-300' : 'bg-white border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'}">
                         <div class="w-16 h-10 rounded-lg overflow-hidden bg-slate-200 shrink-0 relative border border-slate-100">
                             <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" class="w-full h-full object-cover">
                             ${isPlaying ? `<div class="absolute inset-0 bg-amber-900/40 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-volume-high animate-pulse"></i></div>` : ''}
@@ -1163,7 +1192,7 @@
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-bold ${isPlaying ? 'text-amber-900' : 'text-slate-700 group-hover:text-amber-700'} line-clamp-2 leading-snug">${item.title}</h4>
                         </div>
-                        <button onclick="event.stopPropagation(); removeYtVideo(${index});" class="text-slate-300 hover:text-rose-500 p-1 rounded-md text-xs transition cursor-pointer" title="刪除此影片">
+                        <button onclick="event.stopPropagation(); removeYtVideo(${index});" class="text-slate-300 hover:text-rose-500 p-1 rounded-md text-xs transition cursor-pointer shrink-0" title="刪除此影片">
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </div>
@@ -1291,498 +1320,4 @@
         function openVideoWallModal() {
             document.getElementById('videowall-intro-modal').classList.remove('hidden');
         }
-        function closeVideoWallModal() {
-            document.getElementById('videowall-intro-modal').classList.add('hidden');
-        }
-
-        const gasScriptCode = `function doGet(e) {\n  var userProperties = PropertiesService.getUserProperties();\n  var data = userProperties.getProperty('myezlife_backup_data');\n  return ContentService.createTextOutput(data || '{}').setMimeType(ContentService.MimeType.JSON);\n}\n\nfunction doPost(e) {\n  var postData = e.postData.contents;\n  var userProperties = PropertiesService.getUserProperties();\n  userProperties.setProperty('myezlife_backup_data', postData);\n  return ContentService.createTextOutput(JSON.stringify({ status: 'success' })).setMimeType(ContentService.MimeType.JSON);\n}`;
-
-        function openGasScriptWindow() {
-            const win = window.open("", "_blank");
-            win.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Google Apps Script 同步語法展示與下載</title>
-                    <meta charset="utf-8">
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #0f172a; color: #f8fafc; line-height: 1.6; max-width: 800px; margin: 0 auto; }
-                        h2 { color: #38bdf8; margin-top: 0; font-size: 20px; display: flex; align-items: center; gap: 8px; }
-                        p { color: #94a3b8; font-size: 14px; margin-bottom: 16px; }
-                        .btn-group { display: flex; gap: 12px; margin-bottom: 20px; }
-                        button { border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 13px; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-                        .btn-copy { background: #0284c7; color: white; }
-                        .btn-copy:hover { background: #0369a1; }
-                        .btn-download { background: #059669; color: white; }
-                        .btn-download:hover { background: #047857; }
-                        pre { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; overflow-x: auto; font-family: monospace; font-size: 14px; color: #38bdf8; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-                    </style>
-                </head>
-                <body>
-                    <h2>☁️ Google Apps Script (GAS) 個人備份專用語法</h2>
-                    <p>請檢視下方完整程式碼。您可以直接點擊按鈕複製語法，或下載腳本檔案後匯入至您的 Google Apps Script 專案中部署為 Web App。</p>
-                    <div class="btn-group">
-                        <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('code').innerText); alert('📋 已成功複製完整語法到剪貼簿！');">📋 複製完整語法</button>
-                        <button class="btn-download" onclick="downloadGsFile()">📥 下載 Code.gs 檔案</button>
-                    </div>
-                    <pre id="code">${gasScriptCode}</pre>
-
-                    <script>
-                        function downloadGsFile() {
-                            const code = document.getElementById('code').innerText;
-                            const blob = new Blob([code], { type: 'text/javascript' });
-                            const a = document.createElement('a');
-                            a.href = URL.createObjectURL(blob);
-                            a.download = 'Code.gs';
-                            a.click();
-                            URL.revokeObjectURL(a.href);
-                        }
-                    <\/script>
-                </body>
-                </html>
-            `);
-        }
-
-        function saveGasUrl() {
-            localStorage.setItem('myezlife_gas_url', document.getElementById('gas-url-input').value.trim());
-            alert('✅ 雲端同步網址已儲存！');
-            syncFromCloud();
-        }
-
-        async function syncFromCloud() {
-            const gasUrl = localStorage.getItem('myezlife_gas_url');
-            if (!gasUrl) { alert('請先輸入並儲存 GAS 部署網址！'); return; }
-            try {
-                await syncToCloud();
-                const res = await fetch(gasUrl);
-                const cloudData = await res.json();
-                if (cloudData && Object.keys(cloudData).length > 0) {
-                    if (cloudData.custom_groups) localStorage.setItem('myezlife_custom_groups', JSON.stringify(cloudData.custom_groups));
-                    if (cloudData.custom_apps) localStorage.setItem('myezlife_custom_apps', JSON.stringify(cloudData.custom_apps));
-                    if (cloudData.goldmelody_list) localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(cloudData.goldmelody_list));
-                    if (cloudData.custom_logo) {
-                        localStorage.setItem('myezlife_custom_logo', cloudData.custom_logo);
-                        document.getElementById('header-logo-img').src = cloudData.custom_logo;
-                    }
-                    alert('🎉 雲端資料同步成功！網頁將重新整理。');
-                    location.reload();
-                }
-            } catch (err) { alert('❌ 雲端同步讀取失敗。'); }
-        }
-
-        async function syncToCloud() {
-            const gasUrl = localStorage.getItem('myezlife_gas_url');
-            if (!gasUrl) return;
-            try {
-                await fetch(gasUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        custom_groups: JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]'),
-                        custom_apps: JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]'),
-                        goldmelody_list: JSON.parse(localStorage.getItem('myezlife_goldmelody_list') || '[]'),
-                        custom_logo: localStorage.getItem('myezlife_custom_logo') || '',
-                        updated_at: new Date().toISOString()
-                    })
-                });
-            } catch (err) { console.error("GAS 同步失敗:", err); }
-        }
-
-        function clearAllLocalStorage() {
-            if (confirm('確定要清除所有暫存資料並重設儀表板嗎？')) {
-                localStorage.clear();
-                alert('已成功清除！');
-                location.reload();
-            }
-        }
-
-        function applyCardStyle() {
-            const isTransparent = document.getElementById('card-transparent-toggle').checked;
-            document.querySelectorAll('.app-shortcut-card, .custom-desktop-card').forEach(card => {
-                card.style.backgroundColor = isTransparent ? 'transparent' : '#ffffff';
-                card.style.borderColor = isTransparent ? 'transparent' : '#e2e8f0';
-                card.style.boxShadow = isTransparent ? 'none' : '0 1px 3px 0 rgba(0, 0, 0, 0.1)';
-            });
-            localStorage.setItem('myezlife_card_transparent', isTransparent);
-        }
-
-        function loadCardStyle() {
-            const isTransparent = localStorage.getItem('myezlife_card_transparent') === 'true';
-            document.getElementById('card-transparent-toggle').checked = isTransparent;
-            applyCardStyle();
-        }
-
-        function getCustomGroups() { return JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]'); }
-        function saveCustomGroups(groups) { localStorage.setItem('myezlife_custom_groups', JSON.stringify(groups)); syncToCloud(); }
-
-        function addCustomGroup() {
-            const name = document.getElementById('custom-group-name').value.trim();
-            if (!name) { alert('請輸入區塊名稱！'); return; }
-            const groups = getCustomGroups();
-            const groupId = 'group-custom-' + Date.now();
-            groups.push({ id: groupId, name: name });
-            saveCustomGroups(groups);
-            document.getElementById('custom-group-name').value = '';
-            renderCustomGroups();
-            updateTargetGroupSelect();
-            syncDesktopCardsOrder();
-            alert(`成功建立區塊：「${name}」！`);
-        }
-
-        function removeCustomGroup(groupId, groupName) {
-            if (confirm(`確定刪除區塊「${groupName}」？`)) {
-                saveCustomGroups(getCustomGroups().filter(g => g.id !== groupId));
-                localStorage.setItem('myezlife_custom_apps', JSON.stringify(JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').filter(a => a.groupId !== groupId)));
-                syncToCloud();
-                renderCustomGroups();
-                updateTargetGroupSelect();
-                loadCustomApps();
-                updateDesktopVisibility();
-            }
-        }
-
-        function renderCustomGroups() {
-            const sidebarContainer = document.getElementById('sidebar-sortable-container');
-            const desktopWrapper = document.getElementById('custom-desktop-cards-wrapper');
-            document.querySelectorAll('.custom-sidebar-group').forEach(el => el.remove());
-            desktopWrapper.innerHTML = '';
-
-            getCustomGroups().forEach(group => {
-                const sideDiv = document.createElement('div');
-                sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2';
-                sideDiv.setAttribute('data-id', group.id);
-                sideDiv.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
-                            <i class="fa-solid fa-grip-vertical text-slate-300"></i>
-                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5"><i class="fa-solid fa-folder text-[#00a600]"></i> ${group.name}</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <button onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
-                            <button onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-chevron-down"></i></button>
-                        </div>
-                    </div>
-                    <div id="${group.id}-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
-                        <div class="text-[10px] text-slate-400 italic py-1">（新增 App 時可選此區塊）</div>
-                    </div>`;
-                sidebarContainer.appendChild(sideDiv);
-
-                const cardDiv = document.createElement('div');
-                cardDiv.id = `desktop-${group.id}-card`;
-                cardDiv.className = 'custom-desktop-card app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3';
-                cardDiv.innerHTML = `
-                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2"><i class="fa-solid fa-folder-open text-[#00a600]"></i> ${group.name}</div>
-                    <div id="${group.id}-app-grid" class="app-grid"></div>`;
-                desktopWrapper.appendChild(cardDiv);
-            });
-        }
-
-        function updateTargetGroupSelect() {
-            const select = document.getElementById('custom-app-target-group');
-            select.innerHTML = `<option value="group-creative">🎬 精選影音與創作服務</option><option value="group-general">🚗 一般捷徑 (交通與財經)</option>`;
-            getCustomGroups().forEach(g => { select.innerHTML += `<option value="${g.id}">📁 ${g.name}</option>`; });
-        }
-
-        function updateDesktopVisibility() {
-            const searchCard = document.getElementById('desktop-search-card');
-            const modSearch = document.getElementById('mod-search');
-            if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
-
-            const goldmelodyCard = document.getElementById('desktop-goldmelody-card');
-            const modGoldmelody = document.getElementById('mod-goldmelody');
-            if (goldmelodyCard && modGoldmelody) goldmelodyCard.style.display = modGoldmelody.checked ? 'block' : 'none';
-
-            let hasCreativeVisible = false;
-            const creativeSub = document.getElementById('creative-sub');
-            const creativeGrid = document.getElementById('creative-app-grid');
-            if (creativeSub && creativeGrid) {
-                Array.from(creativeSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
-                    const cb = itemEl.querySelector('input[type="checkbox"]');
-                    const modId = itemEl.getAttribute('data-mod-id');
-                    const appItem = creativeGrid.querySelector(`[data-mod="${modId}"]`);
-                    if (cb && appItem) {
-                        creativeGrid.appendChild(appItem);
-                        if (cb.checked) { appItem.style.display = 'flex'; hasCreativeVisible = true; }
-                        else { appItem.style.display = 'none'; }
-                    }
-                });
-            }
-            if (creativeGrid && creativeGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasCreativeVisible = true;
-            const creativeCard = document.getElementById('desktop-creative-card');
-            if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
-
-            let hasGeneralVisible = false;
-            const generalGrid = document.getElementById('general-app-grid');
-            ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
-                const subContainer = document.getElementById(subContainerId);
-                if (subContainer && generalGrid) {
-                    Array.from(subContainer.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
-                        const cb = itemEl.querySelector('input[type="checkbox"]');
-                        const modId = itemEl.getAttribute('data-mod-id');
-                        const appItem = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                        if (cb && appItem) {
-                            generalGrid.appendChild(appItem);
-                            if (cb.checked) { appItem.style.display = 'flex'; hasGeneralVisible = true; }
-                            else { appItem.style.display = 'none'; }
-                        }
-                    });
-                }
-            });
-            if (generalGrid && generalGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasGeneralVisible = true;
-            const generalCard = document.getElementById('desktop-app-card');
-            if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
-
-            getCustomGroups().forEach(g => {
-                const card = document.getElementById(`desktop-${g.id}-card`);
-                const grid = document.getElementById(`${g.id}-app-grid`);
-                if (card && grid) card.style.display = grid.querySelectorAll('.app-item').length > 0 ? 'block' : 'none';
-            });
-
-            const todoCard = document.getElementById('desktop-todo-card');
-            const modTodo = document.getElementById('mod-todo');
-            if (todoCard && modTodo) todoCard.style.display = modTodo.checked ? 'block' : 'none';
-
-            const sponsorCard = document.getElementById('desktop-sponsor-card');
-            const modSponsor = document.getElementById('mod-sponsor');
-            if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
-
-            const adsCard = document.getElementById('desktop-ads-card');
-            const modAds = document.getElementById('mod-ads');
-            if (adsCard && modAds) adsCard.style.display = modAds.checked ? 'block' : 'none';
-
-            let state = {};
-            document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => { if (cb.id) state[cb.id] = cb.checked; });
-            localStorage.setItem('myezlife_checkbox_states', JSON.stringify(state));
-        }
-
-        function loadCheckboxStates() {
-            const savedState = JSON.parse(localStorage.getItem('myezlife_checkbox_states') || 'null');
-            if (savedState) {
-                for (const [id, checked] of Object.entries(savedState)) {
-                    const cb = document.getElementById(id);
-                    if (cb) cb.checked = checked;
-                }
-            } else {
-                document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search');
-                });
-                if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = false;
-                if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
-                if (document.getElementById('mod-sponsor')) document.getElementById('mod-sponsor').checked = false;
-                if (document.getElementById('mod-ads')) document.getElementById('mod-ads').checked = false;
-            }
-        }
-
-        function initSortables() {
-            const sidebarContainer = document.getElementById('sidebar-sortable-container');
-            if (sidebarContainer) {
-                const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                new Sortable(sidebarContainer, {
-                    animation: 200, 
-                    handle: '.sidebar-drag-handle',
-                    filter: 'input, label',
-                    preventOnFilter: false,
-                    delay: isTouchDevice ? 200 : 0,
-                    delayOnTouchOnly: true,
-                    touchStartThreshold: 5,
-                    onEnd: function () {
-                        localStorage.setItem('myezlife_sidebar_order', JSON.stringify(Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id'))));
-                        syncDesktopCardsOrder();
-                        syncToCloud();
-                    }
-                });
-                const savedOrder = JSON.parse(localStorage.getItem('myezlife_sidebar_order') || 'null');
-                if (savedOrder) savedOrder.forEach(id => { const el = sidebarContainer.querySelector(`[data-id="${id}"]`); if (el) sidebarContainer.appendChild(el); });
-                syncDesktopCardsOrder();
-            }
-
-            ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
-                const subContainer = document.getElementById(subId);
-                if (subContainer) {
-                    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-                    new Sortable(subContainer, {
-                        animation: 150, 
-                        handle: '.sub-drag-item', 
-                        filter: 'input', 
-                        preventOnFilter: false,
-                        delay: isTouchDevice ? 200 : 0,
-                        delayOnTouchOnly: true,
-                        touchStartThreshold: 5,
-                        onEnd: function() {
-                            localStorage.setItem(`myezlife_sub_order_${subId}`, JSON.stringify(Array.from(subContainer.querySelectorAll('.sub-drag-item')).map(el => el.getAttribute('data-mod-id'))));
-                            updateDesktopVisibility();
-                            syncToCloud();
-                        }
-                    });
-                    const savedSubOrder = JSON.parse(localStorage.getItem(`myezlife_sub_order_${subId}`) || 'null');
-                    if (savedSubOrder) savedSubOrder.forEach(modId => { const item = subContainer.querySelector(`[data-mod-id="${modId}"]`); if (item) subContainer.appendChild(item); });
-                }
-            });
-        }
-
-        function syncDesktopCardsOrder() {
-            const sidebarContainer = document.getElementById('sidebar-sortable-container');
-            const desktopContainer = document.getElementById('desktop-cards-container');
-            if (!sidebarContainer || !desktopContainer) return;
-            Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id')).forEach(groupId => {
-                let card = null;
-                if (groupId === 'group-search') card = document.getElementById('desktop-search-card');
-                else if (groupId === 'group-goldmelody') card = document.getElementById('desktop-goldmelody-card');
-                else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
-                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
-                else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
-                else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
-                else if (groupId === 'group-ads') card = document.getElementById('desktop-ads-card');
-                else if (groupId && groupId.startsWith('group-custom-')) card = document.getElementById(`desktop-${groupId}-card`);
-                if (card) desktopContainer.appendChild(card);
-            });
-            const dockBar = document.getElementById('dock-bar');
-            if (dockBar) desktopContainer.appendChild(dockBar);
-        }
-
-        function addCustomApp() {
-            const groupId = document.getElementById('custom-app-target-group').value;
-            const name = document.getElementById('custom-app-name').value.trim();
-            let url = document.getElementById('custom-app-url').value.trim();
-            const icon = document.getElementById('custom-app-icon').value;
-            if (!name || !url) { alert('請完整輸入名稱與網址！'); return; }
-            if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
-
-            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-            customApps.push({ groupId, name, url, icon });
-            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-            syncToCloud();
-
-            document.getElementById('custom-app-name').value = '';
-            document.getElementById('custom-app-url').value = '';
-            loadCustomApps();
-            updateDesktopVisibility();
-            alert('成功新增自訂 App！');
-        }
-
-        function removeCustomApp(btn) {
-            if (confirm('確定刪除此自訂捷徑？')) {
-                let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-                customApps.splice(parseInt(btn.closest('.app-item').getAttribute('data-custom-idx'), 10), 1);
-                localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-                syncToCloud();
-                loadCustomApps();
-                updateDesktopVisibility();
-            }
-        }
-
-        function loadCustomApps() {
-            document.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
-            JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').forEach((app, index) => {
-                let targetGrid = null;
-                if (app.groupId === 'group-creative') targetGrid = document.getElementById('creative-app-grid');
-                else if (!app.groupId || app.groupId === 'group-general') targetGrid = document.getElementById('general-app-grid');
-                else targetGrid = document.getElementById(`${app.groupId}-app-grid`);
-
-                if (targetGrid) {
-                    let div = document.createElement('div');
-                    div.className = 'app-item relative group';
-                    div.setAttribute('data-custom-idx', index);
-                    div.innerHTML = `
-                        <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                            <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${app.icon || 'fa-solid fa-globe'} text-white"></i></div>
-                            <span class="app-label">${app.name}</span>
-                        </a>
-                        <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>`;
-                    targetGrid.appendChild(div);
-                }
-            });
-        }
-
-        async function loadBloggerFeed() {
-            const blogUrl = "https://myezdailylife.blogspot.com";
-            const rssApiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(blogUrl + '/feeds/posts/default?alt=rss')}`;
-            const container = document.getElementById('blogger-feed-container');
-
-            try {
-                const response = await fetch(rssApiUrl);
-                const data = await response.json();
-
-                if (data.status === 'ok' && data.items.length > 0) {
-                    container.innerHTML = data.items.slice(0, 5).map(item => {
-                        let imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
-                        let thumbImg = imgMatch ? imgMatch[1] : '';
-                        let pubDate = item.pubDate ? item.pubDate.split(' ')[0] : '';
-                        let cleanDesc = item.description ? item.description.replace(/<[^>]*>?/gm, '') : '';
-
-                        return `
-                            <a href="${item.link}" target="_blank" class="block bg-white border border-slate-100 hover:border-emerald-300 p-3.5 md:p-4 rounded-xl shadow-2xs transition group outline-none focus:outline-none">
-                                <div class="flex flex-col sm:flex-row gap-3 md:gap-4 items-start">
-                                    ${thumbImg ? `<div class="w-full sm:w-32 h-28 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-100"><img src="${thumbImg}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></div>` : ''}
-                                    <div class="space-y-1.5 flex-1 min-w-0 w-full">
-                                        <div class="flex items-start justify-between gap-2">
-                                            <h4 class="font-bold text-slate-800 text-sm group-hover:text-emerald-700 leading-snug line-clamp-2 flex-1">${item.title}</h4>
-                                            <span class="text-[10px] text-slate-400 shrink-0 whitespace-nowrap pt-0.5"><i class="fa-regular fa-calendar-check"></i> ${pubDate}</span>
-                                        </div>
-                                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">${cleanDesc}</p>
-                                    </div>
-                                </div>
-                            </a>
-                        `;
-                    }).join('');
-                } else {
-                    container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-4 bg-slate-50/50 rounded-xl">目前尚無公開的圖文日誌。</div>`;
-                }
-            } catch (error) {
-                console.error('讀取 Blogger 失敗:', error);
-                container.innerHTML = `<div class="text-xs text-rose-400 italic text-center py-4 bg-slate-50/50 rounded-xl">無法載入日誌內容，請稍後再試。</div>`;
-            }
-        }
-
-        function initRandomRecommendation() {
-            const recs = [
-                { title: "🎮 復古小遊戲", desc: "重溫經典好玩的懷舊小遊戲。", url: "https://myezlife.com/games.html", tag: "休閒" },
-                { title: "📂 檔案總管", desc: "方便管理您的本機與網頁暫存。", url: "https://myezlife.com/FileExplorer.html", tag: "系統" },
-                { title: "🎬 AI好劇", desc: "精選優質 AI 好劇頻道與播放清單。", url: "https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ", tag: "影音" },
-                { title: "📝 零碎日常", desc: "記錄生活中的點滴與隨筆心情。", url: "https://myezdailylife.blogspot.com", tag: "部落格" },
-                { title: "📖 生活閱讀分享", desc: "探索富有深度的心靈與閱讀筆記。", url: "https://portaly.cc/myezlife/pages/readingshare", tag: "閱讀" },
-                { title: "📚 好讀書單", desc: "舒適豐富的精選線上閱讀書單。", url: "https://myezlife.com/haodoo.html", tag: "書單" }
-            ];
-            const shuffled = [...recs].sort(() => 0.5 - Math.random()).slice(0, 3);
-            const box = document.getElementById('random-recommendation-box');
-            if (box) {
-                box.innerHTML = shuffled.map(item => `
-                    <a href="${item.url}" target="_blank" class="block group bg-white border border-slate-100 hover:border-emerald-300 rounded-xl p-3 shadow-2xs transition">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-700">${item.title}</span>
-                            <span class="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md font-bold">${item.tag}</span>
-                        </div>
-                        <p class="text-[11px] text-slate-500">${item.desc}</p>
-                    </a>
-                `).join('');
-            }
-        }
-
-        if (localStorage.getItem('myezlife_custom_logo')) {
-            document.getElementById('header-logo-img').src = localStorage.getItem('myezlife_custom_logo');
-        }
-        if (localStorage.getItem('myezlife_custom_bg_color')) {
-            const savedColor = localStorage.getItem('myezlife_custom_bg_color');
-            document.body.style.backgroundColor = savedColor;
-            const picker = document.getElementById('bg-color-picker');
-            if (picker) picker.value = savedColor;
-        }
-        if (localStorage.getItem('myezlife_custom_bg')) {
-            document.body.style.backgroundImage = `url('${localStorage.getItem('myezlife_custom_bg')}')`;
-        }
-        if (localStorage.getItem('myezlife_gas_url')) document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
-        
-        renderCustomGroups();
-        updateTargetGroupSelect();
-        loadCheckboxStates();
-        initSortables();
-        loadCustomApps();
-        updateDesktopVisibility();
-        loadCardStyle();
-        loadBloggerFeed();
-        initRandomRecommendation();
-        renderYtPlaylist();
-    </script>
-</body>
-</html>
+        function close
