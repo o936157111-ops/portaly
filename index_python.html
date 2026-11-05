@@ -471,7 +471,7 @@
                             <input type="checkbox" id="mod-goldmelody" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-yellow-100 text-yellow-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-music"></i></span>
-                                專屬影音櫃
+                                專屬影音櫃 (Gold Melody)
                             </span>
                         </label>
                     </div>
@@ -716,22 +716,18 @@
                     </form>
                 </div>
 
-                <!-- 🌟 專屬影音櫃-->
+                <!-- 🌟 專屬影音櫃 (Gold Melody) -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     
                     <!-- 卡片頂部標題區與按鈕 -->
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                             <span class="w-7 h-7 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-music"></i></span>
-                            <span>🎵 專屬影音櫃</span>
+                            <span>🎵 專屬影音櫃 (Gold Melody)</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <!-- 🔄 一鍵載入 YouTube 播放清單按鈕 -->
-                            <button onclick="importYtPlaylistFromUrl('PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold rounded-xl shadow-xs transition active:scale-95 cursor-pointer flex items-center gap-1" title="載入「好歌一直聽」播放清單">
-                                <i class="fa-solid fa-cloud-arrow-down"></i> 載入清單
-                            </button>
                             <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="text-[11px] text-emerald-600 font-bold hover:underline flex items-center gap-1">
-                                開啟 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                開啟獨立頁面 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                             </a>
                             <!-- ➕ 右側新增影片按鈕 -->
                             <button onclick="toggleYtAddForm()" class="w-8 h-8 rounded-xl bg-[#00a600] hover:bg-[#008f00] text-white flex items-center justify-center shadow-xs transition active:scale-95 cursor-pointer" title="新增 YouTube 影片">
@@ -784,7 +780,7 @@
                             <div class="flex items-center justify-between px-1 shrink-0">
                                 <h3 id="yt-playing-title" class="font-bold text-slate-800 text-xs md:text-sm line-clamp-1">尚未選擇播放影片</h3>
                                 <button id="yt-delete-current-btn" onclick="deleteCurrentYtVideo()" class="text-rose-500 hover:text-rose-700 text-xs font-medium hidden cursor-pointer transition flex items-center gap-1">
-                                    <i class="fa-solid fa-trash-can"></i> 
+                                    <i class="fa-solid fa-trash-can"></i> 移除此影片
                                 </button>
                             </div>
                         </div>
@@ -1095,14 +1091,18 @@
             }
         }
 
-        // 🌟 專屬影音櫃 (Gold Melody) 核心邏輯
+        // 🌟 專屬影音櫃 (Gold Melody) 核心邏輯 (固定 10 首精選好歌)
         const defaultYtPlaylist = [
-            { id: "e-ORhEE9VVg", title: "如果連奇蹟都發生了 你還願意再愛我一次嗎？｜《如果烏鴉說情話》", url: "https://www.youtube.com/watch?v=e-ORhEE9VVg" },
-            { id: "L3wKzym12P8", title: "過來人 The OGs - 喆FILM", url: "https://www.youtube.com/watch?v=L3wKzym12P8" },
-            { id: "3u8b8-xH02A", title: "平凡的日常 - 生活‧簡居‧生活", url: "https://www.youtube.com/watch?v=3u8b8-xH02A" },
-            { id: "2V-mY_g9Z_g", title: "回不去的曾經 - 生活‧簡居‧生活", url: "https://www.youtube.com/watch?v=2V-mY_g9Z_g" },
-            { id: "k-X8yYk4_w0", title: "人潮有多擁擠 就有多想你 - 煙嗓隊長", url: "https://www.youtube.com/watch?v=k-X8yYk4_w0" },
-            { id: "m6Q0wX9kY_s", title: "煙火裡的塵埃 - 華晨宇", url: "https://www.youtube.com/watch?v=m6Q0wX9kY_s" }
+            { id: "e-ORhEE9VVg", title: "《如果烏鴉說情話》", url: "https://www.youtube.com/watch?v=e-ORhEE9VVg" },
+            { id: "L3wKzym12P8", title: "過來人", url: "https://www.youtube.com/watch?v=L3wKzym12P8" },
+            { id: "H7dR6FwvljM", title: "平凡的重量", url: "https://www.youtube.com/watch?v=H7dR6FwvljM" },
+            { id: "lzUyTD6IzqU", title: "回不去的曾經 ", url: "https://www.youtube.com/watch?v=lzUyTD6IzqU" },
+            { id: "1w5r0tbvTCk", title: "人潮有多擁擠 就有多想你", url: "https://www.youtube.com/watch?v=1w5r0tbvTCk" },
+            { id: "VdDSpgwfZrA", title: "煙火裡的塵埃 - 華晨宇", url: "https://www.youtube.com/watch?v=VdDSpgwfZrA&t=38s" },
+            { id: "ad45hvF2dc4", title: "Wake Me Up", url: "https://www.youtube.com/watch?v=ad45hvF2dc4&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=7" },
+            { id: "aJjpYSelgU8", title: "真的愛你又如何", url: "https://www.youtube.com/watch?v=aJjpYSelgU8&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=8" },
+            { id: "rMuqgAHnXUo", title: "我不该动情", url: "https://www.youtube.com/watch?v=rMuqgAHnXUo&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=9" },
+            { id: "hvo5RN3wS7U", title: "愛你始於心甘情願", url: "https://www.youtube.com/watch?v=hvo5RN3wS7U&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=10" }
         ];
 
         let currentYtPlayingId = null;
@@ -1131,40 +1131,6 @@
         function saveYtPlaylist(list) {
             localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(list));
             syncToCloud();
-        }
-
-        // 🌟 一鍵從 YouTube 播放清單網址抓取並匯入
-        async function importYtPlaylistFromUrl(playlistId) {
-            const targetPlaylistId = playlistId || "PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac";
-            const rssUrl = `https://www.youtube.com/feeds/videos.xml?playlist_id=${targetPlaylistId}`;
-            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (data.status === 'ok' && data.items.length > 0) {
-                    const newPlaylist = data.items.map(item => {
-                        const videoId = item.guid ? item.guid.replace("yt:video:", "") : extractYtId(item.link);
-                        return {
-                            id: videoId,
-                            title: item.title,
-                            url: item.link
-                        };
-                    });
-
-                    saveYtPlaylist(newPlaylist);
-                    currentYtPlayingId = null;
-                    renderYtPlaylist();
-
-                    alert(`✅ 成功匯入播放清單！共取得 ${newPlaylist.length} 首歌曲。`);
-                } else {
-                    alert('⚠️ 無法讀取該播放清單，請確認清單是否設為「公開」或「不公開」。');
-                }
-            } catch (error) {
-                console.error("匯入播放清單失敗:", error);
-                alert("❌ 匯入失敗，請檢查網路連線或 API 回傳狀態。");
-            }
         }
 
         function addYtVideo() {
