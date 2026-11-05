@@ -716,16 +716,20 @@
                     </form>
                 </div>
 
-                <!-- 🌟 專屬影音櫃 (Gold Melody) - 手機版在上(左右捲) / 電腦版在右(上下捲) -->
+                <!-- 🌟 專屬影音櫃 (Gold Melody) -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     
-                    <!-- 卡片頂部標題區與＋號按鈕 -->
+                    <!-- 卡片頂部標題區與按鈕 -->
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                             <span class="w-7 h-7 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-music"></i></span>
                             <span>🎵 專屬影音櫃 (Gold Melody)</span>
                         </div>
                         <div class="flex items-center gap-2">
+                            <!-- 🔄 一鍵載入 YouTube 播放清單按鈕 -->
+                            <button onclick="importYtPlaylistFromUrl('PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac')" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-bold rounded-xl shadow-xs transition active:scale-95 cursor-pointer flex items-center gap-1" title="載入「好歌一直聽」播放清單">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> 載入清單
+                            </button>
                             <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="text-[11px] text-emerald-600 font-bold hover:underline flex items-center gap-1">
                                 開啟獨立頁面 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                             </a>
@@ -751,7 +755,7 @@
                         </div>
                     </div>
 
-                    <!-- 🎬 播放器與清單區域 (手機版: 清單在上左右捲, 播放器在下 / 電腦版: 播放器在左, 清單在右上下捲) -->
+                    <!-- 🎬 播放器與清單區域 -->
                     <div class="flex flex-col lg:grid lg:grid-cols-12 gap-4 items-start">
                         
                         <!-- 📱 上/右：歌單清單區塊 -->
@@ -1127,6 +1131,40 @@
         function saveYtPlaylist(list) {
             localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(list));
             syncToCloud();
+        }
+
+        // 🌟 一鍵從 YouTube 播放清單網址抓取並匯入
+        async function importYtPlaylistFromUrl(playlistId) {
+            const targetPlaylistId = playlistId || "PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac";
+            const rssUrl = `https://www.youtube.com/feeds/videos.xml?playlist_id=${targetPlaylistId}`;
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.status === 'ok' && data.items.length > 0) {
+                    const newPlaylist = data.items.map(item => {
+                        const videoId = item.guid ? item.guid.replace("yt:video:", "") : extractYtId(item.link);
+                        return {
+                            id: videoId,
+                            title: item.title,
+                            url: item.link
+                        };
+                    });
+
+                    saveYtPlaylist(newPlaylist);
+                    currentYtPlayingId = null;
+                    renderYtPlaylist();
+
+                    alert(`✅ 成功匯入播放清單！共取得 ${newPlaylist.length} 首歌曲。`);
+                } else {
+                    alert('⚠️ 無法讀取該播放清單，請確認清單是否設為「公開」或「不公開」。');
+                }
+            } catch (error) {
+                console.error("匯入播放清單失敗:", error);
+                alert("❌ 匯入失敗，請檢查網路連線或 API 回傳狀態。");
+            }
         }
 
         function addYtVideo() {
