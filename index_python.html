@@ -189,9 +189,9 @@
             -webkit-user-select: none;
         }
 
-        #sidebar-scroll-content::-webkit-scrollbar { width: 4px; }
-        #sidebar-scroll-content::-webkit-scrollbar-track { background: transparent; }
-        #sidebar-scroll-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        #sidebar-scroll-content::-webkit-scrollbar, .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        #sidebar-scroll-content::-webkit-scrollbar-track, .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        #sidebar-scroll-content::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
         #dock-bar {
             position: fixed;
@@ -461,7 +461,23 @@
                     </div>
                 </div>
 
-                <!-- 4. 個人靈感隨筆與圖文日誌 -->
+                <!-- 🌟 4. 專屬影音櫃 CSV (獨立大群組) -->
+                <div class="sidebar-item-group bg-yellow-50/40 p-2.5 rounded-2xl border border-yellow-100 shadow-2xs transition-all hover:border-yellow-200" data-id="group-goldmelody">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-goldmelody" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-goldmelody" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-yellow-100 text-yellow-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-music"></i></span>
+                                專屬影音櫃 (Gold Melody)
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 5. 個人靈感隨筆與圖文日誌 -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -477,7 +493,7 @@
                     </div>
                 </div>
 
-                <!-- 5. 贊助支援與延伸閱讀 -->
+                <!-- 6. 贊助支援與延伸閱讀 -->
                 <div class="sidebar-item-group bg-pink-50/40 p-2.5 rounded-2xl border border-pink-100 shadow-2xs transition-all hover:border-pink-200" data-id="group-sponsor">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -493,7 +509,7 @@
                     </div>
                 </div>
 
-                <!-- 6. Google 廣告贊助區塊 -->
+                <!-- 7. Google 廣告贊助區塊 -->
                 <div class="sidebar-item-group bg-purple-50/40 p-2.5 rounded-2xl border border-purple-100 shadow-2xs transition-all hover:border-purple-200" data-id="group-ads">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -700,6 +716,81 @@
                     </form>
                 </div>
 
+                <!-- 🌟 專屬影音櫃 (Gold Melody) - 比照 YouTube 播放頁面排版 (初始為空，右側＋按鈕新增) -->
+                <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
+                    
+                    <!-- 卡片頂部標題區與＋號按鈕 -->
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-music"></i></span>
+                            <span>🎵 專屬影音櫃 (Gold Melody)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="text-[11px] text-emerald-600 font-bold hover:underline flex items-center gap-1">
+                                開啟獨立頁面 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                            <!-- ➕ 右側新增影片按鈕 -->
+                            <button onclick="toggleYtAddForm()" class="w-8 h-8 rounded-xl bg-[#00a600] hover:bg-[#008f00] text-white flex items-center justify-center shadow-xs transition active:scale-95 cursor-pointer" title="新增 YouTube 影片">
+                                <i class="fa-solid fa-plus text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ➕ 可折疊的新增 YouTube 影片表單 -->
+                    <div id="yt-add-form" class="bg-yellow-50/60 p-3.5 rounded-2xl border border-yellow-200/80 space-y-2.5 transition-all" style="display: none;">
+                        <div class="text-xs font-bold text-yellow-900 flex items-center gap-1.5">
+                            <i class="fa-brands fa-youtube text-red-500 text-sm"></i> 新增 YouTube 影片至專屬清單
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            <input type="text" id="yt-input-url" placeholder="貼上 YouTube 影片網址 (例: https://www.youtube.com/watch?v=...)" class="w-full bg-white p-2 rounded-xl border border-yellow-200 text-xs outline-none focus:border-amber-500 shadow-2xs">
+                            <input type="text" id="yt-input-title" placeholder="輸入影片名稱/備註 (選填)" class="w-full bg-white p-2 rounded-xl border border-yellow-200 text-xs outline-none focus:border-amber-500 shadow-2xs">
+                        </div>
+                        <div class="flex justify-end gap-2 pt-1">
+                            <button onclick="toggleYtAddForm()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer">取消</button>
+                            <button onclick="addYtVideo()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition cursor-pointer shadow-xs">+ 排入清單</button>
+                        </div>
+                    </div>
+
+                    <!-- 🎬 主播放器與播放清單區域 (左右比照圖示版型) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                        
+                        <!-- 左側：大畫面播放器區塊 (佔 8 欄) -->
+                        <div class="lg:col-span-8 flex flex-col space-y-2">
+                            <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-sm relative flex items-center justify-center" id="yt-player-container">
+                                <!-- 預設尚未選擇影片時的提示圖文 -->
+                                <div id="yt-player-placeholder" class="text-center p-6 text-slate-400 space-y-2">
+                                    <i class="fa-brands fa-youtube text-5xl text-red-500/80"></i>
+                                    <p class="text-xs md:text-sm font-medium">請從右側播放清單點擊影片進行播放<br>或點擊右上角「<strong class="text-amber-500">＋</strong>」新增您的第一首歌曲/影片！</p>
+                                </div>
+                                <!-- 動態插入的 iframe -->
+                                <iframe id="yt-iframe" class="w-full h-full border-0 hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <div class="flex items-center justify-between px-1">
+                                <h3 id="yt-playing-title" class="font-bold text-slate-800 text-xs md:text-sm line-clamp-1">尚未選擇播放影片</h3>
+                                <button id="yt-delete-current-btn" onclick="deleteCurrentYtVideo()" class="text-rose-500 hover:text-rose-700 text-xs font-medium hidden cursor-pointer transition flex items-center gap-1">
+                                    <i class="fa-solid fa-trash-can"></i> 移除此影片
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 右側：播放清單表列區塊 (佔 4 欄) -->
+                        <div class="lg:col-span-4 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-[320px] md:h-[380px] lg:h-auto">
+                            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
+                                <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                                    <i class="fa-solid fa-list-ul text-amber-500"></i> 專屬歌單清單 
+                                    <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
+                                </span>
+                            </div>
+                            <!-- 清單捲動列表 -->
+                            <div id="yt-playlist-items" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                                <div class="text-center text-xs text-slate-400 py-10 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <!-- 1. 精選影音與創作服務 -->
                 <div id="desktop-creative-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
                     <div id="creative-app-grid" class="app-grid">
@@ -834,7 +925,7 @@
 
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 4. 個人靈感隨筆與圖文日誌 (手機排版最佳化版本) -->
+                <!-- 5. 個人靈感隨筆與圖文日誌 -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
@@ -846,13 +937,12 @@
                         </a>
                     </div>
 
-                    <!-- 這裡會由 JavaScript 自動帶入 Blogger 上的最新文章 -->
                     <div id="blogger-feed-container" class="space-y-3">
                         <div class="text-xs text-slate-400 italic text-center py-4">正在載入最新圖文日誌...</div>
                     </div>
                 </div>
 
-                <!-- 5. 贊助支援與延伸閱讀 -->
+                <!-- 6. 贊助支援與延伸閱讀 -->
                 <div id="desktop-sponsor-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="text-center pb-3 border-b border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
@@ -870,7 +960,7 @@
                     </div>
                 </div>
 
-                <!-- 6. 獨立的 Google 廣告贊助區塊 -->
+                <!-- 7. 獨立的 Google 廣告贊助區塊 -->
                 <div id="desktop-ads-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
                     <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
                         <i class="fa-solid fa-rectangle-ad text-purple-600"></i> Google 廣告贊助區塊
@@ -878,7 +968,6 @@
                     <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/40 rounded-xl border border-dashed border-slate-200 overflow-hidden">
                         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811"
                              crossorigin="anonymous"></script>
-                        <!-- myezlife_home -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-client="ca-pub-5328509571221811"
@@ -1001,6 +1090,135 @@
             } else {
                 subMenu.style.display = 'none';
                 if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
+            }
+        }
+
+        // 🌟 專屬影音櫃 (Gold Melody) 核心邏輯
+        let currentYtPlayingId = null;
+
+        function toggleYtAddForm() {
+            const form = document.getElementById('yt-add-form');
+            if (form) form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+        }
+
+        function extractYtId(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        function getYtPlaylist() {
+            return JSON.parse(localStorage.getItem('myezlife_goldmelody_list') || '[]');
+        }
+
+        function saveYtPlaylist(list) {
+            localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(list));
+            syncToCloud();
+        }
+
+        function addYtVideo() {
+            const urlInput = document.getElementById('yt-input-url');
+            const titleInput = document.getElementById('yt-input-title');
+            const url = urlInput.value.trim();
+            let title = titleInput.value.trim();
+
+            const videoId = extractYtId(url);
+            if (!videoId) { alert('請貼上有效的 YouTube 影片網址！'); return; }
+
+            if (!title) title = `YouTube 影片 (${videoId})`;
+
+            let list = getYtPlaylist();
+            list.push({ id: videoId, title: title, url: url });
+            saveYtPlaylist(list);
+
+            urlInput.value = '';
+            titleInput.value = '';
+            toggleYtAddForm();
+            renderYtPlaylist();
+
+            // 如果這是加入的第一支影片，自動播放
+            if (list.length === 1) {
+                playYtVideo(videoId, title);
+            }
+        }
+
+        function renderYtPlaylist() {
+            const list = getYtPlaylist();
+            const container = document.getElementById('yt-playlist-items');
+            const countEl = document.getElementById('yt-list-count');
+            if (countEl) countEl.innerText = list.length;
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center text-xs text-slate-400 py-10 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map((item, index) => {
+                const isPlaying = (item.id === currentYtPlayingId);
+                return `
+                    <div onclick="playYtVideo('${item.id}', '${item.title.replace(/'/g, "\\'")}')" class="flex items-center gap-2.5 p-2 rounded-xl border transition cursor-pointer group ${isPlaying ? 'bg-amber-100/80 border-amber-300' : 'bg-white border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'}">
+                        <div class="w-16 h-10 rounded-lg overflow-hidden bg-slate-200 shrink-0 relative border border-slate-100">
+                            <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" class="w-full h-full object-cover">
+                            ${isPlaying ? `<div class="absolute inset-0 bg-amber-900/40 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-volume-high animate-pulse"></i></div>` : ''}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold ${isPlaying ? 'text-amber-900' : 'text-slate-700 group-hover:text-amber-700'} line-clamp-2 leading-snug">${item.title}</h4>
+                        </div>
+                        <button onclick="event.stopPropagation(); removeYtVideo(${index});" class="text-slate-300 hover:text-rose-500 p-1 rounded-md text-xs transition cursor-pointer" title="刪除此影片">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function playYtVideo(id, title) {
+            currentYtPlayingId = id;
+            const iframe = document.getElementById('yt-iframe');
+            const placeholder = document.getElementById('yt-player-placeholder');
+            const playingTitle = document.getElementById('yt-playing-title');
+            const deleteBtn = document.getElementById('yt-delete-current-btn');
+
+            if (iframe && placeholder) {
+                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+                iframe.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            }
+
+            if (playingTitle) playingTitle.innerText = `正在播放：${title}`;
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+
+            renderYtPlaylist();
+        }
+
+        function removeYtVideo(index) {
+            let list = getYtPlaylist();
+            const removed = list.splice(index, 1)[0];
+            saveYtPlaylist(list);
+
+            if (removed && removed.id === currentYtPlayingId) {
+                currentYtPlayingId = null;
+                const iframe = document.getElementById('yt-iframe');
+                const placeholder = document.getElementById('yt-player-placeholder');
+                const playingTitle = document.getElementById('yt-playing-title');
+                const deleteBtn = document.getElementById('yt-delete-current-btn');
+
+                if (iframe) { iframe.src = ''; iframe.classList.add('hidden'); }
+                if (placeholder) placeholder.classList.remove('hidden');
+                if (playingTitle) playingTitle.innerText = '尚未選擇播放影片';
+                if (deleteBtn) deleteBtn.classList.add('hidden');
+            }
+
+            renderYtPlaylist();
+        }
+
+        function deleteCurrentYtVideo() {
+            if (!currentYtPlayingId) return;
+            let list = getYtPlaylist();
+            const index = list.findIndex(item => item.id === currentYtPlayingId);
+            if (index !== -1) {
+                removeYtVideo(index);
             }
         }
 
@@ -1143,6 +1361,7 @@
                 if (cloudData && Object.keys(cloudData).length > 0) {
                     if (cloudData.custom_groups) localStorage.setItem('myezlife_custom_groups', JSON.stringify(cloudData.custom_groups));
                     if (cloudData.custom_apps) localStorage.setItem('myezlife_custom_apps', JSON.stringify(cloudData.custom_apps));
+                    if (cloudData.goldmelody_list) localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(cloudData.goldmelody_list));
                     if (cloudData.custom_logo) {
                         localStorage.setItem('myezlife_custom_logo', cloudData.custom_logo);
                         document.getElementById('header-logo-img').src = cloudData.custom_logo;
@@ -1164,6 +1383,7 @@
                     body: JSON.stringify({
                         custom_groups: JSON.parse(localStorage.getItem('myezlife_custom_groups') || '[]'),
                         custom_apps: JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]'),
+                        goldmelody_list: JSON.parse(localStorage.getItem('myezlife_goldmelody_list') || '[]'),
                         custom_logo: localStorage.getItem('myezlife_custom_logo') || '',
                         updated_at: new Date().toISOString()
                     })
@@ -1271,6 +1491,10 @@
             const modSearch = document.getElementById('mod-search');
             if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
 
+            const goldmelodyCard = document.getElementById('desktop-goldmelody-card');
+            const modGoldmelody = document.getElementById('mod-goldmelody');
+            if (goldmelodyCard && modGoldmelody) goldmelodyCard.style.display = modGoldmelody.checked ? 'block' : 'none';
+
             let hasCreativeVisible = false;
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
@@ -1345,6 +1569,7 @@
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
                     cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search');
                 });
+                if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = false;
                 if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
                 if (document.getElementById('mod-sponsor')) document.getElementById('mod-sponsor').checked = false;
                 if (document.getElementById('mod-ads')) document.getElementById('mod-ads').checked = false;
@@ -1405,6 +1630,7 @@
             Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id')).forEach(groupId => {
                 let card = null;
                 if (groupId === 'group-search') card = document.getElementById('desktop-search-card');
+                else if (groupId === 'group-goldmelody') card = document.getElementById('desktop-goldmelody-card');
                 else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
                 else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
@@ -1471,7 +1697,6 @@
             });
         }
 
-        // 🌟 自動讀取 Blogger RSS Feed 的核心函式 (已最佳化手機版焦點與卡片樣式)
         async function loadBloggerFeed() {
             const blogUrl = "https://myezdailylife.blogspot.com";
             const rssApiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(blogUrl + '/feeds/posts/default?alt=rss')}`;
@@ -1518,7 +1743,6 @@
                 { title: "📂 檔案總管", desc: "方便管理您的本機與網頁暫存。", url: "https://myezlife.com/FileExplorer.html", tag: "系統" },
                 { title: "🎬 AI好劇", desc: "精選優質 AI 好劇頻道與播放清單。", url: "https://www.youtube.com/playlist?list=PLeSu4EJy_yAQ", tag: "影音" },
                 { title: "📝 零碎日常", desc: "記錄生活中的點滴與隨筆心情。", url: "https://myezdailylife.blogspot.com", tag: "部落格" },
-                { title: "💡 好物推薦", desc: "精選優質好物與實用工具分享。", url: "https://myezlife.com/highly_recommend.html", tag: "推薦" },
                 { title: "📖 生活閱讀分享", desc: "探索富有深度的心靈與閱讀筆記。", url: "https://portaly.cc/myezlife/pages/readingshare", tag: "閱讀" },
                 { title: "📚 好讀書單", desc: "舒適豐富的精選線上閱讀書單。", url: "https://myezlife.com/haodoo.html", tag: "書單" }
             ];
@@ -1560,6 +1784,7 @@
         loadCardStyle();
         loadBloggerFeed();
         initRandomRecommendation();
+        renderYtPlaylist();
     </script>
 </body>
 </html>
