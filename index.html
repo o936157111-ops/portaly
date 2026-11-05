@@ -773,16 +773,16 @@
                             </div>
                         </div>
 
-                        <!-- 右側：播放清單表列區塊 (佔 4 欄) -->
-                        <div class="lg:col-span-4 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-[320px] md:h-[380px] lg:h-auto">
+                       <!-- 右側：播放清單表列區塊 (佔 4 欄) -->
+                        <div class="lg:col-span-4 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-[320px] md:h-[380px] lg:h-[390px]">
                             <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
                                 <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
                                     <i class="fa-solid fa-list-ul text-amber-500"></i> 專屬歌單清單 
                                     <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
                                 </span>
                             </div>
-                            <!-- 清單捲動列表 -->
-                            <div id="yt-playlist-items" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                            <!-- 清單捲動列表：加入明確的高度限制與捲軸支援 -->
+                            <div id="yt-playlist-items" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar max-h-[300px] lg:max-h-[320px]">
                                 <div class="text-center text-xs text-slate-400 py-10 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>
                             </div>
                         </div>
