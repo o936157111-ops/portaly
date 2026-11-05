@@ -908,29 +908,25 @@
                 </div>
 
                 <!-- 6. 獨立的 Google 廣告贊助區塊 -->
-                <!-- 6. 獨立的 Google 廣告贊助區塊 -->
-<div id="desktop-ads-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
-    <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
-        <i class="fa-solid fa-rectangle-ad text-purple-600"></i> Google 廣告贊助區塊
-    </div>
-    <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/40 rounded-xl border border-dashed border-slate-200 overflow-hidden">
-        
-        <!-- 💡 把剛才複製的程式碼貼在這邊 -->
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811"
-             crossorigin="anonymous"></script>
-        <!-- myezlife_home -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-5328509571221811"
-             data-ad-slot="5148210771"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-
-    </div>
-</div>
+                <div id="desktop-ads-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
+                    <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                        <i class="fa-solid fa-rectangle-ad text-purple-600"></i> Google 廣告贊助區塊
+                    </div>
+                    <div id="google-adsense-container" class="w-full flex justify-center items-center my-2 min-h-[90px] bg-slate-50/40 rounded-xl border border-dashed border-slate-200 overflow-hidden">
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5328509571221811"
+                             crossorigin="anonymous"></script>
+                        <!-- myezlife_home -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-5328509571221811"
+                             data-ad-slot="5148210771"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>
+                             (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
+                </div>
 
                 <!-- Dock 欄 -->
                 <div id="dock-bar">
@@ -1174,12 +1170,11 @@
             syncFromCloud();
         }
 
-        // 🌟 修正重點 1：同步時「先推送最新本機資料」再抓取，避免本機新新增的日誌被雲端舊資料蓋掉
         async function syncFromCloud() {
             const gasUrl = localStorage.getItem('myezlife_gas_url');
             if (!gasUrl) { alert('請先輸入並儲存 GAS 部署網址！'); return; }
             try {
-                await syncToCloud(); // 先同步上傳本機資料
+                await syncToCloud();
                 const res = await fetch(gasUrl);
                 const cloudData = await res.json();
                 if (cloudData && Object.keys(cloudData).length > 0) {
@@ -1404,7 +1399,7 @@
                     handle: '.sidebar-drag-handle',
                     filter: 'input, label',
                     preventOnFilter: false,
-                    delay: isTouchDevice ? 3000 : 0,
+                    delay: isTouchDevice ? 200 : 0, // 👈 已將觸控延遲調降為 200 毫秒
                     delayOnTouchOnly: true,
                     touchStartThreshold: 5,
                     onEnd: function () {
@@ -1427,7 +1422,7 @@
                         handle: '.sub-drag-item', 
                         filter: 'input', 
                         preventOnFilter: false,
-                        delay: isTouchDevice ? 3000 : 0,
+                        delay: isTouchDevice ? 200 : 0, // 👈 子項目同步調降為 200 毫秒
                         delayOnTouchOnly: true,
                         touchStartThreshold: 5,
                         onEnd: function() {
@@ -1521,7 +1516,6 @@
             syncToCloud(); 
         }
 
-        // 🌟 修正重點 2：完善 YouTube 影片解析，包含影片與 Short 語法雙重支援
         function publishBlogPost() {
             const title = document.getElementById('post-title').value.trim();
             const content = document.getElementById('post-content').value.trim();
