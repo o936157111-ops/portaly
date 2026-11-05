@@ -751,7 +751,7 @@
                         </div>
                     </div>
 
-               <!-- 🎬 主播放器與播放清單區域 -->
+              <!-- 🎬 主播放器與播放清單區域 (右側精準對齊 3 個影音高度) -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
                         
                         <!-- 左側：大畫面播放器區塊 (佔 8 欄) -->
@@ -773,17 +773,17 @@
                             </div>
                         </div>
 
-                        <!-- 右側：播放清單表列區塊 (佔 4 欄，高度精準對齊左側影片播放框) -->
-                        <div class="lg:col-span-4 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-[260px] sm:h-[300px] md:h-[340px] lg:h-[290px]">
+                        <!-- 右側：播放清單表列區塊 (佔 4 欄，高度剛好 3 個影音，第 4 個起自動出捲軸) -->
+                        <div class="lg:col-span-4 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-[235px] sm:h-[265px] md:h-[295px] lg:h-[258px]">
                             <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
                                 <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
                                     <i class="fa-solid fa-list-ul text-amber-500"></i> 專屬歌單清單 
                                     <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
                                 </span>
                             </div>
-                            <!-- 清單捲動列表：剛好容納 3 個項目，第 4 個起自動出現捲軸 -->
+                            <!-- 清單捲動列表：剛好容納 3 個項目 -->
                             <div id="yt-playlist-items" class="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                                <div class="text-center text-xs text-slate-400 py-10 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>
+                                <div class="text-center text-xs text-slate-400 py-6 italic">目前清單為空<br>點擊右上角「＋」加入影片</div>
                             </div>
                         </div>
 
