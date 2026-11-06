@@ -493,21 +493,122 @@
                     </div>
                 </div>
 
-                <!-- 6. 贊助支援與延伸閱讀 -->
-                <div class="sidebar-item-group bg-pink-50/40 p-2.5 rounded-2xl border border-pink-100 shadow-2xs transition-all hover:border-pink-200" data-id="group-sponsor">
-                    <div class="flex items-center gap-2 py-0.5">
-                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
-                            <i class="fa-solid fa-grip-vertical"></i>
+               <!-- 6. 贊助支援與延伸閱讀 -->
+                <div id="desktop-sponsor-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
+                    <div class="text-center pb-3 border-b border-slate-100">
+                        <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
+                        <p class="text-[11px] text-emerald-700 mt-1.5 font-medium bg-emerald-50/80 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
+                            ☕ 覺得好用嗎？本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機與伺服器維護開銷！
+                        </p>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/30">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-book-open text-emerald-600"></i> 📖 延伸閱讀與推薦</span>
+                            <span onclick="initRandomRecommendation()" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded-lg font-bold cursor-pointer transition select-none">🎲 重新隨機推薦</span>
                         </div>
-                        <label for="mod-sponsor" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
-                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
-                            <span class="flex items-center gap-1.5">
-                                <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-heart"></i></span>
-                                贊助支援與延伸閱讀
+                        <div id="random-recommendation-box" class="space-y-2"></div>
+                    </div>
+
+                    <!-- 🌟 手機專用全相容分享按鈕區塊 -->
+                    <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/30">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-share-nodes text-emerald-600"></i> 分享這個簡居入口給好友
                             </span>
-                        </label>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <button type="button" onclick="handleWebShare()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95">
+                                <i class="fa-solid fa-paper-plane"></i> 快速分享
+                            </button>
+
+                            <button type="button" onclick="copyPageLink()" id="copy-btn" class="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95">
+                                <i class="fa-regular fa-copy"></i> 複製網址
+                            </button>
+
+                            <button type="button" onclick="shareToLine()" class="col-span-2 sm:col-span-1 bg-[#06C755]/10 hover:bg-[#06C755]/20 text-[#06C755] border border-[#06C755]/30 text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95">
+                                <i class="fa-brands fa-line text-sm"></i> 分享到 LINE
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                <script>
+                    // 快速複製網址功能（含雙層備援）
+                    function copyPageLink() {
+                        const currentUrl = window.location.href;
+                        if (navigator.clipboard && window.isSecureContext) {
+                            navigator.clipboard.writeText(currentUrl).then(() => {
+                                showCopySuccess();
+                            }).catch(() => {
+                                fallbackCopy(currentUrl);
+                            });
+                        } else {
+                            fallbackCopy(currentUrl);
+                        }
+                    }
+
+                    function fallbackCopy(text) {
+                        try {
+                            const textArea = document.createElement("textarea");
+                            textArea.value = text;
+                            textArea.style.position = "fixed";
+                            textArea.style.left = "-999999px";
+                            document.body.appendChild(textArea);
+                            textArea.focus();
+                            textArea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textArea);
+                            showCopySuccess();
+                        } catch (err) {
+                            alert('複製網址：\n' + text);
+                        }
+                    }
+
+                    function showCopySuccess() {
+                        const btn = document.getElementById('copy-btn');
+                        if (!btn) return;
+                        const originalHTML = btn.innerHTML;
+                        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i> 已複製！`;
+                        btn.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
+                        setTimeout(() => {
+                            btn.innerHTML = originalHTML;
+                            btn.classList.remove('bg-emerald-50', 'border-emerald-300', 'text-emerald-700');
+                        }, 2000);
+                    }
+
+                    // 手機原生分享
+                    function handleWebShare() {
+                        const shareData = {
+                            title: document.title || 'myezlife.com 簡居生活',
+                            text: '推薦您這個簡潔無廣告的個人數位生活入口網站：',
+                            url: window.location.href
+                        };
+
+                        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                            navigator.share(shareData).catch((err) => {
+                                if (err.name !== 'AbortError') {
+                                    copyPageLink();
+                                }
+                            });
+                        } else {
+                            copyPageLink();
+                        }
+                    }
+
+                    // 手機直接開啟 LINE 傳送
+                    function shareToLine() {
+                        const shareText = '推薦您這個簡潔無廣告的個人數位生活入口網站：' + window.location.href;
+                        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+                        if (isMobile) {
+                            window.location.href = 'line://msg/text/' + encodeURIComponent(shareText);
+                        } else {
+                            window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href), '_blank');
+                        }
+                    }
+                </script>
 
                 <!-- 7. Google 廣告贊助區塊 -->
                 <div class="sidebar-item-group bg-purple-50/40 p-2.5 rounded-2xl border border-purple-100 shadow-2xs transition-all hover:border-purple-200" data-id="group-ads">
