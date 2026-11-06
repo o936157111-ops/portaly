@@ -956,6 +956,31 @@
                         </div>
                         <div id="random-recommendation-box" class="space-y-2"></div>
                     </div>
+
+<!-- 🌟 網頁分享專屬卡片 / 按鈕群組 -->
+                    <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/30">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                <i class="fa-solid fa-share-nodes text-emerald-600"></i> 分享這個簡居入口給好友
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <button onclick="handleWebShare()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95">
+                                <i class="fa-solid fa-paper-plane"></i> 快速分享 / 複製
+                            </button>
+
+                            <button onclick="copyPageLink()" id="copy-btn" class="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95">
+                                <i class="fa-regular fa-copy"></i> 複製網址
+                            </button>
+
+                            <a href="https://social-plugins.line.me/lineit/share?url=" onclick="this.href='https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(window.location.href);" target="_blank" class="col-span-2 sm:col-span-1 bg-[#06C755]/10 hover:bg-[#06C755]/20 text-[#06C755] border border-[#06C755]/30 text-xs font-bold py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 text-decoration-none">
+                                <i class="fa-brands fa-line text-sm"></i> 分享到 LINE
+                            </a>
+                        </div>
+                    </div>
+                </div> <!-- 這是原本 #desktop-sponsor-card 的結尾 div -->
+
                 </div>
 
                 <!-- 7. 獨立的 Google 廣告贊助區塊 -->
