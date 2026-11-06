@@ -44,6 +44,21 @@
                 width: 1.35rem !important;
                 height: 1.35rem !important;
             }
+            /* 🌟 手機版將主體左右留白與容器間距縮到最小，讓影音櫃最大化 */
+            #app-wrapper {
+                padding: 4px !important;
+            }
+            #desktop-goldmelody-card {
+                padding: 4px !important;
+                border-radius: 12px !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+            #desktop-goldmelody-card iframe {
+                height: 75vh !important; /* 手機版播放區塊拉高佔據大半螢幕 */
+                border-radius: 12px !important;
+            }
         }
 
         #sidebar {
@@ -708,7 +723,7 @@
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
                 <!-- Google 智慧搜尋列 -->
-                <div id="desktop-search-card" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <div id="desktop-search-card" class="app-shortcut-card bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
                         <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600"><i class="fa-solid fa-magnifying-glass"></i></div>
                         <input type="text" name="q" placeholder="Google 搜尋您想尋求的解答..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
