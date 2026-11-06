@@ -461,7 +461,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 4. 專屬影音櫃 CSV (獨立大群組) -->
+                <!-- 🌟 4. 專屬影音櫃 (獨立大群組) -->
                 <div class="sidebar-item-group bg-yellow-50/40 p-2.5 rounded-2xl border border-yellow-100 shadow-2xs transition-all hover:border-yellow-200" data-id="group-goldmelody">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -716,77 +716,21 @@
                     </form>
                 </div>
 
-                <!-- 🌟 專屬影音櫃  -->
+                <!-- 🌟 專屬影音櫃 (改為 iframe 直接嵌入 yt-video.html) -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
-                    
-                    <!-- 卡片頂部標題區與按鈕 -->
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                             <span class="w-7 h-7 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-music"></i></span>
-                            <span>🎵 專屬影音櫃 </span>
+                            <span>🎵 專屬影音櫃</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="text-[11px] text-emerald-600 font-bold hover:underline flex items-center gap-1">
-                                開啟獨立頁面 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                            </a>
-                            <!-- ➕ 右側新增影片按鈕 -->
-                            <button onclick="toggleYtAddForm()" class="w-8 h-8 rounded-xl bg-[#00a600] hover:bg-[#008f00] text-white flex items-center justify-center shadow-xs transition active:scale-95 cursor-pointer" title="新增 YouTube 影片">
-                                <i class="fa-solid fa-plus text-sm"></i>
-                            </button>
-                        </div>
+                        <a href="https://myezlife.com/yt-video.html" target="_blank" class="text-[11px] text-emerald-600 font-bold hover:underline flex items-center gap-1">
+                            開啟獨立頁面 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
                     </div>
-
-                    <!-- ➕ 可折疊的新增 YouTube 影片表單 -->
-                    <div id="yt-add-form" class="bg-yellow-50/60 p-3.5 rounded-2xl border border-yellow-200/80 space-y-2.5 transition-all" style="display: none;">
-                        <div class="text-xs font-bold text-yellow-900 flex items-center gap-1.5">
-                            <i class="fa-brands fa-youtube text-red-500 text-sm"></i> 新增 YouTube 影片至專屬清單
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                            <input type="text" id="yt-input-url" placeholder="貼上 YouTube 影片網址 (例: https://www.youtube.com/watch?v=...)" class="w-full bg-white p-2 rounded-xl border border-yellow-200 text-xs outline-none focus:border-amber-500 shadow-2xs">
-                            <input type="text" id="yt-input-title" placeholder="輸入影片名稱/備註 (選填)" class="w-full bg-white p-2 rounded-xl border border-yellow-200 text-xs outline-none focus:border-amber-500 shadow-2xs">
-                        </div>
-                        <div class="flex justify-end gap-2 pt-1">
-                            <button onclick="toggleYtAddForm()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer">取消</button>
-                            <button onclick="addYtVideo()" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition cursor-pointer shadow-xs">+ 排入清單</button>
-                        </div>
+                    <!-- 嵌入共用的 yt-video.html 畫面 -->
+                    <div class="w-full h-[520px] rounded-2xl overflow-hidden border border-slate-100">
+                        <iframe src="https://myezlife.com/yt-video.html" class="w-full h-full border-0"></iframe>
                     </div>
-
-                    <!-- 🎬 播放器與清單區域 -->
-                    <div class="flex flex-col lg:grid lg:grid-cols-12 gap-4 items-start">
-                        
-                        <!-- 📱 上/右：歌單清單區塊 -->
-                        <div class="w-full lg:col-span-4 order-1 lg:order-2 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-auto lg:h-[258px]">
-                            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
-                                <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
-                                    <i class="fa-solid fa-list-ul text-amber-500"></i> 專屬歌單清單 
-                                    <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
-                                </span>
-                            </div>
-                            <!-- 清單容器 -->
-                            <div id="yt-playlist-items" class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto gap-2.5 lg:gap-2 pb-2 lg:pb-0 pr-0 lg:pr-1 custom-scrollbar">
-                                <div class="text-center text-xs text-slate-400 py-6 italic w-full">載入固定歌單中...</div>
-                            </div>
-                        </div>
-
-                        <!-- 📺 下/左：大畫面播放器區塊 -->
-                        <div class="w-full lg:col-span-8 order-2 lg:order-1 flex flex-col space-y-2">
-                            <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-sm relative flex items-center justify-center" id="yt-player-container">
-                                <div id="yt-player-placeholder" class="text-center p-6 text-slate-400 space-y-2">
-                                    <i class="fa-brands fa-youtube text-5xl text-red-500/80"></i>
-                                    <p class="text-xs md:text-sm font-medium">請從上方/右側點擊歌曲播放</p>
-                                </div>
-                                <iframe id="yt-iframe" class="w-full h-full border-0 hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                            <div class="flex items-center justify-between px-1 shrink-0">
-                                <h3 id="yt-playing-title" class="font-bold text-slate-800 text-xs md:text-sm line-clamp-1">尚未選擇播放影片</h3>
-                                <button id="yt-delete-current-btn" onclick="deleteCurrentYtVideo()" class="text-rose-500 hover:text-rose-700 text-xs font-medium hidden cursor-pointer transition flex items-center gap-1">
-                                    <i class="fa-solid fa-trash-can"></i> 
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-
                 </div>
 
                 <!-- 1. 精選影音與創作服務 -->
@@ -1112,175 +1056,6 @@
             } else {
                 subMenu.style.display = 'none';
                 if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
-            }
-        }
-
-        // 🌟 專屬影音櫃 核心邏輯 (固定精選好歌，可無限擴充)
-const defaultYtPlaylist = [
-    { id: "aAh17Sse6LA", title: "《如果烏鴉說情話》", url: "https://www.youtube.com/watch?v=aAh17Sse6LA&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac", type: "video" },
-    { id: "C_SPMqq8uwk", title: "過來人", url: "https://www.youtube.com/watch?v=C_SPMqq8uwk&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=2", type: "video" },
-    { id: "H7dR6FwvljM", title: "平凡的重量", url: "https://www.youtube.com/watch?v=H7dR6FwvljM", type: "video" },
-    { id: "lzUyTD6IzqU", title: "回不去的曾經", url: "https://www.youtube.com/watch?v=lzUyTD6IzqU&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=4", type: "video" },
-    { id: "1w5r0tbvTCk", title: "人潮有多擁擠 就有多想你", url: "https://www.youtube.com/watch?v=1w5r0tbvTCk&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=5", type: "video" },
-    { id: "VdDSpgwfZrA", title: "人潮有多拥挤 就有多想你", url: "https://www.youtube.com/watch?v=VdDSpgwfZrA&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=6", type: "video" },
-    { id: "ad45hvF2dc4", title: "Wake Me Up", url: "https://www.youtube.com/watch?v=ad45hvF2dc4&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=7", type: "video" },
-    { id: "aJjpYSelgU8", title: "真的愛你又如何", url: "https://www.youtube.com/watch?v=aJjpYSelgU8&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=8", type: "video" },
-    { id: "rMuqgAHnXUo", title: "我不该动情", url: "https://www.youtube.com/watch?v=rMuqgAHnXUo&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=9", type: "video" },
-    { id: "hvo5RN3wS7U", title: "愛你始於心甘情願", url: "https://www.youtube.com/watch?v=hvo5RN3wS7U&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=10", type: "video" }
-    // 💡 之後如果還要加第 11 首、第 12 首... 直接在這裡繼續往下貼逗號隔開即可！
-];
-
-
-        let currentYtPlayingId = null;
-
-        function toggleYtAddForm() {
-            const form = document.getElementById('yt-add-form');
-            if (form) form.style.display = (form.style.display === 'none') ? 'block' : 'none';
-        }
-
-        function extractYtId(url) {
-            if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
-        function getYtPlaylist() {
-            const saved = localStorage.getItem('myezlife_goldmelody_list');
-            if (!saved || JSON.parse(saved).length === 0) {
-                localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(defaultYtPlaylist));
-                return defaultYtPlaylist;
-            }
-            return JSON.parse(saved);
-        }
-
-        function saveYtPlaylist(list) {
-            localStorage.setItem('myezlife_goldmelody_list', JSON.stringify(list));
-            syncToCloud();
-        }
-
-        function addYtVideo() {
-            const urlInput = document.getElementById('yt-input-url');
-            const titleInput = document.getElementById('yt-input-title');
-            const url = urlInput.value.trim();
-            let title = titleInput.value.trim();
-
-            const videoId = extractYtId(url);
-            if (!videoId) { alert('請貼上有效的 YouTube 影片網址！'); return; }
-
-            if (!title) title = `YouTube 影片 (${videoId})`;
-
-            let list = getYtPlaylist();
-            list.push({ id: videoId, title: title, url: url });
-            saveYtPlaylist(list);
-
-            urlInput.value = '';
-            titleInput.value = '';
-            toggleYtAddForm();
-            renderYtPlaylist();
-
-            if (list.length === 1) {
-                playYtVideo(videoId, title);
-            }
-        }
-
-        function renderYtPlaylist() {
-            const list = getYtPlaylist();
-            const container = document.getElementById('yt-playlist-items');
-            const countEl = document.getElementById('yt-list-count');
-            if (countEl) countEl.innerText = list.length;
-
-            if (list.length === 0) {
-                container.innerHTML = `<div class="text-center text-xs text-slate-400 py-6 italic w-full">目前清單為空<br>點擊右上角「＋」新增影片</div>`;
-                return;
-            }
-
-            if (!currentYtPlayingId && list.length > 0) {
-                currentYtPlayingId = list[0].id;
-                const iframe = document.getElementById('yt-iframe');
-                const placeholder = document.getElementById('yt-player-placeholder');
-                const playingTitle = document.getElementById('yt-playing-title');
-                const deleteBtn = document.getElementById('yt-delete-current-btn');
-                if (iframe && placeholder) {
-                    iframe.src = `https://www.youtube.com/embed/${list[0].id}`;
-                    iframe.classList.remove('hidden');
-                    placeholder.classList.add('hidden');
-                }
-                if (playingTitle) playingTitle.innerText = `正在播放：${list[0].title}`;
-                if (deleteBtn) deleteBtn.classList.remove('hidden');
-            }
-
-            container.innerHTML = list.map((item, index) => {
-                const isPlaying = (item.id === currentYtPlayingId);
-                return `
-                    <div onclick="playYtVideo('${item.id}', '${item.title.replace(/'/g, "\\'")}')" 
-                         class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2 p-2 rounded-xl border transition cursor-pointer group shrink-0 w-[180px] sm:w-[200px] lg:w-full ${isPlaying ? 'bg-amber-100/90 border-amber-300 shadow-xs' : 'bg-white border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'}">
-                        
-                        <!-- 縮圖區 -->
-                        <div class="w-full lg:w-16 h-24 lg:h-10 rounded-lg overflow-hidden bg-slate-200 shrink-0 relative border border-slate-100">
-                            <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" class="w-full h-full object-cover">
-                            ${isPlaying ? `<div class="absolute inset-0 bg-amber-900/40 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-volume-high animate-pulse"></i></div>` : ''}
-                        </div>
-
-                        <!-- 標題與操作區 -->
-                        <div class="flex-1 min-w-0 flex items-start justify-between gap-1">
-                            <h4 class="text-xs font-bold ${isPlaying ? 'text-amber-900' : 'text-slate-700 group-hover:text-amber-700'} line-clamp-2 leading-snug">${item.title}</h4>
-                            <button onclick="event.stopPropagation(); removeYtVideo(${index});" class="text-slate-300 hover:text-rose-500 p-0.5 rounded-md text-xs transition cursor-pointer shrink-0" title="刪除此影片">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function playYtVideo(id, title) {
-            currentYtPlayingId = id;
-            const iframe = document.getElementById('yt-iframe');
-            const placeholder = document.getElementById('yt-player-placeholder');
-            const playingTitle = document.getElementById('yt-playing-title');
-            const deleteBtn = document.getElementById('yt-delete-current-btn');
-
-            if (iframe && placeholder) {
-                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-                iframe.classList.remove('hidden');
-                placeholder.classList.add('hidden');
-            }
-
-            if (playingTitle) playingTitle.innerText = `正在播放：${title}`;
-            if (deleteBtn) deleteBtn.classList.remove('hidden');
-
-            renderYtPlaylist();
-        }
-
-        function removeYtVideo(index) {
-            let list = getYtPlaylist();
-            const removed = list.splice(index, 1)[0];
-            saveYtPlaylist(list);
-
-            if (removed && removed.id === currentYtPlayingId) {
-                currentYtPlayingId = null;
-                const iframe = document.getElementById('yt-iframe');
-                const placeholder = document.getElementById('yt-player-placeholder');
-                const playingTitle = document.getElementById('yt-playing-title');
-                const deleteBtn = document.getElementById('yt-delete-current-btn');
-
-                if (iframe) { iframe.src = ''; iframe.classList.add('hidden'); }
-                if (placeholder) placeholder.classList.remove('hidden');
-                if (playingTitle) playingTitle.innerText = '尚未選擇播放影片';
-                if (deleteBtn) deleteBtn.classList.add('hidden');
-            }
-
-            renderYtPlaylist();
-        }
-
-        function deleteCurrentYtVideo() {
-            if (!currentYtPlayingId) return;
-            let list = getYtPlaylist();
-            const index = list.findIndex(item => item.id === currentYtPlayingId);
-            if (index !== -1) {
-                removeYtVideo(index);
             }
         }
 
@@ -1823,7 +1598,6 @@ const defaultYtPlaylist = [
             }
         }
 
-        // 🌟 1. 強力全相容複製網址功能
         function copyPageLink() {
             const currentUrl = window.location.href;
             if (navigator.clipboard && window.isSecureContext) {
@@ -1866,7 +1640,6 @@ const defaultYtPlaylist = [
             }, 2000);
         }
 
-        // 🌟 2. 手機原生分享 (不支援時自動降級轉為複製)
         function handleWebShare() {
             const shareData = {
                 title: document.title || 'myezlife.com 簡居生活',
@@ -1885,7 +1658,6 @@ const defaultYtPlaylist = [
             }
         }
 
-        // 🌟 3. 手機直接喚醒 LINE App 傳送
         function shareToLine() {
             const shareText = '推薦您這個簡潔無廣告的個人數位生活入口網站：' + window.location.href;
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -1920,7 +1692,6 @@ const defaultYtPlaylist = [
         loadCardStyle();
         loadBloggerFeed();
         initRandomRecommendation();
-        renderYtPlaylist();
     </script>
 </body>
 </html>
