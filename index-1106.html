@@ -71,7 +71,7 @@
                     </div>
                     <!-- 清單容器 -->
                     <div id="yt-playlist-items" class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto gap-2.5 lg:gap-2 pb-2 lg:pb-0 pr-0 lg:pr-1 custom-scrollbar">
-                        <div class="text-center text-xs text-slate-400 py-6 italic w-full">正在從雲端載入歌單...</div>
+                        <div class="text-center text-xs text-slate-400 py-6 italic w-full">正在從 Google Sheet 載入最新歌單...</div>
                     </div>
                 </div>
 
@@ -244,7 +244,7 @@
             }
         }
 
-        // 解析包含雙引號與逗號的 CSV 欄位
+        // 解析 CSV 欄位（支援引號與逗號）
         function parseCSVLine(text) {
             let result = [];
             let cell = '';
@@ -265,15 +265,16 @@
             return result;
         }
 
-        // 🌟 自動載入 Google 試算表 CSV 歌單 (含代理防 CORS 機制)
+        // 🌟 強制優先從 Google Sheet CSV 抓取並覆寫歌單
         async function loadPlaylistFromGoogleSheet() {
             const rawCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
             
-            // 使用 CORS 代理，解決本機 file:/// 或跨域 fetch 遭瀏覽器阻擋問題
-            const csvUrl = "https://corsproxy.io/?" + encodeURIComponent(rawCsvUrl);
-            
+            // 透過代理確保線上與本機皆能順利讀取
+            const isOnline = window.location.protocol.startsWith('http');
+            const targetUrl = isOnline ? rawCsvUrl : ("https://corsproxy.io/?" + encodeURIComponent(rawCsvUrl));
+
             try {
-                const response = await fetch(csvUrl);
+                const response = await fetch(targetUrl);
                 if (!response.ok) throw new Error("網路請求失敗");
                 
                 const data = await response.text();
@@ -281,13 +282,11 @@
                 const fetchedPlaylist = [];
 
                 rows.forEach((row, index) => {
-                    if (!row.trim() || index === 0) return; // 跳過標題列
+                    if (!row.trim() || index === 0) return;
                     
                     const cols = parseCSVLine(row);
                     if (cols.length > 0) {
                         const title = cols[0] ? cols[0].replace(/^"|"$/g, '').trim() : '';
-                        
-                        // 尋找包含 YouTube 連結的欄位
                         const url = cols.find(c => c.includes('youtube.com') || c.includes('youtu.be')) || '';
                         const videoId = extractYtId(url);
 
@@ -302,6 +301,7 @@
                     }
                 });
 
+                // 只要成功抓到，立刻強制覆寫並渲染畫面
                 if (fetchedPlaylist.length > 0) {
                     saveYtPlaylist(fetchedPlaylist);
                     renderYtPlaylist();
@@ -309,12 +309,12 @@
                     renderYtPlaylist();
                 }
             } catch (error) {
-                console.error("抓取 CSV 失敗，載入本機快取資料:", error);
+                console.error("抓取 CSV 失敗:", error);
                 renderYtPlaylist();
             }
         }
 
-        // 初始化執行
+        // 頁面載入時直接執行
         loadPlaylistFromGoogleSheet();
     </script>
 </body>
