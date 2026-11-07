@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筆墨與歲月的刻痕 · 個人典藏展覽館</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f1217',
+                            card: '#181c24',
+                            border: '#2a3140',
+                            accent: '#c9a063',
+                            accentHover: '#dbb477',
+                            text: '#e2e8f0',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                        serif: ['Noto Serif TC', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- PapaParse for CSV Parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        body {
+            background-color: #0f1217;
+            color: #e2e8f0;
+            font-family: 'Noto Serif TC', serif;
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #c9a063 50%, #aa8243 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-border-glow:focus {
+            box-shadow: 0 0 10px rgba(201, 160, 99, 0.3);
+            border-color: #c9a063;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #181c24; }
+        ::-webkit-scrollbar-thumb { background: #2a3140; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c9a063; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-900 selection:text-amber-100">
+
+    <!-- Header & Navigation -->
+    <header class="border-b border-brand-border bg-brand-dark/90 backdrop-blur sticky top-0 z-30 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-left">
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-wide gold-gradient">筆墨與歲月的刻痕</h1>
+                <p class="text-xs sm:text-sm text-brand-muted tracking-widest font-sans mt-1">THE COLLECTOR'S ATELIER · VINTAGE SHOWCASE</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="fetchSheetData()" class="flex items-center gap-2 bg-brand-accent/20 hover:bg-brand-accent/30 text-brand-accent border border-brand-accent/50 px-4 py-2 rounded-lg text-sm font-sans transition">
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>同步線上表格</span>
+                </button>
+                <button onclick="openAddItemModal()" class="flex items-center gap-2 bg-brand-card hover:bg-brand-border text-brand-text border border-brand-border px-3 py-2 rounded-lg text-sm font-sans transition">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="hidden sm:inline">暫存新增</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+        
+        <!-- Controls: Search & Category Tabs -->
+        <section class="mb-8 space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <!-- Search Bar -->
+                <div class="relative w-full sm:w-80 font-sans">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted text-sm"></i>
+                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="搜尋藏品名稱、描述關鍵字..." 
+                        class="w-full bg-brand-card border border-brand-border rounded-xl pl-10 pr-4 py-2 text-sm text-brand-text focus:outline-none gold-border-glow transition">
+                </div>
+                <!-- Status & Counter -->
+                <div class="text-xs font-sans text-brand-muted flex items-center gap-4">
+                    <span id="syncStatus" class="text-brand-muted flex items-center gap-1.5"><i class="fa-solid fa-circle-notch fa-spin"></i> 載入中...</span>
+                    <div>
+                        <span>顯示藏品：</span>
+                        <span id="itemCounter" class="text-brand-accent font-semibold text-sm">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-brand-border pb-3 font-sans text-sm">
+                <button onclick="filterCategory('all', this)" class="cat-btn active px-4 py-2 rounded-lg border border-brand-accent/50 bg-brand-accent/10 text-brand-accent transition">全部藏品</button>
+                <button onclick="filterCategory('鋼筆', this)" class="cat-btn px-4 py-2 rounded-lg border border-transparent hover:border-brand-border bg-brand-card text-brand-muted hover:text-brand-text transition">鋼筆典藏</button>
+                <button onclick="filterCategory('火柴盒', this)" class="cat-btn px-4 py-2 rounded-lg border border-transparent hover:border-brand-border bg-brand-card text-brand-muted hover:text-brand-text transition">老火柴盒</button>
+            </div>
+        </section>
+
+        <!-- Gallery Grid -->
+        <section id="galleryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <!-- Cards dynamically rendered via JS -->
+        </section>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16 font-sans">
+            <i class="fa-solid fa-box-open text-4xl text-brand-muted mb-3"></i>
+            <p class="text-brand-muted">沒有找到符合條件的藏品。</p>
+        </div>
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl transform transition-all my-8 max-h-[90vh] flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-brand-border flex justify-between items-start bg-brand-dark/50">
+                <div>
+                    <span id="modalCategory" class="text-xs font-sans text-brand-accent tracking-wider uppercase">類別</span>
+                    <h2 id="modalTitle" class="text-xl sm:text-2xl font-bold mt-1 text-brand-text">藏品名稱</h2>
+                </div>
+                <button onclick="closeDetailModal()" class="text-brand-muted hover:text-brand-text p-2 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 overflow-y-auto space-y-6 flex-grow">
+                <!-- Main Image & Multi-photo Gallery -->
+                <div class="space-y-3">
+                    <div class="relative w-full h-64 sm:h-96 bg-brand-dark rounded-xl overflow-hidden border border-brand-border/60 flex items-center justify-center group">
+                        <img id="modalImage" src="" alt="藏品圖片" class="w-full h-full object-contain p-2 transition-all duration-300">
+                        <!-- Navigation Arrows for Multi-images -->
+                        <button id="prevImgBtn" onclick="changeImage(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-9 h-9 rounded-full hidden flex items-center justify-center border border-white/20 transition">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
+                        </button>
+                        <button id="nextImgBtn" onclick="changeImage(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-9 h-9 rounded-full hidden flex items-center justify-center border border-white/20 transition">
+                            <i class="fa-solid fa-chevron-right text-sm"></i>
+                        </button>
+                    </div>
+                    <!-- Image Thumbnails (2~3 photos) -->
+                    <div id="imageThumbnails" class="flex gap-3 justify-center overflow-x-auto py-1">
+                        <!-- Thumbnails dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- Short Description / Highlights -->
+                <div id="modalShortDescContainer" class="hidden bg-brand-accent/5 border border-brand-accent/20 rounded-xl p-3 text-brand-accent text-sm font-sans italic">
+                    <i class="fa-solid fa-quote-left mr-2 opacity-60"></i>
+                    <span id="modalShortDesc"></span>
+                </div>
+
+                <!-- Story & Introduction -->
+                <div>
+                    <h3 class="text-brand-accent font-bold text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark"></i> 藏品賞析與沿革故事
+                    </h3>
+                    <p id="modalStory" class="text-brand-text/90 leading-relaxed text-sm whitespace-pre-line font-serif">
+                        故事內容載入中...
+                    </p>
+                </div>
+
+                <!-- Personal Notes -->
+                <div id="modalNotesContainer" class="border-t border-brand-border pt-4">
+                    <h3 class="text-brand-accent font-bold text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-nib"></i> 收藏隨筆 / 手記
+                    </h3>
+                    <p id="modalNotes" class="text-brand-muted italic text-sm leading-relaxed whitespace-pre-line font-serif">
+                        手記內容...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-brand-border bg-brand-dark/50 flex justify-end font-sans text-xs">
+                <button onclick="closeDetailModal()" class="bg-brand-border hover:bg-brand-border/80 text-brand-text px-5 py-2 rounded-lg transition">
+                    關閉視窗
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div id="addModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto font-sans">
+        <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl my-8 max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b border-brand-border flex justify-between items-center bg-brand-dark/50">
+                <h3 class="text-lg font-bold text-brand-text flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-brand-accent"></i> 暫存新增藏品
+                </h3>
+                <button onclick="closeAddItemModal()" class="text-brand-muted hover:text-brand-text">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="addItemForm" onsubmit="handleAddItem(event)" class="p-6 overflow-y-auto space-y-4 text-sm flex-grow">
+                <div>
+                    <label class="block text-brand-muted text-xs mb-1">藏品名稱 *</label>
+                    <input type="text" id="addTitle" required placeholder="例如：Marlboro 萬寶路煙盒造型火柴盒" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-brand-text focus:outline-none gold-border-glow">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-brand-muted text-xs mb-1">類別 *</label>
+                        <select id="addCategory" required class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-brand-text focus:outline-none gold-border-glow">
+                            <option value="火柴盒">火柴盒</option>
+                            <option value="鋼筆">鋼筆</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-brand-muted text-xs mb-1">一語短評</label>
+                        <input type="text" id="addShortDesc" placeholder="一字一句紀錄掌心裡的煙硝歲月" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-brand-text focus:outline-none gold-border-glow">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-brand-muted text-xs mb-1">圖片網址 (可用逗號隔開 2~3 張圖)</label>
+                    <input type="text" id="addImage" placeholder="https://...1.jpg, https://...2.jpg" class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-brand-text focus:outline-none gold-border-glow">
+                </div>
+
+                <div>
+                    <label class="block text-brand-muted text-xs mb-1">沿革與動人介紹 *</label>
+                    <textarea id="addStory" rows="4" required placeholder="記錄藏品的歷史背景與美學細節..." class="w-full bg-brand-dark border border-brand-border rounded-lg p-2.5 text-brand-text focus:outline-none gold-border-glow"></textarea>
+                </div>
+
+                <div class="pt-4 border-t border-brand-border flex justify-end gap-3">
+                    <button type="button" onclick="closeAddItemModal()" class="px-4 py-2 border border-brand-border rounded-lg text-brand-muted hover:text-brand-text">取消</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-accent hover:bg-brand-accentHover text-brand-dark font-bold rounded-lg transition">加入清單</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-brand-card border border-brand-accent text-brand-text font-sans px-4 py-3 rounded-xl shadow-2xl hidden items-center gap-3 z-50 transition-all">
+        <i class="fa-solid fa-circle-check text-brand-accent"></i>
+        <span id="toastMessage" class="text-sm">提示訊息</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-brand-border bg-brand-dark py-6 text-center text-xs font-sans text-brand-muted">
+        <p>筆墨與歲月的刻痕 · 個人典藏數位展覽館</p>
+    </footer>
+
+    <!-- Script Application Logic -->
+    <script>
+        // 加入代理伺服器網址，解決跨網域讀取阻擋問題
+const rawUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRiGHMabZqwfWrDo3AlwvouXTk4PkknHmkOogYH2pzqYplsSCmCykzrjZi5UeEH25gZEfkouHUh023M/pub?gid=960383798&single=true&output=csv';
+const CSV_URL = 'https://corsproxy.io/?' + encodeURIComponent(rawUrl);
+
+        let collections = [];
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let currentModalImages = [];
+        let currentImageIdx = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchSheetData();
+        });
+
+        // 讀取線上 Google Sheet CSV 資料
+        function fetchSheetData() {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> 載入中...';
+            statusEl.className = 'text-brand-muted flex items-center gap-1.5';
+
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if (results.data && results.data.length > 0) {
+                        collections = results.data.map((row, index) => mapRowToCollection(row, index));
+                        statusEl.innerHTML = '<i class="fa-solid fa-cloud-check text-emerald-400"></i> 已連動 Google Sheet';
+                        showToast('成功同步線上試算表資料！');
+                    } else {
+                        statusEl.innerHTML = '<i class="fa-solid fa-circle-exclamation text-amber-400"></i> 無有效資料';
+                    }
+                    renderGallery();
+                },
+                error: function(err) {
+                    console.error('CSV Parse Error:', err);
+                    statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-400"></i> 連線讀取失敗';
+                    showToast('讀取試算表失敗，請確認發布設定');
+                    renderGallery();
+                }
+            });
+        }
+
+        // 寬鬆彈性的欄位對應邏輯
+        function mapRowToCollection(row, index) {
+            const getField = (keys) => {
+                for (let k of keys) {
+                    const match = Object.keys(row).find(header => header.trim().toLowerCase() === k.toLowerCase());
+                    if (match && row[match]) return row[match].trim();
+                }
+                return '';
+            };
+
+            const rawImages = getField(['Image_URL', 'Image', '圖片', '照片網址', '相片']);
+            const imageList = rawImages ? rawImages.split(/[\n,]+/).map(url => url.trim()).filter(url => url.length > 0) : [];
+
+            return {
+                id: getField(['ID', '編號']) || `item-${index}`,
+                title: getField(['Name', 'Title', '名稱', '藏品名稱', '標題']) || '未命名藏品',
+                category: getField(['Category', '分類', '類別']) || '未分類',
+                shortDesc: getField(['Short_Desc', 'Desc', '短評', '一句話描述', '亮點']),
+                images: imageList,
+                story: getField(['Story', '介紹', '故事', '沿革', '詳情']) || '尚無描述內容。',
+                notes: getField(['Notes', '隨筆', '心得', '備註'])
+            };
+        }
+
+        // 渲染藏品網格
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const emptyState = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            const filtered = collections.filter(item => {
+                const matchCat = (currentCategory === 'all' || item.category.includes(currentCategory) || (currentCategory === '鋼筆' && item.category.includes('pen')));
+                const query = searchQuery.toLowerCase().trim();
+                const matchQuery = !query || 
+                    item.title.toLowerCase().includes(query) ||
+                    item.story.toLowerCase().includes(query) ||
+                    (item.shortDesc && item.shortDesc.toLowerCase().includes(query));
+                return matchCat && matchQuery;
+            });
+
+            document.getElementById('itemCounter').textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                filtered.forEach(item => {
+                    const coverImg = item.images.length > 0 ? item.images[0] : 'https://placehold.co/600x400/181c24/c9a063?text=Vintage+Collection';
+                    const photoBadge = item.images.length > 1 ? `<span class="absolute bottom-3 right-3 bg-black/70 backdrop-blur text-white text-[10px] px-2 py-0.5 rounded-full border border-white/20"><i class="fa-regular fa-images mr-1"></i>${item.images.length} 張照片</span>` : '';
+
+                    const card = document.createElement('div');
+                    card.className = "bg-brand-card border border-brand-border hover:border-brand-accent/60 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group cursor-pointer";
+                    card.onclick = () => openDetailModal(item.id);
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="h-48 sm:h-56 bg-brand-dark overflow-hidden relative">
+                                <img src="${coverImg}" 
+                                     alt="${item.title}" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/181c24/c9a063?text=Vintage+Collection';">
+                                <div class="absolute top-3 left-3 bg-brand-dark/80 backdrop-blur border border-brand-accent/40 text-brand-accent text-xs font-sans px-2.5 py-1 rounded-full">
+                                    ${item.category}
+                                </div>
+                                ${photoBadge}
+                            </div>
+                            
+                            <div class="p-5 font-serif">
+                                <h3 class="text-lg font-bold text-brand-text group-hover:text-brand-accent transition line-clamp-1">${item.title}</h3>
+                                ${item.shortDesc ? `<p class="text-brand-accent/80 text-xs mt-1 italic font-sans line-clamp-1">${item.shortDesc}</p>` : ''}
+                                <p class="text-brand-muted text-xs line-clamp-3 mt-2 leading-relaxed">${item.story}</p>
+                            </div>
+                        </div>
+
+                        <div class="px-5 py-3 border-t border-brand-border/60 bg-brand-dark/40 flex justify-between items-center text-xs font-sans text-brand-accent">
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-eye"></i> 查看詳細與多圖</span>
+                            <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // 分類篩選
+        function filterCategory(category, btnEl) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-brand-accent/50', 'bg-brand-accent/10', 'text-brand-accent');
+                btn.classList.add('border-transparent', 'bg-brand-card', 'text-brand-muted');
+            });
+            btnEl.classList.add('active', 'border-brand-accent/50', 'bg-brand-accent/10', 'text-brand-accent');
+            btnEl.classList.remove('border-transparent', 'bg-brand-card', 'text-brand-muted');
+            renderGallery();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value;
+            renderGallery();
+        }
+
+        // 打開彈出細節視窗（多圖輪播）
+        function openDetailModal(id) {
+            const item = collections.find(c => c.id === id);
+            if (!item) return;
+
+            document.getElementById('modalCategory').textContent = item.category;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalStory').textContent = item.story;
+            
+            // 短評處理
+            const shortDescEl = document.getElementById('modalShortDesc');
+            const shortDescContainer = document.getElementById('modalShortDescContainer');
+            if (item.shortDesc) {
+                shortDescEl.textContent = item.shortDesc;
+                shortDescContainer.classList.remove('hidden');
+            } else {
+                shortDescContainer.classList.add('hidden');
+            }
+
+            // 隨筆手記處理
+            const notesEl = document.getElementById('modalNotes');
+            const notesContainer = document.getElementById('modalNotesContainer');
+            if (item.notes) {
+                notesEl.textContent = item.notes;
+                notesContainer.classList.remove('hidden');
+            } else {
+                notesContainer.classList.add('hidden');
+            }
+
+            // 圖片陣列與縮圖邏輯
+            currentModalImages = item.images.length > 0 ? item.images : ['https://placehold.co/600x400/181c24/c9a063?text=Vintage+Collection'];
+            currentImageIdx = 0;
+            updateModalImageDisplay();
+
+            document.getElementById('detailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function updateModalImageDisplay() {
+            const imgEl = document.getElementById('modalImage');
+            imgEl.src = currentModalImages[currentImageIdx];
+
+            const prevBtn = document.getElementById('prevImgBtn');
+            const nextBtn = document.getElementById('nextImgBtn');
+
+            if (currentModalImages.length > 1) {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            }
+
+            // 建立 2~3 張縮圖選單
+            const thumbsContainer = document.getElementById('imageThumbnails');
+            thumbsContainer.innerHTML = '';
+            if (currentModalImages.length > 1) {
+                currentModalImages.forEach((url, idx) => {
+                    const thumb = document.createElement('img');
+                    thumb.src = url;
+                    thumb.className = `w-14 h-14 object-cover rounded-lg border-2 cursor-pointer transition ${idx === currentImageIdx ? 'border-brand-accent scale-105' : 'border-brand-border opacity-50 hover:opacity-100'}`;
+                    thumb.onclick = () => {
+                        currentImageIdx = idx;
+                        updateModalImageDisplay();
+                    };
+                    thumbsContainer.appendChild(thumb);
+                });
+            }
+        }
+
+        function changeImage(dir) {
+            currentImageIdx = (currentImageIdx + dir + currentModalImages.length) % currentModalImages.length;
+            updateModalImageDisplay();
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 暫存新增視窗
+        function openAddItemModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAddItemModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            document.getElementById('addItemForm').reset();
+        }
+
+        function handleAddItem(e) {
+            e.preventDefault();
+            const rawImages = document.getElementById('addImage').value;
+            const imageList = rawImages ? rawImages.split(/[\n,]+/).map(u => u.trim()).filter(u => u.length > 0) : [];
+
+            const newItem = {
+                id: 'item-' + Date.now(),
+                title: document.getElementById('addTitle').value,
+                category: document.getElementById('addCategory').value,
+                shortDesc: document.getElementById('addShortDesc').value,
+                images: imageList,
+                story: document.getElementById('addStory').value,
+                notes: ''
+            };
+
+            collections.unshift(newItem);
+            renderGallery();
+            closeAddItemModal();
+            showToast('已暫存加入藏品！(提醒：建議一併填入 Google 試算表中)');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
