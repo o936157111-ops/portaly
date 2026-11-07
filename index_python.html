@@ -1115,7 +1115,7 @@
             }
         }
 
-        // 🌟 專屬影音櫃 核心邏輯
+        // 🌟 專屬影音櫃 核心邏輯 (固定精選好歌，可無限擴充)
         const defaultYtPlaylist = [
             { id: "aAh17Sse6LA", title: "《如果烏鴉說情話》", url: "https://www.youtube.com/watch?v=aAh17Sse6LA&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac", type: "video" },
             { id: "C_SPMqq8uwk", title: "過來人", url: "https://www.youtube.com/watch?v=C_SPMqq8uwk&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=2", type: "video" },
@@ -1214,11 +1214,13 @@
                     <div onclick="playYtVideo('${item.id}', '${item.title.replace(/'/g, "\\'")}')" 
                          class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2 p-2 rounded-xl border transition cursor-pointer group shrink-0 w-[180px] sm:w-[200px] lg:w-full ${isPlaying ? 'bg-amber-100/90 border-amber-300 shadow-xs' : 'bg-white border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'}">
                         
+                        <!-- 縮圖區 -->
                         <div class="w-full lg:w-16 h-24 lg:h-10 rounded-lg overflow-hidden bg-slate-200 shrink-0 relative border border-slate-100">
                             <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" class="w-full h-full object-cover">
                             ${isPlaying ? `<div class="absolute inset-0 bg-amber-900/40 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-volume-high animate-pulse"></i></div>` : ''}
                         </div>
 
+                        <!-- 標題與操作區 -->
                         <div class="flex-1 min-w-0 flex items-start justify-between gap-1">
                             <h4 class="text-xs font-bold ${isPlaying ? 'text-amber-900' : 'text-slate-700 group-hover:text-amber-700'} line-clamp-2 leading-snug">${item.title}</h4>
                             <button onclick="event.stopPropagation(); removeYtVideo(${index});" class="text-slate-300 hover:text-rose-500 p-0.5 rounded-md text-xs transition cursor-pointer shrink-0" title="刪除此影片">
@@ -1484,10 +1486,39 @@
             groups.push({ id: groupId, name: name });
             saveCustomGroups(groups);
             document.getElementById('custom-group-name').value = '';
+            
             renderCustomGroups();
             updateTargetGroupSelect();
             syncDesktopCardsOrder();
+            initSortables();
+            
             alert(`成功建立區塊：「${name}」！`);
+        }
+
+        function addCustomApp() {
+            const targetSelect = document.getElementById('custom-app-target-group');
+            const groupId = targetSelect.value;
+            const name = document.getElementById('custom-app-name').value.trim();
+            let url = document.getElementById('custom-app-url').value.trim();
+            const icon = document.getElementById('custom-app-icon').value;
+
+            if (!name || !url) { alert('請完整輸入名稱與網址！'); return; }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+
+            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+            customApps.push({ groupId, name, url, icon });
+            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+            syncToCloud();
+
+            document.getElementById('custom-app-name').value = '';
+            document.getElementById('custom-app-url').value = '';
+
+            renderCustomGroups();
+            loadCustomApps();
+            updateDesktopVisibility();
+            syncDesktopCardsOrder();
+
+            alert('成功新增自訂 App！');
         }
 
         function removeCustomGroup(groupId, groupName) {
@@ -1701,26 +1732,6 @@
             if (dockBar) desktopContainer.appendChild(dockBar);
         }
 
-        function addCustomApp() {
-            const groupId = document.getElementById('custom-app-target-group').value;
-            const name = document.getElementById('custom-app-name').value.trim();
-            let url = document.getElementById('custom-app-url').value.trim();
-            const icon = document.getElementById('custom-app-icon').value;
-            if (!name || !url) { alert('請完整輸入名稱與網址！'); return; }
-            if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
-
-            let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-            customApps.push({ groupId, name, url, icon });
-            localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-            syncToCloud();
-
-            document.getElementById('custom-app-name').value = '';
-            document.getElementById('custom-app-url').value = '';
-            loadCustomApps();
-            updateDesktopVisibility();
-            alert('成功新增自訂 App！');
-        }
-
         function removeCustomApp(btn) {
             if (confirm('確定刪除此自訂捷徑？')) {
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
@@ -1734,11 +1745,21 @@
 
         function loadCustomApps() {
             document.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
+            
             JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').forEach((app, index) => {
                 let targetGrid = null;
-                if (app.groupId === 'group-creative') targetGrid = document.getElementById('creative-app-grid');
-                else if (!app.groupId || app.groupId === 'group-general') targetGrid = document.getElementById('general-app-grid');
-                else targetGrid = document.getElementById(`${app.groupId}-app-grid`);
+                
+                if (app.groupId === 'group-creative') {
+                    targetGrid = document.getElementById('creative-app-grid');
+                } else if (!app.groupId || app.groupId === 'group-general') {
+                    targetGrid = document.getElementById('general-app-grid');
+                } else {
+                    targetGrid = document.getElementById(`${app.groupId}-app-grid`);
+                    if (!targetGrid) {
+                        renderCustomGroups();
+                        targetGrid = document.getElementById(`${app.groupId}-app-grid`);
+                    }
+                }
 
                 if (targetGrid) {
                     let div = document.createElement('div');
@@ -1753,6 +1774,10 @@
                     targetGrid.appendChild(div);
                 }
             });
+
+            if (typeof updateDesktopVisibility === 'function') {
+                updateDesktopVisibility();
+            }
         }
 
         async function loadBloggerFeed() {
@@ -1914,15 +1939,23 @@
         loadBloggerFeed();
         initRandomRecommendation();
 
-        loadPlaylistFromGoogleSheet();
-        renderYtPlaylist();
+        // 🌟 本機環境容錯保護：如果是在 file:// 下直接開啟，避開跨來源封鎖錯誤
+        if (window.location.protocol === 'file:') {
+            console.warn("目前處於本機檔案模式 (file://)，已自動略過遠端 Google 試算表同步請求以防範崩潰。");
+            renderYtPlaylist();
+        } else {
+            loadPlaylistFromGoogleSheet();
+            renderYtPlaylist();
+        }
 
         async function loadPlaylistFromGoogleSheet() {
             const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+            
             try {
                 const response = await fetch(csvUrl);
                 const data = await response.text();
-                const rows = data.split(/\\r?\\n/).slice(1);
+                
+                const rows = data.split(/\r?\n/).slice(1);
                 const fetchedPlaylist = [];
 
                 rows.forEach(row => {
