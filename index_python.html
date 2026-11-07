@@ -1572,6 +1572,8 @@
                     <div id="${group.id}-app-grid" class="app-grid"></div>`;
                 desktopWrapper.appendChild(cardDiv);
             });
+            // 🌟 關鍵修正：每次重新渲染自訂群組後，立刻同步右側桌面卡片的順序，確保左右順序一致
+            syncDesktopCardsOrder();
         }
 
         function updateTargetGroupSelect() {
@@ -1629,7 +1631,6 @@
             const generalCard = document.getElementById('desktop-app-card');
             if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
 
-            // 🌟 修正：精準判斷自訂區塊是否有勾選且「內部真的有 App 捷徑」，否則強制隱藏卡片
             getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
                 const cb = document.getElementById(`mod-${g.id}`);
