@@ -548,7 +548,7 @@
                         <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
                         <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="group-creative">🎬 精選影音與創作服務</option>
-                            <option value="group- general">🚗 一般捷徑 (交通與財經)</option>
+                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
                         </select>
                         <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
                         <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
@@ -1488,6 +1488,7 @@
             updateTargetGroupSelect();
             syncDesktopCardsOrder();
             initSortables();
+            updateDesktopVisibility();
             
             alert(`成功建立區塊：「${name}」！`);
         }
@@ -1527,6 +1528,7 @@
                 updateTargetGroupSelect();
                 loadCustomApps();
                 updateDesktopVisibility();
+                syncDesktopCardsOrder();
             }
         }
 
@@ -1537,6 +1539,7 @@
             desktopWrapper.innerHTML = '';
 
             getCustomGroups().forEach(group => {
+                // 1. 左側選單群組
                 const sideDiv = document.createElement('div');
                 sideDiv.className = 'sidebar-item-group custom-sidebar-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs space-y-2';
                 sideDiv.setAttribute('data-id', group.id);
@@ -1547,15 +1550,19 @@
                             <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5"><i class="fa-solid fa-folder text-[#00a600]"></i> ${group.name}</span>
                         </div>
                         <div class="flex items-center gap-1">
-                            <button onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center"><i class="fa-solid fa-trash-can"></i></button>
-                            <button onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-chevron-down"></i></button>
+                            <button type="button" onclick="removeCustomGroup('${group.id}', '${group.name}')" class="text-rose-400 hover:text-rose-600 text-xs w-6 h-6 rounded-md hover:bg-rose-50 flex items-center justify-center cursor-pointer" title="刪除此區塊"><i class="fa-solid fa-trash-can"></i></button>
+                            <button type="button" onclick="toggleSubMenu('${group.id}-sub', this)" class="text-slate-400 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-chevron-down"></i></button>
                         </div>
                     </div>
                     <div id="${group.id}-sub" class="space-y-1.5 pl-2 border-l-2 border-emerald-200 mt-1" style="display: none;">
-                        <div class="text-[10px] text-slate-400 italic py-1">（新增 App 時可選此區塊）</div>
+                        <div class="flex items-center gap-2 bg-white/90 p-1.5 rounded-lg text-xs border border-emerald-100/60 transition">
+                            <input type="checkbox" id="mod-${group.id}" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5 cursor-pointer">
+                            <span class="text-slate-700 font-medium">顯示 ${group.name} 桌面卡片</span>
+                        </div>
                     </div>`;
                 sidebarContainer.appendChild(sideDiv);
 
+                // 2. 右側桌面卡片
                 const cardDiv = document.createElement('div');
                 cardDiv.id = `desktop-${group.id}-card`;
                 cardDiv.className = 'custom-desktop-card app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3';
@@ -1621,10 +1628,16 @@
             const generalCard = document.getElementById('desktop-app-card');
             if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
 
+            // 自訂區塊顯示與隱控
             getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
+                const cb = document.getElementById(`mod-${g.id}`);
                 const grid = document.getElementById(`${g.id}-app-grid`);
-                if (card && grid) card.style.display = grid.querySelectorAll('.app-item').length > 0 ? 'block' : 'none';
+                if (card) {
+                    const isChecked = cb ? cb.checked : true;
+                    const hasApps = grid && grid.querySelectorAll('.app-item').length > 0;
+                    card.style.display = (isChecked && hasApps) ? 'block' : 'none';
+                }
             });
 
             const todoCard = document.getElementById('desktop-todo-card');
@@ -1653,7 +1666,7 @@
                 }
             } else {
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search');
+                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search' || cb.id.startsWith('mod-group-custom-'));
                 });
                 if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = false;
                 if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
@@ -1767,7 +1780,7 @@
                             <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${app.icon || 'fa-solid fa-globe'} text-white"></i></div>
                             <span class="app-label">${app.name}</span>
                         </a>
-                        <button onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>`;
+                        <button type="button" onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>`;
                     targetGrid.appendChild(div);
                 }
             });
