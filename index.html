@@ -548,7 +548,7 @@
                         <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
                         <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="group-creative">🎬 精選影音與創作服務</option>
-                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+                            <option value="group- general">🚗 一般捷徑 (交通與財經)</option>
                         </select>
                         <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
                         <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
@@ -1115,7 +1115,6 @@
             }
         }
 
-        // 🌟 專屬影音櫃 核心邏輯 (固定精選好歌，可無限擴充)
         const defaultYtPlaylist = [
             { id: "aAh17Sse6LA", title: "《如果烏鴉說情話》", url: "https://www.youtube.com/watch?v=aAh17Sse6LA&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac", type: "video" },
             { id: "C_SPMqq8uwk", title: "過來人", url: "https://www.youtube.com/watch?v=C_SPMqq8uwk&list=PL64GNbse4j6vXlAT3Xw4OYk1uqrsvsOac&index=2", type: "video" },
@@ -1214,13 +1213,11 @@
                     <div onclick="playYtVideo('${item.id}', '${item.title.replace(/'/g, "\\'")}')" 
                          class="flex flex-col lg:flex-row items-stretch lg:items-center gap-2 p-2 rounded-xl border transition cursor-pointer group shrink-0 w-[180px] sm:w-[200px] lg:w-full ${isPlaying ? 'bg-amber-100/90 border-amber-300 shadow-xs' : 'bg-white border-slate-100 hover:border-amber-200 hover:bg-amber-50/50'}">
                         
-                        <!-- 縮圖區 -->
                         <div class="w-full lg:w-16 h-24 lg:h-10 rounded-lg overflow-hidden bg-slate-200 shrink-0 relative border border-slate-100">
                             <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" class="w-full h-full object-cover">
                             ${isPlaying ? `<div class="absolute inset-0 bg-amber-900/40 flex items-center justify-center text-white text-xs"><i class="fa-solid fa-volume-high animate-pulse"></i></div>` : ''}
                         </div>
 
-                        <!-- 標題與操作區 -->
                         <div class="flex-1 min-w-0 flex items-start justify-between gap-1">
                             <h4 class="text-xs font-bold ${isPlaying ? 'text-amber-900' : 'text-slate-700 group-hover:text-amber-700'} line-clamp-2 leading-snug">${item.title}</h4>
                             <button onclick="event.stopPropagation(); removeYtVideo(${index});" class="text-slate-300 hover:text-rose-500 p-0.5 rounded-md text-xs transition cursor-pointer shrink-0" title="刪除此影片">
@@ -1939,7 +1936,6 @@
         loadBloggerFeed();
         initRandomRecommendation();
 
-        // 🌟 本機環境容錯保護：如果是在 file:// 下直接開啟，避開跨來源封鎖錯誤
         if (window.location.protocol === 'file:') {
             console.warn("目前處於本機檔案模式 (file://)，已自動略過遠端 Google 試算表同步請求以防範崩潰。");
             renderYtPlaylist();
