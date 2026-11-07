@@ -1488,6 +1488,7 @@
             updateTargetGroupSelect();
             syncDesktopCardsOrder();
             initSortables();
+            loadCustomApps();
             updateDesktopVisibility();
             
             alert(`成功建立區塊：「${name}」！`);
@@ -1513,8 +1514,8 @@
 
             renderCustomGroups();
             loadCustomApps();
-            updateDesktopVisibility();
             syncDesktopCardsOrder();
+            updateDesktopVisibility();
 
             alert('成功新增自訂 App！');
         }
@@ -1527,8 +1528,8 @@
                 renderCustomGroups();
                 updateTargetGroupSelect();
                 loadCustomApps();
-                updateDesktopVisibility();
                 syncDesktopCardsOrder();
+                updateDesktopVisibility();
             }
         }
 
@@ -1628,15 +1629,15 @@
             const generalCard = document.getElementById('desktop-app-card');
             if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
 
-            // 自訂區塊顯示與隱控
+            // 🌟 修正：精準判斷自訂區塊是否有勾選且「內部真的有 App 捷徑」，否則強制隱藏卡片
             getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
                 const cb = document.getElementById(`mod-${g.id}`);
                 const grid = document.getElementById(`${g.id}-app-grid`);
                 if (card) {
                     const isChecked = cb ? cb.checked : true;
-                    const hasApps = grid && grid.querySelectorAll('.app-item').length > 0;
-                    card.style.display = (isChecked && hasApps) ? 'block' : 'none';
+                    const appCount = grid ? grid.querySelectorAll('.app-item').length : 0;
+                    card.style.display = (isChecked && appCount > 0) ? 'block' : 'none';
                 }
             });
 
