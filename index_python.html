@@ -307,7 +307,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 電影預告模組 (可移動、可勾選顯示) -->
+                <!-- 🌟 電影預告模組 -->
                 <div class="sidebar-item-group bg-red-50/40 p-2.5 rounded-2xl border border-red-100 shadow-2xs transition-all hover:border-red-200" data-id="group-trailer">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -318,6 +318,22 @@
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-red-100 text-red-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-clapperboard"></i></span>
                                 院線熱門電影預告
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 🌟 筆墨與歲月的刻痕 (個人珍藏藝廊) -->
+                <div class="sidebar-item-group bg-amber-50/50 p-2.5 rounded-2xl border border-amber-200/80 shadow-2xs transition-all hover:border-amber-300" data-id="group-vintage">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-vintage" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-vintage" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center text-[10px]"><i class="fa-solid fa-feather"></i></span>
+                                筆墨與歲月的刻痕
                             </span>
                         </label>
                     </div>
@@ -477,7 +493,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 4. 專屬影音櫃 CSV (獨立大群組) -->
+                <!-- 🌟 4. 專屬影音櫃 CSV -->
                 <div class="sidebar-item-group bg-yellow-50/40 p-2.5 rounded-2xl border border-yellow-100 shadow-2xs transition-all hover:border-yellow-200" data-id="group-goldmelody">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -732,7 +748,7 @@
                     </form>
                 </div>
 
-                <!-- 🌟 無外框、影片直接作為區塊主體的滿版電影預告 -->
+                <!-- 🌟 電影預告卡片 -->
                 <div id="desktop-movie-trailer-card" class="relative w-full space-y-2 group">
                     <div class="flex items-center justify-between px-1 mb-1.5">
                         <div class="flex items-center gap-2">
@@ -741,7 +757,6 @@
                             </span>
                             <span id="trailer-title-label" class="font-bold text-xs md:text-sm text-slate-800">院線熱門電影預告</span>
                         </div>
-                        <!-- 🎲 隨機換一部按鈕 -->
                         <button onclick="changeRandomTrailer()" class="text-[11px] bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs">
                             <i class="fa-solid fa-shuffle text-red-500"></i> 隨機換一部
                         </button>
@@ -752,10 +767,32 @@
                     </div>
                 </div>
 
-                <!-- 🌟 專屬影音櫃  -->
+                <!-- 🌟 筆墨與歲月的刻痕 (Vintage Showcase 嵌頂區塊) -->
+                <div id="desktop-vintage-card" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-sm shadow-2xs shrink-0">
+                                <i class="fa-solid fa-feather"></i>
+                            </span>
+                            <div>
+                                <h3 class="font-extrabold text-slate-800 text-sm md:text-base">筆墨與歲月的刻痕</h3>
+                                <p class="text-[10px] md:text-[11px] text-slate-500 font-medium tracking-wide">THE COLLECTOR'S ATELIER · VINTAGE SHOWCASE</p>
+                            </div>
+                        </div>
+                        <a href="https://myezlife.com/mycollection/" target="_blank" class="text-[11px] text-amber-700 font-bold hover:underline flex items-center gap-1 self-end sm:self-auto bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-xl border border-amber-200 transition">
+                            開啟完整典藏展覽館 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- 藏品預覽嵌入 iframe 窗格 -->
+                    <div class="relative w-full h-[480px] bg-slate-50 rounded-xl overflow-hidden border border-slate-200 shadow-inner">
+                        <iframe src="https://myezlife.com/mycollection/" class="w-full h-full border-0" title="筆墨與歲月的刻痕"></iframe>
+                    </div>
+                </div>
+
+                <!-- 🌟 專屬影音櫃 -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     
-                    <!-- 卡片頂部標題區與按鈕 -->
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                             <span class="w-7 h-7 rounded-lg bg-yellow-100 text-yellow-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-music"></i></span>
@@ -765,14 +802,12 @@
                             <a href="https://myezlife.com/goldmelody_csv.html" target="_blank" class="text-[11px] text-emerald-600 font-bold hover:underline flex items-center gap-1">
                                 開啟獨立頁面 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                             </a>
-                            <!-- ➕ 右側新增影片按鈕 -->
                             <button onclick="toggleYtAddForm()" class="w-8 h-8 rounded-xl bg-[#00a600] hover:bg-[#008f00] text-white flex items-center justify-center shadow-xs transition active:scale-95 cursor-pointer" title="新增 YouTube 影片">
                                 <i class="fa-solid fa-plus text-sm"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- ➕ 可折疊的新增 YouTube 影片表單 -->
                     <div id="yt-add-form" class="bg-yellow-50/60 p-3.5 rounded-2xl border border-yellow-200/80 space-y-2.5 transition-all" style="display: none;">
                         <div class="text-xs font-bold text-yellow-900 flex items-center gap-1.5">
                             <i class="fa-brands fa-youtube text-red-500 text-sm"></i> 新增 YouTube 影片至專屬清單
@@ -787,10 +822,8 @@
                         </div>
                     </div>
 
-                    <!-- 🎬 播放器與清單區域 -->
                     <div class="flex flex-col lg:grid lg:grid-cols-12 gap-4 items-start">
                         
-                        <!-- 📱 上/右：歌單清單區塊 -->
                         <div class="w-full lg:col-span-4 order-1 lg:order-2 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 flex flex-col h-auto lg:h-[258px]">
                             <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-2 shrink-0">
                                 <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
@@ -798,13 +831,11 @@
                                     <span id="yt-list-count" class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded-full">0</span>
                                 </span>
                             </div>
-                            <!-- 清單容器 -->
                             <div id="yt-playlist-items" class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-hidden lg:overflow-y-auto gap-2.5 lg:gap-2 pb-2 lg:pb-0 pr-0 lg:pr-1 custom-scrollbar">
                                 <div class="text-center text-xs text-slate-400 py-6 italic w-full">載入固定歌單中...</div>
                             </div>
                         </div>
 
-                        <!-- 📺 下/左：大畫面播放器區塊 -->
                         <div class="w-full lg:col-span-8 order-2 lg:order-1 flex flex-col space-y-2">
                             <div class="w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-sm relative flex items-center justify-center" id="yt-player-container">
                                 <div id="yt-player-placeholder" class="text-center p-6 text-slate-400 space-y-2">
@@ -993,7 +1024,6 @@
                         <div id="random-recommendation-box" class="space-y-2"></div>
                     </div>
 
-                    <!-- 🌟 網頁全相容分享按鈕群組 -->
                     <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/30">
                         <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                             <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
@@ -1620,10 +1650,14 @@
             const modSearch = document.getElementById('mod-search');
             if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
 
-            // 🌟 電影預告卡片顯隱控制
             const trailerCard = document.getElementById('desktop-movie-trailer-card');
             const modTrailer = document.getElementById('mod-trailer');
             if (trailerCard && modTrailer) trailerCard.style.display = modTrailer.checked ? 'block' : 'none';
+
+            // 🌟 筆墨與歲月的刻痕卡片顯隱控制
+            const vintageCard = document.getElementById('desktop-vintage-card');
+            const modVintage = document.getElementById('mod-vintage');
+            if (vintageCard && modVintage) vintageCard.style.display = modVintage.checked ? 'block' : 'none';
 
             const goldmelodyCard = document.getElementById('desktop-goldmelody-card');
             const modGoldmelody = document.getElementById('mod-goldmelody');
@@ -1706,7 +1740,7 @@
                 }
             } else {
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-trailer' || cb.id.startsWith('mod-group-custom-'));
+                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-trailer' || cb.id === 'mod-vintage' || cb.id.startsWith('mod-group-custom-'));
                 });
                 if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = false;
                 if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
@@ -1769,7 +1803,8 @@
             Array.from(sidebarContainer.children).map(el => el.getAttribute('data-id')).forEach(groupId => {
                 let card = null;
                 if (groupId === 'group-search') card = document.getElementById('desktop-search-card');
-                else if (groupId === 'group-trailer') card = document.getElementById('desktop-movie-trailer-card'); // 🌟 同步預告卡片順序
+                else if (groupId === 'group-trailer') card = document.getElementById('desktop-movie-trailer-card');
+                else if (groupId === 'group-vintage') card = document.getElementById('desktop-vintage-card'); // 🌟 同步收藏藝廊卡片順序
                 else if (groupId === 'group-goldmelody') card = document.getElementById('desktop-goldmelody-card');
                 else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
                 else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
