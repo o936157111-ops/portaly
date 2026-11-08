@@ -718,25 +718,25 @@
 
 
 
-<!-- 🌟 支援完整原生播放/暫停/音量的電影預告區塊 -->
-<div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-950 rounded-2xl overflow-hidden shadow-xl text-white relative w-full space-y-2 p-3 md:p-4 border border-slate-800/80">
+<!-- 🌟 無外框、影片直接作為區塊主體的滿版電影預告 -->
+<div id="desktop-movie-trailer-card" class="relative w-full space-y-2 group">
     
-    <!-- 頂部標題與隨機換片按鈕 -->
-    <div class="flex items-center justify-between">
+    <!-- 頂部標題與隨機換片按鈕 (浮動或簡潔排列) -->
+    <div class="flex items-center justify-between px-1 mb-1.5">
         <div class="flex items-center gap-2">
             <span class="w-6 h-6 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center text-xs shrink-0">
                 <i class="fa-solid fa-clapperboard"></i>
             </span>
-            <span id="trailer-title-label" class="font-bold text-xs md:text-sm text-white">院線熱門電影預告</span>
+            <span id="trailer-title-label" class="font-bold text-xs md:text-sm text-slate-800">院線熱門電影預告</span>
         </div>
         <!-- 🎲 隨機換一部按鈕 -->
-        <button onclick="changeRandomTrailer()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs">
-            <i class="fa-solid fa-shuffle text-red-400"></i> 隨機換一部
+        <button onclick="changeRandomTrailer()" class="text-[11px] bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs">
+            <i class="fa-solid fa-shuffle text-red-500"></i> 隨機換一部
         </button>
     </div>
 
-    <!-- 中間影片播放區 (使用標準 16:9 比例，完整呈現 YouTube 原生控制列) -->
-    <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 shadow-inner">
+    <!-- 影片本身就是區塊主體 (無外框、滿版 16:9) -->
+    <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-md border border-slate-200/60">
         <iframe id="trailer-iframe" class="absolute inset-0 w-full h-full border-0" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
@@ -759,7 +759,7 @@
         const titleLabel = document.getElementById('trailer-title-label');
         
         if (iframe) {
-            // 啟用 YouTube 原生控制列 (controls=1)，讓暫停、播放、音量完全由您自由操控
+            // 啟用完整原生控制列，讓您可隨時暫停、調整音量
             iframe.src = `https://www.youtube.com/embed/${selected.id}?autoplay=1&controls=1&modestbranding=1`;
         }
         if (titleLabel) {
@@ -771,7 +771,6 @@
         initRandomTrailer();
     }
 
-    // 網頁載入時自動隨機播放一部
     initRandomTrailer();
 </script>
 
