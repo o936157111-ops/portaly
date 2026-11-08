@@ -718,51 +718,26 @@
 
 
 
-<!-- 🌟 具備流暢音量切換的滿版電影預告橫幅 -->
-<div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-950 rounded-2xl overflow-hidden shadow-xl text-white relative w-full h-36 sm:h-48 md:h-56 group border border-slate-800/80">
+<!-- 🌟 支援完整原生播放/暫停/音量的電影預告區塊 -->
+<div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-950 rounded-2xl overflow-hidden shadow-xl text-white relative w-full space-y-2 p-3 md:p-4 border border-slate-800/80">
     
-    <!-- 滿版影片播放區 -->
-    <div class="absolute inset-0 overflow-hidden flex items-center justify-center z-0">
-        <iframe id="trailer-iframe" class="absolute inset-0 w-full h-full border-0 pointer-events-none scale-125 object-cover origin-center" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-    </div>
-    
-    <!-- 浮動頂部標題與按鈕群組 -->
-    <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10 pointer-events-auto">
-        <div class="bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 font-bold text-xs flex items-center gap-2 shadow-md">
-            <span class="w-5 h-5 rounded-md bg-red-600/30 text-red-500 flex items-center justify-center text-[10px] shrink-0">
+    <!-- 頂部標題與隨機換片按鈕 -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center text-xs shrink-0">
                 <i class="fa-solid fa-clapperboard"></i>
             </span>
-            <span id="trailer-title-label" class="text-white text-[11px]">院線熱門電影預告</span>
+            <span id="trailer-title-label" class="font-bold text-xs md:text-sm text-white">院線熱門電影預告</span>
         </div>
-
-        <div class="flex items-center gap-1.5">
-            <!-- 🔊 解除靜音按鈕：點一下立即開啟聲音 -->
-            <button onclick="toggleAudio()" id="sound-btn" class="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white border border-white/10 px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-md" title="開啟/關閉聲音">
-                <i id="sound-icon" class="fa-solid fa-volume-xmark text-red-400"></i>
-                <span id="sound-text" class="text-[10px]">點擊有聲</span>
-            </button>
-            <!-- 🎲 隨機換一部按鈕 -->
-            <button onclick="changeRandomTrailer()" class="w-8 h-8 rounded-lg bg-black/70 hover:bg-black/90 backdrop-blur-md text-white border border-white/10 flex items-center justify-center text-xs transition cursor-pointer shadow-md" title="隨機換一部">
-                <i class="fa-solid fa-shuffle text-red-400"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- 浮動右下角全螢幕按鈕 -->
-    <div class="absolute bottom-2.5 right-2.5 z-10 pointer-events-auto" onclick="openTrailerInLightbox()" title="點擊放大觀看完整預告">
-        <span class="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white text-[10px] px-2.5 py-1.5 rounded-lg border border-white/10 font-bold transition flex items-center gap-1 shadow-md cursor-pointer">
-            <i class="fa-solid fa-expand"></i> 全螢幕觀看
-        </span>
-    </div>
-</div>
-
-<!-- 互動彈跳燈箱 (LightBox) -->
-<div id="trailer-lightbox" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
-    <div class="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
-        <button onclick="closeTrailerLightbox()" class="absolute top-3 right-3 z-10 w-9 h-9 bg-black/60 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition cursor-pointer shadow-lg">
-            <i class="fa-solid fa-xmark text-base"></i>
+        <!-- 🎲 隨機換一部按鈕 -->
+        <button onclick="changeRandomTrailer()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs">
+            <i class="fa-solid fa-shuffle text-red-400"></i> 隨機換一部
         </button>
-        <iframe id="lightbox-iframe" class="w-full h-full border-0" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <!-- 中間影片播放區 (使用標準 16:9 比例，完整呈現 YouTube 原生控制列) -->
+    <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 shadow-inner">
+        <iframe id="trailer-iframe" class="absolute inset-0 w-full h-full border-0" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
 
@@ -775,46 +750,20 @@
         { id: "s4MJikPQWL8", title: "秋晨小巷 D" }
     ];
 
-    let currentTrailerId = "";
-    let isMuted = true; // 預設靜音以確保能順利自動播放
-
     function initRandomTrailer() {
         if (movieTrailersPool.length === 0) return;
         const randomIndex = Math.floor(Math.random() * movieTrailersPool.length);
         const selected = movieTrailersPool[randomIndex];
-        currentTrailerId = selected.id;
         
-        loadCurrentTrailer();
-        
+        const iframe = document.getElementById('trailer-iframe');
         const titleLabel = document.getElementById('trailer-title-label');
+        
+        if (iframe) {
+            // 啟用 YouTube 原生控制列 (controls=1)，讓暫停、播放、音量完全由您自由操控
+            iframe.src = `https://www.youtube.com/embed/${selected.id}?autoplay=1&controls=1&modestbranding=1`;
+        }
         if (titleLabel) {
             titleLabel.innerText = selected.title;
-        }
-    }
-
-    function loadCurrentTrailer() {
-        const iframe = document.getElementById('trailer-iframe');
-        if (iframe && currentTrailerId) {
-            // 透過變數控制帶入 mute 參數
-            iframe.src = `https://www.youtube.com/embed/${currentTrailerId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${currentTrailerId}&controls=0&modestbranding=1`;
-        }
-    }
-
-    function toggleAudio() {
-        isMuted = !isMuted;
-        loadCurrentTrailer();
-
-        // 隨時更新按鈕的圖示與文字回饋
-        const icon = document.getElementById('sound-icon');
-        const text = document.getElementById('sound-text');
-        if (icon && text) {
-            if (isMuted) {
-                icon.className = "fa-solid fa-volume-xmark text-red-400";
-                text.innerText = "點擊有聲";
-            } else {
-                icon.className = "fa-solid fa-volume-high text-emerald-400";
-                text.innerText = "播放中";
-            }
         }
     }
 
@@ -822,25 +771,7 @@
         initRandomTrailer();
     }
 
-    function openTrailerInLightbox() {
-        if (!currentTrailerId) return;
-        const lightbox = document.getElementById('trailer-lightbox');
-        const lightboxIframe = document.getElementById('lightbox-iframe');
-        if (lightbox && lightboxIframe) {
-            lightboxIframe.src = `https://www.youtube.com/embed/${currentTrailerId}?autoplay=1&mute=0`;
-            lightbox.classList.remove('hidden');
-        }
-    }
-
-    function closeTrailerLightbox() {
-        const lightbox = document.getElementById('trailer-lightbox');
-        const lightboxIframe = document.getElementById('lightbox-iframe');
-        if (lightbox && lightboxIframe) {
-            lightboxIframe.src = '';
-            lightbox.classList.add('hidden');
-        }
-    }
-
+    // 網頁載入時自動隨機播放一部
     initRandomTrailer();
 </script>
 
