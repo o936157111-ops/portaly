@@ -718,15 +718,20 @@
 
 
 
-<!-- 🌟 有聲播放的單純模式電影預告橫幅 -->
+<!-- 🌟 無黑邊、不裁切：毛玻璃背景質感預告橫幅 -->
 <div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-950 rounded-2xl overflow-hidden shadow-xl text-white relative w-full h-36 sm:h-48 md:h-56 group border border-slate-800/80">
     
-    <!-- 單一滿版影片播放區 (調整為 mute=0 允許聲音) -->
-    <div class="absolute inset-0 overflow-hidden flex items-center justify-center z-0">
-        <iframe id="trailer-iframe" class="absolute inset-0 w-full h-full border-0 pointer-events-none scale-125 object-cover origin-center" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    <!-- 1. 背景層：將同一個影片極度放大並模糊處理，作為流動的光暈背景（解決留白與黑邊問題） -->
+    <div class="absolute inset-0 overflow-hidden opacity-30 blur-2xl pointer-events-none scale-125">
+        <iframe id="trailer-bg-iframe" class="w-full h-full border-0 object-cover" src="" tabindex="-1"></iframe>
+    </div>
+
+    <!-- 2. 主畫面層：100% 完整呈現原始 16:9 比例，絕對不裁切、不漏掉任何畫面與字幕 -->
+    <div class="absolute inset-0 flex items-center justify-center z-0 p-1">
+        <iframe id="trailer-iframe" class="w-full h-full max-w-full max-h-full border-0 rounded-xl shadow-lg bg-black object-contain" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
     </div>
     
-    <!-- 浮動頂部標題與按鈕群組 -->
+    <!-- 3. 浮動頂部標題與按鈕群組 (疊在最上層) -->
     <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10 pointer-events-auto">
         <div class="bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 font-bold text-xs flex items-center gap-2 shadow-md">
             <span class="w-5 h-5 rounded-md bg-red-600/30 text-red-500 flex items-center justify-center text-[10px] shrink-0">
@@ -736,6 +741,10 @@
         </div>
 
         <div class="flex items-center gap-1.5">
+            <!-- 🔊 聲音開關按鈕 -->
+            <button onclick="toggleAudio()" class="w-8 h-8 rounded-lg bg-black/70 hover:bg-black/90 backdrop-blur-md text-white border border-white/10 flex items-center justify-center text-xs transition cursor-pointer shadow-md" title="切換靜音/有聲">
+                <i id="sound-toggle-icon" class="fa-solid fa-volume-xmark text-red-400"></i>
+            </button>
             <!-- 🎲 隨機換一部按鈕 -->
             <button onclick="changeRandomTrailer()" class="w-8 h-8 rounded-lg bg-black/70 hover:bg-black/90 backdrop-blur-md text-white border border-white/10 flex items-center justify-center text-xs transition cursor-pointer shadow-md" title="隨機換一部">
                 <i class="fa-solid fa-shuffle text-red-400"></i>
@@ -743,7 +752,7 @@
         </div>
     </div>
 
-    <!-- 浮動右下角全螢幕按鈕 -->
+    <!-- 4. 浮動右下角全螢幕按鈕 -->
     <div class="absolute bottom-2.5 right-2.5 z-10 pointer-events-auto" onclick="openTrailerInLightbox()" title="點擊放大觀看完整預告">
         <span class="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white text-[10px] px-2.5 py-1.5 rounded-lg border border-white/10 font-bold transition flex items-center gap-1 shadow-md cursor-pointer">
             <i class="fa-solid fa-expand"></i> 全螢幕觀看
@@ -751,7 +760,7 @@
     </div>
 </div>
 
-<!-- 互動彈跳燈箱 (LightBox) -->
+<!-- 互動彈跳燈箱 (LightBox) 供點擊後完整欣賞預告 -->
 <div id="trailer-lightbox" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
     <div class="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
         <button onclick="closeTrailerLightbox()" class="absolute top-3 right-3 z-10 w-9 h-9 bg-black/60 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition cursor-pointer shadow-lg">
@@ -770,6 +779,7 @@
     ];
 
     let currentTrailerId = "";
+    let isMuted = true;
 
     function initRandomTrailer() {
         if (movieTrailersPool.length === 0) return;
@@ -777,15 +787,35 @@
         const selected = movieTrailersPool[randomIndex];
         currentTrailerId = selected.id;
         
-        const iframe = document.getElementById('trailer-iframe');
-        const titleLabel = document.getElementById('trailer-title-label');
+        updateTrailerSource();
         
-        if (iframe) {
-            // 將 mute=1 改為 mute=0 讓它嘗試直接帶聲音播放
-            iframe.src = `https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=0&loop=1&playlist=${selected.id}&controls=0&modestbranding=1`;
-        }
+        const titleLabel = document.getElementById('trailer-title-label');
         if (titleLabel) {
             titleLabel.innerText = selected.title;
+        }
+    }
+
+    function updateTrailerSource() {
+        const iframe = document.getElementById('trailer-iframe');
+        const bgIframe = document.getElementById('trailer-bg-iframe');
+        
+        const embedUrl = `https://www.youtube.com/embed/${currentTrailerId}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${currentTrailerId}&controls=0&modestbranding=1`;
+        
+        if (iframe) iframe.src = embedUrl;
+        if (bgIframe) bgIframe.src = embedUrl;
+    }
+
+    function toggleAudio() {
+        isMuted = !isMuted;
+        updateTrailerSource();
+        
+        const soundBtn = document.getElementById('sound-toggle-icon');
+        if (soundBtn) {
+            if (isMuted) {
+                soundBtn.className = "fa-solid fa-volume-xmark text-red-400";
+            } else {
+                soundBtn.className = "fa-solid fa-volume-high text-emerald-400";
+            }
         }
     }
 
@@ -798,7 +828,7 @@
         const lightbox = document.getElementById('trailer-lightbox');
         const lightboxIframe = document.getElementById('lightbox-iframe');
         if (lightbox && lightboxIframe) {
-            lightboxIframe.src = `https://www.youtube.com/embed/${currentTrailerId}?autoplay=1&mute=0`;
+            lightboxIframe.src = `https://www.youtube.com/embed/${currentTrailerId}?autoplay=1`;
             lightbox.classList.remove('hidden');
         }
     }
@@ -814,7 +844,6 @@
 
     initRandomTrailer();
 </script>
-
 
 
                 <!-- 🌟 專屬影音櫃  -->
