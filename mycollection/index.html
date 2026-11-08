@@ -354,8 +354,8 @@
 
                     card.innerHTML = `
                         <div>
-                            <!-- 將原本 h-48 sm:h-56 縮小為 h-36 sm:h-40 -->
-                            <div class="h-36 sm:h-40 bg-brand-dark overflow-hidden relative">
+                            <!-- 將圖片容器固定高度縮小為約 180px 左右 (h-44 sm:h-48) -->
+                            <div class="h-44 sm:h-48 bg-brand-dark overflow-hidden relative flex items-center justify-center">
                                 <img src="${coverImg}" 
                                      alt="${item.title}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
