@@ -716,6 +716,76 @@
                     </form>
                 </div>
 
+
+
+<!-- 🌟 全寬度・高度 2/3 比例：智慧隨機電影預告橫幅 -->
+<div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-900 p-3 md:p-4 rounded-2xl border border-slate-800 shadow-sm text-white space-y-2.5 w-full">
+    
+    <!-- 頂部標題與狀態 -->
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <div class="font-bold text-xs md:text-sm flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center text-xs shrink-0">
+                <i class="fa-solid fa-clapperboard"></i>
+            </span>
+            <span id="trailer-title-label">院線熱門電影預告</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <!-- 🎲 隨機換一部按鈕 -->
+            <button onclick="changeRandomTrailer()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer shadow-2xs">
+                <i class="fa-solid fa-shuffle text-red-400"></i> 隨機換一部
+            </button>
+            <span class="text-[9px] bg-red-500 text-white font-bold px-2 py-0.5 rounded-full tracking-wider animate-pulse">AUTO TRAILER</span>
+        </div>
+    </div>
+
+    <!-- 中間影片播放區 (高度為 2/3 比例) -->
+    <div class="relative w-full h-36 sm:h-48 md:h-56 bg-black rounded-xl overflow-hidden border border-slate-800 shadow-inner group">
+        <iframe id="trailer-iframe" class="w-full h-full border-0 absolute inset-0 object-cover" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <!-- 底部資訊 -->
+    <div class="flex items-center justify-between text-[11px] pt-0.5">
+        <span class="text-slate-400 font-medium">🎬 每次重整或點擊隨機按鈕，自動切換精選強檔預告</span>
+        <span class="text-slate-500">智慧輪播中</span>
+    </div>
+</div>
+
+<script>
+    // 🎬 您的電影預告口袋清單（您可以隨時在裡頭自由增加或修改 YouTube 影片 ID 與名稱！）
+    const movieTrailersPool = [
+        { id: "uJqaGLmZpGo", title: "Dune: Part Three A" },
+        { id: "C_SPMqq8uwk", title: "精選強檔動作鉅獻 B" },
+        { id: "H7dR6FwvljM", title: "年度感動人心力作 C" },
+        { id: "lzUyTD6IzqU", title: "懸疑科幻強檔預告 D" }
+    ];
+
+    function initRandomTrailer() {
+        if (movieTrailersPool.length === 0) return;
+        // 隨機抽出一部
+        const randomIndex = Math.floor(Math.random() * movieTrailersPool.length);
+        const selected = movieTrailersPool[randomIndex];
+        
+        const iframe = document.getElementById('trailer-iframe');
+        const titleLabel = document.getElementById('trailer-title-label');
+        
+        if (iframe) {
+            iframe.src = `https://www.youtube.com/embed/${selected.id}`;
+        }
+        if (titleLabel) {
+            titleLabel.innerText = selected.title;
+        }
+    }
+
+    function changeRandomTrailer() {
+        initRandomTrailer();
+    }
+
+    // 網頁載入時自動隨機播放一部
+    initRandomTrailer();
+</script>
+
+
+
                 <!-- 🌟 專屬影音櫃  -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     
