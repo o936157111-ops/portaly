@@ -718,20 +718,15 @@
 
 
 
-<!-- 🌟 左右無黑邊、100% 完美滿版預告橫幅 -->
+<!-- 🌟 單純俐落的滿版電影預告橫幅 -->
 <div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-950 rounded-2xl overflow-hidden shadow-xl text-white relative w-full h-36 sm:h-48 md:h-56 group border border-slate-800/80">
     
-    <!-- 1. 背景層：極度放大並模糊的同款光暈背景 -->
-    <div class="absolute inset-0 overflow-hidden opacity-30 blur-2xl pointer-events-none scale-125">
-        <iframe id="trailer-bg-iframe" class="w-full h-full border-0 object-cover" src="" tabindex="-1"></iframe>
-    </div>
-
-    <!-- 2. 主畫面層：透過 scale-125 將影片放大，完美切除左右黑邊、達到 100% 滿版 -->
+    <!-- 單一滿版影片播放區 (自動預覽、無聲、無黑邊) -->
     <div class="absolute inset-0 overflow-hidden flex items-center justify-center z-0">
         <iframe id="trailer-iframe" class="absolute inset-0 w-full h-full border-0 pointer-events-none scale-125 object-cover origin-center" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
     </div>
     
-    <!-- 3. 浮動頂部標題與按鈕群組 -->
+    <!-- 浮動頂部標題與按鈕群組 -->
     <div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10 pointer-events-auto">
         <div class="bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 font-bold text-xs flex items-center gap-2 shadow-md">
             <span class="w-5 h-5 rounded-md bg-red-600/30 text-red-500 flex items-center justify-center text-[10px] shrink-0">
@@ -748,7 +743,7 @@
         </div>
     </div>
 
-    <!-- 4. 浮動右下角全螢幕按鈕 -->
+    <!-- 浮動右下角全螢幕按鈕 -->
     <div class="absolute bottom-2.5 right-2.5 z-10 pointer-events-auto" onclick="openTrailerInLightbox()" title="點擊放大觀看完整預告">
         <span class="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white text-[10px] px-2.5 py-1.5 rounded-lg border border-white/10 font-bold transition flex items-center gap-1 shadow-md cursor-pointer">
             <i class="fa-solid fa-expand"></i> 全螢幕觀看
@@ -783,14 +778,10 @@
         currentTrailerId = selected.id;
         
         const iframe = document.getElementById('trailer-iframe');
-        const bgIframe = document.getElementById('trailer-bg-iframe');
         const titleLabel = document.getElementById('trailer-title-label');
         
         if (iframe) {
             iframe.src = `https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=1&loop=1&playlist=${selected.id}&controls=0&modestbranding=1`;
-        }
-        if (bgIframe) {
-            bgIframe.src = `https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=1&loop=1&playlist=${selected.id}&controls=0`;
         }
         if (titleLabel) {
             titleLabel.innerText = selected.title;
@@ -822,7 +813,6 @@
 
     initRandomTrailer();
 </script>
-
 
 
 
