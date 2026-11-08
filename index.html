@@ -718,7 +718,7 @@
 
 
 
-<!-- 🌟 全寬度・高度 2/3 比例：智慧隨機電影預告橫幅 -->
+<!-- 🌟 全寬度・高度 2/3 比例：滿版智慧電影預告橫幅 -->
 <div id="desktop-movie-trailer-card" class="app-shortcut-card bg-slate-900 p-3 md:p-4 rounded-2xl border border-slate-800 shadow-sm text-white space-y-2.5 w-full">
     
     <!-- 頂部標題與狀態 -->
@@ -731,21 +731,38 @@
         </div>
         <div class="flex items-center gap-2">
             <!-- 🎲 隨機換一部按鈕 -->
-            <button onclick="changeRandomTrailer()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer shadow-2xs">
-                <i class="fa-solid fa-shuffle text-red-400"></i>🎲
+            <button onclick="changeRandomTrailer()" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer shadow-2xs" title="隨機換一部">
+                <i class="fa-solid fa-shuffle text-red-400"></i>
             </button>
-            
         </div>
     </div>
 
-    <!-- 中間影片播放區 (高度為 2/3 比例) -->
+    <!-- 中間影片播放區 (透過 overflow-hidden 完美裁切黑邊達到滿版) -->
     <div class="relative w-full h-36 sm:h-48 md:h-56 bg-black rounded-xl overflow-hidden border border-slate-800 shadow-inner group">
-        <iframe id="trailer-iframe" class="w-full h-full border-0 absolute inset-0 object-cover" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <!-- 關鍵：加上 scale-125 將影片放大並撐滿區塊，切除黑邊 -->
+        <iframe id="trailer-iframe" class="absolute inset-0 w-full h-full border-0 pointer-events-none scale-125 object-cover origin-center" src="" title="電影預告" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        
+        <!-- 點擊遮罩：讓使用者隨時可以點擊放大看完整預告（因為滿版會擋住按鈕） -->
+        <div class="absolute inset-0 bg-transparent cursor-pointer flex items-end justify-end p-2" onclick="openTrailerInLightbox()" title="點擊放大觀看完整預告">
+            <span class="bg-black/60 hover:bg-black/80 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg border border-white/20 font-bold transition flex items-center gap-1 shadow-md">
+                <i class="fa-solid fa-expand"></i> 全螢幕觀看
+            </span>
+        </div>
     </div>
+</div>
 
-   
+<!-- 互動彈跳燈箱 (LightBox) 供點擊後完整欣賞預告 -->
+<div id="trailer-lightbox" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
+    <div class="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-700">
+        <button onclick="closeTrailerLightbox()" class="absolute top-3 right-3 z-10 w-9 h-9 bg-black/60 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition cursor-pointer shadow-lg">
+            <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+        <iframe id="lightbox-iframe" class="w-full h-full border-0" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+
 <script>
-    // 🎬 您的電影預告口袋清單（您可以隨時在裡頭自由增加或修改 YouTube 影片 ID 與名稱！）
+    // 🎬 您的電影預告口袋清單
     const movieTrailersPool = [
         { id: "uJqaGLmZpGo", title: "Dune: Part Three A" },
         { id: "B8fSJ0aTsdI", title: "猫と歩み B" },
@@ -753,17 +770,20 @@
         { id: "s4MJikPQWL8", title: "秋晨小巷 D" }
     ];
 
+    let currentTrailerId = "";
+
     function initRandomTrailer() {
         if (movieTrailersPool.length === 0) return;
-        // 隨機抽出一部
         const randomIndex = Math.floor(Math.random() * movieTrailersPool.length);
         const selected = movieTrailersPool[randomIndex];
+        currentTrailerId = selected.id;
         
         const iframe = document.getElementById('trailer-iframe');
         const titleLabel = document.getElementById('trailer-title-label');
         
         if (iframe) {
-            iframe.src = `https://www.youtube.com/embed/${selected.id}`;
+            // 加入 autoplay=1&mute=1&loop=1 讓它在背景自動無聲滿版預覽播放
+            iframe.src = `https://www.youtube.com/embed/${selected.id}?autoplay=1&mute=1&loop=1&playlist=${selected.id}&controls=0&modestbranding=1`;
         }
         if (titleLabel) {
             titleLabel.innerText = selected.title;
@@ -774,10 +794,28 @@
         initRandomTrailer();
     }
 
+    function openTrailerInLightbox() {
+        if (!currentTrailerId) return;
+        const lightbox = document.getElementById('trailer-lightbox');
+        const lightboxIframe = document.getElementById('lightbox-iframe');
+        if (lightbox && lightboxIframe) {
+            lightboxIframe.src = `https://www.youtube.com/embed/${currentTrailerId}?autoplay=1`;
+            lightbox.classList.remove('hidden');
+        }
+    }
+
+    function closeTrailerLightbox() {
+        const lightbox = document.getElementById('trailer-lightbox');
+        const lightboxIframe = document.getElementById('lightbox-iframe');
+        if (lightbox && lightboxIframe) {
+            lightboxIframe.src = '';
+            lightbox.classList.add('hidden');
+        }
+    }
+
     // 網頁載入時自動隨機播放一部
     initRandomTrailer();
 </script>
-
 
 
                 <!-- 🌟 專屬影音櫃  -->
