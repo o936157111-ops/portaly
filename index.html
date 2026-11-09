@@ -1829,42 +1829,22 @@
             }
         }
 
-        function loadCustomApps() {
-            document.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
-            
-            JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').forEach((app, index) => {
-                let targetGrid = null;
-                
-                if (app.groupId === 'group-creative') {
-                    targetGrid = document.getElementById('creative-app-grid');
-                } else if (!app.groupId || app.groupId === 'group-general') {
-                    targetGrid = document.getElementById('general-app-grid');
-                } else {
-                    targetGrid = document.getElementById(`${app.groupId}-app-grid`);
-                    if (!targetGrid) {
-                        renderCustomGroups();
-                        targetGrid = document.getElementById(`${app.groupId}-app-grid`);
-                    }
-                }
+        function removeCustomApp(groupId, name, url) {
+    if (confirm(`確定刪除自訂捷徑「${name}」？`)) {
+        let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+        
+        // 使用 filter 精準比對，只排除符合該分類、名稱與網址的特定項目，絕不誤刪其他捷徑
+        customApps = customApps.filter(app => {
+            const currentGroupId = app.groupId || 'group-general';
+            return !(currentGroupId === groupId && app.name === name && app.url === url);
+        });
 
-                if (targetGrid) {
-                    let div = document.createElement('div');
-                    div.className = 'app-item relative group';
-                    div.setAttribute('data-custom-idx', index);
-                    div.innerHTML = `
-                        <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
-                            <div class="app-box bg-gradient-to-br from-violet-500 to-fuchsia-600"><i class="${app.icon || 'fa-solid fa-globe'} text-white"></i></div>
-                            <span class="app-label">${app.name}</span>
-                        </a>
-                        <button type="button" onclick="removeCustomApp(this)" class="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center opacity-0 group-[.show-delete]:opacity-100 md:group-hover:opacity-100 transition shadow cursor-pointer">×</button>`;
-                    targetGrid.appendChild(div);
-                }
-            });
-
-            if (typeof updateDesktopVisibility === 'function') {
-                updateDesktopVisibility();
-            }
-        }
+        localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
+        syncToCloud();
+        loadCustomApps();
+        updateDesktopVisibility();
+    }
+}
 
         async function loadBloggerFeed() {
             const blogUrl = "https://myezdailylife.blogspot.com";
