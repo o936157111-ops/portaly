@@ -2069,6 +2069,38 @@
                 console.error("從 CSV 載入歌單失敗，使用預設/本地歌單:", error);
             }
         }
+
+
+
+// 開啟指定的浮動視窗
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('hidden');
+  }
+}
+
+// 關閉指定的浮動視窗
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+// 點擊視窗背景半透明區域時自動關閉視窗
+window.addEventListener('click', function(event) {
+  ['aboutModal', 'privacyModal'].forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (event.target === modal) {
+      modal.classList.add('hidden');
+    }
+  });
+});
+
+
+
+
     </script>
 
     <!-- 🌟 電影預告隨機與初始化 Script -->
@@ -2080,7 +2112,7 @@
             { id: "hKvfPjfhCKU", title: "JASON BOURNE 6 " },
             { id: "atsuvMh33QA", title: "高山咖啡館的晨光" },
             { id: "oHesqzgRiEY", title: "經典老歌" },
-            { id: "39n6jqLOd_A", title: "經典老歌" },
+            { id: "Ye5y8O4E04s", title: "開往初戀的平行線" },
             { id: "s4MJikPQWL8", title: "秋晨小巷 D" }
         ];
 
@@ -2107,4 +2139,48 @@
         initRandomTrailer();
     </script>
 </body>
+
+
+<!-- 觸發按鈕區塊 -->
+<!-- 修改這裡：加入 justify-center 即可水平置中 -->
+<div class="flex flex-wrap justify-center items-center gap-4 py-4 text-sm">
+  <button onclick="openModal('aboutModal')" class="hover:underline text-gray-700 font-medium">關於本站</button>
+  <button onclick="openModal('privacyModal')" class="hover:underline text-gray-700 font-medium">隱私權政策</button>
+  <a href="mailto:o936157111@gmail.com" class="hover:underline text-gray-700 font-medium">聯絡我們</a>
+</div>
+ 
+
+<!-- 關於本站 浮動視窗 (Modal) -->
+<div id="aboutModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white w-11/12 max-w-2xl rounded-lg shadow-xl overflow-hidden p-6 relative max-h-[80vh] flex flex-col">
+    <div class="flex justify-between items-center pb-3 border-b mb-4">
+      <h3 class="text-lg font-bold text-gray-800">關於本站（歡迎頁面）</h3>
+      <button onclick="closeModal('aboutModal')" class="text-gray-500 hover:text-gray-800 text-xl font-bold">&times;</button>
+    </div>
+    <!-- 這裡放入原本左側欄「歡迎頁面」的內容 -->
+    <div class="overflow-y-auto flex-grow text-gray-600 space-y-3 pr-2">
+      <p>歡迎來到 myezlife.com！本站是一個結合個人數位工具、輕量化管理入口與圖文日誌的純前端平台。</p>
+      <p>我們致力於提供簡潔、實用且高效率的數位體驗，所有工具與內容皆以使用者自主性與流暢操作為核心設計。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 隱私權政策 浮動視窗 (Modal) -->
+<div id="privacyModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white w-11/12 max-w-2xl rounded-lg shadow-xl overflow-hidden p-6 relative max-h-[80vh] flex flex-col">
+    <div class="flex justify-between items-center pb-3 border-b mb-4">
+      <h3 class="text-lg font-bold text-gray-800">網站使用與隱私說明</h3>
+      <button onclick="closeModal('privacyModal')" class="text-gray-500 hover:text-gray-800 text-xl font-bold">&times;</button>
+    </div>
+    <!-- 這裡放入原本左側欄「網站使用與隱私說明」的內容 -->
+    <div class="overflow-y-auto flex-grow text-gray-600 space-y-3 pr-2">
+      <p><strong>1. 隱私權保護政策：</strong>本站非常重視您的隱私權。我們不會在未經您同意的情況下蒐集您的個人識別資料。</p>
+      <p><strong>2. 本地儲存 (localStorage) 說明：</strong>本站部分工具與個人設定會使用瀏覽器的 `localStorage` 進行本地儲存，資料僅保留在您的個人裝置上，不會上傳至伺服器，保障您的資料自主與隱私安全。</p>
+      <p><strong>3. 廣告政策：</strong>本站可能包含第三方廣告服務（如 Google AdSense），這些服務可能會使用 Cookie 來提供符合您興趣的廣告內容。</p>
+    </div>
+  </div>
+</div>
+
+
+
 </html>
