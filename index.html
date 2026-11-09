@@ -1818,33 +1818,52 @@
             if (dockBar) desktopContainer.appendChild(dockBar);
         }
 
-        function removeCustomApp(btn) {
-            if (confirm('確定刪除此自訂捷徑？')) {
+        function loadCustomApps() {
+            const customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
+            
+            // 清除現有的自訂捷徑元素
+            document.querySelectorAll('.app-item[data-custom-idx]').forEach(el => el.remove());
+
+            customApps.forEach((app, idx) => {
+                let targetGrid = null;
+                if (app.groupId === 'group-creative') targetGrid = document.getElementById('creative-app-grid');
+                else if (app.groupId === 'group-general') targetGrid = document.getElementById('general-app-grid');
+                else targetGrid = document.getElementById(`${app.groupId}-app-grid`);
+
+                if (targetGrid) {
+                    const div = document.createElement('div');
+                    div.className = 'app-item relative group/item';
+                    div.setAttribute('data-custom-idx', idx);
+                    div.innerHTML = `
+                        <a href="${app.url}" target="_blank" class="flex flex-col items-center justify-center text-decoration-none w-full">
+                            <div class="app-box bg-gradient-to-br from-slate-600 to-slate-800"><i class="${app.icon || 'fa-solid fa-globe'} text-white"></i></div>
+                            <span class="app-label">${app.name}</span>
+                        </a>
+                        <button onclick="removeCustomApp('${app.groupId}', '${app.name.replace(/'/g, "\\'")}', '${app.url}')" class="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 hover:bg-rose-600 text-white rounded-full flex items-center justify-center text-[10px] shadow-sm opacity-0 group-hover/item:opacity-100 transition cursor-pointer z-10" title="刪除此捷徑">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    `;
+                    targetGrid.appendChild(div);
+                }
+            });
+        }
+
+        function removeCustomApp(groupId, name, url) {
+            if (confirm(`確定刪除自訂捷徑「${name}」？`)) {
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-                customApps.splice(parseInt(btn.closest('.app-item').getAttribute('data-custom-idx'), 10), 1);
+                
+                // 使用 filter 精準比對，只排除符合該分類、名稱與網址的特定項目，絕不誤刪其他捷徑
+                customApps = customApps.filter(app => {
+                    const currentGroupId = app.groupId || 'group-general';
+                    return !(currentGroupId === groupId && app.name === name && app.url === url);
+                });
+
                 localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
                 syncToCloud();
                 loadCustomApps();
                 updateDesktopVisibility();
             }
         }
-
-        function removeCustomApp(groupId, name, url) {
-    if (confirm(`確定刪除自訂捷徑「${name}」？`)) {
-        let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
-        
-        // 使用 filter 精準比對，只排除符合該分類、名稱與網址的特定項目，絕不誤刪其他捷徑
-        customApps = customApps.filter(app => {
-            const currentGroupId = app.groupId || 'group-general';
-            return !(currentGroupId === groupId && app.name === name && app.url === url);
-        });
-
-        localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
-        syncToCloud();
-        loadCustomApps();
-        updateDesktopVisibility();
-    }
-}
 
         async function loadBloggerFeed() {
             const blogUrl = "https://myezdailylife.blogspot.com";
