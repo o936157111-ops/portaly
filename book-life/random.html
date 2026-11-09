@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myezlife.com - 真·動態網路隨機選書</title>
+    <title>myezlife.com - 中文真實圖書真·動態隨機選書</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -20,17 +20,17 @@
             
             <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-100">
                 <div class="text-xs font-semibold tracking-wider text-amber-600 uppercase flex items-center gap-1.5">
-                    <span>📚</span> 每日一書・全球書庫真·隨機探索
+                    <span>📚</span> 每日一書・繁體中文書庫真·隨機探索
                 </div>
-                <button onclick="fetchTrueRandomBook()" class="text-xs text-amber-600 hover:text-amber-700 font-medium underline cursor-pointer bg-transparent border-none p-0">
-                    🔄 隨機換一本新書
+                <button onclick="fetchChineseRandomBook()" class="text-xs text-amber-600 hover:text-amber-700 font-medium underline cursor-pointer bg-transparent border-none p-0">
+                    🔄 隨機換一本中文書
                 </button>
             </div>
 
             <!-- 動態載入容器 -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center" id="bookWidgetContainer">
                 <div class="md:col-span-12 text-center py-8 text-slate-400 text-sm animate-pulse">
-                    正在從全球開放圖書館即時抓取真實書籍...
+                    正在從 Google 繁體中文圖書資料庫即時隨機抽書...
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
             <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white sticky top-0 z-10">
                 <div class="flex items-center space-x-2">
                     <span class="text-amber-600 font-bold">📖</span>
-                    <h2 class="font-bold text-slate-800 text-lg" id="modalHeaderTitle">真實書籍深度導讀</h2>
+                    <h2 class="font-bold text-slate-800 text-lg" id="modalHeaderTitle">中文書籍深度導讀</h2>
                 </div>
                 <button onclick="closeBookModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors text-lg font-bold">
                     &times;
@@ -56,7 +56,7 @@
 
             <div class="flex items-center justify-end px-6 py-3 border-t border-slate-100 bg-slate-50 gap-3">
                 <a id="modalBuyLink" href="#" target="_blank" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-sm transition-colors shadow-sm hidden">
-                    在 Open Library 查看詳情
+                    查看 Google 圖書預覽
                 </a>
                 <button onclick="closeBookModal()" class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-medium rounded-xl text-sm transition-colors">
                     關閉
@@ -65,45 +65,51 @@
         </div>
     </div>
 
-    <!-- ==================== 真·動態 API 抓取邏輯 ==================== -->
+    <!-- ==================== 繁體中文真·動態 API 抓取邏輯 ==================== -->
     <script>
-        // 隨機主題關鍵字庫，每次隨機挑選一個去圖書館資料庫撈書
-        const subjects = ['classic', 'mystery', 'history', 'philosophy', 'science', 'literature', 'fiction', 'art'];
+        // 繁體中文熱門探索關鍵字庫
+        const chineseKeywords = ['小說', '文學', '歷史', '生活', '心理學', '散文', '商業', '哲學', '懸疑', '傳記'];
 
-        async function fetchTrueRandomBook() {
+        async function fetchChineseRandomBook() {
             const container = document.getElementById('bookWidgetContainer');
-            container.innerHTML = `<div class="md:col-span-12 text-center py-8 text-slate-400 text-sm animate-pulse">正在從全球開放圖書館即時隨機抽書中...</div>`;
+            container.innerHTML = `<div class="md:col-span-12 text-center py-8 text-slate-400 text-sm animate-pulse">正在從繁體中文書庫即時抽書中...</div>`;
 
             try {
-                const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
-                // 隨機位移頁碼，確保每次抓到完全不同的書
-                const randomOffset = Math.floor(Math.random() * 30) * 10;
+                const randomKeyword = chineseKeywords[Math.floor(Math.random() * chineseKeywords.length)];
+                const randomStartIndex = Math.floor(Math.random() * 15) * 10;
 
-                const response = await fetch(`https://openlibrary.org/search.json?q=${randomSubject}&offset=${randomOffset}&limit=50`);
+                // 透過 Google Books API 限制繁體中文 (langRestrict=zh)
+                const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(randomKeyword)}&startIndex=${randomStartIndex}&maxResults=20&langRestrict=zh`);
                 const data = await response.json();
 
-                if (!data.docs || data.docs.length === 0) {
-                    throw new Error('找不到書籍');
+                if (!data.items || data.items.length === 0) {
+                    throw new Error('找不到中文書籍');
                 }
 
-                // 過濾出「確實有封面圖片 (cover_i)」的真實書籍
-                const validBooks = data.docs.filter(doc => doc.cover_i && doc.title);
-                if (validBooks.length === 0) throw new Error('沒有帶封面的書');
+                // 過濾出包含圖片且具備基本資訊的中文書
+                const validBooks = data.items.filter(item => {
+                    const info = item.volumeInfo;
+                    return info.imageLinks && info.imageLinks.thumbnail && info.title;
+                });
+
+                if (validBooks.length === 0) throw new Error('沒有帶封面的中文書');
 
                 // 隨機挑選一本
-                const book = validBooks[Math.floor(Math.random() * validBooks.length)];
-                
-                const title = book.title;
-                const author = book.author_name ? book.author_name.join(', ') : '多位作者 / 佚名';
-                const publishYear = book.first_publish_year ? `初版年份：${book.first_publish_year}` : '經典館藏作品';
-                const coverUrl = `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`;
-                const bookUrl = `https://openlibrary.org${book.key}`;
+                const bookItem = validBooks[Math.floor(Math.random() * validBooks.length)];
+                const info = bookItem.volumeInfo;
+
+                const title = info.title || "未知書名";
+                const authors = info.authors ? info.authors.join(', ') : '佚名';
+                const publisher = info.publisher ? `出版社：${info.publisher}` : '繁體中文出版品';
+                const description = info.description ? info.description.replace(/<[^>]*>?/gm, '') : '這是一部備受關注的繁體中文出版作品，透過細膩的筆觸與深刻的視角，帶領讀者探索截然不同的知識與心靈領域。';
+                let thumbnail = info.imageLinks.thumbnail.replace('http:', 'https:');
+                const previewLink = info.previewLink || "#";
 
                 // 渲染主頁區塊
                 container.innerHTML = `
                     <div class="md:col-span-4 flex justify-center">
                         <div onclick="openBookModal()" class="group relative cursor-pointer overflow-hidden rounded-xl shadow-md w-40 h-56 md:w-full md:h-60 bg-slate-100 border border-slate-100">
-                            <img src="${coverUrl}" alt="${title}書影" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <img src="${thumbnail}" alt="${title}書影" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white font-medium text-xs text-center p-2">
                                 點擊展開深度導讀
                             </div>
@@ -111,19 +117,19 @@
                     </div>
                     <div class="md:col-span-8 flex flex-col justify-center space-y-3">
                         <div class="flex items-center gap-2">
-                            <span class="bg-amber-50 text-amber-800 text-xs px-2.5 py-1 rounded-md font-medium">${author} 著</span>
-                            <span class="text-slate-400 text-xs">• ${publishYear}</span>
+                            <span class="bg-amber-50 text-amber-800 text-xs px-2.5 py-1 rounded-md font-medium">${authors} 著</span>
+                            <span class="text-slate-400 text-xs">• ${publisher}</span>
                         </div>
                         <h3 class="font-bold text-slate-800 text-xl md:text-2xl tracking-tight">${title}</h3>
                         <p class="text-slate-600 text-sm md:text-base leading-relaxed line-clamp-3">
-                            本書收錄於全球開放圖書館（Open Library）資料庫中。透過獨特的文獻視角與作者深厚的筆觸，引領讀者探索 ${randomSubject} 領域的核心精神與知識寶庫。
+                            ${description}
                         </p>
                         <div class="pt-2 flex items-center gap-3">
                             <button onclick="openBookModal()" class="inline-flex items-center justify-center py-2.5 px-5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl text-sm transition-colors shadow-sm gap-2">
                                 <span>📖 閱讀完整導讀</span>
                             </button>
-                            <a href="${bookUrl}" target="_blank" class="inline-flex items-center justify-center py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-xl text-sm transition-colors">
-                                前往圖書館官方頁面
+                            <a href="${previewLink}" target="_blank" class="inline-flex items-center justify-center py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-xl text-sm transition-colors">
+                                查看 Google 圖書
                             </a>
                         </div>
                     </div>
@@ -134,34 +140,32 @@
                 document.getElementById('modalBodyContent').innerHTML = `
                     <div>
                         <h3 class="text-xl font-bold text-slate-900 mb-2">${title}</h3>
-                        <p class="text-slate-500 text-xs mb-3">作者：${author} | ${publishYear}</p>
-                        <p class="text-slate-600 leading-relaxed">
-                            這是一部收錄於全球數位圖書館網路中的真實著作。藉由對該主題的深刻剖析，本書在歷史脈絡與現代思考之間架起了一座橋樑，為追求知識與心靈成長的讀者帶來豐沛的啟發。
-                        </p>
+                        <p class="text-slate-500 text-xs mb-3">作者：${authors} | ${publisher}</p>
+                        <p class="text-slate-600 leading-relaxed">${description}</p>
                     </div>
                     <hr class="border-slate-100">
                     <div>
-                        <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center"><span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded mr-2">01</span>核心價值與時代意義</h4>
-                        <p class="mb-2">透過作者在書中構築的體系，讀者得以一窺該學門或文學流派在當代所引發的深刻迴響與思辯價值。</p>
+                        <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center"><span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded mr-2">01</span>核心觀點與啟發</h4>
+                        <p class="mb-2">本書在繁體中文閱讀社群中引發了獨到的迴響，其深刻的在地化視角與脈絡，能為探索該主題的讀者帶來耳目一新的思考。</p>
                     </div>
                     <div>
                         <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center"><span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded mr-2">02</span>為什麼值得一讀？</h4>
-                        <p class="mb-2">在資訊碎片化的時代，回歸紙本與有份量的經典著作，能有效拓寬我們看待世界的寬度與深度。</p>
+                        <p class="mb-2">透過流暢的中文敘事，本書不僅具備高度的知識與鑑賞價值，更在心靈與思維上提供了沉浸式的啟發。</p>
                     </div>
                     <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 text-amber-900 text-xs leading-relaxed">
-                        <strong>總結：</strong>每一次重新整理或點擊，都是一場與全球浩瀚書海的真實隨機相遇。
+                        <strong>總結：</strong>在繁體中文的世界裡，每一次重新整理都是一場與真實好書的不期而遇。
                     </div>
                 `;
 
                 const buyBtn = document.getElementById('modalBuyLink');
-                buyBtn.href = bookUrl;
+                buyBtn.href = previewLink;
                 buyBtn.classList.remove('hidden');
 
             } catch (error) {
                 container.innerHTML = `
                     <div class="md:col-span-12 text-center py-8 text-slate-500 text-sm">
-                        <p class="mb-2">網路連線或圖書館資料庫回應較慢，請點擊下方按鈕重新嘗試。</p>
-                        <button onclick="fetchTrueRandomBook()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs">重新隨機抓取</button>
+                        <p class="mb-2">網路連線或中文書庫回應較慢，請點擊下方按鈕重新嘗試。</p>
+                        <button onclick="fetchChineseRandomBook()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs">重新隨機抽書</button>
                     </div>
                 `;
             }
@@ -193,8 +197,8 @@
             if (e.key === 'Escape') closeBookModal();
         });
 
-        // 頁面載入時自動執行真·隨機抓取
-        window.onload = fetchTrueRandomBook;
+        // 頁面載入時執行中文真·隨機抓取
+        window.onload = fetchChineseRandomBook;
     </script>
 
 </body>
