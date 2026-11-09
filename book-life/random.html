@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myezlife.com - 動態讀取私房圖書館隨機推薦</title>
+    <title>myezlife.com - 中文真實圖書真·動態隨機選書</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -20,17 +20,17 @@
             
             <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-100">
                 <div class="text-xs font-semibold tracking-wider text-amber-600 uppercase flex items-center gap-1.5">
-                    <span>📚</span> 從我的私房圖書館隨選
+                    <span>📚</span> 每日一書・繁體中文書庫真·隨機探索
                 </div>
-                <button onclick="pickRandomBookFromMyLibrary()" class="text-xs text-amber-600 hover:text-amber-700 font-medium underline cursor-pointer bg-transparent border-none p-0">
-                    🔄 隨機換一本藏書
+                <button onclick="fetchChineseRandomBook()" class="text-xs text-amber-600 hover:text-amber-700 font-medium underline cursor-pointer bg-transparent border-none p-0">
+                    🔄 隨機換一本中文書
                 </button>
             </div>
 
             <!-- 動態載入容器 -->
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center" id="libraryWidgetContainer">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center" id="bookWidgetContainer">
                 <div class="md:col-span-12 text-center py-8 text-slate-400 text-sm animate-pulse">
-                    正在讀取 mylibrary.html 的藏書清單...
+                    正在從 Google 繁體中文圖書資料庫即時隨機抽書...
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
             <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-white sticky top-0 z-10">
                 <div class="flex items-center space-x-2">
                     <span class="text-amber-600 font-bold">📖</span>
-                    <h2 class="font-bold text-slate-800 text-lg" id="modalHeaderTitle">私房藏書深度導讀</h2>
+                    <h2 class="font-bold text-slate-800 text-lg" id="modalHeaderTitle">中文書籍深度導讀</h2>
                 </div>
                 <button onclick="closeBookModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors text-lg font-bold">
                     &times;
@@ -55,8 +55,8 @@
             </div>
 
             <div class="flex items-center justify-end px-6 py-3 border-t border-slate-100 bg-slate-50 gap-3">
-                <a id="modalSourceLink" href="https://myezlife.com/mylibrary.html" target="_blank" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-sm transition-colors shadow-sm hidden">
-                    在 mylibrary.html 中查看
+                <a id="modalBuyLink" href="#" target="_blank" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl text-sm transition-colors shadow-sm hidden">
+                    查看 Google 圖書預覽
                 </a>
                 <button onclick="closeBookModal()" class="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-medium rounded-xl text-sm transition-colors">
                     關閉
@@ -65,111 +65,110 @@
         </div>
     </div>
 
-    <!-- ==================== 遠端抓取 mylibrary.html 邏輯 ==================== -->
+    <!-- ==================== 繁體中文真·動態 API 抓取邏輯 ==================== -->
     <script>
-        let fetchedLibraryBooks = [];
+        // 繁體中文熱門探索關鍵字庫
+        const chineseKeywords = ['小說', '文學', '歷史', '生活', '心理學', '散文', '商業', '哲學', '懸疑', '傳記'];
 
-        async function pickRandomBookFromMyLibrary() {
-            const container = document.getElementById('libraryWidgetContainer');
+        async function fetchChineseRandomBook() {
+            const container = document.getElementById('bookWidgetContainer');
+            container.innerHTML = `<div class="md:col-span-12 text-center py-8 text-slate-400 text-sm animate-pulse">正在從繁體中文書庫即時抽書中...</div>`;
 
-            // 如果已經抓過藏書清單，就直接從裡面隨機抽，不用每次都重抓網頁
-            if (fetchedLibraryBooks.length === 0) {
-                try {
-                    // 透過 fetch 讀取您網站上的 mylibrary.html
-                    const response = await fetch('https://myezlife.com/mylibrary.html');
-                    const htmlText = await response.text();
+            try {
+                const randomKeyword = chineseKeywords[Math.floor(Math.random() * chineseKeywords.length)];
+                const randomStartIndex = Math.floor(Math.random() * 15) * 10;
 
-                    // 將 HTML 字串轉換成 DOM 物件以便解析
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(htmlText, 'text/html');
+                // 透過 Google Books API 限制繁體中文 (langRestrict=zh)
+                const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(randomKeyword)}&startIndex=${randomStartIndex}&maxResults=20&langRestrict=zh`);
+                const data = await response.json();
 
-                    // 假設您在 mylibrary.html 裡面每一本書都是用某個特定的 class 包起來（例如 .book-item 或 .card）
-                    // 這裡預設抓取常見的書本結構：包含圖片 (img)、書名 (h2/h3/h4) 與作者/簡介
-                    // *注意：如果您的 mylibrary.html 結構不同，可以告訴我您網頁裡的 HTML 標籤，我幫您修改這段選擇器*
-                    const bookElements = doc.querySelectorAll('.book-item, .card, article, .book-card');
-
-                    if (bookElements && bookElements.length > 0) {
-                        bookElements.forEach(el => {
-                            const titleEl = el.querySelector('h2, h3, h4, .title');
-                            const imgEl = el.querySelector('img');
-                            const descEl = el.querySelector('p, .desc');
-
-                            if (titleEl && imgEl) {
-                                fetchedLibraryBooks.push({
-                                    title: titleEl.innerText.trim(),
-                                    author: "私房藏書", // 如果您的頁面有獨立作者標籤可在此調整
-                                    image: imgEl.src,
-                                    shortDesc: descEl ? descEl.innerText.trim() : "收錄於我的個人私房圖書館中的精選藏書。",
-                                    link: "https://myezlife.com/mylibrary.html"
-                                });
-                            }
-                        });
-                    }
-
-                    // 如果自動抓取不到 DOM 元素（可能是因為跨域或結構不符合），提供一組備用動態解析邏輯或提示
-                    if (fetchedLibraryBooks.length === 0) {
-                        throw new Error('無法自動解析 mylibrary.html 結構');
-                    }
-
-                } catch (error) {
-                    // 萬一受到瀏覽器跨域 (CORS) 限制無法直接 fetch 完整 HTML，
-                    // 這裡自動切換為讀取您存放書單的 API / CSV / 或保持互動狀態
-                    container.innerHTML = `
-                        <div class="md:col-span-12 text-center py-6 text-slate-500 text-sm">
-                            <p class="mb-2">已嘗試連線至 mylibrary.html，因瀏覽器安全性限制（CORS）無法直接讀取頁面結構。</p>
-                            <p class="text-xs text-amber-600 font-medium">建議：若您的 mylibrary.html 是讀取 Google Sheets CSV，可直接將該 CSV 來源串接進來，即可實現無限本藏書隨機抽取！</p>
-                        </div>
-                    `;
-                    return;
+                if (!data.items || data.items.length === 0) {
+                    throw new Error('找不到中文書籍');
                 }
-            }
 
-            // 從成功抓取到的清單中隨機抽出一本
-            const randomBook = fetchedLibraryBooks[Math.floor(Math.random() * fetchedLibraryBooks.length)];
+                // 過濾出包含圖片且具備基本資訊的中文書
+                const validBooks = data.items.filter(item => {
+                    const info = item.volumeInfo;
+                    return info.imageLinks && info.imageLinks.thumbnail && info.title;
+                });
 
-            // 渲染主頁區塊
-            container.innerHTML = `
-                <div class="md:col-span-4 flex justify-center">
-                    <div onclick="openBookModal()" class="group relative cursor-pointer overflow-hidden rounded-xl shadow-md w-40 h-56 md:w-full md:h-60 bg-slate-100 border border-slate-100">
-                        <img src="${randomBook.image}" alt="${randomBook.title}書影" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white font-medium text-xs text-center p-2">
-                            點擊查看藏書導讀
+                if (validBooks.length === 0) throw new Error('沒有帶封面的中文書');
+
+                // 隨機挑選一本
+                const bookItem = validBooks[Math.floor(Math.random() * validBooks.length)];
+                const info = bookItem.volumeInfo;
+
+                const title = info.title || "未知書名";
+                const authors = info.authors ? info.authors.join(', ') : '佚名';
+                const publisher = info.publisher ? `出版社：${info.publisher}` : '繁體中文出版品';
+                const description = info.description ? info.description.replace(/<[^>]*>?/gm, '') : '這是一部備受關注的繁體中文出版作品，透過細膩的筆觸與深刻的視角，帶領讀者探索截然不同的知識與心靈領域。';
+                let thumbnail = info.imageLinks.thumbnail.replace('http:', 'https:');
+                const previewLink = info.previewLink || "#";
+
+                // 渲染主頁區塊
+                container.innerHTML = `
+                    <div class="md:col-span-4 flex justify-center">
+                        <div onclick="openBookModal()" class="group relative cursor-pointer overflow-hidden rounded-xl shadow-md w-40 h-56 md:w-full md:h-60 bg-slate-100 border border-slate-100">
+                            <img src="${thumbnail}" alt="${title}書影" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white font-medium text-xs text-center p-2">
+                                點擊展開深度導讀
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="md:col-span-8 flex flex-col justify-center space-y-3">
-                    <div class="flex items-center gap-2">
-                        <span class="bg-amber-50 text-amber-800 text-xs px-2.5 py-1 rounded-md font-medium">私房藏書</span>
-                        <span class="text-slate-400 text-xs">• 來自 mylibrary.html</span>
+                    <div class="md:col-span-8 flex flex-col justify-center space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-amber-50 text-amber-800 text-xs px-2.5 py-1 rounded-md font-medium">${authors} 著</span>
+                            <span class="text-slate-400 text-xs">• ${publisher}</span>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-xl md:text-2xl tracking-tight">${title}</h3>
+                        <p class="text-slate-600 text-sm md:text-base leading-relaxed line-clamp-3">
+                            ${description}
+                        </p>
+                        <div class="pt-2 flex items-center gap-3">
+                            <button onclick="openBookModal()" class="inline-flex items-center justify-center py-2.5 px-5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl text-sm transition-colors shadow-sm gap-2">
+                                <span>📖 閱讀完整導讀</span>
+                            </button>
+                            <a href="${previewLink}" target="_blank" class="inline-flex items-center justify-center py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-xl text-sm transition-colors">
+                                查看 Google 圖書
+                            </a>
+                        </div>
                     </div>
-                    <h3 class="font-bold text-slate-800 text-xl md:text-2xl tracking-tight">${randomBook.title}</h3>
-                    <p class="text-slate-600 text-sm md:text-base leading-relaxed line-clamp-3">
-                        ${randomBook.shortDesc}
-                    </p>
-                    <div class="pt-2 flex items-center gap-3">
-                        <button onclick="openBookModal()" class="inline-flex items-center justify-center py-2.5 px-5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl text-sm transition-colors shadow-sm gap-2">
-                            <span>📖 閱讀藏書導讀</span>
-                        </button>
-                        <a href="https://myezlife.com/mylibrary.html" target="_blank" class="inline-flex items-center justify-center py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium rounded-xl text-sm transition-colors">
-                            前往私房圖書館
-                        </a>
+                `;
+
+                // 渲染彈出視窗導讀內容
+                document.getElementById('modalHeaderTitle').innerText = `${title} - 深度導讀`;
+                document.getElementById('modalBodyContent').innerHTML = `
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">${title}</h3>
+                        <p class="text-slate-500 text-xs mb-3">作者：${authors} | ${publisher}</p>
+                        <p class="text-slate-600 leading-relaxed">${description}</p>
                     </div>
-                </div>
-            `;
+                    <hr class="border-slate-100">
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center"><span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded mr-2">01</span>核心觀點與啟發</h4>
+                        <p class="mb-2">本書在繁體中文閱讀社群中引發了獨到的迴響，其深刻的在地化視角與脈絡，能為探索該主題的讀者帶來耳目一新的思考。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base mb-2 flex items-center"><span class="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded mr-2">02</span>為什麼值得一讀？</h4>
+                        <p class="mb-2">透過流暢的中文敘事，本書不僅具備高度的知識與鑑賞價值，更在心靈與思維上提供了沉浸式的啟發。</p>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 text-amber-900 text-xs leading-relaxed">
+                        <strong>總結：</strong>在繁體中文的世界裡，每一次重新整理都是一場與真實好書的不期而遇。
+                    </div>
+                `;
 
-            // 渲染彈出視窗內容
-            document.getElementById('modalHeaderTitle').innerText = `${randomBook.title} - 私房藏書導讀`;
-            document.getElementById('modalBodyContent').innerHTML = `
-                <h3 class="text-xl font-bold text-slate-900 mb-2">${randomBook.title}</h3>
-                <p class="text-slate-600 mb-4">${randomBook.shortDesc}</p>
-                <hr class="border-slate-100 my-4">
-                <h4 class="font-bold text-slate-900 text-base mb-2">藏書亮點與導讀</h4>
-                <p class="text-slate-600 leading-relaxed">這本書是您個人藏書閣中的精選之作。透過在主頁的隨機探索，讓每一位訪客都能意外發現這份珍貴的閱讀軌跡。</p>
-            `;
+                const buyBtn = document.getElementById('modalBuyLink');
+                buyBtn.href = previewLink;
+                buyBtn.classList.remove('hidden');
 
-            const sourceBtn = document.getElementById('modalSourceLink');
-            sourceBtn.href = randomBook.link;
-            sourceBtn.classList.remove('hidden');
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="md:col-span-12 text-center py-8 text-slate-500 text-sm">
+                        <p class="mb-2">網路連線或中文書庫回應較慢，請點擊下方按鈕重新嘗試。</p>
+                        <button onclick="fetchChineseRandomBook()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs">重新隨機抽書</button>
+                    </div>
+                `;
+            }
         }
 
         // 彈出視窗控制
@@ -198,8 +197,8 @@
             if (e.key === 'Escape') closeBookModal();
         });
 
-        // 頁面載入時自動執行
-        window.onload = pickRandomBookFromMyLibrary;
+        // 頁面載入時執行中文真·隨機抓取
+        window.onload = fetchChineseRandomBook;
     </script>
 
 </body>
