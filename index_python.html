@@ -516,7 +516,7 @@
                             <i class="fa-solid fa-grip-vertical"></i>
                         </div>
                         <label for="mod-todo" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
-                            <input type="checkbox" id="mod-todo" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
+                            <input type="checkbox" id="mod-todo" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-amber-100 text-amber-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-pen-nib"></i></span>
                                 個人靈感隨筆與圖文日誌
@@ -532,7 +532,7 @@
                             <i class="fa-solid fa-grip-vertical"></i>
                         </div>
                         <label for="mod-sponsor" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
-                            <input type="checkbox" id="mod-sponsor" onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
+                            <input type="checkbox" id="mod-sponsor" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
                             <span class="flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-pink-100 text-pink-500 flex items-center justify-center text-[10px]"><i class="fa-solid fa-heart"></i></span>
                                 贊助支援與延伸閱讀
@@ -581,7 +581,7 @@
                         <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="group-creative">🎬 精選影音與創作服務</option>
                             <option value="group-traffic">🚗 即時交通與大眾運輸</option>
-                            <option value="group-finance">📈 台股財經與鋸亨網</option>
+                            <option value="group-finance">📈 台股財經與鉅亨網</option>
                         </select>
                         <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
                         <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
@@ -741,7 +741,7 @@
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
                 <!-- Google 智慧搜尋列 -->
-                <div id="desktop-search-card" class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <div id="desktop-search-card" class="app-shortcut-card bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center gap-2">
                         <div class="flex items-center justify-center pl-2 text-base md:text-lg text-emerald-600"><i class="fa-solid fa-magnifying-glass"></i></div>
                         <input type="text" name="q" placeholder="Google 搜尋您想尋求的解答..." class="flex-1 bg-transparent px-2 py-2 text-sm md:text-base outline-none text-slate-700 placeholder-slate-400">
@@ -750,7 +750,7 @@
                 </div>
 
                 <!-- 🌟 電影預告卡片 -->
-                <div id="desktop-movie-trailer-card" class="relative w-full space-y-2 group">
+                <div id="desktop-movie-trailer-card" class="app-shortcut-card relative w-full space-y-2 group">
                     <div class="flex items-center justify-between px-1 mb-1.5">
                         <div class="flex items-center gap-2">
                             <span class="w-6 h-6 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center text-xs shrink-0">
@@ -769,7 +769,7 @@
                 </div>
 
                 <!-- 🌟 筆墨與歲月的刻痕 -->
-                <div id="desktop-vintage-card" class="relative w-full space-y-2 group">
+                <div id="desktop-vintage-card" class="app-shortcut-card relative w-full space-y-2 group">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1 mb-1.5">
                         <div class="flex items-center gap-2.5">
                             <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-700 flex items-center justify-center text-xs shrink-0">
@@ -1764,11 +1764,14 @@
                     if (cb) cb.checked = checked;
                 }
             } else {
+                // 初次預設：影音櫃與廣告預設不勾選，其餘預設勾選
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.closest('#traffic-sub') !== null || cb.closest('#finance-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-trailer' || cb.id === 'mod-vintage' || cb.id === 'mod-todo' || cb.id === 'mod-sponsor' || cb.id.startsWith('mod-group-custom-'));
+                    if (cb.id === 'mod-goldmelody' || cb.id === 'mod-ads') {
+                        cb.checked = false;
+                    } else {
+                        cb.checked = true;
+                    }
                 });
-                if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = false;
-                if (document.getElementById('mod-ads')) document.getElementById('mod-ads').checked = false;
             }
         }
 
@@ -2034,12 +2037,13 @@
         }
         if (localStorage.getItem('myezlife_gas_url')) document.getElementById('gas-url-input').value = localStorage.getItem('myezlife_gas_url');
         
+        // 🌟 初始化：載入狀態、排序、自訂 App，最後立刻套用顯隱控制
         renderCustomGroups();
         updateTargetGroupSelect();
         loadCheckboxStates();
         initSortables();
         loadCustomApps();
-        updateDesktopVisibility();
+        updateDesktopVisibility(); 
         loadCardStyle();
         loadBloggerFeed();
         initRandomRecommendation();
