@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyEZ AI - 你的個人數位樞紐</title>
+    <title>MyEZ AI - myezlife.com 互動組裝工坊</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #f0f4f8;
+            color: #334155;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -18,293 +18,530 @@
         .green-banner {
             background-color: #00a600;
             color: #ffffff;
+            border-radius: 20px;
         }
-        /* 淡入動畫效果 */
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-15px); }
+            from { opacity: 0; transform: translateY(-12px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        .animate-fade-down { animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        /* 預覽視窗內 APP 捷徑真實樣式 */
+        .preview-app-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 4px;
         }
-        .animate-fade-down { animation: fadeInDown 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-fade-up { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; opacity: 0; }
+        .preview-app-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ffffff;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+            margin-bottom: 6px;
+        }
+        .preview-app-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #475569;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
     </style>
 </head>
-<body class="p-4 md:p-6 md:flex md:justify-center md:items-center">
+<body class="p-4 md:p-6">
 
-    <div class="max-w-xl w-full mx-auto space-y-6">
+    <div class="max-w-xl w-full mx-auto space-y-5">
         
-        <!-- 頂部品牌列 (基準寬度) -->
-        <header class="green-banner p-4 md:p-5 rounded-2xl flex items-center justify-between shadow-lg w-full box-border">
+        <!-- 頂部品牌列 -->
+        <header class="green-banner p-4 md:p-5 flex items-center justify-between shadow-lg w-full box-border">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full border-2 border-white/80 overflow-hidden bg-white shadow-sm flex items-center justify-center">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
+                    <img id="header-logo-preview" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-base tracking-wide">MyEZ AI 數位樞紐</h1>
-                    <p class="text-[11px] text-emerald-100">把數位生活的主控權交回自己手上</p>
+                    <h1 class="font-extrabold text-base tracking-wide">MyEZ AI 互動組裝工坊</h1>
+                    <p class="text-[11px] text-emerald-100">myezlife.com 主站完整模組與選項配置</p>
                 </div>
             </div>
-            <a href="https://myezlife.com" target="_blank" class="text-xs bg-black/20 hover:bg-black/30 px-3 py-1.5 rounded-xl font-bold transition text-white no-underline">
-                返回主站 🏠
-            </a>
+            <button onclick="openLogoSettings()" class="text-xs bg-black/20 hover:bg-black/30 px-3 py-1.5 rounded-xl font-bold transition text-white cursor-pointer flex items-center gap-1">
+                <i class="fa-solid fa-gear"></i>更換LOGO
+            </button>
         </header>
 
-        <!-- 畫面一：無額外邊界、影片寬度與頂部綠色區塊 100% 齊平 -->
-        <div id="intro-screen" class="w-full space-y-5">
-            
-            <!-- 動態影片區塊 (去除外部邊框，寬度與綠色橫幅完全對齊) -->
-            <div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-slate-800 shadow-xl bg-slate-950 group">
-                <div id="yt-player-loading" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400">正在從雲端載入隨機影片...</div>
+        <!-- 畫面一：開場引導 -->
+        <div id="intro-screen" class="w-full space-y-4">
+            <div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-slate-800 shadow-xl bg-slate-950">
+                <div id="yt-player-loading" class="absolute inset-0 flex items-center justify-center text-xs text-slate-400">正在載入動態背景...</div>
                 <iframe id="random-yt-iframe" class="w-full h-full border-0 hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 
-                <!-- 疊加在影片上的文字標語 -->
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-5 text-left pointer-events-none">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent flex flex-col justify-end p-5 text-left pointer-events-none">
                     <div class="animate-fade-down space-y-1">
                         <span class="text-[11px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-800/60 inline-block backdrop-blur-sm">
-                            ✨ 迎向全新智慧生活
+                            ✨ 完全真實還原主站架構
                         </span>
                         <h2 class="text-lg md:text-2xl font-extrabold text-white drop-shadow-md">
-                            遇見你的專屬 AI 助手
+                            自主勾選與配置您的專屬首頁
                         </h2>
                     </div>
-                    <p class="animate-fade-up text-xs text-slate-300 font-medium mt-1 leading-relaxed drop-shadow">
-                        零訂閱費、隱私完全自主。專為你量身打造的輕量化數位空間。
+                    <p class="text-xs text-slate-300 font-medium mt-1 leading-relaxed drop-shadow">
+                        包含 Google 搜尋、電影預告、筆墨藝廊、精選影音、即時交通子選項、財經、影音櫃及日誌等所有主站模組。
                     </p>
                 </div>
             </div>
 
-            <!-- 控制按鈕區 (齊平對齊) -->
-            <div class="flex items-center justify-between gap-3 w-full">
-                <button onclick="loadRandomYouTubeVideo()" class="bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-bold py-3.5 px-4 rounded-2xl transition cursor-pointer border border-slate-800 flex items-center gap-1.5 shrink-0 shadow-md">
-                    <i class="fa-solid fa-shuffle text-emerald-400"></i> 換一支影片
-                </button>
-                <button onclick="startChatExperience()" class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer">
-                    進入 MyEZ AI 對話樞紐 <i class="fa-solid fa-arrow-right text-xs"></i>
-                </button>
-            </div>
+            <button onclick="startWorkshop()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer">
+                開始完整勾選與設定模組 <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
         </div>
 
-        <!-- 畫面二：無邊界對齊版 MyEZ AI 聊天對話介面 -->
-        <div id="chat-screen" class="w-full space-y-4 hidden">
+        <!-- 畫面二：主軸互動配置介面 (完全對齊主站側邊欄選單) -->
+        <div id="workshop-screen" class="w-full space-y-4 hidden">
             
-            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 px-1">
-                <div class="flex items-center gap-2 text-sm font-bold text-emerald-400">
-                    <i class="fa-solid fa-robot"></i> MyEZ AI 智慧對話中
+            <div class="flex items-center justify-between bg-white border border-slate-200 p-3.5 rounded-2xl shadow-sm">
+                <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <i class="fa-solid fa-sliders text-[#00a600]"></i> 步驟二：主站完整模組與選項勾選
                 </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="clearHistory()" class="text-slate-400 hover:text-slate-200 text-xs px-2.5 py-1 rounded-lg bg-slate-800 transition cursor-pointer">
-                        清除對話
-                    </button>
-                    <button onclick="backToIntro()" class="text-slate-400 hover:text-slate-200 text-xs px-2.5 py-1 rounded-lg bg-slate-800 transition cursor-pointer">
-                        返回首頁
-                    </button>
+                <button onclick="backToIntro()" class="text-slate-500 hover:text-slate-800 text-xs px-2.5 py-1 rounded-lg bg-slate-100 transition cursor-pointer">返回開場</button>
+            </div>
+
+            <!-- 主站側邊欄所有真實選項與群組 -->
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl space-y-4 shadow-sm text-xs">
+                <div class="font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center justify-between">
+                    <span>📋 myezlife.com 完整功能清單</span>
+                    <span class="text-[10px] text-emerald-600">勾選後將100%真實呈現</span>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- 0. Google 搜尋列 -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-magnifying-glass text-[#00a600]"></i> Google 智慧搜尋列</span>
+                        <input type="checkbox" id="mod-search" checked class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
+
+                    <!-- 🌟 影音與電影預告 -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-clapperboard text-red-500"></i> 院線熱門電影預告</span>
+                        <input type="checkbox" id="mod-trailer" checked class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
+
+                    <!-- 🌟 筆墨與歲月的刻痕 -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-feather text-amber-600"></i> 筆墨與歲月的刻痕 (珍藏藝廊)</span>
+                        <input type="checkbox" id="mod-vintage" checked class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
+
+                    <!-- 1. 精選影音與創作服務群組與子選項 -->
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務 (子選項)
+                        </div>
+                        <div class="pl-5 space-y-1.5 text-slate-600 border-l-2 border-rose-200 ml-2 pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-weather" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🌤️ 即時氣象預報</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-drama" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🎬 AI好劇一直看</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-melody" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🎵 好歌一直聽</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-diary" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>📖 心情隨筆日記</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-greeting" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🌻 AI早安問候圖</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-videowall" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🪄 一鍵打造專屬影音櫃</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-news" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>📰 焦點新聞自動彙整</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-explorer" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>📂 個人檔案總管</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-lifesimple" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🏡 生活‧簡居‧生活</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-library" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>📚 生活圖書館</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-simplehome" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🏠 簡易首頁</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-games" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🎮 復古小遊戲</span></label>
+                        </div>
+                    </div>
+
+                    <!-- 2. 即時交通與大眾運輸群組與子選項 -->
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸 (子選項)
+                        </div>
+                        <div class="pl-5 space-y-1.5 text-slate-600 border-l-2 border-blue-200 ml-2 pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-highway" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🚗 國道 1968 路況</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-provincial" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🛣️ 全台省道路況 (168)</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-bus" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🚌 即時公車動態</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-bike" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🚲 YouBike 站點車位</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-train" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🚂 台鐵時刻查詢</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-hsr" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>🚄 高鐵時刻查詢</span></label>
+                        </div>
+                    </div>
+
+                    <!-- 3. 台股財經與鉅亨網 -->
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                        <div class="font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-emerald-600"></i> 台股財經與鉅亨網 (子選項)
+                        </div>
+                        <div class="pl-5 space-y-1.5 text-slate-600 border-l-2 border-emerald-200 ml-2 pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-yahoo" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>📈 Yahoo股市</span></label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="sub-cnyes" checked class="accent-[#00a600] w-3.5 h-3.5"> <span>📰 鉅亨網</span></label>
+                        </div>
+                    </div>
+
+                    <!-- 4. 專屬影音櫃 CSV -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-music text-yellow-600"></i> 專屬影音櫃 (CSV 影音)</span>
+                        <input type="checkbox" id="mod-goldmelody" class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
+
+                    <!-- 5. 個人靈感隨筆與圖文日誌 -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-pen-nib text-amber-600"></i> 個人靈感隨筆與圖文日誌 (Blogger)</span>
+                        <input type="checkbox" id="mod-todo" class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
+
+                    <!-- 6. 贊助支援與延伸閱讀 -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-heart text-pink-500"></i> 贊助支援與延伸閱讀</span>
+                        <input type="checkbox" id="mod-sponsor" class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
+
+                    <!-- 7. Google 廣告贊助區塊 -->
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <span class="flex items-center gap-2 text-slate-700 font-medium"><i class="fa-solid fa-rectangle-ad text-purple-600"></i> Google 廣告贊助區塊</span>
+                        <input type="checkbox" id="mod-ads" class="accent-[#00a600] w-4 h-4 rounded">
+                    </label>
                 </div>
             </div>
 
-            <!-- 對話內容區 (無額外外框，對齊總寬度) -->
-            <div id="chatBox" class="h-80 overflow-y-auto p-4 bg-slate-900/60 rounded-2xl border border-slate-800/80 flex flex-col gap-3">
-                <!-- 對話內容由 JS 載入 -->
-            </div>
-
-            <!-- 輸入控制區 -->
+            <!-- 操作按鈕列 -->
             <div class="flex gap-2 pt-1">
-                <input type="text" id="userInput" placeholder="請輸入訊息或指令..." class="flex-1 bg-slate-900/80 border border-slate-800 text-white p-3 rounded-xl text-sm outline-none focus:border-emerald-500 transition shadow-inner" onkeypress="handleKeyPress(event)">
-                <button id="sendBtn" onclick="sendMessage()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition cursor-pointer shadow-md">
-                    發送
+                <button onclick="openPreviewModal()" class="flex-1 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 px-4 rounded-xl transition border border-slate-200 text-xs cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-eye text-[#00a600]"></i> 預覽真實首頁樣貌
+                </button>
+                <button onclick="launchMyEZLife()" class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition text-xs cursor-pointer flex items-center justify-center gap-1.5">
+                    🚀 啟動組裝生成 <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
         </div>
 
     </div>
 
+    <!-- 真實首頁即時預覽視窗 (Modal) -->
+    <div id="previewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-3 z-50">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[88vh]">
+            
+            <!-- 預覽頂部橫幅 -->
+            <div class="green-banner p-3.5 px-4 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center border border-white/80">
+                        <img id="modal-logo-img" src="" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-xs font-bold tracking-wide text-white">myezlife.com 正式首頁真實預覽</span>
+                </div>
+                <button onclick="closePreviewModal()" class="text-white hover:bg-black/20 w-7 h-7 rounded-lg flex items-center justify-center text-sm cursor-pointer">✕</button>
+            </div>
+
+            <!-- 預覽主畫面內容 (依據勾選項目真實現身) -->
+            <div class="p-4 space-y-3 overflow-y-auto bg-slate-50 flex-1 text-xs">
+                
+                <!-- 0. 搜尋 -->
+                <div id="prev-search" class="bg-white border border-slate-200 p-3 rounded-2xl flex items-center gap-2 shadow-2xs">
+                    <i class="fa-solid fa-magnifying-glass text-[#00a600]"></i>
+                    <div class="text-slate-400 bg-slate-50 px-3 py-1.5 rounded-xl flex-1 border border-slate-200">Google 智慧搜尋列...</div>
+                </div>
+
+                <!-- 🌟 電影預告 -->
+                <div id="prev-trailer" class="bg-white border border-slate-200 p-3.5 rounded-2xl space-y-2 shadow-2xs">
+                    <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-clapperboard text-red-500"></i> 院線熱門電影預告
+                    </div>
+                    <div class="w-full aspect-video bg-black rounded-xl overflow-hidden flex items-center justify-center text-slate-400 text-[11px]">
+                        🎬 電影預告播放器預覽
+                    </div>
+                </div>
+
+                <!-- 🌟 筆墨與歲月的刻痕 -->
+                <div id="prev-vintage" class="bg-white border border-slate-200 p-3.5 rounded-2xl space-y-2 shadow-2xs">
+                    <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-feather text-amber-600"></i> 筆墨與歲月的刻痕 (珍藏藝廊)
+                    </div>
+                    <div class="h-28 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 text-[11px]">
+                        ✒️ 珍藏藝廊展示區 (mycollection)
+                    </div>
+                </div>
+
+                <!-- 1. 精選影音與創作服務網格 -->
+                <div id="prev-creative" class="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-2xs">
+                    <div class="font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-film text-rose-500"></i> 精選影音與創作服務
+                    </div>
+                    <div class="grid grid-cols-4 gap-3 text-center" id="prev-creative-grid"></div>
+                </div>
+
+                <!-- 2. 即時交通與大眾運輸網格 -->
+                <div id="prev-traffic" class="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-2xs">
+                    <div class="font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-route text-blue-600"></i> 即時交通與大眾運輸
+                    </div>
+                    <div class="grid grid-cols-4 gap-3 text-center" id="prev-traffic-grid"></div>
+                </div>
+
+                <!-- 3. 台股財經網格 -->
+                <div id="prev-finance" class="bg-white border border-slate-200 p-4 rounded-2xl space-y-3 shadow-2xs">
+                    <div class="font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-chart-line text-emerald-600"></i> 台股財經與鉅亨網
+                    </div>
+                    <div class="grid grid-cols-4 gap-3 text-center" id="prev-finance-grid"></div>
+                </div>
+
+                <!-- 4. 專屬影音櫃 -->
+                <div id="prev-goldmelody" class="bg-white border border-slate-200 p-3.5 rounded-2xl space-y-2 shadow-2xs" style="display:none;">
+                    <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-music text-yellow-600"></i> 專屬影音櫃
+                    </div>
+                    <div class="text-[11px] text-slate-500 bg-amber-50 p-2.5 rounded-xl border border-amber-200">🎵 CSV 雲端歌單播放器</div>
+                </div>
+
+                <!-- 5. 隨筆日誌 -->
+                <div id="prev-todo" class="bg-white border border-slate-200 p-3.5 rounded-2xl space-y-2 shadow-2xs" style="display:none;">
+                    <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-nib text-amber-600"></i> 個人靈感隨筆與圖文日誌
+                    </div>
+                    <div class="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200">📖 Blogger 最新文章自動彙整</div>
+                </div>
+
+                <!-- 6. 贊助與延伸閱讀 -->
+                <div id="prev-sponsor" class="bg-white border border-slate-200 p-3.5 rounded-2xl space-y-2 shadow-2xs" style="display:none;">
+                    <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-heart text-pink-500"></i> 贊助支援與延伸閱讀
+                    </div>
+                    <div class="text-[11px] text-slate-500 bg-pink-50 p-2.5 rounded-xl border border-pink-200">☕ 簡居生活理念與分享按鈕</div>
+                </div>
+
+                <!-- 7. Google 廣告 -->
+                <div id="prev-ads" class="bg-white border border-slate-200 p-3.5 rounded-2xl space-y-2 shadow-2xs" style="display:none;">
+                    <div class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-rectangle-ad text-purple-600"></i> Google 廣告贊助區塊
+                    </div>
+                    <div class="text-[11px] text-slate-400 bg-slate-50 p-3 rounded-xl text-center border border-dashed border-slate-200">Google AdSense 廣告橫幅</div>
+                </div>
+
+            </div>
+
+            <!-- 預覽視窗底部 -->
+            <div class="p-3 bg-white border-t border-slate-200 flex justify-end gap-2 shrink-0">
+                <button onclick="closePreviewModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">
+                    返回繼續調整
+                </button>
+                <button onclick="launchMyEZLife()" class="bg-[#00a600] hover:bg-[#008f00] text-white font-bold px-5 py-2 rounded-xl text-xs cursor-pointer shadow-xs">
+                    確認無誤，啟動組裝生成！
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LOGO 設定彈窗 -->
+    <div id="logoModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white border border-slate-200 p-5 rounded-2xl max-w-sm w-full space-y-4 shadow-xl">
+            <h3 class="text-sm font-bold text-slate-800">更換頂部圓形 LOGO</h3>
+            <p class="text-xs text-slate-500">請輸入圖片網址：</p>
+            <input type="text" id="logoUrlInput" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-700 p-2.5 rounded-xl outline-none focus:border-[#00a600]">
+            <div class="flex gap-2 pt-1">
+                <button onclick="closeLogoSettings()" class="flex-1 bg-slate-100 text-slate-600 text-xs py-2 rounded-xl font-bold cursor-pointer">取消</button>
+                <button onclick="saveLogoUrl()" class="flex-1 bg-[#00a600] text-white text-xs font-bold py-2 rounded-xl cursor-pointer">確定</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "myez_ai_portal_history";
-        const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1wHgO9bjq21vu2OFQchkwARwCKU2g-2p7SbxuBQ__mlw/export?format=csv";
+        const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
+        let customLogo = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
-        let playlistCache = [];
+        // 主站真實 APP 圖標與漸層配色對應檔
+        const appConfigs = {
+            // 精選影音與創作服務子選項
+            'sub-weather': { group: 'creative', label: '即時氣象', icon: 'fa-solid fa-cloud-sun', bg: 'bg-gradient-to-br from-sky-400 to-blue-500' },
+            'sub-drama': { group: 'creative', label: 'AI好劇', icon: 'fa-solid fa-film', bg: 'bg-gradient-to-br from-rose-400 to-red-500' },
+            'sub-melody': { group: 'creative', label: '好歌一直聽', icon: 'fa-solid fa-music', bg: 'bg-gradient-to-br from-amber-400 to-orange-500' },
+            'sub-diary': { group: 'creative', label: '心情日記', icon: 'fa-solid fa-book-open', bg: 'bg-gradient-to-br from-emerald-400 to-teal-600' },
+            'sub-greeting': { group: 'creative', label: '早安問候', icon: 'fa-solid fa-sun', bg: 'bg-gradient-to-br from-yellow-400 to-amber-500' },
+            'sub-videowall': { group: 'creative', label: '打造影音', icon: 'fa-solid fa-wand-magic-sparkles', bg: 'bg-gradient-to-br from-green-500 to-emerald-700' },
+            'sub-news': { group: 'creative', label: '焦點新聞', icon: 'fa-solid fa-bolt', bg: 'bg-gradient-to-br from-amber-400 to-yellow-600' },
+            'sub-explorer': { group: 'creative', label: '檔案總管', icon: 'fa-solid fa-folder-open', bg: 'bg-gradient-to-br from-blue-400 to-indigo-600' },
+            'sub-lifesimple': { group: 'creative', label: '生活簡居', icon: 'fa-solid fa-house', bg: 'bg-gradient-to-br from-teal-500 to-emerald-700' },
+            'sub-library': { group: 'creative', label: '圖書館', icon: 'fa-solid fa-book', bg: 'bg-gradient-to-br from-indigo-400 to-blue-700' },
+            'sub-simplehome': { group: 'creative', label: '簡易首頁', icon: 'fa-solid fa-desktop', bg: 'bg-gradient-to-br from-amber-500 to-yellow-600' },
+            'sub-games': { group: 'creative', label: '復古小遊戲', icon: 'fa-solid fa-gamepad', bg: 'bg-gradient-to-br from-pink-500 to-rose-600' },
 
-        // 載入 Google 試算表中的 YouTube 清單
+            // 即時交通與大眾運輸子選項
+            'sub-highway': { group: 'traffic', label: '國道1968', icon: 'fa-solid fa-car', bg: 'bg-gradient-to-br from-blue-500 to-indigo-600' },
+            'sub-provincial': { group: 'traffic', label: '省道路況', icon: 'fa-solid fa-road', bg: 'bg-gradient-to-br from-orange-400 to-red-500' },
+            'sub-bus': { group: 'traffic', label: '即時公車', icon: 'fa-solid fa-bus', bg: 'bg-gradient-to-br from-cyan-400 to-blue-600' },
+            'sub-bike': { group: 'traffic', label: 'YouBike', icon: 'fa-solid fa-person-biking', bg: 'bg-gradient-to-br from-lime-400 to-emerald-600' },
+            'sub-train': { group: 'traffic', label: '台鐵時刻', icon: 'fa-solid fa-train', bg: 'bg-gradient-to-br from-indigo-500 to-purple-600' },
+            'sub-hsr': { group: 'traffic', label: '高鐵時刻', icon: 'fa-solid fa-train-subway', bg: 'bg-gradient-to-br from-amber-500 to-orange-600' },
+
+            // 台股財經與鉅亨網子選項
+            'sub-yahoo': { group: 'finance', label: 'Yahoo股市', icon: 'fa-solid fa-chart-line', bg: 'bg-gradient-to-br from-purple-500 to-indigo-700' },
+            'sub-cnyes': { group: 'finance', label: '鉅亨網', icon: 'fa-solid fa-newspaper', bg: 'bg-gradient-to-br from-teal-400 to-emerald-600' }
+        };
+
         async function fetchYouTubePlaylist() {
             try {
-                const response = await fetch(SHEET_CSV_URL);
-                const data = await response.text();
+                const res = await fetch(SHEET_CSV_URL);
+                const data = await res.text();
                 const rows = data.split(/\r?\n/).slice(1);
-                
-                playlistCache = [];
-                rows.forEach(row => {
-                    const cols = row.split(",");
-                    if (cols.length >= 4) {
-                        const url = cols[3]?.replace(/^"|"$/g, '').trim();
-                        const videoId = extractYtId(url);
-                        if (videoId) playlistCache.push(videoId);
+                let playlist = [];
+                rows.forEach(r => {
+                    const c = r.split(",");
+                    if (c.length >= 4) {
+                        const id = extractYtId(c[3]?.replace(/^"|"$/g, '').trim());
+                        if (id) playlist.push(id);
                     }
                 });
-
-                if (playlistCache.length > 0) {
-                    loadRandomYouTubeVideo();
-                } else {
-                    useFallbackPlaylist();
-                }
-            } catch (err) {
-                console.error("讀取雲端試算表失敗，改用預設備用清單", err);
-                useFallbackPlaylist();
+                loadRandomBg(playlist.length > 0 ? playlist[Math.floor(Math.random() * playlist.length)] : "aAh17Sse6LA");
+            } catch (e) {
+                loadRandomBg("aAh17Sse6LA");
             }
-        }
-
-        function useFallbackPlaylist() {
-            playlistCache = ["aAh17Sse6LA", "C_SPMqq8uwk", "H7dR6FwvljM", "lzUyTD6IzqU", "1w5r0tbvTCk"];
-            loadRandomYouTubeVideo();
         }
 
         function extractYtId(url) {
             if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
+            const m = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+            return (m && m[2].length === 11) ? m[2] : null;
         }
 
-        function loadRandomYouTubeVideo() {
-            if (playlistCache.length === 0) return;
-            const randomIndex = Math.floor(Math.random() * playlistCache.length);
-            const videoId = playlistCache[randomIndex];
-
+        function loadRandomBg(id) {
             const iframe = document.getElementById('random-yt-iframe');
-            const loadingText = document.getElementById('yt-player-loading');
-
-            if (iframe && loadingText) {
-                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1`;
+            const loading = document.getElementById('yt-player-loading');
+            if (iframe && loading) {
+                iframe.src = `https://www.youtube.com/embed/${id}?autoplay=0&modestbranding=1`;
                 iframe.classList.remove('hidden');
-                loadingText.classList.add('hidden');
+                loading.classList.add('hidden');
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchYouTubePlaylist();
-        });
+        window.addEventListener('DOMContentLoaded', fetchYouTubePlaylist);
 
-        let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-            { role: 'ai', text: '你好！我是 MyEZ AI 專屬助手。很高興為你服務，今天想聊些什麼或尋找什麼靈感呢？' }
-        ];
-
-        function startChatExperience() {
+        function startWorkshop() {
             document.getElementById('intro-screen').classList.add('hidden');
-            document.getElementById('chat-screen').classList.remove('hidden');
-            renderHistory();
+            document.getElementById('workshop-screen').classList.remove('hidden');
         }
 
         function backToIntro() {
-            document.getElementById('chat-screen').classList.add('hidden');
+            document.getElementById('workshop-screen').classList.add('hidden');
             document.getElementById('intro-screen').classList.remove('hidden');
         }
 
-        function renderHistory() {
-            const chatBox = document.getElementById("chatBox");
-            chatBox.innerHTML = "";
-            chatHistory.forEach(msg => appendMessageToDOM(msg.text, msg.role));
-        }
-
-        async function sendMessage() {
-            const inputField = document.getElementById("userInput");
-            const sendBtn = document.getElementById("sendBtn");
-            const userText = inputField.value.trim();
-            if (!userText) return;
-
-            chatHistory.push({ role: 'user', text: userText });
-            saveAndRender();
-            inputField.value = "";
-            inputField.disabled = true;
-            sendBtn.disabled = true;
-
-            const aiMessageDiv = appendMessageToDOM("（思考中...）", 'ai');
-
-            try {
-                // 滑動視窗限制 (最近 12 則對話)
-                const recentHistory = chatHistory.slice(-12);
-                const formattedContents = recentHistory
-                    .filter(msg => msg.text.trim() !== "" && !msg.text.includes("（思考中...）"))
-                    .map(msg => ({
-                        role: msg.role === 'ai' ? 'model' : 'user',
-                        parts: [{ text: msg.text }]
-                    }));
-
-                const response = await fetch(GAS_WEB_APP_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ contents: formattedContents })
-                });
-
-                const resData = await response.json();
-
-                if (resData.status === 'success') {
-                    await typeWriterEffect(aiMessageDiv, resData.reply);
-                    chatHistory.push({ role: 'ai', text: resData.reply });
-                } else {
-                    throw new Error(resData.message || "轉發回應失敗");
-                }
-            } catch (error) {
-                const errorMsg = "發生錯誤：" + error.message;
-                aiMessageDiv.textContent = errorMsg;
-                chatHistory.push({ role: 'ai', text: errorMsg });
-            } finally {
-                saveToStorage();
-                inputField.disabled = false;
-                sendBtn.disabled = false;
-                inputField.focus();
+        function openLogoSettings() { document.getElementById('logoModal').classList.remove('hidden'); }
+        function closeLogoSettings() { document.getElementById('logoModal').classList.add('hidden'); }
+        function saveLogoUrl() {
+            const url = document.getElementById('logoUrlInput').value.trim();
+            if (url) { 
+                customLogo = url; 
+                document.getElementById('header-logo-preview').src = url; 
             }
+            closeLogoSettings();
         }
 
-        function typeWriterEffect(element, text, speed = 15) {
-            return new Promise((resolve) => {
-                element.textContent = "";
-                let i = 0;
-                function type() {
-                    if (i < text.length) {
-                        element.textContent += text.charAt(i);
-                        i++;
-                        const chatBox = document.getElementById("chatBox");
-                        chatBox.scrollTop = chatBox.scrollHeight;
-                        setTimeout(type, speed);
-                    } else {
-                        resolve();
+        // 精準預覽控制函數（嚴格過濾勾選狀態）
+        function openPreviewModal() {
+            document.getElementById('modal-logo-img').src = customLogo;
+
+            // 1. 主要單一模組顯示/隱藏
+            document.getElementById('prev-search').style.display = document.getElementById('mod-search').checked ? 'flex' : 'none';
+            document.getElementById('prev-trailer').style.display = document.getElementById('mod-trailer').checked ? 'block' : 'none';
+            document.getElementById('prev-vintage').style.display = document.getElementById('mod-vintage').checked ? 'block' : 'none';
+            document.getElementById('prev-goldmelody').style.display = document.getElementById('mod-goldmelody').checked ? 'block' : 'none';
+            document.getElementById('prev-todo').style.display = document.getElementById('mod-todo').checked ? 'block' : 'none';
+            document.getElementById('prev-sponsor').style.display = document.getElementById('mod-sponsor').checked ? 'block' : 'none';
+            document.getElementById('prev-ads').style.display = document.getElementById('mod-ads').checked ? 'block' : 'none';
+
+            // 2. 算牌並實體渲染「有被勾選」的子選項
+            let creativeHtml = '';
+            let trafficHtml = '';
+            let financeHtml = '';
+
+            let creativeCount = 0;
+            let trafficCount = 0;
+            let financeCount = 0;
+
+            for (const [id, config] of Object.entries(appConfigs)) {
+                const el = document.getElementById(id);
+                if (el && el.checked) {
+                    const cardHtml = `
+                        <div class="preview-app-card">
+                            <div class="preview-app-icon ${config.bg}">
+                                <i class="${config.icon}"></i>
+                            </div>
+                            <span class="preview-app-title">${config.label}</span>
+                        </div>
+                    `;
+
+                    if (config.group === 'creative') { creativeHtml += cardHtml; creativeCount++; }
+                    if (config.group === 'traffic') { trafficHtml += cardHtml; trafficCount++; }
+                    if (config.group === 'finance') { financeHtml += cardHtml; financeCount++; }
+                }
+            }
+
+            // 3. 只有該群組「至少有1個子選項被勾選」時才顯示該卡片
+            const creativeCard = document.getElementById('prev-creative');
+            creativeCard.style.display = creativeCount > 0 ? 'block' : 'none';
+            document.getElementById('prev-creative-grid').innerHTML = creativeHtml;
+
+            const trafficCard = document.getElementById('prev-traffic');
+            trafficCard.style.display = trafficCount > 0 ? 'block' : 'none';
+            document.getElementById('prev-traffic-grid').innerHTML = trafficHtml;
+
+            const financeCard = document.getElementById('prev-finance');
+            financeCard.style.display = financeCount > 0 ? 'block' : 'none';
+            document.getElementById('prev-finance-grid').innerHTML = financeHtml;
+
+            // 開啟預覽 Modal
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+
+        function closePreviewModal() { document.getElementById('previewModal').classList.add('hidden'); }
+
+        function launchMyEZLife() {
+            const config = {
+                logo: customLogo,
+                modules: {
+                    search: document.getElementById('mod-search').checked,
+                    trailer: document.getElementById('mod-trailer').checked,
+                    vintage: document.getElementById('mod-vintage').checked,
+                    goldmelody: document.getElementById('mod-goldmelody').checked,
+                    todo: document.getElementById('mod-todo').checked,
+                    sponsor: document.getElementById('mod-sponsor').checked,
+                    ads: document.getElementById('mod-ads').checked,
+                    subs: {
+                        weather: document.getElementById('sub-weather').checked,
+                        drama: document.getElementById('sub-drama').checked,
+                        melody: document.getElementById('sub-melody').checked,
+                        diary: document.getElementById('sub-diary').checked,
+                        greeting: document.getElementById('sub-greeting').checked,
+                        videowall: document.getElementById('sub-videowall').checked,
+                        news: document.getElementById('sub-news').checked,
+                        explorer: document.getElementById('sub-explorer').checked,
+                        lifesimple: document.getElementById('sub-lifesimple').checked,
+                        library: document.getElementById('sub-library').checked,
+                        simplehome: document.getElementById('sub-simplehome').checked,
+                        games: document.getElementById('sub-games').checked,
+                        highway: document.getElementById('sub-highway').checked,
+                        provincial: document.getElementById('sub-provincial').checked,
+                        bus: document.getElementById('sub-bus').checked,
+                        bike: document.getElementById('sub-bike').checked,
+                        train: document.getElementById('sub-train').checked,
+                        hsr: document.getElementById('sub-hsr').checked,
+                        yahoo: document.getElementById('sub-yahoo').checked,
+                        cnyes: document.getElementById('sub-cnyes').checked
                     }
                 }
-                type();
-            });
-        }
-
-        function appendMessageToDOM(text, sender) {
-            const chatBox = document.getElementById("chatBox");
-            const msgDiv = document.createElement("div");
-            msgDiv.className = `p-3 rounded-xl text-sm max-w-[85%] leading-relaxed ${sender === 'user' ? 'bg-emerald-600 text-white self-end rounded-br-xs' : 'bg-slate-800 border border-slate-700/85 text-slate-200 self-start rounded-bl-xs shadow-2xs'}`;
-            msgDiv.textContent = text;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return msgDiv;
-        }
-
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
-        }
-
-        function saveAndRender() {
-            saveToStorage();
-            renderHistory();
-        }
-
-        function clearHistory() {
-            if (confirm("確定要重置對話紀錄嗎？")) {
-                localStorage.removeItem(STORAGE_KEY);
-                chatHistory = [{ role: 'ai', text: '對話記憶已重置！' }];
-                renderHistory();
-            }
-        }
-
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') sendMessage();
+            };
+            localStorage.setItem('myezlife_user_config', JSON.stringify(config));
+            alert("🎉 完全透明的配置已儲存至本機！即將為您開啟精準對應的 myezlife.com 正式首頁。");
+            window.open("https://myezlife.com", "_blank");
         }
     </script>
 </body>
