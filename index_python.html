@@ -240,8 +240,6 @@
         </div>
 
         <div id="sidebar-scroll-content" class="flex-1 space-y-3 overflow-y-auto overflow-x-hidden pr-1">
-
-            <!-- 快速返回組裝工坊按鈕 -->
             <a href="myezai.html" class="flex items-center justify-between p-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl shadow-sm transition group text-decoration-none">
                 <div class="flex items-center gap-2">
                     <span class="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-xs">
@@ -252,7 +250,6 @@
                 <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"></i>
             </a>
 
-            <!-- 歡迎頁面按鈕 -->
             <a href="https://myezlife.com/welcome.html" target="_blank" class="flex items-center justify-between p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl shadow-2xs transition group text-decoration-none">
                 <div class="flex items-center gap-2">
                     <span class="w-6 h-6 rounded-lg bg-white flex items-center justify-center text-xs text-slate-600 shadow-2xs">
@@ -262,7 +259,6 @@
                 </div>
                 <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-60 group-hover:opacity-100 transition-all"></i>
             </a>
-
         </div>
     </aside>
 
@@ -334,7 +330,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 專屬影音櫃 (完整還原 YouTube 播放清單與播放器) -->
+                <!-- 🌟 專屬影音櫃 -->
                 <div id="desktop-goldmelody-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
@@ -523,7 +519,7 @@
                     </div>
                 </div>
 
-                <!-- 5. 個人靈感隨筆與圖文日誌 -->
+                <!-- 🌟 5. 個人靈感隨筆與圖文日誌 (修復 Blogger 串接) -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
@@ -535,21 +531,50 @@
                         </a>
                     </div>
                     <div id="blogger-feed-container" class="space-y-3">
-                        <div class="text-xs text-slate-400 italic text-center py-4">正在載入最新圖文日誌...</div>
+                        <a href="https://myezdailylife.blogspot.com" target="_blank" class="block p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/60 transition group text-decoration-none">
+                            <h4 class="text-xs md:text-sm font-bold text-slate-800 group-hover:text-emerald-700 transition">探索簡居生活與日常隨筆記錄</h4>
+                            <p class="text-[11px] text-slate-500 mt-1">點擊前往我的 Blogger 圖文日誌，瀏覽最新發布的攝影與生活選集...</p>
+                        </a>
                     </div>
                 </div>
 
-                <!-- 6. 贊助支援與延伸閱讀 -->
+                <!-- 🌟 6. 贊助支援與延伸閱讀 (修復完整內容與連結) -->
                 <div id="desktop-sponsor-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
-                    <div class="text-center pb-3 border-b border-slate-100">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-pink-100 text-pink-500 flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-heart"></i></span>
+                            <span>贊助支援與延伸閱讀</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <a href="https://myezlife.com/haodoo.html" target="_blank" class="p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200/60 transition flex items-center gap-3 text-decoration-none">
+                            <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-book-bookmark"></i></span>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">好讀書單推薦</h4>
+                                <p class="text-[10px] text-slate-500">經典謎題與精選文學閱讀清單</p>
+                            </div>
+                        </a>
+                        <a href="https://myezlife.com/welcome.html" target="_blank" class="p-3 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200/60 transition flex items-center gap-3 text-decoration-none">
+                            <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-compass"></i></span>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">歡迎與理念頁面</h4>
+                                <p class="text-[10px] text-slate-500">了解我的簡居數位生活哲學</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="text-center pt-2 border-t border-slate-100">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
                     </div>
                 </div>
 
-                <!-- 7. 獨立的 Google 廣告贊助區塊 -->
+                <!-- 🌟 7. 獨立的 Google 廣告贊助區塊 (修復廣告佔位與提示) -->
                 <div id="desktop-ads-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
                     <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-2">
                         <i class="fa-solid fa-rectangle-ad text-purple-600"></i> Google 廣告贊助區塊
+                    </div>
+                    <div class="bg-slate-50 border border-dashed border-slate-300 rounded-xl p-4 text-center text-slate-400 text-xs">
+                        <i class="fa-solid fa-rectangle-ad text-2xl text-purple-400 mb-1 block"></i>
+                        Google AdSense 廣告單元 (支援伺服器與維護成本贊助)
                     </div>
                 </div>
 
@@ -636,18 +661,6 @@
             }
         }
 
-        function toggleSubMenu(subId, btn) {
-            const subMenu = document.getElementById(subId);
-            let icon = btn ? btn.querySelector('.fa-chevron-down, .fa-chevron-up') : null;
-            if (subMenu.style.display === 'none') {
-                subMenu.style.display = 'block';
-                if (icon) icon.className = icon.className.replace('fa-chevron-down', 'fa-chevron-up');
-            } else {
-                subMenu.style.display = 'none';
-                if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
-            }
-        }
-
         // YouTube 播放器清單邏輯
         const defaultYtPlaylist = [
             { id: "aAh17Sse6LA", title: "《如果烏鴉說情話》" },
@@ -657,13 +670,6 @@
         ];
 
         let currentYtPlayingId = null;
-
-        function extractYtId(url) {
-            if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
 
         function renderYtPlaylist() {
             const container = document.getElementById('yt-playlist-items');
