@@ -323,7 +323,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 筆墨與歲月的刻痕 (個人珍藏藝廊) -->
+                <!-- 🌟 筆墨與歲月的刻痕 -->
                 <div class="sidebar-item-group bg-amber-50/50 p-2.5 rounded-2xl border border-amber-200/80 shadow-2xs transition-all hover:border-amber-300" data-id="group-vintage">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -417,21 +417,21 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑群組 -->
-                <div class="sidebar-item-group bg-blue-50/40 p-2.5 rounded-2xl border border-blue-100 shadow-2xs space-y-2 transition-all hover:border-blue-200" data-id="group-general">
+                <!-- 2. 即時交通與大眾運輸群組 -->
+                <div class="sidebar-item-group bg-blue-50/40 p-2.5 rounded-2xl border border-blue-100 shadow-2xs space-y-2 transition-all hover:border-blue-200" data-id="group-traffic">
                     <div class="flex items-center justify-between">
                         <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
                             <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
                             <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
                                 <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-route"></i></span>
-                                一般 App 捷徑 (交通與財經)
+                                即時交通與大眾運輸
                             </span>
                         </div>
-                        <button type="button" onclick="toggleSubMenu('general-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
+                        <button type="button" onclick="toggleSubMenu('traffic-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                     </div>
-                    <div id="general-sub" class="space-y-1 pl-2 border-l-2 border-blue-200 mt-1" style="display: none;">
+                    <div id="traffic-sub" class="space-y-1 pl-2 border-l-2 border-blue-200 mt-1" style="display: none;">
                         <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-highway">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-highway" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
@@ -462,12 +462,30 @@
                             <input type="checkbox" id="mod-hsr" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">🚄 高鐵時刻查詢</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-yahoo">
+                    </div>
+                </div>
+
+                <!-- 3. 台股財經與鉅亨網群組 -->
+                <div class="sidebar-item-group bg-purple-50/40 p-2.5 rounded-2xl border border-purple-100 shadow-2xs space-y-2 transition-all hover:border-purple-200" data-id="group-finance">
+                    <div class="flex items-center justify-between">
+                        <div class="sidebar-drag-handle flex items-center gap-2 flex-1 py-0.5">
+                            <i class="fa-solid fa-grip-vertical text-slate-300 hover:text-slate-400"></i>
+                            <span class="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-purple-100 text-purple-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-chart-line"></i></span>
+                                台股財經與鉅亨網
+                            </span>
+                        </div>
+                        <button type="button" onclick="toggleSubMenu('finance-sub', this)" class="text-slate-400 hover:text-slate-600 text-xs w-6 h-6 rounded-md hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div id="finance-sub" class="space-y-1 pl-2 border-l-2 border-purple-200 mt-1" style="display: none;">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-purple-100/60 transition" data-mod-id="mod-yahoo">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-yahoo" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📈 Yahoo股市</span>
                         </div>
-                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-blue-100/60 transition" data-mod-id="mod-cnyes">
+                        <div class="sub-drag-item flex items-center gap-2 bg-white/90 hover:bg-white p-1.5 rounded-lg text-xs cursor-pointer border border-purple-100/60 transition" data-mod-id="mod-cnyes">
                             <i class="fa-solid fa-grip-vertical text-slate-300 text-[10px]"></i>
                             <input type="checkbox" id="mod-cnyes" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-3.5 h-3.5">
                             <span class="text-slate-700 font-medium">📰 鉅亨網</span>
@@ -475,7 +493,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 4. 專屬影音櫃 CSV -->
+                <!-- 4. 專屬影音櫃 CSV -->
                 <div class="sidebar-item-group bg-yellow-50/40 p-2.5 rounded-2xl border border-yellow-100 shadow-2xs transition-all hover:border-yellow-200" data-id="group-goldmelody">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -491,7 +509,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 5. 個人靈感隨筆與圖文日誌 (已完美修復並加入側邊欄控制) -->
+                <!-- 5. 個人靈感隨筆與圖文日誌 -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -507,7 +525,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 6. 贊助支援與延伸閱讀 (已完美修復並加入側邊欄控制) -->
+                <!-- 6. 贊助支援與延伸閱讀 -->
                 <div class="sidebar-item-group bg-pink-50/40 p-2.5 rounded-2xl border border-pink-100 shadow-2xs transition-all hover:border-pink-200" data-id="group-sponsor">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -523,7 +541,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 7. Google 廣告贊助區塊 (已完美修復並加入側邊欄控制) -->
+                <!-- 7. Google 廣告贊助區塊 -->
                 <div class="sidebar-item-group bg-purple-50/40 p-2.5 rounded-2xl border border-purple-100 shadow-2xs transition-all hover:border-purple-200" data-id="group-ads">
                     <div class="flex items-center gap-2 py-0.5">
                         <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
@@ -562,7 +580,8 @@
                         <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
                         <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="group-creative">🎬 精選影音與創作服務</option>
-                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+                            <option value="group-traffic">🚗 即時交通與大眾運輸</option>
+                            <option value="group-finance">📈 台股財經與鋸亨網</option>
                         </select>
                         <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
                         <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
@@ -749,7 +768,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 筆墨與歲月的刻痕 (無邊界嵌入區塊) -->
+                <!-- 🌟 筆墨與歲月的刻痕 -->
                 <div id="desktop-vintage-card" class="relative w-full space-y-2 group">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1 mb-1.5">
                         <div class="flex items-center gap-2.5">
@@ -765,7 +784,6 @@
                         </a>
                     </div>
 
-                    <!-- 無邊界 iframe 窗格 -->
                     <div class="relative w-full h-[480px] bg-slate-50 rounded-2xl overflow-hidden shadow-md border border-slate-200/60">
                         <iframe src="https://myezlife.com/mycollection/" class="w-full h-full border-0" title="筆墨與歲月的刻痕"></iframe>
                     </div>
@@ -915,9 +933,9 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑 -->
-                <div id="desktop-app-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
-                    <div id="general-app-grid" class="app-grid">
+                <!-- 🌟 2. 獨立卡片：即時交通與大眾運輸 -->
+                <div id="desktop-traffic-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="traffic-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
                             <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-blue-500 to-indigo-600"><i class="fa-solid fa-car text-white"></i></div>
@@ -954,6 +972,12 @@
                                 <span class="app-label">高鐵時刻</span>
                             </a>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 🌟 3. 獨立卡片：台股財經與鋸亨網 -->
+                <div id="desktop-finance-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
+                    <div id="finance-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-yahoo">
                             <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-purple-500 to-indigo-700"><i class="fa-solid fa-chart-line text-white"></i></div>
@@ -963,7 +987,7 @@
                         <div class="app-item" data-mod="mod-cnyes">
                             <a href="https://www.cnyes.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-teal-400 to-emerald-600"><i class="fa-solid fa-newspaper text-white"></i></div>
-                                <span class="app-label">鉅亨網</span>
+                                <span class="app-label">鋸亨網</span>
                             </a>
                         </div>
                     </div>
@@ -1623,7 +1647,7 @@
 
         function updateTargetGroupSelect() {
             const select = document.getElementById('custom-app-target-group');
-            select.innerHTML = `<option value="group-creative">🎬 精選影音與創作服務</option><option value="group-general">🚗 一般捷徑 (交通與財經)</option>`;
+            select.innerHTML = `<option value="group-creative">🎬 精選影音與創作服務</option><option value="group-traffic">🚗 即時交通與大眾運輸</option><option value="group-finance">📈 台股財經與鋸亨網</option>`;
             getCustomGroups().forEach(g => { select.innerHTML += `<option value="${g.id}">📁 ${g.name}</option>`; });
         }
 
@@ -1636,7 +1660,6 @@
             const modTrailer = document.getElementById('mod-trailer');
             if (trailerCard && modTrailer) trailerCard.style.display = modTrailer.checked ? 'block' : 'none';
 
-            // 🌟 筆墨與歲月的刻痕卡片顯隱控制
             const vintageCard = document.getElementById('desktop-vintage-card');
             const modVintage = document.getElementById('mod-vintage');
             if (vintageCard && modVintage) vintageCard.style.display = modVintage.checked ? 'block' : 'none';
@@ -1645,6 +1668,7 @@
             const modGoldmelody = document.getElementById('mod-goldmelody');
             if (goldmelodyCard && modGoldmelody) goldmelodyCard.style.display = modGoldmelody.checked ? 'block' : 'none';
 
+            // 1. 精選影音與創作服務控制
             let hasCreativeVisible = false;
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
@@ -1664,24 +1688,45 @@
             const creativeCard = document.getElementById('desktop-creative-card');
             if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
 
-            let hasGeneralVisible = false;
-            const generalGrid = document.getElementById('general-app-grid');
-            const generalSub = document.getElementById('general-sub');
-            if (generalSub && generalGrid) {
-                Array.from(generalSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
+            // 🌟 2. 交通與大眾運輸獨立控制
+            let hasTrafficVisible = false;
+            const trafficGrid = document.getElementById('traffic-app-grid');
+            const trafficSub = document.getElementById('traffic-sub');
+            if (trafficSub && trafficGrid) {
+                Array.from(trafficSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
                     const cb = itemEl.querySelector('input[type="checkbox"]');
                     const modId = itemEl.getAttribute('data-mod-id');
-                    const appItem = generalGrid.querySelector(`[data-mod="${modId}"]`);
+                    const appItem = trafficGrid.querySelector(`[data-mod="${modId}"]`);
                     if (cb && appItem) {
-                        generalGrid.appendChild(appItem);
-                        if (cb.checked) { appItem.style.display = 'flex'; hasGeneralVisible = true; }
+                        trafficGrid.appendChild(appItem);
+                        if (cb.checked) { appItem.style.display = 'flex'; hasTrafficVisible = true; }
                         else { appItem.style.display = 'none'; }
                     }
                 });
             }
-            if (generalGrid && generalGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasGeneralVisible = true;
-            const generalCard = document.getElementById('desktop-app-card');
-            if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
+            if (trafficGrid && trafficGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasTrafficVisible = true;
+            const trafficCard = document.getElementById('desktop-traffic-card');
+            if (trafficCard) trafficCard.style.display = hasTrafficVisible ? 'block' : 'none';
+
+            // 🌟 3. 台股財經與鋸亨網獨立控制
+            let hasFinanceVisible = false;
+            const financeGrid = document.getElementById('finance-app-grid');
+            const financeSub = document.getElementById('finance-sub');
+            if (financeSub && financeGrid) {
+                Array.from(financeSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
+                    const cb = itemEl.querySelector('input[type="checkbox"]');
+                    const modId = itemEl.getAttribute('data-mod-id');
+                    const appItem = financeGrid.querySelector(`[data-mod="${modId}"]`);
+                    if (cb && appItem) {
+                        financeGrid.appendChild(appItem);
+                        if (cb.checked) { appItem.style.display = 'flex'; hasFinanceVisible = true; }
+                        else { appItem.style.display = 'none'; }
+                    }
+                });
+            }
+            if (financeGrid && financeGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasFinanceVisible = true;
+            const financeCard = document.getElementById('desktop-finance-card');
+            if (financeCard) financeCard.style.display = hasFinanceVisible ? 'block' : 'none';
 
             getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
@@ -1694,17 +1739,14 @@
                 }
             });
 
-            // 🌟 個人靈感隨筆與圖文日誌顯隱控制
             const todoCard = document.getElementById('desktop-todo-card');
             const modTodo = document.getElementById('mod-todo');
             if (todoCard && modTodo) todoCard.style.display = modTodo.checked ? 'block' : 'none';
 
-            // 🌟 贊助支援與延伸閱讀顯隱控制
             const sponsorCard = document.getElementById('desktop-sponsor-card');
             const modSponsor = document.getElementById('mod-sponsor');
             if (sponsorCard && modSponsor) sponsorCard.style.display = modSponsor.checked ? 'block' : 'none';
 
-            // 🌟 Google 廣告贊助區塊顯隱控制
             const adsCard = document.getElementById('desktop-ads-card');
             const modAds = document.getElementById('mod-ads');
             if (adsCard && modAds) adsCard.style.display = modAds.checked ? 'block' : 'none';
@@ -1723,7 +1765,7 @@
                 }
             } else {
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.closest('#general-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-trailer' || cb.id === 'mod-vintage' || cb.id === 'mod-todo' || cb.id === 'mod-sponsor' || cb.id.startsWith('mod-group-custom-'));
+                    cb.checked = (cb.closest('#creative-sub') !== null || cb.closest('#traffic-sub') !== null || cb.closest('#finance-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-trailer' || cb.id === 'mod-vintage' || cb.id === 'mod-todo' || cb.id === 'mod-sponsor' || cb.id.startsWith('mod-group-custom-'));
                 });
                 if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = false;
                 if (document.getElementById('mod-ads')) document.getElementById('mod-ads').checked = false;
@@ -1753,7 +1795,7 @@
                 syncDesktopCardsOrder();
             }
 
-            ['creative-sub', 'general-sub'].forEach(subId => {
+            ['creative-sub', 'traffic-sub', 'finance-sub'].forEach(subId => {
                 const subContainer = document.getElementById(subId);
                 if (subContainer) {
                     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
@@ -1788,7 +1830,8 @@
                 else if (groupId === 'group-vintage') card = document.getElementById('desktop-vintage-card');
                 else if (groupId === 'group-goldmelody') card = document.getElementById('desktop-goldmelody-card');
                 else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
-                else if (groupId === 'group-general') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-traffic') card = document.getElementById('desktop-traffic-card');
+                else if (groupId === 'group-finance') card = document.getElementById('desktop-finance-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 else if (groupId === 'group-ads') card = document.getElementById('desktop-ads-card');
@@ -1806,7 +1849,8 @@
             customApps.forEach((app, idx) => {
                 let targetGrid = null;
                 if (app.groupId === 'group-creative') targetGrid = document.getElementById('creative-app-grid');
-                else if (app.groupId === 'group-general') targetGrid = document.getElementById('general-app-grid');
+                else if (app.groupId === 'group-traffic') targetGrid = document.getElementById('traffic-app-grid');
+                else if (app.groupId === 'group-finance') targetGrid = document.getElementById('finance-app-grid');
                 else targetGrid = document.getElementById(`${app.groupId}-app-grid`);
 
                 if (targetGrid) {
@@ -1831,7 +1875,7 @@
             if (confirm(`確定刪除自訂捷徑「${name}」？`)) {
                 let customApps = JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]');
                 customApps = customApps.filter(app => {
-                    const currentGroupId = app.groupId || 'group-general';
+                    const currentGroupId = app.groupId || 'group-traffic';
                     return !(currentGroupId === groupId && app.name === name && app.url === url);
                 });
                 localStorage.setItem('myezlife_custom_apps', JSON.stringify(customApps));
