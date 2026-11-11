@@ -90,10 +90,10 @@
             </div>
         </div>
 
-        <!-- 畫面二：正式 MyEZ AI 聊天對話介面 -->
-        <div id="chat-screen" class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 md:p-6 space-y-4 shadow-2xl backdrop-blur-md hidden">
+        <!-- 畫面二：無邊界對齊版 MyEZ AI 聊天對話介面 -->
+        <div id="chat-screen" class="w-full space-y-4 hidden">
             
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 px-1">
                 <div class="flex items-center gap-2 text-sm font-bold text-emerald-400">
                     <i class="fa-solid fa-robot"></i> MyEZ AI 智慧對話中
                 </div>
@@ -107,14 +107,14 @@
                 </div>
             </div>
 
-            <!-- 對話內容區 -->
-            <div id="chatBox" class="h-80 overflow-y-auto p-4 bg-slate-950 rounded-2xl border border-slate-800/80 flex flex-col gap-3">
+            <!-- 對話內容區 (無邊界融合 style) -->
+            <div id="chatBox" class="h-80 overflow-y-auto p-4 bg-slate-900/60 rounded-2xl border border-slate-800/80 flex flex-col gap-3">
                 <!-- 對話內容由 JS 載入 -->
             </div>
 
             <!-- 輸入控制區 -->
-            <div class="flex gap-2">
-                <input type="text" id="userInput" placeholder="請輸入訊息或指令..." class="flex-1 bg-slate-950 border border-slate-800 text-white p-3 rounded-xl text-sm outline-none focus:border-emerald-500 transition" onkeypress="handleKeyPress(event)">
+            <div class="flex gap-2 pt-1">
+                <input type="text" id="userInput" placeholder="請輸入訊息或指令..." class="flex-1 bg-slate-900/80 border border-slate-800 text-white p-3 rounded-xl text-sm outline-none focus:border-emerald-500 transition shadow-inner" onkeypress="handleKeyPress(event)">
                 <button id="sendBtn" onclick="sendMessage()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl text-sm font-bold transition cursor-pointer shadow-md">
                     發送
                 </button>
