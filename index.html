@@ -750,7 +750,7 @@
                 </div>
 
                 <!-- 🌟 電影預告卡片 -->
-                <div id="desktop-movie-trailer-card" class="app-shortcut-card relative w-full space-y-2 group">
+                <div id="desktop-movie-trailer-card" class="app-shortcut-card relative w-full space-y-2 group" style="display: none;">
                     <div class="flex items-center justify-between px-1 mb-1.5">
                         <div class="flex items-center gap-2">
                             <span class="w-6 h-6 rounded-lg bg-red-600/20 text-red-500 flex items-center justify-center text-xs shrink-0">
@@ -1652,29 +1652,30 @@
         }
 
         function updateDesktopVisibility() {
-            const searchCard = document.getElementById('desktop-search-card');
-            const modSearch = document.getElementById('mod-search');
-            if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
+    // --- 院線熱門電影預告的顯隱控制 ---
+    const trailerCard = document.getElementById('desktop-movie-trailer-card');
+    const modTrailer = document.getElementById('mod-trailer');
+    const trailerIframe = document.getElementById('trailer-iframe');
 
-           const trailerCard = document.getElementById('desktop-movie-trailer-card');
-const modTrailer = document.getElementById('mod-trailer');
-const trailerIframe = document.getElementById('trailer-iframe');
-
-if (trailerCard && modTrailer) {
-    if (modTrailer.checked) {
-        trailerCard.style.display = 'block';
-        // 如果有勾選且 iframe 目前無網址，才載入預告並播放
-        if (trailerIframe && !trailerIframe.src) {
-            initRandomTrailer();
-        }
-    } else {
-        trailerCard.style.display = 'none';
-        // 【關鍵修正】取消勾選時強制清空 src，徹底切斷背景聲音
-        if (trailerIframe) {
-            trailerIframe.src = '';
+    if (trailerCard && modTrailer) {
+        if (modTrailer.checked) {
+            trailerCard.style.display = 'block';
+            // 只有在有勾選且 iframe 還沒載入過時才隨機載入
+            if (trailerIframe && !trailerIframe.src) {
+                initRandomTrailer();
+            }
+        } else {
+            // 沒勾選時，直接隱藏並徹底清空 src，防止背景出聲音
+            trailerCard.style.display = 'none';
+            if (trailerIframe) {
+                trailerIframe.src = '';
+            }
         }
     }
+    
+    // ... 其他模組的顯隱控制 ...
 }
+
             const vintageCard = document.getElementById('desktop-vintage-card');
             const modVintage = document.getElementById('mod-vintage');
             if (vintageCard && modVintage) vintageCard.style.display = modVintage.checked ? 'block' : 'none';
