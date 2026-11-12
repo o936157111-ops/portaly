@@ -685,7 +685,7 @@
                     
                     <div class="space-y-1.5">
                         <div class="font-bold text-amber-900 text-[11px]">設定雲端同步網址 (GAS)</div>
-                        <input type="url" id="gas-url-input" placeholder="貼上 GAS Web App 網址 (https://script.google.com/...)" class="w-full bg-white p-2 rounded-xl border border-amber-200 text-xs outline-none focus:border-amber-600 shadow-2xs">
+                        <input type="url" id="gas-url-input" placeholder="貼上 GAS Web App 網址..." class="w-full bg-white p-2 rounded-xl border border-amber-200 text-xs outline-none focus:border-amber-600 shadow-2xs">
                     </div>
 
                     <div class="flex gap-2">
@@ -951,7 +951,7 @@
 
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 4. 個人靈感隨筆與圖文日誌 (已完美整合 Google Sheet 雲端同步) -->
+                <!-- 4. 個人靈感隨筆與圖文日誌 (GAS 寫入 + CSV 高效穩定讀取) -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
@@ -959,10 +959,10 @@
                             個人靈感隨筆與圖文日誌
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="loadBlogPostsFromCloud()" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer border border-emerald-200">
-                                <i class="fa-solid fa-rotate"></i> 重新載入雲端
+                            <button onclick="loadBlogPostsFromCsv()" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer border border-emerald-200">
+                                <i class="fa-solid fa-rotate"></i> 重新載入最新
                             </button>
-                            <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 hidden md:inline-block">🔗 雲端同步中</span>
+                            <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 hidden md:inline-block">⚡ CSV 即時同步中</span>
                         </div>
                     </div>
 
@@ -989,7 +989,7 @@
                     <div class="space-y-3 pt-2">
                         <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2"><i class="fa-solid fa-clock-rotate-left"></i> 雲端即時隨筆日誌清單</div>
                         <div id="blog-posts-container" class="space-y-3">
-                            <div class="text-xs text-slate-400 italic text-center py-4">正在從 Google Sheet 載入隨筆文章...</div>
+                            <div class="text-xs text-slate-400 italic text-center py-4">正在從 Google Sheet CSV 載入隨筆文章...</div>
                         </div>
                     </div>
                 </div>
@@ -1264,7 +1264,6 @@
             const url = document.getElementById('gas-url-input').value.trim();
             localStorage.setItem('myezlife_gas_url', url);
             alert('✅ 雲端同步網址已儲存！');
-            loadBlogPostsFromCloud();
         }
 
         function clearAllLocalStorage() {
@@ -1656,109 +1655,132 @@
             fetchLatestBloggerPost('https://myeztravellife.blogspot.com', 'blog2-title', 'blog2-date', 'blog2-snippet', 'blog2-link');
         }
 
-        // 🌟 Google Sheet 雲端隨筆雙向同步讀寫邏輯
-        let cloudBlogPosts = [];
+        // 🌟 透過您的 CSV 網址高效即時讀取隨筆文章（完美避開手機快取）
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJxDy0KVSNmHHJgorbLrNSWBa7H0-FF5yurn_WyFF_y9LOmGNOgCD57Dl7CndVbDQnmGjA72BqQcqs/pub?gid=845608255&single=true&output=csv";
 
-        async function loadBlogPostsFromCloud() {
-            const gasUrl = localStorage.getItem('myezlife_gas_url');
-            if (!gasUrl) {
-                renderBlogPostsLocally(JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'));
-                return;
-            }
-
+        async function loadBlogPostsFromCsv() {
             try {
-                // 加上時間戳記防止手機瀏覽器快取舊資料
-                const response = await fetch(`${gasUrl}?t=${Date.now()}`);
-                const data = await response.json();
-                if (data && data.blog_posts) {
-                    cloudBlogPosts = data.blog_posts;
-                    localStorage.setItem('myezlife_blog_posts', JSON.stringify(cloudBlogPosts));
-                    renderBlogPostsLocally(cloudBlogPosts);
-                }
+                // 加上時間戳記強制手機與電腦每次都抓最新鮮的 CSV
+                const response = await fetch(`${csvUrl}&t=${Date.now()}`);
+                const csvText = await response.text();
+                const posts = parseCSV(csvText);
+                renderBlogPostsLocally(posts);
             } catch (err) {
-                console.error("無法從雲端讀取文章，改用本機快取:", err);
-                renderBlogPostsLocally(JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'));
+                console.error("無法讀取 CSV 資料:", err);
+                document.getElementById('blog-posts-container').innerHTML = `<div class="text-xs text-rose-400 italic text-center py-4 bg-rose-50/50 rounded-xl">載入雲端資料失敗，請檢查網路連線</div>`;
             }
         }
 
-        async function saveAndSyncBlogPosts(posts) {
-            cloudBlogPosts = posts;
-            localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts));
-            renderBlogPostsLocally(posts);
+        // 簡易強固的 CSV 解析器（支援逗號與引號換行）
+        function parseCSV(text) {
+            let lines = text.split('\n');
+            let result = [];
+            // 從第 1 行開始（略過第 0 行標題）
+            for (let i = 1; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) continue;
+                
+                let row = [];
+                let inQuotes = false;
+                let currentVal = '';
+                
+                for (let j = 0; j < line.length; j++) {
+                    let char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        row.push(currentVal.trim());
+                        currentVal = '';
+                    } else {
+                        currentVal += char;
+                    }
+                }
+                row.push(currentVal.trim());
+                
+                // 欄位順序: id, date, title, content, imgUrl, videoEmbed
+                if (row.length >= 3 && row[0]) {
+                    let videoUrl = row[5] || '';
+                    let youtubeEmbedUrl = '';
+                    let isShorts = false;
 
-            const gasUrl = localStorage.getItem('myezlife_gas_url');
-            if (gasUrl) {
-                try {
-                    await fetch(gasUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            blog_posts: posts,
-                            updated_at: new Date().toISOString()
-                        })
+                    if (videoUrl) {
+                        if (videoUrl.includes('/shorts/')) {
+                            const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+                            if (shortsMatch && shortsMatch[1]) {
+                                youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
+                                isShorts = true;
+                            }
+                        } else {
+                            const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                            if (match && match[2] && match[2].length === 11) {
+                                youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                            } else if (videoUrl.includes('youtube.com/embed/')) {
+                                youtubeEmbedUrl = videoUrl;
+                            }
+                        }
+                    }
+
+                    result.push({
+                        id: row[0],
+                        date: row[1],
+                        title: row[2],
+                        content: row[3],
+                        imgUrl: row[4],
+                        videoEmbed: youtubeEmbedUrl,
+                        isShorts: isShorts
                     });
-                    // 稍後自動從雲端重新抓取一次確保同步完成
-                    setTimeout(loadBlogPostsFromCloud, 1500);
-                } catch (err) {
-                    console.error("同步至 Google Sheet 失敗:", err);
                 }
             }
+            // 反轉讓最新發布的排在最上方
+            return result.reverse();
         }
 
-        function publishBlogPost() {
+        // 發布文章：透過 GAS POST 寫入 Google Sheet，寫入後自動重新載入 CSV
+        async function publishBlogPost() {
             const title = document.getElementById('post-title').value.trim();
             const content = document.getElementById('post-content').value.trim();
             const imgUrl = document.getElementById('post-img-url').value.trim();
             let videoUrl = document.getElementById('post-video-url').value.trim();
             if (!title && !content && !imgUrl && !videoUrl) { alert('請輸入標題、內容或影片網址！'); return; }
 
-            let youtubeEmbedUrl = '';
-            let isShorts = false;
-
-            if (videoUrl) {
-                if (videoUrl.includes('/shorts/')) {
-                    const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
-                    if (shortsMatch && shortsMatch[1]) {
-                        youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
-                        isShorts = true;
-                    }
-                } else {
-                    const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-                    if (match && match[2] && match[2].length === 11) {
-                        youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
-                    } else if (videoUrl.includes('youtube.com/embed/')) {
-                        youtubeEmbedUrl = videoUrl;
-                    }
-                }
-            }
-
             const now = new Date();
-            const posts = cloudBlogPosts.length > 0 ? [...cloudBlogPosts] : JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]');
-            posts.unshift({ 
-                id: 'post-' + Date.now(), 
-                title: title || '無標題隨筆', 
-                content, 
-                imgUrl, 
-                rawVideoUrl: videoUrl,
-                videoEmbed: youtubeEmbedUrl, 
-                isShorts: isShorts,
-                date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}` 
-            });
-            
-            saveAndSyncBlogPosts(posts);
+            const newPost = {
+                id: 'post-' + Date.now(),
+                date: `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`,
+                title: title || '無標題隨筆',
+                content: content,
+                imgUrl: imgUrl,
+                videoEmbed: videoUrl
+            };
 
-            document.getElementById('post-title').value = '';
-            document.getElementById('post-content').value = '';
-            document.getElementById('post-img-url').value = '';
-            document.getElementById('post-video-url').value = '';
-            alert('✅ 隨筆文章已成功發布並同步至 Google Sheet！');
-        }
+            // 先從現有 CSV 抓取舊文章，把新文章塞進去組成完整清單送給 GAS 覆蓋
+            try {
+                const response = await fetch(`${csvUrl}&t=${Date.now()}`);
+                const csvText = await response.text();
+                let existingPosts = parseCSV(csvText).reverse(); // 轉回原本正序
+                existingPosts.push(newPost);
 
-        function deleteBlogPost(postId) {
-            if (confirm('確定刪除此隨筆？')) {
-                const posts = (cloudBlogPosts.length > 0 ? cloudBlogPosts : JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]')).filter(p => p.id !== postId);
-                saveAndSyncBlogPosts(posts);
+                const gasUrl = localStorage.getItem('myezlife_gas_url');
+                if (gasUrl) {
+                    await fetch(gasUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ blog_posts: existingPosts })
+                    });
+                }
+
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-content').value = '';
+                document.getElementById('post-img-url').value = '';
+                document.getElementById('post-video-url').value = '';
+                alert('✅ 隨筆文章已成功發布並同步至雲端！');
+
+                // 延遲 2 秒等 Google 試算表更新 CSV 後自動重新載入畫面
+                setTimeout(loadBlogPostsFromCsv, 2000);
+            } catch (err) {
+                console.error("發布失敗:", err);
+                alert('發布發生錯誤，請稍後再試。');
             }
         }
 
@@ -1787,7 +1809,6 @@
                             <h4 class="font-bold text-slate-800 text-sm">${post.title}</h4>
                             <div class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar-check"></i> ${post.date}</div>
                         </div>
-                        <button onclick="deleteBlogPost('${post.id}')" class="text-rose-400 hover:text-rose-600 text-xs p-1 cursor-pointer" title="刪除文章"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
                     ${post.content ? `<p class="text-xs text-slate-700 whitespace-pre-wrap">${post.content}</p>` : ''}
                     ${post.imgUrl ? `<div class="overflow-hidden rounded-lg border border-slate-200 max-h-60 flex items-center justify-center bg-black/5"><img src="${post.imgUrl}" class="w-full h-full object-cover"></div>` : ''}
@@ -1842,7 +1863,7 @@
         loadCustomApps();
         updateDesktopVisibility();
         loadCardStyle();
-        loadBlogPostsFromCloud();
+        loadBlogPostsFromCsv(); // 初始化時從 CSV 讀取文章
         initRandomRecommendation();
         loadLatestBlogs();
     </script>
