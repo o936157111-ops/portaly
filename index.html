@@ -649,7 +649,7 @@
                             <input type="url" id="bg-url-input" placeholder="貼上圖片網址 (https://...)" class="w-full bg-white p-2 rounded-lg border border-indigo-200 text-xs outline-none focus:border-indigo-500">
                             <button onclick="applyBgUrl()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold py-1.5 rounded-lg transition cursor-pointer shadow-2xs">套用圖片網址</button>
                         </div>
-                        <div class="text-[10px] text-center text-slate-400 font-bold my-1">or</div>
+                        <div class="text-[10px] text-center text-slate-400 font-bold my-1">或</div>
                         <div>
                             <label class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg py-1.5 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
                                 <i class="fa-solid fa-upload"></i> 上傳本機背景圖片
@@ -951,14 +951,19 @@
 
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 4. 個人靈感隨筆與圖文日誌 (已串接 Google Sheet 即時讀寫) -->
+                <!-- 4. 個人靈感隨筆與圖文日誌 (已完美整合 Google Sheet 雲端同步) -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
                             <span class="w-6 h-6 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-xs"><i class="fa-solid fa-pen-nib"></i></span>
                             個人靈感隨筆與圖文日誌
                         </div>
-                        <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">🔗 Google Sheet 雲端連線中</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="loadBlogPostsFromCloud()" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer border border-emerald-200">
+                                <i class="fa-solid fa-rotate"></i> 重新載入雲端
+                            </button>
+                            <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 hidden md:inline-block">🔗 雲端同步中</span>
+                        </div>
                     </div>
 
                     <div class="space-y-2.5 bg-white p-4 rounded-xl border border-slate-100 shadow-2xs">
@@ -1126,7 +1131,7 @@
     </div>
 
     <script>
-        // 自動將您剛才提供的 GAS 網址預設寫入 localStorage (若尚未設定)
+        // 自動將您的 GAS 網址預設寫入 localStorage
         if (!localStorage.getItem('myezlife_gas_url')) {
             localStorage.setItem('myezlife_gas_url', 'https://script.google.com/macros/s/AKfycbzPNszZwNi64ZqmOMbM_NKcqNuFkk5zkIh3oFYR3ksaTxc1_7Ifg0Pmt3exY4R6rIxX/exec');
         }
@@ -1651,7 +1656,7 @@
             fetchLatestBloggerPost('https://myeztravellife.blogspot.com', 'blog2-title', 'blog2-date', 'blog2-snippet', 'blog2-link');
         }
 
-        // 🌟 Google Sheet 雲端隨筆同步與讀寫邏輯
+        // 🌟 Google Sheet 雲端隨筆雙向同步讀寫邏輯
         let cloudBlogPosts = [];
 
         async function loadBlogPostsFromCloud() {
@@ -1662,7 +1667,8 @@
             }
 
             try {
-                const response = await fetch(gasUrl);
+                // 加上時間戳記防止手機瀏覽器快取舊資料
+                const response = await fetch(`${gasUrl}?t=${Date.now()}`);
                 const data = await response.json();
                 if (data && data.blog_posts) {
                     cloudBlogPosts = data.blog_posts;
@@ -1692,6 +1698,8 @@
                             updated_at: new Date().toISOString()
                         })
                     });
+                    // 稍後自動從雲端重新抓取一次確保同步完成
+                    setTimeout(loadBlogPostsFromCloud, 1500);
                 } catch (err) {
                     console.error("同步至 Google Sheet 失敗:", err);
                 }
