@@ -9,18 +9,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f0f4f8;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: #334155;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f0f4f8;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #334155;
+    margin: 0;
+    padding: 0;
+    /* 確保不會鎖死捲動 */
+    overflow-x: hidden; 
+    -webkit-tap-highlight-color: transparent;
+}
 
         #sidebar input[type="checkbox"] {
             pointer-events: auto !important;
@@ -78,23 +79,23 @@
         }
         #backdrop.show-backdrop { opacity: 1; pointer-events: auto; }
 
-        #app-wrapper {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(0);
-            width: 100%;
-            padding: 16px;
-            padding-bottom: 120px;
-            box-sizing: border-box;
-        }
+        /* 主容器：固定式高度，中間卡片區可獨立上下捲動 */
+       #app-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(0);
+    width: 100%;
+    padding: 16px;
+    padding-bottom: 120px;
+    box-sizing: border-box;
+}
 
         @media (min-width: 768px) {
             #app-wrapper { 
                 padding: 24px; 
-                padding-bottom: 40px; 
             }
             #app-wrapper.push-right { transform: translateX(300px); width: calc(100% - 300px); }
             #backdrop { display: none !important; }
@@ -126,6 +127,7 @@
             box-shadow: 0 4px 15px rgba(0, 166, 0, 0.25);
             width: 100%;
             box-sizing: border-box;
+            flex-shrink: 0;
         }
 
         .rounded-logo-btn {
@@ -193,6 +195,7 @@
         #sidebar-scroll-content::-webkit-scrollbar-track { background: transparent; }
         #sidebar-scroll-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
+        /* 固定於底部的 Dock 欄 */
         #dock-bar {
             position: fixed;
             bottom: 16px;
@@ -201,7 +204,7 @@
             z-index: 35;
             width: calc(100% - 32px);
             max-width: 480px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.8);
@@ -209,11 +212,14 @@
             border-radius: 24px;
             padding: 10px 16px;
             box-sizing: border-box;
+            flex-shrink: 0;
         }
 
         @media (min-width: 768px) {
             #dock-bar {
-                position: static !important;
+                position: relative !important;
+                bottom: 0 !important;
+                left: 0 !important;
                 transform: none !important;
                 width: 100% !important;
                 max-width: 100% !important;
@@ -223,10 +229,27 @@
                 border: 1px solid #e2e8f0 !important;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
                 border-radius: 1rem !important;
-                padding: 1.5rem !important;
-                margin-top: 1.25rem !important;
+                padding: 1.25rem !important;
+                margin-top: 1rem !important;
             }
         }
+
+        /* 讓中間容器能捲動並預留 Dock 欄空間 */
+        #desktop-cards-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 90px;
+            padding-right: 4px;
+        }
+        @media (min-width: 768px) {
+            #desktop-cards-container {
+                padding-bottom: 20px;
+            }
+        }
+
+        #desktop-cards-container::-webkit-scrollbar { width: 6px; }
+        #desktop-cards-container::-webkit-scrollbar-track { background: transparent; }
+        #desktop-cards-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
         .shorts-embed-container {
             position: relative;
@@ -480,6 +503,22 @@
                     </div>
                 </div>
 
+                <!-- 🌟 2-B. 新增：最新生活與旅遊日誌 -->
+                <div class="sidebar-item-group bg-teal-50/40 p-2.5 rounded-2xl border border-teal-100 shadow-2xs transition-all hover:border-teal-200" data-id="group-blogs">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-blogs" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-blogs" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-teal-100 text-teal-700 flex items-center justify-center text-[10px]"><i class="fa-solid fa-rss"></i></span>
+                                生活日誌最新動態
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- 4. 個人靈感隨筆與圖文日誌 -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="flex items-center gap-2 py-0.5">
@@ -551,7 +590,8 @@
                         <div class="text-[11px] font-bold text-emerald-900">新增自訂 App 捷徑</div>
                         <select id="custom-app-target-group" class="w-full bg-white/90 p-1.5 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] cursor-pointer truncate shadow-2xs">
                             <option value="group-creative">🎬 精選影音與創作服務</option>
-                            <option value="group-general">🚗 一般捷徑 (交通與財經)</option>
+                            <option value="group-traffic">🚗 即時交通與大眾運輸</option>
+                            <option value="group-finance">📈 台股財經與鉅亨網</option>
                         </select>
                         <input type="text" id="custom-app-name" placeholder="輸入網頁名稱..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
                         <input type="url" id="custom-app-url" placeholder="https:// 網址..." class="w-full bg-white/90 p-2 rounded-xl border border-emerald-200/80 text-xs outline-none focus:border-[#00a600] transition shadow-2xs">
@@ -691,9 +731,10 @@
     </aside>
 
     <div id="app-wrapper">
-        <div class="max-w-3xl mx-auto w-full space-y-5">
+        <div class="max-w-3xl mx-auto w-full flex flex-col h-full space-y-4">
             
-            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative">
+            <!-- 🌟 固定不可移動頂部：綠色 Banner -->
+            <header class="green-banner p-3 md:p-5 flex flex-row justify-between items-center gap-2 md:gap-4 relative shrink-0 shadow-md">
                 <div class="flex items-center shrink-0">
                     <button onclick="toggleSidebar()" class="p-0 rounded-logo-btn transition cursor-pointer flex items-center justify-center overflow-hidden w-10 h-10 md:w-12 md:h-12 shadow-sm" title="點擊開啟側邊欄選單">
                         <img id="header-logo-img" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif" alt="Logo" class="w-full h-full object-cover">
@@ -708,6 +749,7 @@
                 </div>
             </header>
 
+            <!-- 🌟 中間可滑動卡片區塊 -->
             <main id="desktop-cards-container" class="w-full space-y-5">
                 
                 <!-- Google 智慧搜尋列 -->
@@ -797,9 +839,13 @@
                     </div>
                 </div>
 
-                <!-- 2. 一般 App 捷徑 -->
-                <div id="desktop-app-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm" style="display: none;">
-                    <div id="general-app-grid" class="app-grid">
+                <!-- 🌟 2-A. 即時交通與大眾運輸 獨立卡片 -->
+                <div id="desktop-traffic-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
+                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]"><i class="fa-solid fa-route"></i></span>
+                        即時交通與大眾運輸
+                    </div>
+                    <div id="traffic-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-highway">
                             <a href="https://1968.freeway.gov.tw/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-blue-500 to-indigo-600"><i class="fa-solid fa-car text-white"></i></div>
@@ -836,6 +882,16 @@
                                 <span class="app-label">高鐵時刻</span>
                             </a>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 🌟 2-B. 台股財經與鉅亨網 獨立卡片 -->
+                <div id="desktop-finance-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3" style="display: none;">
+                    <div class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-chart-line"></i></span>
+                        台股財經與鉅亨網
+                    </div>
+                    <div id="finance-app-grid" class="app-grid">
                         <div class="app-item" data-mod="mod-yahoo">
                             <a href="https://tw.stock.yahoo.com/" target="_blank" class="flex flex-col items-center justify-center text-decoration-none">
                                 <div class="app-box bg-gradient-to-br from-purple-500 to-indigo-700"><i class="fa-solid fa-chart-line text-white"></i></div>
@@ -847,6 +903,53 @@
                                 <div class="app-box bg-gradient-to-br from-teal-400 to-emerald-600"><i class="fa-solid fa-newspaper text-white"></i></div>
                                 <span class="app-label">鉅亨網</span>
                             </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🌟 2-C. 新增右側主頁卡片：生活日誌 (自動抓取最新文章) -->
+                <div id="desktop-blogs-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-xs"><i class="fa-solid fa-blog"></i></span>
+                            生活日誌與旅遊筆記（最新文章）
+                        </div>
+                        <span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full font-semibold">自動更新</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- 日誌 1: myezdailylife -->
+                        <div class="bg-gradient-to-br from-slate-50 to-emerald-50/30 p-4 rounded-xl border border-slate-200/80 space-y-2 flex flex-col justify-between hover:shadow-xs transition">
+                            <div>
+                                <div class="flex items-center justify-between text-xs text-slate-500 font-bold mb-1">
+                                    <span class="flex items-center gap-1.5 text-emerald-700"><i class="fa-solid fa-book text-emerald-600"></i> 生活日誌</span>
+                                    <span id="blog1-date" class="text-[10px] text-slate-400">載入中...</span>
+                                </div>
+                                <h4 id="blog1-title" class="font-bold text-slate-800 text-sm line-clamp-2 my-1">正在載入最新文章...</h4>
+                                <p id="blog1-snippet" class="text-xs text-slate-600 line-clamp-3 leading-relaxed">請稍候...</p>
+                            </div>
+                            <div class="pt-2">
+                                <a id="blog1-link" href="https://myezdailylife.blogspot.com" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-700 transition">
+                                    閱讀最新全文 <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- 日誌 2: myeztravellife -->
+                        <div class="bg-gradient-to-br from-slate-50 to-sky-50/30 p-4 rounded-xl border border-slate-200/80 space-y-2 flex flex-col justify-between hover:shadow-xs transition">
+                            <div>
+                                <div class="flex items-center justify-between text-xs text-slate-500 font-bold mb-1">
+                                    <span class="flex items-center gap-1.5 text-sky-700"><i class="fa-solid fa-plane-departure text-sky-600"></i> 旅遊隨筆</span>
+                                    <span id="blog2-date" class="text-[10px] text-slate-400">載入中...</span>
+                                </div>
+                                <h4 id="blog2-title" class="font-bold text-slate-800 text-sm line-clamp-2 my-1">正在載入最新文章...</h4>
+                                <p id="blog2-snippet" class="text-xs text-slate-600 line-clamp-3 leading-relaxed">請稍候...</p>
+                            </div>
+                            <div class="pt-2">
+                                <a id="blog2-link" href="https://myeztravellife.blogspot.com" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-sky-600 hover:text-sky-700 transition">
+                                    閱讀最新全文 <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -891,11 +994,20 @@
 
                 <!-- 5. 贊助支援與延伸閱讀 -->
                 <div id="desktop-sponsor-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
-                    <div class="text-center pb-3 border-b border-slate-100">
+                    <div class="text-center pb-3 border-b border-slate-100 space-y-2">
                         <p class="font-bold text-slate-700 text-xs md:text-sm">© myezlife.com — 簡居數位生活，把選擇權還給自己。</p>
-                        <p class="text-[11px] text-emerald-700 mt-1.5 font-medium bg-emerald-50/80 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
+                        <p class="text-[11px] text-emerald-700 font-medium bg-emerald-50/80 py-1.5 px-3 rounded-xl inline-block border border-emerald-100">
                             ☕ 覺得好用嗎？本站長期免費提供大眾使用，歡迎點擊贊助商廣告支援主機與伺服器維護開銷！
                         </p>
+                        <!-- 🌟 底部新增：歡迎頁面與隱私說明快速捷徑 -->
+                        <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+                            <a href="https://myezlife.com/welcome.html" target="_blank" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold py-1.5 px-3.5 rounded-xl transition shadow-xs flex items-center gap-1.5 text-decoration-none">
+                                <i class="fa-solid fa-house text-[11px]"></i> 歡迎頁面 / Welcome
+                            </a>
+                            <button onclick="openPrivacyModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-1.5 px-3.5 rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer border border-slate-200">
+                                <i class="fa-solid fa-circle-info text-[#00a600] text-[11px]"></i> 網站使用與隱私說明
+                            </button>
+                        </div>
                     </div>
 
                     <div class="border border-slate-200 rounded-xl p-4 space-y-3 bg-slate-50/30">
@@ -916,33 +1028,68 @@
                     </div>
                 </div>
 
-                <!-- Dock 欄 -->
-                <div id="dock-bar">
-                    <div class="flex items-center justify-around">
-                        <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 text-xl md:text-2xl"><i class="fa-solid fa-folder-open text-white"></i></div>
-                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">檔案總管</span>
-                        </a>
-                        <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 text-xl md:text-2xl"><i class="fa-solid fa-bolt text-white"></i></div>
-                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">新聞焦點</span>
-                        </a>
-                        <a href="https://myezlife.com" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-red-500 to-red-700 text-xl md:text-2xl"><i class="fa-solid fa-house text-white"></i></div>
-                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活首頁</span>
-                        </a>
-                        <a href="https://myezlife.com/haodoo.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl"><i class="fa-solid fa-book-bookmark text-white"></i></div>
-                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">好讀書單</span>
-                        </a>
-                        <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
-                            <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-xl md:text-2xl"><i class="fa-solid fa-house text-white"></i></div>
-                            <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活簡居</span>
-                        </a>
-                    </div>
-                </div>
-
             </main>
+
+            <!-- 🌟 固定不可移動底部：Dock 欄 (檔案總管卡片) -->
+            <div id="dock-bar" class="shrink-0">
+                <div class="flex items-center justify-around">
+                    <a href="https://myezlife.com/FileExplorer.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                        <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 text-xl md:text-2xl"><i class="fa-solid fa-folder-open text-white"></i></div>
+                        <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">檔案總管</span>
+                    </a>
+                    <a href="https://myezlife.com/index_news.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                        <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-600 text-xl md:text-2xl"><i class="fa-solid fa-bolt text-white"></i></div>
+                        <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">新聞焦點</span>
+                    </a>
+                    <a href="https://myezlife.com" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                        <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-red-500 to-red-700 text-xl md:text-2xl"><i class="fa-solid fa-house text-white"></i></div>
+                        <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活首頁</span>
+                    </a>
+                    <a href="https://myezlife.com/haodoo.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                        <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 text-xl md:text-2xl"><i class="fa-solid fa-book-bookmark text-white"></i></div>
+                        <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">好讀書單</span>
+                    </a>
+                    <a href="https://myezlife.com/index-1.html" target="_blank" class="flex flex-col items-center justify-center text-decoration-none group">
+                        <div class="app-box w-12 h-12 md:w-16 md:h-16 !rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-700 text-xl md:text-2xl"><i class="fa-solid fa-house text-white"></i></div>
+                        <span class="app-label text-[11px] md:text-xs text-slate-700 font-semibold mt-1">生活簡居</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 🌟 網站使用與隱私說明 Modal -->
+    <div id="privacy-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative border border-slate-100 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-base md:text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-circle-info"></i></span>
+                    網站使用與隱私說明
+                </h3>
+                <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-600 w-7 h-7 rounded-full hover:bg-slate-100 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-xs md:text-sm text-slate-700 leading-relaxed">
+                <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-100 space-y-2">
+                    <strong class="text-emerald-900 font-bold block">💡 關於本站與理念：</strong>
+                    <p class="text-slate-600">本站為開放式純前頁入口儀表板，專為追求「簡居生活」與個人數位掌控權打造。全站零廣告干擾（僅保留贊助支持區塊），完全免費開放使用。</p>
+                </div>
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-100 space-y-2">
+                    <strong class="text-amber-900 font-bold block">🛡️ 100% 個人隱私保護：</strong>
+                    <p class="text-slate-600">您的所有捷徑排序、新增自訂 App、日記隨筆與偏好設定，均 100% 儲存於您當前裝置的 LocalStorage 本機瀏覽器中。本站無後端資料庫，絕不追蹤或收集您的個人隱私與使用紀錄。</p>
+                </div>
+                <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 space-y-2">
+                    <strong class="text-blue-900 font-bold block">🔒 Google 雲端自動同步 (GAS)：</strong>
+                    <p class="text-slate-600">提供免架站、免伺服器費用的 Google Apps Script (GAS) 個人專屬備份方案。資料只會在您的 Google 雲端硬碟與您的手機/電腦瀏覽器之間傳輸，資料完全由您自己掌管！</p>
+                </div>
+            </div>
+            <div class="pt-2">
+                <button onclick="closePrivacyModal()" class="w-full bg-[#00a600] hover:bg-[#008f00] text-white font-bold py-3 px-6 rounded-xl shadow transition cursor-pointer text-xs md:text-sm">
+                    我知道了
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1027,6 +1174,13 @@
                 subMenu.style.display = 'none';
                 if (icon) icon.className = icon.className.replace('fa-chevron-up', 'fa-chevron-down');
             }
+        }
+
+        function openPrivacyModal() {
+            document.getElementById('privacy-modal').classList.remove('hidden');
+        }
+        function closePrivacyModal() {
+            document.getElementById('privacy-modal').classList.add('hidden');
         }
 
         const defaultLogoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
@@ -1158,12 +1312,11 @@
             syncFromCloud();
         }
 
-        // 🌟 修正重點 1：同步時「先推送最新本機資料」再抓取，避免本機新新增的日誌被雲端舊資料蓋掉
         async function syncFromCloud() {
             const gasUrl = localStorage.getItem('myezlife_gas_url');
             if (!gasUrl) { alert('請先輸入並儲存 GAS 部署網址！'); return; }
             try {
-                await syncToCloud(); // 先同步上傳本機資料
+                await syncToCloud();
                 const res = await fetch(gasUrl);
                 const cloudData = await res.json();
                 if (cloudData && Object.keys(cloudData).length > 0) {
@@ -1290,15 +1443,20 @@
 
         function updateTargetGroupSelect() {
             const select = document.getElementById('custom-app-target-group');
-            select.innerHTML = `<option value="group-creative">🎬 精選影音與創作服務</option><option value="group-general">🚗 一般捷徑 (交通與財經)</option>`;
+            select.innerHTML = `
+                <option value="group-creative">🎬 精選影音與創作服務</option>
+                <option value="group-traffic">🚗 即時交通與大眾運輸</option>
+                <option value="group-finance">📈 台股財經與鉅亨網</option>`;
             getCustomGroups().forEach(g => { select.innerHTML += `<option value="${g.id}">📁 ${g.name}</option>`; });
         }
 
         function updateDesktopVisibility() {
+            // Google 搜尋列
             const searchCard = document.getElementById('desktop-search-card');
             const modSearch = document.getElementById('mod-search');
             if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
 
+            // 1. 精選影音
             let hasCreativeVisible = false;
             const creativeSub = document.getElementById('creative-sub');
             const creativeGrid = document.getElementById('creative-app-grid');
@@ -1318,27 +1476,52 @@
             const creativeCard = document.getElementById('desktop-creative-card');
             if (creativeCard) creativeCard.style.display = hasCreativeVisible ? 'block' : 'none';
 
-            let hasGeneralVisible = false;
-            const generalGrid = document.getElementById('general-app-grid');
-            ['traffic-sub', 'finance-sub'].forEach(subContainerId => {
-                const subContainer = document.getElementById(subContainerId);
-                if (subContainer && generalGrid) {
-                    Array.from(subContainer.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
-                        const cb = itemEl.querySelector('input[type="checkbox"]');
-                        const modId = itemEl.getAttribute('data-mod-id');
-                        const appItem = generalGrid.querySelector(`[data-mod="${modId}"]`);
-                        if (cb && appItem) {
-                            generalGrid.appendChild(appItem);
-                            if (cb.checked) { appItem.style.display = 'flex'; hasGeneralVisible = true; }
-                            else { appItem.style.display = 'none'; }
-                        }
-                    });
-                }
-            });
-            if (generalGrid && generalGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasGeneralVisible = true;
-            const generalCard = document.getElementById('desktop-app-card');
-            if (generalCard) generalCard.style.display = hasGeneralVisible ? 'block' : 'none';
+            // 2-A. 即時交通卡片獨立開關
+            let hasTrafficVisible = false;
+            const trafficSub = document.getElementById('traffic-sub');
+            const trafficGrid = document.getElementById('traffic-app-grid');
+            if (trafficSub && trafficGrid) {
+                Array.from(trafficSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
+                    const cb = itemEl.querySelector('input[type="checkbox"]');
+                    const modId = itemEl.getAttribute('data-mod-id');
+                    const appItem = trafficGrid.querySelector(`[data-mod="${modId}"]`);
+                    if (cb && appItem) {
+                        trafficGrid.appendChild(appItem);
+                        if (cb.checked) { appItem.style.display = 'flex'; hasTrafficVisible = true; }
+                        else { appItem.style.display = 'none'; }
+                    }
+                });
+            }
+            if (trafficGrid && trafficGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasTrafficVisible = true;
+            const trafficCard = document.getElementById('desktop-traffic-card');
+            if (trafficCard) trafficCard.style.display = hasTrafficVisible ? 'block' : 'none';
 
+            // 2-B. 台股財經卡片獨立開關
+            let hasFinanceVisible = false;
+            const financeSub = document.getElementById('finance-sub');
+            const financeGrid = document.getElementById('finance-app-grid');
+            if (financeSub && financeGrid) {
+                Array.from(financeSub.querySelectorAll('.sub-drag-item')).forEach(itemEl => {
+                    const cb = itemEl.querySelector('input[type="checkbox"]');
+                    const modId = itemEl.getAttribute('data-mod-id');
+                    const appItem = financeGrid.querySelector(`[data-mod="${modId}"]`);
+                    if (cb && appItem) {
+                        financeGrid.appendChild(appItem);
+                        if (cb.checked) { appItem.style.display = 'flex'; hasFinanceVisible = true; }
+                        else { appItem.style.display = 'none'; }
+                    }
+                });
+            }
+            if (financeGrid && financeGrid.querySelectorAll('.app-item[data-custom-idx]').length > 0) hasFinanceVisible = true;
+            const financeCard = document.getElementById('desktop-finance-card');
+            if (financeCard) financeCard.style.display = hasFinanceVisible ? 'block' : 'none';
+
+            // 新增：生活日誌最新動態卡片
+            const blogsCard = document.getElementById('desktop-blogs-card');
+            const modBlogs = document.getElementById('mod-blogs');
+            if (blogsCard && modBlogs) blogsCard.style.display = modBlogs.checked ? 'block' : 'none';
+
+            // 自訂區塊
             getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
                 const grid = document.getElementById(`${g.id}-app-grid`);
@@ -1371,7 +1554,7 @@
                 }
             } else {
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search');
+                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-blogs');
                 });
                 if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
                 if (document.getElementById('mod-sponsor')) document.getElementById('mod-sponsor').checked = false;
@@ -1434,15 +1617,15 @@
                 let card = null;
                 if (groupId === 'group-search') card = document.getElementById('desktop-search-card');
                 else if (groupId === 'group-creative') card = document.getElementById('desktop-creative-card');
-                else if (groupId === 'group-traffic' || groupId === 'group-finance') card = document.getElementById('desktop-app-card');
+                else if (groupId === 'group-traffic') card = document.getElementById('desktop-traffic-card');
+                else if (groupId === 'group-finance') card = document.getElementById('desktop-finance-card');
+                else if (groupId === 'group-blogs') card = document.getElementById('desktop-blogs-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 else if (groupId === 'group-ads') card = document.getElementById('desktop-ads-card');
                 else if (groupId && groupId.startsWith('group-custom-')) card = document.getElementById(`desktop-${groupId}-card`);
                 if (card) desktopContainer.appendChild(card);
             });
-            const dockBar = document.getElementById('dock-bar');
-            if (dockBar) desktopContainer.appendChild(dockBar);
         }
 
         function addCustomApp() {
@@ -1481,7 +1664,8 @@
             JSON.parse(localStorage.getItem('myezlife_custom_apps') || '[]').forEach((app, index) => {
                 let targetGrid = null;
                 if (app.groupId === 'group-creative') targetGrid = document.getElementById('creative-app-grid');
-                else if (!app.groupId || app.groupId === 'group-general') targetGrid = document.getElementById('general-app-grid');
+                else if (app.groupId === 'group-traffic') targetGrid = document.getElementById('traffic-app-grid');
+                else if (app.groupId === 'group-finance') targetGrid = document.getElementById('finance-app-grid');
                 else targetGrid = document.getElementById(`${app.groupId}-app-grid`);
 
                 if (targetGrid) {
@@ -1499,13 +1683,58 @@
             });
         }
 
+        // 🌟 自動抓取 Blogger 最新文章 (JSONP)
+        function fetchLatestBloggerPost(blogUrl, titleId, dateId, snippetId, linkId) {
+            const cleanUrl = blogUrl.replace(/\/$/, '');
+            const feedUrl = `${cleanUrl}/feeds/posts/default?alt=json-in-script&max-results=1&callback=bloggerCB_${titleId}`;
+            
+            window[`bloggerCB_${titleId}`] = function(data) {
+                try {
+                    const entry = data.feed.entry[0];
+                    if (!entry) return;
+                    
+                    const title = entry.title.$t;
+                    const published = new Date(entry.published.$t);
+                    const formattedDate = `${published.getFullYear()}/${published.getMonth()+1}/${published.getDate()}`;
+                    
+                    let link = cleanUrl;
+                    if (entry.link) {
+                        const alternate = entry.link.find(l => l.rel === 'alternate');
+                        if (alternate) link = alternate.href;
+                    }
+                    
+                    let snippet = '';
+                    if (entry.summary) {
+                        snippet = entry.summary.$t;
+                    } else if (entry.content) {
+                        snippet = entry.content.$t.replace(/<[^>]*>/g, '').substring(0, 80);
+                    }
+
+                    document.getElementById(titleId).innerText = title;
+                    document.getElementById(dateId).innerText = formattedDate;
+                    document.getElementById(snippetId).innerText = snippet ? snippet + '...' : '點擊查看全文內容...';
+                    document.getElementById(linkId).href = link;
+                } catch(e) {
+                    document.getElementById(titleId).innerText = "無法載入最新文章";
+                }
+            };
+
+            const script = document.createElement('script');
+            script.src = feedUrl;
+            document.body.appendChild(script);
+        }
+
+        function loadLatestBlogs() {
+            fetchLatestBloggerPost('https://myezdailylife.blogspot.com', 'blog1-title', 'blog1-date', 'blog1-snippet', 'blog1-link');
+            fetchLatestBloggerPost('https://myeztravellife.blogspot.com', 'blog2-title', 'blog2-date', 'blog2-snippet', 'blog2-link');
+        }
+
         function getBlogPosts() { return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'); }
         function saveBlogPosts(posts) { 
             localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts)); 
             syncToCloud(); 
         }
 
-        // 🌟 修正重點 2：完善 YouTube 影片解析，包含影片與 Short 語法雙重支援
         function publishBlogPost() {
             const title = document.getElementById('post-title').value.trim();
             const content = document.getElementById('post-content').value.trim();
@@ -1637,6 +1866,7 @@
         loadCardStyle();
         renderBlogPosts();
         initRandomRecommendation();
+        loadLatestBlogs();
     </script>
 </body>
 </html>
