@@ -1657,8 +1657,24 @@
             if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
 
             const trailerCard = document.getElementById('desktop-movie-trailer-card');
-            const modTrailer = document.getElementById('mod-trailer');
-            if (trailerCard && modTrailer) trailerCard.style.display = modTrailer.checked ? 'block' : 'none';
+const modTrailer = document.getElementById('mod-trailer');
+const trailerIframe = document.getElementById('trailer-iframe');
+
+if (trailerCard && modTrailer) {
+    if (modTrailer.checked) {
+        trailerCard.style.display = 'block';
+        // 如果剛好開啟且 iframe 沒畫面，可以重新初始化播放
+        if (trailerIframe && !trailerIframe.src) {
+            initRandomTrailer();
+        }
+    } else {
+        trailerCard.style.display = 'none';
+        // 【關鍵修正】當卡片隱藏時，立刻清空 iframe src，徹底停止背景播音！
+        if (trailerIframe) {
+            trailerIframe.src = '';
+        }
+    }
+}
 
             const vintageCard = document.getElementById('desktop-vintage-card');
             const modVintage = document.getElementById('mod-vintage');
@@ -1774,6 +1790,29 @@
                 });
             }
         }
+
+// [修正 A] 檢查是否有來自 myezai_2.html 的自訂組裝配置
+const savedConfig = JSON.parse(localStorage.getItem('myezlife_user_config') || 'null');
+if (savedConfig && savedConfig.modules) {
+    // 依據組裝設定同步更新主站側邊欄的 checkbox 狀態
+    const mods = savedConfig.modules;
+    if (document.getElementById('mod-search')) document.getElementById('mod-search').checked = mods.search;
+    if (document.getElementById('mod-trailer')) document.getElementById('mod-trailer').checked = mods.trailer;
+    if (document.getElementById('mod-vintage')) document.getElementById('mod-vintage').checked = mods.vintage;
+    if (document.getElementById('mod-goldmelody')) document.getElementById('mod-goldmelody').checked = mods.goldmelody;
+    if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = mods.todo;
+    if (document.getElementById('mod-sponsor')) document.getElementById('mod-sponsor').checked = mods.sponsor;
+    if (document.getElementById('mod-ads')) document.getElementById('mod-ads').checked = mods.ads;
+
+    if (mods.subs) {
+        for (const [subKey, isChecked] of Object.entries(mods.subs)) {
+            const subCb = document.getElementById(`mod-${subKey}`) || document.getElementById(`sub-${subKey}`);
+            if (subCb) subCb.checked = isChecked;
+        }
+    }
+}
+
+
 
         function initSortables() {
             const sidebarContainer = document.getElementById('sidebar-sortable-container');
