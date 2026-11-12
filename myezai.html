@@ -355,7 +355,6 @@
     </div>
 
     <script>
-        const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
         let customLogo = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhpplybxkZauJQWUOn9OWSx4fqUNgwoxpGXCuovmbLZMKRRh6LSY-nxcOHvfbRtCnP43rluEF1DtoO4T_7Xrl7U_tmbyn4mdN0em7q4DMw3euMtaflcW3EeXl-1trm2MFlhaE4o7HgZ5I4TUVaxOR0eHPdmqwV_Nq_tlSMHGhiooq68AHhpA7lz6C58U8O5/s560/logo.gif";
 
         // 主站真實 APP 圖標與漸層配色對應檔
@@ -387,29 +386,11 @@
             'sub-cnyes': { group: 'finance', label: '鉅亨網', icon: 'fa-solid fa-newspaper', bg: 'bg-gradient-to-br from-teal-400 to-emerald-600' }
         };
 
-        async function fetchYouTubePlaylist() {
-            try {
-                const res = await fetch(SHEET_CSV_URL);
-                const data = await res.text();
-                const rows = data.split(/\r?\n/).slice(1);
-                let playlist = [];
-                rows.forEach(r => {
-                    const c = r.split(",");
-                    if (c.length >= 4) {
-                        const id = extractYtId(c[3]?.replace(/^"|"$/g, '').trim());
-                        if (id) playlist.push(id);
-                    }
-                });
-                loadRandomBg(playlist.length > 0 ? playlist[Math.floor(Math.random() * playlist.length)] : "aAh17Sse6LA");
-            } catch (e) {
-                loadRandomBg("aAh17Sse6LA");
-            }
-        }
-
-        function extractYtId(url) {
-            if (!url) return null;
-            const m = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-            return (m && m[2].length === 11) ? m[2] : null;
+        function fetchYouTubePlaylist() {
+            // 直接載入預設精選背景影片，確保開場頁面之動態背景 100% 能正常載入
+            const fallbackVideos = ["aAh17Sse6LA", "C_SPMqq8uwk", "H7dR6FwvljM", "lzUyTD6IzqU", "1w5r0tbvTCk"];
+            const randomId = fallbackVideos[Math.floor(Math.random() * fallbackVideos.length)];
+            loadRandomBg(randomId);
         }
 
         function loadRandomBg(id) {
@@ -515,13 +496,6 @@
                     todo: document.getElementById('mod-todo').checked,
                     sponsor: document.getElementById('mod-sponsor').checked,
                     ads: document.getElementById('mod-ads').checked,
-
-                    const goldmelodyCard = document.getElementById('desktop-goldmelody-card');
-                    const modGoldmelody = document.getElementById('mod-goldmelody');
-                    if (goldmelodyCard && modGoldmelody) {
-                   goldmelodyCard.style.display = modGoldmelody.checked ? 'block' : 'none';
-                    }
-
                     subs: {
                         weather: document.getElementById('sub-weather').checked,
                         drama: document.getElementById('sub-drama').checked,
