@@ -923,7 +923,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 今日推薦線上電子書卡片 -->
+                <!-- 🌟 今日推薦線上電子書卡片 (修正為正確標題與導向) -->
                 <div id="desktop-ebook-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
@@ -931,7 +931,7 @@
                             今日推薦線上電子書
                         </div>
                         <a href="https://myezlife.com/haodoo.html" target="_blank" class="text-xs font-bold text-[#00a600] hover:underline flex items-center gap-1">
-                            更多好讀書單 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            前往好讀書單 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                         </a>
                     </div>
                     <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-2">
@@ -939,11 +939,11 @@
                             <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">每日精選</span>
                             <span class="text-[10px] text-slate-400">好讀書單推薦</span>
                         </div>
-                        <h4 class="font-bold text-slate-800 text-sm">探索舒適豐富的線上閱讀世界</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">點擊下方按鈕即可直接前往好讀書單頁面，盡情享受今日推薦的精選電子書與經典文學。</p>
+                        <h4 class="font-bold text-slate-800 text-sm">盡情享受今日推薦的精選電子書與經典文學</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">點擊下方按鈕即可直接前往好讀書單頁面，暢讀各類經典與精選好書。</p>
                         <div class="pt-2 text-right">
                             <a href="https://myezlife.com/haodoo.html" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-[#00a600] hover:underline">
-                                前往閱讀今日推薦書單 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                前往好讀書單頁面 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
                         </div>
                     </div>
@@ -951,7 +951,7 @@
 
                 <div id="custom-desktop-cards-wrapper" class="space-y-5"></div>
 
-                <!-- 4. 個人靈感隨筆與圖文日誌 (GAS 寫入 + CSV 高效穩定讀取) -->
+                <!-- 4. 個人靈感隨筆與圖文日誌 (預設折疊，點擊展開，支援分頁與全部文章載入) -->
                 <div id="desktop-todo-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
@@ -959,38 +959,52 @@
                             個人靈感隨筆與圖文日誌
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="loadBlogPostsFromCsv()" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer border border-emerald-200">
-                                <i class="fa-solid fa-rotate"></i> 重新載入最新
+                            <button onclick="togglePostEditor()" class="text-xs bg-[#00a600] hover:bg-[#008f00] text-white px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                                <i class="fa-solid fa-pen" id="editor-toggle-icon"></i> <span id="editor-toggle-text">寫新文章</span>
                             </button>
-                            <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 hidden md:inline-block">⚡ CSV 即時同步中</span>
+                            <button onclick="loadBlogPostsFromCsv()" class="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1 cursor-pointer border border-emerald-200" title="重新載入">
+                                <i class="fa-solid fa-rotate"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="space-y-2.5 bg-white p-4 rounded-xl border border-slate-100 shadow-2xs">
-                        <input type="text" id="post-title" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold outline-none focus:border-[#00a600] transition">
-                        <textarea id="post-content" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-slate-50/50 p-3 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600] transition" rows="3"></textarea>
+                    <!-- 預設折疊的發文輸入區塊 -->
+                    <div id="post-editor-container" class="space-y-2.5 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner" style="display: none;">
+                        <div class="text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square text-[#00a600]"></i> 發表新隨筆文章
+                        </div>
+                        <input type="text" id="post-title" placeholder="標題：發表今天的靈感或新文章主題..." class="w-full bg-white px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold outline-none focus:border-[#00a600] transition">
+                        <textarea id="post-content" placeholder="輸入日誌內容、心得隨筆..." class="w-full bg-white p-3 rounded-xl border border-slate-200 text-sm outline-none focus:border-[#00a600] transition" rows="3"></textarea>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                            <div class="flex items-center gap-1.5 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-200">
+                            <div class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-slate-200">
                                 <i class="fa-solid fa-image text-emerald-600"></i>
                                 <input type="url" id="post-img-url" placeholder="圖片網址 (https://...)" class="w-full bg-transparent outline-none text-xs">
                             </div>
-                            <div class="flex items-center gap-1.5 bg-slate-50/50 px-3 py-2 rounded-xl border border-slate-200">
+                            <div class="flex items-center gap-1.5 bg-white px-3 py-2 rounded-xl border border-slate-200">
                                 <i class="fa-brands fa-youtube text-red-500"></i>
                                 <input type="url" id="post-video-url" placeholder="YouTube 影片網址..." class="w-full bg-transparent outline-none text-xs">
                             </div>
                         </div>
-                        <div class="flex justify-end pt-1">
+                        <div class="flex justify-end gap-2 pt-1">
+                            <button onclick="togglePostEditor()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer">
+                                取消
+                            </button>
                             <button onclick="publishBlogPost()" class="bg-[#00a600] hover:bg-[#008f00] text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5">
-                                <i class="fa-solid fa-paper-plane"></i> 發布隨筆文章至雲端
+                                <i class="fa-solid fa-paper-plane"></i> 發布至雲端
                             </button>
                         </div>
                     </div>
 
                     <div class="space-y-3 pt-2">
-                        <div class="text-xs font-bold text-slate-500 flex items-center gap-1.5 border-b border-slate-100 pb-2"><i class="fa-solid fa-clock-rotate-left"></i> 雲端即時隨筆日誌清單</div>
+                        <div class="text-xs font-bold text-slate-500 flex items-center justify-between border-b border-slate-100 pb-2">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left"></i> 雲端即時隨筆日誌清單</span>
+                            <span id="pagination-info" class="text-[10px] text-slate-400">載入中...</span>
+                        </div>
                         <div id="blog-posts-container" class="space-y-3">
                             <div class="text-xs text-slate-400 italic text-center py-4">正在從 Google Sheet CSV 載入隨筆文章...</div>
                         </div>
+                        <!-- 分頁按鈕容器 -->
+                        <div id="pagination-controls" class="flex items-center justify-center gap-2 pt-3 border-t border-slate-100" style="display: none;"></div>
                     </div>
                 </div>
 
@@ -1655,103 +1669,117 @@
             fetchLatestBloggerPost('https://myeztravellife.blogspot.com', 'blog2-title', 'blog2-date', 'blog2-snippet', 'blog2-link');
         }
 
-        // 🌟 透過您的 CSV 網址高效即時讀取隨筆文章（完美避開手機快取）
+        // 🌟 寫新文章區塊的收合與展開控制
+        function togglePostEditor() {
+            const editor = document.getElementById('post-editor-container');
+            const icon = document.getElementById('editor-toggle-icon');
+            const text = document.getElementById('editor-toggle-text');
+            if (editor.style.display === 'none') {
+                editor.style.display = 'block';
+                icon.className = 'fa-solid fa-xmark';
+                text.innerText = '關閉寫文章';
+            } else {
+                editor.style.display = 'none';
+                icon.className = 'fa-solid fa-pen';
+                text.innerText = '寫新文章';
+            }
+        }
+
+        // 🌟 透過您的 CSV 網址高效即時讀取隨筆文章（完美支援分頁與換行）
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRJxDy0KVSNmHHJgorbLrNSWBa7H0-FF5yurn_WyFF_y9LOmGNOgCD57Dl7CndVbDQnmGjA72BqQcqs/pub?gid=845608255&single=true&output=csv";
+
+        let allBlogPosts = [];
+        let currentPage = 1;
+        const postsPerPage = 5; // 每頁顯示 5 篇
 
         async function loadBlogPostsFromCsv() {
             try {
-                // 加上時間戳記強制手機與電腦每次都抓最新鮮的 CSV
                 const response = await fetch(`${csvUrl}&t=${Date.now()}`);
                 const csvText = await response.text();
-                const posts = parseCSV(csvText);
-                renderBlogPostsLocally(posts);
+                allBlogPosts = parseCSV(csvText);
+                renderBlogPostsPage(currentPage);
             } catch (err) {
                 console.error("無法讀取 CSV 資料:", err);
                 document.getElementById('blog-posts-container').innerHTML = `<div class="text-xs text-rose-400 italic text-center py-4 bg-rose-50/50 rounded-xl">載入雲端資料失敗，請檢查網路連線</div>`;
             }
         }
 
-     // 🌟 升級版強固 CSV 解析器（完美支援內文換行與雙引號）
-function parseCSV(text) {
-    let rows = [];
-    let currentRow = [];
-    let currentVal = '';
-    let inQuotes = false;
+        function parseCSV(text) {
+            let rows = [];
+            let currentRow = [];
+            let currentVal = '';
+            let inQuotes = false;
 
-    for (let i = 0; i < text.length; i++) {
-        let char = text[i];
-        let nextChar = text[i + 1];
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let nextChar = text[i + 1];
 
-        if (char === '"') {
-            if (inQuotes && nextChar === '"') {
-                currentVal += '"'; // 處理 CSV 內的雙引號跳脫
-                i++;
-            } else {
-                inQuotes = !inQuotes; // 切換引號狀態
-            }
-        } else if (char === ',' && !inQuotes) {
-            currentRow.push(currentVal.trim());
-            currentVal = '';
-        } else if ((char === '\r' && nextChar === '\n') || (char === '\n' && !inQuotes)) {
-            if (char === '\r') i++; // 跳過 \r\n
-            currentRow.push(currentVal.trim());
-            if (currentRow.length > 1 || currentRow[0] !== '') {
-                rows.push(currentRow);
-            }
-            currentRow = [];
-            currentVal = '';
-        } else {
-            currentVal += char;
-        }
-    }
-    // 推入最後一行
-    if (currentVal !== '' || currentRow.length > 0) {
-        currentRow.push(currentVal.trim());
-        rows.push(currentRow);
-    }
-
-    let result = [];
-    // 從第 1 行開始（略過第 0 行標題列）
-    for (let i = 1; i < rows.length; i++) {
-        let row = rows[i];
-        // 欄位順序: id, date, title, content, imgUrl, videoEmbed
-        if (row.length >= 3 && row[0]) {
-            let videoUrl = row[5] || '';
-            let youtubeEmbedUrl = '';
-            let isShorts = false;
-
-            if (videoUrl) {
-                if (videoUrl.includes('/shorts/')) {
-                    const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
-                    if (shortsMatch && shortsMatch[1]) {
-                        youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
-                        isShorts = true;
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        currentVal += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
                     }
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentVal.trim());
+                    currentVal = '';
+                } else if ((char === '\r' && nextChar === '\n') || (char === '\n' && !inQuotes)) {
+                    if (char === '\r') i++;
+                    currentRow.push(currentVal.trim());
+                    if (currentRow.length > 1 || currentRow[0] !== '') {
+                        rows.push(currentRow);
+                    }
+                    currentRow = [];
+                    currentVal = '';
                 } else {
-                    const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-                    if (match && match[2] && match[2].length === 11) {
-                        youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
-                    } else if (videoUrl.includes('youtube.com/embed/')) {
-                        youtubeEmbedUrl = videoUrl;
-                    }
+                    currentVal += char;
                 }
             }
+            if (currentVal !== '' || currentRow.length > 0) {
+                currentRow.push(currentVal.trim());
+                rows.push(currentRow);
+            }
 
-            result.push({
-                id: row[0],
-                date: row[1],
-                title: row[2],
-                content: row[3] || '',
-                imgUrl: row[4] || '',
-                videoEmbed: youtubeEmbedUrl,
-                isShorts: isShorts
-            });
+            let result = [];
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                if (row.length >= 3 && row[0]) {
+                    let videoUrl = row[5] || '';
+                    let youtubeEmbedUrl = '';
+                    let isShorts = false;
+
+                    if (videoUrl) {
+                        if (videoUrl.includes('/shorts/')) {
+                            const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+                            if (shortsMatch && shortsMatch[1]) {
+                                youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
+                                isShorts = true;
+                            }
+                        } else {
+                            const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                            if (match && match[2] && match[2].length === 11) {
+                                youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                            } else if (videoUrl.includes('youtube.com/embed/')) {
+                                youtubeEmbedUrl = videoUrl;
+                            }
+                        }
+                    }
+
+                    result.push({
+                        id: row[0],
+                        date: row[1],
+                        title: row[2],
+                        content: row[3] || '',
+                        imgUrl: row[4] || '',
+                        videoEmbed: youtubeEmbedUrl,
+                        isShorts: isShorts
+                    });
+                }
+            }
+            return result.reverse(); // 最新在前
         }
-    }
-    // 反轉讓最新發布的排在最上方
-    return result.reverse();
-}
-        // 發布文章：透過 GAS POST 寫入 Google Sheet，寫入後自動重新載入 CSV
+
         async function publishBlogPost() {
             const title = document.getElementById('post-title').value.trim();
             const content = document.getElementById('post-content').value.trim();
@@ -1769,11 +1797,10 @@ function parseCSV(text) {
                 videoEmbed: videoUrl
             };
 
-            // 先從現有 CSV 抓取舊文章，把新文章塞進去組成完整清單送給 GAS 覆蓋
             try {
                 const response = await fetch(`${csvUrl}&t=${Date.now()}`);
                 const csvText = await response.text();
-                let existingPosts = parseCSV(csvText).reverse(); // 轉回原本正序
+                let existingPosts = parseCSV(csvText).reverse();
                 existingPosts.push(newPost);
 
                 const gasUrl = localStorage.getItem('myezlife_gas_url');
@@ -1790,9 +1817,11 @@ function parseCSV(text) {
                 document.getElementById('post-content').value = '';
                 document.getElementById('post-img-url').value = '';
                 document.getElementById('post-video-url').value = '';
+                
+                // 發布後自動收合編輯器
+                togglePostEditor();
                 alert('✅ 隨筆文章已成功發布並同步至雲端！');
 
-                // 延遲 2 秒等 Google 試算表更新 CSV 後自動重新載入畫面
                 setTimeout(loadBlogPostsFromCsv, 2000);
             } catch (err) {
                 console.error("發布失敗:", err);
@@ -1800,16 +1829,32 @@ function parseCSV(text) {
             }
         }
 
-        function renderBlogPostsLocally(posts) {
+        // 🌟 渲染指定頁數的文章與分頁按鈕
+        function renderBlogPostsPage(page) {
+            currentPage = page;
             const container = document.getElementById('blog-posts-container');
+            const paginationContainer = document.getElementById('pagination-controls');
+            const paginationInfo = document.getElementById('pagination-info');
             if (!container) return;
             
-            if (!posts || posts.length === 0) {
+            if (!allBlogPosts || allBlogPosts.length === 0) {
                 container.innerHTML = `<div class="text-xs text-slate-400 italic text-center py-4 bg-slate-50/50 rounded-xl">尚無隨筆文章</div>`;
+                paginationContainer.style.display = 'none';
+                paginationInfo.innerText = '';
                 return;
             }
 
-            container.innerHTML = posts.map(post => {
+            const totalPages = Math.ceil(allBlogPosts.length / postsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const pagePosts = allBlogPosts.slice(startIndex, endIndex);
+
+            paginationInfo.innerText = `共 ${allBlogPosts.length} 篇文章 (第 ${currentPage}/${totalPages} 頁)`;
+
+            container.innerHTML = pagePosts.map(post => {
                 let videoHtml = '';
                 if (post.videoEmbed) {
                     videoHtml = `
@@ -1831,6 +1876,27 @@ function parseCSV(text) {
                     ${videoHtml}
                 </div>`;
             }).join('');
+
+            // 產出分頁按鈕
+            if (totalPages > 1) {
+                let paginationHtml = '';
+                paginationHtml += `<button onclick="renderBlogPostsPage(${currentPage - 1})" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition ${currentPage === 1 ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}"><i class="fa-solid fa-chevron-left text-[10px]"></i> 上一頁</button>`;
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentPage) {
+                        paginationHtml += `<span class="px-3 py-1 rounded-lg text-xs font-bold bg-[#00a600] text-white shadow-2xs">${i}</span>`;
+                    } else {
+                        paginationHtml += `<button onclick="renderBlogPostsPage(${i})" class="px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">${i}</button>`;
+                    }
+                }
+
+                paginationHtml += `<button onclick="renderBlogPostsPage(${currentPage + 1})" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition ${currentPage === totalPages ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}">下一頁 <i class="fa-solid fa-chevron-right text-[10px]"></i></button>`;
+                
+                paginationContainer.innerHTML = paginationHtml;
+                paginationContainer.style.display = 'flex';
+            } else {
+                paginationContainer.style.display = 'none';
+            }
         }
 
         function initRandomRecommendation() {
@@ -1879,7 +1945,7 @@ function parseCSV(text) {
         loadCustomApps();
         updateDesktopVisibility();
         loadCardStyle();
-        loadBlogPostsFromCsv(); // 初始化時從 CSV 讀取文章
+        loadBlogPostsFromCsv();
         initRandomRecommendation();
         loadLatestBlogs();
     </script>
