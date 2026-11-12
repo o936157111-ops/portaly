@@ -1656,26 +1656,25 @@
             const modSearch = document.getElementById('mod-search');
             if (searchCard && modSearch) searchCard.style.display = modSearch.checked ? 'block' : 'none';
 
-            const trailerCard = document.getElementById('desktop-movie-trailer-card');
+           const trailerCard = document.getElementById('desktop-movie-trailer-card');
 const modTrailer = document.getElementById('mod-trailer');
 const trailerIframe = document.getElementById('trailer-iframe');
 
 if (trailerCard && modTrailer) {
     if (modTrailer.checked) {
         trailerCard.style.display = 'block';
-        // 如果剛好開啟且 iframe 沒畫面，可以重新初始化播放
+        // 如果有勾選且 iframe 目前無網址，才載入預告並播放
         if (trailerIframe && !trailerIframe.src) {
             initRandomTrailer();
         }
     } else {
         trailerCard.style.display = 'none';
-        // 【關鍵修正】當卡片隱藏時，立刻清空 iframe src，徹底停止背景播音！
+        // 【關鍵修正】取消勾選時強制清空 src，徹底切斷背景聲音
         if (trailerIframe) {
             trailerIframe.src = '';
         }
     }
 }
-
             const vintageCard = document.getElementById('desktop-vintage-card');
             const modVintage = document.getElementById('mod-vintage');
             if (vintageCard && modVintage) vintageCard.style.display = modVintage.checked ? 'block' : 'none';
