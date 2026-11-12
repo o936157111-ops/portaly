@@ -1671,70 +1671,86 @@
             }
         }
 
-        // 簡易強固的 CSV 解析器（支援逗號與引號換行）
-        function parseCSV(text) {
-            let lines = text.split('\n');
-            let result = [];
-            // 從第 1 行開始（略過第 0 行標題）
-            for (let i = 1; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-                
-                let row = [];
-                let inQuotes = false;
-                let currentVal = '';
-                
-                for (let j = 0; j < line.length; j++) {
-                    let char = line[j];
-                    if (char === '"') {
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        row.push(currentVal.trim());
-                        currentVal = '';
-                    } else {
-                        currentVal += char;
-                    }
-                }
-                row.push(currentVal.trim());
-                
-                // 欄位順序: id, date, title, content, imgUrl, videoEmbed
-                if (row.length >= 3 && row[0]) {
-                    let videoUrl = row[5] || '';
-                    let youtubeEmbedUrl = '';
-                    let isShorts = false;
+     // 🌟 升級版強固 CSV 解析器（完美支援內文換行與雙引號）
+function parseCSV(text) {
+    let rows = [];
+    let currentRow = [];
+    let currentVal = '';
+    let inQuotes = false;
 
-                    if (videoUrl) {
-                        if (videoUrl.includes('/shorts/')) {
-                            const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
-                            if (shortsMatch && shortsMatch[1]) {
-                                youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
-                                isShorts = true;
-                            }
-                        } else {
-                            const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-                            if (match && match[2] && match[2].length === 11) {
-                                youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
-                            } else if (videoUrl.includes('youtube.com/embed/')) {
-                                youtubeEmbedUrl = videoUrl;
-                            }
-                        }
-                    }
+    for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        let nextChar = text[i + 1];
 
-                    result.push({
-                        id: row[0],
-                        date: row[1],
-                        title: row[2],
-                        content: row[3],
-                        imgUrl: row[4],
-                        videoEmbed: youtubeEmbedUrl,
-                        isShorts: isShorts
-                    });
+        if (char === '"') {
+            if (inQuotes && nextChar === '"') {
+                currentVal += '"'; // 處理 CSV 內的雙引號跳脫
+                i++;
+            } else {
+                inQuotes = !inQuotes; // 切換引號狀態
+            }
+        } else if (char === ',' && !inQuotes) {
+            currentRow.push(currentVal.trim());
+            currentVal = '';
+        } else if ((char === '\r' && nextChar === '\n') || (char === '\n' && !inQuotes)) {
+            if (char === '\r') i++; // 跳過 \r\n
+            currentRow.push(currentVal.trim());
+            if (currentRow.length > 1 || currentRow[0] !== '') {
+                rows.push(currentRow);
+            }
+            currentRow = [];
+            currentVal = '';
+        } else {
+            currentVal += char;
+        }
+    }
+    // 推入最後一行
+    if (currentVal !== '' || currentRow.length > 0) {
+        currentRow.push(currentVal.trim());
+        rows.push(currentRow);
+    }
+
+    let result = [];
+    // 從第 1 行開始（略過第 0 行標題列）
+    for (let i = 1; i < rows.length; i++) {
+        let row = rows[i];
+        // 欄位順序: id, date, title, content, imgUrl, videoEmbed
+        if (row.length >= 3 && row[0]) {
+            let videoUrl = row[5] || '';
+            let youtubeEmbedUrl = '';
+            let isShorts = false;
+
+            if (videoUrl) {
+                if (videoUrl.includes('/shorts/')) {
+                    const shortsMatch = videoUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
+                    if (shortsMatch && shortsMatch[1]) {
+                        youtubeEmbedUrl = `https://www.youtube.com/embed/${shortsMatch[1]}`;
+                        isShorts = true;
+                    }
+                } else {
+                    const match = videoUrl.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+                    if (match && match[2] && match[2].length === 11) {
+                        youtubeEmbedUrl = `https://www.youtube.com/embed/${match[2]}`;
+                    } else if (videoUrl.includes('youtube.com/embed/')) {
+                        youtubeEmbedUrl = videoUrl;
+                    }
                 }
             }
-            // 反轉讓最新發布的排在最上方
-            return result.reverse();
-        }
 
+            result.push({
+                id: row[0],
+                date: row[1],
+                title: row[2],
+                content: row[3] || '',
+                imgUrl: row[4] || '',
+                videoEmbed: youtubeEmbedUrl,
+                isShorts: isShorts
+            });
+        }
+    }
+    // 反轉讓最新發布的排在最上方
+    return result.reverse();
+}
         // 發布文章：透過 GAS POST 寫入 Google Sheet，寫入後自動重新載入 CSV
         async function publishBlogPost() {
             const title = document.getElementById('post-title').value.trim();
