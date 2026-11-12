@@ -515,6 +515,13 @@
                     todo: document.getElementById('mod-todo').checked,
                     sponsor: document.getElementById('mod-sponsor').checked,
                     ads: document.getElementById('mod-ads').checked,
+
+                    const goldmelodyCard = document.getElementById('desktop-goldmelody-card');
+                    const modGoldmelody = document.getElementById('mod-goldmelody');
+                    if (goldmelodyCard && modGoldmelody) {
+                   goldmelodyCard.style.display = modGoldmelody.checked ? 'block' : 'none';
+                    }
+
                     subs: {
                         weather: document.getElementById('sub-weather').checked,
                         drama: document.getElementById('sub-drama').checked,
