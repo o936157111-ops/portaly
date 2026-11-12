@@ -496,6 +496,22 @@
                     </div>
                 </div>
 
+                <!-- 🌟 新增：今日推薦線上電子書開關 -->
+                <div class="sidebar-item-group bg-emerald-50/40 p-2.5 rounded-2xl border border-emerald-100 shadow-2xs transition-all hover:border-emerald-200" data-id="group-ebook">
+                    <div class="flex items-center gap-2 py-0.5">
+                        <div class="sidebar-drag-handle p-1 text-slate-300 hover:text-slate-400 cursor-grab">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <label for="mod-ebook" class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 w-full select-none">
+                            <input type="checkbox" id="mod-ebook" checked onchange="updateDesktopVisibility()" class="rounded text-[#00a600] w-4 h-4 cursor-pointer">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-5 h-5 rounded-md bg-emerald-100 text-[#00a600] flex items-center justify-center text-[10px]"><i class="fa-solid fa-book-bookmark"></i></span>
+                                今日推薦線上電子書
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- 4. 個人靈感隨筆與圖文日誌 -->
                 <div class="sidebar-item-group bg-amber-50/40 p-2.5 rounded-2xl border border-amber-100 shadow-2xs transition-all hover:border-amber-200" data-id="group-todo">
                     <div class="flex items-center gap-2 py-0.5">
@@ -925,6 +941,32 @@
                                     閱讀最新全文 <i class="fa-solid fa-chevron-right text-[10px]"></i>
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🌟 新增：今日推薦線上電子書卡片 -->
+                <div id="desktop-ebook-card" class="app-shortcut-card bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4" style="display: none;">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="font-bold text-slate-800 text-sm md:text-base flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-lg bg-emerald-100 text-[#00a600] flex items-center justify-center text-xs"><i class="fa-solid fa-book-bookmark"></i></span>
+                            今日推薦線上電子書
+                        </div>
+                        <a href="https://myezlife.com/haodoo.html" target="_blank" class="text-xs font-bold text-[#00a600] hover:underline flex items-center gap-1">
+                            更多好讀書單 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+                    <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">每日精選</span>
+                            <span class="text-[10px] text-slate-400">好讀書單推薦</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-sm">探索舒適豐富的線上閱讀世界</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">點擊下方按鈕即可直接前往好讀書單頁面，盡情享受今日推薦的精選電子書與經典文學。</p>
+                        <div class="pt-2 text-right">
+                            <a href="https://myezlife.com/haodoo.html" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-[#00a600] hover:underline">
+                                前往閱讀今日推薦書單 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1489,6 +1531,10 @@
             const modBlogs = document.getElementById('mod-blogs');
             if (blogsCard && modBlogs) blogsCard.style.display = modBlogs.checked ? 'block' : 'none';
 
+            const ebookCard = document.getElementById('desktop-ebook-card');
+            const modEbook = document.getElementById('mod-ebook');
+            if (ebookCard && modEbook) ebookCard.style.display = modEbook.checked ? 'block' : 'none';
+
             getCustomGroups().forEach(g => {
                 const card = document.getElementById(`desktop-${g.id}-card`);
                 const grid = document.getElementById(`${g.id}-app-grid`);
@@ -1521,7 +1567,7 @@
                 }
             } else {
                 document.querySelectorAll('#sidebar input[type="checkbox"]').forEach(cb => {
-                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-blogs');
+                    cb.checked = (cb.closest('#creative-sub') !== null || cb.id === 'mod-search' || cb.id === 'mod-blogs' || cb.id === 'mod-ebook');
                 });
                 if (document.getElementById('mod-todo')) document.getElementById('mod-todo').checked = false;
                 if (document.getElementById('mod-sponsor')) document.getElementById('mod-sponsor').checked = false;
@@ -1587,6 +1633,7 @@
                 else if (groupId === 'group-traffic') card = document.getElementById('desktop-traffic-card');
                 else if (groupId === 'group-finance') card = document.getElementById('desktop-finance-card');
                 else if (groupId === 'group-blogs') card = document.getElementById('desktop-blogs-card');
+                else if (groupId === 'group-ebook') card = document.getElementById('desktop-ebook-card');
                 else if (groupId === 'group-todo') card = document.getElementById('desktop-todo-card');
                 else if (groupId === 'group-sponsor') card = document.getElementById('desktop-sponsor-card');
                 else if (groupId === 'group-ads') card = document.getElementById('desktop-ads-card');
@@ -1652,88 +1699,68 @@
             });
         }
 
-      // 🌟 修正版：自動抓取 Blogger 最新文章 (JSONP)
-function fetchLatestBloggerPost(blogUrl, titleId, dateId, snippetId, linkId) {
-    const cleanUrl = blogUrl.replace(/\/$/, '');
-    // 隨機產生唯一的 Callback 函式名稱，防止快取與命名衝突
-    const cbName = 'cb_' + Math.random().toString(36).substring(2, 9);
+        // 🌟 自動抓取 Blogger 最新文章 (JSONP)
+        function fetchLatestBloggerPost(blogUrl, titleId, dateId, snippetId, linkId) {
+            const cleanUrl = blogUrl.replace(/\/$/, '');
+            const cbName = 'cb_' + Math.random().toString(36).substring(2, 9);
 
-    // 建立全域 Callback 函式
-    window[cbName] = function(data) {
-        try {
-            const entry = data.feed && data.feed.entry ? data.feed.entry[0] : null;
-            if (!entry) {
-                document.getElementById(titleId).innerText = "尚無公開文章";
-                document.getElementById(snippetId).innerText = "點擊右下角連結前往觀看...";
-                return;
-            }
+            window[cbName] = function(data) {
+                try {
+                    const entry = data.feed && data.feed.entry ? data.feed.entry[0] : null;
+                    if (!entry) {
+                        document.getElementById(titleId).innerText = "尚無公開文章";
+                        document.getElementById(snippetId).innerText = "點擊右下角連結前往觀看...";
+                        return;
+                    }
 
-            // 1. 文章標題
-            const title = entry.title.$t;
+                    const title = entry.title.$t;
+                    const published = new Date(entry.published.$t);
+                    const formattedDate = `${published.getFullYear()}/${published.getMonth() + 1}/${published.getDate()}`;
+                    
+                    let link = cleanUrl;
+                    if (entry.link) {
+                        const alternate = entry.link.find(l => l.rel === 'alternate');
+                        if (alternate) link = alternate.href;
+                    }
+                    
+                    let rawContent = '';
+                    if (entry.summary && entry.summary.$t) {
+                        rawContent = entry.summary.$t;
+                    } else if (entry.content && entry.content.$t) {
+                        rawContent = entry.content.$t;
+                    }
+                    
+                    let cleanSnippet = rawContent.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+                    if (cleanSnippet.length > 80) {
+                        cleanSnippet = cleanSnippet.substring(0, 80) + '...';
+                    }
 
-            // 2. 發布日期
-            const published = new Date(entry.published.$t);
-            const formattedDate = `${published.getFullYear()}/${published.getMonth() + 1}/${published.getDate()}`;
+                    document.getElementById(titleId).innerText = title;
+                    document.getElementById(dateId).innerText = formattedDate;
+                    document.getElementById(snippetId).innerText = cleanSnippet || '點擊閱讀完整文章...';
+                    document.getElementById(linkId).href = link;
+                } catch (err) {
+                    console.error("解析 Blogger 文章失敗:", err);
+                    document.getElementById(titleId).innerText = "點擊前往閱讀文章";
+                } finally {
+                    delete window[cbName];
+                }
+            };
 
-            // 3. 文章全文連結
-            let link = cleanUrl;
-            if (entry.link) {
-                const alternate = entry.link.find(l => l.rel === 'alternate');
-                if (alternate) link = alternate.href;
-            }
-
-            // 4. 文章摘要 (自動過濾 HTML 標籤)
-            let rawContent = '';
-            if (entry.summary && entry.summary.$t) {
-                rawContent = entry.summary.$t;
-            } else if (entry.content && entry.content.$t) {
-                rawContent = entry.content.$t;
-            }
-            
-            // 清理 HTML 標籤並擷取前 80 個字
-            let cleanSnippet = rawContent.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-            if (cleanSnippet.length > 80) {
-                cleanSnippet = cleanSnippet.substring(0, 80) + '...';
-            }
-
-            // 更新 DOM 內容
-            const elTitle = document.getElementById(titleId);
-            const elDate = document.getElementById(dateId);
-            const elSnippet = document.getElementById(snippetId);
-            const elLink = document.getElementById(linkId);
-
-            if (elTitle) elTitle.innerText = title;
-            if (elDate) elDate.innerText = formattedDate;
-            if (elSnippet) elSnippet.innerText = cleanSnippet || '點擊閱讀完整文章...';
-            if (elLink) elLink.href = link;
-
-        } catch (err) {
-            console.error("解析 Blogger 文章失敗:", err);
-            const elTitle = document.getElementById(titleId);
-            if (elTitle) elTitle.innerText = "點擊前往閱讀文章";
-        } finally {
-            // 清理暫存的全域 callback 函式
-            delete window[cbName];
+            const script = document.createElement('script');
+            script.src = `${cleanUrl}/feeds/posts/default?alt=json-in-script&max-results=1&callback=${cbName}`;
+            script.onerror = function() {
+                document.getElementById(titleId).innerText = "無法載入文章";
+                document.getElementById(snippetId).innerText = "請點擊連結直接開啟 Blogger 部落格。";
+            };
+            document.head.appendChild(script);
         }
-    };
 
-    // 動態建立 script 標籤向 Blogger 請求 API
-    const script = document.createElement('script');
-    script.src = `${cleanUrl}/feeds/posts/default?alt=json-in-script&max-results=1&callback=${cbName}`;
-    script.onerror = function() {
-        const elTitle = document.getElementById(titleId);
-        const elSnippet = document.getElementById(snippetId);
-        if (elTitle) elTitle.innerText = "無法載入文章";
-        if (elSnippet) elSnippet.innerText = "請點擊連結直接開啟 Blogger 部落格。";
-    };
+        function loadLatestBlogs() {
+            fetchLatestBloggerPost('https://myezdailylife.blogspot.com', 'blog1-title', 'blog1-date', 'blog1-snippet', 'blog1-link');
+            fetchLatestBloggerPost('https://myeztravellife.blogspot.com', 'blog2-title', 'blog2-date', 'blog2-snippet', 'blog2-link');
+        }
 
-    document.head.appendChild(script);
-}
-
-function loadLatestBlogs() {
-    fetchLatestBloggerPost('https://myezdailylife.blogspot.com', 'blog1-title', 'blog1-date', 'blog1-snippet', 'blog1-link');
-    fetchLatestBloggerPost('https://myeztravellife.blogspot.com', 'blog2-title', 'blog2-date', 'blog2-snippet', 'blog2-link');
-}
         function getBlogPosts() { return JSON.parse(localStorage.getItem('myezlife_blog_posts') || '[]'); }
         function saveBlogPosts(posts) { 
             localStorage.setItem('myezlife_blog_posts', JSON.stringify(posts)); 
