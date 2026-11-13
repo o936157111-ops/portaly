@@ -30,7 +30,7 @@
             <i class="fa-solid fa-house"></i> 首頁
         </a>
         <div class="text-center font-black tracking-wider text-sm">
-            🌿 AI 學外語 
+            🌿 AI 學外語
         </div>
         <div class="flex bg-black/20 backdrop-blur rounded-xl p-1 gap-1 shrink-0">
             <button onclick="setGlobalLanguage('ja', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition">日</button>
@@ -93,25 +93,15 @@
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
         const STORAGE_KEY = "mobile_ai_lang_history_v14";
 
-        let chatHistory = [];
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            chatHistory = saved ? JSON.parse(saved) : null;
-        } catch (e) {
-            chatHistory = null;
-        }
-        
-        if (!Array.isArray(chatHistory) || chatHistory.length === 0) {
-            chatHistory = [
-                { role: 'ai', lang: 'ja', step: 1, topic: '歡迎', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我們將以【分階段方式】輕鬆學外語！' }
-            ];
-        }
+        let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+            { role: 'ai', lang: 'ja', step: 1, topic: '歡迎', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我們將以【分階段方式】輕鬆學外語！' }
+        ];
 
         let selectedImageDataUrl = null;
 
         window.addEventListener('DOMContentLoaded', renderHistory);
 
-        // 切換全域語言（原地無縫轉換）
+        // 切換全域語言
         async function setGlobalLanguage(lang, btnElement) {
             if (currentLang === lang) return;
             currentLang = lang;
@@ -121,9 +111,14 @@
             });
             btnElement.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition";
             
+            const langNames = { ja: '日語', en: '英語', ko: '韓語' };
+            
             const lastActiveTopic = chatHistory.slice().reverse().find(m => m.topic && m.topic !== '歡迎');
             if (lastActiveTopic) {
-                await requestAIStage(lastActiveTopic.topic, lastActiveTopic.step);
+                appendMessageToDOM(`已切換至 ${langNames[lang]}，正在為您轉換主題...`, 'ai');
+                await requestAIStage(lastActiveTopic.topic, 1, true);
+            } else {
+                appendMessageToDOM(`已切換學習語言：${langNames[lang]}`, 'ai');
             }
         }
 
@@ -172,10 +167,10 @@
             recognition.start();
         }
 
-        // Google 標準發音（安全修復版：無語法錯誤，支援單次順暢發音）
+        // Google 標準發音（完完全全採用您原本能動的原始架構，僅安全移除會把日文漢字誤砍的正規表達式）
         function speakSentence(phrase, btnElement) {
             let cleanText = phrase.replace(/[*#`()（）]/g, '').trim();
-            if (!cleanText) cleanText = phrase;
+            if (!cleanText) return;
 
             const icon = btnElement.querySelector('i');
             const originalClass = icon.className;
@@ -207,9 +202,11 @@
             inputField.value = "";
             removeImage();
 
+            // 每次送出新主題，固定從【階段一】開始，確保秒回與輕量
             await requestAIStage(topic, 1);
         }
 
+        // 請求特定階段的內容
         async function requestAIStage(topic, stageNum) {
             const targetLangName = currentLang === 'ja' ? '日語' : currentLang === 'ko' ? '韓語' : '英語';
             
@@ -217,12 +214,12 @@
             if (stageNum === 1) {
                 stageInstruction = `請針對主題「${topic}」提供【階段一：核心說法與外語單字】。
 格式要求：
-1. 給出最核心的單字或短句，必須用反引號包起來。
+1. 給出最核心的單字或短句，必須用反引號包起來（例如 \`お仕事ですか\`）。
 2. 附上中文翻譯與短單字解析。精簡扼要，讓使用者能快速秒回掌握。`;
             } else if (stageNum === 2) {
                 stageInstruction = `請針對主題「${topic}」繼續提供【階段二：功能與實用句型】。
 格式要求：
-1. 提供實用的對話句型，必須用反引號包起來。
+1. 提供實用的對話句型，必須用反引號包起來（例如 \`明日も仕事がありますか\`）。
 2. 附上中文翻譯與用法說明。`;
             } else if (stageNum === 3) {
                 stageInstruction = `請針對主題「${topic}」提供【階段三：生活脈絡與文化故事】。
@@ -238,16 +235,8 @@
                 { role: 'user', parts: [{ text: stageInstruction }] }
             ];
 
-            const lastMsg = chatHistory[chatHistory.length - 1];
-            let targetIndex;
-            
-            if (lastMsg && lastMsg.role === 'ai' && lastMsg.topic === topic) {
-                targetIndex = chatHistory.length - 1;
-                chatHistory[targetIndex] = { role: 'ai', lang: currentLang, step: stageNum, topic: topic, text: `（AI 正在為您轉換 ${targetLangName} 階段 ${stageNum} 內容...）` };
-            } else {
-                targetIndex = chatHistory.length;
-                chatHistory.push({ role: 'ai', lang: currentLang, step: stageNum, topic: topic, text: `（AI 正在為您編排階段 ${stageNum} 內容...）` });
-            }
+            const loadingIndex = chatHistory.length;
+            chatHistory.push({ role: 'ai', lang: currentLang, step: stageNum, topic: topic, text: `（AI 正在為您編排階段 ${stageNum} 內容...）` });
             saveAndRender();
 
             try {
@@ -259,7 +248,7 @@
 
                 const data = await response.json();
                 if (data.status === 'success') {
-                    chatHistory[targetIndex] = { 
+                    chatHistory[loadingIndex] = { 
                         role: 'ai', 
                         lang: currentLang, 
                         step: stageNum, 
@@ -271,7 +260,7 @@
                     throw new Error(data.message || "回應失敗");
                 }
             } catch (err) {
-                chatHistory[targetIndex] = { role: 'ai', lang: currentLang, step: stageNum, topic: topic, text: "載入失敗：" + err.message };
+                chatHistory[loadingIndex] = { role: 'ai', lang: currentLang, step: stageNum, topic: topic, text: "載入失敗：" + err.message };
                 saveAndRender();
             }
         }
@@ -280,6 +269,7 @@
             containerDiv.innerHTML = "";
             if (!msgObj.text) return;
 
+            // 1. 渲染文字與反引號發音按鈕
             const parts = msgObj.text.split(/`([^`]+)`/);
             parts.forEach((part, index) => {
                 if (!part) return;
@@ -310,7 +300,8 @@
                 }
             });
 
-            if (msgObj.role === 'ai' && msgObj.step && msgObj.topic && msgObj.topic !== '歡迎' && !msgObj.text.includes('正在為您')) {
+            // 2. 如果是 AI 的訊息，自動在下方帶出「階段推進按鈕」
+            if (msgObj.role === 'ai' && msgObj.step && msgObj.topic && msgObj.topic !== '歡迎' && !msgObj.text.includes('正在為您編排')) {
                 const btnContainer = document.createElement("div");
                 btnContainer.className = "mt-3 pt-2 border-t border-slate-100 flex flex-wrap gap-2";
 
@@ -337,7 +328,7 @@
             const div = document.createElement("div");
             div.className = `p-3 rounded-2xl text-xs sm:text-sm max-w-[92%] leading-relaxed whitespace-pre-wrap ${msgObj.role === 'user' ? 'bg-[#00a600] text-white self-end rounded-br-xs' : 'bg-white border border-slate-200 text-slate-800 self-start rounded-bl-xs shadow-2xs'}`;
             
-            if (msgObj.role === 'ai' && !msgObj.text.includes('正在為您') && !msgObj.text.includes('已切換')) {
+            if (msgObj.role === 'ai' && !msgObj.text.includes('正在為您編排') && !msgObj.text.includes('已切換')) {
                 renderMessageContent(div, msgObj);
             } else {
                 div.textContent = msgObj.text;
