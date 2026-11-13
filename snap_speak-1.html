@@ -24,7 +24,7 @@
 </head>
 <body class="p-3 max-w-md mx-auto flex flex-col min-h-screen">
 
-    <!-- 頂部精簡綠色橫幅：返回首頁按鈕與語言切換 -->
+    <!-- 頂部精簡綠色橫幅：返回首頁按鈕與全域語言切換 -->
     <header class="green-banner p-3.5 flex items-center justify-between gap-3 mb-3 shrink-0">
         <a href="https://myezlife.com" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 backdrop-blur">
             <i class="fa-solid fa-house"></i> 返回首頁
@@ -33,9 +33,9 @@
             🌿 AI 學外語
         </div>
         <div class="flex bg-black/20 backdrop-blur rounded-xl p-1 gap-1 shrink-0">
-            <button onclick="setLanguage('ja', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition">日</button>
-            <button onclick="setLanguage('en', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">英</button>
-            <button onclick="setLanguage('ko', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">韓</button>
+            <button onclick="setGlobalLanguage('ja', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition">日</button>
+            <button onclick="setGlobalLanguage('en', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">英</button>
+            <button onclick="setGlobalLanguage('ko', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">韓</button>
         </div>
     </header>
 
@@ -88,26 +88,36 @@
     <script>
         let currentLang = 'ja';
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v11";
+        const STORAGE_KEY = "mobile_ai_lang_history_v12";
 
         let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-            { role: 'ai', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我會隨時為你解答並提供外語教學！' }
+            { role: 'ai', lang: 'ja', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，隨時可以切換日、英、韓語學習！' }
         ];
 
         let selectedImageDataUrl = null;
-        let currentAudio = null; // 用於管理音訊播放
 
         window.addEventListener('DOMContentLoaded', renderHistory);
 
-        function setLanguage(lang, btnElement) {
+        // 切換全域語言並「即時轉換」對話紀錄的語言內容
+        async function setGlobalLanguage(lang, btnElement) {
+            if (currentLang === lang) return;
             currentLang = lang;
+            
             document.querySelectorAll('.lang-btn').forEach(b => {
                 b.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition";
             });
             btnElement.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition";
             
             const langNames = { ja: '日語', en: '英語', ko: '韓語' };
-            appendMessageToDOM(`已切換學習語言：${langNames[lang]}`, 'ai');
+            
+            // 如果最後一則訊息是 AI 回覆，直接透過 API 將其翻譯/切換為新語言，省去重新提問的麻煩
+            const lastAiMsg = chatHistory.slice().reverse().find(m => m.role === 'ai');
+            if (lastAiMsg && lastAiMsg.lastUserPrompt) {
+                appendMessageToDOM(`已切換至 ${langNames[lang]}，正在為您轉換對話內容...`, 'ai');
+                await translateLastResponse(lastAiMsg.lastUserPrompt, lang);
+            } else {
+                appendMessageToDOM(`已切換學習語言：${langNames[lang]}`, 'ai');
+            }
         }
 
         function triggerCamera() { document.getElementById('cameraInput').click(); }
@@ -155,44 +165,36 @@
             recognition.start();
         }
 
-        // 升級：使用 Google Translate 高品質語音 API（真人音質、高清清晰）
+        // 雙軌穩健發音函數（結合 HTML5 Audio 與瀏覽器合成，確保 100% 有聲音）
         function speakSentence(phrase, btnElement) {
-            // 清理文字：只保留日文/韓文/英文原文，徹底濾掉中文及符號
             let cleanText = phrase.replace(/[\u4e00-\u9fa5]/g, '').replace(/[*#`()（）]/g, '').trim();
             if (!cleanText) return;
 
-            // 如果有正在播放的聲音，先停止
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
-            }
-
-            // 按鈕提示動畫效果
             const icon = btnElement.querySelector('i');
             const originalClass = icon.className;
             icon.className = "fa-solid fa-spinner fa-spin text-xs text-emerald-600";
 
             const langCode = currentLang === 'ja' ? 'ja' : currentLang === 'ko' ? 'ko' : 'en';
-            // 直連 Google 高音質語音服務
             const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=${langCode}&client=tw-ob`;
 
-            currentAudio = new Audio(ttsUrl);
-            
-            currentAudio.onplay = () => {
-                icon.className = "fa-solid fa-volume-high text-xs text-emerald-600 animate-pulse";
-            };
-            
-            currentAudio.onended = currentAudio.onerror = () => {
+            const audio = new Audio(ttsUrl);
+            audio.onplay = () => { icon.className = "fa-solid fa-volume-high text-xs text-emerald-600 animate-pulse"; };
+            audio.onended = audio.onerror = () => {
                 icon.className = originalClass;
+                // 備援方案：若線上語音失敗，啟動內建合成
+                if (audio.error && 'speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(cleanText);
+                    utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
+                    window.speechSynthesis.speak(utterance);
+                }
             };
-
-            currentAudio.play().catch(err => {
-                console.error("播放失敗:", err);
+            audio.play().catch(() => {
                 icon.className = originalClass;
-                // 備援方案：若 API 被暫時阻擋，降級回瀏覽器合成
-                const utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
-                window.speechSynthesis.speak(utterance);
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(cleanText);
+                    utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
+                    window.speechSynthesis.speak(utterance);
+                }
             });
         }
 
@@ -203,7 +205,6 @@
             if (!text && !selectedImageDataUrl) return;
 
             let userParts = [];
-
             if (selectedImageDataUrl) {
                 const base64Data = selectedImageDataUrl.split(',')[1];
                 const mimeType = selectedImageDataUrl.split(';')[0].split(':')[1];
@@ -218,31 +219,29 @@
             inputField.value = "";
             removeImage();
 
-            const aiMsgDiv = appendMessageToDOM("（AI 正在思考與編排教學內容中...）", 'ai');
+            await requestAI(text || "圖片辨識", chatHistory.length - 1);
+        }
 
-            try {
-                const targetLangName = currentLang === 'ja' ? '日語' : currentLang === 'ko' ? '韓語' : '英語';
-                
-                const systemInstruction = `你是一位專業親切的生活外語導師（目前學習語言：${targetLangName}）。
-請針對使用者的輸入（無論是日常問句如「今天要不要上班」、句子、文法或上傳的圖片）進行詳細教學回應。
+        async function translateLastResponse(lastPrompt, targetLang) {
+            await requestAI(lastPrompt, chatHistory.length - 1, true);
+        }
+
+        async function requestAI(promptText, historyIndex, isTranslation = false) {
+            const targetLangName = currentLang === 'ja' ? '日語' : currentLang === 'ko' ? '韓語' : '英語';
+            
+            const systemInstruction = `你是一位專業親切的生活外語導師（目前目標學習語言：${targetLangName}）。
+請針對使用者輸入的句子或主題（例如「今天要不要上班」或物品）提供詳細教學回應。
 格式要求：
 1. 請用清晰的標題與清單呈現。
 2. **非常重要**：每當出現外語單字、假名或外語例句時，請務必將該外語內容用反引號（例如 \`外語內容\`）包起來，這樣前端才能自動為其加上播放聲音的圖示按鈕。
-3. 如果是日語教學，請在反引號中給予純日文原文（例如 \`今日仕事に行きますか\` 或 \`会社 (かいしゃ)\`），這樣語音才能完美朗讀！
+3. 請確保提供該語言（${targetLangName}）的純正原生寫法與對應發音。
 4. 提供中文翻譯對照與實用說明。`;
 
-                let contentsPayload = [];
-                contentsPayload.push({ role: 'user', parts: [{ text: systemInstruction }] });
-                
-                const recentHistory = chatHistory.slice(-6);
-                recentHistory.forEach(h => {
-                    if(h.role === 'user') {
-                        contentsPayload.push({ role: 'user', parts: [{ text: h.text }] });
-                    } else if(h.role === 'ai') {
-                        contentsPayload.push({ role: 'model', parts: [{ text: h.text }] });
-                    }
-                });
+            let contentsPayload = [];
+            contentsPayload.push({ role: 'user', parts: [{ text: systemInstruction }] });
+            contentsPayload.push({ role: 'user', parts: [{ text: promptText }] });
 
+            try {
                 const response = await fetch(GAS_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -251,16 +250,20 @@
 
                 const data = await response.json();
                 if (data.status === 'success') {
-                    chatHistory[chatHistory.length - 1] = { role: 'ai', text: data.reply };
+                    chatHistory[historyIndex] = { 
+                        role: 'ai', 
+                        lang: currentLang, 
+                        text: data.reply, 
+                        lastUserPrompt: promptText 
+                    };
                     saveAndRender();
                 } else {
                     throw new Error(data.message || "回應失敗");
                 }
             } catch (err) {
                 const errMsg = "分析失敗：" + err.message;
-                aiMsgDiv.textContent = errMsg;
-                chatHistory.push({ role: 'ai', text: errMsg });
-                saveStorage();
+                chatHistory.push({ role: 'ai', lang: currentLang, text: errMsg });
+                saveAndRender();
             }
         }
 
@@ -306,7 +309,7 @@
             const div = document.createElement("div");
             div.className = `p-3 rounded-2xl text-xs sm:text-sm max-w-[92%] leading-relaxed whitespace-pre-wrap ${sender === 'user' ? 'bg-[#00a600] text-white self-end rounded-br-xs' : 'bg-white border border-slate-200 text-slate-800 self-start rounded-bl-xs shadow-2xs'}`;
             
-            if (sender === 'ai' && !text.includes('正在思考')) {
+            if (sender === 'ai' && !text.includes('正在思考') && !text.includes('已切換')) {
                 renderMessageContent(div, text);
             } else {
                 div.textContent = text;
@@ -329,7 +332,7 @@
         function clearChat() {
             if (confirm("重新開始新的學習對話嗎？")) {
                 localStorage.removeItem(STORAGE_KEY);
-                chatHistory = [{ role: 'ai', text: '對話已重置！請輸入想學的日常句子、物品或拍照上傳。' }];
+                chatHistory = [{ role: 'ai', lang: 'ja', text: '對話已重置！請輸入想學的日常句子、物品或拍照上傳。' }];
                 renderHistory();
             }
         }
