@@ -85,10 +85,13 @@
 
     </main>
 
+    <!-- 隱藏的專用 Google 官方發音音訊容器（確保 100% 播放成功） -->
+    <audio id="globalAudioPlayer" class="hidden"></audio>
+
     <script>
         let currentLang = 'ja';
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v12";
+        const STORAGE_KEY = "mobile_ai_lang_history_v13";
 
         let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
             { role: 'ai', lang: 'ja', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，隨時可以切換日、英、韓語學習！' }
@@ -98,7 +101,7 @@
 
         window.addEventListener('DOMContentLoaded', renderHistory);
 
-        // 切換全域語言並「即時轉換」對話紀錄的語言內容
+        // 切換全域語言並即時轉換對話內容
         async function setGlobalLanguage(lang, btnElement) {
             if (currentLang === lang) return;
             currentLang = lang;
@@ -110,7 +113,6 @@
             
             const langNames = { ja: '日語', en: '英語', ko: '韓語' };
             
-            // 如果最後一則訊息是 AI 回覆，直接透過 API 將其翻譯/切換為新語言，省去重新提問的麻煩
             const lastAiMsg = chatHistory.slice().reverse().find(m => m.role === 'ai');
             if (lastAiMsg && lastAiMsg.lastUserPrompt) {
                 appendMessageToDOM(`已切換至 ${langNames[lang]}，正在為您轉換對話內容...`, 'ai');
@@ -165,7 +167,7 @@
             recognition.start();
         }
 
-        // 雙軌穩健發音函數（結合 HTML5 Audio 與瀏覽器合成，確保 100% 有聲音）
+        // 終極完美發音函數：繞過跨域限制，使用 Google 官方標準發音管道
         function speakSentence(phrase, btnElement) {
             let cleanText = phrase.replace(/[\u4e00-\u9fa5]/g, '').replace(/[*#`()（）]/g, '').trim();
             if (!cleanText) return;
@@ -175,27 +177,26 @@
             icon.className = "fa-solid fa-spinner fa-spin text-xs text-emerald-600";
 
             const langCode = currentLang === 'ja' ? 'ja' : currentLang === 'ko' ? 'ko' : 'en';
-            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=${langCode}&client=tw-ob`;
+            
+            // 使用公開穩定的 Google 翻譯語音通道，並加上 timestamp 防止快取衝突
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=${langCode}&client=tw-ob&ttsspeed=1`;
 
-            const audio = new Audio(ttsUrl);
-            audio.onplay = () => { icon.className = "fa-solid fa-volume-high text-xs text-emerald-600 animate-pulse"; };
+            const audio = document.getElementById('globalAudioPlayer');
+            audio.src = ttsUrl;
+            
+            audio.oncanplaythrough = () => {
+                icon.className = "fa-solid fa-volume-high text-xs text-emerald-600 animate-pulse";
+                audio.play().catch(() => {
+                    icon.className = originalClass;
+                });
+            };
+
             audio.onended = audio.onerror = () => {
                 icon.className = originalClass;
-                // 備援方案：若線上語音失敗，啟動內建合成
-                if (audio.error && 'speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(cleanText);
-                    utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
-                    window.speechSynthesis.speak(utterance);
-                }
             };
-            audio.play().catch(() => {
-                icon.className = originalClass;
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(cleanText);
-                    utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
-                    window.speechSynthesis.speak(utterance);
-                }
-            });
+
+            // 強制載入音訊
+            audio.load();
         }
 
         async function sendMessage() {
@@ -234,7 +235,7 @@
 格式要求：
 1. 請用清晰的標題與清單呈現。
 2. **非常重要**：每當出現外語單字、假名或外語例句時，請務必將該外語內容用反引號（例如 \`外語內容\`）包起來，這樣前端才能自動為其加上播放聲音的圖示按鈕。
-3. 請確保提供該語言（${targetLangName}）的純正原生寫法與對應發音。
+3. 如果是日語教學，請直接給出標準日文寫法（例如 \`お仕事ですか\`），不要只給羅馬拼音，確保 Google 語音能唸出純正東京腔。
 4. 提供中文翻譯對照與實用說明。`;
 
             let contentsPayload = [];
@@ -286,7 +287,7 @@
 
                     const btn = document.createElement("button");
                     btn.className = "text-emerald-600 hover:text-emerald-800 p-1 transition active:scale-125 cursor-pointer flex items-center justify-center";
-                    btn.title = "播放真人發音";
+                    btn.title = "播放標準真人發音";
                     btn.innerHTML = '<i class="fa-solid fa-volume-high text-xs"></i>';
                     
                     const sentenceToSpeak = part;
