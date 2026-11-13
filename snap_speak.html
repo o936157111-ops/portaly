@@ -2,269 +2,1122 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI學外語 | myezlife.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snap & Speak - 隨手拍·生活實物外語學習館</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', 'Noto Sans JP', 'Noto Sans KR', sans-serif;
             background-color: #f8fafc;
-            color: #334155;
-            margin: 0;
-            padding: 0;
         }
-        .green-banner {
-            background-color: #00a600;
-            border-radius: 1.5rem;
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(0, 166, 0, 0.2);
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-effect {
+            animation: pulse-ring 2s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="p-3 max-w-md mx-auto flex flex-col min-h-screen">
+<body class="text-slate-800 bg-slate-50 min-h-screen flex flex-col selection:bg-amber-100 selection:text-amber-900">
 
-    <!-- 頂部精簡綠色橫幅：返回首頁按鈕與簡潔標題 -->
-    <header class="green-banner p-3.5 flex items-center justify-between gap-3 mb-3 shrink-0">
-        <a href="https://myezlife.com" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 backdrop-blur">
-            <i class="fa-solid fa-house"></i> 返回首頁
-        </a>
-        <div class="text-center font-black tracking-wider text-sm">
-            🌿 AI 學外語
-        </div>
-        <!-- 語言快速切換圖形按鈕 -->
-        <div class="flex bg-black/20 backdrop-blur rounded-xl p-1 gap-1 shrink-0">
-            <button onclick="setLanguage('ja', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition">日</button>
-            <button onclick="setLanguage('en', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">英</button>
-            <button onclick="setLanguage('ko', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">韓</button>
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('studio')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20">
+                        <i class="fa-solid font-bold fa-camera-retro text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg text-slate-900 tracking-tight">Snap & Speak</span>
+                        <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-full">生活沉浸式學習館</span>
+                    </div>
+                </div>
+
+                <!-- Target Language Selector -->
+                <div class="flex items-center gap-2">
+                    <label for="targetLangSelect" class="text-xs font-semibold uppercase text-slate-500 tracking-wider hidden md:block">
+                        學習目標語言：
+                    </label>
+                    <div class="relative">
+                        <select id="targetLangSelect" onchange="changeTargetLanguage(this.value)" class="appearance-none bg-slate-100 border border-slate-200 text-slate-800 font-bold text-sm rounded-xl px-4 py-2 pr-9 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer shadow-sm hover:bg-slate-200/60 transition">
+                            <option value="ja" selected>🇯🇵 日語 (日本語)</option>
+                            <option value="en">🇺🇸 英語 (English)</option>
+                            <option value="ko">🇰🇷 韓語 (한국어)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="flex items-center gap-2">
+                    <button onclick="switchTab('studio')" id="tabBtnStudio" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span class="hidden sm:inline">口說工作坊</span>
+                    </button>
+                    <button onclick="switchTab('notebook')" id="tabBtnNotebook" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span class="hidden sm:inline">我的實物筆記</span>
+                        <span id="notebookBadge" class="bg-amber-500 text-white text-[11px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- 主要互動卡片 -->
-    <main class="flex-1 flex flex-col bg-white border border-slate-200 rounded-3xl p-4 shadow-sm space-y-3 relative overflow-hidden">
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
-        <!-- 頂端功能圖形列 -->
-        <div class="grid grid-cols-4 gap-2 pb-3 border-b border-slate-100 shrink-0">
-            <button onclick="triggerCamera()" class="h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95" title="拍照辨識">
-                <i class="fa-solid fa-camera"></i>
-            </button>
-            <button onclick="triggerUpload()" class="h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95" title="上傳照片">
-                <i class="fa-solid fa-image"></i>
-            </button>
-            <button onclick="toggleVoiceInput()" id="micBtn" class="h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95" title="語音輸入">
-                <i class="fa-solid fa-microphone"></i>
-            </button>
-            <button onclick="clearChat()" class="h-12 rounded-2xl bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 flex items-center justify-center text-lg transition active:scale-95" title="重新開始">
-                <i class="fa-solid fa-rotate-right"></i>
-            </button>
-        </div>
-
-        <!-- 隱藏的拍照與上傳 Input -->
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageSelected(event)">
-        <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelected(event)">
-
-        <!-- 圖片預覽與「物品名稱確認區」 -->
-        <div id="previewContainer" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2 shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-900 shrink-0">
-                    <img id="previewImage" src="" alt="Preview" class="w-full h-full object-cover">
+        <!-- STUDIO TAB -->
+        <div id="studioTab" class="space-y-6">
+            
+            <!-- Hero Banner & Presets -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-2xl relative z-10">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">把身邊萬物變成你的外語教室</h1>
+                    <p class="mt-2 text-slate-300 text-sm sm:text-base">
+                        拍下身邊日常物品，結合道地外語母語發音與中文對照，提供流暢的 3 分鐘口說練習體驗。
+                    </p>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <div class="text-[11px] font-bold text-slate-500 mb-1">這是什麼物品？請輸入名稱：</div>
-                    <input type="text" id="objectNameInput" placeholder="例如：火柴盒、鋼筆..." class="w-full bg-white border border-slate-200 px-3 py-1.5 rounded-xl text-xs outline-none focus:border-[#00a600]">
+
+                <!-- Presets Quick Picker -->
+                <div class="mt-6 pt-5 border-t border-slate-700/60 flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2 w-full sm:w-auto">快速測試範例：</span>
+                    <button onclick="loadPreset('pen')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition">✒️ 鋼筆</button>
+                    <button onclick="loadPreset('mug')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition">☕ 馬克杯</button>
+                    <button onclick="loadPreset('watch')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition">⌚ 復古手錶</button>
+                    <button onclick="loadPreset('lamp')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition">💡 檯燈</button>
+                    <button onclick="loadPreset('books')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition">📚 書架</button>
                 </div>
-                <button onclick="removeImage()" class="w-7 h-7 bg-slate-200 text-slate-600 rounded-full flex items-center justify-center text-xs shrink-0">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+            </div>
+
+            <!-- Workspace Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left Column: Image Canvas & Object Detection (5 cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-4 shadow-sm relative">
+                        <div class="flex items-center justify-between mb-3 px-1">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-image text-amber-500"></i> 實物照片分析
+                            </span>
+                            <div class="flex gap-2">
+                                <button onclick="triggerCamera()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition flex items-center gap-1">
+                                    <i class="fa-solid fa-camera"></i> 拍照
+                                </button>
+                                <button onclick="triggerUpload()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition flex items-center gap-1">
+                                    <i class="fa-solid fa-upload"></i> 上傳
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Inputs -->
+                        <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+
+                        <!-- Image Display Area -->
+                        <div class="relative rounded-2xl overflow-hidden bg-slate-950 aspect-[4/3] flex items-center justify-center border border-slate-100 group">
+                            <img id="mainImage" src="" alt="Object Preview" class="w-full h-full object-cover hidden">
+                            <div id="imagePlaceholder" class="text-center p-6 space-y-3">
+                                <div class="w-16 h-16 rounded-full bg-slate-800 text-amber-400 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                                    <i class="fa-solid fa-camera-retro"></i>
+                                </div>
+                                <h3 class="text-white font-semibold text-sm">請拍攝或上傳身邊物品</h3>
+                                <p class="text-slate-400 text-xs">AI 將即時辨識並生成外語學習指南</p>
+                                <button onclick="triggerUpload()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-xl transition">
+                                    選擇照片
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Object Specs -->
+                        <div id="objectSummaryCard" class="mt-4 bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 hidden">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span id="targetObjectName" class="font-extrabold text-slate-900 text-base">万年筆</span>
+                                    <button onclick="speakTargetName()" class="w-7 h-7 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shadow hover:bg-amber-600 transition" title="聽道地原音發音">
+                                        <i class="fa-solid fa-volume-high text-xs"></i>
+                                    </button>
+                                </div>
+                                <span id="targetObjectZh" class="text-xs bg-white text-slate-600 px-2.5 py-1 rounded-lg border border-amber-100 font-medium">中文：鋼筆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: 3-Stage Speaking Studio (7 cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
+                        
+                        <!-- Stage Navigation Tabs -->
+                        <div class="grid grid-cols-3 gap-2 p-1.5 bg-slate-100 rounded-2xl text-xs font-bold mb-6">
+                            <button id="stageBtn1" onclick="switchStage(1)" class="py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm font-bold">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center">1</span>
+                                <span class="hidden sm:inline">階段一：外觀描述</span>
+                            </button>
+                            <button id="stageBtn2" onclick="switchStage(2)" class="py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900">
+                                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 text-[10px] flex items-center justify-center">2</span>
+                                <span class="hidden sm:inline">階段二：功能動作</span>
+                            </button>
+                            <button id="stageBtn3" onclick="switchStage(3)" class="py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900">
+                                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 text-[10px] flex items-center justify-center">3</span>
+                                <span class="hidden sm:inline">階段三：生活故事</span>
+                            </button>
+                        </div>
+
+                        <!-- STAGE CONTENT -->
+                        <div class="space-y-5">
+                            <div class="border-l-4 border-amber-500 pl-3 py-0.5">
+                                <h3 id="stageTitle" class="font-extrabold text-slate-900 text-base">階段 1：基礎外語詞彙與外觀描述</h3>
+                                <p id="stageDesc" class="text-xs text-slate-500 mt-0.5">點擊喇叭聆聽道地母語發音，下方備有中文翻譯輔助理解。</p>
+                            </div>
+
+                            <!-- Vocab / Phrases Container -->
+                            <div id="vocabContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <!-- Rendered dynamically -->
+                            </div>
+
+                            <!-- Model Sentence Card -->
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">示範外語句型 (Tap to Speak)</span>
+                                    <button onclick="speakMainSentence()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
+                                        <i class="fa-solid fa-volume-high"></i> 播放外語發音
+                                    </button>
+                                </div>
+                                <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+                                    <div id="mainSentenceTarget" class="text-base font-bold text-slate-900">載入中...</div>
+                                    <div id="mainSentenceZh" class="text-xs text-slate-500 font-medium border-t border-slate-100 pt-1">中文對照：載入中...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <button onclick="saveToNotebook()" class="text-xs px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-bookmark text-amber-600"></i> 收藏至外語筆記
+                            </button>
+                            <span class="text-xs text-slate-400 font-medium">階段 <span id="currentStageNum">1</span> / 3</span>
+                        </div>
+
+                    </div>
+
+                    <!-- 3-Minute Voice Recording Studio -->
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-3xl p-5 shadow-lg space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                                <h3 class="font-bold text-sm tracking-wide">3 分鐘外語口說錄音室</h3>
+                            </div>
+                            <div class="font-mono text-xl font-bold bg-slate-800 px-3 py-1 rounded-xl text-amber-400 border border-slate-700" id="timerDisplay">
+                                03:00
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button id="recordBtn" onclick="toggleRecording()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                                <i class="fa-solid fa-microphone text-base" id="recordIcon"></i>
+                                <span id="recordBtnText">開始錄音口說練習</span>
+                            </button>
+                            <button onclick="resetTimer()" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                        <div id="audioPlaybackContainer" class="hidden pt-2 border-t border-slate-800/80 space-y-2">
+                            <div class="text-xs text-slate-400 font-medium">錄音完成！可點擊播放回放：</div>
+                            <audio id="audioPlayback" controls class="w-full h-9 rounded-lg"></audio>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 對話訊息顯示區 -->
-        <div id="chatBox" class="flex-1 overflow-y-auto p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-2.5 min-h-[260px]">
-            <!-- 動態插入對話 -->
+        <!-- NOTEBOOK TAB -->
+        <div id="notebookTab" class="space-y-6 hidden">
+            <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">我的外語收藏筆記</h2>
+                    <p class="text-xs text-slate-500 mt-1">複習您在日常生活中拍下或收藏的實物外語單字與句型。</p>
+                </div>
+                <button onclick="clearNotebook()" class="text-xs text-red-600 hover:text-red-700 font-semibold px-3 py-2 bg-red-50 hover:bg-red-100 rounded-xl transition">
+                    清空筆記
+                </button>
+            </div>
+            <div id="notebookGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            <div id="notebookEmpty" class="text-center py-16 bg-white rounded-3xl border border-slate-200">
+                <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-2xl mb-3">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 text-base">目前沒有收藏的外語筆記</h3>
+                <p class="text-xs text-slate-500 mt-1">在工作坊學習時點擊「收藏至外語筆記」即可儲存。</p>
+            </div>
         </div>
-
-        <!-- 底部訊息輸入控制區 -->
-        <div class="flex gap-2 shrink-0 pt-1">
-            <input type="text" id="userInput" placeholder="輸入想學的物品或直接對話..." class="flex-1 bg-slate-50 border border-slate-200 px-3.5 py-3 rounded-xl text-sm outline-none focus:border-[#00a600] transition" onkeypress="handleKeyPress(event)">
-            <button id="sendBtn" onclick="sendMessage()" class="w-12 h-12 rounded-xl bg-[#00a600] hover:bg-[#008f00] text-white flex items-center justify-center transition shrink-0 shadow-sm active:scale-95">
-                <i class="fa-solid fa-paper-plane text-sm"></i>
-            </button>
-        </div>
-
     </main>
 
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-info text-amber-400"></i>
+        <span id="toastMsg">提示訊息</span>
+    </div>
+
+    <!-- Application Logic Script -->
     <script>
+        // 完整的日、英、韓多語言教材資料庫（確保各範例內容結構正確不亂套）
+        const DATA = {
+            ja: {
+                pen: {
+                    name: '万年筆 (まんねんひつ)',
+                    zh: '鋼筆',
+                    image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '階段 1：基礎外語詞彙與外觀描述',
+                            vocab: [
+                                { target: '金属製のボディ (きんぞくせいのぼでぃ)', zh: '金屬製筆身' },
+                                { target: 'ペン先 (ぺんさき)', zh: '金屬筆尖' },
+                                { target: '高級感のある質感 (こうきゅうかん)', zh: '高級沉穩質感' },
+                                { target: '光沢のある黒 (こうたく)', zh: '光澤黑色' }
+                            ],
+                            sentence: { target: 'これは洗練された黒い軸身を持つクラシックな万年筆です。', zh: '這是一支具有光滑黑色筆身的經典萬年筆。' }
+                        },
+                        2: {
+                            title: '階段 2：實用動詞與功能動作',
+                            vocab: [
+                                { target: 'インクを補充する (ほじゅうする)', zh: '補充墨水' },
+                                { target: '紙の上を滑らせる (すらせる)', zh: '在紙上滑順書寫' },
+                                { target: '力を入れずに書く (ちからをいれずにかく)', zh: '不需用力即可書寫' },
+                                { target: '書類に署名する (しょるいにしょめいする)', zh: '簽署文件' }
+                            ],
+                            sentence: { target: '紙の上をすらすらと滑り、力を入れずに書くことができます。', zh: '它能在紙上順暢滑動，完全不需施加重力。' }
+                        },
+                        3: {
+                            title: '階段 3：個人記憶與生活故事',
+                            vocab: [
+                                { target: '大切なお守り (たいせつなおまもり)', zh: '珍貴的隨身物件' },
+                                { target: '手書きの時間 (てがきのかん)', zh: '手寫的時光' },
+                                { target: '心を落ち着かせる (こころをおちつく)', zh: '讓心靜下來' },
+                                { target: '記念の贈り物 (きねんのおくりもの)', zh: '紀念禮物' }
+                            ],
+                            sentence: { target: 'この万年筆を使うと、心が落ち着き手書きの文字の感覚を楽しめます。', zh: '使用這支萬年筆讓我能慢下腳步，享受手寫文字的節奏。' }
+                        }
+                    }
+                },
+                mug: {
+                    name: 'コーヒーマグ',
+                    zh: '馬克杯',
+                    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '階段 1：基礎外語詞彙與外觀描述',
+                            vocab: [
+                                { target: '陶器のマグカップ (とうき)', zh: '陶瓷馬克杯' },
+                                { target: '持ちやすい取っ手 (とって)', zh: '好握的把手' },
+                                { target: 'マットな質感 (しつかん)', zh: '霧面磨砂觸感' },
+                                { target: '温かみのある色 (あたたかみ)', zh: '溫暖的色調' }
+                            ],
+                            sentence: { target: 'これはお茶を温かく保ってくれる、厚手のセラミックマグカップです。', zh: '這是一個能幫茶保持溫熱的厚實陶瓷馬克杯。' }
+                        },
+                        2: {
+                            title: '階段 2：實用動詞與功能動作',
+                            vocab: [
+                                { target: 'コーヒーを注ぐ (そそぐ)', zh: '倒入咖啡' },
+                                { target: '両手で包み込む (りょうてでつつみこむ)', zh: '雙手捧著杯身' },
+                                { target: '香りを楽しむ (かおりをたのしむ)', zh: '品嚐咖啡香氣' },
+                                { target: 'ゆっくり味わう (あじわう)', zh: '細細啜飲' }
+                            ],
+                            sentence: { target: '寒い冬の朝、これを両手で包み込むように持つのが好きです。', zh: '在寒冷的冬天早晨，我喜歡用雙手捧著它。' }
+                        },
+                        3: {
+                            title: '階段 3：個人記憶與生活故事',
+                            vocab: [
+                                { target: '朝のルーティン', zh: '早晨儀式感' },
+                                { target: '穏やかな時間 (おだやかなじかん)', zh: '寧靜的時光' },
+                                { target: 'リラックスする', zh: '放鬆心情' },
+                                { target: 'お気に入りの相棒 (あいぼう)', zh: '最愛的日常夥伴' }
+                            ],
+                            sentence: { target: 'これは仕事前の、穏やかな朝の習慣の始まりを意味しています。', zh: '它代表著我在工作前那段寧靜早晨時光的開始。' }
+                        }
+                    }
+                },
+                watch: {
+                    name: '腕時計 (うでどけい)',
+                    zh: '復古手錶',
+                    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '階段 1：基礎外語詞彙與外觀描述',
+                            vocab: [
+                                { target: '革のベルト (かわのべると)', zh: '皮革錶帶' },
+                                { target: '文字盤 (もじばん)', zh: '錶盤' },
+                                { target: 'クラシックなデザイン', zh: '經典復古設計' },
+                                { target: '正確な針 (せいかくなはり)', zh: '精準指針' }
+                            ],
+                            sentence: { target: 'この時計はクラシックな革ベルトとシンプルな文字盤が特徴です。', zh: '這隻手錶擁有經典皮革錶帶與極簡的錶盤。' }
+                        },
+                        2: {
+                            title: '階段 2：實用動詞與功能動作',
+                            vocab: [
+                                { target: '腕に装着する (うでにそうちゃくする)', zh: '戴在手腕上' },
+                                { target: '時間を確認する (じかんをかくにんする)', zh: '確認當前時間' },
+                                { target: 'ぜんまいを巻く (ぜんまいをまく)', zh: '手動上發條' },
+                                { target: '服に合わせる (ふくにあわせる)', zh: '搭配服裝' }
+                            ],
+                            sentence: { target: '毎朝、正確に動くようにリューズを手動で巻いています。', zh: '我每天早晨手動旋轉錶冠上發條，確保它精準運轉。' }
+                        },
+                        3: {
+                            title: '階段 3：個人記憶與生活故事',
+                            vocab: [
+                                { target: '限られた時間 (かぎられたじかん)', zh: '有限的時間' },
+                                { target: '大切な思い出 (おもいで)', zh: '珍貴的回憶' },
+                                { target: '時間を刻む (じかんをきざむ)', zh: '記錄歲月足跡' },
+                                { target: '世代を超えて (せだいをもこえて)', zh: '跨越世代傳承' }
+                            ],
+                            sentence: { target: 'これは私に、限られた時間を大切に使うことを思い出させてくれます。', zh: '它常提醒我要珍惜並用心度過每一天有限的時間。' }
+                        }
+                    }
+                },
+                lamp: {
+                    name: 'デスクライト',
+                    zh: '檯燈',
+                    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '階段 1：基礎外語詞彙與外觀描述',
+                            vocab: [
+                                { target: '温かい光 (あたたかいひかり)', zh: '溫暖光線' },
+                                { target: '可動式アーム (かどうしきあーむ)', zh: '可調燈臂' },
+                                { target: 'シンプルな電球 (でんきゅう)', zh: '簡約燈泡' },
+                                { target: '安定した台座 (だいざ)', zh: '穩固底座' }
+                            ],
+                            sentence: { target: 'これは暖かく柔らかい光を放つ、シンプルなデスクライトです。', zh: '這是一盞能投射出溫暖柔和光線的極簡檯燈。' }
+                        },
+                        2: {
+                            title: '階段 2：實用動詞與功能動作',
+                            vocab: [
+                                { target: 'スイッチを入れる (すいっちをいれる)', zh: '按下電源開關' },
+                                { target: '角度を調整する (かくどをちょうせいする)', zh: '調整照射角度' },
+                                { target: '手元を照らす (てもとをてらす)', zh: '照亮桌面閱讀區' },
+                                { target: '光を弱める (ひかりをよわめる)', zh: '調暗光線' }
+                            ],
+                            sentence: { target: '夜遅く本を読んだり仕事したりするときに、いつも点灯します。', zh: '每當我夜深閱讀或工作時，我都會點亮它。' }
+                        },
+                        3: {
+                            title: '階段 3：個人記憶與生活故事',
+                            vocab: [
+                                { target: '静かな思考 (しずかなしこう)', zh: '平靜思考' },
+                                { target: '快適な雰囲気 (かいてきなふんいき)', zh: '舒適氛圍' },
+                                { target: '夜の読書 (よるのどくしょ)', zh: '深夜讀書時光' },
+                                { target: '心のよりどころ', zh: '心靈依靠' }
+                            ],
+                            sentence: { target: 'その優しい光が、静かに思考するための快適な雰囲気を作ってくれます。', zh: '它柔和的光芒為我打造了一個適合平靜思考的舒適氛圍。' }
+                        }
+                    }
+                },
+                books: {
+                    name: '本棚 (ほんだな)',
+                    zh: '書架',
+                    image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '階段 1：基礎外語詞彙與外觀描述',
+                            vocab: [
+                                { target: '木製の棚 (もくせいのたな)', zh: '木質層架' },
+                                { target: '背表紙 (せばおし)', zh: '書脊' },
+                                { target: '古典小説 (こてんしょうせつ)', zh: '古典小說' },
+                                { target: '整然とした本 (せいぜん)', zh: '整齊排列書籍' }
+                            ],
+                            sentence: { target: 'これはお気に入りの古典小説が詰まった木製の本棚です。', zh: '這是一個擺滿了我最喜愛的經典小說的木質書架。' }
+                        },
+                        2: {
+                            title: '階段 2：實用動詞與功能動作',
+                            vocab: [
+                                { target: 'タイトルを眺める (ながめる)', zh: '瀏覽書名' },
+                                { target: '本を手に取る (てにとる)', zh: '抽出一本書' },
+                                { target: 'ジャンルごとに整理する', zh: '按分類整理' },
+                                { target: '物語を集める (あつめる)', zh: '收集故事' }
+                            ],
+                            sentence: { target: '週末に読む本を選ぶため、背表紙を眺めるのが好きです。', zh: '我喜歡看著書背標題，挑選一本陪我度過週末的好書。' }
+                        },
+                        3: {
+                            title: '階段 3：個人記憶與生活故事',
+                            vocab: [
+                                { target: '人生の章 (じんせいのしょう)', zh: '人生章節' },
+                                { target: 'かけがえのない時間', zh: '無可取代的時光' },
+                                { target: '知識の海 (ちしきのうみ)', zh: '知識的海洋' },
+                                { target: '深い共感 (きょうかん)', zh: '深刻共鳴' }
+                            ],
+                            sentence: { target: 'この棚のどの本も、私の人生の切実で大切な章を象徴しています。', zh: '書架上的每一本書，都代表著我人生中珍貴精彩的一章。' }
+                        }
+                    }
+                }
+            },
+            en: {
+                pen: {
+                    name: 'Fountain Pen',
+                    zh: '鋼筆',
+                    image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: 'Stage 1: Basics & Appearance',
+                            vocab: [
+                                { target: 'Polished metallic body', zh: '拋光金屬筆身' },
+                                { target: 'Golden nib', zh: '金色筆尖' },
+                                { target: 'Weight balanced', zh: '重量平衡' },
+                                { target: 'Classic design', zh: '經典設計' }
+                            ],
+                            sentence: { target: 'This is a classical fountain pen with a polished black body.', zh: '這是一支具有光滑黑色筆身的經典鋼筆。' }
+                        },
+                        2: {
+                            title: 'Stage 2: Actions & Usage',
+                            vocab: [
+                                { target: 'Fill with ink', zh: '填充墨水' },
+                                { target: 'Glide smoothly across paper', zh: '在紙上滑順書寫' },
+                                { target: 'Write without pressure', zh: '輕盈無壓書寫' },
+                                { target: 'Sign important documents', zh: '簽署重要文件' }
+                            ],
+                            sentence: { target: 'It glides smoothly across paper without requiring heavy pressure.', zh: '它能在紙上順暢滑動，完全不需施加重力。' }
+                        },
+                        3: {
+                            title: 'Stage 3: Personal Story & Reflection',
+                            vocab: [
+                                { target: 'Daily companion', zh: '日常伴侶' },
+                                { target: 'Slow down pace', zh: '放慢腳步' },
+                                { target: 'Appreciate handwriting', zh: '欣賞手寫質感' },
+                                { target: 'Special milestone', zh: '特別的里程碑' }
+                            ],
+                            sentence: { target: 'Using this pen forces me to slow down and enjoy the rhythm of handwriting.', zh: '使用這支鋼筆讓我能慢下腳步，享受手寫文字的節奏。' }
+                        }
+                    }
+                },
+                mug: {
+                    name: 'Coffee Mug',
+                    zh: '馬克杯',
+                    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: 'Stage 1: Basics & Appearance',
+                            vocab: [
+                                { target: 'Ceramic finish', zh: '陶瓷質感' },
+                                { target: 'Sturdy handle', zh: '結實手把' },
+                                { target: 'Heat retention', zh: '保溫性良好' },
+                                { target: 'Cozy grip', zh: '握感舒適' }
+                            ],
+                            sentence: { target: 'This is a heavy ceramic mug that keeps my tea warm.', zh: '這是一個能幫茶保持溫熱的厚實陶瓷馬克杯。' }
+                        },
+                        2: {
+                            title: 'Stage 2: Actions & Usage',
+                            vocab: [
+                                { target: 'Brew fresh coffee', zh: '沖泡新鮮咖啡' },
+                                { target: 'Hold with both hands', zh: '雙手捧著杯身' },
+                                { target: 'Sip slowly', zh: '細細啜飲' },
+                                { target: 'Wash gently', zh: '溫柔手洗' }
+                            ],
+                            sentence: { target: 'I like to hold it with both hands on cold winter mornings.', zh: '在寒冷的冬天早晨，我喜歡用雙手捧著它。' }
+                        },
+                        3: {
+                            title: 'Stage 3: Personal Story & Reflection',
+                            vocab: [
+                                { target: 'Morning routine', zh: '晨間儀式' },
+                                { target: 'Comforting moment', zh: '療癒時刻' },
+                                { target: 'Thoughtful gift', zh: '貼心的禮物' },
+                                { target: 'Peaceful start', zh: '平靜的開端' }
+                            ],
+                            sentence: { target: 'It marks the start of my quiet morning routine before work.', zh: '它代表著我在工作前那段寧靜早晨時光的開始。' }
+                        }
+                    }
+                },
+                watch: {
+                    name: 'Vintage Watch',
+                    zh: '復古手錶',
+                    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: 'Stage 1: Basics & Appearance',
+                            vocab: [
+                                { target: 'Leather strap', zh: '皮革錶帶' },
+                                { target: 'Ivory dial', zh: '象牙白錶盤' },
+                                { target: 'Mechanical movement', zh: '機械機芯' },
+                                { target: 'Timeless style', zh: '永恆風格' }
+                            ],
+                            sentence: { target: 'This is a vintage mechanical wristwatch with a genuine leather strap.', zh: '這是一隻擁有真皮錶帶的復古機械手錶。' }
+                        },
+                        2: {
+                            title: 'Stage 2: Actions & Usage',
+                            vocab: [
+                                { target: 'Wind the crown', zh: '上發條' },
+                                { target: 'Check the schedule', zh: '查看行程' },
+                                { target: 'Wear on wrist', zh: '佩戴在手腕' },
+                                { target: 'Keep accurate time', zh: '保持精準時間' }
+                            ],
+                            sentence: { target: 'I wind the crown manually every morning to keep it running.', zh: '我每天早晨手動旋轉錶冠來維持它的運轉。' }
+                        },
+                        3: {
+                            title: 'Stage 3: Personal Story & Reflection',
+                            vocab: [
+                                { target: 'Precious heirloom', zh: '珍貴傳家寶' },
+                                { target: 'Value every second', zh: '珍惜每分每秒' },
+                                { target: 'Nostalgic memories', zh: '懷舊回憶' },
+                                { target: 'Meaningful gift', zh: '意義深遠的禮物' }
+                            ],
+                            sentence: { target: 'This timepiece carries nostalgic stories and teaches me to value time.', zh: '這座時計承載著懷舊的故事，教導我珍惜時間。' }
+                        }
+                    }
+                },
+                lamp: {
+                    name: 'Desk Lamp',
+                    zh: '檯燈',
+                    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: 'Stage 1: Basics & Appearance',
+                            vocab: [
+                                { target: 'Warm glow bulb', zh: '暖光燈泡' },
+                                { target: 'Adjustable metal arm', zh: '可調金屬燈臂' },
+                                { target: 'Minimalist base', zh: '極簡底座' },
+                                { target: 'Soft illumination', zh: '柔和照明' }
+                            ],
+                            sentence: { target: 'This is a minimal desk lamp that casts a warm, soft light.', zh: '這是一盞能投射出溫暖柔和光線的極簡檯燈。' }
+                        },
+                        2: {
+                            title: 'Stage 2: Actions & Usage',
+                            vocab: [
+                                { target: 'Flip the switch', zh: '開啟開關' },
+                                { target: 'Adjust lighting angle', zh: '調整照明角度' },
+                                { target: 'Illuminate study area', zh: '照亮學習區' },
+                                { target: 'Dim late at night', zh: '深夜調暗' }
+                            ],
+                            sentence: { target: 'I turn it on whenever I read or work late into the night.', zh: '每當我夜深閱讀或工作時，我都會點亮它。' }
+                        },
+                        3: {
+                            title: 'Stage 3: Personal Story & Reflection',
+                            vocab: [
+                                { target: 'Cozy atmosphere', zh: '舒適氛圍' },
+                                { target: 'Quiet concentration', zh: '安靜專注' },
+                                { target: 'Late night companion', zh: '深夜夥伴' },
+                                { target: 'Peaceful corner', zh: '平靜角落' }
+                            ],
+                            sentence: { target: 'Its soft glow creates a comfortable atmosphere for quiet thinking.', zh: '它柔和的光芒為平靜思考創造了舒適的氛圍。' }
+                        }
+                    }
+                },
+                books: {
+                    name: 'Bookshelf',
+                    zh: '書架',
+                    image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: 'Stage 1: Basics & Appearance',
+                            vocab: [
+                                { target: 'Wooden shelves', zh: '木質層架' },
+                                { target: 'Hardcover spines', zh: '精裝書脊' },
+                                { target: 'Classic novels', zh: '經典小說' },
+                                { target: 'Neatly arranged', zh: '整齊排列' }
+                            ],
+                            sentence: { target: 'This is a wooden bookshelf filled with my favorite classic novels.', zh: '這是一個擺滿了我最喜愛的經典小說的木質書架。' }
+                        },
+                        2: {
+                            title: 'Stage 2: Actions & Usage',
+                            vocab: [
+                                { target: 'Browse through titles', zh: '瀏覽書名' },
+                                { target: 'Pull out a book', zh: '抽出一本書' },
+                                { target: 'Organize by genre', zh: '按類別整理' },
+                                { target: 'Collect stories', zh: '收集故事' }
+                            ],
+                            sentence: { target: 'I love browsing through the spines to pick a book for the weekend.', zh: '我喜歡瀏覽書脊，為週末挑選一本書。' }
+                        },
+                        3: {
+                            title: 'Stage 3: Personal Story & Reflection',
+                            vocab: [
+                                { target: 'Meaningful chapter', zh: '有意義的章節' },
+                                { target: 'Literary journey', zh: '文學旅程' },
+                                { target: 'Cherished memories', zh: '珍貴回憶' },
+                                { target: 'Endless inspiration', zh: '無盡啟發' }
+                            ],
+                            sentence: { target: 'Each book on these shelves represents a meaningful chapter in my life.', zh: '這些書架上的每一本書都代表了我人生中意味深長的一章。' }
+                        }
+                    }
+                }
+            },
+            ko: {
+                pen: {
+                    name: '만년필',
+                    zh: '鋼筆',
+                    image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '단계 1: 기초 외래어 및 외관 묘사',
+                            vocab: [
+                                { target: '금속 재질의 바디', zh: '金屬材質筆身' },
+                                { target: '부드러운 펜촉', zh: '滑順筆尖' },
+                                { target: '고급스러운 질감', zh: '高級質感' },
+                                { target: '클래식한 디자인', zh: '經典設計' }
+                            ],
+                            sentence: { target: '이것은 세련된 검은색 바디를 가진 클래식한 만년필입니다.', zh: '這是一支具有質感黑色筆身的經典萬年筆。' }
+                        },
+                        2: {
+                            title: '단계 2: 실용 동사 및 기능 동작',
+                            vocab: [
+                                { target: '잉크를 충전하다', zh: '補充墨水' },
+                                { target: '종이 위에서 부드럽게 써지다', zh: '在紙上滑順書寫' },
+                                { target: '힘주지 않고 쓰다', zh: '不需用力即可書寫' },
+                                { target: '서류에 서명하다', zh: '簽署文件' }
+                            ],
+                            sentence: { target: '종이 위를 부드럽게 미끄러지며 힘을 주지 않고도 쓸 수 있습니다.', zh: '它能在紙上順暢滑動，完全不需施加重力。' }
+                        },
+                        3: {
+                            title: '단계 3: 개인적인 기억과 이야기',
+                            vocab: [
+                                { target: '소중한 일상 동반자', zh: '珍貴的日常夥伴' },
+                                { target: '손글씨의 여유', zh: '手寫文字的悠閒' },
+                                { target: '마음을 차분하게 하다', zh: '讓心情平靜下來' },
+                                { target: '특별한 선물', zh: '特別的禮物' }
+                            ],
+                            sentence: { target: '이 만년필을 사용하면 마음이 차분해지고 손글씨의 감성을 느낄 수 있습니다.', zh: '使用這支萬年筆讓我能沉澱心情，感受手寫文字的溫度。' }
+                        }
+                    }
+                },
+                mug: {
+                    name: '머그컵',
+                    zh: '馬克杯',
+                    image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '단계 1: 기초 외래어 및 외관 묘사',
+                            vocab: [
+                                { target: '도자기 재질', zh: '陶瓷材質' },
+                                { target: '잡기 편한 손잡이', zh: '好握的把手' },
+                                { target: '따뜻한 감성', zh: '溫暖感性' },
+                                { target: '넉넉한 용량', zh: '充裕容量' }
+                            ],
+                            sentence: { target: '이것은 차를 따뜻하게 유지해주는 두툼한 세라믹 머그컵입니다.', zh: '這是一個能幫茶保持溫熱的厚實陶瓷馬克杯。' }
+                        },
+                        2: {
+                            title: '단계 2: 실용 동사 및 기능 동작',
+                            vocab: [
+                                { target: '커피를 따르다', zh: '倒入咖啡' },
+                                { target: '두 손으로 감싸다', zh: '雙手捧著' },
+                                { target: '향을 음미하다', zh: '品嚐香氣' },
+                                { target: '천천히 마시다', zh: '慢慢品飲' }
+                            ],
+                            sentence: { target: '추운 겨울 아침, 이걸 두 손으로 감싸듯이 잡는 것을 좋아합니다.', zh: '在寒冷的冬天早晨，我喜歡用雙手捧著它。' }
+                        },
+                        3: {
+                            title: '단계 3: 개인적인 기억과 이야기',
+                            vocab: [
+                                { target: '아침 루틴', zh: '早晨儀式感' },
+                                { target: '여유로운 시간', zh: '悠閒時光' },
+                                { target: '힐링 순간', zh: '療癒時刻' },
+                                { target: '소소한 행복', zh: '點滴幸福' }
+                            ],
+                            sentence: { target: '이것은 일하기 전, 평온한 아침 일과의 시작을 의미합니다.', zh: '它代表著我在工作前那段寧靜早晨時光的開始。' }
+                        }
+                    }
+                },
+                watch: {
+                    name: '손목시계',
+                    zh: '復古手錶',
+                    image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '단계 1: 기초 외래어 및 외관 묘사',
+                            vocab: [
+                                { target: '가죽 스트랩', zh: '皮革錶帶' },
+                                { target: '클래식 다이얼', zh: '經典錶盤' },
+                                { target: '기계식 무브먼트', zh: '機械機芯' },
+                                { target: '빈티지 감성', zh: '復古感性' }
+                            ],
+                            sentence: { target: '이것은 가죽 스트랩과 깔끔한 다이얼을 가진 빈티지 손목시계입니다.', zh: '這是一支擁有皮革錶帶與簡潔錶盤的復古手錶。' }
+                        },
+                        2: {
+                            title: '단계 2: 실용 동사 및 기능 동작',
+                            vocab: [
+                                { target: '태엽을 감다', zh: '上發條' },
+                                { target: '시간을 확인하다', zh: '確認時間' },
+                                { target: '손목에 차다', zh: '戴在手腕上' },
+                                { target: '일정을 관리하다', zh: '管理行程' }
+                            ],
+                            sentence: { target: '매일 아침 태엽을 감아 시계를 작동시키며 하루를 시작합니다.', zh: '我每天早晨上緊發條讓手錶運轉，以此展開新的一天。' }
+                        },
+                        3: {
+                            title: '단계 3: 개인적인 기억과 이야기',
+                            vocab: [
+                                { target: '소중한 시간', zh: '寶貴的時間' },
+                                { target: '추억이 담긴 물건', zh: '充滿回憶的物件' },
+                                { target: '시간의 가치', zh: '時間的價值' },
+                                { target: '의미 있는 선물', zh: '具意義的禮物' }
+                            ],
+                            sentence: { target: '이 시계는 지나가는 시간의 소중함을 조용히 일깨워줍니다.', zh: '這座手錶靜靜地喚醒了我對逝去時間寶貴性的認知。' }
+                        }
+                    }
+                },
+                lamp: {
+                    name: '데스크 스탠드',
+                    zh: '檯燈',
+                    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '단계 1: 기초 외래어 및 외관 묘사',
+                            vocab: [
+                                { target: '따뜻한 조명', zh: '溫暖照明' },
+                                { target: '각도 조절 암', zh: '可調角度燈臂' },
+                                { target: '미니멀한 디자인', zh: '極簡設計' },
+                                { target: '부드러운 빛', zh: '柔和的光線' }
+                            ],
+                            sentence: { target: '이것은 부드럽고 따뜻한 빛을 비추는 미니멀한 데스크 스탠드입니다.', zh: '這是一盞散發著柔和溫暖光芒的極簡桌面檯燈。' }
+                        },
+                        2: {
+                            title: '단계 2: 실용 동사 및 기능 동작',
+                            vocab: [
+                                { target: '스위치를 켜다', zh: '打開開關' },
+                                { target: '조명 각도를 조절하다', zh: '調節照明角度' },
+                                { target: '책상을 밝히다', zh: '照亮書桌' },
+                                { target: '빛을 줄이다', zh: '調低亮度' }
+                            ],
+                            sentence: { target: '밤늦게 책을 읽거나 작업을 할 때 이 스탠드를 켭니다.', zh: '每當深夜讀書或工作時，我都會打開這盞檯燈。' }
+                        },
+                        3: {
+                            title: '단계 3: 개인적인 기억과 이야기',
+                            vocab: [
+                                { target: '아늑한 분위기', zh: '溫馨氛圍' },
+                                { target: '고요한 집중', zh: '寧靜專注' },
+                                { target: '나만의 공간', zh: '屬於自己的空間' },
+                                { target: '편안한 힐링', zh: '舒適療癒' }
+                            ],
+                            sentence: { target: '은은한 불빛이 고요하게 생각에 잠길 수 있는 아늑한 분위기를 만들어줍니다.', zh: '微弱的燈光營造出沉思時的舒適溫馨氛圍。' }
+                        }
+                    }
+                },
+                books: {
+                    name: '책장',
+                    zh: '書架',
+                    image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80',
+                    stages: {
+                        1: {
+                            title: '단계 1: 기초 외래어 및 외관 묘사',
+                            vocab: [
+                                { target: '원목 선반', zh: '實木層架' },
+                                { target: '책등과 제목', zh: '書脊與書名' },
+                                { target: '고전 소설', zh: '古典小說' },
+                                { target: '정리된 책들', zh: '整齊排列的書籍' }
+                            ],
+                            sentence: { target: '이것은 좋아하는 고전 소설들로 가득 찬 원목 책장입니다.', zh: '這是一個擺滿了我喜愛古典小說的實木書架。' }
+                        },
+                        2: {
+                            title: '단계 2: 실용 동사 및 기능 동작',
+                            vocab: [
+                                { target: '책 제목을 훑어보다', zh: '瀏覽書名' },
+                                { target: '책을 꺼내 읽다', zh: '抽出一本書閱讀' },
+                                { target: '장르별로 정리하다', zh: '按文類整理' },
+                                { target: '이야기를 수집하다', zh: '收集故事' }
+                            ],
+                            sentence: { target: '주말에 읽을 책을 고르기 위해 책등을 훑어보는 것을 좋아합니다.', zh: '我喜歡瀏覽書脊來挑選週末要讀的書。' }
+                        },
+                        3: {
+                            title: '단계 3: 개인적인 기억과 이야기',
+                            vocab: [
+                                { target: '인생의 한 챕터', zh: '人生的一個章節' },
+                                { target: '소중한 문학 여행', zh: '珍貴的文學之旅' },
+                                { target: '깊은 영감', zh: '深刻啟發' },
+                                { target: '마음의 양식', zh: '心靈糧食' }
+                            ],
+                            sentence: { target: '이 책장에 꽂힌 책들은 내 인생의 의미 있는 순간들을 담고 있습니다.', zh: '這些書架上的書記錄了我人生中意義非凡的時刻。' }
+                        }
+                    }
+                }
+            }
+        };
+
+        // State Management
         let currentLang = 'ja';
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v3";
+        let currentPresetKey = 'pen';
+        let currentStage = 1;
 
-        let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-            { role: 'ai', text: '你好！隨手拍張照或輸入想學的物品，我們一起探討它的外語與生活脈絡！' }
-        ];
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPreset('pen');
+        });
 
-        let selectedImageDataUrl = null;
-
-        window.addEventListener('DOMContentLoaded', renderHistory);
-
-        function setLanguage(lang, btnElement) {
+        function changeTargetLanguage(lang) {
             currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(b => {
-                b.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition";
-            });
-            btnElement.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition";
-            
-            const langNames = { ja: '日語', en: '英語', ko: '韓語' };
-            appendMessageToDOM(`已切換學習語言：${langNames[lang]}`, 'ai');
+            loadPreset(currentPresetKey);
+            showToast(`已切換學習語言：${lang === 'ja' ? '日語' : lang === 'en' ? '英語' : '韓語'}`, 'fa-globe');
         }
 
+        function loadPreset(key) {
+            currentPresetKey = key;
+            const langData = DATA[currentLang] || DATA.ja;
+            const item = langData[key] || langData.pen;
+
+            document.getElementById('mainImage').src = item.image;
+            document.getElementById('mainImage').classList.remove('hidden');
+            document.getElementById('imagePlaceholder').classList.add('hidden');
+            document.getElementById('objectSummaryCard').classList.remove('hidden');
+
+            document.getElementById('targetObjectName').textContent = item.name;
+            document.getElementById('targetObjectZh').textContent = `中文：${item.zh}`;
+
+            renderStageContent();
+        }
+
+        function renderStageContent() {
+            const langData = DATA[currentLang] || DATA.ja;
+            const item = langData[currentPresetKey] || langData.pen;
+            const stage = item.stages[currentStage];
+
+            document.getElementById('stageTitle').textContent = stage.title;
+            document.getElementById('currentStageNum').textContent = currentStage;
+
+            const vocabContainer = document.getElementById('vocabContainer');
+            vocabContainer.innerHTML = stage.vocab.map(v => `
+                <div onclick="playGoogleTTS('${v.target.split('(')[0].trim().replace(/'/g, "\\'")}')" class="bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-400 p-3.5 rounded-2xl cursor-pointer transition flex items-center justify-between group">
+                    <div>
+                        <div class="font-extrabold text-slate-900 text-sm group-hover:text-amber-900">${v.target}</div>
+                        <div class="text-xs text-slate-500 mt-0.5">${v.zh}</div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-white group-hover:bg-amber-500 group-hover:text-white text-slate-600 flex items-center justify-center transition shadow-sm">
+                        <i class="fa-solid fa-volume-high text-xs"></i>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('mainSentenceTarget').textContent = stage.sentence.target;
+            document.getElementById('mainSentenceZh').textContent = `中文對照：${stage.sentence.zh}`;
+        }
+
+        function switchStage(num) {
+            currentStage = num;
+            [1, 2, 3].forEach(i => {
+                const btn = document.getElementById(`stageBtn${i}`);
+                if (i === num) {
+                    btn.className = "py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm border border-slate-200/80 font-bold";
+                    btn.querySelector('span').className = "w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-bold";
+                } else {
+                    btn.className = "py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900";
+                    btn.querySelector('span').className = "w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center";
+                }
+            });
+            renderStageContent();
+        }
+
+        // 🌟 串流原音播放引擎（自動過濾括號註音，確保發音100%純正）
+        function playGoogleTTS(text) {
+            const cleanText = text.split('(')[0].trim();
+            const langCodeMap = { ja: 'ja', en: 'en', ko: 'ko' };
+            const tl = langCodeMap[currentLang] || 'ja';
+            const url = `https://translate.google.com.tw/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=${tl}&client=tw-ob`;
+            
+            const audio = new Audio(url);
+            audio.play().catch(err => {
+                showToast('播放音訊失敗，請檢查網路連線', 'fa-triangle-exclamation');
+            });
+            showToast(`正在播放原音：${cleanText}`, 'fa-volume-high');
+        }
+
+        function speakTargetName() {
+            const langData = DATA[currentLang] || DATA.ja;
+            const item = langData[currentPresetKey] || langData.pen;
+            playGoogleTTS(item.name);
+        }
+
+        function speakMainSentence() {
+            const langData = DATA[currentLang] || DATA.ja;
+            const item = langData[currentPresetKey] || langData.pen;
+            const stage = item.stages[currentStage];
+            playGoogleTTS(stage.sentence.target);
+        }
+
+        // Image Handling
         function triggerCamera() { document.getElementById('cameraInput').click(); }
         function triggerUpload() { document.getElementById('imageInput').click(); }
 
-        function handleImageSelected(e) {
+        function handleImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(evt) {
-                selectedImageDataUrl = evt.target.result;
-                document.getElementById('previewImage').src = selectedImageDataUrl;
-                document.getElementById('previewContainer').classList.remove('hidden');
-                document.getElementById('objectNameInput').focus();
+            reader.onload = (evt) => {
+                document.getElementById('mainImage').src = evt.target.result;
+                document.getElementById('mainImage').classList.remove('hidden');
+                document.getElementById('imagePlaceholder').classList.add('hidden');
+                document.getElementById('objectSummaryCard').classList.remove('hidden');
+                showToast('照片載入成功！已套用外語學習指南', 'fa-circle-check');
             };
             reader.readAsDataURL(file);
         }
 
-        function removeImage() {
-            selectedImageDataUrl = null;
-            document.getElementById('previewContainer').classList.add('hidden');
-            document.getElementById('objectNameInput').value = "";
-            document.getElementById('imageInput').value = "";
-            document.getElementById('cameraInput').value = "";
+        // Recording Studio
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let timerInterval = null;
+        let secondsLeft = 180;
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        document.getElementById('audioPlayback').src = URL.createObjectURL(blob);
+                        document.getElementById('audioPlaybackContainer').classList.remove('hidden');
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    startTimer();
+                    document.getElementById('recordBtn').className = "flex-1 py-3 bg-red-600 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 animate-pulse";
+                    document.getElementById('recordBtnText').textContent = "停止錄音";
+                    showToast('錄音中...請大聲朗讀外語範例句型', 'fa-microphone');
+                } catch (err) {
+                    showToast('無法存取麥克風權限', 'fa-triangle-exclamation');
+                }
+            } else {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(t => t.stop());
+                isRecording = false;
+                clearInterval(timerInterval);
+                document.getElementById('recordBtn').className = "flex-1 py-3 bg-amber-500 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2";
+                document.getElementById('recordBtnText').textContent = "開始錄音口說練習";
+                showToast('錄音完成！', 'fa-circle-check');
+            }
         }
 
-        function toggleVoiceInput() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('您的手機瀏覽器不支援語音辨識');
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+                    const s = (secondsLeft % 60).toString().padStart(2, '0');
+                    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+                } else {
+                    toggleRecording();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            if (isRecording) toggleRecording();
+            secondsLeft = 180;
+            document.getElementById('timerDisplay').textContent = "03:00";
+            document.getElementById('audioPlaybackContainer').classList.add('hidden');
+        }
+
+        // Notebook
+        function switchTab(tab) {
+            const studio = document.getElementById('studioTab');
+            const notebook = document.getElementById('notebookTab');
+            const btnS = document.getElementById('tabBtnStudio');
+            const btnN = document.getElementById('tabBtnNotebook');
+            if (tab === 'studio') {
+                studio.classList.remove('hidden');
+                notebook.classList.add('hidden');
+                btnS.className = "px-3.5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200";
+                btnN.className = "px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-2";
+            } else {
+                studio.classList.add('hidden');
+                notebook.classList.remove('hidden');
+                btnN.className = "px-3.5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200";
+                btnS.className = "px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-2";
+                renderNotebook();
+            }
+        }
+
+        function saveToNotebook() {
+            const langData = DATA[currentLang] || DATA.ja;
+            const item = langData[currentPresetKey] || langData.pen;
+            const stage = item.stages[currentStage];
+            const list = JSON.parse(localStorage.getItem('my_vocab') || '[]');
+            
+            list.unshift({
+                lang: currentLang.toUpperCase(),
+                name: item.name,
+                sentence: stage.sentence.target,
+                zh: stage.sentence.zh,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('my_vocab', JSON.stringify(list));
+            updateBadge();
+            showToast('已成功收藏至外語筆記！', 'fa-bookmark');
+        }
+
+        function renderNotebook() {
+            const list = JSON.parse(localStorage.getItem('my_vocab') || '[]');
+            const grid = document.getElementById('notebookGrid');
+            const empty = document.getElementById('notebookEmpty');
+            updateBadge();
+
+            if (list.length === 0) {
+                grid.classList.add('hidden');
+                empty.classList.remove('hidden');
                 return;
             }
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new SpeechRecognition();
-            recognition.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
-            
-            const micBtn = document.getElementById('micBtn');
-            micBtn.className = "h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center text-lg animate-pulse shadow-sm";
+            empty.classList.add('hidden');
+            grid.classList.remove('hidden');
 
-            recognition.onresult = (event) => {
-                document.getElementById('userInput').value = event.results[0][0].transcript;
-                micBtn.className = "h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95";
-                sendMessage();
-            };
-            recognition.onerror = recognition.onend = () => {
-                micBtn.className = "h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95";
-            };
-            recognition.start();
+            grid.innerHTML = list.map((item, idx) => `
+                <div class="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm space-y-3 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-0.5 rounded-md">${item.lang}</span>
+                            <span class="text-[11px] text-slate-400">${item.date}</span>
+                        </div>
+                        <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
+                        <p class="text-sm font-bold text-slate-800 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-100">"${item.sentence}"</p>
+                        <p class="text-xs text-slate-500 mt-1">中文對照：${item.zh}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <button onclick="playGoogleTTS('${item.sentence.replace(/'/g, "\\'")}')" class="text-xs text-amber-600 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-volume-high"></i> 播放發音
+                        </button>
+                        <button onclick="deleteNote(${idx})" class="text-xs text-red-500 hover:text-red-700">刪除</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function playTTS(text) {
-            const url = `https://translate.google.com.tw/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${currentLang}&client=tw-ob`;
-            new Audio(url).play().catch(() => {});
+        function deleteNote(idx) {
+            const list = JSON.parse(localStorage.getItem('my_vocab') || '[]');
+            list.splice(idx, 1);
+            localStorage.setItem('my_vocab', JSON.stringify(list));
+            renderNotebook();
+            showToast('已刪除筆記', 'fa-trash');
         }
 
-        async function sendMessage() {
-            const inputField = document.getElementById("userInput");
-            let text = inputField.value.trim();
-            const objName = document.getElementById("objectNameInput").value.trim();
-
-            if (!text && !selectedImageDataUrl) return;
-
-            if (selectedImageDataUrl) {
-                const nameDesc = objName ? `[這是一張「${objName}」的照片]` : "[這是一張實物照片]";
-                text = `${nameDesc} ${text ? text : "請教我如何用目標語言表達這個物品，並深入解說它的來龍去脈與生活應用。"}`;
-            }
-
-            chatHistory.push({ role: 'user', text: text });
-            saveAndRender();
-            inputField.value = "";
-            removeImage();
-
-            const aiMsgDiv = appendMessageToDOM("（AI 正在整理深度學習脈絡...）", 'ai');
-
-            try {
-                const systemPrompt = `你是一位專業且博學的生活外語導師。當使用者提供物品名稱或照片時，請以目標語言（目前設定為 ${currentLang === 'ja' ? '日語' : currentLang === 'ko' ? '韓語' : '英語'}）提供標準說法與羅馬拼音，並用流暢親切的中文深入淺出地解說：1. 核心單字與句型；2. 來龍去脈與文化背景；3. 現代應用與未來變化；4. 延伸討論議題。`;
-
-                const recentHistory = chatHistory.slice(-10).map(m => ({
-                    role: m.role === 'ai' ? 'model' : 'user',
-                    parts: [{ text: m.text }]
-                }));
-                recentHistory.unshift({ role: 'user', parts: [{ text: systemPrompt }] });
-
-                const response = await fetch(GAS_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ contents: recentHistory })
-                });
-
-                const data = await response.json();
-                if (data.status === 'success') {
-                    aiMsgDiv.textContent = data.reply;
-                    chatHistory.push({ role: 'ai', text: data.reply });
-                    addAudioButtonsToMessage(aiMsgDiv, data.reply);
-                } else {
-                    throw new Error(data.message || "回應失敗");
-                }
-            } catch (err) {
-                const errMsg = "連線發生錯誤：" + err.message;
-                aiMsgDiv.textContent = errMsg;
-                chatHistory.push({ role: 'ai', text: errMsg });
-            } finally {
-                saveStorage();
+        function clearNotebook() {
+            if (confirm('確定清空所有外語筆記？')) {
+                localStorage.removeItem('my_vocab');
+                renderNotebook();
+                showToast('筆記已清空', 'fa-check');
             }
         }
 
-        function appendMessageToDOM(text, sender) {
-            const chatBox = document.getElementById("chatBox");
-            const div = document.createElement("div");
-            div.className = `p-3 rounded-2xl text-xs sm:text-sm max-w-[90%] leading-relaxed ${sender === 'user' ? 'bg-[#00a600] text-white self-end rounded-br-xs' : 'bg-white border border-slate-200 text-slate-800 self-start rounded-bl-xs shadow-2xs'}`;
-            div.textContent = text;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return div;
-        }
-
-        function addAudioButtonsToMessage(divElement, replyText) {
-            const btnContainer = document.createElement("div");
-            btnContainer.className = "mt-2 pt-2 border-t border-slate-100 flex items-center justify-between";
-            
-            const speakBtn = document.createElement("button");
-            speakBtn.className = "text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg flex items-center gap-1 active:scale-95 transition";
-            speakBtn.innerHTML = `<i class="fa-solid fa-volume-high"></i> 播放發音`;
-            speakBtn.onclick = () => playTTS(replyText);
-            
-            btnContainer.appendChild(speakBtn);
-            divElement.appendChild(btnContainer);
-            
-            const chatBox = document.getElementById("chatBox");
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function renderHistory() {
-            const chatBox = document.getElementById("chatBox");
-            chatBox.innerHTML = "";
-            chatHistory.forEach(m => appendMessageToDOM(m.text, m.role));
-        }
-
-        function saveStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)); }
-        function saveAndRender() { saveStorage(); renderHistory(); }
-
-        function clearChat() {
-            if (confirm("重新開始新的學習對話嗎？")) {
-                localStorage.removeItem(STORAGE_KEY);
-                chatHistory = [{ role: 'ai', text: '對話已重置！隨時拍張照或輸入想學的內容，我們開始吧。' }];
-                renderHistory();
+        function updateBadge() {
+            const count = JSON.parse(localStorage.getItem('my_vocab') || '[]').length;
+            const badge = document.getElementById('notebookBadge');
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
             }
         }
 
-        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+        function showToast(msg, icon) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            t.querySelector('i').className = `fa-solid ${icon} text-amber-400`;
+            t.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
     </script>
 </body>
 </html>

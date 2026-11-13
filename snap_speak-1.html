@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI學外語 | myezlife.com</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+        }
+        .green-banner {
+            background-color: #00a600;
+            border-radius: 1.5rem;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 166, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="p-3 max-w-md mx-auto flex flex-col min-h-screen">
+
+    <!-- 頂部精簡綠色橫幅：返回首頁按鈕與語言切換 -->
+    <header class="green-banner p-3.5 flex items-center justify-between gap-3 mb-3 shrink-0">
+        <a href="https://myezlife.com" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 backdrop-blur">
+            <i class="fa-solid fa-house"></i> 返回首頁
+        </a>
+        <div class="text-center font-black tracking-wider text-sm">
+            🌿 AI 學外語
+        </div>
+        <div class="flex bg-black/20 backdrop-blur rounded-xl p-1 gap-1 shrink-0">
+            <button onclick="setLanguage('ja', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition">日</button>
+            <button onclick="setLanguage('en', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">英</button>
+            <button onclick="setLanguage('ko', this)" class="lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition">韓</button>
+        </div>
+    </header>
+
+    <!-- 主要互動卡片 -->
+    <main class="flex-1 flex flex-col bg-white border border-slate-200 rounded-3xl p-4 shadow-sm space-y-3 relative overflow-hidden">
+        
+        <!-- 頂端功能圖形列 (純圖形按鈕) -->
+        <div class="grid grid-cols-4 gap-2 pb-3 border-b border-slate-100 shrink-0">
+            <button onclick="triggerCamera()" class="h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95" title="拍照辨識">
+                <i class="fa-solid fa-camera"></i>
+            </button>
+            <button onclick="triggerUpload()" class="h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95" title="上傳照片">
+                <i class="fa-solid fa-image"></i>
+            </button>
+            <button onclick="toggleVoiceInput()" id="micBtn" class="h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95" title="語音輸入">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button onclick="clearChat()" class="h-12 rounded-2xl bg-slate-100 hover:bg-red-50 text-slate-700 hover:text-red-600 flex items-center justify-center text-lg transition active:scale-95" title="重新開始">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+        </div>
+
+        <!-- 隱藏的拍照與上傳 Input -->
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageSelected(event)">
+        <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageSelected(event)">
+
+        <!-- 圖片預覽區 -->
+        <div id="previewContainer" class="hidden relative h-36 rounded-2xl overflow-hidden bg-slate-900 shrink-0">
+            <img id="previewImage" src="" alt="Preview" class="w-full h-full object-cover">
+            <button onclick="removeImage()" class="absolute top-2 right-2 w-7 h-7 bg-black/60 text-white rounded-full flex items-center justify-center text-xs">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- 對話訊息顯示區 (支援 3 階段學習解析與發音) -->
+        <div id="chatBox" class="flex-1 overflow-y-auto p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-3 min-h-[260px]">
+            <!-- 動態內容 -->
+        </div>
+
+        <!-- 底部訊息輸入區 -->
+        <div class="flex gap-2 shrink-0 pt-1">
+            <input type="text" id="userInput" placeholder="輸入想學的物品或直接對話..." class="flex-1 bg-slate-50 border border-slate-200 px-3.5 py-3 rounded-xl text-sm outline-none focus:border-[#00a600] transition" onkeypress="handleKeyPress(event)">
+            <button id="sendBtn" onclick="sendMessage()" class="w-12 h-12 rounded-xl bg-[#00a600] hover:bg-[#008f00] text-white flex items-center justify-center transition shrink-0 shadow-sm active:scale-95">
+                <i class="fa-solid fa-paper-plane text-sm"></i>
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        let currentLang = 'ja';
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
+        const STORAGE_KEY = "mobile_ai_lang_history_v4";
+
+        let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+            { role: 'ai', text: '你好！請拍照或傳圖片，AI 會自動辨識物品並為你整理 3 階段外語學習指南！' }
+        ];
+
+        let selectedImageDataUrl = null;
+
+        window.addEventListener('DOMContentLoaded', renderHistory);
+
+        function setLanguage(lang, btnElement) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => {
+                b.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold text-white transition";
+            });
+            btnElement.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition";
+            
+            const langNames = { ja: '日語', en: '英語', ko: '韓語' };
+            appendMessageToDOM(`已切換學習語言：${langNames[lang]}`, 'ai');
+        }
+
+        function triggerCamera() { document.getElementById('cameraInput').click(); }
+        function triggerUpload() { document.getElementById('imageInput').click(); }
+
+        function handleImageSelected(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                selectedImageDataUrl = evt.target.result;
+                document.getElementById('previewImage').src = selectedImageDataUrl;
+                document.getElementById('previewContainer').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage() {
+            selectedImageDataUrl = null;
+            document.getElementById('previewContainer').classList.add('hidden');
+            document.getElementById('imageInput').value = "";
+            document.getElementById('cameraInput').value = "";
+        }
+
+        function toggleVoiceInput() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('您的手機瀏覽器不支援語音辨識');
+                return;
+            }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
+            
+            const micBtn = document.getElementById('micBtn');
+            micBtn.className = "h-12 rounded-2xl bg-red-500 text-white flex items-center justify-center text-lg animate-pulse shadow-sm";
+
+            recognition.onresult = (event) => {
+                document.getElementById('userInput').value = event.results[0][0].transcript;
+                micBtn.className = "h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95";
+                sendMessage();
+            };
+            recognition.onerror = recognition.onend = () => {
+                micBtn.className = "h-12 rounded-2xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-[#00a600] flex items-center justify-center text-lg transition active:scale-95";
+            };
+            recognition.start();
+        }
+
+        function playTTS(text) {
+            // 過濾羅馬拼音或中文說明，只播放純外語
+            const cleanText = text.split('\n')[0].replace(/[\u4e00-\u9fa5]/g, '').replace(/\(.*\)/g, '').trim();
+            const targetText = cleanText || text;
+            const url = `https://translate.google.com.tw/translate_tts?ie=UTF-8&q=${encodeURIComponent(targetText)}&tl=${currentLang}&client=tw-ob`;
+            new Audio(url).play().catch(() => {});
+        }
+
+        async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            let text = inputField.value.trim();
+
+            if (!text && !selectedImageDataUrl) return;
+
+            let requestParts = [];
+
+            // 正確處理圖文多模態資料傳遞
+            if (selectedImageDataUrl) {
+                const base64Data = selectedImageDataUrl.split(',')[1];
+                const mimeType = selectedImageDataUrl.split(';')[0].split(':')[1];
+                requestParts.push({ inlineData: { mimeType: mimeType, data: base64Data } });
+                requestParts.push({ text: text ? text : "請辨識圖中主體物品，並依照 3 階段學習法解說。" });
+            } else {
+                requestParts.push({ text: text });
+            }
+
+            chatHistory.push({ role: 'user', text: text || "[上傳了物品照片]" });
+            saveAndRender();
+            inputField.value = "";
+            const tempImg = selectedImageDataUrl;
+            removeImage();
+
+            const aiMsgDiv = appendMessageToDOM("（AI 正在進行視覺辨識與 3 階段分析...）", 'ai');
+
+            try {
+                const targetLangName = currentLang === 'ja' ? '日語' : currentLang === 'ko' ? '韓語' : '英語';
+                
+                // 強制 AI 依據舊版經典的「3 階段」結構回應
+                const systemPrompt = `你是一位生活外語導師。請精準辨識圖片或文字中的物品，並用目標語言（${targetLangName}）依照以下 3 階段格式進行結構化分析：
+
+【物品名稱】：外語名稱 (假名/羅馬拼音) - 中文翻譯
+
+📌 階段一：外觀描述
+- 提供 2~3 個描述顏色、材質、形狀的單字或短語 (附中文)
+- 示範例句 (附中文)
+
+📌 階段二：功能與動作
+- 提供 2~3 個常見用法或動詞短語 (附中文)
+- 示範例句 (附中文)
+
+📌 階段三：生活脈絡與故事
+- 簡述其文化背景、延伸意義或與生活的連結
+- 引導提問，鼓勵繼續對話`;
+
+                // 準備發送給 GAS 的內容
+                const contentsPayload = [
+                    { role: 'user', parts: [{ text: systemPrompt }] },
+                    { role: 'user', parts: requestParts }
+                ];
+
+                const response = await fetch(GAS_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ contents: contentsPayload })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    aiMsgDiv.textContent = data.reply;
+                    chatHistory.push({ role: 'ai', text: data.reply });
+                    addAudioButtonsToMessage(aiMsgDiv, data.reply);
+                } else {
+                    throw new Error(data.message || "回應失敗");
+                }
+            } catch (err) {
+                const errMsg = "辨識失敗：" + err.message;
+                aiMsgDiv.textContent = errMsg;
+                chatHistory.push({ role: 'ai', text: errMsg });
+            } finally {
+                saveStorage();
+            }
+        }
+
+        function appendMessageToDOM(text, sender) {
+            const chatBox = document.getElementById("chatBox");
+            const div = document.createElement("div");
+            div.className = `p-3 rounded-2xl text-xs sm:text-sm max-w-[92%] leading-relaxed whitespace-pre-wrap ${sender === 'user' ? 'bg-[#00a600] text-white self-end rounded-br-xs' : 'bg-white border border-slate-200 text-slate-800 self-start rounded-bl-xs shadow-2xs'}`;
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return div;
+        }
+
+        function addAudioButtonsToMessage(divElement, replyText) {
+            const btnContainer = document.createElement("div");
+            btnContainer.className = "mt-2 pt-2 border-t border-slate-100 flex items-center justify-between";
+            
+            const speakBtn = document.createElement("button");
+            speakBtn.className = "text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg flex items-center gap-1 active:scale-95 transition";
+            speakBtn.innerHTML = `<i class="fa-solid fa-volume-high"></i> 播放發音`;
+            speakBtn.onclick = () => playTTS(replyText);
+            
+            btnContainer.appendChild(speakBtn);
+            divElement.appendChild(btnContainer);
+            
+            const chatBox = document.getElementById("chatBox");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function renderHistory() {
+            const chatBox = document.getElementById("chatBox");
+            chatBox.innerHTML = "";
+            chatHistory.forEach(m => appendMessageToDOM(m.text, m.role));
+        }
+
+        function saveStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory)); }
+        function saveAndRender() { saveStorage(); renderHistory(); }
+
+        function clearChat() {
+            if (confirm("重新開始新的學習對話嗎？")) {
+                localStorage.removeItem(STORAGE_KEY);
+                chatHistory = [{ role: 'ai', text: '對話已重置！請拍照或傳照片開始 3 階段學習。' }];
+                renderHistory();
+            }
+        }
+
+        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+    </script>
+</body>
+</html>
