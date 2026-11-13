@@ -24,7 +24,7 @@
 </head>
 <body class="p-3 max-w-md mx-auto flex flex-col min-h-screen">
 
-    <!-- 頂部精簡綠色橫幅：返回首頁按鈕與全域語言切換 -->
+    <!-- 頂部精簡綠色橫幅 -->
     <header class="green-banner p-3.5 flex items-center justify-between gap-3 mb-3 shrink-0">
         <a href="https://myezlife.com" class="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 backdrop-blur">
             <i class="fa-solid fa-house"></i> 返回首頁
@@ -91,7 +91,7 @@
     <script>
         let currentLang = 'ja';
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v18";
+        const STORAGE_KEY = "mobile_ai_lang_history_v19";
 
         let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
             { role: 'ai', lang: 'ja', step: 1, topic: '歡迎', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我們將以【分階段方式】輕鬆學外語！' }
@@ -101,8 +101,7 @@
 
         window.addEventListener('DOMContentLoaded', renderHistory);
 
-        // 切換全域語言
-        async function setGlobalLanguage(lang, btnElement) {
+        function setGlobalLanguage(lang, btnElement) {
             if (currentLang === lang) return;
             currentLang = lang;
             
@@ -112,11 +111,10 @@
             btnElement.className = "lang-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-[#00a600] shadow-xs transition";
             
             const langNames = { ja: '日語', en: '英語', ko: '韓語' };
-            
             const lastActive = chatHistory.slice().reverse().find(m => m.topic && m.topic !== '歡迎');
             if (lastActive) {
                 appendMessageToDOM({ role: 'ai', lang: currentLang, text: `已切換至 ${langNames[lang]}，正在為您轉換「${lastActive.topic}」的第 ${lastActive.step} 階段...` });
-                await requestAIStage(lastActive.topic, lastActive.step);
+                requestAIStage(lastActive.topic, lastActive.step);
             } else {
                 appendMessageToDOM({ role: 'ai', lang: currentLang, text: `已切換學習語言：${langNames[lang]}` });
             }
@@ -167,7 +165,6 @@
             recognition.start();
         }
 
-        // 標準真人發音（智慧處理日文漢字與括號，確保 100% 順暢有聲音）
         function speakSentence(phrase, btnElement) {
             let cleanText = phrase;
             const match = phrase.match(/\(([^)]+)\)/) || phrase.match(/（([^）]+）/);
@@ -196,7 +193,7 @@
             audio.load();
         }
 
-        async function sendMessage() {
+        function sendMessage() {
             const inputField = document.getElementById("userInput");
             const inputText = inputField.value.trim();
 
@@ -210,7 +207,7 @@
             inputField.value = "";
             removeImage();
 
-            await requestAIStage(userTopic, 1);
+            requestAIStage(userTopic, 1);
         }
 
         async function requestAIStage(topic, stageNum) {
@@ -218,20 +215,11 @@
             
             let stageInstruction = "";
             if (stageNum === 1) {
-                stageInstruction = `請針對主題「${topic}」提供【階段一：核心說法與外語單字】。
-格式要求：
-1. 給出最核心的單字或短句，必須用反引號包起來（例如 \`お仕事 (おしごと)\`）。
-2. 附上中文翻譯與短單字解析。精簡扼要，讓使用者能快速秒回掌握。`;
+                stageInstruction = `請針對主題「${topic}」提供【階段一：核心說法與外語單字】。格式要求：1. 給出最核心的單字或短句，用反引號包起來（例如 \`お仕事 (おしごと)\`）。2. 附上中文翻譯與短單字解析，精簡扼要。`;
             } else if (stageNum === 2) {
-                stageInstruction = `請針對主題「${topic}」繼續提供【階段二：功能與實用句型】。
-格式要求：
-1. 提供實用的對話句型，必須用反引號包起來（例如 \`明日もお仕事ですか (あしたもおしごとですか)\`）。
-2. 附上中文翻譯與用法說明。`;
+                stageInstruction = `請針對主題「${topic}」繼續提供【階段二：功能與實用句型】。格式要求：1. 提供實用對話句型，用反引號包起來（例如 \`明日もお仕事ですか (あしたもおしごとですか)\`）。2. 附上中文翻譯與用法。`;
             } else if (stageNum === 3) {
-                stageInstruction = `請針對主題「${topic}」提供【階段三：生活脈絡與文化故事】。
-格式要求：
-1. 簡述其文化背景或日常生活應用情境。
-2. 如有出現關鍵短句也請用反引號包起來（例如 \`お疲れ様です (おつかれさまです)\`）。`;
+                stageInstruction = `請針對主題「${topic}」提供【階段三：生活脈絡與文化故事】。格式要求：1. 簡述文化背景或情境。2. 關鍵短句用反引號包起來。`;
             }
 
             const systemPrompt = `你是一位專業親切的生活外語導師（目前目標學習語言：${targetLangName}）。請嚴格遵守分階段教學，每次只回答一個階段。`;
@@ -246,7 +234,6 @@
             saveAndRender();
 
             try {
-                // 改用最穩定的字串傳遞方式，避免 CORS 預檢攔截
                 const response = await fetch(GAS_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -264,9 +251,11 @@
                     };
                     saveAndRender();
                 } else {
-                    throw new Error(data.message || "回應失敗");
+                    throw new Error(data.message || "後端回傳錯誤");
                 }
             } catch (err) {
+                // 如果發生錯誤，直接在畫面上跳出警告，方便我們看看到底哪裡出錯
+                alert("通訊發生錯誤: " + err.message);
                 chatHistory[loadingIndex] = { role: 'ai', lang: currentLang, step: stageNum, topic: topic, text: "載入失敗：" + err.message };
                 saveAndRender();
             }
