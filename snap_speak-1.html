@@ -88,15 +88,28 @@
     <script>
         let currentLang = 'ja';
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v9";
+        const STORAGE_KEY = "mobile_ai_lang_history_v10";
 
         let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
             { role: 'ai', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我會隨時為你解答並提供外語教學！' }
         ];
 
         let selectedImageDataUrl = null;
+        let voices = [];
 
-        window.addEventListener('DOMContentLoaded', renderHistory);
+        // 預先載入瀏覽器支援的語音清單
+        function loadVoices() {
+            if (!('speechSynthesis' in window)) return;
+            voices = window.speechSynthesis.getVoices();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadVoices();
+            if (window.speechSynthesis && onvoiceschanged in window.speechSynthesis) {
+                window.speechSynthesis.onvoiceschanged = loadVoices;
+            }
+            renderHistory();
+        });
 
         function setLanguage(lang, btnElement) {
             currentLang = lang;
@@ -154,27 +167,40 @@
             recognition.start();
         }
 
-        // 全域發音函數：強勢喚醒瀏覽器語音引擎
+        // 升級版：強制精準匹配日語/韓語/英語專屬原生語音引擎發音
         function speakSentence(phrase) {
             if (!('speechSynthesis' in window)) {
                 alert('您的瀏覽器不支援語音朗讀功能');
                 return;
             }
 
-            // 確保停止之前的發音並解除暫停狀態
             window.speechSynthesis.cancel();
             if (window.speechSynthesis.paused) {
                 window.speechSynthesis.resume();
             }
 
-            const cleanText = phrase.replace(/[\u4e00-\u9fa5]/g, '').replace(/[*#`]/g, '').trim();
+            // 清除中文字與不必要的符號，保留日文漢字、假名或英文
+            const cleanText = phrase.replace(/[\u4e00-\u9fa5]/g, '').replace(/[*#`()]/g, '').trim();
             if (!cleanText) return;
 
             const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
-            utterance.rate = 0.85;
+            
+            // 指定語言代碼
+            const langMap = { ja: 'ja-JP', ko: 'ko-KR', en: 'en-US' };
+            const targetLangCode = langMap[currentLang] || 'ja-JP';
+            utterance.lang = targetLangCode;
+            utterance.rate = 0.82; // 稍慢，適合學習發音
 
-            // 解決部分行動裝置瀏覽器垃圾回收機制導致語音物件被砍掉的問題
+            // 強制從系統語音清單中找出對應語系的專屬原生語音（避免被預設英文引擎誤讀）
+            if (voices.length === 0) {
+                voices = window.speechSynthesis.getVoices();
+            }
+            
+            const matchedVoice = voices.find(v => v.lang === targetLangCode || v.lang.replace('_', '-') === targetLangCode);
+            if (matchedVoice) {
+                utterance.voice = matchedVoice;
+            }
+
             window.speechSynthesis.speak(utterance);
         }
 
@@ -209,8 +235,9 @@
 請針對使用者的輸入（無論是日常問句如「今天要不要上班」、句子、文法或上傳的圖片）進行詳細教學回應。
 格式要求：
 1. 請用清晰的標題與清單呈現。
-2. **非常重要**：每當出現外語單字、假名、拼音或外語例句時，請務必將該外語內容用反引號（例如 \`外語內容\`）包起來，這樣前端才能自動為其加上播放聲音的圖示按鈕。
-3. 提供中文翻譯對照與實用說明。`;
+2. **非常重要**：每當出現外語單字、假名或外語例句時，請務必將該外語內容用反引號（例如 \`外語內容\`）包起來，這樣前端才能自動為其加上播放聲音的圖示按鈕。
+3. 如果是日語教學，請直接提供日文原文（如漢字與假名，例如：\`お仕事ですか (おしごとですか)\`），不要單獨只給羅馬拼音，這樣語音引擎才能完美唸出正確的日文發音。
+4. 提供中文翻譯對照與實用說明。`;
 
                 let contentsPayload = [];
                 contentsPayload.push({ role: 'user', parts: [{ text: systemInstruction }] });
@@ -245,19 +272,16 @@
             }
         }
 
-        // 解析 AI 回覆，將反引號內的外語句子後方自動轉為實際 DOM 按鈕（綁定 onclick 事件而非純文字注入）
         function renderMessageContent(containerDiv, rawText) {
             containerDiv.innerHTML = "";
             if (!rawText) return;
 
-            // 用反引號切分文字
             const parts = rawText.split(/`([^`]+)`/);
             
             parts.forEach((part, index) => {
                 if (!part) return;
                 
                 if (index % 2 === 1) {
-                    // 這是被反引號包起來的外語句子，建立專屬的發音標籤與按鈕
                     const span = document.createElement("span");
                     span.className = "inline-flex items-center gap-1 font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 my-0.5 mx-0.5";
                     
@@ -270,7 +294,6 @@
                     btn.title = "播放此句發音";
                     btn.innerHTML = '<i class="fa-solid fa-volume-high text-xs"></i>';
                     
-                    // 直接用標準 DOM 事件綁定發音函數
                     const sentenceToSpeak = part;
                     btn.onclick = (e) => {
                         e.stopPropagation();
@@ -280,7 +303,6 @@
                     span.appendChild(btn);
                     containerDiv.appendChild(span);
                 } else {
-                    // 一般文字（支援換行與跳脫處理）
                     const textNode = document.createTextNode(part);
                     containerDiv.appendChild(textNode);
                 }
