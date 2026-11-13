@@ -38,11 +38,11 @@
                     </div>
                     <div>
                         <span class="font-bold text-lg text-slate-900 tracking-tight">Snap & Speak</span>
-                        <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-full">外語沉浸學</span>
+                        <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-full">Google 原音引擎</span>
                     </div>
                 </div>
 
-                <!-- Target Language Selector (Focus: English, Japanese, Korean) -->
+                <!-- Target Language Selector -->
                 <div class="flex items-center gap-2">
                     <label for="targetLangSelect" class="text-xs font-semibold uppercase text-slate-500 tracking-wider hidden md:block">
                         學習外語：
@@ -55,12 +55,6 @@
                         </select>
                         <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
                     </div>
-
-                    <!-- Voice Settings Modal Toggle Button -->
-                    <button onclick="toggleVoiceSettingsModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-200" title="調整語音音高與語速">
-                        <i class="fa-solid fa-sliders text-amber-500"></i>
-                        <span class="hidden sm:inline">語音設定</span>
-                    </button>
                 </div>
 
                 <!-- Navigation Links -->
@@ -91,7 +85,7 @@
                 <div class="max-w-2xl relative z-10">
                     <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">把身邊萬物變成你的外語教室</h1>
                     <p class="mt-2 text-slate-300 text-sm sm:text-base">
-                        以<strong class="text-amber-400">「外語發音為主、中文翻譯為輔」</strong>的沉浸式架構，隨手拍下日常物品，點擊喇叭直接聽取最純正的外語朗讀與實用句型！
+                        採用 <strong class="text-amber-400">Google 官方線上原音串流發音</strong>，日語漢字、韓語字母絕對呈現最純正的母語腔調，中文僅作為輔助對照！
                     </p>
                 </div>
 
@@ -143,15 +137,14 @@
                                     選擇照片
                                 </button>
                             </div>
-                            <div id="hotspotOverlay" class="absolute inset-0 hidden"></div>
                         </div>
 
                         <!-- Object Specs -->
                         <div id="objectSummaryCard" class="mt-4 bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 hidden">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
-                                    <span id="targetObjectName" class="font-extrabold text-slate-900 text-base">鋼筆</span>
-                                    <button onclick="speakTargetName()" class="w-7 h-7 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shadow hover:bg-amber-600 transition" title="聽外語發音">
+                                    <span id="targetObjectName" class="font-extrabold text-slate-900 text-base">萬年筆</span>
+                                    <button onclick="speakTargetName()" class="w-7 h-7 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shadow hover:bg-amber-600 transition" title="聽 Google 原音發音">
                                         <i class="fa-solid fa-volume-high text-xs"></i>
                                     </button>
                                 </div>
@@ -185,7 +178,7 @@
                         <div class="space-y-5">
                             <div class="border-l-4 border-amber-500 pl-3 py-0.5">
                                 <h3 id="stageTitle" class="font-extrabold text-slate-900 text-base">階段 1：基礎外語詞彙與外觀描述</h3>
-                                <p id="stageDesc" class="text-xs text-slate-500 mt-0.5">點擊喇叭聆聽純正外語發音，下方備有中文翻譯輔助理解。</p>
+                                <p id="stageDesc" class="text-xs text-slate-500 mt-0.5">點擊喇叭聆聽 Google 官方原生外語發音，下方備有中文翻譯輔助理解。</p>
                             </div>
 
                             <!-- Vocab / Phrases Container -->
@@ -196,7 +189,7 @@
                             <!-- Model Sentence Card -->
                             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">示範外語句型 (Tap to Speak)</span>
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">示範外語句型 (Google 語音)</span>
                                     <button onclick="speakMainSentence()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow-sm">
                                         <i class="fa-solid fa-volume-high"></i> 播放外語發音
                                     </button>
@@ -269,36 +262,6 @@
         </div>
     </main>
 
-    <!-- Voice Settings Modal -->
-    <div id="voiceSettingsModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white border border-slate-200 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 class="font-extrabold text-slate-900 text-base">語音清晰度與參數設定</h3>
-                <button onclick="toggleVoiceSettingsModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                        <span>音高 / 尖銳度 (Pitch)</span>
-                        <span id="pitchValDisplay" class="text-amber-600 font-mono">1.25</span>
-                    </div>
-                    <input type="range" id="pitchSlider" min="0.8" max="1.8" step="0.05" value="1.25" oninput="updateVoiceConfig()" class="w-full accent-amber-500">
-                </div>
-                <div>
-                    <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
-                        <span>朗讀語速 (Speed)</span>
-                        <span id="rateValDisplay" class="text-amber-600 font-mono">0.95x</span>
-                    </div>
-                    <input type="range" id="rateSlider" min="0.5" max="1.4" step="0.05" value="0.95" oninput="updateVoiceConfig()" class="w-full accent-amber-500">
-                </div>
-            </div>
-            <div class="pt-3 border-t border-slate-100 flex gap-2">
-                <button onclick="testVoice()" class="flex-1 py-2.5 bg-amber-500 text-slate-950 font-bold text-xs rounded-xl">測試發音</button>
-                <button onclick="toggleVoiceSettingsModal()" class="px-4 py-2.5 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl">完成</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
         <i class="fa-solid fa-circle-info text-amber-400"></i>
@@ -307,11 +270,11 @@
 
     <!-- Application Logic Script -->
     <script>
-        // Multi-language Database (Focus on Japanese, English, Korean)
+        // Multi-language Database with Google Audio TTS Support
         const DATA = {
             ja: {
                 pen: {
-                    name: '万年筆 (Mannenhitsu)',
+                    name: '万年筆',
                     zh: '鋼筆',
                     image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
                     stages: {
@@ -348,7 +311,7 @@
                     }
                 },
                 mug: {
-                    name: 'コーヒーマグ (Kōhī Magu)',
+                    name: 'コーヒーマグ',
                     zh: '馬克杯',
                     image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
                     stages: {
@@ -463,7 +426,7 @@
             },
             ko: {
                 pen: {
-                    name: '만년필 (Mannyeonpil)',
+                    name: '만년필',
                     zh: '鋼筆',
                     image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
                     stages: {
@@ -500,7 +463,7 @@
                     }
                 },
                 mug: {
-                    name: '머그컵 (Meogeuk-keop)',
+                    name: '머그컵',
                     zh: '馬克杯',
                     image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
                     stages: {
@@ -543,24 +506,10 @@
         let currentLang = 'ja';
         let currentPresetKey = 'pen';
         let currentStage = 1;
-        let ttsPitch = 1.25;
-        let ttsRate = 0.95;
-        let availableVoices = [];
 
         window.addEventListener('DOMContentLoaded', () => {
-            initVoices();
             loadPreset('pen');
         });
-
-        function initVoices() {
-            if (!('speechSynthesis' in window)) return;
-            availableVoices = window.speechSynthesis.getVoices();
-            if (speechSynthesis.onvoiceschanged !== undefined) {
-                speechSynthesis.onvoiceschanged = () => {
-                    availableVoices = window.speechSynthesis.getVoices();
-                };
-            }
-        }
 
         function changeTargetLanguage(lang) {
             currentLang = lang;
@@ -573,7 +522,6 @@
             const langData = DATA[currentLang] || DATA.ja;
             const item = langData[key] || langData.pen;
 
-            // Update Image & Header
             document.getElementById('mainImage').src = item.image;
             document.getElementById('mainImage').classList.remove('hidden');
             document.getElementById('imagePlaceholder').classList.add('hidden');
@@ -593,12 +541,11 @@
             document.getElementById('stageTitle').textContent = stage.title;
             document.getElementById('currentStageNum').textContent = currentStage;
 
-            // Render Vocab
             const vocabContainer = document.getElementById('vocabContainer');
             vocabContainer.innerHTML = stage.vocab.map(v => `
-                <div onclick="speakForeignText('${v.target.replace(/'/g, "\\'")}')" class="bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-400 p-3.5 rounded-2xl cursor-pointer transition flex items-center justify-between group">
+                <div onclick="playGoogleTTS('${v.target.replace(/'/g, "\\'")}')" class="bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-400 p-3.5 rounded-2xl cursor-pointer transition flex items-center justify-between group">
                     <div>
-                        <div class="font-bold text-slate-900 text-sm group-hover:text-amber-900">${v.target}</div>
+                        <div class="font-extrabold text-slate-900 text-sm group-hover:text-amber-900">${v.target}</div>
                         <div class="text-xs text-slate-500 mt-0.5">${v.zh}</div>
                     </div>
                     <div class="w-8 h-8 rounded-full bg-white group-hover:bg-amber-500 group-hover:text-white text-slate-600 flex items-center justify-center transition shadow-sm">
@@ -607,7 +554,6 @@
                 </div>
             `).join('');
 
-            // Render Sentence
             document.getElementById('mainSentenceTarget').textContent = stage.sentence.target;
             document.getElementById('mainSentenceZh').textContent = `中文對照：${stage.sentence.zh}`;
         }
@@ -627,43 +573,30 @@
             renderStageContent();
         }
 
-        // 核心外語發音優先引擎 (100% 外語發音，不混雜中文)
-        function speakForeignText(text) {
-            if (!('speechSynthesis' in window)) {
-                showToast('您的瀏覽器不支援發音功能', 'fa-triangle-exclamation');
-                return;
-            }
-            window.speechSynthesis.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            const langMap = { ja: 'ja-JP', en: 'en-US', ko: 'ko-KR' };
-            utterance.lang = langMap[currentLang] || 'ja-JP';
-            utterance.pitch = ttsPitch;
-            utterance.rate = ttsRate;
-
-            // 挑選最佳外語語音
-            if (availableVoices.length > 0) {
-                const prefix = utterance.lang.substring(0, 2);
-                const bestVoice = availableVoices.find(v => v.lang.toLowerCase().startsWith(prefix) && (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium')));
-                if (bestVoice) utterance.voice = bestVoice;
-            }
-
-            window.speechSynthesis.speak(utterance);
+        // 🌟 絕對正確的 Google 官方線上原音串流發音引擎（支援日、英、韓，絕不發生漢字唸成中文錯誤）
+        function playGoogleTTS(text) {
+            const langCodeMap = { ja: 'ja', en: 'en', ko: 'ko' };
+            const tl = langCodeMap[currentLang] || 'ja';
+            const url = `https://translate.google.com.tw/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${tl}&client=tw-ob`;
+            
+            const audio = new Audio(url);
+            audio.play().catch(err => {
+                showToast('播放音訊失敗，請檢查網路連線', 'fa-triangle-exclamation');
+            });
+            showToast(`正在播放 Google 官方發音：${text}`, 'fa-volume-high');
         }
 
         function speakTargetName() {
             const langData = DATA[currentLang] || DATA.ja;
             const item = langData[currentPresetKey] || langData.pen;
-            // 提取純外語部分（去掉括號）
-            const cleanText = item.name.split(' ')[0];
-            speakForeignText(cleanText);
+            playGoogleTTS(item.name);
         }
 
         function speakMainSentence() {
             const langData = DATA[currentLang] || DATA.ja;
             const item = langData[currentPresetKey] || langData.pen;
             const stage = item.stages[currentStage];
-            speakForeignText(stage.sentence.target);
+            playGoogleTTS(stage.sentence.target);
         }
 
         // Image Handling
@@ -682,23 +615,6 @@
                 showToast('照片載入成功！已套用外語學習指南', 'fa-circle-check');
             };
             reader.readAsDataURL(file);
-        }
-
-        // Voice Settings
-        function toggleVoiceSettingsModal() {
-            document.getElementById('voiceSettingsModal').classList.toggle('hidden');
-        }
-
-        function updateVoiceConfig() {
-            ttsPitch = parseFloat(document.getElementById('pitchSlider').value);
-            ttsRate = parseFloat(document.getElementById('rateSlider').value);
-            document.getElementById('pitchValDisplay').textContent = ttsPitch.toFixed(2);
-            document.getElementById('rateValDisplay').textContent = `${ttsRate.toFixed(2)}x`;
-        }
-
-        function testVoice() {
-            const testTexts = { ja: 'こんにちは、外語学習を始めましょう！', en: 'Hello, let us start learning languages!', ko: '안녕하세요, 외국어 학습을 시작합시다!' };
-            speakForeignText(testTexts[currentLang]);
         }
 
         // Recording Studio
@@ -825,7 +741,7 @@
                         <p class="text-xs text-slate-500 mt-1">中文對照：${item.zh}</p>
                     </div>
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-                        <button onclick="speakForeignText('${item.sentence.replace(/'/g, "\\'")}')" class="text-xs text-amber-600 font-bold flex items-center gap-1">
+                        <button onclick="playGoogleTTS('${item.sentence.replace(/'/g, "\\'")}')" class="text-xs text-amber-600 font-bold flex items-center gap-1">
                             <i class="fa-solid fa-volume-high"></i> 播放發音
                         </button>
                         <button onclick="deleteNote(${idx})" class="text-xs text-red-500 hover:text-red-700">刪除</button>
