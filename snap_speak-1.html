@@ -88,28 +88,16 @@
     <script>
         let currentLang = 'ja';
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v10";
+        const STORAGE_KEY = "mobile_ai_lang_history_v11";
 
         let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
             { role: 'ai', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我會隨時為你解答並提供外語教學！' }
         ];
 
         let selectedImageDataUrl = null;
-        let voices = [];
+        let currentAudio = null; // 用於管理音訊播放
 
-        // 預先載入瀏覽器支援的語音清單
-        function loadVoices() {
-            if (!('speechSynthesis' in window)) return;
-            voices = window.speechSynthesis.getVoices();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            loadVoices();
-            if (window.speechSynthesis && onvoiceschanged in window.speechSynthesis) {
-                window.speechSynthesis.onvoiceschanged = loadVoices;
-            }
-            renderHistory();
-        });
+        window.addEventListener('DOMContentLoaded', renderHistory);
 
         function setLanguage(lang, btnElement) {
             currentLang = lang;
@@ -167,41 +155,45 @@
             recognition.start();
         }
 
-        // 升級版：強制精準匹配日語/韓語/英語專屬原生語音引擎發音
-        function speakSentence(phrase) {
-            if (!('speechSynthesis' in window)) {
-                alert('您的瀏覽器不支援語音朗讀功能');
-                return;
-            }
-
-            window.speechSynthesis.cancel();
-            if (window.speechSynthesis.paused) {
-                window.speechSynthesis.resume();
-            }
-
-            // 清除中文字與不必要的符號，保留日文漢字、假名或英文
-            const cleanText = phrase.replace(/[\u4e00-\u9fa5]/g, '').replace(/[*#`()]/g, '').trim();
+        // 升級：使用 Google Translate 高品質語音 API（真人音質、高清清晰）
+        function speakSentence(phrase, btnElement) {
+            // 清理文字：只保留日文/韓文/英文原文，徹底濾掉中文及符號
+            let cleanText = phrase.replace(/[\u4e00-\u9fa5]/g, '').replace(/[*#`()（）]/g, '').trim();
             if (!cleanText) return;
 
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            
-            // 指定語言代碼
-            const langMap = { ja: 'ja-JP', ko: 'ko-KR', en: 'en-US' };
-            const targetLangCode = langMap[currentLang] || 'ja-JP';
-            utterance.lang = targetLangCode;
-            utterance.rate = 0.82; // 稍慢，適合學習發音
-
-            // 強制從系統語音清單中找出對應語系的專屬原生語音（避免被預設英文引擎誤讀）
-            if (voices.length === 0) {
-                voices = window.speechSynthesis.getVoices();
-            }
-            
-            const matchedVoice = voices.find(v => v.lang === targetLangCode || v.lang.replace('_', '-') === targetLangCode);
-            if (matchedVoice) {
-                utterance.voice = matchedVoice;
+            // 如果有正在播放的聲音，先停止
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
             }
 
-            window.speechSynthesis.speak(utterance);
+            // 按鈕提示動畫效果
+            const icon = btnElement.querySelector('i');
+            const originalClass = icon.className;
+            icon.className = "fa-solid fa-spinner fa-spin text-xs text-emerald-600";
+
+            const langCode = currentLang === 'ja' ? 'ja' : currentLang === 'ko' ? 'ko' : 'en';
+            // 直連 Google 高音質語音服務
+            const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=${langCode}&client=tw-ob`;
+
+            currentAudio = new Audio(ttsUrl);
+            
+            currentAudio.onplay = () => {
+                icon.className = "fa-solid fa-volume-high text-xs text-emerald-600 animate-pulse";
+            };
+            
+            currentAudio.onended = currentAudio.onerror = () => {
+                icon.className = originalClass;
+            };
+
+            currentAudio.play().catch(err => {
+                console.error("播放失敗:", err);
+                icon.className = originalClass;
+                // 備援方案：若 API 被暫時阻擋，降級回瀏覽器合成
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = currentLang === 'ja' ? 'ja-JP' : currentLang === 'ko' ? 'ko-KR' : 'en-US';
+                window.speechSynthesis.speak(utterance);
+            });
         }
 
         async function sendMessage() {
@@ -236,7 +228,7 @@
 格式要求：
 1. 請用清晰的標題與清單呈現。
 2. **非常重要**：每當出現外語單字、假名或外語例句時，請務必將該外語內容用反引號（例如 \`外語內容\`）包起來，這樣前端才能自動為其加上播放聲音的圖示按鈕。
-3. 如果是日語教學，請直接提供日文原文（如漢字與假名，例如：\`お仕事ですか (おしごとですか)\`），不要單獨只給羅馬拼音，這樣語音引擎才能完美唸出正確的日文發音。
+3. 如果是日語教學，請在反引號中給予純日文原文（例如 \`今日仕事に行きますか\` 或 \`会社 (かいしゃ)\`），這樣語音才能完美朗讀！
 4. 提供中文翻譯對照與實用說明。`;
 
                 let contentsPayload = [];
@@ -290,14 +282,14 @@
                     span.appendChild(textSpan);
 
                     const btn = document.createElement("button");
-                    btn.className = "text-emerald-600 hover:text-emerald-800 p-1 transition active:scale-125 cursor-pointer";
-                    btn.title = "播放此句發音";
+                    btn.className = "text-emerald-600 hover:text-emerald-800 p-1 transition active:scale-125 cursor-pointer flex items-center justify-center";
+                    btn.title = "播放真人發音";
                     btn.innerHTML = '<i class="fa-solid fa-volume-high text-xs"></i>';
                     
                     const sentenceToSpeak = part;
                     btn.onclick = (e) => {
                         e.stopPropagation();
-                        speakSentence(sentenceToSpeak);
+                        speakSentence(sentenceToSpeak, btn);
                     };
 
                     span.appendChild(btn);
