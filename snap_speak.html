@@ -71,6 +71,12 @@
                         </select>
                         <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
                     </div>
+
+                    <!-- Voice Settings Modal Toggle Button -->
+                    <button onclick="toggleVoiceSettingsModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-200" title="調整語音音高與發音">
+                        <i class="fa-solid fa-sliders text-amber-500"></i>
+                        <span class="hidden sm:inline">語音設定</span>
+                    </button>
                 </div>
 
                 <!-- Right Navigation Links -->
@@ -406,6 +412,72 @@
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2 pointer-events-none">
         <i id="toastIcon" class="fa-solid fa-circle-info text-amber-400"></i>
         <span id="toastMessage">提示訊息</span>
+    </div>
+
+    <!-- Voice Audio Settings Modal -->
+    <div id="voiceSettingsModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h3 class="font-extrabold text-slate-900 text-base">TTS 發音與聲音調整</h3>
+                </div>
+                <button onclick="toggleVoiceSettingsModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Pitch Slider -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold text-slate-700">
+                        <span>音高 / 尖銳度 (Pitch)</span>
+                        <span id="pitchValDisplay" class="text-amber-600 font-mono">1.25 (預設較尖銳)</span>
+                    </div>
+                    <input type="range" id="pitchSlider" min="0.5" max="2.0" step="0.05" value="1.25" oninput="updateVoiceConfig()" class="w-full accent-amber-500 cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>低沉 (0.5)</span>
+                        <span>標準 (1.0)</span>
+                        <span>清亮尖銳 (2.0)</span>
+                    </div>
+                </div>
+
+                <!-- Speech Rate Slider -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold text-slate-700">
+                        <span>朗讀語速 (Speed Rate)</span>
+                        <span id="rateValDisplay" class="text-amber-600 font-mono">0.95x</span>
+                    </div>
+                    <input type="range" id="rateSlider" min="0.5" max="1.5" step="0.05" value="0.95" oninput="updateVoiceConfig()" class="w-full accent-amber-500 cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>慢速 (0.5x)</span>
+                        <span>標準 (1.0x)</span>
+                        <span>快速 (1.5x)</span>
+                    </div>
+                </div>
+
+                <!-- Voice Selection Dropdown -->
+                <div class="space-y-1">
+                    <label for="voiceSelect" class="text-xs font-bold text-slate-700 block">
+                        發音人選單 (系統內建語音)
+                    </label>
+                    <select id="voiceSelect" onchange="updateVoiceConfig()" class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="">預設系統語音</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex gap-2">
+                <button onclick="testVoiceAudio()" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
+                    <i class="fa-solid fa-volume-high"></i> 測試當前聲音
+                </button>
+                <button onclick="toggleVoiceSettingsModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+                    完成
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Application Logic Script -->
@@ -940,6 +1012,12 @@
         let currentStage = 1;
         let activeTab = 'studio';
 
+        // TTS Custom Settings State
+        let ttsPitch = 1.25; // Default sharper pitch
+        let ttsRate = 0.95;  // Slightly slower rate for high clarity
+        let availableVoices = [];
+        let selectedVoiceURI = null;
+
         // Timer & Audio Recording States
         let isRecording = false;
         let mediaRecorder = null;
@@ -951,7 +1029,81 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadPreset('pen');
             renderNotebook();
+            initSpeechVoices();
         });
+
+        // Speech Voice Initialization
+        function initSpeechVoices() {
+            if (!('speechSynthesis' in window)) return;
+            
+            const populateVoices = () => {
+                availableVoices = window.speechSynthesis.getVoices();
+                updateVoiceDropdown();
+            };
+
+            populateVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = populateVoices;
+            }
+        }
+
+        function updateVoiceDropdown() {
+            const select = document.getElementById('voiceSelect');
+            if (!select) return;
+
+            const langPrefixes = {
+                en: 'en',
+                ja: 'ja',
+                fr: 'fr',
+                es: 'es',
+                de: 'de'
+            };
+            const prefix = langPrefixes[currentTargetLang] || 'en';
+
+            const filteredVoices = availableVoices.filter(v => v.lang.toLowerCase().startsWith(prefix));
+
+            select.innerHTML = '<option value="">預設高清晰語音</option>';
+            filteredVoices.forEach(voice => {
+                const option = document.createElement('option');
+                option.value = voice.voiceURI;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                if (selectedVoiceURI === voice.voiceURI) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        }
+
+        function toggleVoiceSettingsModal() {
+            const modal = document.getElementById('voiceSettingsModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                updateVoiceDropdown();
+            }
+        }
+
+        function updateVoiceConfig() {
+            const pitchVal = parseFloat(document.getElementById('pitchSlider').value);
+            const rateVal = parseFloat(document.getElementById('rateSlider').value);
+            selectedVoiceURI = document.getElementById('voiceSelect').value;
+
+            ttsPitch = pitchVal;
+            ttsRate = rateVal;
+
+            document.getElementById('pitchValDisplay').textContent = `${pitchVal.toFixed(2)} ${pitchVal > 1.0 ? '(尖銳清亮)' : ''}`;
+            document.getElementById('rateValDisplay').textContent = `${rateVal.toFixed(2)}x`;
+        }
+
+        function testVoiceAudio() {
+            const testPhrases = {
+                en: 'Testing speech clarity and pitch sharp level.',
+                ja: '音調と明確さのテスト音声です。',
+                fr: 'Test de clarté et de hauteur de la voix.',
+                es: 'Prueba de claridad y tono de voz.',
+                de: 'Test für Sprachklarheit und Tonhöhe.'
+            };
+            speakText(testPhrases[currentTargetLang] || testPhrases.en);
+        }
 
         // Tab Switching
         function switchTab(tab) {
@@ -979,6 +1131,7 @@
         function changeTargetLanguage(lang) {
             currentTargetLang = lang;
             updateUIForCurrentObject();
+            updateVoiceDropdown();
             showToast(`學習目標語言已切換為：${getLanguageName(lang)}`, 'fa-globe');
         }
 
@@ -1269,8 +1422,24 @@
                 es: 'es-ES',
                 de: 'de-DE'
             };
+
             utterance.lang = langTags[currentTargetLang] || 'en-US';
-            utterance.rate = 0.9;
+            utterance.pitch = ttsPitch; // Applied custom pitch
+            utterance.rate = ttsRate;   // Applied custom rate
+
+            // Select specific voice if picked by user
+            if (selectedVoiceURI && availableVoices.length > 0) {
+                const foundVoice = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
+                if (foundVoice) utterance.voice = foundVoice;
+            } else if (availableVoices.length > 0) {
+                // Auto-pick high quality voice matching language
+                const prefix = utterance.lang.substring(0, 2);
+                const preferredVoice = availableVoices.find(v => 
+                    v.lang.toLowerCase().startsWith(prefix) && 
+                    (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Premium') || v.name.includes('Enhanced') || v.name.includes('Apple'))
+                );
+                if (preferredVoice) utterance.voice = preferredVoice;
+            }
 
             window.speechSynthesis.speak(utterance);
         }
