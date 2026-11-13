@@ -3,494 +3,1481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snap & Speak 隨手拍·生活實物外語學習館</title>
+    <title>Snap & Speak - 隨手拍·生活實物外語學習館</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
             background-color: #f8fafc;
         }
-        .tab-active {
-            border-bottom: 3px solid #3b82f6;
-            color: #1d4ed8;
-            font-weight: 700;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        .record-pulse {
-            animation: pulse-red 1.5s infinite;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-effect {
+            animation: pulse-ring 2s infinite ease-in-out;
         }
     </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col">
+<body class="text-slate-800 bg-slate-50 min-h-screen flex flex-col selection:bg-amber-100 selection:text-amber-900">
 
-    <!-- 導覽列 -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 text-white p-2 rounded-xl">
-                    <i data-lucide="camera" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight text-slate-900">Snap & Speak</h1>
-                    <p class="text-xs text-slate-500">隨手拍 · 生活實物外語學習館</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-4">
-                <!-- 語言切換 -->
-                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
-                    <i data-lucide="languages" class="w-4 h-4 ml-2 text-slate-500"></i>
-                    <select id="targetLanguage" onchange="changeLanguage()" class="bg-transparent text-sm font-medium px-2 py-1 outline-none cursor-pointer">
-                        <option value="en">英語 (English)</option>
-                        <option value="ja" selected>日本語 (Japanese)</option>
-                        <option value="fr">法語 (Français)</option>
-                        <option value="es">西班牙語 (Español)</option>
-                        <option value="de">德語 (Deutsch)</option>
-                    </select>
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('studio')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20">
+                        <i class="fa-solid font-bold fa-camera-retro text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg text-slate-900 tracking-tight">Snap & Speak</span>
+                        <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 bg-amber-100 text-amber-800 font-semibold rounded-full">生活沉浸式學習</span>
+                    </div>
                 </div>
 
-                <!-- 語音設定按鈕 -->
-                <button onclick="toggleVoiceSettingsModal()" class="p-2 text-slate-600 hover:text-blue-600 hover:bg-slate-100 rounded-lg border border-slate-200 transition" title="調音與語音設定">
-                    <i data-lucide="sliders" class="w-5 h-5"></i>
-                </button>
+                <!-- Center Controls: Target Language Selector -->
+                <div class="flex items-center gap-2">
+                    <label for="targetLangSelect" class="text-xs font-semibold uppercase text-slate-500 tracking-wider hidden md:block">
+                        學習目標語言：
+                    </label>
+                    <div class="relative">
+                        <select id="targetLangSelect" onchange="changeTargetLanguage(this.value)" class="appearance-none bg-slate-100 border border-slate-200 text-slate-800 font-medium text-sm rounded-xl px-4 py-2 pr-9 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer shadow-sm hover:bg-slate-200/60 transition">
+                            <option value="en">🇺🇸 英文 (English)</option>
+                            <option value="ja" selected>🇯🇵 日文 (日本語)</option>
+                            <option value="fr">🇫🇷 法文 (Français)</option>
+                            <option value="es">🇪🇸 西班牙文 (Español)</option>
+                            <option value="de">🇩🇪 德文 (Deutsch)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none"></i>
+                    </div>
+
+                    <!-- Voice Settings Modal Toggle Button -->
+                    <button onclick="toggleVoiceSettingsModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-200" title="調整語音清晰度與發音">
+                        <i class="fa-solid fa-sliders text-amber-500"></i>
+                        <span class="hidden sm:inline">語音設定</span>
+                    </button>
+                </div>
+
+                <!-- Right Navigation Links -->
+                <div class="flex items-center gap-2">
+                    <button onclick="switchTab('studio')" id="tabBtnStudio" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span class="hidden sm:inline">口說工作坊</span>
+                    </button>
+                    <button onclick="switchTab('notebook')" id="tabBtnNotebook" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span class="hidden sm:inline">實物筆記本</span>
+                        <span id="notebookBadge" class="bg-amber-500 text-white text-[11px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- 主內容區 -->
-    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <!-- 左側：影像辨識與 Hotspots 拍照區 (5 cols) -->
-        <section class="lg:col-span-5 flex flex-col space-y-4">
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="font-bold text-slate-800 flex items-center gap-2">
-                        <i data-lucide="image" class="w-5 h-5 text-blue-600"></i> 1. 拍照/選擇實物
-                    </h2>
-                    <span class="text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-medium">點擊熱點學習細節</span>
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        
+        <!-- STUDIO TAB -->
+        <div id="studioTab" class="space-y-6">
+            
+            <!-- Hero banner / Presets bar -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="max-w-2xl relative z-10">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">把身邊萬物變成你的外語教室</h1>
+                    <p class="mt-2 text-slate-300 text-sm sm:text-base">
+                        拍下身邊任何物品，或點擊下方快速範例，啟動兼顧外語純正發音與中文對照的 3 分鐘口說練習。
+                    </p>
                 </div>
 
-                <!-- 影像觀測台 -->
-                <div class="relative w-full aspect-square bg-slate-900 rounded-xl overflow-hidden group shadow-inner flex items-center justify-center">
-                    <img id="objectImage" src="https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80" alt="實物照片" class="w-full h-full object-cover">
-                    
-                    <!-- 點擊標記熱點 (Hotspots) -->
-                    <div id="hotspotContainer" class="absolute inset-0"></div>
+                <!-- Presets Quick Picker -->
+                <div class="mt-6 pt-5 border-t border-slate-700/60 flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2 w-full sm:w-auto">快速測試範例：</span>
+                    <button onclick="loadPreset('pen')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition flex items-center gap-2">
+                        ✒️ 鋼筆 (Fountain Pen)
+                    </button>
+                    <button onclick="loadPreset('mug')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition flex items-center gap-2">
+                        ☕ 馬克杯 (Coffee Mug)
+                    </button>
+                    <button onclick="loadPreset('watch')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition flex items-center gap-2">
+                        ⌚ 復古手錶 (Watch)
+                    </button>
+                    <button onclick="loadPreset('lamp')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition flex items-center gap-2">
+                        💡 檯燈 (Desk Lamp)
+                    </button>
+                    <button onclick="loadPreset('books')" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-amber-500 hover:text-slate-950 border border-slate-700 text-xs font-medium transition flex items-center gap-2">
+                        📚 書架 (Bookshelf)
+                    </button>
+                </div>
+            </div>
 
-                    <!-- 載入中遮罩 -->
-                    <div id="loadingOverlay" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center text-white hidden">
-                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mb-2"></i>
-                        <span class="text-sm font-medium">AI 正在辨識實物與特徵標籤...</span>
+            <!-- Workspace Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left Column: Image Canvas & Object Detection (5 cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-4 shadow-sm relative">
+                        
+                        <!-- Header with Actions -->
+                        <div class="flex items-center justify-between mb-3 px-1">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-image text-amber-500"></i> 實物照片分析
+                            </span>
+                            <div class="flex gap-2">
+                                <button onclick="triggerCamera()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition flex items-center gap-1">
+                                    <i class="fa-solid fa-camera"></i> 拍照
+                                </button>
+                                <button onclick="triggerUpload()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-lg transition flex items-center gap-1">
+                                    <i class="fa-solid fa-upload"></i> 上傳
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Inputs -->
+                        <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="handleImageUpload(event)">
+
+                        <!-- Image Display & Interactive Pin Canvas Area -->
+                        <div id="imageDisplayContainer" class="relative rounded-2xl overflow-hidden bg-slate-950 aspect-[4/3] flex items-center justify-center border border-slate-100 group">
+                            
+                            <!-- Main Displayed Image -->
+                            <img id="mainImage" src="" alt="Object Preview" class="w-full h-full object-cover hidden">
+                            
+                            <!-- Placeholder View -->
+                            <div id="imagePlaceholder" class="text-center p-6 space-y-3">
+                                <div class="w-16 h-16 rounded-full bg-slate-800 text-amber-400 flex items-center justify-center mx-auto text-2xl shadow-inner">
+                                    <i class="fa-solid fa-camera-retro"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-semibold text-sm">尚未選擇或拍攝照片</h3>
+                                    <p class="text-slate-400 text-xs mt-1">請拍攝你手邊的物品或點擊上方預設範例。</p>
+                                </div>
+                                <button onclick="triggerUpload()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-xl transition shadow-lg shadow-amber-500/20">
+                                    上傳照片
+                                </button>
+                            </div>
+
+                            <!-- Click/Tap Hotspot Overlay -->
+                            <div id="hotspotOverlay" class="absolute inset-0 hidden cursor-crosshair"></div>
+
+                            <!-- Scanning Effect Overlay -->
+                            <div id="scanningOverlay" class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm hidden flex-col items-center justify-center gap-3">
+                                <div class="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                                <span class="text-xs font-semibold text-amber-400 tracking-wider uppercase animate-pulse">AI 正在辨識物件與分析情境...</span>
+                            </div>
+                        </div>
+
+                        <!-- Recognized Tags / Detected Focal Points -->
+                        <div class="mt-4 pt-3 border-t border-slate-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">辨識目標標籤：</span>
+                                <span class="text-[11px] text-amber-600 font-medium">點擊照片上的熱點數字或標籤</span>
+                            </div>
+                            <div id="detectedTagsList" class="flex flex-wrap gap-2">
+                                <span class="text-xs text-slate-400 italic">尚無辨識物件</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Object Quick Specs Card -->
+                    <div id="objectSummaryCard" class="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent border border-amber-200/80 rounded-2xl p-4 hidden">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shrink-0 shadow-md">
+                                <i class="fa-solid fa-cube"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h4 id="detectedObjectName" class="font-bold text-slate-900 text-base truncate">鋼筆</h4>
+                                    <span id="detectedObjectPhonetic" class="text-xs text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md font-mono">/ˈfaʊn.tən pen/</span>
+                                </div>
+                                <p id="detectedObjectCategory" class="text-xs text-slate-600 font-medium mt-0.5">分類：文具用品 / 日常小物</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 拍照與預設操作控制卡 -->
-                <div class="mt-4 grid grid-cols-2 gap-2">
-                    <button onclick="triggerCamera()" class="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-xl text-sm font-medium transition shadow-sm">
-                        <i data-lucide="camera" class="w-4 h-4"></i> 開啟相機/上傳
+                <!-- Right Column: 3-Stage Speaking Studio (7 cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
+                        
+                        <!-- Stage Navigation Tabs -->
+                        <div class="grid grid-cols-3 gap-2 p-1.5 bg-slate-100 rounded-2xl text-xs font-bold mb-6">
+                            <button id="stageBtn1" onclick="switchStage(1)" class="py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm">
+                                <span class="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center">1</span>
+                                <span class="hidden sm:inline">階段一：外觀描述</span>
+                            </button>
+                            <button id="stageBtn2" onclick="switchStage(2)" class="py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900">
+                                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 text-[10px] flex items-center justify-center">2</span>
+                                <span class="hidden sm:inline">階段二：功能與動作</span>
+                            </button>
+                            <button id="stageBtn3" onclick="switchStage(3)" class="py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900">
+                                <span class="w-5 h-5 rounded-full bg-slate-300 text-slate-700 text-[10px] flex items-center justify-center">3</span>
+                                <span class="hidden sm:inline">階段三：故事與體驗</span>
+                            </button>
+                        </div>
+
+                        <!-- STAGE 1 CONTENT: Basics -->
+                        <div id="stageContent1" class="space-y-5">
+                            <div class="border-l-4 border-amber-500 pl-3 py-0.5">
+                                <h3 class="font-extrabold text-slate-900 text-lg">階段 1：基礎外觀與核心詞彙（第 1 分鐘）</h3>
+                                <p class="text-xs text-slate-500">觀察顏色、材質、觸感與外形特徵。</p>
+                            </div>
+
+                            <!-- Vocabulary Grid -->
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">關鍵單字與搭配詞 (Vocabulary & Collocations)</h4>
+                                <div id="stage1VocabList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    <!-- Dynamic Vocab Cards -->
+                                </div>
+                            </div>
+
+                            <!-- Sentence Template -->
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">示範口說句型 (Model Speech)</span>
+                                    <button onclick="speakTextFromId('stage1Script')" class="text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center gap-1">
+                                        <i class="fa-solid fa-volume-high"></i> 聆聽示範發音
+                                    </button>
+                                </div>
+                                <p id="stage1Script" class="text-sm text-slate-800 leading-relaxed font-medium bg-white p-3 rounded-xl border border-slate-200/80">
+                                    請選擇左側的物品以載入專屬口說指南。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- STAGE 2 CONTENT: Details & Usage -->
+                        <div id="stageContent2" class="space-y-5 hidden">
+                            <div class="border-l-4 border-amber-500 pl-3 py-0.5">
+                                <h3 class="font-extrabold text-slate-900 text-lg">階段 2：功能用途與動作（第 2 分鐘）</h3>
+                                <p class="text-xs text-slate-500">這個物品怎麼使用？平常何時會用到它？搭配動詞有哪些？</p>
+                            </div>
+
+                            <!-- Action Verbs & Phrases -->
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">實用動詞與常用短語 (Action Verbs & Phrases)</h4>
+                                <div id="stage2PhrasesList" class="space-y-2">
+                                    <!-- Dynamic Phrase Cards -->
+                                </div>
+                            </div>
+
+                            <!-- Sentence Template -->
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">示範口說句型 (Model Speech)</span>
+                                    <button onclick="speakTextFromId('stage2Script')" class="text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center gap-1">
+                                        <i class="fa-solid fa-volume-high"></i> 聆聽示範發音
+                                    </button>
+                                </div>
+                                <p id="stage2Script" class="text-sm text-slate-800 leading-relaxed font-medium bg-white p-3 rounded-xl border border-slate-200/80">
+                                    請選擇左側的物品以載入專屬口說指南。
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- STAGE 3 CONTENT: Story & Personal Meaning -->
+                        <div id="stageContent3" class="space-y-5 hidden">
+                            <div class="border-l-4 border-amber-500 pl-3 py-0.5">
+                                <h3 class="font-extrabold text-slate-900 text-lg">階段 3：記憶故事與個人連結（第 3 分鐘）</h3>
+                                <p class="text-xs text-slate-500">結合你的個人經歷、購買記憶或使用心得進行延伸演練。</p>
+                            </div>
+
+                            <!-- Sentence Template -->
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">完整 3 分鐘挑戰範本 (Full Speech Template)</span>
+                                    <button onclick="speakTextFromId('stage3Script')" class="text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center gap-1">
+                                        <i class="fa-solid fa-volume-high"></i> 聆聽示範發音
+                                    </button>
+                                </div>
+                                <p id="stage3Script" class="text-sm text-slate-800 leading-relaxed font-medium bg-white p-3 rounded-xl border border-slate-200/80">
+                                    請選擇左側的物品以載入專屬口說指南。
+                                </p>
+                            </div>
+
+                            <!-- Fill in the blanks practice -->
+                            <div class="bg-amber-50/60 border border-amber-200/70 rounded-2xl p-4 space-y-2">
+                                <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wider">個人化口說填空練習 (Personalized Prompts)</h4>
+                                <div id="interactiveFillIn" class="text-xs text-amber-950 space-y-2">
+                                    <!-- Dynamic input fields -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Universal Action Bar at Bottom of Guides -->
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <button onclick="saveCurrentObjectToNotebook()" class="text-xs px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-bookmark text-amber-600"></i> 儲存至單字本
+                            </button>
+                            <span class="text-xs text-slate-400 font-medium">階段 <span id="currentStageNum">1</span> / 3</span>
+                        </div>
+
+                    </div>
+
+                    <!-- Audio Recording & 3-Minute Practice Studio Card -->
+                    <div class="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-3xl p-5 shadow-lg space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                                <h3 class="font-bold text-sm tracking-wide">3 分鐘獨立口說錄音室</h3>
+                            </div>
+                            <!-- Live Timer Display -->
+                            <div class="font-mono text-xl font-bold bg-slate-800 px-3 py-1 rounded-xl text-amber-400 border border-slate-700" id="timerDisplay">
+                                03:00
+                            </div>
+                        </div>
+
+                        <!-- Control Buttons -->
+                        <div class="flex items-center justify-between gap-3">
+                            <button id="recordBtn" onclick="toggleRecording()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                                <i class="fa-solid fa-microphone text-base" id="recordIcon"></i>
+                                <span id="recordBtnText">開始 3 分鐘口說錄音練習</span>
+                            </button>
+                            <button id="resetTimerBtn" onclick="resetTimer()" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition" title="重置倒數計時">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Audio Playback Container -->
+                        <div id="audioPlaybackContainer" class="hidden pt-2 border-t border-slate-800/80 space-y-2">
+                            <div class="flex items-center justify-between text-xs text-slate-400 font-medium">
+                                <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> 錄音完成！點擊下方播放收聽</span>
+                                <span id="recordedDuration">00:00</span>
+                            </div>
+                            <audio id="audioPlayback" controls class="w-full h-9 rounded-lg"></audio>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- NOTEBOOK TAB -->
+        <div id="notebookTab" class="space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">我的實物單字與口說庫</h2>
+                    <p class="text-xs text-slate-500 mt-1">複習您所收藏的日常生活物品單字、例句與朗讀音檔。</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="clearAllNotebook()" class="text-xs text-red-600 hover:text-red-700 font-semibold px-3 py-2 bg-red-50 hover:bg-red-100 rounded-xl transition">
+                        <i class="fa-solid fa-trash-can mr-1"></i> 清空單字庫
                     </button>
-                    <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
-                    
-                    <select id="presetSelector" onchange="loadPreset(this.value)" class="bg-slate-50 border border-slate-200 text-slate-700 py-2.5 px-3 rounded-xl text-sm font-medium outline-none cursor-pointer">
-                        <option value="fountainPen">預設範例：鋼筆 (Fountain Pen)</option>
-                        <option value="coffeeMug">預設範例：馬克杯 (Coffee Mug)</option>
-                        <option value="watch">預設範例：復古手錶 (Watch)</option>
+                </div>
+            </div>
+
+            <!-- Saved Grid -->
+            <div id="notebookGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Cards rendered dynamically -->
+            </div>
+            
+            <div id="notebookEmptyState" class="text-center py-16 bg-white rounded-3xl border border-slate-200">
+                <div class="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-2xl mb-3">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 text-base">您的實物筆記本目前是空的</h3>
+                <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">在工作坊學習時點擊「儲存至單字本」，建立專屬於您的生活單字與句型庫。</p>
+                <button onclick="switchTab('studio')" class="mt-4 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-xl transition">
+                    回到口說工作坊
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2 pointer-events-none">
+        <i id="toastIcon" class="fa-solid fa-circle-info text-amber-400"></i>
+        <span id="toastMessage">提示訊息</span>
+    </div>
+
+    <!-- Voice Audio Settings Modal -->
+    <div id="voiceSettingsModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h3 class="font-extrabold text-slate-900 text-base">語音清晰度與發音設定</h3>
+                </div>
+                <button onclick="toggleVoiceSettingsModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 leading-relaxed">
+                如聽起來混濁低沉，可調高「音高」獲得清亮發音；系統已升級雙語智慧解析引擎，外文（含日文漢字）與中文括號對照將精準獨立朗讀。
+            </p>
+
+            <div class="space-y-4">
+                <!-- Pitch Slider -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold text-slate-700">
+                        <span>音高 / 尖銳度 (Pitch)</span>
+                        <span id="pitchValDisplay" class="text-amber-600 font-mono">1.25 (推薦清亮值)</span>
+                    </div>
+                    <input type="range" id="pitchSlider" min="0.8" max="1.8" step="0.05" value="1.25" oninput="updateVoiceConfig()" class="w-full accent-amber-500 cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>偏低沉 (0.8)</span>
+                        <span>標準 (1.0)</span>
+                        <span>清亮高頻 (1.8)</span>
+                    </div>
+                </div>
+
+                <!-- Speech Rate Slider -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-bold text-slate-700">
+                        <span>朗讀語速 (Speed Rate)</span>
+                        <span id="rateValDisplay" class="text-amber-600 font-mono">0.95x</span>
+                    </div>
+                    <input type="range" id="rateSlider" min="0.5" max="1.4" step="0.05" value="0.95" oninput="updateVoiceConfig()" class="w-full accent-amber-500 cursor-pointer">
+                    <div class="flex justify-between text-[10px] text-slate-400">
+                        <span>慢速 (0.5x)</span>
+                        <span>標準 (1.0x)</span>
+                        <span>快速 (1.4x)</span>
+                    </div>
+                </div>
+
+                <!-- Foreign Voice Select -->
+                <div class="space-y-1">
+                    <label for="voiceSelect" class="text-xs font-bold text-slate-700 block">
+                        外語發音人選單 (系統支援)
+                    </label>
+                    <select id="voiceSelect" onchange="updateVoiceConfig()" class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer">
+                        <option value="">自動遴選預設高清晰外語語音</option>
+                    </select>
+                </div>
+
+                <!-- Chinese Voice Select -->
+                <div class="space-y-1">
+                    <label for="zhVoiceSelect" class="text-xs font-bold text-slate-700 block">
+                        中文翻譯發音人選單
+                    </label>
+                    <select id="zhVoiceSelect" onchange="updateVoiceConfig()" class="w-full bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer">
+                        <option value="">自動遴選預設高清晰中文語音</option>
                     </select>
                 </div>
             </div>
 
-            <!-- 實物細節單字快捷清單 -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex-1">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">辨識出的元件與部位單字</h3>
-                <div id="hotspotList" class="flex flex-wrap gap-2"></div>
-            </div>
-        </section>
-
-        <!-- 右側：三階段口說練習與語音區 (7 cols) -->
-        <section class="lg:col-span-7 flex flex-col space-y-4">
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex-1 flex flex-col">
-                
-                <!-- 階段頁籤 Header -->
-                <div class="border-b border-slate-200 bg-slate-50/50 px-4 pt-3 flex space-x-6 overflow-x-auto">
-                    <button onclick="switchStage(1)" id="tabStage1" class="pb-3 text-sm font-medium transition flex items-center gap-2 tab-active whitespace-nowrap">
-                        <span class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-xs flex items-center justify-center font-bold">1</span>
-                        階段 1：外觀描述
-                    </button>
-                    <button onclick="switchStage(2)" id="tabStage2" class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-800 transition flex items-center gap-2 whitespace-nowrap">
-                        <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-xs flex items-center justify-center font-bold">2</span>
-                        階段 2：功能與動作
-                    </button>
-                    <button onclick="switchStage(3)" id="tabStage3" class="pb-3 text-sm font-medium text-slate-500 hover:text-slate-800 transition flex items-center gap-2 whitespace-nowrap">
-                        <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-xs flex items-center justify-center font-bold">3</span>
-                        階段 3：故事與感受
-                    </button>
-                </div>
-
-                <!-- 階段卡片內容區 -->
-                <div class="p-6 flex-1 overflow-y-auto">
-                    <div id="stageContent"></div>
-                </div>
-
-                <!-- 底部口說錄音與發音練習列 -->
-                <div class="border-t border-slate-200 bg-slate-50 p-4 flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <button id="recordBtn" onclick="toggleRecording()" class="w-12 h-12 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition shadow-md">
-                            <i data-lucide="mic" class="w-6 h-6"></i>
-                        </button>
-                        <div>
-                            <div class="text-xs font-semibold text-slate-500 uppercase">3 分鐘口說挑戰錄音</div>
-                            <div id="recordTimer" class="text-sm font-mono font-bold text-slate-800">00:00 / 03:00</div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <button id="playAudioBtn" onclick="playUserAudio()" disabled class="p-2.5 rounded-xl border border-slate-300 text-slate-400 bg-white cursor-not-allowed transition flex items-center gap-1.5 text-xs font-medium">
-                            <i data-lucide="play" class="w-4 h-4"></i> 回放自己的錄音
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- 語音設定 Modal -->
-    <div id="voiceModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
-                    <i data-lucide="sliders" class="w-5 h-5 text-blue-600"></i> 語音清晰度與聲音設定
-                </h3>
-                <button onclick="toggleVoiceSettingsModal()" class="text-slate-400 hover:text-slate-600">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+            <div class="pt-3 border-t border-slate-100 flex gap-2">
+                <button onclick="testVoiceAudio()" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-amber-500/20">
+                    <i class="fa-solid fa-volume-high"></i> 測試當前聲音
                 </button>
-            </div>
-            
-            <p class="text-xs text-slate-500 mb-4 leading-relaxed">
-                若覺得預設語音偏渾厚，可將音高調高以獲得乾淨清亮的聲音；系統已啟動雙語獨立朗讀機制，確保日文與中文不會混在一起。
-            </p>
-
-            <div class="space-y-4">
-                <!-- 音高 -->
-                <div>
-                    <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                        <span>音高 (Pitch / 尖銳度): <strong id="pitchValue" class="text-blue-600">1.25</strong></span>
-                        <span class="text-slate-400">清亮 1.25 ~ 1.4</span>
-                    </div>
-                    <input type="range" id="pitchInput" min="0.8" max="1.8" step="0.05" value="1.25" oninput="updateVoiceSettingsParams()" class="w-full accent-blue-600">
-                </div>
-
-                <!-- 語速 -->
-                <div>
-                    <div class="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                        <span>語速 (Speed): <strong id="rateValue" class="text-blue-600">0.95</strong>x</span>
-                    </div>
-                    <input type="range" id="rateInput" min="0.6" max="1.4" step="0.05" value="0.95" oninput="updateVoiceSettingsParams()" class="w-full accent-blue-600">
-                </div>
-
-                <!-- 外語發音人選擇器 -->
-                <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">外語發音人選單 (系統支援)</label>
-                    <select id="targetVoiceSelect" class="w-full bg-slate-50 border border-slate-200 text-xs py-2 px-3 rounded-lg outline-none cursor-pointer"></select>
-                </div>
-
-                <!-- 中文翻譯發音人選擇器 -->
-                <div>
-                    <label class="block text-xs font-medium text-slate-700 mb-1">中文翻譯發音人選單</label>
-                    <select id="zhVoiceSelect" class="w-full bg-slate-50 border border-slate-200 text-xs py-2 px-3 rounded-lg outline-none cursor-pointer"></select>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-between gap-3">
-                <button onclick="testCurrentVoice()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1">
-                    <i data-lucide="volume-2" class="w-4 h-4"></i> 測試當前語音
-                </button>
-                <button onclick="toggleVoiceSettingsModal()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl text-xs font-semibold">
-                    儲存並關閉
+                <button onclick="toggleVoiceSettingsModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+                    儲存關閉
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript 邏輯庫 -->
+    <!-- Application Logic Script -->
     <script>
-        // Data Store
-        const presets = {
-            fountainPen: {
-                title: "鋼筆 / Fountain Pen",
-                image: "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80",
+        // Preset Objects Data Repository for Multilingual Guides
+        const OBJECT_DATABASE = {
+            pen: {
+                id: 'pen',
+                name: {
+                    en: 'Fountain Pen',
+                    ja: '万年筆 (Mannenhitsu)',
+                    fr: 'Stylo-plume',
+                    es: 'Pluma estilográfica',
+                    de: 'Füllfederhalter'
+                },
+                phonetic: '/ˈfaʊn.tən pen/',
+                category: '文具與書寫 (Stationery)',
+                image: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=800&q=80',
                 hotspots: [
-                    { x: 45, y: 35, label: { en: "Nib", ja: "ペン先 (ペンさき)", fr: "Plume", es: "Plumín", de: "Feder" } },
-                    { x: 55, y: 60, label: { en: "Pen Body", ja: "軸 / 軸身 (じく)", fr: "Corps", es: "Cuerpo", de: "Schaft" } },
-                    { x: 50, y: 15, label: { en: "Cap", ja: "キャップ", fr: "Capuchon", es: "Capuchón", de: "Kappe" } }
+                    { x: 50, y: 45, label: '筆身 (Body)' },
+                    { x: 25, y: 35, label: '金屬筆尖 (Nib)' }
                 ],
-                stages: {
-                    1: {
-                        title: "階段 1：外觀與材質描述 (First Minute)",
-                        vocab: [
-                            { word: "Metallic", ja: "金属製の (きんぞくせい)", zh: "金屬質感的" },
-                            { word: "Polished", ja: "研磨された (けんまされた)", zh: "拋光磨平的" },
-                            { word: "Solid", ja: "重厚感のある (じゅうこうかん)", zh: "紮實沉穩的" }
-                        ],
-                        sentence: {
-                            en: "This is a classical fountain pen with a polished black body.",
-                            ja: "これは洗練された黒い軸身を持つクラシックな万年筆です。(這是一支具有光滑黑色筆身的經典鋼筆。)",
-                            fr: "C'est un stylo-plume classique avec un corps noir poli.",
-                            es: "Es una pluma estilográfica clásica con un cuerpo negro pulido.",
-                            de: "Dies ist ein klassischer Füllhalter mit einem polierten schwarzen Schaft."
-                        }
+                vocab: {
+                    en: [
+                        { word: 'Metallic cap', meaning: '金屬筆蓋', type: 'Noun' },
+                        { word: 'Smooth nib', meaning: '滑順筆尖', type: 'Noun' },
+                        { word: 'Ink flow', meaning: '墨水流暢度', type: 'Noun' },
+                        { word: 'Weight balanced', meaning: '重量平衡的', type: 'Adj' }
+                    ],
+                    ja: [
+                        { word: 'ペン先 (Pensaki)', meaning: '筆尖', type: 'Noun' },
+                        { word: 'インク (Inku)', meaning: '墨水', type: 'Noun' },
+                        { word: '滑らか (Nameraka)', meaning: '滑順的', type: 'Adj' },
+                        { word: '高級感 (Kōkyūkan)', meaning: '進階質感', type: 'Noun' }
+                    ],
+                    fr: [
+                        { word: 'La plume', meaning: '筆尖', type: 'Noun' },
+                        { word: "L'encre", meaning: '墨水', type: 'Noun' },
+                        { word: 'Fluide', meaning: '順暢的', type: 'Adj' },
+                        { word: 'Élégant', meaning: '優雅的', type: 'Adj' }
+                    ],
+                    es: [
+                        { word: 'El plumín', meaning: '筆尖', type: 'Noun' },
+                        { word: 'La tinta', meaning: '墨水', type: 'Noun' },
+                        { word: 'Suave', meaning: '滑順的', type: 'Adj' },
+                        { word: 'Elegante', meaning: '高雅的', type: 'Adj' }
+                    ],
+                    de: [
+                        { word: 'Die Feder', meaning: '筆尖', type: 'Noun' },
+                        { word: 'Die Tinte', meaning: '墨水', type: 'Noun' },
+                        { word: 'Glatt', meaning: '滑順的', type: 'Adj' },
+                        { word: 'Klassisch', meaning: '經典的', type: 'Adj' }
+                    ]
+                },
+                phrases: {
+                    en: [
+                        'Fill with dark blue ink',
+                        'Write without applying pressure',
+                        'Sign important documents',
+                        'Jot down daily thoughts'
+                    ],
+                    ja: [
+                        '青いインクを補充する (補充深藍色墨水)',
+                        '力を入れずに書く (不需用力即可書寫)',
+                        '大切な書類にサインする (簽署重要文件)',
+                        '日々の思いを書き留める (隨手記錄日常想法)'
+                    ],
+                    fr: [
+                        "Remplir d'encre bleue (填充藍色墨水)",
+                        'Écrire sans pression (流暢書寫不費力)',
+                        'Signer des documents (簽署重要文件)',
+                        'Prendre des notes (記錄隨筆筆記)'
+                    ],
+                    es: [
+                        'Llenar con tinta azul (裝滿藍色墨水)',
+                        'Escribir sin hacer presión (輕鬆滑順書寫)',
+                        'Firmar documentos (簽署重要文件)',
+                        'Anotar ideas diarias (記錄每日靈感)'
+                    ],
+                    de: [
+                        'Mit blauer Tinte füllen (填充藍色墨水)',
+                        'Ohne Druck schreiben (輕盈無壓書寫)',
+                        'Dokumente unterschreiben (簽署檔案文件)',
+                        'Gedanken aufschreiben (寫下生活隨想)'
+                    ]
+                },
+                scripts: {
+                    stage1: {
+                        en: "This is my favorite fountain pen. It features a polished metallic body with a golden nib. It feels nicely balanced and slightly heavy in my hand, giving it a solid feel.",
+                        ja: "これは洗練された黒い軸身を持つクラシックな万年筆です。(這是一支具有光滑黑色筆身的經典鋼筆。)",
+                        fr: "C'est mon stylo-plume préféré. Il a un corps métallique poli avec une plume dorée.",
+                        es: "Esta es mi pluma estilográfica favorita. Cuenta con un cuerpo metálico pulido y un plumín dorado.",
+                        de: "Das ist mein Lieblingsfüllfederhalter. Er hat einen polierten Metallkörper und eine goldene Feder."
                     },
-                    2: {
-                        title: "階段 2：功能用途與動作短語 (Second Minute)",
-                        vocab: [
-                            { word: "Glide across", ja: "すらすら滑る (すべる)", zh: "在紙上滑順書寫" },
-                            { word: "Refill ink", ja: "インクを補充する (ほじゅう)", zh: "補充/墨水注入" },
-                            { word: "Sign documents", ja: "書類に署名する (しょめい)", zh: "簽署重要文件" }
-                        ],
-                        sentence: {
-                            en: "It glides smoothly across paper without requiring heavy pressure.",
-                            ja: "紙の上をすらすらと滑り、力を入れずに書くことができます。(它能在紙上順暢滑動，完全不需施加重力。)",
-                            fr: "Il glisse doucement sur le papier sans avoir à appuyer fort.",
-                            es: "Se desliza suavemente sobre el papel sin necesidad de presionar mucho.",
-                            de: "Er gleitet sanft über das Papier, ohne dass man stark aufdrücken muss."
-                        }
+                    stage2: {
+                        en: "I fill it with dark blue ink. When writing with it, the ink flows effortlessly across the paper without requiring extra force. I usually use it to sign letters or journal before bed.",
+                        ja: "紙の上をすらすらと滑り、力を入れずに書くことができます。(它能在紙上順暢滑動，完全不需施加重力。)",
+                        fr: "Je le remplis d'encre bleu nuit. L'encre glisse facilement sur le papier sans effort.",
+                        es: "La lleno con tinta azul oscuro. La tinta fluye sin esfuerzo sobre el papel.",
+                        de: "Ich fülle ihn mit dunkelblauer Tinte. Die Tinte fließt mühelos auf das Papier."
                     },
-                    3: {
-                        title: "階段 3：故事體驗與個人連結 (Third Minute)",
-                        sentence: {
-                            en: "Using this pen forces me to slow down and enjoy the rhythm of handwriting.",
-                            ja: "この万年筆を使うと、心が落ち着き手書きの文字の感覚を楽しめます。(使用這支鋼筆讓我能慢下腳步，享受手寫文字的節奏。)",
-                            fr: "Utiliser ce stylo me force à ralentir et à apprécier le rythme de l'écriture.",
-                            es: "Usar esta pluma me obliga a frenar y disfrutar el ritmo de escribir a mano.",
-                            de: "Die Benutzung dieses Füllers zwingt mich, innezuhalten und das Schreiben zu genießen."
-                        }
+                    stage3: {
+                        en: "I bought this pen a few years ago to celebrate a personal milestone. In a world full of glowing screens, writing with this pen helps me slow down and focus on my thoughts.",
+                        ja: "この万年筆を使うと、心が落ち着き手書きの文字の感覚を楽しめます。(使用這支鋼筆讓我能慢下腳步，享受手寫文字的節奏。)",
+                        fr: "J'ai acheté ce stylo il y a quelques années. Écrire avec me permet de ralentir et de mieux me concentrer.",
+                        es: "Compré esta pluma hace unos años. Escribir con ella me ayuda a desacelerar y concentrar mis pensamientos.",
+                        de: "Ich habe diesen Füller vor einigen Jahren gekauft. Das Schreiben damit hilft mir, langsamer zu werden."
                     }
                 }
             },
-            coffeeMug: {
-                title: "馬克杯 / Coffee Mug",
-                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80",
+            mug: {
+                id: 'mug',
+                name: {
+                    en: 'Coffee Mug',
+                    ja: 'コーヒーマグ (Kōhī Magu)',
+                    fr: 'Tasse à café',
+                    es: 'Taza de café',
+                    de: 'Kaffeetasse'
+                },
+                phonetic: '/ˈkɒf.i mʌɡ/',
+                category: '餐廚與生活 (Kitchenware)',
+                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
                 hotspots: [
-                    { x: 70, y: 50, label: { en: "Handle", ja: "取っ手 (とって)", fr: "Anse", es: "Asa", de: "Henkel" } },
-                    { x: 45, y: 25, label: { en: "Rim", ja: "飲み口 (のみくち)", fr: "Rebord", es: "Borde", de: "Rand" } }
+                    { x: 45, y: 55, label: '陶瓷杯身' },
+                    { x: 70, y: 50, label: '握把' }
                 ],
-                stages: {
-                    1: {
-                        title: "階段 1：外觀與材質描述 (First Minute)",
-                        vocab: [
-                            { word: "Ceramic", ja: "陶器の (とうき)", zh: "陶瓷的" },
-                            { word: "Cozy", ja: "心地よい (ここちよい)", zh: "溫暖舒適的" }
-                        ],
-                        sentence: {
-                            en: "This is a heavy ceramic mug that keeps my tea warm.",
-                            ja: "これはお茶を温かく保ってくれる、厚手のセラミックマグカップです。(這是一個能幫我的茶保持溫熱的厚實陶瓷馬克杯。)",
-                            fr: "C'est une tasse en céramique lourde qui garde mon thé au chaud.",
-                            es: "Es una taza de cerámica pesada que mantiene mi té caliente.",
-                            de: "Dies ist ein schwerer Keramikbecher, der meinen Tee warm hält."
-                        }
+                vocab: {
+                    en: [
+                        { word: 'Ceramic finish', meaning: '陶瓷質感', type: 'Noun' },
+                        { word: 'Sturdy handle', meaning: '結實手把', type: 'Noun' },
+                        { word: 'Heat retention', meaning: '良好保溫性', type: 'Noun' },
+                        { word: 'Cozy grip', meaning: '握感舒適', type: 'Adj' }
+                    ],
+                    ja: [
+                        { word: '陶器 (Tōki)', meaning: '陶瓷', type: 'Noun' },
+                        { word: '取っ手 (Totte)', meaning: '把手', type: 'Noun' },
+                        { word: '保温性 (Hoon-sei)', meaning: '保溫力', type: 'Noun' },
+                        { word: '温かい (Warm)', meaning: '溫暖的', type: 'Adj' }
+                    ],
+                    fr: [
+                        { word: 'La céramique', meaning: '陶瓷', type: 'Noun' },
+                        { word: "L'anse", meaning: '把手', type: 'Noun' },
+                        { word: 'Chaud', meaning: '溫熱的', type: 'Adj' },
+                        { word: 'Confortable', meaning: '舒適的', type: 'Adj' }
+                    ],
+                    es: [
+                        { word: 'La cerámica', meaning: '陶瓷', type: 'Noun' },
+                        { word: 'El asa', meaning: '把手', type: 'Noun' },
+                        { word: 'Caliente', meaning: '熱的', type: 'Adj' },
+                        { word: 'Cómodo', meaning: '舒適的', type: 'Adj' }
+                    ],
+                    de: [
+                        { word: 'Die Keramik', meaning: '陶瓷', type: 'Noun' },
+                        { word: 'Der Henkel', meaning: '把手', type: 'Noun' },
+                        { word: 'Warm', meaning: '溫暖的', type: 'Adj' },
+                        { word: 'Gemütlich', meaning: '舒適的', type: 'Adj' }
+                    ]
+                },
+                phrases: {
+                    en: [
+                        'Brew fresh morning coffee',
+                        'Hold with both hands for warmth',
+                        'Sip slowly while working',
+                        'Wash gently by hand'
+                    ],
+                    ja: [
+                        '朝の淹れたてコーヒーを注ぐ (沖泡早晨咖啡)',
+                        '両手で持って温まる (雙手捧著取暖)',
+                        '仕事をしながら少しずつ飲む (工作時慢慢品嚐)',
+                        '手で優しく洗う (用手溫柔清洗)'
+                    ],
+                    fr: [
+                        'Préparer du café frais (沖泡新鮮咖啡)',
+                        'Tenir à deux mains (雙手捧著杯身)',
+                        'Savoir savourer (工作時細細品嚐)',
+                        'Laver doucement (溫和清潔擦拭)'
+                    ],
+                    es: [
+                        'Preparar café por la mañana (沖煮晨間咖啡)',
+                        'Sostener con ambas manos (雙手溫暖握著)',
+                        'Tomar despacio (工作時慢慢飲用)',
+                        'Lavar a mano (使用後手洗乾淨)'
+                    ],
+                    de: [
+                        'Frischen Kaffee aufbrühen (沖泡新鮮咖啡)',
+                        'Mit beiden Händen halten (雙手捧著溫暖)',
+                        'Langsam trinken (一邊工作一邊啜飲)',
+                        'Sanft spülen (輕柔沖洗清潔)'
+                    ]
+                },
+                scripts: {
+                    stage1: {
+                        en: "This is my everyday ceramic coffee mug. It has a smooth white matte texture with an ergonomic handle.",
+                        ja: "これはお茶を温かく保ってくれる、厚手のセラミックマグカップです。(這是一個能幫我的茶保持溫熱的厚實陶瓷馬克杯。)",
+                        fr: "C'est ma tasse à café en céramique. Sa finition est mat et son anse est très confortable.",
+                        es: "Esta es mi taza de café diaria. Tiene un acabado mate y un asa ergonómica muy cómoda.",
+                        de: "Das ist meine tägliche Kaffeetasse aus Keramik. Sie hat eine matte Oberfläche."
                     },
-                    2: {
-                        title: "階段 2：功能用途與動作短語 (Second Minute)",
-                        vocab: [
-                            { word: "Sip slowly", ja: "ゆっくり味わう", zh: "細細啜飲" },
-                            { word: "Hold with both hands", ja: "両手で包み込む (りょうて)", zh: "用雙手捧著" }
-                        ],
-                        sentence: {
-                            en: "I like to hold it with both hands on cold winter mornings.",
-                            ja: "寒い冬の朝、これを両手で包み込むように持つのが好きです。(在寒冷的冬天早晨，我喜歡用雙手捧著它。)",
-                            fr: "J'aime la tenir à deux mains les matins d'hiver froids.",
-                            es: "Me gusta sostenerla con ambas manos en las mañanas frías de invierno.",
-                            de: "Ich halte ihn an kalten Wintermorgen gerne mit beiden Händen."
-                        }
+                    stage2: {
+                        en: "Every morning, I pour freshly brewed pour-over coffee into it. The thick wall keeps my drink warm for a long time.",
+                        ja: "寒い冬の朝、これを両手で包み込むように持つのが好きです。(在寒冷的冬天早晨，我喜歡用雙手捧著它。)",
+                        fr: "Chaque matin, j'y verse du café chaud. Les parois épaisses gardent ma boisson chaude.",
+                        es: "Cada mañana sirvo café recién hecho aquí. Mantienen la bebida caliente por más tiempo.",
+                        de: "Jeden Morgen gieße ich frischen Kaffee hinein. Die dicken Wände halten den Kaffee lange warm."
                     },
-                    3: {
-                        title: "階段 3：故事體驗與個人連結 (Third Minute)",
-                        sentence: {
-                            en: "It marks the start of my quiet morning routine before work.",
-                            ja: "これは仕事前の、穏やかな朝の習慣の始まりを意味しています。(它代表著我在工作前那段寧靜早晨時光的開始。)",
-                            fr: "Elle marque le début de ma routine matinale avant le travail.",
-                            es: "Marca el comienzo de mi tranquila rutina matutina antes de trabajar.",
-                            de: "Er markiert den Beginn meiner ruhigen Morgenroutine vor der Arbeit."
-                        }
+                    stage3: {
+                        en: "A good friend gifted this mug to me during my trip last summer. Drinking from it starts my workday with comfort.",
+                        ja: "これは仕事前の、穏やかな朝の習慣の始まりを意味しています。(它代表著我在工作前那段寧靜早晨時光的開始。)",
+                        fr: "Un ami me l'a offerte lors d'un voyage. Boire mon café dedans apporte un moment de réconfort.",
+                        es: "Un buen amigo me regaló esta taza durante un viaje. Usarla por la mañana me brinda un momento de paz.",
+                        de: "Ein freund hat mir diese Tasse geschenkt. Sie gibt mir jeden Morgen ein gemütliches Gefühl."
+                    }
+                }
+            },
+            watch: {
+                id: 'watch',
+                name: {
+                    en: 'Vintage Watch',
+                    ja: 'ヴィンテージ腕時計 (Vintage Udedokei)',
+                    fr: 'Montre vintage',
+                    es: 'Reloj vintage',
+                    de: 'Vintage-Uhr'
+                },
+                phonetic: '/ˈvɪn.tɪdʒ wɒtʃ/',
+                category: '配件與配飾 (Accessories)',
+                image: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                hotspots: [
+                    { x: 50, y: 50, label: '鐘錶錶盤' },
+                    { x: 30, y: 70, label: '真皮錶帶' }
+                ],
+                vocab: {
+                    en: [
+                        { word: 'Leather strap', meaning: '皮革錶帶', type: 'Noun' },
+                        { word: 'Dial & Hands', meaning: '錶盤與指針', type: 'Noun' },
+                        { word: 'Tick-tock sound', meaning: '滴答聲響', type: 'Noun' },
+                        { word: 'Timeless design', meaning: '經典不朽的', type: 'Adj' }
+                    ],
+                    ja: [
+                        { word: '革ベルト (Kawa Beruto)', meaning: '皮革錶帶', type: 'Noun' },
+                        { word: '文字盤 (Mojiban)', meaning: '錶盤', type: 'Noun' },
+                        { word: '針 (Hari)', meaning: '指針', type: 'Noun' },
+                        { word: 'クラシック (Classic)', meaning: '復古經典', type: 'Adj' }
+                    ],
+                    fr: [
+                        { word: 'Le bracelet en cuir', meaning: '皮錶帶', type: 'Noun' },
+                        { word: 'Le cadran', meaning: '錶盤', type: 'Noun' },
+                        { word: 'Précis', meaning: '精準的', type: 'Adj' },
+                        { word: 'Rétro', meaning: '復古的', type: 'Adj' }
+                    ],
+                    es: [
+                        { word: 'La correa de cuero', meaning: '皮錶帶', type: 'Noun' },
+                        { word: 'La esfera', meaning: '錶盤', type: 'Noun' },
+                        { word: 'Preciso', meaning: '精準的', type: 'Adj' },
+                        { word: 'Clásico', meaning: '經典的', type: 'Adj' }
+                    ],
+                    de: [
+                        { word: 'Das Lederarmband', meaning: '皮錶帶', type: 'Noun' },
+                        { word: 'Das Zifferblatt', meaning: '錶盤', type: 'Noun' },
+                        { word: 'Präzise', meaning: '精準的', type: 'Adj' },
+                        { word: 'Zeitlos', meaning: '永恆經典', type: 'Adj' }
+                    ]
+                },
+                phrases: {
+                    en: [
+                        'Strap onto wrist',
+                        'Check the time periodically',
+                        'Wind up the mechanical movement',
+                        'Match with formal outfits'
+                    ],
+                    ja: [
+                        '腕に装着する (戴在手腕上)',
+                        '定期的に時間を確認する (確認當前時間)',
+                        'ぜんまいを巻く (手動上發條)',
+                        'フォーマルな服に合わせる (搭配正裝襯衫)'
+                    ],
+                    fr: [
+                        'Attacher au poignet (戴上右手腕)',
+                        'Vérifier l\'heure (看時間確認行程)',
+                        'Remonter le mécanisme (發條手動上鍊)',
+                        'Assortir avec des tenues (搭配正式服裝)'
+                    ],
+                    es: [
+                        'Ajustar en la muñeca (佩戴在手腕上)',
+                        'Mirar la hora (定時查看時間)',
+                        'Dar cuerda al reloj (手動為機械上鍊)',
+                        'Combinar con ropa formal (搭配正式服飾)'
+                    ],
+                    de: [
+                        'Am Handgelenk tragen (佩戴於手腕)',
+                        'Die Uhrzeit ablesen (讀取當前時間)',
+                        'Das Uhrwerk aufziehen (手動上緊發條)',
+                        'Mit Kleidung kombinieren (搭配正裝出行)'
+                    ]
+                },
+                scripts: {
+                    stage1: {
+                        en: "This is a vintage mechanical wrist watch. It features a genuine brown leather strap and a clean ivory dial.",
+                        ja: "この時計はクラシックな革ベルトとシンプルな文字盤が特徴です。(這隻手錶擁有經典皮革錶帶與極簡的錶盤。)",
+                        fr: "C'est une montre mécanique vintage avec un bracelet en cuir marron et un cadran ivoire.",
+                        es: "Este es un reloj de pulsera mecánico vintage con una correa de cuero marrón.",
+                        de: "Das ist eine Vintage-Armbanduhr mit einem braunen Lederarmband."
+                    },
+                    stage2: {
+                        en: "I wind the crown manually every morning to power its internal gears. Wearing it reminds me to manage my schedule wisely.",
+                        ja: "毎朝、正確に動くようにリューズを手動で巻いています。(我每天早晨手動旋轉錶冠上發條，確保它精準運轉。)",
+                        fr: "Je la remonte manuellement chaque matin. Elle me permet de vérifier l'heure.",
+                        es: "Le doy cuerda manualmente cada mañana. Me ayuda a consultar la hora sin mirar el teléfono.",
+                        de: "Ich ziehe sie jeden Morgen von Hand auf. Sie hilft mir, die Zeit abzulesen."
+                    },
+                    stage3: {
+                        en: "This timepiece carries nostalgic stories and teaches me to value every passing moment.",
+                        ja: "これは私に、限られた時間を大切に使うことを思い出させてくれます。(它常提醒我要珍惜並用心度過每一天有限的時間。)",
+                        fr: "Cette montre m'a été transmise par mon grand-père. Elle porte en elle une vraie valeur.",
+                        es: "Este reloj fue heredado de mi abuelo. Me enseña a valorar el tiempo.",
+                        de: "Diese Uhr stammt von meinem Großvater. Sie erinnert mich daran, Zeit zu schätzen."
+                    }
+                }
+            },
+            lamp: {
+                id: 'lamp',
+                name: {
+                    en: 'Desk Lamp',
+                    ja: 'デスクライト (Desuku Raito)',
+                    fr: 'Lampe de bureau',
+                    es: 'Lámpara de escritorio',
+                    de: 'Schreibtischlampe'
+                },
+                phonetic: '/desk læmp/',
+                category: '家具與照明 (Furniture & Light)',
+                image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
+                hotspots: [
+                    { x: 50, y: 30, label: '燈罩與燈泡' },
+                    { x: 50, y: 75, label: '底座開關' }
+                ],
+                vocab: {
+                    en: [
+                        { word: 'Warm bulb', meaning: '暖色燈泡', type: 'Noun' },
+                        { word: 'Adjustable arm', meaning: '可調式燈臂', type: 'Noun' },
+                        { word: 'Cozy glow', meaning: '溫馨光芒', type: 'Noun' },
+                        { word: 'Dimmer switch', meaning: '調光開關', type: 'Noun' }
+                    ],
+                    ja: [
+                        { word: '電球 (Denkyū)', meaning: '燈泡', type: 'Noun' },
+                        { word: '可動式アーム', meaning: '可調燈臂', type: 'Noun' },
+                        { word: '温かい光', meaning: '暖光', type: 'Noun' },
+                        { word: 'スイッチ (Switch)', meaning: '開關', type: 'Noun' }
+                    ],
+                    fr: [
+                        { word: "L'ampoule", meaning: '燈泡', type: 'Noun' },
+                        { word: 'Lumière douce', meaning: '柔和光線', type: 'Noun' },
+                        { word: 'Ajustable', meaning: '可調節的', type: 'Adj' },
+                        { word: 'L\'interrupteur', meaning: '開關', type: 'Noun' }
+                    ],
+                    es: [
+                        { word: 'La bombilla', meaning: '燈泡', type: 'Noun' },
+                        { word: 'Luz cálida', meaning: '暖光', type: 'Noun' },
+                        { word: 'Ajustable', meaning: '可調節的', type: 'Adj' },
+                        { word: 'El interruptor', meaning: '開關', type: 'Noun' }
+                    ],
+                    de: [
+                        { word: 'Die Glühbirne', meaning: '燈泡', type: 'Noun' },
+                        { word: 'Warmes Licht', meaning: '暖光', type: 'Noun' },
+                        { word: 'Verstellbar', meaning: '可調節的', type: 'Adj' },
+                        { word: 'Der Schalter', meaning: '開關', type: 'Noun' }
+                    ]
+                },
+                phrases: {
+                    en: [
+                        'Flip the switch on',
+                        'Adjust the lighting angle',
+                        'Illuminate the study space',
+                        'Dim the light late at night'
+                    ],
+                    ja: [
+                        'スイッチを入れる (按下電源開關)',
+                        '光の角度を調整する (調整照射角度)',
+                        '手元を照らす (照亮書桌閱讀區)',
+                        '深夜に光を弱める (深夜調暗光線)'
+                    ],
+                    fr: [
+                        'Allumer la lampe (打開檯燈電源)',
+                        'Régler l\'angle de lumière (調整光源角度)',
+                        'Éclairer le bureau (照亮工作區域)',
+                        'Tasser la lumière la nuit (深夜將燈光微調)'
+                    ],
+                    es: [
+                        'Encender el interruptor (開啟檯燈開關)',
+                        'Ajustar el ángulo de luz (調節燈光角度)',
+                        'Iluminar el escritorio (照亮書桌桌面)',
+                        'Atenuar la luz de noche (深夜調低亮度)'
+                    ],
+                    de: [
+                        'Den Schalter einschalten (打開燈具開關)',
+                        'Den Lichtwinkel anpassen (調整照明角度)',
+                        'Den Tisch beleuchten (照亮讀書區域)',
+                        'Nachts das Licht dimmen (夜間將燈光調暗)'
+                    ]
+                },
+                scripts: {
+                    stage1: {
+                        en: "This is a minimal desk lamp that casts a warm, soft light.",
+                        ja: "これは暖かく柔らかい光を放つ、シンプルなデスクライトです。(這是一盞能投射出溫暖柔和光線的極簡檯燈。)",
+                        fr: "C'est une lampe de bureau minimale qui émet une lumière chaude et douce.",
+                        es: "Es una lámpara de escritorio mínima que emite una luz cálida y suave.",
+                        de: "Dies ist eine minimale Schreibtischlampe, die ein warmes, weiches Licht wirft."
+                    },
+                    stage2: {
+                        en: "I turn it on whenever I read or work late into the night.",
+                        ja: "夜遅く本を読んだり仕事したりするときに、いつも点灯します。(每當我夜深閱讀或工作時，我都會點亮它。)",
+                        fr: "Je l'allume chaque fois que je lis ou travaille tard le soir.",
+                        es: "La enciendo cada vez que leo o trabajo hasta tarde en la noche.",
+                        de: "Ich schalte sie ein, wann immer ich spät in der Nacht lese oder arbeite."
+                    },
+                    stage3: {
+                        en: "Its soft glow creates a comfortable atmosphere for quiet thinking.",
+                        ja: "その優しい光が、静かに思考するための快適な雰囲気を作ってくれます。(它柔和的光芒為我打造了一個適合平靜思考的舒適氛圍。)",
+                        fr: "Sa douce lueur crée une atmosphère confortable pour réfléchir calmement.",
+                        es: "Su suave brillo crea un ambiente cómodo para pensar con tranquilidad.",
+                        de: "Ihr sanftes Leuchten schafft eine angenehme Atmosphäre für ruhiges Nachdenken."
+                    }
+                }
+            },
+            books: {
+                id: 'books',
+                name: {
+                    en: 'Bookshelf',
+                    ja: '本棚 (Hondana)',
+                    fr: 'Bibliothèque',
+                    es: 'Estantería de libros',
+                    de: 'Bücherregal'
+                },
+                phonetic: '/ˈbʊk.ʃelf/',
+                category: '家具與學習 (Study & Living)',
+                image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80',
+                hotspots: [
+                    { x: 35, y: 40, label: '小說與書籍' },
+                    { x: 70, y: 60, label: '實木架層' }
+                ],
+                vocab: {
+                    en: [
+                        { word: 'Hardcover spines', meaning: '精裝書脊', type: 'Noun' },
+                        { word: 'Wooden shelves', meaning: '木質層架', type: 'Noun' },
+                        { word: 'Literary collection', meaning: '個人藏書', type: 'Noun' },
+                        { word: 'Neatly organized', meaning: '整齊排列的', type: 'Adj' }
+                    ],
+                    ja: [
+                        { word: '背表紙 (Sebabōshi)', meaning: '書脊', type: 'Noun' },
+                        { word: '木製棚 (Mokusei tana)', meaning: '木架', type: 'Noun' },
+                        { word: '蔵書 (Zōsho)', meaning: '藏書', type: 'Noun' },
+                        { word: '整然と (Seizen-to)', meaning: '井然有序地', type: 'Adj' }
+                    ],
+                    fr: [
+                        { word: 'La reliure', meaning: '書脊/裝訂', type: 'Noun' },
+                        { word: 'Les étagères', meaning: '架子', type: 'Noun' },
+                        { word: 'Bien rangé', meaning: '整齊的', type: 'Adj' },
+                        { word: 'Inspirant', meaning: '有啟發性的', type: 'Adj' }
+                    ],
+                    es: [
+                        { word: 'El lomo del libro', meaning: '書脊', type: 'Noun' },
+                        { word: 'Los estantes', meaning: '架子', type: 'Noun' },
+                        { word: 'Bien organizado', meaning: '井然有序的', type: 'Adj' },
+                        { word: 'Valioso', meaning: '珍貴的', type: 'Adj' }
+                    ],
+                    de: [
+                        { word: 'Der Buchrücken', meaning: '書脊', type: 'Noun' },
+                        { word: 'Die Regale', meaning: '層架', type: 'Noun' },
+                        { word: 'Ordentlich', meaning: '整齊的', type: 'Adj' },
+                        { word: 'Wortreich', meaning: '豐富的', type: 'Adj' }
+                    ]
+                },
+                phrases: {
+                    en: [
+                        'Browse through titles',
+                        'Pull out a book to read',
+                        'Organize by genre or color',
+                        'Collect stories over time'
+                    ],
+                    ja: [
+                        'タイトルを眺める (瀏覽書背書名)',
+                        '本を1冊手に取る (抽出一本書閱讀)',
+                        'ジャンルごとに整理する (按分類分類整齊)',
+                        '時間をかけて物語を集める (收集喜愛的書籍故事)'
+                    ],
+                    fr: [
+                        'Parcourir les titres (瀏覽書架上的書名)',
+                        'Choisir un livre à lire (挑選一本書閱讀)',
+                        'Ranger par genre (依據種類歸類整理)',
+                        'Collectionner des romans (累積閱讀與書本記錄)'
+                    ],
+                    es: [
+                        'Hojear los títulos (瀏覽書脊書名)',
+                        'Sacar un libro para leer (抽出書本閱讀)',
+                        'Organizar por género (按照類別擺放整理)',
+                        'Coleccionar historias (收集各類書籍文字)'
+                    ],
+                    de: [
+                        'Buchtitel durchstöbern (瀏覽書架書名)',
+                        'Ein Buch herausnehmen (抽取書本來閱讀)',
+                        'Nach Genre ordnen (依據主題整理書籍)',
+                        'Geschichten sammeln (收藏各種心儀作品)'
+                    ]
+                },
+                scripts: {
+                    stage1: {
+                        en: "This is a wooden bookshelf filled with my favorite classic novels.",
+                        ja: "これはお気に入りの古典小説が詰まった木製の本棚です。(這是一個擺滿了我最喜愛的經典小說的木質書架。)",
+                        fr: "C'est une étagère en bois remplie de mes romans classiques préférés.",
+                        es: "Es una estantería de madera llena de mis novelas clásicas favoritas.",
+                        de: "Dies ist ein Holzregal voller meiner Lieblingsromane."
+                    },
+                    stage2: {
+                        en: "I love browsing through the spines to pick a book for the weekend.",
+                        ja: "週末に読む本を選ぶため、背表紙を眺めるのが好きです。(我喜歡看著書背標題，挑選一本陪我度過週末的好書。)",
+                        fr: "J'aime parcourir les dos pour choisir un livre pour le week-end.",
+                        es: "Me encanta mirar los lomos para elegir un libro para el fin de semana.",
+                        de: "Ich liebe es, durch die Buchrücken zu stöbern."
+                    },
+                    stage3: {
+                        en: "Each book on these shelves represents a meaningful chapter in my life.",
+                        ja: "この棚のどの本も、私の人生の切実で大切な章を象徴しています。(書架上的每一本書，都代表著我人生中珍貴精彩的一章。)",
+                        fr: "Chaque livre sur ces étagères représente un chapitre de ma vie.",
+                        es: "Cada libro en estos estantes representa un capítulo significativo de mi vida.",
+                        de: "Jedes Buch in diesen Regalen repräsentiert ein Kapitel in meinem Leben."
                     }
                 }
             }
         };
 
-        let currentLang = 'ja';
-        let currentPreset = 'fountainPen';
+        // State Management
+        let currentTargetLang = 'ja';
+        let currentObject = OBJECT_DATABASE.pen; 
         let currentStage = 1;
-        let pitch = 1.25;
-        let rate = 0.95;
-        let availableVoices = [];
+        let activeTab = 'studio';
 
-        // 初始化
+        // TTS Custom Settings State
+        let ttsPitch = 1.25; // Default clear & sharp pitch
+        let ttsRate = 0.95;  // Slightly slower rate for high clarity
+        let availableVoices = [];
+        let selectedTargetVoiceURI = null;
+        let selectedZhVoiceURI = null;
+
+        // Timer & Audio Recording States
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let timerInterval = null;
+        let secondsLeft = 180;
+
+        // Initialization
         window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            initSpeechSynthesis();
-            renderApp();
+            loadPreset('pen');
+            renderNotebook();
+            initSpeechVoices();
         });
 
-        function initSpeechSynthesis() {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.onvoiceschanged = () => {
-                    availableVoices = window.speechSynthesis.getVoices();
-                    populateVoiceDropdowns();
-                };
+        // Speech Voice Initialization
+        function initSpeechVoices() {
+            if (!('speechSynthesis' in window)) return;
+            
+            const populateVoices = () => {
                 availableVoices = window.speechSynthesis.getVoices();
-                populateVoiceDropdowns();
+                updateVoiceDropdown();
+            };
+
+            populateVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = populateVoices;
             }
         }
 
-        function populateVoiceDropdowns() {
-            const targetSelect = document.getElementById('targetVoiceSelect');
+        function updateVoiceDropdown() {
+            const targetSelect = document.getElementById('voiceSelect');
             const zhSelect = document.getElementById('zhVoiceSelect');
             if (!targetSelect || !zhSelect) return;
 
-            targetSelect.innerHTML = '';
-            zhSelect.innerHTML = '';
+            targetSelect.innerHTML = '<option value="">自動選取最佳清亮外語發音人</option>';
+            zhSelect.innerHTML = '<option value="">自動選取最佳中文翻譯發音人</option>';
 
-            const langPrefixMap = { en: 'en', ja: 'ja', fr: 'fr', es: 'es', de: 'de' };
-            const prefix = langPrefixMap[currentLang] || 'en';
+            const langPrefixes = { en: 'en', ja: 'ja', fr: 'fr', es: 'es', de: 'de' };
+            const prefix = langPrefixes[currentTargetLang] || 'en';
 
-            availableVoices.forEach((v, index) => {
+            availableVoices.forEach(voice => {
                 const opt = document.createElement('option');
-                opt.value = index;
-                opt.textContent = `${v.name} (${v.lang})`;
+                opt.value = voice.voiceURI;
+                opt.textContent = `${voice.name} (${voice.lang})`;
 
-                if (v.lang.toLowerCase().startsWith(prefix)) {
+                if (voice.lang.toLowerCase().startsWith(prefix)) {
+                    if (selectedTargetVoiceURI === voice.voiceURI) opt.selected = true;
                     targetSelect.appendChild(opt);
                 }
-                if (v.lang.toLowerCase().startsWith('zh')) {
+                if (voice.lang.toLowerCase().startsWith('zh')) {
                     const zhOpt = document.createElement('option');
-                    zhOpt.value = index;
-                    zhOpt.textContent = `${v.name} (${v.lang})`;
+                    zhOpt.value = voice.voiceURI;
+                    zhOpt.textContent = `${voice.name} (${voice.lang})`;
+                    if (selectedZhVoiceURI === voice.voiceURI) zhOpt.selected = true;
                     zhSelect.appendChild(zhOpt);
                 }
             });
 
-            // 優先設定發音清晰、高品質語音 (Google/Microsoft/Apple)
-            selectBestVoice(targetSelect, prefix);
-            selectBestVoice(zhSelect, 'zh');
+            autoSelectBestVoice(targetSelect, prefix);
+            autoSelectBestVoice(zhSelect, 'zh');
         }
 
-        function selectBestVoice(selectElement, langPrefix) {
+        function autoSelectBestVoice(selectElement, langPrefix) {
+            if (selectElement.value !== "") return;
             const options = Array.from(selectElement.options);
-            const preferredKeywords = ['Google', 'Natural', 'Online', 'Premium', 'Enhanced', 'Kyoko', 'Otoya', 'Luciana'];
+            const preferredKeywords = ['Google', 'Natural', 'Online', 'Premium', 'Enhanced', 'Kyoko', 'Otoya', 'Luciana', 'Mei-Jia'];
             
             for (let kw of preferredKeywords) {
                 const match = options.find(o => o.textContent.includes(kw));
                 if (match) {
                     selectElement.value = match.value;
+                    if (langPrefix === 'zh') selectedZhVoiceURI = match.value;
+                    else selectedTargetVoiceURI = match.value;
                     return;
                 }
             }
         }
 
-        function renderApp() {
-            const data = presets[currentPreset];
-            document.getElementById('objectImage').src = data.image;
-
-            // Render Hotspots
-            const container = document.getElementById('hotspotContainer');
-            const list = document.getElementById('hotspotList');
-            container.innerHTML = '';
-            list.innerHTML = '';
-
-            data.hotspots.forEach(hp => {
-                const dot = document.createElement('button');
-                dot.className = "absolute w-7 h-7 bg-blue-600/90 border-2 border-white rounded-full text-white text-xs font-bold flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2 hover:scale-125 transition shadow-lg cursor-pointer";
-                dot.style.left = `${hp.x}%`;
-                dot.style.top = `${hp.y}%`;
-                dot.innerHTML = `<i data-lucide="sparkles" class="w-3.5 h-3.5"></i>`;
-                dot.onclick = () => speakText(hp.label[currentLang] || hp.label.en);
-                container.appendChild(dot);
-
-                const tag = document.createElement('span');
-                tag.className = "bg-slate-100 hover:bg-blue-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 cursor-pointer transition";
-                tag.innerHTML = `<i data-lucide="volume-2" class="w-3.5 h-3.5 text-blue-600"></i> ${hp.label[currentLang] || hp.label.en}`;
-                tag.onclick = () => speakText(hp.label[currentLang] || hp.label.en);
-                list.appendChild(tag);
-            });
-
-            renderStageContent();
-            lucide.createIcons();
+        function toggleVoiceSettingsModal() {
+            const modal = document.getElementById('voiceSettingsModal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                updateVoiceDropdown();
+            }
         }
 
-        function renderStageContent() {
-            const stageData = presets[currentPreset].stages[currentStage];
-            const container = document.getElementById('stageContent');
-            
-            let html = `<h3 class="font-bold text-slate-900 text-base mb-4 flex items-center justify-between">
-                <span>${stageData.title}</span>
-            </h3>`;
+        function updateVoiceConfig() {
+            const pitchVal = parseFloat(document.getElementById('pitchSlider').value);
+            const rateVal = parseFloat(document.getElementById('rateSlider').value);
+            selectedTargetVoiceURI = document.getElementById('voiceSelect').value;
+            selectedZhVoiceURI = document.getElementById('zhVoiceSelect').value;
 
-            if (stageData.vocab) {
-                html += `<div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">`;
-                stageData.vocab.forEach(v => {
-                    const textToRead = currentLang === 'ja' ? `${v.word} ${v.ja}` : `${v.word} (${v.zh})`;
-                    html += `
-                    <div onclick="speakText('${textToRead.replace(/'/g, "\\'")}')" class="bg-slate-50 hover:bg-blue-50 border border-slate-200 p-3 rounded-xl cursor-pointer transition group">
-                        <div class="flex justify-between items-start">
-                            <span class="font-bold text-blue-600 text-sm">${v.word}</span>
-                            <i data-lucide="volume-2" class="w-4 h-4 text-slate-400 group-hover:text-blue-600"></i>
-                        </div>
-                        <div class="text-xs text-slate-600 mt-1">${v.ja || v.zh}</div>
-                    </div>`;
+            ttsPitch = pitchVal;
+            ttsRate = rateVal;
+
+            document.getElementById('pitchValDisplay').textContent = `${pitchVal.toFixed(2)} ${pitchVal > 1.0 ? '(高頻清亮)' : ''}`;
+            document.getElementById('rateValDisplay').textContent = `${rateVal.toFixed(2)}x`;
+        }
+
+        function testVoiceAudio() {
+            const testPhrases = {
+                en: 'Testing clear target speech sound. (測試音質發音清晰度。)',
+                ja: 'これは万年筆です。(這是一支鋼筆。)',
+                fr: 'C\'est un stylo-plume. (這是一支鋼筆。)',
+                es: 'Es una pluma estilográfica. (這是一支鋼筆。)',
+                de: 'Dies ist ein Füllhalter. (這是一支鋼筆。)'
+            };
+            speakText(testPhrases[currentTargetLang] || testPhrases.en);
+        }
+
+        // Tab Switching
+        function switchTab(tab) {
+            activeTab = tab;
+            const studioTab = document.getElementById('studioTab');
+            const notebookTab = document.getElementById('notebookTab');
+            const btnStudio = document.getElementById('tabBtnStudio');
+            const btnNotebook = document.getElementById('tabBtnNotebook');
+
+            if (tab === 'studio') {
+                studioTab.classList.remove('hidden');
+                notebookTab.classList.add('hidden');
+                btnStudio.className = "px-3.5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200";
+                btnNotebook.className = "px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-2";
+            } else {
+                studioTab.classList.add('hidden');
+                notebookTab.classList.remove('hidden');
+                btnNotebook.className = "px-3.5 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200";
+                btnStudio.className = "px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition flex items-center gap-2";
+                renderNotebook();
+            }
+        }
+
+        // Language Switch Handler
+        function changeTargetLanguage(lang) {
+            currentTargetLang = lang;
+            updateUIForCurrentObject();
+            updateVoiceDropdown();
+            showToast(`學習目標語言已切換為：${getLanguageName(lang)}`, 'fa-globe');
+        }
+
+        function getLanguageName(code) {
+            const names = { en: '英文', ja: '日文', fr: '法文', es: '西班牙文', de: '德文' };
+            return names[code] || code;
+        }
+
+        // Preset Loader
+        function loadPreset(presetKey) {
+            if (OBJECT_DATABASE[presetKey]) {
+                currentObject = OBJECT_DATABASE[presetKey];
+                displayMainImage(currentObject.image);
+                updateUIForCurrentObject();
+                showToast(`已載入「${currentObject.name.en}」學習範例`, 'fa-circle-check');
+            }
+        }
+
+        // Image Handling
+        function triggerCamera() {
+            document.getElementById('cameraInput').click();
+        }
+
+        function triggerUpload() {
+            document.getElementById('imageInput').click();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imageSrc = e.target.result;
+                displayMainImage(imageSrc);
+                simulateAIRecognition(file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayMainImage(src) {
+            const img = document.getElementById('mainImage');
+            const placeholder = document.getElementById('imagePlaceholder');
+            const overlay = document.getElementById('hotspotOverlay');
+
+            img.src = src;
+            img.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            overlay.classList.remove('hidden');
+        }
+
+        // AI Mock Object Detection Simulation
+        function simulateAIRecognition(filename = '') {
+            const scanning = document.getElementById('scanningOverlay');
+            scanning.classList.remove('hidden');
+            scanning.classList.add('flex');
+
+            setTimeout(() => {
+                scanning.classList.add('hidden');
+                scanning.classList.remove('flex');
+
+                currentObject = {
+                    id: 'custom_' + Date.now(),
+                    name: {
+                        en: 'Captured Object',
+                        ja: '撮影したオブジェクト',
+                        fr: 'Objet personnalisé',
+                        es: 'Objeto personalizado',
+                        de: 'Benutzerdefiniertes Objekt'
+                    },
+                    phonetic: '/ˈkæp.tʃəd ˈɒb.dʒɪkt/',
+                    category: '身邊拍攝物品 (Captured Item)',
+                    image: document.getElementById('mainImage').src,
+                    hotspots: [{ x: 50, y: 50, label: '焦點主體' }],
+                    vocab: {
+                        en: [
+                            { word: 'Distinct surface', meaning: '獨特表面', type: 'Noun' },
+                            { word: 'Compact size', meaning: '尺寸輕巧', type: 'Adj' },
+                            { word: 'Practical tool', meaning: '實用工具', type: 'Noun' },
+                            { word: 'Daily essential', meaning: '生活必需品', type: 'Noun' }
+                        ],
+                        ja: [
+                            { word: '表面 (Hyōmen)', meaning: '表面', type: 'Noun' },
+                            { word: '実用的 (Jitsuyō-teki)', meaning: '實用的', type: 'Adj' },
+                            { word: '日用品 (Nichiyōhin)', meaning: '日用品', type: 'Noun' },
+                            { word: '便利 (Benri)', meaning: '便利的', type: 'Adj' }
+                        ],
+                        fr: [
+                            { word: 'La surface', meaning: '表面', type: 'Noun' },
+                            { word: 'Pratique', meaning: '實用的', type: 'Adj' },
+                            { word: 'Essentiel', meaning: '必要的', type: 'Adj' },
+                            { word: 'Objet quotidien', meaning: '日常物品', type: 'Noun' }
+                        ],
+                        es: [
+                            { word: 'La superficie', meaning: '表面', type: 'Noun' },
+                            { word: 'Práctico', meaning: '實用的', type: 'Adj' },
+                            { word: 'Esencial', meaning: '必要的', type: 'Adj' },
+                            { word: 'Uso diario', meaning: '日常使用', type: 'Noun' }
+                        ],
+                        de: [
+                            { word: 'Die Oberfläche', meaning: '表面', type: 'Noun' },
+                            { word: 'Praktisch', meaning: '實用的', type: 'Adj' },
+                            { word: 'Nützlich', meaning: '有用的', type: 'Adj' },
+                            { word: 'Alltagsgegenstand', meaning: '日常物品', type: 'Noun' }
+                        ]
+                    },
+                    phrases: {
+                        en: [
+                            'Hold firmly in hand',
+                            'Use for daily tasks',
+                            'Keep on desk space',
+                            'Inspect closely'
+                        ],
+                        ja: [
+                            'しっかり手に持つ (緊握在手裡)',
+                            '日々のタスクに使う (用於日常事務)',
+                            'デスクの上に置く (擺在桌面上)',
+                            '近くで観察する (近距離觀察細節)'
+                        ],
+                        fr: [
+                            'Tenir fermement (手緊握物品)',
+                            'Utiliser au quotidien (用於日常用途)',
+                            'Garder sur le bureau (擺放於書桌上)',
+                            'Examiner de près (仔細端詳觀察)'
+                        ],
+                        es: [
+                            'Sostener con firmeza (拿在手上觸摸)',
+                            'Usar a diario (日常生活使用)',
+                            'Mantener en la mesa (放置在案頭前)',
+                            'Inspeccionar de cerca (近距離進行觀察)'
+                        ],
+                        de: [
+                            'Fest in der Hand halten (抓握在手掌中)',
+                            'Täglich benutzen (日常作業使用)',
+                            'Auf dem Tisch behalten (置於工作桌上)',
+                            'Genau untersuchen (仔細檢視細節)'
+                        ]
+                    },
+                    scripts: {
+                        stage1: {
+                            en: "This is an object I captured nearby.",
+                            ja: "これは身近で撮影した興味深いアイテムです。(這是拍攝的實物。)",
+                            fr: "C'est un objet intéressant que j'ai pris en photo.",
+                            es: "Este es un objeto interesante que he fotografiado.",
+                            de: "Das ist ein interessantes Objekt, das ich fotografiert habe."
+                        },
+                        stage2: {
+                            en: "I use this item almost every day.",
+                            ja: "日常生活でほぼ毎日使っています。(日常幾乎每天使用。)",
+                            fr: "Je l'utilise presque tous les jours.",
+                            es: "Lo uso casi todos los días.",
+                            de: "Ich benutze dieses Objekt fast jeden Tag."
+                        },
+                        stage3: {
+                            en: "I snapped a photo to practice foreign language.",
+                            ja: "身近な物体を通じて外語を学ぶと、記憶に深く残ります。(透過周遭物體學外語更具體。)",
+                            fr: "Observer ce qui m'entoure rend l'apprentissage vivant.",
+                            es: "Observar los objetos cotidianos hace el aprendizaje natural.",
+                            de: "Alltagsgegenstände zu beobachten macht das Lernen lebendig."
+                        }
+                    }
+                };
+
+                updateUIForCurrentObject();
+                showToast("物件掃描辨識成功！", "fa-wand-magic-sparkles");
+            }, 1200);
+        }
+
+        // Render UI with Current Selected Object and Language
+        function updateUIForCurrentObject() {
+            if (!currentObject) return;
+
+            const lang = currentTargetLang;
+
+            // Summary Card
+            document.getElementById('objectSummaryCard').classList.remove('hidden');
+            document.getElementById('detectedObjectName').textContent = currentObject.name[lang] || currentObject.name.en;
+            document.getElementById('detectedObjectPhonetic').textContent = currentObject.phonetic || '';
+            document.getElementById('detectedObjectCategory').textContent = `分類：${currentObject.category}`;
+
+            // Detected Tags
+            const tagsContainer = document.getElementById('detectedTagsList');
+            tagsContainer.innerHTML = `
+                <button class="px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-tag"></i> ${currentObject.name[lang] || currentObject.name.en}
+                </button>
+                <button class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
+                    #${currentObject.category.split(' ')[0]}
+                </button>
+            `;
+
+            // Hotspot Pin overlay
+            const hotspotOverlay = document.getElementById('hotspotOverlay');
+            hotspotOverlay.innerHTML = '';
+            if (currentObject.hotspots) {
+                currentObject.hotspots.forEach((hs, idx) => {
+                    const pin = document.createElement('div');
+                    pin.className = 'absolute w-6 h-6 rounded-full bg-amber-500 text-slate-950 font-extrabold text-[11px] flex items-center justify-center border-2 border-white shadow-lg pulse-effect cursor-pointer transform -translate-x-1/2 -translate-y-1/2';
+                    pin.style.left = hs.x + '%';
+                    pin.style.top = hs.y + '%';
+                    pin.title = hs.label;
+                    pin.innerText = idx + 1;
+                    pin.onclick = (e) => {
+                        e.stopPropagation();
+                        showToast(`焦點觀察點 ${idx + 1}：${hs.label}`, 'fa-location-dot');
+                    };
+                    hotspotOverlay.appendChild(pin);
                 });
-                html += `</div>`;
             }
 
-            const rawSentence = stageData.sentence[currentLang] || stageData.sentence.en;
-            html += `
-            <div class="bg-blue-50/60 border border-blue-200 rounded-2xl p-5 relative">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">學習例句與練習聽力</span>
-                    <button onclick="speakText('${rawSentence.replace(/'/g, "\\'")}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow-sm">
-                        <i data-lucide="volume-2" class="w-4 h-4"></i> 清晰朗讀
+            // Stage 1 Vocab
+            const stage1List = document.getElementById('stage1VocabList');
+            const vocabItems = currentObject.vocab[lang] || currentObject.vocab.en;
+            stage1List.innerHTML = vocabItems.map(item => {
+                const readStr = item.ja ? `${item.word} (${item.meaning})` : `${item.word} (${item.meaning})`;
+                return `
+                <div onclick="speakText('${readStr.replace(/'/g, "\\'")}')" class="bg-slate-50 border border-slate-200/90 hover:border-amber-400 p-3 rounded-2xl transition group flex items-center justify-between cursor-pointer">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-900 text-sm">${item.word}</span>
+                            <span class="text-[10px] px-1.5 py-0.2 bg-slate-200 text-slate-600 font-semibold rounded">${item.type}</span>
+                        </div>
+                        <div class="text-xs text-slate-500 mt-0.5">${item.meaning}</div>
+                    </div>
+                    <button class="w-8 h-8 rounded-full bg-white group-hover:bg-amber-100 text-slate-600 group-hover:text-amber-700 flex items-center justify-center transition shadow-sm" title="朗讀單字">
+                        <i class="fa-solid fa-volume-high text-xs"></i>
+                    </button>
+                </div>`;
+            }).join('');
+
+            // Stage 2 Phrases
+            const stage2List = document.getElementById('stage2PhrasesList');
+            const phraseItems = currentObject.phrases[lang] || currentObject.phrases.en;
+            stage2List.innerHTML = phraseItems.map(phrase => `
+                <div onclick="speakText('${phrase.replace(/'/g, "\\'")}')" class="bg-slate-50 border border-slate-200 hover:border-amber-400 p-3 rounded-2xl flex items-center justify-between cursor-pointer group">
+                    <span class="text-xs font-semibold text-slate-800">${phrase}</span>
+                    <button class="text-xs text-amber-600 group-hover:text-amber-700 font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-volume-high"></i> 朗讀短語
                     </button>
                 </div>
-                <p class="text-slate-800 text-base font-medium leading-relaxed">${rawSentence}</p>
-            </div>`;
+            `).join('');
 
-            container.innerHTML = html;
-            lucide.createIcons();
+            // Stage Scripts
+            const scripts = currentObject.scripts;
+            document.getElementById('stage1Script').textContent = scripts.stage1[lang] || scripts.stage1.en;
+            document.getElementById('stage2Script').textContent = scripts.stage2[lang] || scripts.stage2.en;
+            document.getElementById('stage3Script').textContent = scripts.stage3[lang] || scripts.stage3.en;
+
+            // Interactive fill-in
+            const fillIn = document.getElementById('interactiveFillIn');
+            fillIn.innerHTML = `
+                <p><strong>1. 實物觸感描繪：</strong> "This ${currentObject.name[lang] || 'object'} feels <input type="text" placeholder="例：heavy / smooth" class="border-b border-amber-400 bg-transparent px-1 focus:outline-none w-32 text-center"> in my hands."</p>
+                <p><strong>2. 使用習慣發表：</strong> "I usually use it when <input type="text" placeholder="例：working / studying" class="border-b border-amber-400 bg-transparent px-1 focus:outline-none w-40 text-center">."</p>
+            `;
         }
 
-        // 雙語獨立朗讀邏輯，防止語言混雜
-        function speakText(text) {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
+        // Switch Stage (1, 2, 3)
+        function switchStage(stageNum) {
+            currentStage = stageNum;
+            document.getElementById('currentStageNum').textContent = stageNum;
 
-            // 解析文字中的括號 (區分外語與中文翻譯)
-            const match = text.match(/^(.*?)\((.*?)\)$/);
+            [1, 2, 3].forEach(num => {
+                const btn = document.getElementById(`stageBtn${num}`);
+                const content = document.getElementById(`stageContent${num}`);
+                if (num === stageNum) {
+                    content.classList.remove('hidden');
+                    btn.className = "py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 bg-white text-slate-900 shadow-sm border border-slate-200/80 font-bold";
+                    btn.querySelector('span').className = "w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] flex items-center justify-center font-bold";
+                } else {
+                    content.classList.add('hidden');
+                    btn.className = "py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-900";
+                    btn.querySelector('span').className = "w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center";
+                }
+            });
+        }
+
+        // 升級版：智慧雙語分段獨立朗讀引擎 (完美分離外語與括號中文)
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) {
+                showToast('您的瀏覽器不支援發音朗讀功能', 'fa-triangle-exclamation');
+                return;
+            }
+            window.speechSynthesis.cancel(); 
+
+            // 使用正規表達式精準抓取「括號前的外語主體」與「括號內的中文翻譯」
+            // 範例：這是萬年筆です。(這是一支鋼筆。) -> 外語：這是萬年筆です。 | 中文：這是一支鋼筆。
+            const regex = /^([\s\S]*?)\(([\s\S]*?)\)$/;
+            const match = text.match(regex);
 
             if (match) {
-                const targetPart = match[1].trim();
-                const zhPart = match[2].trim();
+                const targetText = match[1].trim();
+                const zhText = match[2].trim();
 
-                // 1. 朗讀外語
-                const targetUtterance = new SpeechSynthesisUtterance(targetPart);
-                configureUtterance(targetUtterance, 'target');
+                // 1. 先用外語發音人朗讀日文/外語部分（即使夾雜漢字，語言標籤仍是 ja-JP，絕不會被當成中文唸）
+                if (targetText) {
+                    const targetUtterance = new SpeechSynthesisUtterance(targetText);
+                    configureUtterance(targetUtterance, 'target');
+                    window.speechSynthesis.speak(targetUtterance);
+                }
 
-                // 2. 朗讀中文
-                const zhUtterance = new SpeechSynthesisUtterance(zhPart);
-                configureUtterance(zhUtterance, 'zh');
-
-                window.speechSynthesis.speak(targetUtterance);
-                window.speechSynthesis.speak(zhUtterance);
+                // 2. 稍作停頓後，用中文發音人朗讀括號內的中文翻譯
+                if (zhText) {
+                    const zhUtterance = new SpeechSynthesisUtterance(zhText);
+                    configureUtterance(zhUtterance, 'zh');
+                    window.speechSynthesis.speak(zhUtterance);
+                }
             } else {
+                // 如果沒有括號（純外語單字），則 100% 只用外語發音人朗讀
                 const utterance = new SpeechSynthesisUtterance(text);
                 configureUtterance(utterance, 'target');
                 window.speechSynthesis.speak(utterance);
@@ -498,139 +1485,235 @@
         }
 
         function configureUtterance(utterance, type) {
-            utterance.pitch = parseFloat(document.getElementById('pitchInput').value);
-            utterance.rate = parseFloat(document.getElementById('rateInput').value);
+            const langTags = { en: 'en-US', ja: 'ja-JP', fr: 'fr-FR', es: 'es-ES', de: 'de-DE' };
+            utterance.pitch = ttsPitch;
+            utterance.rate = ttsRate;
 
             if (type === 'target') {
-                const select = document.getElementById('targetVoiceSelect');
-                if (select && select.value !== '') {
-                    utterance.voice = availableVoices[parseInt(select.value)];
+                utterance.lang = langTags[currentTargetLang] || 'en-US';
+                if (selectedTargetVoiceURI && availableVoices.length > 0) {
+                    const found = availableVoices.find(v => v.voiceURI === selectedTargetVoiceURI);
+                    if (found) utterance.voice = found;
                 }
             } else {
-                const zhSelect = document.getElementById('zhVoiceSelect');
-                if (zhSelect && zhSelect.value !== '') {
-                    utterance.voice = availableVoices[parseInt(zhSelect.value)];
+                utterance.lang = 'zh-TW';
+                if (selectedZhVoiceURI && availableVoices.length > 0) {
+                    const foundZh = availableVoices.find(v => v.voiceURI === selectedZhVoiceURI);
+                    if (foundZh) utterance.voice = foundZh;
                 }
             }
         }
 
-        function updateVoiceSettingsParams() {
-            document.getElementById('pitchValue').textContent = document.getElementById('pitchInput').value;
-            document.getElementById('rateValue').textContent = document.getElementById('rateInput').value;
+        function speakTextFromId(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            speakText(text);
         }
 
-        function testCurrentVoice() {
-            const sampleText = currentLang === 'ja' 
-                ? "これは万年筆です。(這是一支鋼筆。)" 
-                : "This is a fountain pen. (這是一支鋼筆。)";
-            speakText(sampleText);
-        }
-
-        function switchStage(stageNum) {
-            currentStage = stageNum;
-            for (let i = 1; i <= 3; i++) {
-                const btn = document.getElementById(`tabStage${i}`);
-                if (i === stageNum) {
-                    btn.className = "pb-3 text-sm font-medium transition flex items-center gap-2 tab-active whitespace-nowrap";
-                } else {
-                    btn.className = "pb-3 text-sm font-medium text-slate-500 hover:text-slate-800 transition flex items-center gap-2 whitespace-nowrap";
-                }
-            }
-            renderStageContent();
-        }
-
-        function changeLanguage() {
-            currentLang = document.getElementById('targetLanguage').value;
-            populateVoiceDropdowns();
-            renderApp();
-        }
-
-        function loadPreset(key) {
-            currentPreset = key;
-            renderApp();
-        }
-
-        function toggleVoiceSettingsModal() {
-            document.getElementById('voiceModal').classList.toggle('hidden');
-        }
-
-        // 拍照/模擬上傳
-        function triggerCamera() {
-            document.getElementById('fileInput').click();
-        }
-
-        function handleImageUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                setTimeout(() => {
-                    document.getElementById('objectImage').src = evt.target.result;
-                    document.getElementById('loadingOverlay').classList.add('hidden');
-                }, 1200);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // 錄音功能實作
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
-        let timerInterval;
-        let secondsElapsed = 0;
-        let audioUrl = null;
-
+        // Audio Recording Studio Logic (MediaRecorder API)
         async function toggleRecording() {
-            const btn = document.getElementById('recordBtn');
-            const timer = document.getElementById('recordTimer');
-
             if (!isRecording) {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     mediaRecorder = new MediaRecorder(stream);
                     audioChunks = [];
 
-                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
                     mediaRecorder.onstop = () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                        audioUrl = URL.createObjectURL(audioBlob);
-                        const playBtn = document.getElementById('playAudioBtn');
-                        playBtn.disabled = false;
-                        playBtn.classList.remove('text-slate-400', 'bg-white', 'cursor-not-allowed');
-                        playBtn.classList.add('text-blue-600', 'bg-blue-50', 'border-blue-200');
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audioPlayer = document.getElementById('audioPlayback');
+                        audioPlayer.src = audioUrl;
+                        document.getElementById('audioPlaybackContainer').classList.remove('hidden');
                     };
 
                     mediaRecorder.start();
                     isRecording = true;
-                    btn.classList.add('record-pulse');
-                    secondsElapsed = 0;
+                    startTimer();
 
-                    timerInterval = setInterval(() => {
-                        secondsElapsed++;
-                        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-                        const secs = String(secondsElapsed % 60).padStart(2, '0');
-                        timer.textContent = `${mins}:${secs} / 03:00`;
+                    // Update UI
+                    document.getElementById('recordBtn').className = "flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 animate-pulse";
+                    document.getElementById('recordIcon').className = "fa-solid fa-square text-base";
+                    document.getElementById('recordBtnText').textContent = "停止錄音練習";
+                    showToast("錄音啟動！請對著麥克風進行 3 分鐘練習...", "fa-microphone");
 
-                        if (secondsElapsed >= 180) toggleRecording();
-                    }, 1000);
                 } catch (err) {
-                    alert('無法讀取麥克風設備，請確認權限設定。');
+                    showToast("無法存取麥克風設備，請確認權限設定", "fa-triangle-exclamation");
                 }
             } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                btn.classList.remove('record-pulse');
-                clearInterval(timerInterval);
+                stopRecording();
             }
         }
 
-        function playUserAudio() {
-            if (audioUrl) {
-                const audio = new Audio(audioUrl);
-                audio.play();
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
             }
+            isRecording = false;
+            clearInterval(timerInterval);
+
+            // Update UI
+            document.getElementById('recordBtn').className = "flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20";
+            document.getElementById('recordIcon').className = "fa-solid fa-microphone text-base";
+            document.getElementById('recordBtnText').textContent = "開始 3 分鐘口說錄音練習";
+            showToast("口說練習錄音完成！", "fa-circle-check");
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (secondsLeft > 0) {
+                    secondsLeft--;
+                    updateTimerDisplay();
+                } else {
+                    stopRecording();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            stopRecording();
+            secondsLeft = 180;
+            updateTimerDisplay();
+            document.getElementById('audioPlaybackContainer').classList.add('hidden');
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(secondsLeft / 60);
+            const secs = secondsLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Local Storage Notebook Logic
+        function getNotebookData() {
+            try {
+                return JSON.parse(localStorage.getItem('snap_speak_notebook') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveCurrentObjectToNotebook() {
+            if (!currentObject) return;
+            const notebook = getNotebookData();
+            
+            const exists = notebook.some(item => item.id === currentObject.id && item.lang === currentTargetLang);
+            if (exists) {
+                showToast("此物品已儲存於您的單字本中！", "fa-info-circle");
+                return;
+            }
+
+            const itemToSave = {
+                id: currentObject.id,
+                name: currentObject.name[currentTargetLang] || currentObject.name.en,
+                category: currentObject.category,
+                image: currentObject.image,
+                lang: currentTargetLang,
+                langName: getLanguageName(currentTargetLang),
+                savedAt: new Date().toLocaleDateString(),
+                sampleSentence: currentObject.scripts.stage1[currentTargetLang] || currentObject.scripts.stage1.en
+            };
+
+            notebook.unshift(itemToSave);
+            localStorage.setItem('snap_speak_notebook', JSON.stringify(notebook));
+            updateNotebookBadge();
+            showToast("成功加入單字本！", "fa-bookmark");
+        }
+
+        function renderNotebook() {
+            const notebook = getNotebookData();
+            const grid = document.getElementById('notebookGrid');
+            const empty = document.getElementById('notebookEmptyState');
+            updateNotebookBadge();
+
+            if (notebook.length === 0) {
+                grid.classList.add('hidden');
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            grid.innerHTML = notebook.map((item, index) => `
+                <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition space-y-3 p-4 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-40 rounded-2xl overflow-hidden bg-slate-900 mb-3">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                            <span class="absolute top-2 right-2 px-2.5 py-1 bg-slate-950/80 text-amber-400 font-bold text-[11px] rounded-lg backdrop-blur-md">
+                                ${item.langName}
+                            </span>
+                        </div>
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <h4 class="font-extrabold text-slate-900 text-base">${item.name}</h4>
+                                <p class="text-xs text-slate-500 font-medium">${item.category}</p>
+                            </div>
+                            <span class="text-[10px] text-slate-400">${item.savedAt}</span>
+                        </div>
+                        <p class="text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mt-3 line-clamp-3">
+                            "${item.sampleSentence}"
+                        </p>
+                    </div>
+                    <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                        <button onclick="speakText('${item.sampleSentence.replace(/'/g, "\\'")}')" class="text-xs text-amber-600 hover:text-amber-700 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-volume-high"></i> 播放發音
+                        </button>
+                        <button onclick="deleteNotebookItem(${index})" class="text-xs text-red-500 hover:text-red-700">
+                            <i class="fa-solid fa-trash-can"></i> 刪除
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteNotebookItem(index) {
+            const notebook = getNotebookData();
+            notebook.splice(index, 1);
+            localStorage.setItem('snap_speak_notebook', JSON.stringify(notebook));
+            renderNotebook();
+            showToast("已從單字本中移除", "fa-trash-can");
+        }
+
+        function clearAllNotebook() {
+            if (confirm("確定要清空單字本中的所有收藏嗎？")) {
+                localStorage.removeItem('snap_speak_notebook');
+                renderNotebook();
+                showToast("單字本已清空", "fa-check");
+            }
+        }
+
+        function updateNotebookBadge() {
+            const count = getNotebookData().length;
+            const badge = document.getElementById('notebookBadge');
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Notification Toast
+        function showToast(message, iconClass = 'fa-circle-info') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+
+            msgEl.textContent = message;
+            iconEl.className = `fa-solid ${iconClass} text-amber-400`;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
         }
     </script>
 </body>
