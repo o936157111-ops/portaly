@@ -91,7 +91,7 @@
     <script>
         let currentLang = 'ja';
         const GAS_URL = "https://script.google.com/macros/s/AKfycbx54C4nncX9H0GWMZGsMR7Mo-vDBPEMkrAB72jLjbCmyMgEVZeDLL2T6Vik8ML9Hwte/exec";
-        const STORAGE_KEY = "mobile_ai_lang_history_v15";
+        const STORAGE_KEY = "mobile_ai_lang_history_v18";
 
         let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
             { role: 'ai', lang: 'ja', step: 1, topic: '歡迎', text: '你好！請輸入你想學的日常對話句子、物品或拍照上傳，我們將以【分階段方式】輕鬆學外語！' }
@@ -101,7 +101,7 @@
 
         window.addEventListener('DOMContentLoaded', renderHistory);
 
-        // 切換全域語言：精準同步當前主題與目前所在階段
+        // 切換全域語言
         async function setGlobalLanguage(lang, btnElement) {
             if (currentLang === lang) return;
             currentLang = lang;
@@ -113,7 +113,6 @@
             
             const langNames = { ja: '日語', en: '英語', ko: '韓語' };
             
-            // 找出畫面上最近一個正在學習的主題與階段進度
             const lastActive = chatHistory.slice().reverse().find(m => m.topic && m.topic !== '歡迎');
             if (lastActive) {
                 appendMessageToDOM({ role: 'ai', lang: currentLang, text: `已切換至 ${langNames[lang]}，正在為您轉換「${lastActive.topic}」的第 ${lastActive.step} 階段...` });
@@ -170,7 +169,6 @@
 
         // 標準真人發音（智慧處理日文漢字與括號，確保 100% 順暢有聲音）
         function speakSentence(phrase, btnElement) {
-            // 智慧處理：如果包含括號（例如 お仕事 (おしごと)），優先擷取括號內的平假名發音，確保日語發音絕對純正流暢、沒有斷字
             let cleanText = phrase;
             const match = phrase.match(/\(([^)]+)\)/) || phrase.match(/（([^）]+）/);
             if (match) {
@@ -200,18 +198,19 @@
 
         async function sendMessage() {
             const inputField = document.getElementById("userInput");
-            let text = inputField.value.trim();
+            const inputText = inputField.value.trim();
 
-            if (!text && !selectedImageDataUrl) return;
+            if (!inputText && !selectedImageDataUrl) return;
 
-            const topic = text || "圖片辨識物件";
-            chatHistory.push({ role: 'user', text: text || "[上傳了圖片]" });
+            const userTopic = inputText ? inputText : "圖片辨識物件";
+
+            chatHistory.push({ role: 'user', text: inputText || "[上傳了圖片]" });
             saveAndRender();
+            
             inputField.value = "";
             removeImage();
 
-            // 每次新提問固定從【階段一】開始
-            await requestAIStage(topic, 1);
+            await requestAIStage(userTopic, 1);
         }
 
         async function requestAIStage(topic, stageNum) {
@@ -247,6 +246,7 @@
             saveAndRender();
 
             try {
+                // 改用最穩定的字串傳遞方式，避免 CORS 預檢攔截
                 const response = await fetch(GAS_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
