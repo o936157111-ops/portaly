@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyEZLife</title>
+    <!-- 備用 HTML 轉址：若 1.5 秒內未跳轉則強制執行 -->
+    <meta http-equiv="refresh" content="1.5;url=https://portaly.cc/myezlife">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff; /* 可根據喜好調整背景色，例如 #0f172a (深色模式) */
+            color: #333333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .logo-container {
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        /* 簡單的淡入動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <!-- 這裡放你的 LOGO 文字或 <img> 圖片 -->
+        <div class="logo-text">MyEZLife</div>
+    </div>
+
+    <script>
+        // 頁面載入後延遲 1.2 秒執行 JavaScript 轉址，讓使用者能看一眼 LOGO
+        setTimeout(function() {
+            window.location.replace("https://portaly.cc/myezlife");
+        }, 1200);
+    </script>
+
+</body>
+</html>
