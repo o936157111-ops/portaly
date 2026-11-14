@@ -332,7 +332,7 @@ html, body {
     border-radius: 12px;
 }
 
-/* 左上角精緻 Logo 與標語設計 (點擊可隨時前往主入口) */
+/* 🌟 左上角 Logo 品牌標語：固定在最上層，絕對不會隨影片捲動而跑掉 */
 .top-brand-badge {
     position: absolute;
     top: 16px;
@@ -340,19 +340,20 @@ html, body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(6px);
-    padding: 6px 12px 6px 6px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px 6px 6px;
     border-radius: 30px;
-    z-index: 999;
+    z-index: 99999; /* 確保浮在所有影片與覆蓋層的最上方 */
     cursor: pointer;
     transition: transform 0.2s ease, background 0.2s ease;
     pointer-events: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .top-brand-badge:hover {
     transform: scale(1.03);
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.75);
 }
 
 .top-brand-badge img {
@@ -360,7 +361,7 @@ html, body {
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
 }
 
 .top-brand-badge span {
@@ -380,7 +381,7 @@ html, body {
         </div>
     </div>
 
-    <!-- 2. 30秒後彈出的選擇提示視窗 -->
+    <!-- 🌟 2. 30秒後彈出的選擇提示視窗 -->
     <div class="choice-modal-overlay" id="choiceModalOverlay">
         <div class="choice-modal-card" onclick="event.stopPropagation()">
             <h3>🎵 喜歡這首曲子嗎？</h3>
@@ -394,7 +395,7 @@ html, body {
 
     <!-- 3. 影片播放主畫面 -->
     <div class="app-frame">
-        <!-- 左上角精緻品牌標語 (點擊即可隨時前往主入口) -->
+        <!-- 🌟 左上角 Logo 與標語：點擊任意處隨時前往主入口 -->
         <div class="top-brand-badge" onclick="goToPortal()" title="點擊前往主入口">
             <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
             <span>隨心所欲的生活，活出自己的光芒 ➔</span>
