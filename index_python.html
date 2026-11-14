@@ -332,7 +332,7 @@ html, body {
     border-radius: 12px;
 }
 
-/* 左上角精緻 Logo 與標語設計 */
+/* 左上角精緻 Logo 與標語設計 (點擊可隨時前往主入口) */
 .top-brand-badge {
     position: absolute;
     top: 16px;
@@ -345,7 +345,14 @@ html, body {
     padding: 6px 12px 6px 6px;
     border-radius: 30px;
     z-index: 999;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
     pointer-events: auto;
+}
+
+.top-brand-badge:hover {
+    transform: scale(1.03);
+    background: rgba(0, 0, 0, 0.65);
 }
 
 .top-brand-badge img {
@@ -373,7 +380,7 @@ html, body {
         </div>
     </div>
 
-    <!-- 🌟 2. 30秒後彈出的選擇提示視窗 -->
+    <!-- 2. 30秒後彈出的選擇提示視窗 -->
     <div class="choice-modal-overlay" id="choiceModalOverlay">
         <div class="choice-modal-card" onclick="event.stopPropagation()">
             <h3>🎵 喜歡這首曲子嗎？</h3>
@@ -387,10 +394,10 @@ html, body {
 
     <!-- 3. 影片播放主畫面 -->
     <div class="app-frame">
-        <!-- 左上角精緻品牌標語 -->
-        <div class="top-brand-badge">
+        <!-- 左上角精緻品牌標語 (點擊即可隨時前往主入口) -->
+        <div class="top-brand-badge" onclick="goToPortal()" title="點擊前往主入口">
             <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
-            <span>隨心所欲的生活，活出自己的光芒</span>
+            <span>隨心所欲的生活，活出自己的光芒 ➔</span>
         </div>
 
         <!-- 影音捲動容器 -->
@@ -413,7 +420,7 @@ html, body {
             modal.style.display = 'flex';
         }, 30000);
 
-        // 使用者選擇「繼續聽歌」：關閉視窗，讓使用者可以繼續滑動和聽歌
+        // 使用者選擇「繼續聽歌」：關閉視窗，留在影音牆
         function continueListening() {
             const modal = document.getElementById('choiceModalOverlay');
             modal.style.display = 'none';
