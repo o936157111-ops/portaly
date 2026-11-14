@@ -178,7 +178,7 @@ html, body {
     }
 }
 
-/* 手機版：直接強制 100% 全螢幕覆蓋，毫無破綻 */
+/* 手機版：直接強制 100% 全螢幕覆蓋 */
 @media (max-width: 767px) {
     .app-frame {
         width: 100vw;
@@ -222,6 +222,7 @@ html, body {
     overflow: hidden;
 }
 
+/* 0 邊界滿版容器 */
 .video-wrapper {
     position: absolute;
     top: 0;
@@ -229,6 +230,9 @@ html, body {
     width: 100%;
     height: 100%;
     z-index: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -237,7 +241,10 @@ html, body {
 .video-wrapper iframe {
     width: 100% !important;
     height: 100% !important;
-    border: none;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block;
     object-fit: cover;
 }
 
@@ -370,11 +377,46 @@ html, body {
     font-weight: 500;
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
+
+/* 🌟 右側專屬的上下切換控制條 (解決網頁嵌入時無法滑動的問題) */
+.nav-control-bar {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 99998;
+    pointer-events: auto;
+}
+
+.nav-btn {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 59, 48, 0.8);
+    transform: scale(1.1);
+}
 </style>
 </head>
 <body>
 
-    <!-- 1. 初始的 MyEzLife 開場過渡頁 -->
+    <!-- 1. 初始的 MyEzLife 開場頁面遮罩 -->
     <div id="welcome-splash">
         <div class="logo-container">
             <div class="logo-text">MyEzLife</div>
@@ -385,7 +427,7 @@ html, body {
     <div class="choice-modal-overlay" id="choiceModalOverlay">
         <div class="choice-modal-card" onclick="event.stopPropagation()">
             <h3>🎵 喜歡這首曲子嗎？</h3>
-            <p>您已經聆聽了一段時間，要繼續留在這裡聽歌，還是前往總入口網頁呢？</p>
+            <p>您已經聆聽了一段時間,要繼續留在這裡聽歌,還是前往總入口網頁呢?</p>
             <div class="choice-btn-group">
                 <button class="choice-btn-primary" onclick="continueListening()">繼續聽歌</button>
                 <button class="choice-btn-secondary" onclick="goToPortal()">前往主入口網頁</button>
@@ -398,7 +440,13 @@ html, body {
         <!-- 左上角 Logo 與標語：點擊隨時前往主入口 -->
         <div class="top-brand-badge" onclick="goToPortal()" title="點擊前往主入口">
             <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
-            <span>隨心所欲的生活，活出自己的光芒 ➔</span>
+            <span>隨心所欲的生活,活出自己的光芒 ➔</span>
+        </div>
+
+        <!-- 🌟 右側專屬上下切換按鈕控制條 -->
+        <div class="nav-control-bar">
+            <button class="nav-btn" onclick="scrollCard('up')" title="上一首 / 上一頁">▲</button>
+            <button class="nav-btn" onclick="scrollCard('down')" title="下一首 / 下一頁">▼</button>
         </div>
 
         <!-- 影音與網頁捲動容器 -->
@@ -415,7 +463,7 @@ html, body {
             }, 500);
         }, 1200);
 
-        // 30 秒一到，彈出選擇視窗
+        // 30 秒一到,彈出選擇視窗 (只問一次)
         setTimeout(function() {
             const modal = document.getElementById('choiceModalOverlay');
             modal.style.display = 'flex';
@@ -428,6 +476,24 @@ html, body {
 
         function goToPortal() {
             window.location.replace("https://portaly.cc/myezlife");
+        }
+
+        // 🌟 點擊上下按鈕時執行的安全捲動切換邏輯
+        function scrollCard(direction) {
+            const container = document.getElementById('reelContainer');
+            const cards = container.querySelectorAll('.reel-card');
+            if (!cards.length) return;
+
+            const cardHeight = cards[0].offsetHeight;
+            const currentScroll = container.scrollTop;
+            
+            // 計算目前大約在哪一個卡片位置
+            let targetScroll = direction === 'down' ? currentScroll + cardHeight : currentScroll - cardHeight;
+            
+            container.scrollTo({
+                top: targetScroll,
+                behavior: 'smooth'
+            });
         }
 
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
@@ -521,12 +587,11 @@ html, body {
                     coverClass = coverValue;
                 }
 
-                // 🌟 核心判斷：如果沒有 YouTube 影片 ID，但有產品網址（Product URL），就將其包裝成內嵌網頁 (iframe)
                 let embedCode = "";
                 if (videoId) {
                     embedCode = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 } else if (productUrl) {
-                    embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
+                    embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none; margin:0; padding:0;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
                 }
 
                 return {
@@ -536,7 +601,7 @@ html, body {
                     coverClass,
                     coverUrl,
                     productUrl,
-                    isWebPage: !videoId && !!productUrl, // 標記是否為純網頁卡片
+                    isWebPage: !videoId && !!productUrl,
                     embedCode
                 };
             }).filter(Boolean);
@@ -563,7 +628,6 @@ html, body {
                 card.className = 'reel-card';
 
                 let coverHtml = '';
-                // 🌟 如果是網頁卡片，且您希望一滑到就直接顯示網頁，可以不加封面遮罩；若需要點擊封面才展開則保留
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
                     coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
@@ -631,7 +695,6 @@ html, body {
                     if (entry.isIntersecting) {
                         const coverLayer = card.querySelector('.custom-cover-layer');
                         
-                        // 🌟 如果是網頁卡片，滑到時可以自動讓封面淡出並直接嵌入網頁，體驗更流暢
                         if (isWebPage && coverLayer && !coverLayer.classList.contains('fade-out')) {
                             coverLayer.classList.add('fade-out');
                         }
