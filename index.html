@@ -9,9 +9,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<!-- 30秒後自動轉址到 portaly -->
-<meta http-equiv="refresh" content="30;url=https://portaly.cc/myezlife">
-
 <title>生活・簡居・生活 | 總入口</title>
 <style>
 /* 基礎重置 */
@@ -63,6 +60,100 @@ html, body {
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
+}
+
+/* 🌟 30秒後彈出的選擇提示視窗 (Modal) */
+.choice-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
+    z-index: 1000000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.choice-modal-card {
+    background: #ffffff;
+    color: #222;
+    width: 100%;
+    max-width: 340px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    animation: scaleUp 0.25s ease;
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.choice-modal-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #111;
+    font-weight: 700;
+}
+
+.choice-modal-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.choice-btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 6px;
+}
+
+.choice-btn-primary {
+    background: linear-gradient(135deg, #ff3b30, #ff9500);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.choice-btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.choice-btn-secondary {
+    background: #f1f3f5;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s ease;
+}
+
+.choice-btn-secondary:hover {
+    background: #e2e6ea;
 }
 
 /* 電腦版或大螢幕時：置中顯示手機精緻比例框體 */
@@ -282,7 +373,19 @@ html, body {
         </div>
     </div>
 
-    <!-- 2. 影片播放主畫面 (乾淨、滿版、無干擾) -->
+    <!-- 🌟 2. 30秒後彈出的選擇提示視窗 -->
+    <div class="choice-modal-overlay" id="choiceModalOverlay">
+        <div class="choice-modal-card" onclick="event.stopPropagation()">
+            <h3>🎵 喜歡這首曲子嗎？</h3>
+            <p>您已經聆聽了一段時間，要繼續留在這裡聽歌，還是前往總入口網頁呢？</p>
+            <div class="choice-btn-group">
+                <button class="choice-btn-primary" onclick="continueListening()">繼續聽歌</button>
+                <button class="choice-btn-secondary" onclick="goToPortal()">前往主入口網頁</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 影片播放主畫面 -->
     <div class="app-frame">
         <!-- 左上角精緻品牌標語 -->
         <div class="top-brand-badge">
@@ -304,10 +407,22 @@ html, body {
             }, 500);
         }, 1200);
 
-        // 🌟 30 秒後自動轉址到 portaly.cc/myezlife
+        // 🌟 30 秒 (30000 毫秒) 一到，跳出選擇視窗讓使用者決定
         setTimeout(function() {
-            window.location.replace("https://portaly.cc/myezlife");
+            const modal = document.getElementById('choiceModalOverlay');
+            modal.style.display = 'flex';
         }, 30000);
+
+        // 使用者選擇「繼續聽歌」：關閉視窗，讓使用者可以繼續滑動和聽歌
+        function continueListening() {
+            const modal = document.getElementById('choiceModalOverlay');
+            modal.style.display = 'none';
+        }
+
+        // 使用者選擇「前往主入口」：手動觸發跳轉到 portaly
+        function goToPortal() {
+            window.location.replace("https://portaly.cc/myezlife");
+        }
 
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTOX4kSu5tM7H8A3UPVNr1lEF_7dZwkzqXQrSf7oAJuAqkdVYEDhJh_UjJbfQ0UuKtufPydYSeZJO89/pub?gid=0&single=true&output=csv";
 
