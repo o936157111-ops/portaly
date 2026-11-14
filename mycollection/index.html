@@ -52,6 +52,28 @@
             box-shadow: 0 0 10px rgba(201, 160, 99, 0.3);
             border-color: #c9a063;
         }
+
+        /* 關鍵：手機版模擬 myezlife.com 首頁的影音播放器風格（全螢幕獨立卡片區塊、磁吸滾動） */
+        @media (max-width: 1023px) {
+            #galleryGrid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 2rem !important;
+                scroll-snap-type: y mandatory;
+                overflow-y: auto;
+                padding-bottom: 2rem;
+            }
+            .gallery-card {
+                scroll-snap-align: center;
+                min-height: 78vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 100% !important;
+                margin: 0 auto;
+            }
+        }
+
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #181c24; }
         ::-webkit-scrollbar-thumb { background: #2a3140; border-radius: 3px; }
@@ -111,8 +133,8 @@
             </div>
         </section>
 
-        <!-- Gallery Grid: 電腦版一列 5 個 (lg:grid-cols-5)，平板 3 個，手機 1~2 個 -->
-        <section id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+        <!-- Gallery Grid: 電腦版維持完美一列 5 個 (lg:grid-cols-5)，手機版自動轉為滿版播放器風格 -->
+        <section id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             <!-- Cards dynamically rendered via JS -->
         </section>
 
@@ -152,9 +174,7 @@
                         </button>
                     </div>
                     <!-- Image Thumbnails (2~3 photos) -->
-                    <div id="imageThumbnails" class="flex gap-3 justify-center overflow-x-auto py-1">
-                        <!-- Thumbnails dynamically inserted here -->
-                    </div>
+                    <div id="imageThumbnails" class="flex gap-3 justify-center overflow-x-auto py-1"></div>
                 </div>
 
                 <!-- Short Description / Highlights -->
@@ -256,7 +276,6 @@
 
     <!-- Script Application Logic -->
     <script>
-        // 直接使用 Google 官方發布的 CSV 網址
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRiGHMabZqwfWrDo3AlwvouXTk4PkknHmkOogYH2pzqYplsSCmCykzrjZi5UeEH25gZEfkouHUh023M/pub?gid=960383798&single=true&output=csv';
 
         let collections = [];
@@ -269,7 +288,6 @@
             fetchSheetData();
         });
 
-        // 讀取線上 Google Sheet CSV 資料
         function fetchSheetData() {
             const statusEl = document.getElementById('syncStatus');
             statusEl.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> 載入中...';
@@ -288,6 +306,7 @@
                         statusEl.innerHTML = '<i class="fa-solid fa-circle-exclamation text-amber-400"></i> 無有效資料';
                     }
                     renderGallery();
+                    checkUrlHashAndOpenModal(); // 支援外部連結自動開窗
                 },
                 error: function(err) {
                     console.error('CSV Parse Error:', err);
@@ -298,7 +317,6 @@
             });
         }
 
-        // 寬鬆彈性的欄位對應邏輯
         function mapRowToCollection(row, index) {
             const getField = (keys) => {
                 for (let k of keys) {
@@ -322,7 +340,6 @@
             };
         }
 
-        // 渲染藏品網格
         function renderGallery() {
             const grid = document.getElementById('galleryGrid');
             const emptyState = document.getElementById('emptyState');
@@ -349,13 +366,13 @@
                     const photoBadge = item.images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/70 backdrop-blur text-white text-[9px] px-1.5 py-0.5 rounded-full border border-white/20"><i class="fa-regular fa-images mr-1"></i>${item.images.length}</span>` : '';
 
                     const card = document.createElement('div');
-                    card.className = "bg-brand-card border border-brand-border hover:border-brand-accent/60 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group cursor-pointer";
-                    card.onclick = () => openDetailModal(item.id);
+                    // gallery-card 類別在手機版會自動轉為滿版播放器風格，電腦版維持 lg:grid-cols-5 的 5 個一列網格
+                    card.className = "gallery-card bg-brand-card border border-brand-border hover:border-brand-accent/60 rounded-xl overflow-hidden shadow-lg transition-all duration-300 flex flex-col justify-between group relative";
 
                     card.innerHTML = `
                         <div>
-                            <!-- 一列 5 個對應的適中高度：h-32 sm:h-36 -->
-                            <div class="h-32 sm:h-36 bg-brand-dark overflow-hidden relative flex items-center justify-center">
+                            <!-- 圖片區塊 (手機版較大、電腦版維持精緻高度 h-36) -->
+                            <div class="h-[55vh] sm:h-36 bg-brand-dark overflow-hidden relative flex items-center justify-center cursor-pointer" onclick="openDetailModal('${item.id}')">
                                 <img src="${coverImg}" 
                                      alt="${item.title}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -366,16 +383,21 @@
                                 ${photoBadge}
                             </div>
                             
-                            <div class="p-3 font-serif">
-                                <h3 class="text-sm font-bold text-brand-text group-hover:text-brand-accent transition line-clamp-1">${item.title}</h3>
-                                ${item.shortDesc ? `<p class="text-brand-accent/80 text-[11px] mt-0.5 italic font-sans line-clamp-1">${item.shortDesc}</p>` : ''}
-                                <p class="text-brand-muted text-[11px] line-clamp-2 mt-1 leading-relaxed">${item.story}</p>
+                            <div class="p-4 sm:p-3 font-serif">
+                                <h3 class="text-base sm:text-sm font-bold text-brand-text group-hover:text-brand-accent transition line-clamp-1">${item.title}</h3>
+                                ${item.shortDesc ? `<p class="text-brand-accent/80 text-xs sm:text-[11px] mt-0.5 italic font-sans line-clamp-1">${item.shortDesc}</p>` : ''}
+                                <p class="text-brand-muted text-xs sm:text-[11px] line-clamp-3 sm:line-clamp-2 mt-1.5 leading-relaxed">${item.story}</p>
                             </div>
                         </div>
 
-                        <div class="px-3 py-2 border-t border-brand-border/60 bg-brand-dark/40 flex justify-between items-center text-[11px] font-sans text-brand-accent">
-                            <span class="flex items-center gap-1"><i class="fa-regular fa-eye"></i> 查看詳細</span>
-                            <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                        <!-- 底部區域：包含右下角浮動/固定介紹按鈕 -->
+                        <div class="px-4 py-3 sm:px-3 sm:py-2 border-t border-brand-border/60 bg-brand-dark/40 flex justify-between items-center text-xs sm:text-[11px] font-sans">
+                            <span class="text-brand-muted hidden sm:inline items-center gap-1"><i class="fa-regular fa-eye"></i> 查看詳細</span>
+                            <!-- 手機與電腦共用的右下角按鈕，點擊開啟浮動新視窗 -->
+                            <button onclick="openDetailModal('${item.id}')" class="ml-auto flex items-center gap-1.5 bg-brand-accent hover:bg-brand-accentHover text-brand-dark px-3.5 py-2 sm:px-3 sm:py-1.5 rounded-full font-bold shadow-md transition transform active:scale-95">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <span>詳細介紹</span>
+                            </button>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -400,7 +422,7 @@
             renderGallery();
         }
 
-        // 打開彈出細節視窗（多圖輪播）
+        // 打開彈出細節視窗（浮動新視窗）
         function openDetailModal(id) {
             const item = collections.find(c => c.id === id);
             if (!item) return;
@@ -409,7 +431,6 @@
             document.getElementById('modalTitle').textContent = item.title;
             document.getElementById('modalStory').textContent = item.story;
             
-            // 短評處理
             const shortDescEl = document.getElementById('modalShortDesc');
             const shortDescContainer = document.getElementById('modalShortDescContainer');
             if (item.shortDesc) {
@@ -419,7 +440,6 @@
                 shortDescContainer.classList.add('hidden');
             }
 
-            // 隨筆手記處理
             const notesEl = document.getElementById('modalNotes');
             const notesContainer = document.getElementById('modalNotesContainer');
             if (item.notes) {
@@ -429,7 +449,6 @@
                 notesContainer.classList.add('hidden');
             }
 
-            // 圖片陣列與縮圖邏輯
             currentModalImages = item.images.length > 0 ? item.images : ['https://placehold.co/600x400/181c24/c9a063?text=Vintage+Collection'];
             currentImageIdx = 0;
             updateModalImageDisplay();
@@ -453,7 +472,6 @@
                 nextBtn.classList.add('hidden');
             }
 
-            // 建立 2~3 張縮圖選單
             const thumbsContainer = document.getElementById('imageThumbnails');
             thumbsContainer.innerHTML = '';
             if (currentModalImages.length > 1) {
@@ -480,7 +498,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // 暫存新增視窗
         function openAddItemModal() {
             document.getElementById('addModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -510,7 +527,7 @@
             collections.unshift(newItem);
             renderGallery();
             closeAddItemModal();
-            showToast('已暫存加入藏品！(提醒：建議一併填入 Google 試算表中)');
+            showToast('已暫存加入藏品！');
         }
 
         function showToast(msg) {
@@ -522,6 +539,20 @@
                 toast.classList.add('hidden');
                 toast.classList.remove('flex');
             }, 3000);
+        }
+
+        // 外部連結自動開窗支援（如 #item-1）
+        function checkUrlHashAndOpenModal() {
+            const hash = window.location.hash;
+            if (hash) {
+                const targetId = hash.substring(1);
+                setTimeout(() => {
+                    const exists = collections.find(c => c.id === targetId);
+                    if (exists) {
+                        openDetailModal(targetId);
+                    }
+                }, 400);
+            }
         }
     </script>
 </body>
