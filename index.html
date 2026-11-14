@@ -218,7 +218,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #111; /* 背景預設深色，避免載入時短暫閃爍 */
+    background-color: #111;
     overflow: hidden;
 }
 
@@ -248,7 +248,7 @@ html, body {
     object-fit: cover;
 }
 
-/* 🌟 強化優化後的圖片背景樣式：完美支援 .webp、.jpg、.png 滿版顯示 */
+/* 圖片背景樣式：完美支援 .webp、.jpg、.png 滿版顯示 */
 .custom-cover-layer {
     position: absolute;
     top: 0;
@@ -269,7 +269,7 @@ html, body {
     pointer-events: none;
 }
 
-/* 精緻的右下角播放按鈕 */
+/* 精緻的右下角播放/前往按鈕 */
 .cover-play-btn {
     width: 52px;
     height: 52px;
@@ -557,6 +557,20 @@ html, body {
             return match ? match[1] : "";
         }
 
+        // 🌟 智慧判斷該網站是否允許 iframe 嵌入（例如阻擋博客來、Yahoo、各大主流購物/新聞網等）
+        function isEmbeddableSite(url) {
+            try {
+                const parsed = new URL(url);
+                const hostname = parsed.hostname.toLowerCase();
+                // 常見禁止 iframe 嵌入的外部知名網站清單
+                const blockedDomains = ['books.com.tw', 'yahoo.com', 'shopee.tw', 'facebook.com', 'instagram.com', 'line.me'];
+                if (blockedDomains.some(domain => hostname.includes(domain))) {
+                    return false;
+                }
+            } catch (_) {}
+            return true; // 預設允許自家或一般網頁嵌入
+        }
+
         function rowsToSongs(rows) {
             if (!rows.length) return [];
             const headers = rows[0];
@@ -590,20 +604,29 @@ html, body {
                 }
 
                 let embedCode = "";
+                let isExternalLinkOnly = false;
+
                 if (videoId) {
                     embedCode = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 } else if (productUrl) {
-                    embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none; margin:0; padding:0;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
+                    if (isEmbeddableSite(productUrl)) {
+                        // 支援嵌入的網頁：以滿版 iframe 呈現
+                        embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none; margin:0; padding:0;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
+                    } else {
+                        // 像博客來這樣禁止 iframe 的外部網站：標記為外部連結，點擊時另開新分頁
+                        isExternalLinkOnly = true;
+                    }
                 }
 
                 return {
                     title,
-                    views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
+                    views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : (isExternalLinkOnly ? "🔗 外部推薦連結" : "🎵 精彩推薦"),
                     isCustomCover: true,
                     coverClass,
-                    coverUrl: coverUrl || "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg", // 預設安全備用圖
+                    coverUrl: coverUrl || "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
                     productUrl,
                     isWebPage: !videoId && !!productUrl,
+                    isExternalLinkOnly,
                     embedCode
                 };
             }).filter(Boolean);
@@ -632,7 +655,6 @@ html, body {
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    // 🌟 完美支援 .webp / .jpg / .png 背景圖填滿設定，並加上漸層遮罩讓文字更清晰
                     const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
                     coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}></div>`;
                     card.dataset.hasCover = "true";
@@ -658,6 +680,7 @@ html, body {
                 card.dataset.embed = song.embedCode;
                 card.dataset.productUrl = song.productUrl;
                 card.dataset.isWebPage = song.isWebPage ? "true" : "false";
+                card.dataset.isExternal = song.isExternalLinkOnly ? "true" : "false";
                 container.appendChild(card);
             });
 
@@ -695,10 +718,14 @@ html, body {
                     const wrapper = card.querySelector('.video-wrapper');
                     const hasCover = card.dataset.hasCover === "true";
                     const isWebPage = card.dataset.isWebPage === "true";
+                    const isExternal = card.dataset.isExternal === "true";
 
                     if (entry.isIntersecting) {
                         const coverLayer = card.querySelector('.custom-cover-layer');
                         
+                        // 如果是外部禁止嵌入的網站（如博客來），保持封面不淡出，點擊按鈕時直接開新分頁
+                        if (isExternal) return;
+
                         if (isWebPage && coverLayer && !coverLayer.classList.contains('fade-out')) {
                             coverLayer.classList.add('fade-out');
                         }
@@ -725,6 +752,15 @@ html, body {
 
         function playCustomSong(btnWrapper, songObj) {
             const card = btnWrapper.closest('.reel-card');
+            const productUrl = card.dataset.productUrl;
+            const isExternal = card.dataset.isExternal === "true";
+
+            // 🌟 如果是博客來等外部網站，點擊右下角按鈕時自動用新分頁開啟
+            if (isExternal && productUrl) {
+                window.open(productUrl, '_blank');
+                return;
+            }
+
             const wrapper = card.querySelector('.video-wrapper');
             const coverLayer = card.querySelector('.custom-cover-layer');
             const embedCode = card.dataset.embed;
