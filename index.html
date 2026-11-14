@@ -156,7 +156,7 @@ html, body {
     background: #e2e6ea;
 }
 
-/* 電腦版或大螢幕時：置中顯示手機精緻比例框體 */
+/* 電腦版或大螢幕時：置中顯示手機精緻比例框體（帶有圓角與質感陰影） */
 @media (min-width: 768px) {
     body {
         display: flex;
@@ -174,7 +174,7 @@ html, body {
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         position: relative;
-        background-color: #ffffff;
+        background-color: #111;
     }
 }
 
@@ -191,7 +191,7 @@ html, body {
         bottom: 0;
         border-radius: 0;
         box-shadow: none;
-        background-color: #ffffff;
+        background-color: #111;
     }
 }
 
@@ -222,7 +222,7 @@ html, body {
     overflow: hidden;
 }
 
-/* 0 邊界滿版容器 */
+/* 0 邊界滿版內容容器 */
 .video-wrapper {
     position: absolute;
     top: 0;
@@ -248,7 +248,7 @@ html, body {
     object-fit: cover;
 }
 
-/* 圖片背景樣式：完美支援 .webp、.jpg、.png 滿版顯示 */
+/* 第一張圖高質感的封面圖樣式（完美支援 .webp, .jpg, .png） */
 .custom-cover-layer {
     position: absolute;
     top: 0;
@@ -269,7 +269,7 @@ html, body {
     pointer-events: none;
 }
 
-/* 精緻的右下角播放/前往按鈕 */
+/* 右下角精緻紅色播放按鈕 */
 .cover-play-btn {
     width: 52px;
     height: 52px;
@@ -303,7 +303,7 @@ html, body {
     left: 0;
     right: 0;
     padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
     z-index: 10;
     display: flex;
     justify-content: space-between;
@@ -342,7 +342,7 @@ html, body {
     border-radius: 12px;
 }
 
-/* 左上角 Logo 品牌標語：固定在最上層 */
+/* 左上角圓形精緻 Logo 標誌 */
 .top-brand-badge {
     position: absolute;
     top: 16px;
@@ -381,7 +381,7 @@ html, body {
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-/* 右側專屬的上下切換控制條 */
+/* 右側專屬上下切換控制條 */
 .nav-control-bar {
     position: absolute;
     right: 12px;
@@ -438,9 +438,9 @@ html, body {
         </div>
     </div>
 
-    <!-- 3. 影片與網頁嵌入播放主畫面 -->
+    <!-- 3. 主畫面框體 -->
     <div class="app-frame">
-        <!-- 左上角 Logo 與標語：點擊隨時前往主入口 -->
+        <!-- 左上角 Logo 標誌 -->
         <div class="top-brand-badge" onclick="goToPortal()" title="點擊前往主入口">
             <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
             <span>隨心所欲的生活，活出自己的光芒 ➔</span>
@@ -457,7 +457,7 @@ html, body {
     </div>
 
     <script>
-        // 1.2 秒後自動淡出 MyEzLife 開場頁
+        // 1.2 秒後自動淡出開場頁
         setTimeout(function() {
             const splash = document.getElementById('welcome-splash');
             splash.style.opacity = '0';
@@ -481,7 +481,6 @@ html, body {
             window.location.replace("https://portaly.cc/myezlife");
         }
 
-        // 點擊上下按鈕時執行的安全捲動切換邏輯
         function scrollCard(direction) {
             const container = document.getElementById('reelContainer');
             const cards = container.querySelectorAll('.reel-card');
@@ -489,7 +488,6 @@ html, body {
 
             const cardHeight = cards[0].offsetHeight;
             const currentScroll = container.scrollTop;
-            
             let targetScroll = direction === 'down' ? currentScroll + cardHeight : currentScroll - cardHeight;
             
             container.scrollTo({
@@ -557,18 +555,17 @@ html, body {
             return match ? match[1] : "";
         }
 
-        // 🌟 智慧判斷該網站是否允許 iframe 嵌入（例如阻擋博客來、Yahoo、各大主流購物/新聞網等）
+        // 智慧判斷是否為允許 iframe 嵌入的網頁（例如自己的網站允許，外部阻擋網站則自動改為新分頁）
         function isEmbeddableSite(url) {
             try {
                 const parsed = new URL(url);
                 const hostname = parsed.hostname.toLowerCase();
-                // 常見禁止 iframe 嵌入的外部知名網站清單
-                const blockedDomains = ['books.com.tw', 'yahoo.com', 'shopee.tw', 'facebook.com', 'instagram.com', 'line.me'];
+                const blockedDomains = ['books.com.tw', 'yahoo.com', 'shopee.tw', 'facebook.com', 'instagram.com', 'line.me', 'mureka.ai'];
                 if (blockedDomains.some(domain => hostname.includes(domain))) {
                     return false;
                 }
             } catch (_) {}
-            return true; // 預設允許自家或一般網頁嵌入
+            return true;
         }
 
         function rowsToSongs(rows) {
@@ -610,11 +607,9 @@ html, body {
                     embedCode = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 } else if (productUrl) {
                     if (isEmbeddableSite(productUrl)) {
-                        // 支援嵌入的網頁：以滿版 iframe 呈現
                         embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none; margin:0; padding:0;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
                     } else {
-                        // 像博客來這樣禁止 iframe 的外部網站：標記為外部連結，點擊時另開新分頁
-                        isExternalLinkOnly = true;
+                        isExternalLinkOnly = true; // 像 mureka.ai 或博客來會自動轉為另開新分頁，保護畫面不破局
                     }
                 }
 
@@ -655,7 +650,8 @@ html, body {
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
+                    // 🌟 完美帶入您試算表中的封面圖片 (.webp, .jpg, .png)，並加上高質感漸層
+                    const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
                     coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}></div>`;
                     card.dataset.hasCover = "true";
                 }
@@ -669,7 +665,7 @@ html, body {
                             <div class="song-views">${song.views}</div>
                         </div>
                         ${song.isCustomCover ? `
-                        <div class="cover-play-btn-wrapper" onclick="playCustomSong(this, ${JSON.stringify(song).replace(/"/g, '&quot;')})">
+                        <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
                             <div class="cover-play-btn">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -723,7 +719,7 @@ html, body {
                     if (entry.isIntersecting) {
                         const coverLayer = card.querySelector('.custom-cover-layer');
                         
-                        // 如果是外部禁止嵌入的網站（如博客來），保持封面不淡出，點擊按鈕時直接開新分頁
+                        // 外部網站保持封面，點擊才開新分頁
                         if (isExternal) return;
 
                         if (isWebPage && coverLayer && !coverLayer.classList.contains('fade-out')) {
@@ -750,12 +746,12 @@ html, body {
             });
         }
 
-        function playCustomSong(btnWrapper, songObj) {
+        function playCustomSong(btnWrapper) {
             const card = btnWrapper.closest('.reel-card');
             const productUrl = card.dataset.productUrl;
             const isExternal = card.dataset.isExternal === "true";
 
-            // 🌟 如果是博客來等外部網站，點擊右下角按鈕時自動用新分頁開啟
+            // 如果是像 mureka.ai 這種拒絕連線的外部網站，點擊時自動順暢另開新分頁
             if (isExternal && productUrl) {
                 window.open(productUrl, '_blank');
                 return;
