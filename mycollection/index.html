@@ -111,8 +111,8 @@
             </div>
         </section>
 
-        <!-- Gallery Grid -->
-        <section id="galleryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <!-- Gallery Grid: 電腦版一列 5 個 (lg:grid-cols-5)，平板 3 個，手機 1~2 個 -->
+        <section id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
             <!-- Cards dynamically rendered via JS -->
         </section>
 
@@ -346,34 +346,35 @@
                 emptyState.classList.add('hidden');
                 filtered.forEach(item => {
                     const coverImg = item.images.length > 0 ? item.images[0] : 'https://placehold.co/600x400/181c24/c9a063?text=Vintage+Collection';
-                    const photoBadge = item.images.length > 1 ? `<span class="absolute bottom-3 right-3 bg-black/70 backdrop-blur text-white text-[10px] px-2 py-0.5 rounded-full border border-white/20"><i class="fa-regular fa-images mr-1"></i>${item.images.length} 張照片</span>` : '';
+                    const photoBadge = item.images.length > 1 ? `<span class="absolute bottom-2 right-2 bg-black/70 backdrop-blur text-white text-[9px] px-1.5 py-0.5 rounded-full border border-white/20"><i class="fa-regular fa-images mr-1"></i>${item.images.length}</span>` : '';
 
                     const card = document.createElement('div');
-                    card.className = "bg-brand-card border border-brand-border hover:border-brand-accent/60 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group cursor-pointer";
+                    card.className = "bg-brand-card border border-brand-border hover:border-brand-accent/60 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between group cursor-pointer";
                     card.onclick = () => openDetailModal(item.id);
 
                     card.innerHTML = `
                         <div>
-                            <div class="h-48 sm:h-56 bg-brand-dark overflow-hidden relative">
+                            <!-- 一列 5 個對應的適中高度：h-32 sm:h-36 -->
+                            <div class="h-32 sm:h-36 bg-brand-dark overflow-hidden relative flex items-center justify-center">
                                 <img src="${coverImg}" 
                                      alt="${item.title}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                      onerror="this.onerror=null; this.src='https://placehold.co/600x400/181c24/c9a063?text=Vintage+Collection';">
-                                <div class="absolute top-3 left-3 bg-brand-dark/80 backdrop-blur border border-brand-accent/40 text-brand-accent text-xs font-sans px-2.5 py-1 rounded-full">
+                                <div class="absolute top-2 left-2 bg-brand-dark/80 backdrop-blur border border-brand-accent/40 text-brand-accent text-[10px] font-sans px-1.5 py-0.5 rounded-full">
                                     ${item.category}
                                 </div>
                                 ${photoBadge}
                             </div>
                             
-                            <div class="p-5 font-serif">
-                                <h3 class="text-lg font-bold text-brand-text group-hover:text-brand-accent transition line-clamp-1">${item.title}</h3>
-                                ${item.shortDesc ? `<p class="text-brand-accent/80 text-xs mt-1 italic font-sans line-clamp-1">${item.shortDesc}</p>` : ''}
-                                <p class="text-brand-muted text-xs line-clamp-3 mt-2 leading-relaxed">${item.story}</p>
+                            <div class="p-3 font-serif">
+                                <h3 class="text-sm font-bold text-brand-text group-hover:text-brand-accent transition line-clamp-1">${item.title}</h3>
+                                ${item.shortDesc ? `<p class="text-brand-accent/80 text-[11px] mt-0.5 italic font-sans line-clamp-1">${item.shortDesc}</p>` : ''}
+                                <p class="text-brand-muted text-[11px] line-clamp-2 mt-1 leading-relaxed">${item.story}</p>
                             </div>
                         </div>
 
-                        <div class="px-5 py-3 border-t border-brand-border/60 bg-brand-dark/40 flex justify-between items-center text-xs font-sans text-brand-accent">
-                            <span class="flex items-center gap-1"><i class="fa-regular fa-eye"></i> 查看詳細與多圖</span>
+                        <div class="px-3 py-2 border-t border-brand-border/60 bg-brand-dark/40 flex justify-between items-center text-[11px] font-sans text-brand-accent">
+                            <span class="flex items-center gap-1"><i class="fa-regular fa-eye"></i> 查看詳細</span>
                             <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     `;
