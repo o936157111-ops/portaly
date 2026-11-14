@@ -248,7 +248,7 @@ html, body {
     object-fit: cover;
 }
 
-/* 第一張圖高質感的封面圖樣式（完美支援 .webp, .jpg, .png） */
+/* 第一張圖高質感的封面圖樣式 */
 .custom-cover-layer {
     position: absolute;
     top: 0;
@@ -555,7 +555,6 @@ html, body {
             return match ? match[1] : "";
         }
 
-        // 智慧判斷是否為允許 iframe 嵌入的網頁（例如自己的網站允許，外部阻擋網站則自動改為新分頁）
         function isEmbeddableSite(url) {
             try {
                 const parsed = new URL(url);
@@ -609,7 +608,7 @@ html, body {
                     if (isEmbeddableSite(productUrl)) {
                         embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none; margin:0; padding:0;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
                     } else {
-                        isExternalLinkOnly = true; // 像 mureka.ai 或博客來會自動轉為另開新分頁，保護畫面不破局
+                        isExternalLinkOnly = true; 
                     }
                 }
 
@@ -650,7 +649,6 @@ html, body {
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    // 🌟 完美帶入您試算表中的封面圖片 (.webp, .jpg, .png)，並加上高質感漸層
                     const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
                     coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}></div>`;
                     card.dataset.hasCover = "true";
@@ -665,7 +663,7 @@ html, body {
                             <div class="song-views">${song.views}</div>
                         </div>
                         ${song.isCustomCover ? `
-                        <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
+                        <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)" title="點擊播放或開新分頁看網頁">
                             <div class="cover-play-btn">
                                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
@@ -713,18 +711,11 @@ html, body {
                     const card = entry.target;
                     const wrapper = card.querySelector('.video-wrapper');
                     const hasCover = card.dataset.hasCover === "true";
-                    const isWebPage = card.dataset.isWebPage === "true";
                     const isExternal = card.dataset.isExternal === "true";
 
                     if (entry.isIntersecting) {
                         const coverLayer = card.querySelector('.custom-cover-layer');
-                        
-                        // 外部網站保持封面，點擊才開新分頁
                         if (isExternal) return;
-
-                        if (isWebPage && coverLayer && !coverLayer.classList.contains('fade-out')) {
-                            coverLayer.classList.add('fade-out');
-                        }
 
                         if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
                             return;
@@ -746,17 +737,21 @@ html, body {
             });
         }
 
+        // 🌟 關鍵修改：讓右下角的圖形按鈕同時支援「播放」與「如果這是網頁/藏品，直接在新分頁開啟整個網頁」
         function playCustomSong(btnWrapper) {
             const card = btnWrapper.closest('.reel-card');
             const productUrl = card.dataset.productUrl;
             const isExternal = card.dataset.isExternal === "true";
+            const isWebPage = card.dataset.isWebPage === "true";
 
-            // 如果是像 mureka.ai 這種拒絕連線的外部網站，點擊時自動順暢另開新分頁
-            if (isExternal && productUrl) {
+            // 如果該筆 CSV 資料有設定產品網址／網頁連結（例如鋼筆展覽館、其他子網頁）
+            // 點擊右下角按鈕時，直接在新分頁開啟該網頁！
+            if (productUrl) {
                 window.open(productUrl, '_blank');
                 return;
             }
 
+            // 否則維持原本的 YouTube 播放行為
             const wrapper = card.querySelector('.video-wrapper');
             const coverLayer = card.querySelector('.custom-cover-layer');
             const embedCode = card.dataset.embed;
