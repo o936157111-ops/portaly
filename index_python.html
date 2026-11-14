@@ -254,7 +254,7 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 100%),
+    background: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%),
     url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg') center/cover no-repeat;
     z-index: 5;
     cursor: pointer;
@@ -378,7 +378,7 @@ html, body {
     text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-/* 🌟 右側專屬的上下切換控制條 (解決網頁嵌入時無法滑動的問題) */
+/* 右側專屬的上下切換控制條 */
 .nav-control-bar {
     position: absolute;
     right: 12px;
@@ -427,7 +427,7 @@ html, body {
     <div class="choice-modal-overlay" id="choiceModalOverlay">
         <div class="choice-modal-card" onclick="event.stopPropagation()">
             <h3>🎵 喜歡這首曲子嗎？</h3>
-            <p>您已經聆聽了一段時間,要繼續留在這裡聽歌,還是前往總入口網頁呢?</p>
+            <p>您已經聆聽了一段時間，要繼續留在這裡聽歌，還是前往總入口網頁呢？</p>
             <div class="choice-btn-group">
                 <button class="choice-btn-primary" onclick="continueListening()">繼續聽歌</button>
                 <button class="choice-btn-secondary" onclick="goToPortal()">前往主入口網頁</button>
@@ -440,10 +440,10 @@ html, body {
         <!-- 左上角 Logo 與標語：點擊隨時前往主入口 -->
         <div class="top-brand-badge" onclick="goToPortal()" title="點擊前往主入口">
             <img src="https://myezlife.com/eric-logo.gif" alt="Logo">
-            <span>隨心所欲的生活,活出自己的光芒 ➔</span>
+            <span>隨心所欲的生活，活出自己的光芒 ➔</span>
         </div>
 
-        <!-- 🌟 右側專屬上下切換按鈕控制條 -->
+        <!-- 右側專屬上下切換按鈕控制條 -->
         <div class="nav-control-bar">
             <button class="nav-btn" onclick="scrollCard('up')" title="上一首 / 上一頁">▲</button>
             <button class="nav-btn" onclick="scrollCard('down')" title="下一首 / 下一頁">▼</button>
@@ -463,7 +463,7 @@ html, body {
             }, 500);
         }, 1200);
 
-        // 30 秒一到,彈出選擇視窗 (只問一次)
+        // 30 秒一到，彈出選擇視窗 (只問一次)
         setTimeout(function() {
             const modal = document.getElementById('choiceModalOverlay');
             modal.style.display = 'flex';
@@ -478,7 +478,7 @@ html, body {
             window.location.replace("https://portaly.cc/myezlife");
         }
 
-        // 🌟 點擊上下按鈕時執行的安全捲動切換邏輯
+        // 點擊上下按鈕時執行的安全捲動切換邏輯
         function scrollCard(direction) {
             const container = document.getElementById('reelContainer');
             const cards = container.querySelectorAll('.reel-card');
@@ -487,7 +487,6 @@ html, body {
             const cardHeight = cards[0].offsetHeight;
             const currentScroll = container.scrollTop;
             
-            // 計算目前大約在哪一個卡片位置
             let targetScroll = direction === 'down' ? currentScroll + cardHeight : currentScroll - cardHeight;
             
             container.scrollTo({
@@ -577,6 +576,7 @@ html, body {
 
                 if (!title || (!videoId && !productUrl)) return null;
 
+                // 🌟 重新補回：正確讀取 Google 試算表中的封面圖片網址或樣式
                 const coverValue = coverCol >= 0 ? String(row[coverCol] || "").trim() : "";
                 let coverUrl = "";
                 let coverClass = "";
@@ -630,7 +630,9 @@ html, body {
                 let coverHtml = '';
                 if (song.isCustomCover) {
                     const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-                    coverHtml = `<div class="custom-cover-layer${extraClass}"${song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : ""}></div>`;
+                    // 🌟 確保封面圖片網址能夠正確套用到背景中
+                    const bgStyle = song.coverUrl ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1)),url('${song.coverUrl.replace(/'/g, "%27")}')"` : '';
+                    coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}></div>`;
                     card.dataset.hasCover = "true";
                 }
 
