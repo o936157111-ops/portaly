@@ -747,29 +747,37 @@ html, body {
         }
 
         function playCustomSong(btnWrapper) {
-            const card = btnWrapper.closest('.reel-card');
-            const productUrl = card.dataset.productUrl;
-            const isExternal = card.dataset.isExternal === "true";
+    const card = btnWrapper.closest('.reel-card');
+    const productUrl = card.dataset.productUrl;
+    const isWebPage = card.dataset.isWebPage === "true";
+    const isExternal = card.dataset.isExternal === "true";
 
-            // 如果是像 mureka.ai 這種拒絕連線的外部網站，點擊時自動順暢另開新分頁
-            if (isExternal && productUrl) {
-                window.open(productUrl, '_blank');
-                return;
-            }
+    // 🌟 如果是純網頁或產品連結類型，點擊右下角按鈕直接另開新分頁前往該網頁
+    if (isWebPage && productUrl) {
+        window.open(productUrl, '_blank');
+        return;
+    }
 
-            const wrapper = card.querySelector('.video-wrapper');
-            const coverLayer = card.querySelector('.custom-cover-layer');
-            const embedCode = card.dataset.embed;
+    // 如果是外部限制無法內嵌的站點
+    if (isExternal && productUrl) {
+        window.open(productUrl, '_blank');
+        return;
+    }
 
-            if (embedCode) {
-                if (!wrapper.hasChildNodes()) {
-                    wrapper.innerHTML = embedCode;
-                }
-                if (coverLayer) {
-                    coverLayer.classList.add('fade-out');
-                }
-            }
+    const wrapper = card.querySelector('.video-wrapper');
+    const coverLayer = card.querySelector('.custom-cover-layer');
+    const embedCode = card.dataset.embed;
+
+    if (embedCode) {
+        if (!wrapper.hasChildNodes()) {
+            wrapper.innerHTML = embedCode;
         }
+        if (coverLayer) {
+            coverLayer.classList.add('fade-out');
+        }
+    }
+}
+
 
         window.onload = async function () {
             const container = document.getElementById("reelContainer");
