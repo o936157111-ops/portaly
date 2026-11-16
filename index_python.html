@@ -426,13 +426,13 @@ html, body {
         </div>
     </div>
 
-    <!-- 2. 30秒後彈出的選擇提示視窗 -->
+    <!-- 2. 30秒後彈出的選擇提示視窗 (已更新為全方位分享與瀏覽導向) -->
     <div class="choice-modal-overlay" id="choiceModalOverlay">
         <div class="choice-modal-card" onclick="event.stopPropagation()">
-            <h3>🎵 喜歡這首曲子嗎？</h3>
-            <p>您已經聆聽了一段時間，要繼續留在這裡聽歌，還是前往總入口網頁呢？</p>
+            <h3>✨ 喜歡這些精選推薦嗎？</h3>
+            <p>您已經瀏覽了一小段時間，要繼續在這裡細細品味，還是前往總入口探索更多精彩內容呢？</p>
             <div class="choice-btn-group">
-                <button class="choice-btn-primary" onclick="continueListening()">繼續聽歌</button>
+                <button class="choice-btn-primary" onclick="continueListening()">繼續瀏覽</button>
                 <button class="choice-btn-secondary" onclick="goToPortal()">前往主入口網頁</button>
             </div>
         </div>
@@ -558,7 +558,6 @@ function extractYouTubeId(value) {
     return match ? match[1] : "";
 }
 
-// 🌟 擴充防護名單：包含誠品 (eslite.com) 等無法內嵌的大型網站
 function isEmbeddableSite(url) {
     try {
         const parsed = new URL(url);
@@ -630,7 +629,6 @@ function rowsToSongs(rows) {
     }).filter(Boolean);
 }
 
-// 🌟 帶有快取的 CSV 載入邏輯（秒開關鍵）
 async function loadSongDatabase() {
     const cachedData = localStorage.getItem(CACHE_KEY);
     let songsFromCache = null;
@@ -679,7 +677,6 @@ function initReels(songDatabase) {
         if (song.isCustomCover) {
             const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
             const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
-            // 如果是外部網站，點擊整張封面也能開啟新分頁
             const clickAttr = (song.isExternalLinkOnly && song.productUrl) ? ` onclick="window.open('${song.productUrl.replace(/'/g, "\\'")}', '_blank')"` : '';
             coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}${clickAttr}></div>`;
             card.dataset.hasCover = "true";
@@ -748,7 +745,6 @@ function initReels(songDatabase) {
             if (entry.isIntersecting) {
                 const coverLayer = card.querySelector('.custom-cover-layer');
                 
-                // 🌟 關鍵修復：如果是外部網站（如誠品、博客來），絕對不要淡出封面，也不載入 iframe，避免一閃而過與拒絕連線
                 if (isExternal) {
                     return;
                 }
@@ -785,7 +781,6 @@ function playCustomSong(btnWrapper) {
     const isWebPage = card.dataset.isWebPage === "true";
     const isExternal = card.dataset.isExternal === "true";
 
-    // 🌟 點擊右下角按鈕時，只要是外部網站，立刻在新分頁打開目標連結
     if ((isWebPage || isExternal) && productUrl) {
         window.open(productUrl, '_blank');
         return;
@@ -805,7 +800,6 @@ function playCustomSong(btnWrapper) {
     }
 }
 
-// 主初始化入口
 window.onload = async function () {
     const container = document.getElementById("reelContainer");
     const fallbackTimeout = setTimeout(hideSplash, 2500);
