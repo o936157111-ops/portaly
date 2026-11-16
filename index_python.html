@@ -558,11 +558,12 @@ function extractYouTubeId(value) {
     return match ? match[1] : "";
 }
 
+// 🌟 擴充防護名單：包含誠品 (eslite.com) 等無法內嵌的大型網站
 function isEmbeddableSite(url) {
     try {
         const parsed = new URL(url);
         const hostname = parsed.hostname.toLowerCase();
-        const blockedDomains = ['books.com.tw', 'yahoo.com', 'shopee.tw', 'facebook.com', 'instagram.com', 'line.me', 'mureka.ai'];
+        const blockedDomains = ['eslite.com', 'books.com.tw', 'yahoo.com', 'shopee.tw', 'facebook.com', 'instagram.com', 'line.me', 'mureka.ai'];
         if (blockedDomains.some(domain => hostname.includes(domain))) {
             return false;
         }
@@ -622,7 +623,7 @@ function rowsToSongs(rows) {
             coverClass,
             coverUrl: coverUrl || "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
             productUrl,
-            isWebPage: !videoId && !!productUrl,
+            isWebPage: !videoId && !isExternalLinkOnly && !!productUrl,
             isExternalLinkOnly,
             embedCode
         };
@@ -631,7 +632,6 @@ function rowsToSongs(rows) {
 
 // 🌟 帶有快取的 CSV 載入邏輯（秒開關鍵）
 async function loadSongDatabase() {
-    // 1. 先嘗試讀取本地快取
     const cachedData = localStorage.getItem(CACHE_KEY);
     let songsFromCache = null;
     if (cachedData) {
@@ -640,17 +640,15 @@ async function loadSongDatabase() {
         } catch (_) {}
     }
 
-    // 2. 如果有快取，非同步發動遠端更新，背景默默刷新
     if (songsFromCache && songsFromCache.length > 0) {
         fetchRemoteCSV().then(newSongs => {
             if (newSongs && newSongs.length > 0) {
                 localStorage.setItem(CACHE_KEY, JSON.stringify(newSongs));
             }
         }).catch(() => {});
-        return songsFromCache; // 秒回傳快取資料
+        return songsFromCache;
     }
 
-    // 3. 沒有快取時才等待遠端下載
     const remoteSongs = await fetchRemoteCSV();
     if (remoteSongs && remoteSongs.length > 0) {
         localStorage.setItem(CACHE_KEY, JSON.stringify(remoteSongs));
@@ -681,7 +679,9 @@ function initReels(songDatabase) {
         if (song.isCustomCover) {
             const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
             const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
-            coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}></div>`;
+            // 如果是外部網站，點擊整張封面也能開啟新分頁
+            const clickAttr = (song.isExternalLinkOnly && song.productUrl) ? ` onclick="window.open('${song.productUrl.replace(/'/g, "\\'")}', '_blank')"` : '';
+            coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}${clickAttr}></div>`;
             card.dataset.hasCover = "true";
         }
 
@@ -748,7 +748,7 @@ function initReels(songDatabase) {
             if (entry.isIntersecting) {
                 const coverLayer = card.querySelector('.custom-cover-layer');
                 
-                // 🌟 修正：如果是外部連結，維持封面顯示，不強行阻斷
+                // 🌟 關鍵修復：如果是外部網站（如誠品、博客來），絕對不要淡出封面，也不載入 iframe，避免一閃而過與拒絕連線
                 if (isExternal) {
                     return;
                 }
@@ -776,7 +776,6 @@ function initReels(songDatabase) {
         observer.observe(card);
     });
 
-    // 🌟 卡片渲染完畢，立刻淡出開場遮罩
     hideSplash();
 }
 
@@ -786,7 +785,7 @@ function playCustomSong(btnWrapper) {
     const isWebPage = card.dataset.isWebPage === "true";
     const isExternal = card.dataset.isExternal === "true";
 
-    // 🌟 修正：只要是外部網連結或無法內嵌的站台，點擊右下角按鈕或封面即直接開新分頁
+    // 🌟 點擊右下角按鈕時，只要是外部網站，立刻在新分頁打開目標連結
     if ((isWebPage || isExternal) && productUrl) {
         window.open(productUrl, '_blank');
         return;
@@ -809,8 +808,6 @@ function playCustomSong(btnWrapper) {
 // 主初始化入口
 window.onload = async function () {
     const container = document.getElementById("reelContainer");
-    
-    // 設定最大安全等待時間 (2.5 秒)，就算網路極慢也強制解開遮罩避免卡住
     const fallbackTimeout = setTimeout(hideSplash, 2500);
 
     try {
