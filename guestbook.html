@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>溫馨留言板</title>
+  <style>
+    /* 簡居風格變數設定 */
+    :root {
+      --bg-color: #faf9f5;
+      --card-bg: #ffffff;
+      --text-main: #3d3a36;
+      --text-muted: #8c857b;
+      --border-color: #e8e4dc;
+      --accent-color: #7d8471;
+      --accent-hover: #656c5a;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .warm-guestbook {
+      width: 100%;
+      max-width: 640px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      box-sizing: border-box;
+    }
+
+    /* 標題與迎賓文案 */
+    .gb-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .gb-header h2 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.05em;
+    }
+    .gb-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* 發布表單區塊 */
+    .gb-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .gb-input-row {
+      display: flex;
+      gap: 12px;
+    }
+    .gb-input, .gb-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-color);
+      font-size: 0.92rem;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .gb-input:focus, .gb-textarea:focus {
+      border-color: var(--accent-color);
+      background: #fff;
+    }
+    .gb-textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+    .gb-submit {
+      align-self: flex-end;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .gb-submit:hover {
+      background: var(--accent-hover);
+    }
+    .gb-submit:disabled {
+      background: var(--border-color);
+      cursor: not-allowed;
+    }
+
+    /* 防機器人垃圾留言陷阱欄位 (Honeypot) - 隱藏不讓真人看到 */
+    .website-hp {
+      display: none !important;
+    }
+
+    /* 留言列表區塊 */
+    .gb-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .gb-item {
+      padding: 16px;
+      background: var(--bg-color);
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .gb-item:hover {
+      border-color: var(--border-color);
+    }
+    .gb-item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .gb-author {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+    .gb-time {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .gb-content {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      margin: 0;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .gb-loading {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="warm-guestbook">
+    <!-- 迎賓導讀 -->
+    <div class="gb-header">
+      <h2>🍃 訪客留聲小角落</h2>
+      <p>日子慢慢過，話題隨心聊。歡迎路過歇腳，留下您的足跡與想法。</p>
+    </div>
+
+    <!-- 留言輸入表單 -->
+    <form class="gb-form" id="guestbook-form">
+      <!-- Honeypot 陷阱欄位：人類看不見，機器人填寫了就會被直接退件 -->
+      <input type="text" id="website_hp" class="website-hp" tabindex="-1" autocomplete="off" />
+
+      <div class="gb-input-row">
+        <input type="text" id="author" class="gb-input" placeholder="您的暱稱 / 稱呼" required />
+      </div>
+      <textarea id="content" class="gb-textarea" placeholder="寫下想說的話、日常隨筆或對網站的建議..." required></textarea>
+      <button type="submit" id="submit-btn" class="gb-submit">送出留言</button>
+    </form>
+
+    <!-- 留言列表 -->
+    <div class="gb-list" id="guestbook-list">
+      <div class="gb-loading">留言資料載入中...</div>
+    </div>
+  </div>
+
+  <script>
+    // 已直接代入您的 GAS 部署網址
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzPNszZwNi64ZqmOMbM_NKcqNuFkk5zkIh3oFYR3ksaTxc1_7Ifg0Pmt3exY4R6rIxX/exec';
+
+    const form = document.getElementById('guestbook-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const listContainer = document.getElementById('guestbook-list');
+
+    // 1. 載入並渲染留言列表
+    async function fetchDiscussions() {
+      try {
+        const response = await fetch(GAS_WEB_APP_URL);
+        const data = await response.json();
+
+        if (!data || data.length === 0) {
+          listContainer.innerHTML = '<div class="gb-loading">目前尚無留言，歡迎成為第一個發言的人！</div>';
+          return;
+        }
+
+        // 時間倒序排列（最新的顯示在最上面）
+        const renderedHtml = data.reverse().map(item => `
+          <div class="gb-item">
+            <div class="gb-item-meta">
+              <span class="gb-author">${escapeHtml(item.author || '匿名訪客')}</span>
+              <span class="gb-time">${escapeHtml(item.timestamp || '')}</span>
+            </div>
+            <p class="gb-content">${escapeHtml(item.content || '')}</p>
+          </div>
+        `).join('');
+
+        listContainer.innerHTML = renderedHtml;
+      } catch (err) {
+        console.error('讀取留言失敗:', err);
+        listContainer.innerHTML = '<div class="gb-loading">暫時無法載入留言，請稍後再試。</div>';
+      }
+    }
+
+    // 2. 處理留言送出事件
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // 防機器人 Check：如果隱藏欄位有值，表示是垃圾留言機器人自動填寫的，直接無視
+      const honeypot = document.getElementById('website_hp').value;
+      if (honeypot) {
+        console.warn('防洗版機制攔截');
+        return;
+      }
+
+      const author = document.getElementById('author').value.trim();
+      const content = document.getElementById('content').value.trim();
+
+      if (!author || !content) return;
+
+      // 按鈕狀態設為發送中，防止重複點擊
+      submitBtn.disabled = true;
+      submitBtn.textContent = '送出中...';
+
+      try {
+        await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            author: author,
+            title: '訪客留言',
+            content: content,
+            website_hp: honeypot
+          })
+        });
+
+        // 送出成功：清空表單、恢復按鈕狀態並重新載入列表
+        form.reset();
+        await fetchDiscussions();
+      } catch (err) {
+        console.error('送出留言失敗:', err);
+        alert('留言送出失敗，請重試。');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '送出留言';
+      }
+    });
+
+    // 簡單的 XSS 防護字元轉義
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[m];
+      });
+    }
+
+    // 初始化：網頁載入時自動讀取留言
+    fetchDiscussions();
+  </script>
+</body>
+</html>
