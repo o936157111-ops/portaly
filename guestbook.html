@@ -167,17 +167,17 @@
       <p>日子慢慢過，話題隨心聊。歡迎路過歇腳，留下您的足跡與想法。</p>
     </div>
 
-    <!-- 留言輸入表單 -->
-    <form class="gb-form" id="guestbook-form">
+    <!-- 留言輸入區塊（改用 div 容器搭配普通按鈕，避開表單預設跳轉與卡住問題） -->
+    <div class="gb-form">
       <!-- Honeypot 陷阱欄位 -->
       <input type="text" id="website_hp" class="website-hp" tabindex="-1" autocomplete="off" />
 
       <div class="gb-input-row">
-        <input type="text" id="author" class="gb-input" placeholder="您的暱稱 / 稱呼" required />
+        <input type="text" id="author" class="gb-input" placeholder="您的暱稱 / 稱呼" />
       </div>
-      <textarea id="content" class="gb-textarea" placeholder="寫下想說的話、日常隨筆或對網站的建議..." required></textarea>
-      <button type="submit" id="submit-btn" class="gb-submit">送出留言</button>
-    </form>
+      <textarea id="content" class="gb-textarea" placeholder="寫下想說的話、日常隨筆或對網站的建議..."></textarea>
+      <button type="button" id="submit-btn" class="gb-submit">送出留言</button>
+    </div>
 
     <!-- 留言列表 -->
     <div class="gb-list" id="guestbook-list">
@@ -186,10 +186,9 @@
   </div>
 
   <script>
-    // 已更新為您的最新 GAS 部署網址
+    // 您的最新 GAS 部署網址
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSD62gu0jStv8QHhuAOHRdXfVz0DOmd5rcGRXr9AU_7ALIH2TFz9unjCRLbXt1wdZW/exec';
 
-    const form = document.getElementById('guestbook-form');
     const submitBtn = document.getElementById('submit-btn');
     const listContainer = document.getElementById('guestbook-list');
 
@@ -222,18 +221,23 @@
       }
     }
 
-    // 2. 處理留言送出事件
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
+    // 2. 點擊按鈕送出事件（改用 click 監聽，反應更直覺靈敏）
+    submitBtn.addEventListener('click', async () => {
       const honeypot = document.getElementById('website_hp').value;
       if (honeypot) return;
 
-      const author = document.getElementById('author').value.trim();
-      const content = document.getElementById('content').value.trim();
+      const authorInput = document.getElementById('author');
+      const contentInput = document.getElementById('content');
 
-      if (!author || !content) return;
+      const author = authorInput.value.trim();
+      const content = contentInput.value.trim();
 
+      if (!author || !content) {
+        alert('請填寫暱稱與留言內容！');
+        return;
+      }
+
+      // 按鈕狀態設為發送中，防止重複點擊
       submitBtn.disabled = true;
       submitBtn.textContent = '送出中...';
 
@@ -249,7 +253,9 @@
           })
         });
 
-        form.reset();
+        // 送出成功：清空表單並重新載入列表
+        authorInput.value = '';
+        contentInput.value = '';
         await fetchDiscussions();
       } catch (err) {
         console.error('送出留言失敗:', err);
