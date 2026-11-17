@@ -169,7 +169,7 @@
 
     <!-- 留言輸入表單 -->
     <form class="gb-form" id="guestbook-form">
-      <!-- Honeypot 陷阱欄位：人類看不見，機器人填寫了就會被直接退件 -->
+      <!-- Honeypot 陷阱欄位 -->
       <input type="text" id="website_hp" class="website-hp" tabindex="-1" autocomplete="off" />
 
       <div class="gb-input-row">
@@ -186,8 +186,8 @@
   </div>
 
   <script>
-    // 已直接代入您的 GAS 部署網址
-    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzPNszZwNi64ZqmOMbM_NKcqNuFkk5zkIh3oFYR3ksaTxc1_7Ifg0Pmt3exY4R6rIxX/exec';
+    // 已更新為您的最新 GAS 部署網址
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyjips9YLeTEkta07vLVoylkMQ0kddKe8H9XqQ2aFoSx-qWKfdHsifqcJCtbJ_5T5f66g/exec';
 
     const form = document.getElementById('guestbook-form');
     const submitBtn = document.getElementById('submit-btn');
@@ -226,19 +226,14 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // 防機器人 Check：如果隱藏欄位有值，表示是垃圾留言機器人自動填寫的，直接無視
       const honeypot = document.getElementById('website_hp').value;
-      if (honeypot) {
-        console.warn('防洗版機制攔截');
-        return;
-      }
+      if (honeypot) return;
 
       const author = document.getElementById('author').value.trim();
       const content = document.getElementById('content').value.trim();
 
       if (!author || !content) return;
 
-      // 按鈕狀態設為發送中，防止重複點擊
       submitBtn.disabled = true;
       submitBtn.textContent = '送出中...';
 
@@ -254,7 +249,6 @@
           })
         });
 
-        // 送出成功：清空表單、恢復按鈕狀態並重新載入列表
         form.reset();
         await fetchDiscussions();
       } catch (err) {
@@ -266,7 +260,7 @@
       }
     });
 
-    // 簡單的 XSS 防護字元轉義
+    // XSS 防護字元轉義
     function escapeHtml(str) {
       if (!str) return '';
       return String(str).replace(/[&<>"']/g, function(m) {
@@ -280,7 +274,7 @@
       });
     }
 
-    // 初始化：網頁載入時自動讀取留言
+    // 初始化讀取
     fetchDiscussions();
   </script>
 </body>
