@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>典藏誌：Parker Duofold 古董鋼筆</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .card-container {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 18px;
+      max-width: 440px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-top {
+      padding: 16px 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-badge {
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      color: #d4af37;
+      font-weight: 600;
+    }
+    .step-indicator {
+      font-size: 0.78rem;
+      color: #999999;
+      background: #282828;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    /* 三幕導覽頁籤 */
+    .story-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 0 20px 12px;
+    }
+    .tab-btn {
+      background: #262626;
+      color: #bbbbbb;
+      border: 1px solid #383838;
+      border-radius: 8px;
+      padding: 8px 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: rgba(212, 175, 55, 0.16);
+      color: #f0cf65;
+      border-color: #d4af37;
+    }
+
+    .card-image-area {
+      position: relative;
+      width: 100%;
+      height: 245px;
+      background-color: #2a2a2a;
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+    .card-image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      color: #f3f3f3;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0));
+    }
+
+    .card-content {
+      padding: 18px 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      touch-action: pan-y;
+    }
+    .chapter-panel {
+      display: none;
+      flex-direction: column;
+      gap: 11px;
+      animation: fadeIn 0.25s ease;
+    }
+    .chapter-panel.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-size: 1.42rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .card-subtitle {
+      font-size: 0.94rem;
+      color: #c7c7c7;
+      line-height: 1.6;
+    }
+    .detail-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      background: #252525;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      color: #d4d4d4;
+      line-height: 1.5;
+    }
+    .detail-list li strong {
+      color: #e5c158;
+    }
+    .card-quote {
+      border-left: 3px solid #d4af37;
+      padding-left: 12px;
+      margin: 4px 0;
+      font-style: italic;
+      color: #cccccc;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 20px 8px;
+      gap: 10px;
+    }
+    .step-btn {
+      flex: 1;
+      background: #262626;
+      color: #e0e0e0;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .step-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .card-footer {
+      padding: 8px 20px 22px;
+      background: #1e1e1e;
+    }
+    .btn-link {
+      display: block;
+      width: 100%;
+      padding: 14px 0;
+      text-align: center;
+      background: linear-gradient(135deg, #d4af37, #aa820a);
+      color: #121212;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: opacity 0.2s ease;
+    }
+    .btn-link:active {
+      opacity: 0.82;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container" id="duofoldCard">
+    <!-- 1. 分類徽章與進度 -->
+    <div class="card-top">
+      <div class="card-badge">✦ 私房典藏 ‧ 鋼筆系列</div>
+      <div class="step-indicator" id="stepIndicator">1 / 3 品牌沿革</div>
+    </div>
+
+    <!-- 2. 三幕導覽頁籤 -->
+    <div class="story-tabs" role="tablist">
+      <button type="button" class="tab-btn active" data-step="0">① 品牌沿革</button>
+      <button type="button" class="tab-btn" data-step="1">② Duofold 系列</button>
+      <button type="button" class="tab-btn" data-step="2">③ 這支古董筆</button>
+    </div>
+
+    <!-- 3. 主視覺圖片 -->
+    <div class="card-image-area">
+      <img
+        id="penPhoto"
+        src="https://live.staticflickr.com/65535/55643916356_dfd65f3262_b.jpg"
+        alt="Parker Duofold 古董鋼筆"
+        onerror="this.src='https://picsum.photos/450/300?grayscale';"
+      >
+      <div class="photo-caption" id="photoCaption">私房典藏實拍 · 左右滑動或點選上方章節切換故事</div>
+    </div>
+
+    <!-- 4. 三幕內容區 -->
+    <div class="card-content">
+      <!-- 第一幕：品牌沿革 -->
+      <section class="chapter-panel active" data-step="0">
+        <h1 class="card-title">Parker 品牌沿革：從書寫痛點出發</h1>
+        <p class="card-subtitle">
+          1888 年，喬治·派克（George S. Parker）創立派克鋼筆，初衷源於當時鋼筆容易漏墨、供墨不穩的困擾。透過改良供墨結構與製筆工藝，派克逐步成為書寫工具史上最具代表性的品牌之一。
+        </p>
+        <div class="card-quote">
+          「在還沒有即時訊息的年代，一筆一劃寫下的字跡與信件，承載著時間與人的溫度。」
+        </div>
+      </section>
+
+      <!-- 第二幕：認識 Duofold 系列 -->
+      <section class="chapter-panel" data-step="1">
+        <h2 class="card-title">認識 Duofold 系列：1920 年代的傳奇</h2>
+        <p class="card-subtitle">
+          Duofold 於 1920 年代問世，早期以醒目的亮橘紅（俗稱「大紅」Big Red）與大器筆身掀起熱潮，象徵當時製筆工藝的自信與氣度，也奠定其在收藏圈的經典地位。
+        </p>
+        <ul class="detail-list">
+          <li><strong>系列亮點：</strong>筆身比例穩重、辨識度高，兼顧書寫手感與收藏賞玩。</li>
+          <li><strong>時代印記：</strong>見證鋼筆從實用書寫走向經典工藝設計的演變。</li>
+        </ul>
+      </section>
+
+      <!-- 第三幕：這支古董筆的起承故事與細節 -->
+      <section class="chapter-panel" data-step="2">
+        <h2 class="card-title">這支古董鋼筆：起承與細節</h2>
+        <p class="card-subtitle">
+          <strong>【起與承】</strong>[可填入這支筆與你相遇的緣起、入手經過，以及它陪伴你的片刻。]
+        </p>
+        <ul class="detail-list">
+          <li><strong>外觀與材質：</strong>[可填入筆桿色澤、紋路、歲月痕跡與配重感受]</li>
+          <li><strong>筆尖與書寫：</strong>[可填入筆尖刻字、出墨順暢度或握感特色]</li>
+          <li><strong>典藏小記：</strong>[可填入你最喜歡這支筆的一個小細節或保養心得]</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- 5. 前後章節切換 -->
+    <div class="nav-row">
+      <button type="button" class="step-btn" id="prevStepBtn">← 上一段</button>
+      <button type="button" class="step-btn" id="nextStepBtn">下一段 →</button>
+    </div>
+
+    <!-- 6. 原網頁連結 -->
+    <div class="card-footer">
+      <a href="https://myezlife.com/mycollection/" class="btn-link">前往完整典藏頁查看細節 ➔</a>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const panels = Array.from(document.querySelectorAll('.chapter-panel'));
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      const stepIndicator = document.getElementById('stepIndicator');
+      const photoCaption = document.getElementById('photoCaption');
+      const prevBtn = document.getElementById('prevStepBtn');
+      const nextBtn = document.getElementById('nextStepBtn');
+      const swipeZone = document.getElementById('duofoldCard');
+
+      const labels = ['1 / 3 品牌沿革', '2 / 3 Duofold 系列', '3 / 3 這支古董筆'];
+      const captions = [
+        '第一幕：派克品牌沿革 · 記錄手寫時代的工藝起點',
+        '第二幕：Duofold 系列 · 經典筆款與時代傳奇',
+        '第三幕：這支古董鋼筆 · 起承故事與細節觀察'
+      ];
+
+      let currentStep = 0;
+
+      function renderStep(index) {
+        currentStep = Math.max(0, Math.min(panels.length - 1, index));
+
+        panels.forEach((panel, i) => {
+          panel.classList.toggle('active', i === currentStep);
+        });
+
+        tabs.forEach((tab, i) => {
+          const isActive = i === currentStep;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        stepIndicator.textContent = labels[currentStep];
+        photoCaption.textContent = captions[currentStep];
+        prevBtn.disabled = currentStep === 0;
+        nextBtn.disabled = currentStep === panels.length - 1;
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          renderStep(Number(tab.dataset.step));
+        });
+      });
+
+      prevBtn.addEventListener('click', () => renderStep(currentStep - 1));
+      nextBtn.addEventListener('click', () => renderStep(currentStep + 1));
+
+      // 支援手機左右滑動切換三幕故事
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      swipeZone.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      swipeZone.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          if (dx < 0 && currentStep < panels.length - 1) {
+            renderStep(currentStep + 1);
+          } else if (dx > 0 && currentStep > 0) {
+            renderStep(currentStep - 1);
+          }
+        }
+      }, { passive: true });
+
+      renderStep(0);
+    })();
+  </script>
+
+</body>
+</html>
