@@ -174,7 +174,7 @@ html, body {
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         position: relative;
-        background-color: #111;
+        background-color: #ffffff;
     }
 }
 
@@ -191,7 +191,7 @@ html, body {
         bottom: 0;
         border-radius: 0;
         box-shadow: none;
-        background-color: #111;
+        background-color: #ffffff;
     }
 }
 
@@ -222,7 +222,7 @@ html, body {
     overflow: hidden;
 }
 
-/* 0 邊界滿版內容容器 */
+/* 播放內容容器（採用 index-2.html 純粹播放模式） */
 .video-wrapper {
     position: absolute;
     top: 0;
@@ -248,14 +248,14 @@ html, body {
     object-fit: cover;
 }
 
-/* 第一張圖高質感的封面圖樣式（完美支援 .webp, .jpg, .png） */
+/* 封面圖層：呈現物品全貌（contain 完整顯示不裁切） */
 .custom-cover-layer {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover !important;
+    background-size: contain !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
     background-color: #111;
@@ -303,7 +303,7 @@ html, body {
     left: 0;
     right: 0;
     padding: 40px 16px calc(25px + env(safe-area-inset-bottom)) 16px;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.22) 60%, transparent 100%);
     z-index: 10;
     display: flex;
     justify-content: space-between;
@@ -452,12 +452,12 @@ html, body {
             <button class="nav-btn" onclick="scrollCard('down')" title="下一首 / 下一頁">▼</button>
         </div>
 
-        <!-- 影音與網頁捲動容器 -->
+        <!-- 影音捲動容器 -->
         <div class="reel-container" id="reelContainer"></div>
     </div>
 
     <script>
-       // 1. 30 秒後彈出的選擇提示視窗 (只問一次)
+// 1. 30 秒後彈出的選擇提示視窗 (只問一次)
 setTimeout(function() {
     const modal = document.getElementById('choiceModalOverlay');
     if (modal) modal.style.display = 'flex';
@@ -480,7 +480,7 @@ function scrollCard(direction) {
     const cardHeight = cards[0].offsetHeight;
     const currentScroll = container.scrollTop;
     let targetScroll = direction === 'down' ? currentScroll + cardHeight : currentScroll - cardHeight;
-    
+
     container.scrollTo({
         top: targetScroll,
         behavior: 'smooth'
@@ -558,18 +558,6 @@ function extractYouTubeId(value) {
     return match ? match[1] : "";
 }
 
-function isEmbeddableSite(url) {
-    try {
-        const parsed = new URL(url);
-        const hostname = parsed.hostname.toLowerCase();
-        const blockedDomains = ['eslite.com', 'books.com.tw', 'yahoo.com', 'shopee.tw', 'facebook.com', 'instagram.com', 'line.me', 'mureka.ai'];
-        if (blockedDomains.some(domain => hostname.includes(domain))) {
-            return false;
-        }
-    } catch (_) {}
-    return true;
-}
-
 function rowsToSongs(rows) {
     if (!rows.length) return [];
     const headers = rows[0];
@@ -602,31 +590,37 @@ function rowsToSongs(rows) {
             coverClass = coverValue;
         }
 
-        let embedCode = "";
-        let isExternalLinkOnly = false;
-
-        if (videoId) {
-            embedCode = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        } else if (productUrl) {
-            if (isEmbeddableSite(productUrl)) {
-                embedCode = `<iframe src="${productUrl}" style="width:100%; height:100%; border:none; margin:0; padding:0;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
-            } else {
-                isExternalLinkOnly = true;
-            }
-        }
-
         return {
             title,
-            views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : (isExternalLinkOnly ? "🔗 外部推薦連結" : "🎵 精彩推薦"),
+            views: viewsCol >= 0 && row[viewsCol] ? String(row[viewsCol]).trim() : "🎵 精彩推薦",
             isCustomCover: true,
             coverClass,
-            coverUrl: coverUrl || "https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg",
+            coverUrl,
             productUrl,
-            isWebPage: !videoId && !isExternalLinkOnly && !!productUrl,
-            isExternalLinkOnly,
-            embedCode
+            embedCode: videoId ? String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>' : ""
         };
     }).filter(Boolean);
+}
+
+function recordUserClick(song) {
+    try {
+        let history = JSON.parse(localStorage.getItem('user_watch_history')) || [];
+        let existing = history.find(item => item.title === song.title);
+        if (existing) {
+            existing.clicks = (existing.clicks || 1) + 1;
+            existing.lastWatched = new Date().getTime();
+        } else {
+            history.push({
+                title: song.title,
+                clicks: 1,
+                lastWatched: new Date().getTime()
+            });
+        }
+        if (history.length > 100) history.shift();
+        localStorage.setItem('user_watch_history', JSON.stringify(history));
+    } catch (e) {
+        console.error("記錄點擊失敗", e);
+    }
 }
 
 async function loadSongDatabase() {
@@ -659,7 +653,9 @@ async function fetchRemoteCSV() {
     const response = await fetch(CSV_URL, { cache: "no-store" });
     if (!response.ok) throw new Error("CSV 載入失敗（HTTP " + response.status + "）");
     const csvText = await response.text();
-    return rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
+    const songs = rowsToSongs(parseCSV(csvText.replace(/^\uFEFF/, "")));
+    if (!songs.length) throw new Error("CSV 中找不到有效歌曲。請確認欄位至少包含歌曲名稱與 YouTube 影片網址。");
+    return songs;
 }
 
 function initReels(songDatabase) {
@@ -676,9 +672,10 @@ function initReels(songDatabase) {
         let coverHtml = '';
         if (song.isCustomCover) {
             const extraClass = song.coverClass ? ` ${song.coverClass}` : '';
-            const bgStyle = ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.2) 100%), url('${song.coverUrl.replace(/'/g, "%27")}');"`;
-            const clickAttr = (song.isExternalLinkOnly && song.productUrl) ? ` onclick="window.open('${song.productUrl.replace(/'/g, "\\'")}', '_blank')"` : '';
-            coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}${clickAttr}></div>`;
+            const bgStyle = song.coverUrl
+                ? ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15) 100%),url('${song.coverUrl.replace(/'/g, "%27")}');"`
+                : ` style="background-image:linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.15) 100%),url('https://live.staticflickr.com/65535/55549203944_a7a9f89992_z.jpg');"`;
+            coverHtml = `<div class="custom-cover-layer${extraClass}"${bgStyle}></div>`;
             card.dataset.hasCover = "true";
         }
 
@@ -691,7 +688,7 @@ function initReels(songDatabase) {
                     <div class="song-views">${song.views}</div>
                 </div>
                 ${song.isCustomCover ? `
-                <div class="cover-play-btn-wrapper" onclick="playCustomSong(this)">
+                <div class="cover-play-btn-wrapper" onclick='playCustomSong(this, ${JSON.stringify(song).replace(/'/g, "&#39;")})'>
                     <div class="cover-play-btn">
                         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </div>
@@ -701,8 +698,6 @@ function initReels(songDatabase) {
 
         card.dataset.embed = song.embedCode;
         card.dataset.productUrl = song.productUrl;
-        card.dataset.isWebPage = song.isWebPage ? "true" : "false";
-        card.dataset.isExternal = song.isExternalLinkOnly ? "true" : "false";
         container.appendChild(card);
     });
 
@@ -739,20 +734,9 @@ function initReels(songDatabase) {
             const card = entry.target;
             const wrapper = card.querySelector('.video-wrapper');
             const hasCover = card.dataset.hasCover === "true";
-            const isWebPage = card.dataset.isWebPage === "true";
-            const isExternal = card.dataset.isExternal === "true";
 
             if (entry.isIntersecting) {
                 const coverLayer = card.querySelector('.custom-cover-layer');
-                
-                if (isExternal) {
-                    return;
-                }
-
-                if (isWebPage && coverLayer && !coverLayer.classList.contains('fade-out')) {
-                    coverLayer.classList.add('fade-out');
-                }
-
                 if (hasCover && coverLayer && !coverLayer.classList.contains('fade-out')) {
                     return;
                 }
@@ -775,20 +759,16 @@ function initReels(songDatabase) {
     hideSplash();
 }
 
-function playCustomSong(btnWrapper) {
-    const card = btnWrapper.closest('.reel-card');
-    const productUrl = card.dataset.productUrl;
-    const isWebPage = card.dataset.isWebPage === "true";
-    const isExternal = card.dataset.isExternal === "true";
-
-    if ((isWebPage || isExternal) && productUrl) {
-        window.open(productUrl, '_blank');
-        return;
+function playCustomSong(btnWrapper, songObj) {
+    if (songObj) {
+        recordUserClick(songObj);
     }
 
+    const card = btnWrapper.closest('.reel-card');
     const wrapper = card.querySelector('.video-wrapper');
     const coverLayer = card.querySelector('.custom-cover-layer');
     const embedCode = card.dataset.embed;
+    const productUrl = card.dataset.productUrl;
 
     if (embedCode) {
         if (!wrapper.hasChildNodes()) {
@@ -797,6 +777,10 @@ function playCustomSong(btnWrapper) {
         if (coverLayer) {
             coverLayer.classList.add('fade-out');
         }
+    } else if (productUrl) {
+        window.open(productUrl, '_blank');
+    } else {
+        alert("此項目目前沒有設定播放影片或產品連結");
     }
 }
 
