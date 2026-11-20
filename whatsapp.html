@@ -6,14 +6,12 @@
   <title>金曲旋律精選｜MyEzLife 簡居生活</title>
   <meta name="description" content="書・咖啡・小日子・零碎日常｜漫無目的，恣意生活。點擊線上聆聽播放清單。" />
 
-  <!-- Open Graph 社群分享標籤（WhatsApp / Facebook / LINE 預覽用） -->
+  <!-- Open Graph 社群分享標籤 -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://myezlife.com/goldmelody_csv.html" />
   <meta property="og:title" content="金曲旋律精選｜MyEzLife 簡居生活" />
   <meta property="og:description" content="書・咖啡・小日子・零碎日常｜漫無目的，恣意生活。點擊線上聆聽播放清單。" />
-  <meta property="og:image" content="https://live.staticflickr.com/65535/55655995173_c19ae388f6_c.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <meta property="og:image" content="https://myezlife.com/images/og-goldmelody.jpg" />
 
   <style>
     :root {
@@ -21,44 +19,58 @@
       --card: #ffffff;
       --text: #2c2a29;
       --muted: #6e6a66;
-      --accent: #5c6f5e;
       --border: #e5e0d8;
+      --active: #efeae1;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      padding: 24px 16px;
+      padding: 20px 14px;
       font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
     }
     .container {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 24px;
+      padding: 20px;
     }
     h1 {
-      margin: 0 0 6px;
-      font-size: 1.5rem;
+      margin: 0 0 4px;
+      font-size: 1.45rem;
     }
     .subtitle {
-      margin: 0 0 20px;
+      margin: 0 0 16px;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
-    audio {
+    .player-box {
+      position: relative;
       width: 100%;
+      padding-top: 56.25%; /* 16:9 比例 */
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
       margin-bottom: 16px;
+    }
+    .player-box iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
     .playlist {
       list-style: none;
       padding: 0;
       margin: 0;
       border-top: 1px solid var(--border);
+      max-height: 420px;
+      overflow-y: auto;
     }
     .playlist li {
       padding: 10px 12px;
@@ -67,11 +79,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
     }
     .playlist li:hover,
     .playlist li.active {
-      background: #f0eee9;
+      background: var(--active);
       font-weight: 600;
+    }
+    .tag {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -80,74 +98,137 @@
     <h1>金曲旋律精選</h1>
     <p class="subtitle">書・咖啡・小日子・零碎日常｜漫無目的，恣意生活。</p>
 
-    <audio id="player" controls preload="metadata"></audio>
-    <ul id="playlist" class="playlist"></ul>
+    <div class="player-box">
+      <iframe
+        id="ytPlayer"
+        src=""
+        title="YouTube 影音播放器"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <ul id="playlist" class="playlist">
+      <li>正在載入播放清單...</li>
+    </ul>
   </div>
 
   <script>
-   // 替換為你的 Google Sheets 匯出 CSV 網址
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1wHgO9bjq21vu2OFQchkwARwCKU2g-2p7SbxuBQ__mlw/gviz/tq?tqx=out:csv';
+    const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1wHgO9bjq21vu2OFQchkwARwCKU2g-2p7SbxuBQ__mlw/gviz/tq?tqx=out:csv';
+    const ytPlayer = document.getElementById('ytPlayer');
+    const playlistEl = document.getElementById('playlist');
 
-const player = document.getElementById('player');
-const playlistEl = document.getElementById('playlist');
+    // 支援一般 watch、youtu.be、embed、shorts 等 YouTube 網址轉成 embed 網址
+    function toYouTubeEmbedUrl(rawUrl, autoplay = false) {
+      if (!rawUrl) return '';
+      const cleanUrl = rawUrl.trim();
+      let videoId = '';
 
-// 解析 CSV 文字的簡易函式
-function parseCSV(text) {
-  const lines = text.trim().split(/\r?\n/);
-  if (lines.length < 2) return [];
-  
-  // 處理包含引號的 CSV 欄位
-  const headers = lines[0].split(',').map(h => h.replace(/^"(.*)"$/, '$1').trim());
-  
-  return lines.slice(1).map(line => {
-    // 簡單區分 CSV 欄位
-    const cols = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-    const cleanCols = cols.map(c => c.replace(/^"(.*)"$/, '$1').trim());
-    
-    const item = {};
-    headers.forEach((h, i) => {
-      item[h] = cleanCols[i] || '';
-    });
-    return item;
-  });
-}
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtu\.be\/)([A-Za-z0-9_-]{11})/
+      ];
 
-async function loadPlaylistFromGoogleSheet() {
-  try {
-    const res = await fetch(GOOGLE_SHEET_CSV_URL);
-    if (!res.ok) throw new Error('無法讀取 Google Sheets 資料');
-    const csvText = await res.text();
-    const tracks = parseCSV(csvText);
-
-    playlistEl.innerHTML = '';
-    tracks.forEach((track, idx) => {
-      const songName = track['歌曲名稱'] || track['title'] || '未命名曲目';
-      const videoUrl = track['YouTube網址'] || track['url'] || '';
-      const tag = track['熱門標籤'] || '';
-
-      if (!videoUrl) return; // 沒有網址就跳過
-
-      const li = document.createElement('li');
-      li.innerHTML = `<span>${songName} <small style="color:#888;">${tag}</small></span>`;
-      li.addEventListener('click', () => {
-        document.querySelectorAll('#playlist li').forEach(el => el.classList.remove('active'));
-        li.classList.add('active');
-        player.src = videoUrl;
-        player.play().catch(() => {});
-      });
-      playlistEl.appendChild(li);
-
-      if (idx === 0) {
-        li.classList.add('active');
-        player.src = videoUrl;
+      for (const regex of patterns) {
+        const match = cleanUrl.match(regex);
+        if (match && match[1]) {
+          videoId = match[1];
+          break;
+        }
       }
-    });
-  } catch (err) {
-    playlistEl.innerHTML = `<li>載入播放清單失敗：${err.message}</li>`;
-  }
-}
 
-loadPlaylistFromGoogleSheet();
+      if (!videoId) return '';
+      const auto = autoplay ? '1' : '0';
+      return `https://www.youtube.com/embed/${videoId}?autoplay=${auto}&rel=0`;
+    }
+
+    // 處理含引號與逗號的 CSV 行
+    function splitCSVLine(line) {
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (ch === ',' && !inQuotes) {
+          result.push(current.trim());
+          current = '';
+        } else {
+          current += ch;
+        }
+      }
+      result.push(current.trim());
+      return result;
+    }
+
+    function parseCSV(text) {
+      const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+      if (lines.length < 2) return [];
+
+      const headers = splitCSVLine(lines[0]);
+      return lines.slice(1).map(line => {
+        const cols = splitCSVLine(line);
+        const row = {};
+        headers.forEach((h, idx) => {
+          row[h] = cols[idx] || '';
+        });
+        return row;
+      });
+    }
+
+    async function initPlaylist() {
+      try {
+        const res = await fetch(SHEET_CSV_URL);
+        if (!res.ok) throw new Error('無法取得試算表 CSV 資料');
+        const csvText = await res.text();
+        const rows = parseCSV(csvText);
+
+        // 只保留有有效 YouTube 連結的項目
+        const tracks = rows
+          .map(r => ({
+            title: r['歌曲名稱'] || '未命名曲目',
+            tag: r['熱門標籤'] || '',
+            embedUrl: toYouTubeEmbedUrl(r['YouTube網址'], false),
+            autoplayUrl: toYouTubeEmbedUrl(r['YouTube網址'], true)
+          }))
+          .filter(t => t.embedUrl);
+
+        playlistEl.innerHTML = '';
+        if (tracks.length === 0) {
+          playlistEl.innerHTML = '<li>找不到可播放的 YouTube 曲目</li>';
+          return;
+        }
+
+        tracks.forEach((track, index) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<span>${track.title}</span><span class="tag">${track.tag}</span>`;
+
+          li.addEventListener('click', () => {
+            document.querySelectorAll('#playlist li').forEach(el => el.classList.remove('active'));
+            li.classList.add('active');
+            ytPlayer.src = track.autoplayUrl;
+          });
+
+          playlistEl.appendChild(li);
+
+          // 預設載入第一首（不自動吵到訪客）
+          if (index === 0) {
+            li.classList.add('active');
+            ytPlayer.src = track.embedUrl;
+          }
+        });
+      } catch (err) {
+        playlistEl.innerHTML = `<li>載入失敗：${err.message}</li>`;
+      }
+    }
+
+    initPlaylist();
   </script>
 </body>
 </html>
