@@ -21,6 +21,8 @@
       --muted: #6e6a66;
       --border: #e5e0d8;
       --active: #efeae1;
+      --wa: #25D366;
+      --wa-hover: #1ebe5d;
     }
     * { box-sizing: border-box; }
     body {
@@ -51,11 +53,11 @@
     .player-box {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 比例 */
+      padding-top: 56.25%;
       background: #000;
       border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .player-box iframe {
       position: absolute;
@@ -63,6 +65,50 @@
       width: 100%;
       height: 100%;
       border: 0;
+    }
+    .now-playing-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #faf8f4;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .now-playing-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .now-playing-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .now-playing-title {
+      font-weight: 600;
+      font-size: 0.98rem;
+      word-break: break-word;
+    }
+    .wa-share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--wa);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      transition: background 0.2s ease;
+    }
+    .wa-share-btn:hover {
+      background: var(--wa-hover);
     }
     .playlist {
       list-style: none;
@@ -108,6 +154,16 @@
       ></iframe>
     </div>
 
+    <div class="now-playing-bar">
+      <div class="now-playing-info">
+        <span class="now-playing-label">目前播放</span>
+        <span id="nowPlayingTitle" class="now-playing-title">尚未選擇曲目</span>
+      </div>
+      <a id="waShareBtn" class="wa-share-btn" href="#" target="_blank" rel="noopener noreferrer">
+        分享到 WhatsApp
+      </a>
+    </div>
+
     <ul id="playlist" class="playlist">
       <li>正在載入播放清單...</li>
     </ul>
@@ -117,31 +173,42 @@
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1wHgO9bjq21vu2OFQchkwARwCKU2g-2p7SbxuBQ__mlw/gviz/tq?tqx=out:csv';
     const ytPlayer = document.getElementById('ytPlayer');
     const playlistEl = document.getElementById('playlist');
+    const nowPlayingTitleEl = document.getElementById('nowPlayingTitle');
+    const waShareBtn = document.getElementById('waShareBtn');
 
-    // 支援一般 watch、youtu.be、embed、shorts 等 YouTube 網址轉成 embed 網址
-    function toYouTubeEmbedUrl(rawUrl, autoplay = false) {
+    function extractYouTubeId(rawUrl) {
       if (!rawUrl) return '';
       const cleanUrl = rawUrl.trim();
-      let videoId = '';
-
-      const patterns = [
+      const match = cleanUrl.match(
         /(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtu\.be\/)([A-Za-z0-9_-]{11})/
-      ];
-
-      for (const regex of patterns) {
-        const match = cleanUrl.match(regex);
-        if (match && match[1]) {
-          videoId = match[1];
-          break;
-        }
-      }
-
-      if (!videoId) return '';
-      const auto = autoplay ? '1' : '0';
-      return `https://www.youtube.com/embed/${videoId}?autoplay=${auto}&rel=0`;
+      );
+      return match && match[1] ? match[1] : '';
     }
 
-    // 處理含引號與逗號的 CSV 行
+    function toYouTubeEmbedUrl(videoId, autoplay = false) {
+      if (!videoId) return '';
+      return `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay ? '1' : '0'}&rel=0`;
+    }
+
+    function toWatchUrl(videoId, fallbackUrl) {
+      if (videoId) return `https://youtu.be/${videoId}`;
+      return fallbackUrl || 'https://myezlife.com/goldmelody_csv.html';
+    }
+
+    function updateCurrentTrack(track, autoplay = false) {
+      nowPlayingTitleEl.textContent = track.tag ? `${track.title}（${track.tag}）` : track.title;
+      ytPlayer.src = autoplay ? track.autoplayUrl : track.embedUrl;
+
+      const shareText = [
+        `♪ 分享這首好歌：${track.title}`,
+        track.tag ? `分類：${track.tag}` : '',
+        `影片連結：${track.watchUrl}`,
+        `更多精選：https://myezlife.com/goldmelody_csv.html`
+      ].filter(Boolean).join('\n');
+
+      waShareBtn.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+    }
+
     function splitCSVLine(line) {
       const result = [];
       let current = '';
@@ -189,14 +256,18 @@
         const csvText = await res.text();
         const rows = parseCSV(csvText);
 
-        // 只保留有有效 YouTube 連結的項目
         const tracks = rows
-          .map(r => ({
-            title: r['歌曲名稱'] || '未命名曲目',
-            tag: r['熱門標籤'] || '',
-            embedUrl: toYouTubeEmbedUrl(r['YouTube網址'], false),
-            autoplayUrl: toYouTubeEmbedUrl(r['YouTube網址'], true)
-          }))
+          .map(r => {
+            const rawUrl = r['YouTube網址'] || '';
+            const videoId = extractYouTubeId(rawUrl);
+            return {
+              title: r['歌曲名稱'] || '未命名曲目',
+              tag: r['熱門標籤'] || '',
+              embedUrl: toYouTubeEmbedUrl(videoId, false),
+              autoplayUrl: toYouTubeEmbedUrl(videoId, true),
+              watchUrl: toWatchUrl(videoId, rawUrl)
+            };
+          })
           .filter(t => t.embedUrl);
 
         playlistEl.innerHTML = '';
@@ -212,15 +283,14 @@
           li.addEventListener('click', () => {
             document.querySelectorAll('#playlist li').forEach(el => el.classList.remove('active'));
             li.classList.add('active');
-            ytPlayer.src = track.autoplayUrl;
+            updateCurrentTrack(track, true);
           });
 
           playlistEl.appendChild(li);
 
-          // 預設載入第一首（不自動吵到訪客）
           if (index === 0) {
             li.classList.add('active');
-            ytPlayer.src = track.embedUrl;
+            updateCurrentTrack(track, false);
           }
         });
       } catch (err) {
