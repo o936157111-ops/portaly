@@ -80,21 +80,21 @@
     .card-image-area {
       position: relative;
       width: 100%;
-      height: 245px;
+      height: 255px;
       background-color: #2a2a2a;
       overflow: hidden;
       touch-action: pan-y;
-      cursor: pointer; /* 顯示可點擊游標 */
+      cursor: pointer;
     }
     .card-image-area img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
     .card-image-area:hover img {
-      transform: scale(1.03); /* 滑鼠懸停微幅放大提示 */
+      transform: scale(1.03);
     }
     .photo-caption {
       position: absolute;
@@ -104,7 +104,7 @@
       padding: 8px 14px;
       font-size: 0.78rem;
       color: #f3f3f3;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0));
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -219,7 +219,7 @@
       opacity: 0.82;
     }
 
-    /* 浮動視窗 (Modal Lightbox) 樣式 */
+    /* 相簿輪播浮動視窗 (Modal Lightbox) */
     .image-modal {
       display: none;
       position: fixed;
@@ -228,27 +228,29 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.92);
-      backdrop-filter: blur(5px);
+      background-color: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(6px);
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      animation: modalFadeIn 0.2s ease;
     }
     .image-modal.open {
       display: flex;
     }
-    @keyframes modalFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
     .modal-content {
       max-width: 95vw;
-      max-height: 85vh;
+      max-height: 75vh;
       object-fit: contain;
       border-radius: 8px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.9);
       border: 1px solid #444;
+    }
+    .modal-info {
+      margin-top: 14px;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+      text-align: center;
     }
     .modal-close {
       position: absolute;
@@ -256,7 +258,6 @@
       right: 20px;
       color: #ffffff;
       font-size: 32px;
-      font-weight: bold;
       cursor: pointer;
       background: rgba(255, 255, 255, 0.15);
       width: 44px;
@@ -266,11 +267,26 @@
       align-items: center;
       justify-content: center;
       line-height: 1;
-      transition: background 0.2s ease;
     }
-    .modal-close:hover {
-      background: rgba(255, 255, 255, 0.3);
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: 1px solid #555;
+      font-size: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
     }
+    .modal-nav.prev { left: 16px; }
+    .modal-nav.next { right: 16px; }
   </style>
 </head>
 <body>
@@ -289,7 +305,7 @@
       <button type="button" class="tab-btn" data-step="2">③ 這支古董筆</button>
     </div>
 
-    <!-- 3. 主視覺圖片（點擊可觸發浮動視窗放大圖片） -->
+    <!-- 3. 主視覺圖片（切換章節時會同步更換照片，點擊可放大開啟完整相簿） -->
     <div class="card-image-area" id="triggerImageArea">
       <img
         id="penPhoto"
@@ -298,8 +314,8 @@
         onerror="this.src='https://picsum.photos/450/300?grayscale';"
       >
       <div class="photo-caption">
-        <span id="photoCaption">私房典藏實拍 · 左右滑動切換故事</span>
-        <span class="zoom-hint">🔍 點擊放大</span>
+        <span id="photoCaption">私房典藏實拍 · 圖片 1/4</span>
+        <span class="zoom-hint">🔍 點擊看全套 4 張大圖</span>
       </div>
     </div>
 
@@ -332,12 +348,12 @@
       <section class="chapter-panel" data-step="2">
         <h2 class="card-title">這支古董鋼筆：起承與細節</h2>
         <p class="card-subtitle">
-          <strong>【起與承】</strong>[可填入這支筆與你相遇的緣起、入手經過，以及它陪伴你的片刻。]
+          <strong>【起與承】</strong>這支古董 Duofold 帶著歲月留下的沉靜氣氛，握在手中能感受到當年重筆身的實重感與寫感。
         </p>
         <ul class="detail-list">
-          <li><strong>外觀與材質：</strong>[可填入筆桿色澤、紋路、歲月痕跡與配重感受]</li>
-          <li><strong>筆尖與書寫：</strong>[可填入筆尖刻字、出墨順暢度或握感特色]</li>
-          <li><strong>典藏小記：</strong>[可填入你最喜歡這支筆的一個小細節或保養心得]</li>
+          <li><strong>筆身細節：</strong>筆桿紋路與金屬配件保留了老筆特有的時代韻味。</li>
+          <li><strong>筆尖與出墨：</strong>K金筆尖彈性適中，書寫時回饋感極佳。</li>
+          <li><strong>相簿收錄：</strong>點擊上方照片可放大瀏覽全套 4 張私房細節實拍。</li>
         </ul>
       </section>
     </div>
@@ -354,37 +370,46 @@
     </div>
   </div>
 
-  <!-- 7. 浮動放大視窗 Modal -->
+  <!-- 7. 相簿輪播浮動視窗 Modal -->
   <div class="image-modal" id="imgModal">
     <span class="modal-close" id="modalClose">&times;</span>
+    <span class="modal-nav prev" id="modalPrev">&#10094;</span>
+    <span class="modal-nav next" id="modalNext">&#10095;</span>
     <img class="modal-content" id="modalImg" alt="Parker Duofold 鋼筆大圖">
+    <div class="modal-info" id="modalInfo">照片 1 / 4</div>
   </div>
 
   <script>
     (function () {
+      // 收錄你的 4 張 Flickr 典藏實拍照片
+      const photoList = [
+        { url: 'https://live.staticflickr.com/65535/55643916356_dfd65f3262_b.jpg', title: '圖 1/4：Parker Duofold 古董鋼筆全貌' },
+        { url: 'https://live.staticflickr.com/65535/55644058133_26e342f79a_b.jpg', title: '圖 2/4：筆身紋路與金屬配件特寫' },
+        { url: 'https://live.staticflickr.com/65535/55644122764_5a794c569f_b.jpg', title: '圖 3/4：筆尖結構與工藝細節' },
+        { url: 'https://live.staticflickr.com/65535/55644346545_0f4f076f68_b.jpg', title: '圖 4/4：古董筆整體質感與光影' }
+      ];
+
       const panels = Array.from(document.querySelectorAll('.chapter-panel'));
       const tabs = Array.from(document.querySelectorAll('.tab-btn'));
       const stepIndicator = document.getElementById('stepIndicator');
       const photoCaption = document.getElementById('photoCaption');
+      const penPhoto = document.getElementById('penPhoto');
       const prevBtn = document.getElementById('prevStepBtn');
       const nextBtn = document.getElementById('nextStepBtn');
       const swipeZone = document.getElementById('duofoldCard');
 
-      // 浮動視窗元素
+      // Modal 元素
       const triggerImageArea = document.getElementById('triggerImageArea');
       const imgModal = document.getElementById('imgModal');
       const modalImg = document.getElementById('modalImg');
+      const modalInfo = document.getElementById('modalInfo');
       const modalClose = document.getElementById('modalClose');
-      const penPhoto = document.getElementById('penPhoto');
+      const modalPrev = document.getElementById('modalPrev');
+      const modalNext = document.getElementById('modalNext');
 
       const labels = ['1 / 3 品牌沿革', '2 / 3 Duofold 系列', '3 / 3 這支古董筆'];
-      const captions = [
-        '第一幕：派克品牌沿革',
-        '第二幕：Duofold 系列經典',
-        '第三幕：這支古董鋼筆細節'
-      ];
-
       let currentStep = 0;
+      let modalIndex = 0;
 
       function renderStep(index) {
         currentStep = Math.max(0, Math.min(panels.length - 1, index));
@@ -399,8 +424,12 @@
           tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
 
+        // 依章節切換卡片上的主要展示圖片
+        const photoIndex = Math.min(currentStep, photoList.length - 1);
+        penPhoto.src = photoList[photoIndex].url;
+        photoCaption.textContent = photoList[photoIndex].title;
+
         stepIndicator.textContent = labels[currentStep];
-        photoCaption.textContent = captions[currentStep];
         prevBtn.disabled = currentStep === 0;
         nextBtn.disabled = currentStep === panels.length - 1;
       }
@@ -414,21 +443,29 @@
       prevBtn.addEventListener('click', () => renderStep(currentStep - 1));
       nextBtn.addEventListener('click', () => renderStep(currentStep + 1));
 
-      // 點擊圖片開啟浮動視窗
+      // 浮視窗：開啟相簿
+      function updateModalPhoto(idx) {
+        modalIndex = (idx + photoList.length) % photoList.length;
+        modalImg.src = photoList[modalIndex].url;
+        modalInfo.textContent = photoList[modalIndex].title;
+      }
+
       triggerImageArea.addEventListener('click', () => {
-        modalImg.src = penPhoto.src;
+        updateModalPhoto(currentStep);
         imgModal.classList.add('open');
       });
 
-      // 點擊關閉按鈕或背景關閉浮動視窗
       modalClose.addEventListener('click', () => imgModal.classList.remove('open'));
+      modalPrev.addEventListener('click', (e) => { e.stopPropagation(); updateModalPhoto(modalIndex - 1); });
+      modalNext.addEventListener('click', (e) => { e.stopPropagation(); updateModalPhoto(modalIndex + 1); });
+
       imgModal.addEventListener('click', (e) => {
         if (e.target === imgModal) {
           imgModal.classList.remove('open');
         }
       });
 
-      // 手機左右滑動切換三幕故事
+      // 支援手機滑動切換卡片章節
       let touchStartX = 0;
       let touchStartY = 0;
 
