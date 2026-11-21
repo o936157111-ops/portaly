@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>典藏誌：Montblanc Meisterstück 149 鋼筆</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .card-container {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 18px;
+      max-width: 440px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-top {
+      padding: 16px 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-badge {
+      font-size: 0.82rem;
+      letter-spacing: 1px;
+      color: #d4af37;
+      font-weight: 600;
+    }
+    .step-indicator {
+      font-size: 0.78rem;
+      color: #999999;
+      background: #282828;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    /* 三幕導覽頁籤 */
+    .story-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 0 20px 12px;
+    }
+    .tab-btn {
+      background: #262626;
+      color: #bbbbbb;
+      border: 1px solid #383838;
+      border-radius: 8px;
+      padding: 8px 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: rgba(212, 175, 55, 0.16);
+      color: #f0cf65;
+      border-color: #d4af37;
+    }
+
+    /* 圖片區域：點擊放大效果 */
+    .card-image-area {
+      position: relative;
+      width: 100%;
+      height: 255px;
+      background-color: #2a2a2a;
+      overflow: hidden;
+      touch-action: pan-y;
+      cursor: pointer;
+    }
+    .card-image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .card-image-area:hover img {
+      transform: scale(1.03);
+    }
+    .photo-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px 14px;
+      font-size: 0.78rem;
+      color: #f3f3f3;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .zoom-hint {
+      font-size: 0.72rem;
+      color: #f0cf65;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+    }
+
+    .card-content {
+      padding: 18px 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      touch-action: pan-y;
+    }
+    .chapter-panel {
+      display: none;
+      flex-direction: column;
+      gap: 11px;
+      animation: fadeIn 0.25s ease;
+    }
+    .chapter-panel.active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-size: 1.38rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+    .card-subtitle {
+      font-size: 0.92rem;
+      color: #c7c7c7;
+      line-height: 1.65;
+    }
+    .detail-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #252525;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.86rem;
+      color: #d4d4d4;
+      line-height: 1.55;
+    }
+    .detail-list li strong {
+      color: #e5c158;
+    }
+    .card-quote {
+      border-left: 3px solid #d4af37;
+      padding-left: 12px;
+      margin: 2px 0;
+      font-style: italic;
+      color: #cccccc;
+      font-size: 0.86rem;
+      line-height: 1.6;
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 20px 8px;
+      gap: 10px;
+    }
+    .step-btn {
+      flex: 1;
+      background: #262626;
+      color: #e0e0e0;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .step-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .card-footer {
+      padding: 8px 20px 22px;
+      background: #1e1e1e;
+    }
+    .btn-link {
+      display: block;
+      width: 100%;
+      padding: 14px 0;
+      text-align: center;
+      background: linear-gradient(135deg, #d4af37, #aa820a);
+      color: #121212;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: opacity 0.2s ease;
+    }
+    .btn-link:active {
+      opacity: 0.82;
+    }
+
+    /* 相簿輪播浮動視窗 (Modal Lightbox) */
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.94);
+      backdrop-filter: blur(6px);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .image-modal.open {
+      display: flex;
+    }
+    .modal-content {
+      max-width: 95vw;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.9);
+      border: 1px solid #444;
+    }
+    .modal-info {
+      margin-top: 14px;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: #ffffff;
+      font-size: 32px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .modal-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: 1px solid #555;
+      font-size: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .modal-nav.prev { left: 16px; }
+    .modal-nav.next { right: 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="card-container" id="mb149Card">
+    <!-- 1. 分類徽章與進度 -->
+    <div class="card-top">
+      <div class="card-badge">✦ 私房典藏 ‧ 鋼筆系列</div>
+      <div class="step-indicator" id="stepIndicator">1 / 3 品牌沿革</div>
+    </div>
+
+    <!-- 2. 三幕導覽頁籤 -->
+    <div class="story-tabs" role="tablist">
+      <button type="button" class="tab-btn active" data-step="0">① 品牌沿革</button>
+      <button type="button" class="tab-btn" data-step="1">② 149 旗艦</button>
+      <button type="button" class="tab-btn" data-step="2">③ 典藏細節</button>
+    </div>
+
+    <!-- 3. 主視覺圖片（切換章節時同步更換照片，點擊開啟完整相簿） -->
+    <div class="card-image-area" id="triggerImageArea">
+      <img
+        id="penPhoto"
+        src="https://live.staticflickr.com/65535/55644100336_9a0fa01e17_c.jpg"
+        alt="Montblanc Meisterstück 149 鋼筆"
+        onerror="this.src='https://picsum.photos/450/300?grayscale';"
+      >
+      <div class="photo-caption">
+        <span id="photoCaption">私房典藏實拍 · 圖片 1/3</span>
+        <span class="zoom-hint">🔍 點擊看全套 3 張大圖</span>
+      </div>
+    </div>
+
+    <!-- 4. 三幕內容區 -->
+    <div class="card-content">
+      <!-- 第一幕：品牌沿革 -->
+      <section class="chapter-panel active" data-step="0">
+        <h1 class="card-title">從漢堡工坊到雪山星徽：一段關於「不漏墨」的執念</h1>
+        <p class="card-subtitle">
+          1906 年，文具商與工程師在德國漢堡攜手起步，起初只是為了解決早期鋼筆容易沾手漏墨的毛病。1924 年，「Meisterstück」（德文意為「傑作」）正式登場，試圖打造一支真正能長期陪伴書寫、兼具結構可靠度與體面氣度的筆。
+        </p>
+        <ul class="detail-list">
+          <li><strong>名字與星徽的由來：</strong>「白朗峰」（Montblanc）不只是地理名詞，筆帽頂端的六角白星更像是一份承諾——把工藝標準拉到最高處。</li>
+          <li><strong>時代轉折：</strong>從早年實用導向的「Rouge et Noir」與「Simplo」年代，走向講究比例、金飾與書寫儀式的經典大班時代。</li>
+        </ul>
+        <div class="card-quote">
+          「一支好筆之所以歷久彌新，不在於炫技，而在於多年後再拿起它，依然能把字寫得穩、寫得有分寸。」
+        </div>
+      </section>
+
+      <!-- 第二幕：認識 149 旗艦 -->
+      <section class="chapter-panel" data-step="1">
+        <h2 class="card-title">大班 149：把「旗艦氣度」寫進雪茄筆身</h2>
+        <p class="card-subtitle">
+          在 Meisterstück 家族裡，149 一直是最具份量感的存在。自 1950 年代確立現代雪茄造型與大尺寸輪廓以來，它便成了書桌上的主角——粗壯卻不笨拙，握感飽滿，一眼就能辨認。
+        </p>
+        <ul class="detail-list">
+          <li><strong>結構與上墨：</strong>內置活塞上墨搭配觀墨窗，吸墨量充裕，日常寫作或簽批都不必頻繁中斷。</li>
+          <li><strong>視覺語彙：</strong>黑亮樹脂筆身配上三道鍍金環與筆帽白星，低調卻自帶一種沉穩的權威感。</li>
+        </ul>
+      </section>
+
+      <!-- 第三幕：典藏細節與規格 -->
+      <section class="chapter-panel" data-step="2">
+        <h2 class="card-title">這支 149：9 號金尖的呼吸與手感</h2>
+        <p class="card-subtitle">
+          <strong>【書寫與賞玩】</strong>149 最迷人的地方在於那片寬大的 9 號金尖。下筆時能感受到筆尖與紙張之間細膩的接觸與回彈，墨水鋪陳得開闊而不拖泥帶水。
+        </p>
+        <ul class="detail-list">
+          <li><strong>筆尖細節：</strong>18K 金（Au750）雙色筆尖，刻有「4810」海拔高度字樣與經典紋飾。</li>
+          <li><strong>尺碼手感：</strong>筆身全長約 147.3 mm、直徑約 17.3 mm，大筆桿讓手掌自然放鬆，久寫不易緊繃。</li>
+          <li><strong>相簿收錄：</strong>點擊上方照片可開啟大圖輪播，細看全套 3 張實拍細節。</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- 5. 前後章節切換 -->
+    <div class="nav-row">
+      <button type="button" class="step-btn" id="prevStepBtn">← 上一段</button>
+      <button type="button" class="step-btn" id="nextStepBtn">下一段 →</button>
+    </div>
+
+    <!-- 6. 原網頁連結 -->
+    <div class="card-footer">
+      <a href="https://myezlife.com/mycollection/" class="btn-link">前往完整典藏頁查看細節 ➔</a>
+    </div>
+  </div>
+
+  <!-- 7. 相簿輪播浮動視窗 Modal -->
+  <div class="image-modal" id="imgModal">
+    <span class="modal-close" id="modalClose">&times;</span>
+    <span class="modal-nav prev" id="modalPrev">&#10094;</span>
+    <span class="modal-nav next" id="modalNext">&#10095;</span>
+    <img class="modal-content" id="modalImg" alt="Montblanc 149 鋼筆大圖">
+    <div class="modal-info" id="modalInfo">照片 1 / 3</div>
+  </div>
+
+  <script>
+    (function () {
+      const photoList = [
+        { url: 'https://live.staticflickr.com/65535/55644100336_9a0fa01e17_c.jpg', title: '圖 1/3：Montblanc 149 經典黑珍貴樹脂全貌' },
+        { url: 'https://live.staticflickr.com/65535/55644240438_1e26a1f60b_c.jpg', title: '圖 2/3：霸氣 9 號 18K 金雙色筆尖特寫' },
+        { url: 'https://live.staticflickr.com/65535/55644240433_ba8ea98d71_c.jpg', title: '圖 3/3：筆帽黃金三環與觀墨窗細節' }
+      ];
+
+      const panels = Array.from(document.querySelectorAll('.chapter-panel'));
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      const stepIndicator = document.getElementById('stepIndicator');
+      const photoCaption = document.getElementById('photoCaption');
+      const penPhoto = document.getElementById('penPhoto');
+      const prevBtn = document.getElementById('prevStepBtn');
+      const nextBtn = document.getElementById('nextStepBtn');
+      const swipeZone = document.getElementById('mb149Card');
+
+      const triggerImageArea = document.getElementById('triggerImageArea');
+      const imgModal = document.getElementById('imgModal');
+      const modalImg = document.getElementById('modalImg');
+      const modalInfo = document.getElementById('modalInfo');
+      const modalClose = document.getElementById('modalClose');
+      const modalPrev = document.getElementById('modalPrev');
+      const modalNext = document.getElementById('modalNext');
+
+      const labels = ['1 / 3 品牌沿革', '2 / 3 149 旗艦', '3 / 3 典藏細節'];
+      let currentStep = 0;
+      let modalIndex = 0;
+
+      function renderStep(index) {
+        currentStep = Math.max(0, Math.min(panels.length - 1, index));
+
+        panels.forEach((panel, i) => {
+          panel.classList.toggle('active', i === currentStep);
+        });
+
+        tabs.forEach((tab, i) => {
+          const isActive = i === currentStep;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        const photoIndex = Math.min(currentStep, photoList.length - 1);
+        penPhoto.src = photoList[photoIndex].url;
+        photoCaption.textContent = photoList[photoIndex].title;
+
+        stepIndicator.textContent = labels[currentStep];
+        prevBtn.disabled = currentStep === 0;
+        nextBtn.disabled = currentStep === panels.length - 1;
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          renderStep(Number(tab.dataset.step));
+        });
+      });
+
+      prevBtn.addEventListener('click', () => renderStep(currentStep - 1));
+      nextBtn.addEventListener('click', () => renderStep(currentStep + 1));
+
+      function updateModalPhoto(idx) {
+        modalIndex = (idx + photoList.length) % photoList.length;
+        modalImg.src = photoList[modalIndex].url;
+        modalInfo.textContent = photoList[modalIndex].title;
+      }
+
+      triggerImageArea.addEventListener('click', () => {
+        updateModalPhoto(currentStep);
+        imgModal.classList.add('open');
+      });
+
+      modalClose.addEventListener('click', () => imgModal.classList.remove('open'));
+      modalPrev.addEventListener('click', (e) => { e.stopPropagation(); updateModalPhoto(modalIndex - 1); });
+      modalNext.addEventListener('click', (e) => { e.stopPropagation(); updateModalPhoto(modalIndex + 1); });
+
+      imgModal.addEventListener('click', (e) => {
+        if (e.target === imgModal) {
+          imgModal.classList.remove('open');
+        }
+      });
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      swipeZone.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      swipeZone.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          if (dx < 0 && currentStep < panels.length - 1) {
+            renderStep(currentStep + 1);
+          } else if (dx > 0 && currentStep > 0) {
+            renderStep(currentStep - 1);
+          }
+        }
+      }, { passive: true });
+
+      renderStep(0);
+    })();
+  </script>
+
+</body>
+</html>
