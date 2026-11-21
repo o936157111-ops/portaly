@@ -154,11 +154,17 @@ html, body {
     font-size: 14px;
     cursor: pointer;
     text-align: center;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, opacity 0.2s ease;
 }
 
 .choice-btn-secondary:hover {
     background: #e2e6ea;
+}
+
+.choice-btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #e9ecef;
 }
 
 /* 電腦版或大螢幕時：置中顯示手機精緻比例框體（帶有圓角與質感陰影） */
@@ -438,7 +444,7 @@ html, body {
             <p>您已經瀏覽了一小段時間，要繼續在這裡細細品味，還是前往總入口探索更多精彩內容呢？</p>
             <div class="choice-btn-group">
                 <button class="choice-btn-primary" onclick="continueListening()">繼續瀏覽</button>
-                <button class="choice-btn-secondary" onclick="goToPortal()">前往主入口網頁</button>
+                <button class="choice-btn-secondary" onclick="goToPortal(event, this)">前往主入口網頁</button>
             </div>
         </div>
     </div>
@@ -446,7 +452,7 @@ html, body {
     <!-- 3. 主畫面框體 -->
     <div class="app-frame">
         <!-- 左上角 Logo 標誌 -->
-        <div class="top-brand-badge" onclick="goToPortal()" title="點擊前往主入口">
+        <div class="top-brand-badge" onclick="goToPortal(event)" title="點擊前往主入口">
             <img src="https://myezlife.com/eric-logo.gif" alt="Logo" loading="eager">
             <span>活出自己隨心所欲的生活➔</span>
         </div>
@@ -484,10 +490,30 @@ function buildEmbedCode(videoId) {
     return String.fromCharCode(60) + 'iframe width="560" height="315" src="https://www.youtube.com/embed/' + videoId + '?autoplay=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' + String.fromCharCode(60, 47) + 'iframe>';
 }
 
+// 預先對 Portaly 進行 DNS 連線與文檔預抓，減少點擊後的通訊時間
+function warmupPortal() {
+    if (document.getElementById('portal-warmup-link')) return;
+
+    const dnsLink = document.createElement('link');
+    dnsLink.rel = 'preconnect';
+    dnsLink.href = 'https://portaly.cc';
+    dnsLink.crossOrigin = 'anonymous';
+
+    const prefetchLink = document.createElement('link');
+    prefetchLink.id = 'portal-warmup-link';
+    prefetchLink.rel = 'prefetch';
+    prefetchLink.href = 'https://portaly.cc/myezlife';
+    prefetchLink.as = 'document';
+
+    document.head.appendChild(dnsLink);
+    document.head.appendChild(prefetchLink);
+}
+
 // 1. 30 秒後彈出的選擇提示視窗 (只問一次)
 setTimeout(function() {
     const modal = document.getElementById('choiceModalOverlay');
     if (modal) modal.style.display = 'flex';
+    warmupPortal();
 }, 30000);
 
 function continueListening() {
@@ -495,8 +521,15 @@ function continueListening() {
     if (modal) modal.style.display = 'none';
 }
 
-function goToPortal() {
-    window.location.replace("https://portaly.cc/myezlife");
+function goToPortal(event, btnEl) {
+    if (event) event.stopPropagation();
+    
+    if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.textContent = '正在前往主入口…';
+    }
+    
+    window.location.href = "https://portaly.cc/myezlife";
 }
 
 function scrollCard(direction) {
